@@ -49,7 +49,7 @@ Validation package
 Status:
 
 ```text
-IN PROGRESS
+COMPLETE
 ```
 
 Purpose:
@@ -65,7 +65,7 @@ Register the complete token infrastructure documentation package (T1–T8).
 Status:
 
 ```text
-BLOCKED UNTIL M1 PASS
+BLOCKED UNTIL M6 PASS
 ```
 
 ---
@@ -95,5 +95,58 @@ BLOCKED UNTIL M3 PASS
 Status:
 
 ```text
-BLOCKED UNTIL M4 PASS
+COMPLETE
+```
+
+---
+
+## Milestone M6 — Token CSS Implementation
+
+Status:
+
+```text
+IN PROGRESS
+```
+
+### NV-023-TASK-007 — M6 Token CSS Implementation
+
+Status:
+
+```text
+IN PROGRESS
+```
+
+Purpose:
+
+```text
+Implement approved design tokens as CSS custom properties in website/styles/tokens.css.
+Documentation-only phases complete. First authorized CSS implementation step.
+```
+
+Authorized file:
+
+```text
+website/styles/tokens.css
+```
+
+Deliverables:
+
+```text
+website/styles/tokens.css (implemented)
+docs/implementation/phase-1/packages/NV-023-TASK-007.md
+docs/implementation/phase-1/reviews/NV-023-TASK-007_REVIEW.md
+docs/implementation/phase-1/validations/NV-023-TASK-007_VALIDATION.md
+PHASE_1_BACKLOG.md (this file)
+```
+
+Blocked by:
+
+```text
+Nothing — authorized by HUB for M6.
+```
+
+Does NOT unblock:
+
+```text
+Component implementation — requires HUB review of M6 before M2 can proceed.
 ```

@@ -1,0 +1,569 @@
+/**
+ * NeuralVerse Token Layer
+ *
+ * Source:
+ * TOKEN_REGISTRY.md
+ * M1 Token Infrastructure Package
+ * T2_REFERENCE_TOKEN_CATALOG.md
+ * T3_SEMANTIC_TOKEN_CATALOG.md
+ * T4_CONTEXT_TOKEN_CATALOG.md
+ * T5_ACCESSIBILITY_TOKEN_CATALOG.md
+ *
+ * Scope:
+ * Design token custom properties only.
+ * Allowed selectors: :root, @media (prefers-reduced-motion: reduce)
+ *
+ * Forbidden:
+ * Component selectors
+ * Layout selectors
+ * Page selectors
+ * Utility classes
+ *
+ * Task:        NV-023-TASK-007
+ * Milestone:   M6 Token CSS Implementation
+ */
+
+/* =========================================================
+   Reference Tokens — Color
+   Source: T2_REFERENCE_TOKEN_CATALOG.md / NV-010
+   ========================================================= */
+
+:root {
+  /* Graphite scale */
+  --ref-color-graphite-950: #0a0f16;
+  --ref-color-graphite-900: #101824;
+  --ref-color-graphite-850: #162030;
+  --ref-color-graphite-800: #1e2c3e;
+
+  /* Cyan accent scale */
+  --ref-color-cyan-500: #22d3ee;
+  --ref-color-cyan-400: #38e8ff;
+  --ref-color-cyan-300: #67f0ff;
+
+  /* Semantic indicator scale */
+  --ref-color-green-500: #22c55e;
+  --ref-color-amber-500: #f59e0b;
+  --ref-color-red-500:   #ef4444;
+  --ref-color-blue-500:  #3b82f6;
+
+  /* Neutral poles */
+  --ref-color-white:       #ffffff;
+  --ref-color-black:       #000000;
+  --ref-color-transparent: transparent;
+}
+
+/* =========================================================
+   Reference Tokens — Typography
+   Source: T2_REFERENCE_TOKEN_CATALOG.md / NV-011
+   ========================================================= */
+
+:root {
+  /* Font families */
+  --ref-font-family-primary:    'Inter', 'Roboto', system-ui, sans-serif;
+  --ref-font-family-display:    'Inter', 'Roboto', system-ui, sans-serif;
+  --ref-font-family-monospace:  'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+
+  /* Type size scale */
+  --ref-font-size-100: 0.625rem;   /*  10px */
+  --ref-font-size-200: 0.75rem;    /*  12px */
+  --ref-font-size-300: 0.875rem;   /*  14px */
+  --ref-font-size-400: 1rem;       /*  16px — base body */
+  --ref-font-size-500: 1.125rem;   /*  18px */
+  --ref-font-size-600: 1.25rem;    /*  20px */
+  --ref-font-size-700: 1.5rem;     /*  24px */
+  --ref-font-size-800: 2rem;       /*  32px */
+  --ref-font-size-900: 2.5rem;     /*  40px — largest display */
+
+  /* Font weights */
+  --ref-font-weight-regular:  400;
+  --ref-font-weight-medium:   500;
+  --ref-font-weight-semibold: 600;
+  --ref-font-weight-bold:     700;
+
+  /* Line heights */
+  --ref-font-line-height-tight:   1.25;
+  --ref-font-line-height-normal:  1.5;
+  --ref-font-line-height-relaxed: 1.625;
+  --ref-font-line-height-reading: 1.75;
+
+  /* Letter spacing */
+  --ref-font-tracking-tight:  -0.025em;
+  --ref-font-tracking-normal:  0em;
+  --ref-font-tracking-wide:    0.05em;
+}
+
+/* =========================================================
+   Reference Tokens — Spacing
+   Source: T2_REFERENCE_TOKEN_CATALOG.md / NV-012
+   ========================================================= */
+
+:root {
+  --ref-space-0:    0px;
+  --ref-space-100:  0.25rem;   /*   4px */
+  --ref-space-200:  0.5rem;    /*   8px */
+  --ref-space-300:  0.75rem;   /*  12px */
+  --ref-space-400:  1rem;      /*  16px */
+  --ref-space-500:  1.25rem;   /*  20px */
+  --ref-space-600:  1.5rem;    /*  24px */
+  --ref-space-700:  2rem;      /*  32px */
+  --ref-space-800:  2.5rem;    /*  40px */
+  --ref-space-900:  3rem;      /*  48px */
+  --ref-space-1000: 4rem;      /*  64px */
+}
+
+/* =========================================================
+   Reference Tokens — Radius
+   Source: T2_REFERENCE_TOKEN_CATALOG.md / NV-014
+   ========================================================= */
+
+:root {
+  --ref-radius-none:     0px;
+  --ref-radius-subtle:   2px;
+  --ref-radius-soft:     6px;
+  --ref-radius-moderate: 12px;
+  --ref-radius-round:    9999px;
+}
+
+/* =========================================================
+   Reference Tokens — Border
+   Source: T2_REFERENCE_TOKEN_CATALOG.md / NV-014
+   ========================================================= */
+
+:root {
+  --ref-border-width-none:      0px;
+  --ref-border-width-thin:      1px;
+  --ref-border-width-standard:  1.5px;
+  --ref-border-width-emphasis:  2px;
+}
+
+/* =========================================================
+   Reference Tokens — Shadow
+   Source: T2_REFERENCE_TOKEN_CATALOG.md / NV-014
+   ========================================================= */
+
+:root {
+  --ref-shadow-none:   none;
+  --ref-shadow-subtle: 0 1px 2px 0 rgb(0 0 0 / 0.20);
+  --ref-shadow-soft:   0 2px 8px 0 rgb(0 0 0 / 0.30);
+  --ref-shadow-medium: 0 8px 24px 0 rgb(0 0 0 / 0.45);
+}
+
+/* =========================================================
+   Reference Tokens — Motion
+   Source: T2_REFERENCE_TOKEN_CATALOG.md / NV-016
+   ========================================================= */
+
+:root {
+  /* Duration scale */
+  --ref-motion-duration-instant: 0ms;
+  --ref-motion-duration-fast:    100ms;
+  --ref-motion-duration-normal:  220ms;
+  --ref-motion-duration-slow:    380ms;
+
+  /* Easing curves */
+  --ref-motion-ease-standard:  cubic-bezier(0.4, 0, 0.2, 1);
+  --ref-motion-ease-enter:     cubic-bezier(0.0, 0, 0.2, 1);
+  --ref-motion-ease-exit:      cubic-bezier(0.4, 0, 1,   1);
+  --ref-motion-ease-emphasized: cubic-bezier(0.2, 0, 0,   1);
+}
+
+/* =========================================================
+   Reference Tokens — Z-Index
+   Source: T2_REFERENCE_TOKEN_CATALOG.md / NV-014
+   ========================================================= */
+
+:root {
+  --ref-z-0:  0;
+  --ref-z-10: 10;
+  --ref-z-20: 20;
+  --ref-z-30: 30;
+  --ref-z-40: 40;
+  --ref-z-50: 50;
+  --ref-z-60: 60;
+  --ref-z-70: 70;
+  --ref-z-80: 80;
+  --ref-z-90: 90;
+}
+
+/* =========================================================
+   Semantic Tokens — Color
+   Source: T3_SEMANTIC_TOKEN_CATALOG.md / NV-010
+   Semantic tokens MUST consume ref tokens — no raw values.
+   ========================================================= */
+
+:root {
+  /* Background */
+  --sys-color-background-base:   var(--ref-color-graphite-950);
+  --sys-color-background-subtle: var(--ref-color-graphite-900);
+
+  /* Surface */
+  --sys-color-surface-base:    var(--ref-color-graphite-900);
+  --sys-color-surface-raised:  var(--ref-color-graphite-850);
+  --sys-color-surface-overlay: var(--ref-color-graphite-800);
+
+  /* Border */
+  --sys-color-border-subtle:  var(--ref-color-graphite-800);
+  --sys-color-border-default: var(--ref-color-graphite-800);
+  --sys-color-border-strong:  var(--ref-color-graphite-800);
+
+  /* Divider */
+  --sys-color-divider-default: var(--sys-color-border-subtle);
+
+  /* Text */
+  --sys-color-text-primary:   var(--ref-color-white);
+  --sys-color-text-secondary: /* TODO: NV-010 approval for secondary text value */ var(--ref-color-white);
+  --sys-color-text-muted:     /* TODO: NV-010 approval for muted text value */ var(--ref-color-white);
+  --sys-color-text-disabled:  /* TODO: NV-010 approval for disabled text value */ var(--ref-color-white);
+  --sys-color-text-inverse:   var(--ref-color-graphite-950);
+
+  /* Accent */
+  --sys-color-accent-primary: var(--ref-color-cyan-500);
+  --sys-color-accent-hover:   var(--ref-color-cyan-400);
+  --sys-color-accent-active:  var(--ref-color-cyan-300);
+  --sys-color-accent-subtle:  /* TODO: NV-010 approval for subtle accent tint value */ var(--ref-color-transparent);
+
+  /* Semantic indicators */
+  --sys-color-semantic-success: var(--ref-color-green-500);
+  --sys-color-semantic-warning: var(--ref-color-amber-500);
+  --sys-color-semantic-error:   var(--ref-color-red-500);
+  --sys-color-semantic-info:    var(--ref-color-blue-500);
+
+  /* State overlays */
+  --sys-color-state-hover:     /* TODO: NV-010 approval for hover overlay value */ var(--ref-color-transparent);
+  --sys-color-state-active:    /* TODO: NV-010 approval for active overlay value */ var(--ref-color-transparent);
+  --sys-color-state-focus:     var(--sys-color-accent-primary);
+  --sys-color-state-selected:  var(--sys-color-accent-subtle);
+  --sys-color-state-disabled:  /* TODO: NV-010 approval for disabled overlay value */ var(--ref-color-transparent);
+}
+
+/* =========================================================
+   Semantic Tokens — Typography
+   Source: T3_SEMANTIC_TOKEN_CATALOG.md / NV-011
+   ========================================================= */
+
+:root {
+  /* Font families */
+  --sys-font-body-family:    var(--ref-font-family-primary);
+  --sys-font-display-family: var(--ref-font-family-display);
+  --sys-font-code-family:    var(--ref-font-family-monospace);
+
+  /* Body */
+  --sys-font-body-size:        var(--ref-font-size-400);
+  --sys-font-body-weight:      var(--ref-font-weight-regular);
+  --sys-font-body-line-height: var(--ref-font-line-height-normal);
+
+  /* Heading */
+  --sys-font-heading-size:        var(--ref-font-size-600);
+  --sys-font-heading-weight:      var(--ref-font-weight-semibold);
+  --sys-font-heading-line-height: var(--ref-font-line-height-tight);
+
+  /* Caption */
+  --sys-font-caption-size:        var(--ref-font-size-200);
+  --sys-font-caption-weight:      var(--ref-font-weight-medium);
+  --sys-font-caption-line-height: var(--ref-font-line-height-normal);
+
+  /* Code */
+  --sys-font-code-size:        var(--ref-font-size-300);
+  --sys-font-code-weight:      var(--ref-font-weight-regular);
+  --sys-font-code-line-height: var(--ref-font-line-height-relaxed);
+}
+
+/* =========================================================
+   Semantic Tokens — Spacing
+   Source: T3_SEMANTIC_TOKEN_CATALOG.md / NV-012
+   ========================================================= */
+
+:root {
+  /* Inline */
+  --sys-space-inline-xs: var(--ref-space-100);
+  --sys-space-inline-sm: var(--ref-space-200);
+  --sys-space-inline-md: var(--ref-space-400);
+  --sys-space-inline-lg: var(--ref-space-600);
+
+  /* Stack */
+  --sys-space-stack-xs: var(--ref-space-100);
+  --sys-space-stack-sm: var(--ref-space-200);
+  --sys-space-stack-md: var(--ref-space-400);
+  --sys-space-stack-lg: var(--ref-space-700);
+  --sys-space-stack-xl: var(--ref-space-900);
+
+  /* Inset */
+  --sys-space-inset-xs: var(--ref-space-100);
+  --sys-space-inset-sm: var(--ref-space-200);
+  --sys-space-inset-md: var(--ref-space-400);
+  --sys-space-inset-lg: var(--ref-space-600);
+
+  /* Layout */
+  --sys-space-layout-gap:     var(--ref-space-600);
+  --sys-space-layout-section: var(--ref-space-1000);
+}
+
+/* =========================================================
+   Semantic Tokens — Radius
+   Source: T3_SEMANTIC_TOKEN_CATALOG.md / NV-014
+   ========================================================= */
+
+:root {
+  --sys-radius-surface: var(--ref-radius-subtle);
+  --sys-radius-control: var(--ref-radius-soft);
+  --sys-radius-overlay: var(--ref-radius-moderate);
+  --sys-radius-badge:   var(--ref-radius-round);
+}
+
+/* =========================================================
+   Semantic Tokens — Border
+   Source: T3_SEMANTIC_TOKEN_CATALOG.md / NV-014
+   ========================================================= */
+
+:root {
+  --sys-border-subtle:      var(--ref-border-width-thin);
+  --sys-border-default:     var(--ref-border-width-standard);
+  --sys-border-strong:      var(--ref-border-width-emphasis);
+  --sys-border-interactive: var(--ref-border-width-standard);
+}
+
+/* =========================================================
+   Semantic Tokens — Elevation & Shadow
+   Source: T3_SEMANTIC_TOKEN_CATALOG.md / NV-014
+   ========================================================= */
+
+:root {
+  /* Elevation levels */
+  --sys-elevation-0: 0;
+  --sys-elevation-1: 1;
+  --sys-elevation-2: 2;
+  --sys-elevation-3: 3;
+  --sys-elevation-4: 4;
+
+  /* Shadow roles */
+  --sys-shadow-surface: var(--ref-shadow-subtle);
+  --sys-shadow-overlay: var(--ref-shadow-soft);
+  --sys-shadow-modal:   var(--ref-shadow-medium);
+}
+
+/* =========================================================
+   Semantic Tokens — Motion
+   Source: T3_SEMANTIC_TOKEN_CATALOG.md / NV-016
+   FORBIDDEN: sys.motion.intensity.high — not an approved level.
+   ========================================================= */
+
+:root {
+  /* Duration roles */
+  --sys-motion-duration-feedback:   var(--ref-motion-duration-fast);
+  --sys-motion-duration-transition: var(--ref-motion-duration-normal);
+  --sys-motion-duration-overlay:    var(--ref-motion-duration-slow);
+
+  /* Easing roles */
+  --sys-motion-ease-interface: var(--ref-motion-ease-standard);
+  --sys-motion-ease-panel:     var(--ref-motion-ease-enter);
+  --sys-motion-ease-overlay:   var(--ref-motion-ease-enter);
+
+  /* Intensity scale (approved levels only) */
+  --sys-motion-intensity-none:    0;
+  --sys-motion-intensity-reduced: 0.25;
+  --sys-motion-intensity-low:     0.5;
+  --sys-motion-intensity-medium:  1;
+  /* --sys-motion-intensity-high  FORBIDDEN — not an approved intensity level */
+}
+
+/* =========================================================
+   Semantic Tokens — Z-Index
+   Source: T3_SEMANTIC_TOKEN_CATALOG.md / NV-014
+   ========================================================= */
+
+:root {
+  --sys-z-base:         var(--ref-z-0);
+  --sys-z-raised:       var(--ref-z-10);
+  --sys-z-dropdown:     var(--ref-z-20);
+  --sys-z-sticky:       var(--ref-z-30);
+  --sys-z-overlay:      var(--ref-z-40);
+  --sys-z-drawer:       var(--ref-z-50);
+  --sys-z-modal:        var(--ref-z-60);
+  --sys-z-notification: var(--ref-z-70);
+  --sys-z-debug:        var(--ref-z-90);
+}
+
+/* =========================================================
+   Semantic Tokens — Accessibility (sys.a11y.*)
+   Source: T5_ACCESSIBILITY_TOKEN_CATALOG.md / NV-017
+   ========================================================= */
+
+:root {
+  /* Focus ring */
+  --sys-a11y-focus-color:  var(--sys-color-accent-primary);
+  --sys-a11y-focus-width:  var(--ref-border-width-emphasis);
+  --sys-a11y-focus-offset: 3px;
+  --sys-a11y-focus-ring:   var(--sys-a11y-focus-width) solid var(--sys-a11y-focus-color);
+
+  /* Contrast targets */
+  --sys-a11y-contrast-standard: 4.5;  /* WCAG AA */
+  --sys-a11y-contrast-high:     7;    /* WCAG AAA */
+
+  /* Disabled state */
+  --sys-a11y-disabled-opacity: 0.38;
+  --sys-a11y-disabled-cursor:  not-allowed;
+  --sys-a11y-disabled-text:    var(--sys-color-text-disabled);
+  --sys-a11y-disabled-surface: var(--sys-color-state-disabled);
+
+  /* Motion sensitivity */
+  --sys-a11y-motion-reduced: var(--sys-motion-intensity-reduced);
+  --sys-a11y-motion-none:    var(--sys-motion-intensity-none);
+
+  /* Touch targets */
+  --sys-a11y-touch-target-minimum: 44px;
+
+  /* Reading width */
+  --sys-a11y-reading-width-standard: 65ch;
+  --sys-a11y-reading-width-enhanced: 75ch;
+}
+
+/* =========================================================
+   Context Tokens — Shell Header
+   Source: T4_CONTEXT_TOKEN_CATALOG.md / NV-012
+   Context tokens MUST consume sys tokens — not ref tokens.
+   ========================================================= */
+
+:root {
+  --ctx-shell-header-surface: var(--sys-color-background-base);
+  --ctx-shell-header-border:  var(--sys-color-border-subtle);
+  --ctx-shell-padding:        var(--sys-space-inset-md);
+  --ctx-shell-z:              var(--sys-z-sticky);
+}
+
+/* =========================================================
+   Context Tokens — Navigation Rail
+   Source: T4_CONTEXT_TOKEN_CATALOG.md / NV-012, NV-015
+   ========================================================= */
+
+:root {
+  --ctx-nav-rail-surface:       var(--sys-color-surface-base);
+  --ctx-nav-rail-border:        var(--sys-color-border-subtle);
+  --ctx-nav-rail-padding:       var(--sys-space-inset-sm);
+  --ctx-nav-item-text:          var(--sys-color-text-secondary);
+  --ctx-nav-item-text-active:   var(--sys-color-accent-primary);
+  --ctx-nav-item-surface-hover:  var(--sys-color-state-hover);
+  --ctx-nav-item-surface-active: var(--sys-color-state-selected);
+  --ctx-nav-motion:             var(--sys-motion-duration-transition);
+  --ctx-nav-z:                  var(--sys-z-raised);
+}
+
+/* =========================================================
+   Context Tokens — Workspace
+   Source: T4_CONTEXT_TOKEN_CATALOG.md / NV-012
+   ========================================================= */
+
+:root {
+  --ctx-workspace-background: var(--sys-color-background-base);
+  --ctx-workspace-surface:    var(--sys-color-surface-raised);
+  --ctx-workspace-border:     var(--sys-color-border-subtle);
+  --ctx-workspace-padding:    var(--sys-space-inset-lg);
+  --ctx-workspace-radius:     var(--sys-radius-surface);
+  --ctx-workspace-elevation:  var(--sys-elevation-1);
+}
+
+/* =========================================================
+   Context Tokens — Context Panel
+   Source: T4_CONTEXT_TOKEN_CATALOG.md / NV-012
+   ========================================================= */
+
+:root {
+  --ctx-context-panel-surface:   var(--sys-color-surface-base);
+  --ctx-context-panel-border:    var(--sys-color-border-subtle);
+  --ctx-context-panel-padding:   var(--sys-space-inset-md);
+  --ctx-panel-radius:            var(--sys-radius-surface);
+  --ctx-panel-elevation:         var(--sys-elevation-2);
+  --ctx-panel-motion:            var(--sys-motion-duration-transition);
+  --ctx-context-panel-z:         var(--sys-z-overlay);
+}
+
+/* =========================================================
+   Context Tokens — Reading Surface
+   Source: T4_CONTEXT_TOKEN_CATALOG.md / NV-011, NV-012
+   ========================================================= */
+
+:root {
+  --ctx-reading-surface:       var(--sys-color-surface-raised);
+  --ctx-reading-text:          var(--sys-color-text-primary);
+  --ctx-reading-muted:         var(--sys-color-text-muted);
+  --ctx-reading-section-gap:   var(--sys-space-stack-xl);
+  --ctx-reading-block-gap:     var(--sys-space-stack-md);
+  --ctx-reading-body-font:     var(--sys-font-body-family);
+  --ctx-reading-heading-font:  var(--sys-font-display-family);
+  --ctx-reading-caption-font:  var(--sys-font-body-family);
+  --ctx-reading-code-font:     var(--sys-font-code-family);
+}
+
+/* =========================================================
+   Context Tokens — Overlay
+   Source: T4_CONTEXT_TOKEN_CATALOG.md / NV-012
+   Note: ctx.overlay.backdrop consumes ref.color.black per T4 registry;
+         this is the single documented exception to the ctx→sys rule.
+   ========================================================= */
+
+:root {
+  --ctx-overlay-backdrop:  var(--ref-color-black);  /* opacity via rgba in consuming rule */
+  --ctx-overlay-surface:   var(--sys-color-surface-overlay);
+  --ctx-overlay-radius:    var(--sys-radius-overlay);
+  --ctx-overlay-elevation: var(--sys-elevation-4);
+  --ctx-overlay-motion:    var(--sys-motion-duration-overlay);
+  --ctx-overlay-z:         var(--sys-z-overlay);
+  --ctx-modal-elevation:   var(--sys-elevation-4);
+  --ctx-modal-z:           var(--sys-z-modal);
+}
+
+/* =========================================================
+   Context Tokens — Navigation Typography
+   Source: T4_CONTEXT_TOKEN_CATALOG.md / NV-011, NV-015
+   ========================================================= */
+
+:root {
+  --ctx-navigation-label-font: var(--sys-font-body-family);
+  --ctx-navigation-meta-font:  var(--sys-font-caption-size);
+}
+
+/* =========================================================
+   Context Tokens — Workspace Typography
+   Source: T4_CONTEXT_TOKEN_CATALOG.md / NV-011
+   ========================================================= */
+
+:root {
+  --ctx-workspace-label-font:    var(--sys-font-caption-size);
+  --ctx-workspace-metadata-font: var(--sys-font-caption-size);
+}
+
+/* =========================================================
+   Context Tokens — Feedback Motion
+   Source: T4_CONTEXT_TOKEN_CATALOG.md / NV-016
+   ========================================================= */
+
+:root {
+  --ctx-feedback-motion: var(--sys-motion-duration-feedback);
+}
+
+/* =========================================================
+   Reduced Motion — Motion Token Remap
+   Source: NV-016, NV-017 / sys.a11y.motion.reduced
+   This block remaps only motion tokens.
+   No component behavior. No layout. No selectors other than :root.
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    /* Remap duration tokens to near-instant for reduced motion */
+    --sys-motion-duration-feedback:   var(--ref-motion-duration-instant);
+    --sys-motion-duration-transition: var(--ref-motion-duration-instant);
+    --sys-motion-duration-overlay:    var(--ref-motion-duration-instant);
+
+    /* Remap intensity to reduced level */
+    --sys-motion-intensity-none:    0;
+    --sys-motion-intensity-reduced: 0;
+    --sys-motion-intensity-low:     0;
+    --sys-motion-intensity-medium:  0;
+
+    /* Remap context motion tokens */
+    --ctx-nav-motion:      var(--ref-motion-duration-instant);
+    --ctx-panel-motion:    var(--ref-motion-duration-instant);
+    --ctx-overlay-motion:  var(--ref-motion-duration-instant);
+    --ctx-feedback-motion: var(--ref-motion-duration-instant);
+  }
+}
