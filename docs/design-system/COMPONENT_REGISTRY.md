@@ -203,4 +203,209 @@ None.
 ```text
 Initial bootstrap:
 Created as part of NV-023-TASK-001.
+
+NV-023-TASK-003 (M2 Foundation Components):
+Added F1-F9 foundation component entries.
+```
+
+---
+
+## M2 Foundation Component Entries
+
+### F1 — Divider
+
+```text
+Component ID: component-f1-divider
+Component Name: Divider
+Category: layout / visual
+Purpose: Provide visual and structural separation between content regions.
+Canonical Decision Source: NV-012, NV-013, NV-014
+Owner: Component Designer
+Contract: docs/design-system/components/contracts/F1_DIVIDER.md
+Token Dependencies: sys.color.border.subtle, sys.color.divider.default, sys.space.stack.sm
+Accessibility Requirements: role separator when meaningful; aria-hidden when decorative.
+Motion Requirements: none
+States: default, vertical
+Variants: horizontal, vertical
+Slots: none
+Forbidden Usage: As primary content delimiter, as decorative graphic, with hardcoded colors.
+Implementation Status: Not Implemented
+Lifecycle Status: Approved
+Version: 1.0.0
+```
+
+### F2 — Badge
+
+```text
+Component ID: component-f2-badge
+Component Name: Badge
+Category: display / status
+Purpose: Communicate status, category, count, or label metadata inline.
+Canonical Decision Source: NV-010, NV-013, NV-014, NV-017
+Owner: Component Designer
+Contract: docs/design-system/components/contracts/F2_BADGE.md
+Token Dependencies: sys.color.semantic.*, sys.color.accent.subtle, sys.color.text.inverse, sys.font.caption.*, sys.radius.badge, sys.space.inline.xs
+Accessibility Requirements: Color must not be sole meaning carrier; label text required; icon-only badges forbidden without accessible text.
+Motion Requirements: none
+States: default
+Variants: success, warning, error, info, accent, neutral
+Slots: label, leading-icon optional
+Forbidden Usage: As interactive trigger without role; as navigation; with arbitrary colors.
+Implementation Status: Not Implemented
+Lifecycle Status: Approved
+Version: 1.0.0
+```
+
+### F3 — Button
+
+```text
+Component ID: component-f3-button
+Component Name: Button
+Category: input / action
+Purpose: Trigger explicit, single user actions.
+Canonical Decision Source: NV-013, NV-014, NV-016, NV-017, NV-018
+Owner: Component Designer
+Contract: docs/design-system/components/contracts/F3_BUTTON.md
+Token Dependencies: sys.color.accent.*, sys.color.surface.raised, sys.color.state.*, sys.color.text.*, sys.font.body.*, sys.space.inset.*, sys.radius.control, sys.border.interactive, sys.motion.duration.feedback, sys.motion.ease.interface, sys.a11y.focus.*, sys.a11y.disabled.*, sys.a11y.touch.target.minimum
+Accessibility Requirements: Enter and Space activation; visible focus ring; accessible name required; aria-disabled for disabled; aria-busy for loading.
+Motion Requirements: Focus Transition, Button Press Feedback
+States: default, hover, focus, active, disabled, loading
+Variants: action, secondary-action, quiet-action
+Slots: label, leading-icon, trailing-icon, loading-indicator
+Forbidden Usage: As navigation without contract; decorative-only; nested interactives; icon-only without aria-label.
+Implementation Status: Not Implemented
+Lifecycle Status: Approved
+Version: 1.0.0
+```
+
+### F4 — Input
+
+```text
+Component ID: component-f4-input
+Component Name: Input
+Category: input / text
+Purpose: Capture single-line user-provided text or structured input.
+Canonical Decision Source: NV-013, NV-014, NV-016, NV-017, NV-018
+Owner: Component Designer
+Contract: docs/design-system/components/contracts/F4_INPUT.md
+Token Dependencies: sys.color.surface.base, sys.color.border.*, sys.color.semantic.error, sys.color.text.*, sys.color.state.disabled, sys.font.body.*, sys.font.caption.*, sys.space.inset.sm, sys.radius.control, sys.motion.duration.feedback, sys.a11y.focus.*, sys.a11y.touch.target.minimum
+Accessibility Requirements: Programmatic label required; aria-describedby for helper/error; aria-invalid in error state; full keyboard support.
+Motion Requirements: Focus Transition
+States: default, hover, focus, disabled, error, warning, loading
+Variants: text, search-compatible
+Slots: label, input-field, leading-icon, trailing-icon, helper-text, error-message
+Forbidden Usage: Placeholder-only label; without accessible label; arbitrary borders; as textarea.
+Implementation Status: Not Implemented
+Lifecycle Status: Approved
+Version: 1.0.0
+```
+
+### F5 — Textarea
+
+```text
+Component ID: component-f5-textarea
+Component Name: Textarea
+Category: input / text
+Purpose: Capture multi-line user-provided text.
+Canonical Decision Source: NV-013, NV-014, NV-016, NV-017, NV-018
+Owner: Component Designer
+Contract: docs/design-system/components/contracts/F5_TEXTAREA.md
+Token Dependencies: All F4 Input tokens plus sys.font.body.line-height, sys.font.code.family, sys.space.inset.md
+Accessibility Requirements: aria-multiline true; same label/error rules as F4; character count as aria-live when applicable.
+Motion Requirements: Focus Transition
+States: default, hover, focus, disabled, error, warning
+Variants: standard, fixed, monospace
+Slots: label, textarea-field, helper-text, error-message, character-count
+Forbidden Usage: Placeholder-only label; as code editor without monospace variant; without label.
+Implementation Status: Not Implemented
+Lifecycle Status: Approved
+Version: 1.0.0
+```
+
+### F6 — Checkbox
+
+```text
+Component ID: component-f6-checkbox
+Component Name: Checkbox
+Category: input / selection
+Purpose: Allow selection of one or more independent boolean options.
+Canonical Decision Source: NV-013, NV-014, NV-016, NV-017
+Owner: Component Designer
+Contract: docs/design-system/components/contracts/F6_CHECKBOX.md
+Token Dependencies: sys.color.accent.primary, sys.color.surface.base, sys.color.border.*, sys.color.semantic.error, sys.color.text.*, sys.color.state.disabled, sys.font.body.*, sys.radius.subtle, sys.motion.duration.feedback, sys.a11y.focus.*, sys.a11y.disabled.*, sys.a11y.touch.target.minimum
+Accessibility Requirements: Native checkbox or role checkbox; aria-checked including mixed; label required; group label for grouped checkboxes; Space to toggle.
+Motion Requirements: Selection State Transition
+States: unchecked, checked, indeterminate, hover, focus, disabled-unchecked, disabled-checked, error
+Variants: standard, label-hidden
+Slots: control, label, helper-text, error-message
+Forbidden Usage: As radio group replacement; without label; indeterminate without programmatic management.
+Implementation Status: Not Implemented
+Lifecycle Status: Approved
+Version: 1.0.0
+```
+
+### F7 — Radio
+
+```text
+Component ID: component-f7-radio
+Component Name: Radio
+Category: input / selection
+Purpose: Allow selection of exactly one option from a mutually exclusive group.
+Canonical Decision Source: NV-013, NV-014, NV-016, NV-017
+Owner: Component Designer
+Contract: docs/design-system/components/contracts/F7_RADIO.md
+Token Dependencies: All F6 Checkbox tokens plus sys.radius.round
+Accessibility Requirements: Native radio or role radio; radiogroup wrapper required; Arrow key navigation within group; group label via fieldset/legend or aria-labelledby.
+Motion Requirements: Selection State Transition
+States: unselected, selected, hover, focus, disabled-unselected, disabled-selected, error
+Variants: standard, label-hidden
+Slots: control, label, helper-text, group-label, error-message
+Forbidden Usage: Single radio without group; replacing checkbox for independent booleans; without group label.
+Implementation Status: Not Implemented
+Lifecycle Status: Approved
+Version: 1.0.0
+```
+
+### F8 — Switch
+
+```text
+Component ID: component-f8-switch
+Component Name: Switch
+Category: input / toggle
+Purpose: Toggle a single boolean setting with immediate effect.
+Canonical Decision Source: NV-013, NV-014, NV-016, NV-017
+Owner: Component Designer
+Contract: docs/design-system/components/contracts/F8_SWITCH.md
+Token Dependencies: sys.color.accent.primary, sys.color.border.default, sys.color.surface.overlay, sys.color.text.*, sys.color.state.disabled, sys.radius.round, sys.motion.duration.feedback, sys.motion.ease.interface, sys.a11y.focus.*, sys.a11y.disabled.*, sys.a11y.touch.target.minimum
+Accessibility Requirements: role switch; aria-checked true/false; label required; Space to toggle; immediate effect communicated.
+Motion Requirements: Switch Thumb Slide
+States: off, on, hover, focus, disabled-off, disabled-on
+Variants: standard, label-hidden
+Slots: track, thumb, label, helper-text
+Forbidden Usage: As confirmation dialog replacement; without label; as radio group replacement; with high-intensity animation.
+Implementation Status: Not Implemented
+Lifecycle Status: Approved
+Version: 1.0.0
+```
+
+### F9 — Tooltip
+
+```text
+Component ID: component-f9-tooltip
+Component Name: Tooltip
+Category: overlay / contextual
+Purpose: Provide brief contextual information about an interface element on hover or focus.
+Canonical Decision Source: NV-013, NV-014, NV-015, NV-016, NV-017
+Owner: Component Designer
+Contract: docs/design-system/components/contracts/F9_TOOLTIP.md
+Token Dependencies: sys.color.surface.overlay, sys.color.text.inverse, sys.color.border.subtle, sys.font.caption.*, sys.font.body.family, sys.space.inset.xs, sys.radius.surface, sys.shadow.overlay, sys.z.dropdown, sys.motion.duration.feedback, sys.motion.ease.enter, sys.motion.ease.exit, sys.a11y.reading.width.standard
+Accessibility Requirements: role tooltip; trigger aria-describedby pointing to tooltip; trigger must have own accessible label; non-interactive content only; Escape to dismiss.
+Motion Requirements: Tooltip Reveal
+States: hidden, visible
+Variants: standard above, below, left, right
+Slots: trigger, tooltip-panel, tooltip-label
+Forbidden Usage: As primary information container; with interactive content; as dropdown replacement; with long paragraphs; without aria-describedby.
+Implementation Status: Not Implemented
+Lifecycle Status: Approved
+Version: 1.0.0
 ```

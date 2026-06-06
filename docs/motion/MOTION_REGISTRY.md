@@ -188,3 +188,99 @@ None.
 Initial bootstrap:
 Created as part of NV-023-TASK-001.
 ```
+
+---
+
+## M2 Foundation Component Motion Entries
+
+### Button Press Feedback
+
+```text
+Motion ID: motion-button-press-feedback
+Motion Name: Button Press Feedback
+Purpose: Communicate hover and pressed states on interactive buttons.
+Trigger: Button hover entry, hover exit, pointer down, pointer up.
+Target: Button surface and label.
+Duration Category: feedback
+Intensity: low
+Easing Category: standard
+Allowed Usage: Button hover and press transitions only.
+Forbidden Usage: Decorative button animation; scale/bounce effects; high-intensity transforms.
+Reduced-Motion Variant: Instant background color state change.
+Disabled-Motion Variant: Static state update.
+Accessibility Risk: Low when reduced-motion supported.
+Dependencies: sys.motion.duration.feedback, sys.motion.ease.interface
+Owner: Motion Designer
+Lifecycle Status: Approved
+Version: 1.0.0
+Review Status: Approved
+```
+
+### Selection State Transition
+
+```text
+Motion ID: motion-selection-state-transition
+Motion Name: Selection State Transition
+Purpose: Communicate checked/selected/on state changes for selection controls.
+Trigger: Checkbox checked/unchecked; Radio selected; Switch toggled.
+Target: Checkbox fill; Radio fill; Switch thumb position.
+Duration Category: feedback
+Intensity: low
+Easing Category: standard
+Allowed Usage: Checkbox, Radio, and Switch state changes only.
+Forbidden Usage: Elastic or bounce effects; scale transforms; attention-grabbing animation.
+Reduced-Motion Variant: Instant state visual update.
+Disabled-Motion Variant: Static state update.
+Accessibility Risk: Low when reduced-motion supported.
+Dependencies: sys.motion.duration.feedback, sys.motion.ease.interface
+Owner: Motion Designer
+Lifecycle Status: Approved
+Version: 1.0.0
+Review Status: Approved
+```
+
+### Switch Thumb Slide
+
+```text
+Motion ID: motion-switch-thumb-slide
+Motion Name: Switch Thumb Slide
+Purpose: Communicate on/off state by sliding the thumb element along the track.
+Trigger: Switch toggled.
+Target: Switch thumb (position transition along track).
+Duration Category: feedback
+Intensity: low
+Easing Category: standard
+Allowed Usage: Switch component only.
+Forbidden Usage: High-intensity slide; elastic bounce; overshoot effects.
+Reduced-Motion Variant: Instant thumb position change.
+Disabled-Motion Variant: Static on/off state.
+Accessibility Risk: Low when reduced-motion supported.
+Dependencies: sys.motion.duration.feedback, sys.motion.ease.interface
+Owner: Motion Designer
+Lifecycle Status: Approved
+Version: 1.0.0
+Review Status: Approved
+```
+
+### Tooltip Reveal
+
+```text
+Motion ID: motion-tooltip-reveal
+Motion Name: Tooltip Reveal
+Purpose: Communicate tooltip appearance and disappearance without drawing excessive attention.
+Trigger: Trigger hover enter (appear); trigger hover leave or focus blur or Escape (dismiss).
+Target: Tooltip panel (opacity or subtle transform).
+Duration Category: feedback
+Intensity: low
+Easing Category: enter on appear; exit on dismiss
+Allowed Usage: Tooltip appear and dismiss only.
+Forbidden Usage: Slide animation drawing attention away from trigger; scale bounce; delayed dismiss that obscures content.
+Reduced-Motion Variant: Instant appear and dismiss.
+Disabled-Motion Variant: Static show/hide.
+Accessibility Risk: Low when reduced-motion supported and focus behavior is correct.
+Dependencies: sys.motion.duration.feedback, sys.motion.ease.enter, sys.motion.ease.exit
+Owner: Motion Designer
+Lifecycle Status: Approved
+Version: 1.0.0
+Review Status: Approved
+```
