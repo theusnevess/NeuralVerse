@@ -13,7 +13,7 @@ Implementation Phase 1
 Status:
 
 ```text
-IN PROGRESS
+COMPLETE
 ```
 
 Purpose:
@@ -44,10 +44,18 @@ Validation package
 
 ## Milestone M1 — Token Infrastructure
 
+### NV-023-TASK-002 — M1 Token Infrastructure Documentation Registration
+
 Status:
 
 ```text
-BLOCKED UNTIL M0 PASS
+IN PROGRESS
+```
+
+Purpose:
+
+```text
+Register the complete token infrastructure documentation package (T1–T8).
 ```
 
 ---
