@@ -52,8 +52,79 @@
       <main class="nv-main-workspace">
         <h1>Main Workspace</h1>
       </main>
-      <aside class="nv-context-panel">
-        Context Panel
+      <aside class="nv-context-panel" aria-label="Context Information">
+        <div class="nv-context-header">
+          <h2 class="nv-context-title">Context</h2>
+          <span class="nv-badge" data-variant="info">Active</span>
+        </div>
+
+        <div class="nv-divider" aria-hidden="true"></div>
+
+        <section class="nv-context-section" aria-labelledby="nv-section-orientation-title">
+          <h3 id="nv-section-orientation-title" class="nv-context-section-title">Orientation</h3>
+          <div class="nv-context-meta-group">
+            <div class="nv-context-meta-item">
+              <span class="nv-context-meta-label">Active Region</span>
+              <span class="nv-context-meta-value">R3 Workspace</span>
+            </div>
+            <div class="nv-context-meta-item">
+              <span class="nv-context-meta-label">Primary Target</span>
+              <span class="nv-context-meta-value">Scientific Env</span>
+            </div>
+          </div>
+          <p class="nv-context-description">
+            Provides a focused view of active research tools, workflow graphs, and compute nodes for AI tasks.
+          </p>
+        </section>
+
+        <div class="nv-divider" aria-hidden="true"></div>
+
+        <section class="nv-context-section" aria-labelledby="nv-nav-context-title">
+          <h3 id="nv-nav-context-title" class="nv-context-section-title">Navigation Context</h3>
+          <ul class="nv-context-hierarchy">
+            <li class="nv-context-hierarchy-item">
+              <span class="nv-context-hierarchy-dot"></span>
+              <span class="nv-context-hierarchy-text">NeuralVerse Hub</span>
+            </li>
+            <li class="nv-context-hierarchy-item nv-context-hierarchy-item--active">
+              <span class="nv-context-hierarchy-dot nv-context-hierarchy-dot--active"></span>
+              <span class="nv-context-hierarchy-text">Main Workspace</span>
+            </li>
+            <li class="nv-context-hierarchy-item">
+              <span class="nv-context-hierarchy-dot"></span>
+              <span class="nv-context-hierarchy-text">Labs Sandbox</span>
+            </li>
+          </ul>
+        </section>
+
+        <div class="nv-divider" aria-hidden="true"></div>
+
+        <section class="nv-context-section" aria-labelledby="nv-cross-region-title">
+          <h3 id="nv-cross-region-title" class="nv-context-section-title">Cross-Region Status</h3>
+          <div class="nv-context-status-list">
+            <div class="nv-context-status-row">
+              <span class="nv-context-status-label">Global Header (R1)</span>
+              <span class="nv-badge" data-variant="neutral">Sticky</span>
+            </div>
+            <div class="nv-context-status-row">
+              <span class="nv-context-status-label">Navigation Rail (R2)</span>
+              <span class="nv-badge" data-variant="success">Connected</span>
+            </div>
+            <div class="nv-context-status-row">
+              <span class="nv-context-status-label">Main Workspace (R3)</span>
+              <span class="nv-badge" data-variant="info">Active</span>
+            </div>
+          </div>
+        </section>
+
+        <div class="nv-divider" aria-hidden="true"></div>
+
+        <section class="nv-context-section" aria-labelledby="nv-context-awareness-title">
+          <h3 id="nv-context-awareness-title" class="nv-context-section-title">Context Awareness</h3>
+          <p class="nv-context-description">
+            This secondary panel renders contextual info relative to your current workspace node to minimize cognitive load.
+          </p>
+        </section>
       </aside>
     </div>
   </div>
