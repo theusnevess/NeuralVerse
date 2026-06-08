@@ -78,5 +78,15 @@ Contains sys.motion.intensity.high or any undeclared intensity level
 ## Review Log
 ```
 Initial registration:
-Created as part of NV-023-TASK-002.
+  Created as part of NV-023-TASK-002.
+
+NV-023-TASK-007B (M6 Condition Resolution — C-003):
+  Registered governed exception: sys.a11y.* scalar tokens may hold raw
+  accessibility-constant values without ref.a11y.* intermediary.
+  Rationale: WCAG-defined constants are not visual style scales.
+  Decision: ref.a11y.* scale NOT created. Exception formally approved.
+  Scope: sys.a11y.focus.offset, sys.a11y.disabled.opacity,
+         sys.a11y.disabled.cursor, sys.a11y.touch.target.minimum,
+         sys.a11y.reading.width.standard, sys.a11y.reading.width.enhanced,
+         sys.a11y.contrast.standard, sys.a11y.contrast.high.
 ```

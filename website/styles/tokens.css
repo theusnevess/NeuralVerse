@@ -209,18 +209,31 @@
   /* Divider */
   --sys-color-divider-default: var(--sys-color-border-subtle);
 
-  /* Text */
+  /* Text
+   * C-001 resolution (NV-023-TASK-007B):
+   * text-primary    → ref.color.white (canonically defined in NV-010).
+   * text-secondary  → ref.color.graphite.800 (Option A: graphite scale, legible on dark surfaces).
+   * text-muted      → ref.color.graphite.800 (Option A: same step, lower visual weight via usage context).
+   * text-disabled   → ref.color.graphite.800 (Option A: graphite scale, AA-exempt for disabled per WCAG).
+   * text-inverse    → ref.color.graphite.950 (canonically defined in NV-010).
+   * Rationale: NV-010 graphite scale is the approved dark-theme text hierarchy.
+   * Deferred: Exact opacity/alpha variants require explicit NV-010 amendment. */
   --sys-color-text-primary:   var(--ref-color-white);
-  --sys-color-text-secondary: /* TODO: NV-010 approval for secondary text value */ var(--ref-color-white);
-  --sys-color-text-muted:     /* TODO: NV-010 approval for muted text value */ var(--ref-color-white);
-  --sys-color-text-disabled:  /* TODO: NV-010 approval for disabled text value */ var(--ref-color-white);
+  --sys-color-text-secondary: var(--ref-color-graphite-800);
+  --sys-color-text-muted:     var(--ref-color-graphite-800);
+  --sys-color-text-disabled:  var(--ref-color-graphite-800);
   --sys-color-text-inverse:   var(--ref-color-graphite-950);
 
   /* Accent */
   --sys-color-accent-primary: var(--ref-color-cyan-500);
   --sys-color-accent-hover:   var(--ref-color-cyan-400);
   --sys-color-accent-active:  var(--ref-color-cyan-300);
-  --sys-color-accent-subtle:  /* TODO: NV-010 approval for subtle accent tint value */ var(--ref-color-transparent);
+  /* C-001 accent-subtle: GOVERNED DEFERRED DECISION (NV-023-TASK-007B).
+   * A tinted cyan surface requires an alpha-channel reference value not yet
+   * in the approved ref.* palette. Preserved as ref.color.transparent until
+   * NV-010 formally defines ref.color.cyan.alpha-100 or equivalent.
+   * Deferred entry registered in TOKEN_IMPLEMENTATION_READINESS.md. */
+  --sys-color-accent-subtle:  var(--ref-color-transparent);
 
   /* Semantic indicators */
   --sys-color-semantic-success: var(--ref-color-green-500);
@@ -228,12 +241,25 @@
   --sys-color-semantic-error:   var(--ref-color-red-500);
   --sys-color-semantic-info:    var(--ref-color-blue-500);
 
-  /* State overlays */
-  --sys-color-state-hover:     /* TODO: NV-010 approval for hover overlay value */ var(--ref-color-transparent);
-  --sys-color-state-active:    /* TODO: NV-010 approval for active overlay value */ var(--ref-color-transparent);
+  /* State overlays
+   * C-001 state overlays: GOVERNED DEFERRED DECISION (NV-023-TASK-007B).
+   * hover/active/disabled overlay tints require alpha-channel ref values
+   * (e.g. ref.color.white.alpha-08) not yet defined in the approved palette.
+   * Preserved as ref.color.transparent until NV-010 defines alpha scale.
+   * Deferred entries registered in TOKEN_IMPLEMENTATION_READINESS.md. */
+  --sys-color-state-hover:     var(--ref-color-transparent);
+  --sys-color-state-active:    var(--ref-color-transparent);
   --sys-color-state-focus:     var(--sys-color-accent-primary);
   --sys-color-state-selected:  var(--sys-color-accent-subtle);
-  --sys-color-state-disabled:  /* TODO: NV-010 approval for disabled overlay value */ var(--ref-color-transparent);
+  --sys-color-state-disabled:  var(--ref-color-transparent);
+
+  /* Overlay backdrop
+   * C-002 resolution (NV-023-TASK-007B):
+   * sys.color.overlay.backdrop is a new semantic token inserted to close
+   * the ctx→ref hierarchy gap identified in finding F-003.
+   * Consumes ref.color.black — opacity applied by consuming rule via rgba.
+   * Registered in TOKEN_REGISTRY.md and TOKEN_DEPENDENCY_MAP.md. */
+  --sys-color-overlay-backdrop: var(--ref-color-black);
 }
 
 /* =========================================================
@@ -501,7 +527,8 @@
    ========================================================= */
 
 :root {
-  --ctx-overlay-backdrop:  var(--ref-color-black);  /* opacity via rgba in consuming rule */
+  /* C-002 resolved: now consumes sys.color.overlay.backdrop (not ref directly). */
+  --ctx-overlay-backdrop:  var(--sys-color-overlay-backdrop);  /* opacity via rgba in consuming rule */
   --ctx-overlay-surface:   var(--sys-color-surface-overlay);
   --ctx-overlay-radius:    var(--sys-radius-overlay);
   --ctx-overlay-elevation: var(--sys-elevation-4);

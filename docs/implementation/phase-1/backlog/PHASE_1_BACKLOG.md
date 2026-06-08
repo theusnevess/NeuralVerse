@@ -65,7 +65,7 @@ Register the complete token infrastructure documentation package (T1–T8).
 Status:
 
 ```text
-BLOCKED UNTIL M6 PASS
+BLOCKED UNTIL NV-023-TASK-007B PASS
 ```
 
 ---
@@ -105,10 +105,33 @@ COMPLETE
 Status:
 
 ```text
-IN PROGRESS
+APPROVED WITH CONDITIONS
 ```
 
 ### NV-023-TASK-007 — M6 Token CSS Implementation
+
+Status:
+
+```text
+APPROVED WITH CONDITIONS
+```
+
+Purpose:
+
+```text
+Implement approved design tokens as CSS custom properties in website/styles/tokens.css.
+```
+
+Conditions from NV-023-TASK-007A:
+
+```text
+C-001: Resolve 7 color TODO tokens — ADDRESSED IN NV-023-TASK-007B
+C-002: sys.color.overlay.backdrop — ADDRESSED IN NV-023-TASK-007B
+C-003: sys.a11y.* governed exception — ADDRESSED IN NV-023-TASK-007B
+C-004: git push — ADDRESSED IN NV-023-TASK-007B
+```
+
+### NV-023-TASK-007B — M6 Token CSS Condition Resolution
 
 Status:
 
@@ -119,34 +142,38 @@ IN PROGRESS
 Purpose:
 
 ```text
-Implement approved design tokens as CSS custom properties in website/styles/tokens.css.
-Documentation-only phases complete. First authorized CSS implementation step.
+Resolve all four HUB conditions from NV-023-TASK-007A before M7 can be authorized.
 ```
 
-Authorized file:
+Authorized files:
 
 ```text
 website/styles/tokens.css
-```
-
-Deliverables:
-
-```text
-website/styles/tokens.css (implemented)
-docs/implementation/phase-1/packages/NV-023-TASK-007.md
-docs/implementation/phase-1/reviews/NV-023-TASK-007_REVIEW.md
-docs/implementation/phase-1/validations/NV-023-TASK-007_VALIDATION.md
-PHASE_1_BACKLOG.md (this file)
-```
-
-Blocked by:
-
-```text
-Nothing — authorized by HUB for M6.
+docs/design-system/TOKEN_REGISTRY.md
+docs/design-system/tokens/TOKEN_DEPENDENCY_MAP.md
+docs/design-system/tokens/TOKEN_GOVERNANCE_VALIDATION.md
+docs/design-system/tokens/TOKEN_IMPLEMENTATION_READINESS.md
+docs/implementation/phase-1/ (packages, reviews, validations, backlog)
 ```
 
 Does NOT unblock:
 
 ```text
-Component implementation — requires HUB review of M6 before M2 can proceed.
+M7 Base Layer CSS — requires HUB review of NV-023-TASK-007B before authorized.
+```
+
+---
+
+## Milestone M7 — Base Layer CSS
+
+Status:
+
+```text
+BLOCKED UNTIL NV-023-TASK-007B PASS
+```
+
+Purpose (when authorized):
+
+```text
+Implement website/styles/base.css using approved tokens from tokens.css.
 ```

@@ -5,6 +5,8 @@
 ```
 NV-023-TASK-001: Bootstrap entries — APPROVED
 NV-023-TASK-002: M1 full catalog registration — IN PROGRESS
+NV-023-TASK-007: M6 Token CSS Implementation — APPROVED WITH CONDITIONS
+NV-023-TASK-007B: M6 Condition Resolution — IN PROGRESS
 ```
 
 ---
@@ -147,7 +149,7 @@ docs/design-system/tokens/execution/T5_ACCESSIBILITY_TOKEN_CATALOG.md — sys.a1
 
 | Domain | ref.* | sys.* | ctx.* |
 | :--- | :--- | :--- | :--- |
-| color | 14 | 27 | 18 |
+| color | 14 | 28 | 18 |
 | font | 23 | 15 | 8 |
 | space | 11 | 15 | 6 |
 | radius | 5 | 4 | 3 |
@@ -248,8 +250,28 @@ Consumed By: sys.motion.duration.transition
 Status: approved
 Source: NV-016, NV-014
 Accessibility Notes: All transitions using this token must include a reduced-motion fallback.
-Implementation Status: not-implemented
+Implementation Status: implemented
 Owner: Motion Designer
+Version: 1.0.0
+```
+
+### sys.color.overlay.backdrop
+
+```text
+Token Name: sys.color.overlay.backdrop
+Layer: sys
+Domain: color
+Category: semantic color
+Purpose: Defines the semantic backdrop color role for overlay and modal surfaces.
+         Inserted in NV-023-TASK-007B to resolve ctx→ref hierarchy gap (finding F-003).
+Consumes: ref.color.black
+Consumed By: ctx.overlay.backdrop
+Status: approved
+Source: NV-010, NV-014, NV-023-TASK-007A (finding F-003)
+Accessibility Notes: Opacity applied by the consuming rule (rgba). Underlying
+                     content must retain sufficient contrast when overlay is present.
+Implementation Status: implemented
+Owner: Component Designer
 Version: 1.0.0
 ```
 
@@ -273,7 +295,7 @@ See: `docs/accessibility/ACCESSIBILITY_MATRIX.md`
 
 ```
 Registry Owner: Frontend Architect
-Last Updated: NV-023-TASK-002
+Last Updated: NV-023-TASK-007B
 Governance Source: NV-020 Design System Governance Package
 Change Control: docs/governance/CHANGE_CONTROL.md
 ```
@@ -296,4 +318,14 @@ NV-023-TASK-002 (M1 Token Infrastructure):
   Expanded with canonical structure, token layer model, naming convention,
   full catalog reference (T2-T5), dependency map, accessibility validation,
   governance metadata. Bootstrap entries preserved and aligned to new structure.
+
+NV-023-TASK-007B (M6 Condition Resolution):
+  Added sys.color.overlay.backdrop to resolve finding F-003 (ctx→ref gap).
+  Updated color sys.* catalog count from 27 to 28.
+  Updated implementation status for ref.motion.duration.normal to implemented.
+  Registered governed deferred decisions for:
+    sys.color.accent.subtle (alpha-channel ref pending NV-010 amendment)
+    sys.color.state.hover   (alpha-channel ref pending NV-010 amendment)
+    sys.color.state.active  (alpha-channel ref pending NV-010 amendment)
+    sys.color.state.disabled (alpha-channel ref pending NV-010 amendment)
 ```
