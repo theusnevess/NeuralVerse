@@ -35,7 +35,45 @@ COMPLETE
 Status:
 
 ```text
-BLOCKED UNTIL M7 PASS
+IN PROGRESS — Limited: F1–F3
+```
+
+### NV-023-TASK-009A — F1–F3 Foundation Components
+
+Status:
+
+```text
+IN PROGRESS
+```
+
+Purpose:
+
+```text
+Implement F1 Divider, F2 Badge, F3 Button in website/styles/components.css.
+First authorized component implementation.
+```
+
+Authorized file:
+
+```text
+website/styles/components.css
+```
+
+Deliverables:
+
+```text
+website/styles/components.css (F1–F3 implemented)
+docs/implementation/phase-1/packages/NV-023-TASK-009A.md
+docs/implementation/phase-1/reviews/NV-023-TASK-009A_REVIEW.md
+docs/implementation/phase-1/validations/NV-023-TASK-009A_VALIDATION.md
+PHASE_1_BACKLOG.md (this file)
+```
+
+Does NOT authorize:
+
+```text
+F4–F9 — require HUB review of NV-023-TASK-009A before proceeding.
+M3 Region Components — blocked until M2 COMPLETE.
 ```
 
 ---
@@ -45,7 +83,7 @@ BLOCKED UNTIL M7 PASS
 Status:
 
 ```text
-BLOCKED UNTIL M2 PASS
+BLOCKED UNTIL M2 COMPLETE
 ```
 
 ---
@@ -78,21 +116,8 @@ Status:
 COMPLETE
 ```
 
-### NV-023-TASK-007 — M6 Token CSS Implementation
-
-Status:
-
-```text
-COMPLETE
-```
-
-### NV-023-TASK-007B — M6 Token CSS Condition Resolution
-
-Status:
-
-```text
-COMPLETE
-```
+### NV-023-TASK-007 — COMPLETE
+### NV-023-TASK-007B — COMPLETE
 
 ---
 
@@ -101,43 +126,7 @@ COMPLETE
 Status:
 
 ```text
-IN PROGRESS
+COMPLETE
 ```
 
-### NV-023-TASK-008 — M7 Base Layer CSS Implementation
-
-Status:
-
-```text
-IN PROGRESS
-```
-
-Purpose:
-
-```text
-Implement the canonical base CSS normalization layer in website/styles/base.css.
-Establishes html, body, typography, accessibility, media, form, and motion baselines.
-All values sourced from approved tokens.css.
-```
-
-Authorized file:
-
-```text
-website/styles/base.css
-```
-
-Deliverables:
-
-```text
-website/styles/base.css (implemented)
-docs/implementation/phase-1/packages/NV-023-TASK-008.md
-docs/implementation/phase-1/reviews/NV-023-TASK-008_REVIEW.md
-docs/implementation/phase-1/validations/NV-023-TASK-008_VALIDATION.md
-PHASE_1_BACKLOG.md (this file)
-```
-
-Does NOT unblock:
-
-```text
-Component implementation — requires HUB review of M7 before M2 can proceed.
-```
+### NV-023-TASK-008 — COMPLETE

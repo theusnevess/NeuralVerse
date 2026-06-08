@@ -1,0 +1,266 @@
+/**
+ * NeuralVerse Foundation Components CSS
+ *
+ * Task:      NV-023-TASK-009A
+ * Milestone: M2 Foundation Components — F1–F3
+ * Source:    COMPONENT_REGISTRY.md, ACCESSIBILITY_MATRIX.md, MOTION_REGISTRY.md
+ *
+ * Implemented:
+ *   F1 — Divider     (component-f1-divider)
+ *   F2 — Badge       (component-f2-badge)
+ *   F3 — Button      (component-f3-button)
+ *
+ * NOT implemented:
+ *   F4–F9 — Deferred to NV-023-TASK-009B+
+ *
+ * Token Rule:
+ * Every var(--*) in this file must exist in BOTH:
+ *   docs/design-system/TOKEN_REGISTRY.md
+ *   website/styles/tokens.css
+ *
+ * Forbidden:
+ *   Raw colors, raw typography, raw spacing, raw radius, raw border,
+ *   raw shadow, raw motion values, class selectors not on approved list,
+ *   @keyframes, decorative animation.
+ */
+
+/* =========================================================
+   F1 — Divider
+   Registry: component-f1-divider
+   Source: COMPONENT_REGISTRY.md (M2 F1), ACCESSIBILITY_MATRIX.md (a11y-f1-divider)
+   Token Dependencies: sys.color.divider.default, sys.color.border.subtle, sys.space.stack.sm
+   Motion: none
+   ========================================================= */
+
+.nv-divider {
+  /* Visual structure */
+  display: block;
+  border: none;
+  background-color: var(--sys-color-divider-default);
+
+  /* Horizontal orientation (default) */
+  block-size:  var(--sys-border-subtle);   /* 1px */
+  inline-size: 100%;
+
+  /* Spacing context — component does not own layout; margin is a hint */
+  margin-block: var(--sys-space-stack-sm);
+}
+
+/* Vertical variant — registered in COMPONENT_REGISTRY.md States: vertical */
+.nv-divider[aria-orientation="vertical"] {
+  display:      inline-block;
+  block-size:   1em;           /* Inherits line-height context — normalized */
+  inline-size:  var(--sys-border-subtle);
+  margin-block:  0;
+  margin-inline: var(--sys-space-inline-xs);
+  vertical-align: middle;
+}
+
+/* =========================================================
+   F2 — Badge
+   Registry: component-f2-badge
+   Source: COMPONENT_REGISTRY.md (M2 F2), ACCESSIBILITY_MATRIX.md (a11y-f2-badge)
+   Token Dependencies:
+     sys.color.semantic.*, sys.color.accent.subtle, sys.color.text.inverse,
+     sys.font.caption.*, sys.radius.badge, sys.space.inline.xs
+   Motion: none
+   Note: sys.color.accent.subtle resolves to transparent (governed deferred, NV-023-TASK-007B).
+         The neutral variant uses sys.color.surface.overlay as surface fallback.
+   ========================================================= */
+
+.nv-badge {
+  /* Layout — inline pill */
+  display:         inline-flex;
+  align-items:     center;
+  gap:             var(--sys-space-inline-xs);
+
+  /* Spacing */
+  padding-block:  var(--sys-space-inset-xs);
+  padding-inline: var(--sys-space-inline-xs);
+
+  /* Typography */
+  font-family:   var(--sys-font-body-family);
+  font-size:     var(--sys-font-caption-size);
+  font-weight:   var(--sys-font-caption-weight);
+  line-height:   var(--sys-font-caption-line-height);
+  white-space:   nowrap;
+
+  /* Shape */
+  border-radius: var(--sys-radius-badge);
+
+  /* Default (neutral) — surface overlay provides subtle surface */
+  background-color: var(--sys-color-surface-overlay);
+  color:            var(--sys-color-text-primary);
+
+  /* Non-interactive */
+  user-select: none;
+  pointer-events: none;
+}
+
+/* Neutral variant — registered: Variants: neutral */
+.nv-badge[data-variant="neutral"] {
+  background-color: var(--sys-color-surface-overlay);
+  color:            var(--sys-color-text-primary);
+}
+
+/* Info variant — registered: Variants: info */
+.nv-badge[data-variant="info"] {
+  background-color: var(--sys-color-semantic-info);
+  color:            var(--sys-color-text-inverse);
+}
+
+/* Success variant — registered: Variants: success */
+.nv-badge[data-variant="success"] {
+  background-color: var(--sys-color-semantic-success);
+  color:            var(--sys-color-text-inverse);
+}
+
+/* Warning variant — registered: Variants: warning */
+.nv-badge[data-variant="warning"] {
+  background-color: var(--sys-color-semantic-warning);
+  color:            var(--sys-color-text-inverse);
+}
+
+/* Error variant — registered: Variants: error */
+.nv-badge[data-variant="error"] {
+  background-color: var(--sys-color-semantic-error);
+  color:            var(--sys-color-text-inverse);
+}
+
+/* =========================================================
+   F3 — Button
+   Registry: component-f3-button
+   Source: COMPONENT_REGISTRY.md (M2 F3), ACCESSIBILITY_MATRIX.md (a11y-f3-button),
+           MOTION_REGISTRY.md (motion-button-press-feedback, motion-focus-transition)
+   Token Dependencies:
+     sys.color.accent.*, sys.color.surface.raised, sys.color.state.*,
+     sys.color.text.*, sys.font.body.*, sys.space.inset.*,
+     sys.radius.control, sys.border.interactive,
+     sys.motion.duration.feedback, sys.motion.ease.interface,
+     sys.a11y.focus.*, sys.a11y.disabled.*, sys.a11y.touch.target.minimum
+   Motion: Button Press Feedback (low intensity), Focus Transition (reduced intensity)
+   ========================================================= */
+
+.nv-button {
+  /* Layout */
+  display:         inline-flex;
+  align-items:     center;
+  justify-content: center;
+  gap:             var(--sys-space-inline-sm);
+
+  /* Touch target — WCAG 2.5.5 via sys.a11y.touch.target.minimum */
+  min-block-size:  var(--sys-a11y-touch-target-minimum);
+  padding-block:   var(--sys-space-inset-sm);
+  padding-inline:  var(--sys-space-inset-md);
+
+  /* Typography */
+  font-family:     var(--sys-font-body-family);
+  font-size:       var(--sys-font-body-size);
+  font-weight:     var(--sys-font-body-weight);
+  line-height:     var(--sys-font-body-line-height);
+  white-space:     nowrap;
+  text-decoration: none;
+
+  /* Shape */
+  border-radius: var(--sys-radius-control);
+  border-style:  solid;
+  border-width:  var(--sys-border-interactive);
+
+  /* Default (primary / action variant) */
+  background-color: var(--sys-color-accent-primary);
+  border-color:     var(--sys-color-accent-primary);
+  color:            var(--sys-color-text-inverse);
+
+  /* Interaction */
+  cursor: pointer;
+
+  /* Motion — Button Press Feedback (low intensity, feedback duration) */
+  transition:
+    background-color var(--sys-motion-duration-feedback) var(--sys-motion-ease-interface),
+    border-color     var(--sys-motion-duration-feedback) var(--sys-motion-ease-interface),
+    color            var(--sys-motion-duration-feedback) var(--sys-motion-ease-interface);
+}
+
+/* Primary variant (action) — registered: Variants: action */
+.nv-button[data-variant="primary"] {
+  background-color: var(--sys-color-accent-primary);
+  border-color:     var(--sys-color-accent-primary);
+  color:            var(--sys-color-text-inverse);
+}
+
+/* Secondary variant (secondary-action) — registered: Variants: secondary-action */
+.nv-button[data-variant="secondary"] {
+  background-color: var(--sys-color-surface-raised);
+  border-color:     var(--sys-color-border-default);
+  color:            var(--sys-color-text-primary);
+}
+
+/* Ghost variant (quiet-action) — registered: Variants: quiet-action */
+.nv-button[data-variant="ghost"] {
+  background-color: transparent;
+  border-color:     transparent;
+  color:            var(--sys-color-accent-primary);
+}
+
+/* Hover states — registered: States: hover */
+.nv-button:hover {
+  background-color: var(--sys-color-accent-hover);
+  border-color:     var(--sys-color-accent-hover);
+  color:            var(--sys-color-text-inverse);
+}
+
+.nv-button[data-variant="secondary"]:hover {
+  background-color: var(--sys-color-surface-overlay);
+  border-color:     var(--sys-color-border-strong);
+  color:            var(--sys-color-text-primary);
+}
+
+.nv-button[data-variant="ghost"]:hover {
+  background-color: var(--sys-color-surface-raised);
+  border-color:     transparent;
+  color:            var(--sys-color-accent-hover);
+}
+
+/* Active state — registered: States: active */
+.nv-button:active {
+  background-color: var(--sys-color-accent-active);
+  border-color:     var(--sys-color-accent-active);
+  color:            var(--sys-color-text-inverse);
+}
+
+.nv-button[data-variant="secondary"]:active {
+  background-color: var(--sys-color-surface-raised);
+  border-color:     var(--sys-color-border-strong);
+  color:            var(--sys-color-text-primary);
+}
+
+.nv-button[data-variant="ghost"]:active {
+  background-color: var(--sys-color-surface-raised);
+  border-color:     transparent;
+  color:            var(--sys-color-accent-active);
+}
+
+/* Focus-visible — registered: States: focus
+   Source: sys.a11y.focus.* — ACCESSIBILITY_MATRIX.md (a11y-f3-button)
+   Motion: Focus Transition (reduced intensity) */
+.nv-button:focus-visible {
+  outline:        var(--sys-a11y-focus-ring);
+  outline-offset: var(--sys-a11y-focus-offset);
+}
+
+/* Disabled state — registered: States: disabled
+   Source: sys.a11y.disabled.* — ACCESSIBILITY_MATRIX.md (a11y-f3-button)
+   Note: CSS disables pointer — aria-disabled handled separately below */
+.nv-button:disabled {
+  opacity:         var(--sys-a11y-disabled-opacity);
+  cursor:          var(--sys-a11y-disabled-cursor);
+  pointer-events:  none;
+}
+
+/* aria-disabled — registered: Accessibility: aria-disabled for disabled
+   Keeps button in tab order for screen readers while appearing disabled */
+.nv-button[aria-disabled="true"] {
+  opacity:        var(--sys-a11y-disabled-opacity);
+  cursor:         var(--sys-a11y-disabled-cursor);
+  pointer-events: none;
+}
