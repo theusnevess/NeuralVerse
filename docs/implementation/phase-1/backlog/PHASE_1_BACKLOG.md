@@ -77,7 +77,7 @@ COMPLETE
 Status:
 
 ```text
-IMPLEMENTATION IN PROGRESS
+COMPLETE
 ```
 
 ### NV-023-TASK-011A — M3 Region Registry Completion
@@ -96,23 +96,6 @@ Status:
 COMPLETE
 ```
 
-Purpose:
-
-```text
-Implement structural layout shell (R1, R2, R3, R4 regions) inside layout.css and index.html.
-```
-
-Deliverables:
-
-```text
-website/styles/layout.css (implemented)
-website/index.html (implemented landmark structure)
-docs/implementation/phase-1/packages/NV-023-TASK-012A.md
-docs/implementation/phase-1/reviews/NV-023-TASK-012A_REVIEW.md
-docs/implementation/phase-1/validations/NV-023-TASK-012A_VALIDATION.md
-PHASE_1_BACKLOG.md (this file)
-```
-
 ---
 
 ## Milestone M4 — Shell Integration Validation
@@ -120,7 +103,30 @@ PHASE_1_BACKLOG.md (this file)
 Status:
 
 ```text
-BLOCKED UNTIL M3 PASS
+COMPLETE (composition validation complete)
+```
+
+### NV-023-TASK-014A — M4 Shell Integration — Phase 1
+
+Status:
+
+```text
+COMPLETE
+```
+
+Purpose:
+
+```text
+Validate and consolidate the composition of M3 regions within the nv-shell structure.
+```
+
+Deliverables:
+
+```text
+docs/implementation/phase-1/packages/NV-023-TASK-014A.md
+docs/implementation/phase-1/reviews/NV-023-TASK-014A_REVIEW.md
+docs/implementation/phase-1/validations/NV-023-TASK-014A_VALIDATION.md
+PHASE_1_BACKLOG.md (this file)
 ```
 
 ---
