@@ -1,0 +1,258 @@
+/**
+ * NeuralVerse Base Layer CSS
+ *
+ * Task:      NV-023-TASK-008
+ * Milestone: M7 Base Layer CSS
+ * Source:    tokens.css (NV-023-TASK-007 / NV-023-TASK-007B)
+ *
+ * Scope:
+ * Platform baseline normalization only.
+ * All values must originate from approved tokens in tokens.css.
+ *
+ * Allowed selectors:
+ * html, body, *, *::before, *::after
+ * Typographic elements: p, small, strong, em, code, pre, hr
+ * Media: img, svg, video, canvas
+ * Form resets: button, input, textarea, select
+ * Links: a
+ * Lists: ul, ol, li
+ * Tables: table
+ * Accessibility: :focus-visible, ::selection
+ * Motion: @media (prefers-reduced-motion: reduce)
+ *
+ * Forbidden:
+ * Classes (.any-class)
+ * Component selectors
+ * Region selectors
+ * Layout selectors
+ * Utility selectors
+ * Hardcoded colors, spacing, or typography values
+ */
+
+/* =========================================================
+   1. Universal Box Model
+   ========================================================= */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* =========================================================
+   2. HTML Baseline
+   Source: NV-011 Typography System, NV-016 Motion System
+   ========================================================= */
+
+html {
+  /* Typography baseline */
+  font-size: var(--sys-font-body-size);          /* 1rem / 16px */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+
+  /* Color scheme — dark-first per NV-010 */
+  color-scheme: dark;
+
+  /* Scroll behavior — gated by motion preference */
+  scroll-behavior: smooth;
+
+  /* Tab size normalization */
+  tab-size: 4;
+
+  /* Hanging punctuation for reading surfaces */
+  hanging-punctuation: first last;
+}
+
+/* =========================================================
+   3. Body Baseline
+   Source: NV-010 Color System, NV-011 Typography System
+   ========================================================= */
+
+body {
+  /* Surface & text */
+  background-color: var(--sys-color-background-base);
+  color:            var(--sys-color-text-primary);
+
+  /* Typography */
+  font-family:   var(--sys-font-body-family);
+  font-size:     var(--sys-font-body-size);
+  font-weight:   var(--sys-font-body-weight);
+  line-height:   var(--sys-font-body-line-height);
+
+  /* Font rendering */
+  -webkit-font-smoothing:  antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-synthesis: none;
+
+  /* Layout containment */
+  min-block-size: 100dvh;
+
+  /* Overflow governance — no horizontal scroll at root */
+  overflow-x: hidden;
+
+  /* Text rendering optimization */
+  text-rendering: optimizeLegibility;
+}
+
+/* =========================================================
+   4. Typography Baseline
+   Source: NV-011 Typography System, ctx.reading.*
+   ========================================================= */
+
+p {
+  max-inline-size: var(--sys-a11y-reading-width-standard);
+}
+
+small {
+  font-size: var(--sys-font-caption-size);
+  font-weight: var(--sys-font-caption-weight);
+  line-height: var(--sys-font-caption-line-height);
+}
+
+strong {
+  font-weight: var(--ref-font-weight-semibold);
+}
+
+em {
+  font-style: italic;
+}
+
+code {
+  font-family:  var(--sys-font-code-family);
+  font-size:    var(--sys-font-code-size);
+  font-weight:  var(--sys-font-code-weight);
+  line-height:  var(--sys-font-code-line-height);
+}
+
+pre {
+  font-family:  var(--sys-font-code-family);
+  font-size:    var(--sys-font-code-size);
+  line-height:  var(--sys-font-code-line-height);
+  overflow-x:   auto;
+  white-space:  pre;
+}
+
+hr {
+  border: none;
+  border-block-start: var(--sys-border-subtle) solid var(--sys-color-border-subtle);
+}
+
+/* =========================================================
+   5. Accessibility Baseline
+   Source: NV-017 Accessibility System, sys.a11y.focus.*
+   ========================================================= */
+
+:focus-visible {
+  outline:        var(--sys-a11y-focus-ring);
+  outline-offset: var(--sys-a11y-focus-offset);
+}
+
+/* Remove focus ring for pointer/touch users who don't need it */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+::selection {
+  background-color: var(--sys-color-accent-primary);
+  color:            var(--sys-color-background-base);
+}
+
+/* =========================================================
+   6. Media Baseline
+   Source: NV-012 Layout Architecture
+   ========================================================= */
+
+img,
+svg,
+video,
+canvas {
+  display:   block;
+  max-inline-size: 100%;
+  block-size: auto;
+}
+
+svg {
+  fill: currentColor;
+}
+
+/* =========================================================
+   7. Form Reset Baseline
+   Source: NV-011 Typography System
+   Purpose: Inherit host typography — NO component styling
+   ========================================================= */
+
+button,
+input,
+textarea,
+select {
+  font-family:  inherit;
+  font-size:    inherit;
+  font-weight:  inherit;
+  line-height:  inherit;
+  color:        inherit;
+  background:   transparent;
+  border:       none;
+  appearance:   none;
+  -webkit-appearance: none;
+}
+
+button {
+  cursor: pointer;
+}
+
+textarea {
+  resize: vertical;
+}
+
+/* =========================================================
+   8. Link Baseline
+   Source: NV-010 Color System, sys.color.accent.*
+   ========================================================= */
+
+a {
+  color:           var(--sys-color-accent-primary);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+/* =========================================================
+   9. List Baseline
+   ========================================================= */
+
+ul,
+ol {
+  list-style: none;
+}
+
+/* =========================================================
+   10. Table Baseline
+   ========================================================= */
+
+table {
+  border-collapse: collapse;
+  border-spacing:  0;
+  inline-size:     100%;
+}
+
+/* =========================================================
+   11. Motion Baseline
+   Source: NV-016 Motion System, NV-017 Accessibility System
+   sys.motion.intensity.* / sys.a11y.motion.*
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration:        0.01ms !important;
+    animation-iteration-count: 1      !important;
+    transition-duration:       0.01ms !important;
+    scroll-behavior:           auto   !important;
+  }
+}
