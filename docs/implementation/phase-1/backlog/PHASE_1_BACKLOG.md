@@ -35,7 +35,7 @@ COMPLETE
 Status:
 
 ```text
-COMPLETE (F1-F8 implemented; F9 declared blocked by missing tokens)
+COMPLETE (F1–F8 complete. F9 intentionally deferred by architectural decision NV-023-TASK-009E)
 ```
 
 ### NV-023-TASK-009A — F1–F3 Foundation Components
@@ -62,19 +62,26 @@ Status:
 COMPLETE
 ```
 
+### NV-023-TASK-009F — M2 Closure Package
+
+Status:
+
+```text
+COMPLETE
+```
+
 Purpose:
 
 ```text
-Implement F8 Switch in website/styles/components.css using existing governed tokens.
+Officially close Milestone M2 with F1–F8 implemented and F9 deferred.
 ```
 
 Deliverables:
 
 ```text
-website/styles/components.css (F1–F8 implemented)
-docs/implementation/phase-1/packages/NV-023-TASK-009D.md
-docs/implementation/phase-1/reviews/NV-023-TASK-009D_REVIEW.md
-docs/implementation/phase-1/validations/NV-023-TASK-009D_VALIDATION.md
+docs/implementation/phase-1/packages/NV-023-TASK-009F.md
+docs/implementation/phase-1/reviews/NV-023-TASK-009F_REVIEW.md
+docs/implementation/phase-1/validations/NV-023-TASK-009F_VALIDATION.md
 PHASE_1_BACKLOG.md (this file)
 ```
 
