@@ -1,21 +1,26 @@
 /**
  * NeuralVerse Foundation Components CSS
  *
- * Task:      NV-023-TASK-009A
- * Milestone: M2 Foundation Components — F1–F3
+ * Task:      NV-023-TASK-009B-STRICT
+ * Milestone: M2 Foundation Components — F1–F7
  * Source:    COMPONENT_REGISTRY.md, ACCESSIBILITY_MATRIX.md, MOTION_REGISTRY.md
  *
  * Implemented:
  *   F1 — Divider     (component-f1-divider)
  *   F2 — Badge       (component-f2-badge)
  *   F3 — Button      (component-f3-button)
+ *   F4 — Input       (component-f4-input)
+ *   F5 — Textarea    (component-f5-textarea)
+ *   F6 — Checkbox    (component-f6-checkbox)
+ *   F7 — Radio       (component-f7-radio)
  *
- * NOT implemented:
- *   F4–F9 — Deferred to NV-023-TASK-009B+
+ * Blocked / NOT implemented:
+ *   F8 — Switch      (Blocked by missing switch-specific tokens)
+ *   F9 — Tooltip     (Blocked by missing tooltip-specific tokens)
  *
  * Token Rule:
  * Every var(--*) in this file must exist in BOTH:
- *   docs/design-system/TOKEN_REGISTRY.md
+ *   docs/design-system/TOKEN_REGISTRY.md (and its execution catalogs)
  *   website/styles/tokens.css
  *
  * Forbidden:
@@ -263,4 +268,283 @@
   opacity:        var(--sys-a11y-disabled-opacity);
   cursor:         var(--sys-a11y-disabled-cursor);
   pointer-events: none;
+}
+
+/* =========================================================
+   F4 — Input
+   Registry: component-f4-input
+   Source: COMPONENT_REGISTRY.md (M2 F4), ACCESSIBILITY_MATRIX.md (a11y-f4-input)
+   Token Dependencies:
+     sys.color.surface.base, sys.color.text.primary, sys.color.border.default,
+     sys.color.border.strong, sys.radius.control, sys.font.body.*,
+     sys.space.inset.sm, sys.a11y.touch.target.minimum, sys.a11y.focus.*,
+     sys.a11y.disabled.*, sys.color.state.disabled, sys.color.text.disabled,
+     sys.color.semantic.error
+   ========================================================= */
+
+.nv-input {
+  /* Layout */
+  display: block;
+  inline-size: 100%;
+  min-block-size: var(--sys-a11y-touch-target-minimum);
+  padding-block: var(--sys-space-inset-sm);
+  padding-inline: var(--sys-space-inset-sm);
+
+  /* Typography */
+  font-family: var(--sys-font-body-family);
+  font-size: var(--sys-font-body-size);
+  font-weight: var(--sys-font-body-weight);
+  line-height: var(--sys-font-body-line-height);
+  color: var(--sys-color-text-primary);
+
+  /* Visual */
+  background-color: var(--sys-color-surface-base);
+  border: var(--sys-border-default) solid var(--sys-color-border-default);
+  border-radius: var(--sys-radius-control);
+  outline: none;
+
+  /* Transition for interaction focus */
+  transition: border-color var(--sys-motion-duration-feedback) var(--sys-motion-ease-interface);
+}
+
+/* Hover state */
+.nv-input:hover {
+  border-color: var(--sys-color-border-strong);
+}
+
+/* Focus state */
+.nv-input:focus-visible {
+  outline: var(--sys-a11y-focus-ring);
+  outline-offset: var(--sys-a11y-focus-offset);
+}
+
+/* Disabled state */
+.nv-input:disabled {
+  opacity: var(--sys-a11y-disabled-opacity);
+  cursor: var(--sys-a11y-disabled-cursor);
+  background-color: var(--sys-color-state-disabled);
+  color: var(--sys-color-text-disabled);
+}
+
+/* Error/Invalid state */
+.nv-input[aria-invalid="true"],
+.nv-input:invalid {
+  border-color: var(--sys-color-semantic-error);
+}
+
+/* =========================================================
+   F5 — Textarea
+   Registry: component-f5-textarea
+   Source: COMPONENT_REGISTRY.md (M2 F5), ACCESSIBILITY_MATRIX.md (a11y-f5-textarea)
+   Token Dependencies:
+     Same as F4 Input, plus sys.font.code.family, sys.font.code.size,
+     sys.font.code.line-height, sys.space.inset.md
+   ========================================================= */
+
+.nv-textarea {
+  /* Layout */
+  display: block;
+  inline-size: 100%;
+  min-block-size: calc(var(--sys-a11y-touch-target-minimum) * 2);
+  padding-block: var(--sys-space-inset-md);
+  padding-inline: var(--sys-space-inset-md);
+  resize: vertical;
+
+  /* Typography */
+  font-family: var(--sys-font-body-family);
+  font-size: var(--sys-font-body-size);
+  font-weight: var(--sys-font-body-weight);
+  line-height: var(--sys-font-body-line-height);
+  color: var(--sys-color-text-primary);
+
+  /* Visual */
+  background-color: var(--sys-color-surface-base);
+  border: var(--sys-border-default) solid var(--sys-color-border-default);
+  border-radius: var(--sys-radius-control);
+  outline: none;
+
+  /* Transition for interaction focus */
+  transition: border-color var(--sys-motion-duration-feedback) var(--sys-motion-ease-interface);
+}
+
+/* Hover state */
+.nv-textarea:hover {
+  border-color: var(--sys-color-border-strong);
+}
+
+/* Focus state */
+.nv-textarea:focus-visible {
+  outline: var(--sys-a11y-focus-ring);
+  outline-offset: var(--sys-a11y-focus-offset);
+}
+
+/* Disabled state */
+.nv-textarea:disabled {
+  opacity: var(--sys-a11y-disabled-opacity);
+  cursor: var(--sys-a11y-disabled-cursor);
+  background-color: var(--sys-color-state-disabled);
+  color: var(--sys-color-text-disabled);
+}
+
+/* Error/Invalid state */
+.nv-textarea[aria-invalid="true"],
+.nv-textarea:invalid {
+  border-color: var(--sys-color-semantic-error);
+}
+
+/* Monospace variant */
+.nv-textarea[data-variant="monospace"] {
+  font-family: var(--sys-font-code-family);
+  font-size: var(--sys-font-code-size);
+  line-height: var(--sys-font-code-line-height);
+}
+
+/* =========================================================
+   F6 — Checkbox
+   Registry: component-f6-checkbox
+   Source: COMPONENT_REGISTRY.md (M2 F6), ACCESSIBILITY_MATRIX.md (a11y-f6-checkbox)
+   Token Dependencies:
+     sys.color.accent.primary, sys.color.surface.base, sys.color.border.default,
+     sys.color.border.strong, sys.radius.surface, sys.color.text.inverse,
+     sys.motion.duration.feedback, sys.motion.ease.interface,
+     sys.a11y.focus.*, sys.a11y.disabled.*, sys.color.semantic.error
+   ========================================================= */
+
+.nv-checkbox {
+  position: relative;
+  appearance: none;
+  -webkit-appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  border-radius: var(--sys-radius-surface);
+  border: var(--sys-border-default) solid var(--sys-color-border-default);
+  background-color: var(--sys-color-surface-base);
+  cursor: pointer;
+  outline: none;
+  vertical-align: middle;
+
+  /* Transition */
+  transition:
+    background-color var(--sys-motion-duration-feedback) var(--sys-motion-ease-interface),
+    border-color var(--sys-motion-duration-feedback) var(--sys-motion-ease-interface);
+}
+
+/* Hover state */
+.nv-checkbox:hover {
+  border-color: var(--sys-color-border-strong);
+}
+
+/* Checked state */
+.nv-checkbox:checked {
+  background-color: var(--sys-color-accent-primary);
+  border-color: var(--sys-color-accent-primary);
+}
+
+/* Inner indicator */
+.nv-checkbox::after {
+  content: "";
+  display: none;
+  width: 0.35rem;
+  height: 0.6rem;
+  border: solid var(--sys-color-text-inverse);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  margin-bottom: 2px;
+}
+
+.nv-checkbox:checked::after {
+  display: block;
+}
+
+/* Focus state */
+.nv-checkbox:focus-visible {
+  outline: var(--sys-a11y-focus-ring);
+  outline-offset: var(--sys-a11y-focus-offset);
+}
+
+/* Disabled state */
+.nv-checkbox:disabled {
+  opacity: var(--sys-a11y-disabled-opacity);
+  cursor: var(--sys-a11y-disabled-cursor);
+  pointer-events: none;
+}
+
+/* Error/Invalid state */
+.nv-checkbox[aria-invalid="true"] {
+  border-color: var(--sys-color-semantic-error);
+}
+
+/* =========================================================
+   F7 — Radio
+   Registry: component-f7-radio
+   Source: COMPONENT_REGISTRY.md (M2 F7), ACCESSIBILITY_MATRIX.md (a11y-f7-radio)
+   Token Dependencies:
+     Same as F6 Checkbox, plus sys.radius.badge
+   ========================================================= */
+
+.nv-radio {
+  position: relative;
+  appearance: none;
+  -webkit-appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  border-radius: var(--sys-radius-badge);
+  border: var(--sys-border-default) solid var(--sys-color-border-default);
+  background-color: var(--sys-color-surface-base);
+  cursor: pointer;
+  outline: none;
+  vertical-align: middle;
+
+  /* Transition */
+  transition:
+    background-color var(--sys-motion-duration-feedback) var(--sys-motion-ease-interface),
+    border-color var(--sys-motion-duration-feedback) var(--sys-motion-ease-interface);
+}
+
+/* Hover state */
+.nv-radio:hover {
+  border-color: var(--sys-color-border-strong);
+}
+
+/* Checked state */
+.nv-radio:checked {
+  border-color: var(--sys-color-accent-primary);
+}
+
+/* Inner indicator */
+.nv-radio::after {
+  content: "";
+  display: none;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: var(--sys-radius-badge);
+  background-color: var(--sys-color-accent-primary);
+}
+
+.nv-radio:checked::after {
+  display: block;
+}
+
+/* Focus state */
+.nv-radio:focus-visible {
+  outline: var(--sys-a11y-focus-ring);
+  outline-offset: var(--sys-a11y-focus-offset);
+}
+
+/* Disabled state */
+.nv-radio:disabled {
+  opacity: var(--sys-a11y-disabled-opacity);
+  cursor: var(--sys-a11y-disabled-cursor);
+  pointer-events: none;
+}
+
+/* Error/Invalid state */
+.nv-radio[aria-invalid="true"] {
+  border-color: var(--sys-color-semantic-error);
 }
