@@ -409,3 +409,49 @@ Implementation Status: Not Implemented
 Lifecycle Status: Approved
 Version: 1.0.0
 ```
+
+---
+
+## M3 Region Component Entries
+
+### R1 — GlobalHeader
+
+```text
+Component ID: component-global-header
+Component Name: GlobalHeader
+Category: region
+Purpose: Global orientation and platform-level action access region.
+Canonical Decision Source: NV-012 Layout Architecture, NV-015 Navigation System, NV-018 Frontend Architecture, NV-023 M3 Region Components
+Owner: Frontend Architect
+Dependencies: Button, SearchBar, Navigation state contract, Command palette trigger contract
+Token Dependencies: ctx.shell.header.surface, ctx.shell.header.border, ctx.shell.padding, ctx.shell.z
+Accessibility Requirements: header landmark, keyboard reachable actions, accessible action labels, visible focus, predictable focus order
+Motion Requirements: none or low-intensity state feedback only, reduced-motion compatible
+Responsive Requirements: compact header behavior, preserve access to global actions
+Forbidden Usage: marketing hero, dashboard KPI bar, social feed, page-specific navigation, educational content
+Implementation Status: Not Implemented
+Lifecycle Status: Approved
+Review Owner: Antigravity Architect
+Version: 1.0.0
+```
+
+### R3 — MainWorkspace
+
+```text
+Component ID: component-main-workspace
+Component Name: MainWorkspace
+Category: region
+Purpose: Primary active work area for rendered workspace and future knowledge surfaces.
+Canonical Decision Source: NV-012 Layout Architecture, NV-018 Frontend Architecture, NV-023 M3 Region Components
+Owner: Frontend Architect
+Dependencies: Route state, Breadcrumb context, Workspace state
+Token Dependencies: ctx.workspace.background, ctx.workspace.surface, ctx.workspace.border, ctx.workspace.padding, ctx.workspace.radius, ctx.workspace.elevation, ctx.workspace.label.font, ctx.workspace.metadata.font
+Accessibility Requirements: main landmark, skip-link target, focus entry point, logical reading order, responsive reading support
+Motion Requirements: none or low-intensity workspace state clarification only, reduced-motion compatible
+Responsive Requirements: mobile-first adaptation, no core horizontal scrolling, preserve readable workspace area
+Forbidden Usage: primary navigation ownership, context-panel ownership, final page content, educational content, backend logic
+Implementation Status: Not Implemented
+Lifecycle Status: Approved
+Review Owner: Antigravity Architect
+Version: 1.0.0
+```

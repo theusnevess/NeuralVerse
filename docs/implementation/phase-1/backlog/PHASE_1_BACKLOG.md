@@ -70,21 +70,6 @@ Status:
 COMPLETE
 ```
 
-Purpose:
-
-```text
-Officially close Milestone M2 with F1–F8 implemented and F9 deferred.
-```
-
-Deliverables:
-
-```text
-docs/implementation/phase-1/packages/NV-023-TASK-009F.md
-docs/implementation/phase-1/reviews/NV-023-TASK-009F_REVIEW.md
-docs/implementation/phase-1/validations/NV-023-TASK-009F_VALIDATION.md
-PHASE_1_BACKLOG.md (this file)
-```
-
 ---
 
 ## Milestone M3 — Region Components
@@ -92,7 +77,32 @@ PHASE_1_BACKLOG.md (this file)
 Status:
 
 ```text
-BLOCKED UNTIL M2 REVIEW PASS
+PREPARATION IN PROGRESS
+```
+
+### NV-023-TASK-011A — M3 Region Registry Completion
+
+Status:
+
+```text
+IN PROGRESS
+```
+
+Purpose:
+
+```text
+Complete missing region component registrations and structural contracts for M3 (R1 and R3).
+```
+
+Deliverables:
+
+```text
+docs/design-system/COMPONENT_REGISTRY.md (R1 and R3 added)
+docs/design-system/REGION_CONTRACTS.md (created)
+docs/implementation/phase-1/packages/NV-023-TASK-011A.md
+docs/implementation/phase-1/reviews/NV-023-TASK-011A_REVIEW.md
+docs/implementation/phase-1/validations/NV-023-TASK-011A_VALIDATION.md
+PHASE_1_BACKLOG.md (this file)
 ```
 
 ---
