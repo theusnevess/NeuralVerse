@@ -22,7 +22,45 @@
   background-color: var(--ctx-shell-header-surface);
   border-bottom: var(--sys-border-default) solid var(--ctx-shell-header-border);
   z-index: var(--ctx-shell-z);
+  gap: var(--sys-space-inline-md);
+  font-family: var(--sys-font-body-family);
 }
+
+.nv-header-brand {
+  display: flex;
+  align-items: center;
+}
+
+.nv-header-platform-title {
+  font-size: var(--sys-font-body-size);
+  font-weight: var(--ref-font-weight-bold);
+  color: var(--sys-color-text-primary);
+  letter-spacing: -0.025em;
+}
+
+.nv-header-separator {
+  color: var(--sys-color-text-muted);
+  font-size: var(--sys-font-body-size);
+  user-select: none;
+}
+
+.nv-header-orientation {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sys-space-inline-sm);
+}
+
+.nv-header-section-title {
+  font-size: var(--sys-font-body-size);
+  font-weight: var(--sys-font-caption-weight);
+  color: var(--sys-color-text-primary);
+}
+
+.nv-header-section-description {
+  font-size: var(--sys-font-caption-size);
+  color: var(--sys-color-text-muted);
+}
+
 
 .nv-shell-body {
   display: flex;

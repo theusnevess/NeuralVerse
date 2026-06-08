@@ -48,3 +48,38 @@ docs/implementation/phase-2/reviews/NV-023-P2-M1_REVIEW.md
 docs/implementation/phase-2/validations/NV-023-P2-M1_VALIDATION.md
 PHASE_2_BACKLOG.md (this file)
 ```
+
+---
+
+## Milestone P2-M2 — Global Header Orientation Layer
+
+Status:
+
+```text
+COMPLETE
+```
+
+### NV-023-P2-M2 — Global Header Orientation
+
+Status:
+
+```text
+COMPLETE
+```
+
+Purpose:
+
+```text
+Implement Global Header orientation details, including platform branding, separator visual elements, active section orientation descriptions, and typography constraints.
+```
+
+Deliverables:
+
+```text
+website/styles/layout.css (global header orientation styles added)
+website/index.html (branding and orientation elements added)
+docs/implementation/phase-2/packages/NV-023-P2-M2.md
+docs/implementation/phase-2/reviews/NV-023-P2-M2_REVIEW.md
+docs/implementation/phase-2/validations/NV-023-P2-M2_VALIDATION.md
+PHASE_2_BACKLOG.md (this file)
+```
