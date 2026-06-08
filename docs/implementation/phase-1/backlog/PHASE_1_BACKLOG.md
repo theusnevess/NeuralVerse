@@ -35,7 +35,7 @@ COMPLETE
 Status:
 
 ```text
-COMPLETE (F1-F7 implemented; F8-F9 declared blocked by missing tokens)
+COMPLETE (F1-F8 implemented; F9 declared blocked by missing tokens)
 ```
 
 ### NV-023-TASK-009A — F1–F3 Foundation Components
@@ -54,20 +54,27 @@ Status:
 COMPLETE
 ```
 
+### NV-023-TASK-009D — F8 Switch Implementation
+
+Status:
+
+```text
+COMPLETE
+```
+
 Purpose:
 
 ```text
-Implement F4 Input, F5 Textarea, F6 Checkbox, and F7 Radio in website/styles/components.css.
-Identify and mark F8 Switch and F9 Tooltip as blocked due to missing design tokens in the current registry/css.
+Implement F8 Switch in website/styles/components.css using existing governed tokens.
 ```
 
 Deliverables:
 
 ```text
-website/styles/components.css (F1–F7 implemented)
-docs/implementation/phase-1/packages/NV-023-TASK-009B.md
-docs/implementation/phase-1/reviews/NV-023-TASK-009B_REVIEW.md
-docs/implementation/phase-1/validations/NV-023-TASK-009B_VALIDATION.md
+website/styles/components.css (F1–F8 implemented)
+docs/implementation/phase-1/packages/NV-023-TASK-009D.md
+docs/implementation/phase-1/reviews/NV-023-TASK-009D_REVIEW.md
+docs/implementation/phase-1/validations/NV-023-TASK-009D_VALIDATION.md
 PHASE_1_BACKLOG.md (this file)
 ```
 

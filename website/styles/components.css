@@ -548,3 +548,105 @@
 .nv-radio[aria-invalid="true"] {
   border-color: var(--sys-color-semantic-error);
 }
+
+/* =========================================================
+   F8 — Switch
+   Registry: component-f8-switch
+   Source: COMPONENT_REGISTRY.md (M2 F8), ACCESSIBILITY_MATRIX.md (a11y-f8-switch)
+   Token Dependencies:
+     sys.color.surface.base, sys.color.text.primary, sys.color.text.inverse,
+     sys.color.border.default, sys.color.border.strong, sys.color.accent.primary,
+     sys.radius.control, sys.motion.duration.feedback, sys.motion.ease.interface,
+     sys.a11y.focus.*, sys.a11y.disabled.*, sys.color.semantic.error
+   Motion: Checked transition uses sys.motion.duration.feedback, sys.motion.ease.interface
+   ========================================================= */
+
+.nv-switch {
+  position: relative;
+  appearance: none;
+  -webkit-appearance: none;
+  display: inline-flex;
+  align-items: center;
+  inline-size: 2.5rem;
+  block-size: 1.5rem;
+  border-radius: var(--sys-radius-control);
+  border: var(--sys-border-default) solid var(--sys-color-border-default);
+  background-color: var(--sys-color-surface-base);
+  cursor: pointer;
+  outline: none;
+  vertical-align: middle;
+
+  /* Transition for track */
+  transition:
+    background-color var(--sys-motion-duration-feedback) var(--sys-motion-ease-interface),
+    border-color var(--sys-motion-duration-feedback) var(--sys-motion-ease-interface);
+}
+
+/* Hover state */
+.nv-switch:hover {
+  border-color: var(--sys-color-border-strong);
+}
+
+/* Checked state (track) */
+.nv-switch:checked {
+  background-color: var(--sys-color-accent-primary);
+  border-color: var(--sys-color-accent-primary);
+}
+
+/* Inner thumb */
+.nv-switch::after {
+  content: "";
+  position: absolute;
+  inset-block-start: 2px;
+  inset-inline-start: 2px;
+  inline-size: calc(1.5rem - 6px);
+  block-size: calc(1.5rem - 6px);
+  border-radius: var(--sys-radius-control);
+  background-color: var(--sys-color-text-primary);
+
+  /* Transition for thumb */
+  transition:
+    transform var(--sys-motion-duration-feedback) var(--sys-motion-ease-interface),
+    background-color var(--sys-motion-duration-feedback) var(--sys-motion-ease-interface);
+}
+
+/* Checked state (thumb position & color) */
+.nv-switch:checked::after {
+  transform: translateX(1rem);
+  background-color: var(--sys-color-text-inverse);
+}
+
+/* Focus state */
+.nv-switch:focus-visible {
+  outline: var(--sys-a11y-focus-ring);
+  outline-offset: var(--sys-a11y-focus-offset);
+}
+
+/* Disabled state */
+.nv-switch:disabled {
+  opacity: var(--sys-a11y-disabled-opacity);
+  cursor: var(--sys-a11y-disabled-cursor);
+  pointer-events: none;
+}
+
+/* aria-disabled and aria-checked compatibility */
+.nv-switch[aria-disabled="true"] {
+  opacity: var(--sys-a11y-disabled-opacity);
+  cursor: var(--sys-a11y-disabled-cursor);
+  pointer-events: none;
+}
+
+.nv-switch[aria-checked="true"] {
+  background-color: var(--sys-color-accent-primary);
+  border-color: var(--sys-color-accent-primary);
+}
+
+.nv-switch[aria-checked="true"]::after {
+  transform: translateX(1rem);
+  background-color: var(--sys-color-text-inverse);
+}
+
+/* Error/Invalid state */
+.nv-switch[aria-invalid="true"] {
+  border-color: var(--sys-color-semantic-error);
+}
