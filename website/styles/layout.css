@@ -33,12 +33,89 @@
 .nv-navigation-rail {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
   inline-size: 5rem;
   padding: var(--ctx-nav-rail-padding);
   background-color: var(--ctx-nav-rail-surface);
   border-right: var(--sys-border-default) solid var(--ctx-nav-rail-border);
   z-index: var(--ctx-nav-z);
 }
+
+.nv-nav-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 100%;
+  block-size: 3rem;
+  margin-bottom: var(--sys-space-stack-md);
+}
+
+.nv-nav-logo {
+  font-family: var(--ctx-navigation-label-font);
+  font-size: var(--sys-font-body-size);
+  font-weight: var(--sys-font-body-weight-bold);
+  color: var(--ctx-nav-item-text-active);
+}
+
+.nv-nav-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sys-space-stack-sm);
+  inline-size: 100%;
+  flex: 1;
+}
+
+.nv-nav-group--secondary {
+  flex: none;
+  margin-top: auto;
+}
+
+.nv-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sys-space-stack-xs);
+  inline-size: 100%;
+  aspect-ratio: 1;
+  border-radius: var(--sys-radius-control);
+  color: var(--ctx-nav-item-text);
+  text-decoration: none;
+  font-family: var(--ctx-navigation-label-font);
+  font-size: var(--sys-font-caption-size);
+  transition:
+    background-color var(--ctx-nav-motion) var(--sys-motion-ease-interface),
+    color var(--ctx-nav-motion) var(--sys-motion-ease-interface);
+}
+
+.nv-nav-item:hover {
+  background-color: var(--ctx-nav-item-surface-hover);
+  color: var(--ctx-nav-item-text-active);
+}
+
+.nv-nav-item[aria-current="page"] {
+  background-color: var(--ctx-nav-item-surface-active);
+  color: var(--ctx-nav-item-text-active);
+  font-weight: var(--sys-font-body-weight-bold);
+}
+
+.nv-nav-item:focus-visible {
+  outline: var(--sys-a11y-focus-ring);
+  outline-offset: var(--sys-a11y-focus-offset);
+}
+
+.nv-nav-icon {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.nv-nav-label {
+  font-size: 0.65rem;
+  text-align: center;
+}
+
 
 .nv-main-workspace {
   flex: 1;
