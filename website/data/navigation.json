@@ -1,0 +1,62 @@
+[
+  {
+    "id": "home",
+    "path": "#/",
+    "label": "Home",
+    "title": "Welcome to NeuralVerse",
+    "description": "Scientific Research & AI Agent Environment.",
+    "region": "R3 Workspace",
+    "navigationGroup": "primary",
+    "isImplemented": true
+  },
+  {
+    "id": "learning",
+    "path": "#/learning",
+    "label": "Learning Paths",
+    "title": "Advanced Learning Paths",
+    "description": "Explore agentic models and neural architecture courses.",
+    "region": "R3 Workspace",
+    "navigationGroup": "primary",
+    "isImplemented": true
+  },
+  {
+    "id": "modules",
+    "path": "#/modules",
+    "label": "Modules",
+    "title": "Core Study Modules",
+    "description": "Dive deep into specialized neural and cognitive science units.",
+    "region": "R3 Workspace",
+    "navigationGroup": "primary",
+    "isImplemented": true
+  },
+  {
+    "id": "workspace",
+    "path": "#/workspace",
+    "label": "Workspace",
+    "title": "Agent Workspace",
+    "description": "Deploy, configure, and monitor live AI agents in real-time.",
+    "region": "R3 Workspace",
+    "navigationGroup": "primary",
+    "isImplemented": true
+  },
+  {
+    "id": "content",
+    "path": "#/content",
+    "label": "Content Viewer",
+    "title": "Documentation & Papers",
+    "description": "Access scientific publications, references, and guidebooks.",
+    "region": "R3 Workspace",
+    "navigationGroup": "primary",
+    "isImplemented": true
+  },
+  {
+    "id": "settings",
+    "path": "#/settings",
+    "label": "Settings",
+    "title": "Environment Settings",
+    "description": "Configure nodes, API endpoints, and visualization options.",
+    "region": "R3 Workspace",
+    "navigationGroup": "secondary",
+    "isImplemented": false
+  }
+]

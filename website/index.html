@@ -24,7 +24,7 @@
       </div>
       <div class="nv-header-separator" aria-hidden="true">/</div>
       <div class="nv-header-orientation">
-        <span class="nv-header-section-title">Workspace</span>
+        <span class="nv-header-section-title">Home</span>
         <span class="nv-header-section-description">Scientific AI Environment</span>
       </div>
     </header>
@@ -36,21 +36,29 @@
           <span class="nv-nav-logo">NV</span>
         </div>
         <div class="nv-nav-group">
-          <a href="#" class="nv-nav-item" aria-current="page">
+          <a href="#/" class="nv-nav-item" aria-current="page">
             <span class="nv-nav-icon" aria-hidden="true">■</span>
+            <span class="nv-nav-label">Home</span>
+          </a>
+          <a href="#/learning" class="nv-nav-item">
+            <span class="nv-nav-icon" aria-hidden="true">▲</span>
+            <span class="nv-nav-label">Learning</span>
+          </a>
+          <a href="#/modules" class="nv-nav-item">
+            <span class="nv-nav-icon" aria-hidden="true">◆</span>
+            <span class="nv-nav-label">Modules</span>
+          </a>
+          <a href="#/workspace" class="nv-nav-item">
+            <span class="nv-nav-icon" aria-hidden="true">❖</span>
             <span class="nv-nav-label">Workspace</span>
           </a>
-          <a href="#" class="nv-nav-item">
-            <span class="nv-nav-icon" aria-hidden="true">▲</span>
-            <span class="nv-nav-label">Labs</span>
-          </a>
-          <a href="#" class="nv-nav-item">
-            <span class="nv-nav-icon" aria-hidden="true">◆</span>
-            <span class="nv-nav-label">Data</span>
+          <a href="#/content" class="nv-nav-item">
+            <span class="nv-nav-icon" aria-hidden="true">▤</span>
+            <span class="nv-nav-label">Content</span>
           </a>
         </div>
         <div class="nv-nav-group nv-nav-group--secondary">
-          <a href="#" class="nv-nav-item" aria-label="Settings">
+          <a href="#/settings" class="nv-nav-item" aria-label="Settings">
             <span class="nv-nav-icon" aria-hidden="true">⚙</span>
             <span class="nv-nav-label">Settings</span>
           </a>
@@ -59,41 +67,7 @@
 
       <!-- Main Workspace -->
       <main class="nv-main-workspace" id="main-content">
-        <div class="nv-stack nv-stack--gap-md">
-          <header class="nv-stack nv-stack--gap-xs">
-            <h1 class="nv-context-title">Main Workspace</h1>
-            <p class="nv-muted">Execute and monitor deep learning pipelines and agentic simulations.</p>
-          </header>
-
-          <div class="nv-grid nv-grid--cols-3">
-            <div class="nv-card">
-              <span class="nv-badge" data-variant="success" style="align-self: flex-start;">Active</span>
-              <h3>Model Training</h3>
-              <p class="nv-muted">Compute nodes status and epoch progression logging.</p>
-            </div>
-            <div class="nv-card">
-              <span class="nv-badge" data-variant="info" style="align-self: flex-start;">Ready</span>
-              <h3>Agent Orchestrator</h3>
-              <p class="nv-muted">Coordinate agentic loops and decision boundary graphs.</p>
-            </div>
-            <div class="nv-card">
-              <span class="nv-badge" data-variant="neutral" style="align-self: flex-start;">Idle</span>
-              <h3>Dataset Sandbox</h3>
-              <p class="nv-muted">Clean and query datasets for reinforcement learning input.</p>
-            </div>
-          </div>
-
-          <div class="nv-panel">
-            <div class="nv-empty-state">
-              <div class="nv-empty-state-icon" aria-hidden="true">⚙</div>
-              <h2 class="nv-empty-state-title">No Active Simulation</h2>
-              <p class="nv-empty-state-description">
-                Configure your environment node parameters in the sidebar or rail navigation to deploy an AI agent instance.
-              </p>
-              <button class="nv-button" data-variant="primary">Initialize Agent Loop</button>
-            </div>
-          </div>
-        </div>
+        <!-- Rendered by View Controller -->
       </main>
 
       <!-- Context Panel -->
@@ -114,11 +88,11 @@
             </div>
             <div class="nv-context-meta-item">
               <span class="nv-context-meta-label">Primary Target</span>
-              <span class="nv-context-meta-value">Scientific Env</span>
+              <span class="nv-context-meta-value">Home</span>
             </div>
           </div>
           <p class="nv-context-description">
-            Provides a focused view of active research tools, workflow graphs, and compute nodes for AI tasks.
+            Scientific Research & AI Agent Environment.
           </p>
         </section>
 
@@ -127,17 +101,25 @@
         <section class="nv-context-section" aria-labelledby="nv-nav-context-title">
           <h3 id="nv-nav-context-title" class="nv-context-section-title">Navigation Context</h3>
           <ul class="nv-context-hierarchy">
-            <li class="nv-context-hierarchy-item">
-              <span class="nv-context-hierarchy-dot"></span>
-              <span class="nv-context-hierarchy-text">NeuralVerse Hub</span>
-            </li>
             <li class="nv-context-hierarchy-item nv-context-hierarchy-item--active">
               <span class="nv-context-hierarchy-dot nv-context-hierarchy-dot--active"></span>
-              <span class="nv-context-hierarchy-text">Main Workspace</span>
+              <span class="nv-context-hierarchy-text">Home</span>
             </li>
             <li class="nv-context-hierarchy-item">
               <span class="nv-context-hierarchy-dot"></span>
-              <span class="nv-context-hierarchy-text">Labs Sandbox</span>
+              <span class="nv-context-hierarchy-text">Learning Paths</span>
+            </li>
+            <li class="nv-context-hierarchy-item">
+              <span class="nv-context-hierarchy-dot"></span>
+              <span class="nv-context-hierarchy-text">Modules</span>
+            </li>
+            <li class="nv-context-hierarchy-item">
+              <span class="nv-context-hierarchy-dot"></span>
+              <span class="nv-context-hierarchy-text">Workspace</span>
+            </li>
+            <li class="nv-context-hierarchy-item">
+              <span class="nv-context-hierarchy-dot"></span>
+              <span class="nv-context-hierarchy-text">Content Viewer</span>
             </li>
           </ul>
         </section>
@@ -186,6 +168,10 @@
   </div>
 
   <!-- Script Initialization -->
+  <script src="scripts/router/routes.js"></script>
+  <script src="scripts/state/navigation-state.js"></script>
+  <script src="scripts/router/router.js"></script>
+  <script src="scripts/navigation/navigation.js"></script>
   <script src="scripts/app.js"></script>
 </body>
 </html>
