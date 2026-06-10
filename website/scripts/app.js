@@ -1,4 +1,5 @@
 import { createLearningController } from "./learning/learning-controller.js";
+import { createContentController } from "./content/content-controller.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   console.log('NeuralVerse App Shell Initialized');
@@ -18,6 +19,14 @@ document.addEventListener("DOMContentLoaded", () => {
     console.error("Learning controller failed to initialize.", error);
   });
 
+  // Initialize the content controller
+  const contentController = createContentController({
+    root: document,
+  });
+
+  contentController.init();
+
   window.NeuralVerse = window.NeuralVerse || {};
   window.NeuralVerse.learningController = learningController;
+  window.NeuralVerse.contentController = contentController;
 });

@@ -394,4 +394,15 @@
   line-height: var(--sys-font-body-line-height);
 }
 
+/* =========================================================
+   Content Page Layout (NV-100-M6)
+   ========================================================= */
+
+.nv-content-page {
+  display: grid;
+  gap: var(--sys-space-stack-xl);
+  inline-size: 100%;
+}
+
+
 

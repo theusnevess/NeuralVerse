@@ -904,4 +904,134 @@
   letter-spacing: var(--ref-font-tracking-wide);
 }
 
+/* =========================================================
+   Content Viewer Component (NV-100-M6)
+   ========================================================= */
+
+.nv-content-viewer {
+  display: grid;
+  gap: var(--sys-space-stack-xl);
+}
+
+.nv-content-viewer__header {
+  display: grid;
+  gap: var(--sys-space-stack-md);
+  padding-block-end: var(--sys-space-stack-lg);
+  border-block-end: var(--sys-border-subtle) solid var(--sys-color-border-subtle);
+}
+
+.nv-content-viewer__eyebrow {
+  margin: 0;
+  color: var(--sys-color-text-secondary);
+  font-family: var(--sys-font-code-family);
+  font-size: var(--sys-font-caption-size);
+  letter-spacing: var(--ref-font-tracking-wide);
+  text-transform: uppercase;
+}
+
+.nv-content-viewer__header h1 {
+  margin: 0;
+  color: var(--sys-color-text-primary);
+  font-family: var(--sys-font-display-family);
+  font-size: var(--sys-font-heading-size);
+  line-height: var(--sys-font-heading-line-height);
+}
+
+.nv-content-meta {
+  display: grid;
+  gap: var(--sys-space-stack-sm);
+  margin: 0;
+}
+
+.nv-content-meta div {
+  display: grid;
+  gap: var(--sys-space-stack-xs);
+}
+
+.nv-content-meta dt {
+  color: var(--sys-color-text-secondary);
+  font-family: var(--sys-font-code-family);
+  font-size: var(--sys-font-caption-size);
+  letter-spacing: var(--ref-font-tracking-wide);
+  text-transform: uppercase;
+}
+
+.nv-content-meta dd {
+  margin: 0;
+  color: var(--sys-color-text-secondary);
+  font-family: var(--sys-font-body-family);
+  font-size: var(--sys-font-body-size);
+  line-height: var(--sys-font-body-line-height);
+}
+
+.nv-content-meta code {
+  font-family: var(--sys-font-code-family);
+  font-size: var(--sys-font-code-size);
+  color: var(--sys-color-text-primary);
+}
+
+.nv-markdown-content {
+  display: grid;
+  gap: var(--sys-space-stack-md);
+  max-inline-size: var(--sys-a11y-reading-width-enhanced);
+  color: var(--sys-color-text-secondary);
+  font-family: var(--sys-font-body-family);
+  font-size: var(--sys-font-body-size);
+  line-height: var(--sys-font-body-line-height);
+}
+
+.nv-markdown-content h1,
+.nv-markdown-content h2,
+.nv-markdown-content h3 {
+  margin: 0;
+  color: var(--sys-color-text-primary);
+  font-family: var(--sys-font-display-family);
+  line-height: var(--sys-font-heading-line-height);
+}
+
+.nv-markdown-content h1 {
+  font-size: var(--sys-font-heading-size);
+}
+
+.nv-markdown-content h2 {
+  font-size: var(--sys-font-heading-size);
+}
+
+.nv-markdown-content h3 {
+  font-size: var(--sys-font-heading-size);
+}
+
+.nv-markdown-content p,
+.nv-markdown-content ul,
+.nv-markdown-content pre {
+  margin: 0;
+}
+
+.nv-markdown-content ul {
+  padding-inline-start: var(--sys-space-inline-md);
+}
+
+.nv-markdown-content li + li {
+  margin-block-start: var(--sys-space-stack-xs);
+}
+
+.nv-markdown-content code {
+  font-family: var(--sys-font-code-family);
+  font-size: var(--sys-font-code-size);
+  color: var(--sys-color-text-primary);
+}
+
+.nv-markdown-content pre {
+  overflow-x: auto;
+  padding: var(--sys-space-inset-md);
+  border: var(--sys-border-subtle) solid var(--sys-color-border-subtle);
+  border-radius: var(--sys-radius-control);
+  background: var(--sys-color-background-subtle);
+}
+
+.nv-markdown-content pre code {
+  display: block;
+}
+
+
 
