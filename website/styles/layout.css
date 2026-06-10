@@ -505,6 +505,21 @@
   }
 }
 
+/* =========================================================
+   Module Overview Grid Layout (NV-200-M3)
+   ========================================================= */
+
+.nv-overview-grid {
+  inline-size: 100%;
+}
+
+@media (max-width: 23.5rem) {
+  .nv-overview-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
 
 
 

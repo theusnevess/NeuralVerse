@@ -85,6 +85,11 @@ export function createLearningService(paths = DATA_PATHS) {
     return data.learningPaths.find((path) => path.id === pathId) || null;
   }
 
+  async function getContentItems() {
+    const data = await loadAll();
+    return data.contentItems;
+  }
+
   return {
     loadAll,
     getLearningPaths,
@@ -93,5 +98,6 @@ export function createLearningService(paths = DATA_PATHS) {
     getContentItemsByModule,
     getModuleById,
     getLearningPathById,
+    getContentItems,
   };
 }

@@ -1342,6 +1342,41 @@
   color: var(--sys-color-text-primary);
 }
 
+/* =========================================================
+   Module Overview Grid (NV-200-M3)
+   ========================================================= */
+
+.nv-overview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(var(--sys-size-card-metric-min, 100px), 1fr));
+  gap: var(--sys-spacing-stack-sm, var(--sys-space-stack-sm));
+}
+
+.nv-overview-metric {
+  display: grid;
+  gap: var(--sys-spacing-stack-2xs, var(--sys-space-stack-xs));
+  padding: var(--sys-spacing-inset-sm, var(--sys-space-inset-sm));
+  border: var(--sys-border-width-sm, var(--sys-border-subtle)) solid var(--sys-color-border-subtle);
+  border-radius: var(--sys-radius-card, var(--sys-radius-surface));
+  background: var(--sys-color-surface-muted, var(--sys-color-background-subtle));
+}
+
+.nv-overview-metric__label {
+  color: var(--sys-color-text-tertiary, var(--sys-color-text-secondary));
+  font-family: var(--sys-font-family-mono, var(--sys-font-code-family));
+  font-size: var(--sys-font-size-label-sm, var(--sys-font-caption-size));
+  letter-spacing: var(--sys-letter-spacing-label, normal);
+  text-transform: uppercase;
+}
+
+.nv-overview-metric__value {
+  color: var(--sys-color-text-primary);
+  font-family: var(--sys-font-family-ui, var(--sys-font-body-family));
+  font-size: var(--sys-font-size-body-sm, var(--sys-font-body-size));
+  line-height: var(--sys-line-height-body, var(--sys-font-body-line-height));
+}
+
+
 
 
 

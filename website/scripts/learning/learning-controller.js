@@ -24,28 +24,103 @@ function createMeta(label, value) {
 }
 
 function formatReadingTime(minutes) {
-  if (minutes < 60) {
-    return `${minutes}m`;
+  if (!minutes) {
+    return {
+      text: "0m",
+      label: "0 minutes",
+    };
   }
+
   const hours = Math.floor(minutes / 60);
   const remainingMinutes = minutes % 60;
-  if (remainingMinutes === 0) {
-    return `${hours}h`;
+
+  if (!hours) {
+    return {
+      text: `${remainingMinutes}m`,
+      label: `${remainingMinutes} minutes`,
+    };
   }
-  return `${hours}h ${remainingMinutes}m`;
+
+  if (!remainingMinutes) {
+    return {
+      text: `${hours}h`,
+      label: `${hours} hours`,
+    };
+  }
+
+  return {
+    text: `${hours}h ${remainingMinutes}m`,
+    label: `${hours} hours ${remainingMinutes} minutes`,
+  };
 }
 
-function formatReadingTimeA11y(minutes) {
-  if (minutes < 60) {
-    return `${minutes} minutes`;
+function getProgressStatus(progressValue) {
+  if (progressValue <= 0) return "Not Started";
+  if (progressValue >= 100) return "Completed";
+  return "In Progress";
+}
+
+function createMetric(label, value, ariaLabel = null) {
+  const item = createElement("div", "nv-overview-metric");
+
+  const term = createElement("span", "nv-overview-metric__label", label);
+  const data = createElement("strong", "nv-overview-metric__value", value);
+
+  if (ariaLabel) {
+    data.setAttribute("aria-label", ariaLabel);
   }
-  const hours = Math.floor(minutes / 60);
-  const remainingMinutes = minutes % 60;
-  const hourText = hours === 1 ? "hour" : "hours";
-  if (remainingMinutes === 0) {
-    return `${hours} ${hourText}`;
-  }
-  return `${hours} ${hourText} ${remainingMinutes} minutes`;
+
+  item.append(term, data);
+  return item;
+}
+
+function computeModuleOverview(module, contentItems, progressRecords) {
+  const moduleContentItems = contentItems.filter(
+    (contentItem) => contentItem.moduleId === module.id
+  );
+
+  const completedContentItems = moduleContentItems.filter((contentItem) => {
+    return progressRecords.some(
+      (record) =>
+        record.entityId === contentItem.id &&
+        record.entityType === "content-item" &&
+        record.status === "completed"
+    );
+  });
+
+  const contentCount = moduleContentItems.length;
+  const completedCount = completedContentItems.length;
+  const remainingCount = Math.max(contentCount - completedCount, 0);
+
+  const readingMinutes = moduleContentItems.reduce(
+    (total, contentItem) => total + Number(contentItem.estimatedReadingTime || 0),
+    0
+  );
+
+  const remainingReadingMinutes = moduleContentItems
+    .filter((contentItem) => {
+      return !completedContentItems.some(
+        (completedItem) => completedItem.id === contentItem.id
+      );
+    })
+    .reduce(
+      (total, contentItem) => total + Number(contentItem.estimatedReadingTime || 0),
+      0
+    );
+
+  const progressValue = contentCount
+    ? Math.round((completedCount / contentCount) * 100)
+    : 0;
+
+  return {
+    contentCount,
+    completedCount,
+    remainingCount,
+    readingTime: formatReadingTime(readingMinutes),
+    remainingReadingTime: formatReadingTime(remainingReadingMinutes),
+    progressValue,
+    status: getProgressStatus(progressValue),
+  };
 }
 
 export function createLearningController(options = {}) {
@@ -129,12 +204,7 @@ export function createLearningController(options = {}) {
       const progressPercent =
         contentCount > 0 ? Math.round((completedContentCount / contentCount) * 100) : 0;
 
-      const statusLabel =
-        progressPercent === 0
-          ? "Not Started"
-          : progressPercent === 100
-            ? "Completed"
-            : "In Progress";
+      const statusLabel = getProgressStatus(progressPercent);
 
       const meta = createElement("div", "nv-card-meta");
       meta.append(
@@ -173,6 +243,9 @@ export function createLearningController(options = {}) {
       `;
 
       // Metrics block
+      const readingLoad = formatReadingTime(readingLoadMinutes);
+      const remainingTime = formatReadingTime(remainingReadingTimeMinutes);
+
       const metricsBlock = createElement("div", "nv-path-metrics");
       metricsBlock.innerHTML = `
         <div class="nv-path-metrics__section" aria-label="Module and Content aggregates">
@@ -196,11 +269,11 @@ export function createLearningController(options = {}) {
         <div class="nv-path-metrics__section" aria-label="Reading estimates">
           <div class="nv-path-metric">
             <span class="nv-path-metric__label">Reading Load</span>
-            <strong class="nv-path-metric__value" aria-label="Estimated Reading Time: ${formatReadingTimeA11y(readingLoadMinutes)}">${formatReadingTime(readingLoadMinutes)}</strong>
+            <strong class="nv-path-metric__value" aria-label="Estimated Reading Time: ${readingLoad.label}">${readingLoad.text}</strong>
           </div>
           <div class="nv-path-metric">
             <span class="nv-path-metric__label">Remaining Time</span>
-            <strong class="nv-path-metric__value" aria-label="Remaining Reading Time: ${formatReadingTimeA11y(remainingReadingTimeMinutes)}">${formatReadingTime(remainingReadingTimeMinutes)}</strong>
+            <strong class="nv-path-metric__value" aria-label="Remaining Reading Time: ${remainingTime.label}">${remainingTime.text}</strong>
           </div>
         </div>
       `;
@@ -235,7 +308,7 @@ export function createLearningController(options = {}) {
     window.dispatchEvent(new CustomEvent("nv:learningrendered"));
   }
 
-  function renderModules(modules) {
+  async function renderModules(modules) {
     if (!elements.moduleList) {
       return;
     }
@@ -253,6 +326,16 @@ export function createLearningController(options = {}) {
       elements.moduleEmpty.hidden = true;
     }
 
+    let contentItems = [];
+    try {
+      contentItems = await learningService.getContentItems();
+    } catch (error) {
+      console.error("Failed to load content items for modules overview", error);
+    }
+
+    const progressRecords =
+      window.NeuralVerse?.progress?.service?.getRecords?.() || progressService.getRecords() || [];
+
     modules.forEach((module) => {
       const card = createElement("article", "nv-module-card");
       card.setAttribute("aria-labelledby", `module-${module.id}`);
@@ -266,14 +349,17 @@ export function createLearningController(options = {}) {
         module.description
       );
 
+      const overview = computeModuleOverview(module, contentItems, progressRecords);
+
       const meta = createElement("div", "nv-card-meta");
       meta.append(
-        createMeta("Content items", String(module.contentItemIds.length)),
-        createMeta("Status", module.status)
+        createMeta("Content items", String(overview.contentCount)),
+        createMeta("Status", overview.status)
       );
 
-      const status = createElement("span", "nv-card-status", module.status);
-      status.dataset.status = module.status;
+      const status = createElement("span", "nv-card-status", overview.status);
+      status.dataset.status = overview.status.toLowerCase().replace(' ', '-');
+      status.dataset.progressStatus = overview.status.toLowerCase().replace(' ', '-');
 
       // Inline progress target
       const progressOverview = createElement("div", "nv-progress-overview");
@@ -282,24 +368,45 @@ export function createLearningController(options = {}) {
       progressOverview.innerHTML = `
         <div class="nv-progress-overview__header">
           <span>Progress</span>
-          <strong data-module-progress-id="${module.id}">0%</strong>
+          <strong data-module-progress-id="${module.id}">${overview.progressValue}%</strong>
         </div>
         <progress
           class="nv-progress-meter"
-          value="0"
+          value="${overview.progressValue}"
           max="100"
           role="progressbar"
           aria-label="${module.title} progress"
           aria-valuemin="0"
           aria-valuemax="100"
-          aria-valuenow="0"
+          aria-valuenow="${overview.progressValue}"
           data-module-progress-meter="${module.id}"
         ></progress>
         <div class="nv-progress-overview__meta">
-          <span data-module-progress-count="${module.id}">0 of 0 completed</span>
-          <span class="nv-card-status" data-module-progress-status="${module.id}">Not started</span>
+          <span data-module-progress-count="${module.id}">${overview.completedCount} of ${overview.contentCount} completed</span>
+          <span class="nv-card-status" data-module-progress-status="${module.id}" data-progress-status="${overview.status.toLowerCase().replace(' ', '-')}">${overview.status}</span>
         </div>
       `;
+
+      // Overview Grid
+      const overviewBlock = createElement("div", "nv-overview-grid");
+      overviewBlock.setAttribute("aria-label", `${module.title} overview`);
+
+      overviewBlock.append(
+        createMetric("Content", String(overview.contentCount)),
+        createMetric("Completed", String(overview.completedCount)),
+        createMetric("Remaining", String(overview.remainingCount)),
+        createMetric(
+          "Reading Load",
+          overview.readingTime.text,
+          overview.readingTime.label
+        ),
+        createMetric(
+          "Remaining Time",
+          overview.remainingReadingTime.text,
+          overview.remainingReadingTime.label
+        ),
+        createMetric("Status", overview.status)
+      );
 
       const action = createElement("button", "nv-button", "Open Module");
       action.type = "button";
@@ -311,7 +418,15 @@ export function createLearningController(options = {}) {
         announce(`${module.title} selected.`);
       });
 
-      card.append(title, description, meta, status, progressOverview, action);
+      card.append(
+        title,
+        description,
+        meta,
+        status,
+        progressOverview,
+        overviewBlock,
+        action
+      );
       elements.moduleList.append(card);
     });
 
@@ -373,6 +488,14 @@ export function createLearningController(options = {}) {
       }
     });
   }
+
+  window.addEventListener("nv:progressupdated", () => {
+    const state = learningState.getState();
+
+    if (state.availableModules && state.availableModules.length) {
+      renderModules(state.availableModules);
+    }
+  });
 
   return {
     init,
