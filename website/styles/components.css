@@ -30,6 +30,29 @@
  */
 
 /* =========================================================
+   A11y — Skip Link
+   ========================================================= */
+
+.nv-skip-link {
+  position: absolute;
+  top: -100px;
+  left: var(--sys-space-inset-md);
+  background-color: var(--sys-color-accent-primary);
+  color: var(--sys-color-text-inverse);
+  padding: var(--sys-space-inset-sm) var(--sys-space-inset-md);
+  border-radius: var(--sys-radius-control);
+  z-index: var(--sys-z-notification);
+  transition: top var(--sys-motion-duration-feedback) var(--sys-motion-ease-interface);
+  font-family: var(--sys-font-body-family);
+  font-weight: var(--ref-font-weight-bold);
+  text-decoration: none;
+}
+
+.nv-skip-link:focus-visible {
+  top: var(--sys-space-inset-md);
+}
+
+/* =========================================================
    F1 — Divider
    Registry: component-f1-divider
    Source: COMPONENT_REGISTRY.md (M2 F1), ACCESSIBILITY_MATRIX.md (a11y-f1-divider)
@@ -649,4 +672,87 @@
 /* Error/Invalid state */
 .nv-switch[aria-invalid="true"] {
   border-color: var(--sys-color-semantic-error);
+}
+
+/* =========================================================
+   NeuralVerse MVP Visual Components
+   ========================================================= */
+
+/* Card Component */
+.nv-card {
+  background-color: var(--sys-color-surface-raised);
+  border: var(--sys-border-subtle) solid var(--sys-color-border-subtle);
+  border-radius: var(--sys-radius-surface);
+  padding: var(--sys-space-inset-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sys-space-stack-xs);
+  box-shadow: var(--sys-shadow-surface);
+}
+
+/* Panel Component */
+.nv-panel {
+  background-color: var(--sys-color-surface-base);
+  border: var(--sys-border-default) solid var(--sys-color-border-default);
+  border-radius: var(--sys-radius-surface);
+  padding: var(--sys-space-inset-md);
+}
+
+/* Empty State Component */
+.nv-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--sys-space-inset-lg);
+  gap: var(--sys-space-stack-sm);
+  min-block-size: 20rem;
+}
+
+.nv-empty-state-icon {
+  font-size: 2.5rem;
+  color: var(--sys-color-accent-primary);
+}
+
+.nv-empty-state-title {
+  font-family: var(--sys-font-display-family);
+  font-size: var(--sys-font-heading-size);
+  font-weight: var(--sys-font-heading-weight);
+  color: var(--sys-color-text-primary);
+}
+
+.nv-empty-state-description {
+  font-family: var(--sys-font-body-family);
+  font-size: var(--sys-font-body-size);
+  color: var(--sys-color-text-muted);
+  max-inline-size: var(--sys-a11y-reading-width-standard);
+}
+
+/* Status Footer Component */
+.nv-status-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  block-size: 2.5rem;
+  padding-inline: var(--sys-space-inset-md);
+  background-color: var(--sys-color-background-subtle);
+  border-top: var(--sys-border-subtle) solid var(--sys-color-border-subtle);
+  font-family: var(--sys-font-body-family);
+  font-size: var(--sys-font-caption-size);
+  color: var(--sys-color-text-muted);
+  z-index: var(--sys-z-sticky);
+}
+
+.nv-status-indicator {
+  display: flex;
+  align-items: center;
+  gap: var(--sys-space-inline-xs);
+}
+
+.nv-status-dot {
+  inline-size: 0.5rem;
+  block-size: 0.5rem;
+  border-radius: var(--ref-radius-round);
+  background-color: var(--sys-color-semantic-success);
 }

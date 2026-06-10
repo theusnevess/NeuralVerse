@@ -1,0 +1,58 @@
+/* =========================================================
+   NeuralVerse Utility Layer CSS
+   ========================================================= */
+
+/* Visually Hidden (Screen Reader Only) */
+.sr-only,
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* Stack Layout Utility (Vertical Stack) */
+.nv-stack {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.nv-stack--gap-xs { gap: var(--sys-space-stack-xs); }
+.nv-stack--gap-sm { gap: var(--sys-space-stack-sm); }
+.nv-stack--gap-md { gap: var(--sys-space-stack-md); }
+.nv-stack--gap-lg { gap: var(--sys-space-stack-lg); }
+
+/* Cluster Layout Utility (Horizontal Row) */
+.nv-cluster {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.nv-cluster--gap-xs { gap: var(--sys-space-inline-xs); }
+.nv-cluster--gap-sm { gap: var(--sys-space-inline-sm); }
+.nv-cluster--gap-md { gap: var(--sys-space-inline-md); }
+.nv-cluster--gap-lg { gap: var(--sys-space-inline-lg); }
+
+/* Grid Layout Utility */
+.nv-grid {
+  display: grid;
+  gap: var(--sys-space-layout-gap);
+}
+.nv-grid--cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.nv-grid--cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+/* Muted Text */
+.nv-muted {
+  color: var(--sys-color-text-muted) !important;
+}
+
+/* Text Balance */
+.nv-text-balance {
+  text-wrap: balance;
+}
