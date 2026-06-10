@@ -1207,6 +1207,54 @@
   font-weight: var(--ref-font-weight-medium);
 }
 
+/* =========================================================
+   Progress Overview Component (NV-101-M3)
+   ========================================================= */
+
+.nv-progress-overview {
+  display: grid;
+  gap: var(--sys-space-stack-sm);
+  padding: var(--sys-space-inset-md);
+  border: var(--sys-border-subtle) solid var(--sys-color-border-subtle);
+  border-radius: var(--sys-radius-control);
+  background: var(--sys-color-background-subtle);
+}
+
+.nv-progress-overview__header,
+.nv-progress-overview__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sys-space-inline-sm);
+}
+
+.nv-progress-overview__header span,
+.nv-progress-overview__meta span {
+  color: var(--sys-color-text-secondary);
+  font-family: var(--sys-font-body-family);
+  font-size: var(--sys-font-body-size);
+}
+
+.nv-progress-overview__header strong {
+  color: var(--sys-color-text-primary);
+  font-family: var(--sys-font-code-family);
+  font-size: var(--sys-font-caption-size);
+}
+
+.nv-card-status[data-progress-status="not-started"] {
+  color: var(--sys-color-text-secondary);
+}
+
+.nv-card-status[data-progress-status="in-progress"] {
+  color: var(--sys-color-text-primary);
+}
+
+.nv-card-status[data-progress-status="completed"] {
+  color: var(--sys-color-text-primary);
+}
+
+
 
 
 

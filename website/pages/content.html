@@ -16,6 +16,11 @@
       <strong data-progress-content-status>not started</strong>
     </div>
 
+    <div class="nv-progress-summary">
+      <span>Completed at:</span>
+      <strong data-progress-completed-at>Not completed</strong>
+    </div>
+
     <label class="nv-progress-meter-label" for="content-progress-meter">
       Progress:
       <span data-progress-content-value>0%</span>
@@ -26,6 +31,8 @@
       class="nv-progress-meter"
       value="0"
       max="100"
+      role="progressbar"
+      aria-label="Current content progress"
       aria-valuemin="0"
       aria-valuemax="100"
       aria-valuenow="0"

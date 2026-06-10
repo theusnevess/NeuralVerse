@@ -431,6 +431,15 @@
   max-inline-size: var(--sys-a11y-reading-width-standard);
 }
 
+/* =========================================================
+   Progress Overview Layout (NV-101-M3)
+   ========================================================= */
+
+.nv-progress-overview {
+  inline-size: 100%;
+}
+
+
 
 
 

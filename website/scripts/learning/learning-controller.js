@@ -65,11 +65,29 @@ export function createLearningController(options = {}) {
       status.dataset.status = path.status;
 
       // Inline progress target
-      const progress = createElement("div", "nv-progress-inline");
-      progress.setAttribute("aria-label", "Learning path progress");
-      progress.innerHTML = `
-        <span>Progress:</span>
-        <strong data-path-progress-id="${path.id}">0%</strong>
+      const progressOverview = createElement("div", "nv-progress-overview");
+      progressOverview.setAttribute("aria-label", `${path.title} progress`);
+
+      progressOverview.innerHTML = `
+        <div class="nv-progress-overview__header">
+          <span>Progress</span>
+          <strong data-path-progress-id="${path.id}">0%</strong>
+        </div>
+        <progress
+          class="nv-progress-meter"
+          value="0"
+          max="100"
+          role="progressbar"
+          aria-label="${path.title} progress"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          aria-valuenow="0"
+          data-path-progress-meter="${path.id}"
+        ></progress>
+        <div class="nv-progress-overview__meta">
+          <span data-path-progress-count="${path.id}">0 of 0 completed</span>
+          <span class="nv-card-status" data-path-progress-status="${path.id}">Not started</span>
+        </div>
       `;
 
       const action = createElement("button", "nv-button", "Select Path");
@@ -90,7 +108,7 @@ export function createLearningController(options = {}) {
         announce(`${path.title} selected.`);
       });
 
-      card.append(title, description, meta, status, progress, action);
+      card.append(title, description, meta, status, progressOverview, action);
       elements.pathList.append(card);
     });
 
@@ -143,11 +161,29 @@ export function createLearningController(options = {}) {
       status.dataset.status = module.status;
 
       // Inline progress target
-      const progress = createElement("div", "nv-progress-inline");
-      progress.setAttribute("aria-label", "Module progress");
-      progress.innerHTML = `
-        <span>Progress:</span>
-        <strong data-module-progress-id="${module.id}">0%</strong>
+      const progressOverview = createElement("div", "nv-progress-overview");
+      progressOverview.setAttribute("aria-label", `${module.title} progress`);
+
+      progressOverview.innerHTML = `
+        <div class="nv-progress-overview__header">
+          <span>Progress</span>
+          <strong data-module-progress-id="${module.id}">0%</strong>
+        </div>
+        <progress
+          class="nv-progress-meter"
+          value="0"
+          max="100"
+          role="progressbar"
+          aria-label="${module.title} progress"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          aria-valuenow="0"
+          data-module-progress-meter="${module.id}"
+        ></progress>
+        <div class="nv-progress-overview__meta">
+          <span data-module-progress-count="${module.id}">0 of 0 completed</span>
+          <span class="nv-card-status" data-module-progress-status="${module.id}">Not started</span>
+        </div>
       `;
 
       const action = createElement("button", "nv-button", "Open Module");
@@ -160,7 +196,7 @@ export function createLearningController(options = {}) {
         announce(`${module.title} selected.`);
       });
 
-      card.append(title, description, meta, status, progress, action);
+      card.append(title, description, meta, status, progressOverview, action);
       elements.moduleList.append(card);
     });
 

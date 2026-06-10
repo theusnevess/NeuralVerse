@@ -30,6 +30,11 @@ export function createWorkspaceController(options = {}) {
       contextContent: root.querySelector("[data-workspace-context-content]"),
       contextLastOpened: root.querySelector("[data-workspace-context-last-opened]"),
       contextProgress: root.querySelector("[data-workspace-context-progress]"),
+
+      workspacePathProgress: root.querySelector("[data-workspace-progress-path]"),
+      workspaceModuleProgress: root.querySelector("[data-workspace-progress-module]"),
+      workspaceContentStatus: root.querySelector("[data-workspace-progress-content-status]"),
+      workspaceContentCount: root.querySelector("[data-workspace-progress-count]"),
     };
   }
 
