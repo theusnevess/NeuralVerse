@@ -1,5 +1,6 @@
 import { createLearningController } from "./learning/learning-controller.js";
 import { createContentController } from "./content/content-controller.js";
+import { createProgressController } from "./progress/progress-controller.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   console.log('NeuralVerse App Shell Initialized');
@@ -26,7 +27,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
   contentController.init();
 
+  // Initialize the progress controller
+  const progressController = createProgressController({
+    root: document,
+  });
+
+  progressController.init().catch((error) => {
+    console.error("Progress controller failed to initialize.", error);
+  });
+
   window.NeuralVerse = window.NeuralVerse || {};
   window.NeuralVerse.learningController = learningController;
   window.NeuralVerse.contentController = contentController;
+  window.NeuralVerse.progressController = progressController;
 });

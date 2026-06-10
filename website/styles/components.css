@@ -1033,5 +1033,69 @@
   display: block;
 }
 
+/* =========================================================
+   Progress Tracking Component (NV-100-M7)
+   ========================================================= */
+
+.nv-progress-panel {
+  display: grid;
+  gap: var(--sys-space-stack-sm);
+  padding: var(--sys-space-inset-lg);
+  border: var(--sys-border-subtle) solid var(--sys-color-border-subtle);
+  border-radius: var(--sys-radius-control);
+  background: var(--sys-color-surface-raised);
+}
+
+.nv-progress-panel h2 {
+  margin: 0;
+  color: var(--sys-color-text-primary);
+  font-family: var(--sys-font-display-family);
+  font-size: var(--sys-font-heading-size);
+  line-height: var(--sys-font-heading-line-height);
+}
+
+.nv-progress-summary,
+.nv-progress-inline,
+.nv-progress-meter-label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sys-space-inline-xs);
+  color: var(--sys-color-text-secondary);
+  font-family: var(--sys-font-body-family);
+  font-size: var(--sys-font-body-size);
+  line-height: var(--sys-font-body-line-height);
+}
+
+.nv-progress-summary strong,
+.nv-progress-inline strong {
+  color: var(--sys-color-text-primary);
+  font-family: var(--sys-font-code-family);
+  font-size: var(--sys-font-caption-size);
+  text-transform: uppercase;
+  letter-spacing: var(--ref-font-tracking-wide);
+}
+
+.nv-progress-meter {
+  inline-size: 100%;
+  block-size: 8px;
+  overflow: hidden;
+  border: var(--sys-border-subtle) solid var(--sys-color-border-subtle);
+  border-radius: var(--sys-radius-badge);
+  background: var(--sys-color-background-subtle);
+}
+
+.nv-progress-meter::-webkit-progress-bar {
+  background: var(--sys-color-background-subtle);
+}
+
+.nv-progress-meter::-webkit-progress-value {
+  background: var(--sys-color-accent-primary);
+}
+
+.nv-progress-meter::-moz-progress-bar {
+  background: var(--sys-color-accent-primary);
+}
+
+
 
 

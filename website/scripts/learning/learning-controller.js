@@ -64,6 +64,14 @@ export function createLearningController(options = {}) {
       const status = createElement("span", "nv-card-status", path.status);
       status.dataset.status = path.status;
 
+      // Inline progress target
+      const progress = createElement("div", "nv-progress-inline");
+      progress.setAttribute("aria-label", "Learning path progress");
+      progress.innerHTML = `
+        <span>Progress:</span>
+        <strong data-path-progress-id="${path.id}">0%</strong>
+      `;
+
       const action = createElement("button", "nv-button", "Select Path");
       action.type = "button";
       action.dataset.learningPathId = path.id;
@@ -82,13 +90,16 @@ export function createLearningController(options = {}) {
         announce(`${path.title} selected.`);
       });
 
-      card.append(title, description, meta, status, action);
+      card.append(title, description, meta, status, progress, action);
       elements.pathList.append(card);
     });
 
     if (elements.learningEmpty) {
       elements.learningEmpty.hidden = paths.length > 0;
     }
+
+    // Trigger progress update for newly created DOM nodes
+    window.dispatchEvent(new CustomEvent("nv:viewrendered"));
   }
 
   function renderModules(modules) {
@@ -131,6 +142,14 @@ export function createLearningController(options = {}) {
       const status = createElement("span", "nv-card-status", module.status);
       status.dataset.status = module.status;
 
+      // Inline progress target
+      const progress = createElement("div", "nv-progress-inline");
+      progress.setAttribute("aria-label", "Module progress");
+      progress.innerHTML = `
+        <span>Progress:</span>
+        <strong data-module-progress-id="${module.id}">0%</strong>
+      `;
+
       const action = createElement("button", "nv-button", "Open Module");
       action.type = "button";
       action.dataset.moduleId = module.id;
@@ -141,9 +160,12 @@ export function createLearningController(options = {}) {
         announce(`${module.title} selected.`);
       });
 
-      card.append(title, description, meta, status, action);
+      card.append(title, description, meta, status, progress, action);
       elements.moduleList.append(card);
     });
+
+    // Trigger progress update for newly created DOM nodes
+    window.dispatchEvent(new CustomEvent("nv:viewrendered"));
   }
 
   function announce(message) {
