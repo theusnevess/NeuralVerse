@@ -527,6 +527,21 @@
   max-inline-size: 100%;
 }
 
+.nv-workspace__surface {
+  display: grid;
+  gap: var(--sys-spacing-stack-lg, var(--sys-space-stack-lg));
+}
+
+@media (max-width: 48rem) {
+  .nv-orientation-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .nv-workspace-orientation {
+    padding: var(--sys-spacing-inset-md, var(--sys-space-inset-md));
+  }
+}
+
 
 
 

@@ -157,6 +157,66 @@
               </a>
             </article>
           </section>
+
+          <section class="nv-workspace-orientation" aria-labelledby="workspace-focus-title">
+            <h2 id="workspace-focus-title">Current Learning Focus</h2>
+
+            <dl class="nv-orientation-grid">
+              <div>
+                <dt>Path</dt>
+                <dd data-workspace-orientation-path>No learning session started yet.</dd>
+              </div>
+              <div>
+                <dt>Module</dt>
+                <dd data-workspace-orientation-module>None</dd>
+              </div>
+              <div>
+                <dt>Content</dt>
+                <dd data-workspace-orientation-content>None</dd>
+              </div>
+            </dl>
+          </section>
+
+          <section class="nv-workspace-orientation" aria-labelledby="workspace-path-summary-title">
+            <h2 id="workspace-path-summary-title">Path Summary</h2>
+
+            <dl class="nv-orientation-grid">
+              <div><dt>Progress</dt><dd data-workspace-path-summary-progress>0%</dd></div>
+              <div><dt>Completed</dt><dd data-workspace-path-summary-completed>0 / 0</dd></div>
+              <div><dt>Remaining</dt><dd data-workspace-path-summary-remaining>0</dd></div>
+              <div><dt>Reading Load</dt><dd data-workspace-path-summary-reading aria-label="0 minutes">0m</dd></div>
+              <div><dt>Remaining Reading</dt><dd data-workspace-path-summary-remaining-reading aria-label="0 minutes">0m</dd></div>
+              <div><dt>Status</dt><dd data-workspace-path-summary-status>Not Started</dd></div>
+            </dl>
+          </section>
+
+          <section class="nv-workspace-orientation" aria-labelledby="workspace-module-summary-title">
+            <h2 id="workspace-module-summary-title">Module Summary</h2>
+
+            <dl class="nv-orientation-grid">
+              <div><dt>Progress</dt><dd data-workspace-module-summary-progress>0%</dd></div>
+              <div><dt>Completed</dt><dd data-workspace-module-summary-completed>0 / 0</dd></div>
+              <div><dt>Remaining</dt><dd data-workspace-module-summary-remaining>0</dd></div>
+              <div><dt>Reading Load</dt><dd data-workspace-module-summary-reading aria-label="0 minutes">0m</dd></div>
+              <div><dt>Remaining Reading</dt><dd data-workspace-module-summary-remaining-reading aria-label="0 minutes">0m</dd></div>
+              <div><dt>Status</dt><dd data-workspace-module-summary-status>Not Started</dd></div>
+            </dl>
+          </section>
+
+          <section class="nv-workspace-orientation" aria-labelledby="workspace-position-title">
+            <h2 id="workspace-position-title">Current Position</h2>
+
+            <dl class="nv-orientation-grid">
+              <div>
+                <dt>Current Item</dt>
+                <dd data-workspace-position-content>—</dd>
+              </div>
+              <div>
+                <dt>Current Module</dt>
+                <dd data-workspace-position-module>—</dd>
+              </div>
+            </dl>
+          </section>
         </div>
 
         <div class="nv-divider" aria-hidden="true" style="margin-block: var(--sys-space-stack-md);"></div>
@@ -201,8 +261,10 @@
 
         <div class="nv-divider" aria-hidden="true"></div>
 
-        <section class="nv-context-section" aria-labelledby="nv-workspace-context-title">
-          <h3 id="nv-workspace-context-title" class="nv-context-section-title">Workspace Context</h3>
+        <section class="nv-context-section nv-workspace-context" aria-labelledby="workspace-context-title">
+          <h2 id="workspace-context-title" class="nv-context-section-title">Workspace Context</h2>
+
+          <h3>Learning Focus</h3>
           <dl class="nv-context-meta-list" style="display: grid; gap: var(--sys-space-stack-xs); margin: 0; padding: 0;">
             <div style="display: grid; gap: 2px;">
               <dt style="color: var(--sys-color-text-secondary); font-family: var(--sys-font-code-family); font-size: var(--sys-font-caption-size); text-transform: uppercase; letter-spacing: var(--ref-font-tracking-wide);">Current learning path</dt>
@@ -220,29 +282,13 @@
               <dt style="color: var(--sys-color-text-secondary); font-family: var(--sys-font-code-family); font-size: var(--sys-font-caption-size); text-transform: uppercase; letter-spacing: var(--ref-font-tracking-wide);">Last opened content</dt>
               <dd data-workspace-context-last-opened style="margin: 0; color: var(--sys-color-text-primary); font-family: var(--sys-font-body-family); font-size: var(--sys-font-body-size);">None</dd>
             </div>
-            <div style="display: grid; gap: 2px; margin-block-start: var(--sys-space-stack-xs);">
+          </dl>
+
+          <h3>Current Progress</h3>
+          <dl class="nv-context-meta-list" style="display: grid; gap: var(--sys-space-stack-xs); margin: 0; padding: 0;">
+            <div style="display: grid; gap: 2px;">
               <dt style="color: var(--sys-color-text-secondary); font-family: var(--sys-font-code-family); font-size: var(--sys-font-caption-size); text-transform: uppercase; letter-spacing: var(--ref-font-tracking-wide);">Progress summary</dt>
               <dd data-workspace-context-progress style="margin: 0; color: var(--sys-color-text-primary); font-family: var(--sys-font-body-family); font-size: var(--sys-font-body-size);">No progress yet</dd>
-            </div>
-            <div style="display: grid; gap: 2px; margin-block-start: var(--sys-space-stack-xs);">
-              <dt style="color: var(--sys-color-text-secondary); font-family: var(--sys-font-code-family); font-size: var(--sys-font-caption-size); text-transform: uppercase; letter-spacing: var(--ref-font-tracking-wide);">Next Ordered Content</dt>
-              <dd data-workspace-next-content style="margin: 0; color: var(--sys-color-text-primary); font-family: var(--sys-font-body-family); font-size: var(--sys-font-body-size);">None</dd>
-            </div>
-            <div style="display: grid; gap: 2px; margin-block-start: var(--sys-space-stack-xs);">
-              <dt style="color: var(--sys-color-text-secondary); font-family: var(--sys-font-code-family); font-size: var(--sys-font-caption-size); text-transform: uppercase; letter-spacing: var(--ref-font-tracking-wide);">Remaining Items</dt>
-              <dd data-workspace-remaining-items style="margin: 0; color: var(--sys-color-text-primary); font-family: var(--sys-font-body-family); font-size: var(--sys-font-body-size);">0 remaining</dd>
-            </div>
-            <div style="display: grid; gap: 2px; margin-block-start: var(--sys-space-stack-xs);">
-              <dt style="color: var(--sys-color-text-secondary); font-family: var(--sys-font-code-family); font-size: var(--sys-font-caption-size); text-transform: uppercase; letter-spacing: var(--ref-font-tracking-wide);">Remaining Reading Time</dt>
-              <dd data-workspace-remaining-reading-time aria-label="0 minutes" style="margin: 0; color: var(--sys-color-text-primary); font-family: var(--sys-font-body-family); font-size: var(--sys-font-body-size);">0m</dd>
-            </div>
-            <div style="display: grid; gap: 2px; margin-block-start: var(--sys-space-stack-xs);">
-              <dt style="color: var(--sys-color-text-secondary); font-family: var(--sys-font-code-family); font-size: var(--sys-font-caption-size); text-transform: uppercase; letter-spacing: var(--ref-font-tracking-wide);">Route type</dt>
-              <dd data-workspace-context-route-type style="margin: 0; color: var(--sys-color-text-primary); font-family: var(--sys-font-body-family); font-size: var(--sys-font-body-size);">home</dd>
-            </div>
-            <div style="display: grid; gap: 2px; margin-block-start: var(--sys-space-stack-xs);">
-              <dt style="color: var(--sys-color-text-secondary); font-family: var(--sys-font-code-family); font-size: var(--sys-font-caption-size); text-transform: uppercase; letter-spacing: var(--ref-font-tracking-wide);">Hierarchy depth</dt>
-              <dd data-workspace-context-depth style="margin: 0; color: var(--sys-color-text-primary); font-family: var(--sys-font-body-family); font-size: var(--sys-font-body-size);">1</dd>
             </div>
             <div style="display: grid; gap: 2px; margin-block-start: var(--sys-space-stack-xs);">
               <dt style="color: var(--sys-color-text-secondary); font-family: var(--sys-font-code-family); font-size: var(--sys-font-caption-size); text-transform: uppercase; letter-spacing: var(--ref-font-tracking-wide);">Path progress</dt>
@@ -259,6 +305,34 @@
             <div style="display: grid; gap: 2px; margin-block-start: var(--sys-space-stack-xs);">
               <dt style="color: var(--sys-color-text-secondary); font-family: var(--sys-font-code-family); font-size: var(--sys-font-caption-size); text-transform: uppercase; letter-spacing: var(--ref-font-tracking-wide);">Completed content</dt>
               <dd data-workspace-progress-count style="margin: 0; color: var(--sys-color-text-primary); font-family: var(--sys-font-body-family); font-size: var(--sys-font-body-size);">No progress yet</dd>
+            </div>
+          </dl>
+
+          <h3>Current Position</h3>
+          <dl class="nv-context-meta-list" style="display: grid; gap: var(--sys-space-stack-xs); margin: 0; padding: 0;">
+            <div style="display: grid; gap: 2px;">
+              <dt style="color: var(--sys-color-text-secondary); font-family: var(--sys-font-code-family); font-size: var(--sys-font-caption-size); text-transform: uppercase; letter-spacing: var(--ref-font-tracking-wide);">Route type</dt>
+              <dd data-workspace-context-route-type style="margin: 0; color: var(--sys-color-text-primary); font-family: var(--sys-font-body-family); font-size: var(--sys-font-body-size);">home</dd>
+            </div>
+            <div style="display: grid; gap: 2px; margin-block-start: var(--sys-space-stack-xs);">
+              <dt style="color: var(--sys-color-text-secondary); font-family: var(--sys-font-code-family); font-size: var(--sys-font-caption-size); text-transform: uppercase; letter-spacing: var(--ref-font-tracking-wide);">Hierarchy depth</dt>
+              <dd data-workspace-context-depth style="margin: 0; color: var(--sys-color-text-primary); font-family: var(--sys-font-body-family); font-size: var(--sys-font-body-size);">1</dd>
+            </div>
+          </dl>
+
+          <h3>Remaining Work</h3>
+          <dl class="nv-context-meta-list" style="display: grid; gap: var(--sys-space-stack-xs); margin: 0; padding: 0;">
+            <div style="display: grid; gap: 2px;">
+              <dt style="color: var(--sys-color-text-secondary); font-family: var(--sys-font-code-family); font-size: var(--sys-font-caption-size); text-transform: uppercase; letter-spacing: var(--ref-font-tracking-wide);">Next Ordered Content</dt>
+              <dd data-workspace-next-content style="margin: 0; color: var(--sys-color-text-primary); font-family: var(--sys-font-body-family); font-size: var(--sys-font-body-size);">None</dd>
+            </div>
+            <div style="display: grid; gap: 2px; margin-block-start: var(--sys-space-stack-xs);">
+              <dt style="color: var(--sys-color-text-secondary); font-family: var(--sys-font-code-family); font-size: var(--sys-font-caption-size); text-transform: uppercase; letter-spacing: var(--ref-font-tracking-wide);">Remaining Items</dt>
+              <dd data-workspace-remaining-items style="margin: 0; color: var(--sys-color-text-primary); font-family: var(--sys-font-body-family); font-size: var(--sys-font-body-size);">0 remaining</dd>
+            </div>
+            <div style="display: grid; gap: 2px; margin-block-start: var(--sys-space-stack-xs);">
+              <dt style="color: var(--sys-color-text-secondary); font-family: var(--sys-font-code-family); font-size: var(--sys-font-caption-size); text-transform: uppercase; letter-spacing: var(--ref-font-tracking-wide);">Remaining Reading Time</dt>
+              <dd data-workspace-remaining-reading-time aria-label="0 minutes" style="margin: 0; color: var(--sys-color-text-primary); font-family: var(--sys-font-body-family); font-size: var(--sys-font-body-size);">0m</dd>
             </div>
           </dl>
         </section>

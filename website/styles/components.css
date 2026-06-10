@@ -1400,6 +1400,67 @@
   }
 }
 
+/* =========================================================
+   Workspace Orientation (NV-200-M6)
+   ========================================================= */
+
+.nv-workspace-orientation {
+  display: grid;
+  gap: var(--sys-spacing-stack-md, var(--sys-space-stack-md));
+  padding: var(--sys-spacing-inset-lg, var(--sys-space-inset-lg));
+  border: var(--sys-border-width-sm, var(--sys-border-subtle)) solid var(--sys-color-border-subtle);
+  border-radius: var(--sys-radius-card, var(--sys-radius-surface));
+  background: var(--sys-color-surface-card, var(--sys-color-background-subtle));
+}
+
+.nv-workspace-orientation h2 {
+  margin: 0;
+  color: var(--sys-color-text-primary);
+  font-family: var(--sys-font-family-display, var(--sys-font-body-family));
+  font-size: var(--sys-font-size-heading-sm, var(--sys-font-body-size));
+  line-height: var(--sys-line-height-heading, var(--sys-font-body-line-height));
+}
+
+.nv-orientation-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(var(--sys-size-card-metric-min, 100px), 1fr));
+  gap: var(--sys-spacing-stack-sm, var(--sys-space-stack-sm));
+  margin: 0;
+}
+
+.nv-orientation-grid div {
+  display: grid;
+  gap: var(--sys-spacing-stack-2xs, var(--sys-space-stack-xs));
+  padding: var(--sys-spacing-inset-sm, var(--sys-space-inset-sm));
+  border: var(--sys-border-width-sm, var(--sys-border-subtle)) solid var(--sys-color-border-subtle);
+  border-radius: var(--sys-radius-card, var(--sys-radius-surface));
+  background: var(--sys-color-surface-muted, var(--sys-color-background-subtle));
+}
+
+.nv-orientation-grid dt {
+  color: var(--sys-color-text-tertiary, var(--sys-color-text-secondary));
+  font-family: var(--sys-font-family-mono, var(--sys-font-code-family));
+  font-size: var(--sys-font-size-label-sm, var(--sys-font-caption-size));
+  letter-spacing: var(--sys-letter-spacing-label, normal);
+  text-transform: uppercase;
+}
+
+.nv-orientation-grid dd {
+  margin: 0;
+  color: var(--sys-color-text-primary);
+  font-family: var(--sys-font-family-ui, var(--sys-font-body-family));
+  font-size: var(--sys-font-size-body-sm, var(--sys-font-body-size));
+  line-height: var(--sys-line-height-body, var(--sys-font-body-line-height));
+}
+
+.nv-workspace-context h3 {
+  margin-block: var(--sys-spacing-stack-md, var(--sys-space-stack-md)) var(--sys-spacing-stack-xs, var(--sys-space-stack-xs));
+  color: var(--sys-color-text-secondary);
+  font-family: var(--sys-font-family-display, var(--sys-font-body-family));
+  font-size: var(--sys-font-size-heading-xs, var(--sys-font-caption-size));
+  line-height: var(--sys-line-height-heading, var(--sys-font-body-line-height));
+}
+
 
 
 

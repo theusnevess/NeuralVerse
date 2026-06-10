@@ -2,48 +2,40 @@ import { createProgressService } from "../progress/progress-service.js";
 import { createContentService } from "../content/content-service.js";
 import { createLearningService } from "../learning/learning-service.js";
 
+function getStatusFromPercent(value) {
+  if (value <= 0) return "Not Started";
+  if (value >= 100) return "Completed";
+  return "In Progress";
+}
+
 function formatReadingTime(minutes) {
-  const safeMinutes = Number(minutes || 0);
+  const safe = Number(minutes || 0);
+  const hours = Math.floor(safe / 60);
+  const mins = safe % 60;
 
-  if (!safeMinutes) {
-    return {
-      text: "0m",
-      label: "0 minutes",
-    };
-  }
-
-  const hours = Math.floor(safeMinutes / 60);
-  const remainingMinutes = safeMinutes % 60;
-
-  if (!hours) {
-    return {
-      text: `${remainingMinutes}m`,
-      label: `${remainingMinutes} minutes`,
-    };
-  }
-
-  if (!remainingMinutes) {
-    return {
-      text: `${hours}h`,
-      label: `${hours} hours`,
-    };
-  }
+  if (!hours) return { text: `${mins}m`, label: `${mins} minutes` };
+  if (!mins) return { text: `${hours}h`, label: `${hours} hours` };
 
   return {
-    text: `${hours}h ${remainingMinutes}m`,
-    label: `${hours} hours ${remainingMinutes} minutes`,
+    text: `${hours}h ${mins}m`,
+    label: `${hours} hours ${mins} minutes`,
   };
 }
 
-function getCompletedContentIds(progressService) {
-  return progressService
-    .getRecords()
-    .filter(
-      (record) =>
-        record.entityType === "content-item" &&
-        record.status === "completed"
-    )
+function getCompletedIds(progressService) {
+  return progressService.getRecords()
+    .filter((record) => record.entityType === "content-item" && record.status === "completed")
     .map((record) => record.entityId);
+}
+
+function getProgress(completed, total) {
+  if (!total) return 0;
+  return Math.round((completed / total) * 100);
+}
+
+function getPositionByOrder(item, orderedItems) {
+  const index = orderedItems.findIndex((entry) => entry.id === item?.id);
+  return index === -1 ? "—" : `${index + 1} / ${orderedItems.length}`;
 }
 
 function getNextOrderedContent(currentContent, moduleContentItems) {
@@ -59,12 +51,6 @@ function getNextOrderedContent(currentContent, moduleContentItems) {
   }
 
   return orderedItems[currentIndex + 1] || null;
-}
-
-function getRemainingContentItems(moduleContentItems, completedContentIds) {
-  return moduleContentItems.filter(
-    (contentItem) => !completedContentIds.includes(contentItem.id)
-  );
 }
 
 function setAllText(targets, value) {
@@ -122,6 +108,27 @@ export function createWorkspaceController(options = {}) {
       remainingReadingTimeTargets: root.querySelectorAll("[data-workspace-remaining-reading-time]"),
 
       nextContentAction: root.querySelector("[data-workspace-next-content-action]"),
+
+      orientationPath: root.querySelector("[data-workspace-orientation-path]"),
+      orientationModule: root.querySelector("[data-workspace-orientation-module]"),
+      orientationContent: root.querySelector("[data-workspace-orientation-content]"),
+
+      pathSummaryProgress: root.querySelector("[data-workspace-path-summary-progress]"),
+      pathSummaryCompleted: root.querySelector("[data-workspace-path-summary-completed]"),
+      pathSummaryRemaining: root.querySelector("[data-workspace-path-summary-remaining]"),
+      pathSummaryReading: root.querySelector("[data-workspace-path-summary-reading]"),
+      pathSummaryRemainingReading: root.querySelector("[data-workspace-path-summary-remaining-reading]"),
+      pathSummaryStatus: root.querySelector("[data-workspace-path-summary-status]"),
+
+      moduleSummaryProgress: root.querySelector("[data-workspace-module-summary-progress]"),
+      moduleSummaryCompleted: root.querySelector("[data-workspace-module-summary-completed]"),
+      moduleSummaryRemaining: root.querySelector("[data-workspace-module-summary-remaining]"),
+      moduleSummaryReading: root.querySelector("[data-workspace-module-summary-reading]"),
+      moduleSummaryRemainingReading: root.querySelector("[data-workspace-module-summary-remaining-reading]"),
+      moduleSummaryStatus: root.querySelector("[data-workspace-module-summary-status]"),
+
+      positionContent: root.querySelector("[data-workspace-position-content]"),
+      positionModule: root.querySelector("[data-workspace-position-module]"),
     };
   }
 
@@ -150,21 +157,33 @@ export function createWorkspaceController(options = {}) {
     const module = await learningService.getModuleById(contentItem.moduleId);
     const path = module ? await learningService.getLearningPathById(module.pathId) : null;
 
-    const moduleContentItems = module
-      ? await learningService.getContentItemsByModule(module.id)
+    const allModules = await learningService.getModules();
+    const allContentItems = await learningService.getContentItems();
+
+    const pathModules = path
+      ? allModules.filter((item) => item.pathId === path.id).sort((a, b) => a.order - b.order)
       : [];
 
-    const completedContentIds = getCompletedContentIds(progressService);
-    const nextContent = getNextOrderedContent(contentItem, moduleContentItems);
-    const remainingContentItems = getRemainingContentItems(
-      moduleContentItems,
-      completedContentIds
+    const moduleContentItems = module
+      ? allContentItems.filter((item) => item.moduleId === module.id).sort((a, b) => a.order - b.order)
+      : [];
+
+    const pathContentItems = pathModules.flatMap((pathModule) =>
+      allContentItems.filter((item) => item.moduleId === pathModule.id)
     );
 
-    const remainingReadingMinutes = remainingContentItems.reduce(
-      (total, item) => total + Number(item.estimatedReadingTime || 0),
-      0
-    );
+    const completedIds = getCompletedIds(progressService);
+
+    const completedPathItems = pathContentItems.filter((item) => completedIds.includes(item.id));
+    const completedModuleItems = moduleContentItems.filter((item) => completedIds.includes(item.id));
+
+    const remainingPathItems = pathContentItems.filter((item) => !completedIds.includes(item.id));
+    const remainingModuleItems = moduleContentItems.filter((item) => !completedIds.includes(item.id));
+
+    const pathProgress = getProgress(completedPathItems.length, pathContentItems.length);
+    const moduleProgress = getProgress(completedModuleItems.length, moduleContentItems.length);
+
+    const nextContent = getNextOrderedContent(contentItem, moduleContentItems);
 
     return {
       record: lastRecord,
@@ -172,8 +191,34 @@ export function createWorkspaceController(options = {}) {
       module,
       path,
       nextContent,
-      remainingContentItems,
-      remainingReadingTime: formatReadingTime(remainingReadingMinutes),
+      pathSummary: {
+        progress: pathProgress,
+        status: getStatusFromPercent(pathProgress),
+        completed: completedPathItems.length,
+        total: pathContentItems.length,
+        remaining: remainingPathItems.length,
+        readingLoad: formatReadingTime(
+          pathContentItems.reduce((sum, item) => sum + Number(item.estimatedReadingTime || 0), 0)
+        ),
+        remainingReading: formatReadingTime(
+          remainingPathItems.reduce((sum, item) => sum + Number(item.estimatedReadingTime || 0), 0)
+        ),
+        modulePosition: getPositionByOrder(module, pathModules),
+      },
+      moduleSummary: {
+        progress: moduleProgress,
+        status: getStatusFromPercent(moduleProgress),
+        completed: completedModuleItems.length,
+        total: moduleContentItems.length,
+        remaining: remainingModuleItems.length,
+        readingLoad: formatReadingTime(
+          moduleContentItems.reduce((sum, item) => sum + Number(item.estimatedReadingTime || 0), 0)
+        ),
+        remainingReading: formatReadingTime(
+          remainingModuleItems.reduce((sum, item) => sum + Number(item.estimatedReadingTime || 0), 0)
+        ),
+        contentPosition: getPositionByOrder(contentItem, moduleContentItems),
+      },
     };
   }
 
@@ -216,6 +261,39 @@ export function createWorkspaceController(options = {}) {
         elements.nextContentAction.removeAttribute("href");
       }
 
+      if (elements.orientationPath) elements.orientationPath.textContent = "No learning session started yet.";
+      if (elements.orientationModule) elements.orientationModule.textContent = "None";
+      if (elements.orientationContent) elements.orientationContent.textContent = "None";
+
+      if (elements.pathSummaryProgress) elements.pathSummaryProgress.textContent = "0%";
+      if (elements.pathSummaryCompleted) elements.pathSummaryCompleted.textContent = "0 / 0";
+      if (elements.pathSummaryRemaining) elements.pathSummaryRemaining.textContent = "0";
+      if (elements.pathSummaryReading) {
+        elements.pathSummaryReading.textContent = "0m";
+        elements.pathSummaryReading.setAttribute("aria-label", "0 minutes");
+      }
+      if (elements.pathSummaryRemainingReading) {
+        elements.pathSummaryRemainingReading.textContent = "0m";
+        elements.pathSummaryRemainingReading.setAttribute("aria-label", "0 minutes");
+      }
+      if (elements.pathSummaryStatus) elements.pathSummaryStatus.textContent = "Not Started";
+
+      if (elements.moduleSummaryProgress) elements.moduleSummaryProgress.textContent = "0%";
+      if (elements.moduleSummaryCompleted) elements.moduleSummaryCompleted.textContent = "0 / 0";
+      if (elements.moduleSummaryRemaining) elements.moduleSummaryRemaining.textContent = "0";
+      if (elements.moduleSummaryReading) {
+        elements.moduleSummaryReading.textContent = "0m";
+        elements.moduleSummaryReading.setAttribute("aria-label", "0 minutes");
+      }
+      if (elements.moduleSummaryRemainingReading) {
+        elements.moduleSummaryRemainingReading.textContent = "0m";
+        elements.moduleSummaryRemainingReading.setAttribute("aria-label", "0 minutes");
+      }
+      if (elements.moduleSummaryStatus) elements.moduleSummaryStatus.textContent = "Not Started";
+
+      if (elements.positionContent) elements.positionContent.textContent = "—";
+      if (elements.positionModule) elements.positionModule.textContent = "—";
+
       return;
     }
 
@@ -225,8 +303,8 @@ export function createWorkspaceController(options = {}) {
       module,
       path,
       nextContent,
-      remainingContentItems,
-      remainingReadingTime,
+      pathSummary,
+      moduleSummary,
     } = context;
 
     if (elements.continueCard) elements.continueCard.hidden = false;
@@ -261,10 +339,11 @@ export function createWorkspaceController(options = {}) {
       elements.currentFocusContent.textContent = contentItem.title;
     }
 
+    // Remaining items for the module
     setAllText(elements.nextContentTargets, nextContent?.title || "No next content");
-    setAllText(elements.remainingItemsTargets, `${remainingContentItems.length} remaining`);
-    setAllText(elements.remainingReadingTimeTargets, remainingReadingTime.text);
-    setAllAriaLabel(elements.remainingReadingTimeTargets, remainingReadingTime.label);
+    setAllText(elements.remainingItemsTargets, `${moduleSummary.remaining} remaining`);
+    setAllText(elements.remainingReadingTimeTargets, moduleSummary.remainingReading.text);
+    setAllAriaLabel(elements.remainingReadingTimeTargets, moduleSummary.remainingReading.label);
 
     if (elements.nextContentAction) {
       if (nextContent) {
@@ -279,6 +358,40 @@ export function createWorkspaceController(options = {}) {
         elements.nextContentAction.removeAttribute("href");
       }
     }
+
+    // Update Orientation fields
+    if (elements.orientationPath) elements.orientationPath.textContent = path?.title || "Unknown path";
+    if (elements.orientationModule) elements.orientationModule.textContent = module?.title || "Unknown module";
+    if (elements.orientationContent) elements.orientationContent.textContent = contentItem.title;
+
+    if (elements.pathSummaryProgress) elements.pathSummaryProgress.textContent = `${pathSummary.progress}%`;
+    if (elements.pathSummaryCompleted) elements.pathSummaryCompleted.textContent = `${pathSummary.completed} / ${pathSummary.total}`;
+    if (elements.pathSummaryRemaining) elements.pathSummaryRemaining.textContent = String(pathSummary.remaining);
+    if (elements.pathSummaryReading) {
+      elements.pathSummaryReading.textContent = pathSummary.readingLoad.text;
+      elements.pathSummaryReading.setAttribute("aria-label", pathSummary.readingLoad.label);
+    }
+    if (elements.pathSummaryRemainingReading) {
+      elements.pathSummaryRemainingReading.textContent = pathSummary.remainingReading.text;
+      elements.pathSummaryRemainingReading.setAttribute("aria-label", pathSummary.remainingReading.label);
+    }
+    if (elements.pathSummaryStatus) elements.pathSummaryStatus.textContent = pathSummary.status;
+
+    if (elements.moduleSummaryProgress) elements.moduleSummaryProgress.textContent = `${moduleSummary.progress}%`;
+    if (elements.moduleSummaryCompleted) elements.moduleSummaryCompleted.textContent = `${moduleSummary.completed} / ${moduleSummary.total}`;
+    if (elements.moduleSummaryRemaining) elements.moduleSummaryRemaining.textContent = String(moduleSummary.remaining);
+    if (elements.moduleSummaryReading) {
+      elements.moduleSummaryReading.textContent = moduleSummary.readingLoad.text;
+      elements.moduleSummaryReading.setAttribute("aria-label", moduleSummary.readingLoad.label);
+    }
+    if (elements.moduleSummaryRemainingReading) {
+      elements.moduleSummaryRemainingReading.textContent = moduleSummary.remainingReading.text;
+      elements.moduleSummaryRemainingReading.setAttribute("aria-label", moduleSummary.remainingReading.label);
+    }
+    if (elements.moduleSummaryStatus) elements.moduleSummaryStatus.textContent = moduleSummary.status;
+
+    if (elements.positionContent) elements.positionContent.textContent = moduleSummary.contentPosition;
+    if (elements.positionModule) elements.positionModule.textContent = pathSummary.modulePosition;
   }
 
   function handleRouteChange(navState) {
