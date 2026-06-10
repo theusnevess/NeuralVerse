@@ -490,6 +490,17 @@
   }
 }
 
+/* =========================================================
+   Mobile Layout Refinements (NV-101-M5)
+   ========================================================= */
+
+@media (max-width: 48rem) {
+  .nv-breadcrumbs__list {
+    row-gap: var(--sys-space-stack-xs);
+  }
+}
+
+
 
 
 

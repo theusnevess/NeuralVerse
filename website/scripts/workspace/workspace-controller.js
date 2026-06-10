@@ -196,10 +196,12 @@ export function createWorkspaceController(options = {}) {
             <div class="nv-empty-state-icon" aria-hidden="true">📭</div>
             <h2 class="nv-empty-state-title">Workspace is Empty</h2>
             <p class="nv-empty-state-description">
-              No learning modules, publications, or simulation agents have been initialized for the current path block.
+              No learning modules, publications, or simulation agents have been initialized for the current path block. Select a path block to get started or initialize the default view.
             </p>
-            <div class="nv-cluster nv-cluster--gap-sm">
+            <div class="nv-cluster nv-cluster--gap-sm" style="justify-content: center; align-items: center; margin-block-start: var(--sys-space-stack-md);">
               <button class="nv-button" data-variant="primary" data-workspace-action="open-workspace">Initialize Workspace</button>
+              <button class="nv-button" data-variant="secondary" data-workspace-action="explore-learning">Explore Learning Paths</button>
+              <button class="nv-button" data-variant="secondary" data-workspace-action="browse-modules">Browse Modules</button>
             </div>
           </div>
         `;

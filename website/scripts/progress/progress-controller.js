@@ -304,11 +304,11 @@ export function createProgressController(options = {}) {
     });
 
     window.addEventListener("nv:learningrendered", async () => {
-      await renderLearningAggregates();
+      await handleRoute(window.location.hash);
     });
 
     window.addEventListener("nv:modulesrendered", async () => {
-      await renderLearningAggregates();
+      await handleRoute(window.location.hash);
     });
   }
 

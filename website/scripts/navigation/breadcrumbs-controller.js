@@ -30,7 +30,7 @@ export function createBreadcrumbsController(options = {}) {
   const getPathTarget = () => root.querySelector("[data-workspace-context-path]");
   const getModuleTarget = () => root.querySelector("[data-workspace-context-module]");
   const getContentTarget = () => root.querySelector("[data-workspace-context-content]");
-  const getLiveRegion = () => root.querySelector("[data-breadcrumbs-live]");
+  const getLiveRegion = () => root.querySelector("[data-workspace-live]");
 
   function renderBreadcrumbs(crumbs) {
     const breadcrumbsTarget = getBreadcrumbsTarget();
@@ -80,8 +80,8 @@ export function createBreadcrumbsController(options = {}) {
     if (liveRegion) {
       const labels = [path?.title, module?.title, content?.title].filter(Boolean);
       liveRegion.textContent = labels.length
-        ? `Current location: ${labels.join(", ")}.`
-        : `Current route: ${routeType}.`;
+        ? `Current view changed to ${routeType}. Current location: ${labels.join(" > ")}.`
+        : `Current view changed to ${routeType}.`;
     }
   }
 

@@ -1189,6 +1189,8 @@
 }
 
 .nv-breadcrumbs a {
+  display: inline-flex;
+  align-items: center;
   color: var(--sys-color-text-secondary);
   text-decoration: none;
 }

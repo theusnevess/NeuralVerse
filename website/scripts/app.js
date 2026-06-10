@@ -64,14 +64,8 @@ document.addEventListener("DOMContentLoaded", () => {
   window.NeuralVerse.breadcrumbsController = breadcrumbsController;
 });
 
-function announceRouteChange() {
-  const liveRegion = document.querySelector("[data-route-live]");
+function shiftFocusToWorkspace() {
   const mainWorkspace = document.querySelector("#main-workspace");
-  const title = document.querySelector("[data-workspace-title]")?.textContent || "Workspace";
-
-  if (liveRegion) {
-    liveRegion.textContent = `Current view changed to ${title}.`;
-  }
 
   if (mainWorkspace) {
     mainWorkspace.focus({ preventScroll: true });
@@ -79,5 +73,5 @@ function announceRouteChange() {
 }
 
 window.addEventListener("hashchange", () => {
-  window.requestAnimationFrame(announceRouteChange);
+  window.requestAnimationFrame(shiftFocusToWorkspace);
 });
