@@ -137,6 +137,7 @@ export function createProgressController(options = {}) {
     );
 
     syncRecords();
+    window.dispatchEvent(new CustomEvent("nv:progressupdated"));
     renderContentProgress(contentItem.id);
     await renderLearningAggregates();
     announce(`Progress updated. ${formatStatus(record.status)}.`);
@@ -173,6 +174,7 @@ export function createProgressController(options = {}) {
       );
 
       syncRecords();
+      window.dispatchEvent(new CustomEvent("nv:progressupdated"));
       renderContentProgress(contentItemId);
       await renderLearningAggregates();
       announce("Content marked as completed.");

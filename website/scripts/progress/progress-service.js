@@ -214,6 +214,16 @@ export function createProgressService(options = {}) {
     };
   }
 
+  function getLastOpenedContentRecord() {
+    return getRecords()
+      .filter(
+        (record) =>
+          record.entityType === PROGRESS_ENTITY_TYPES.CONTENT_ITEM &&
+          record.lastOpenedAt
+      )
+      .sort((a, b) => new Date(b.lastOpenedAt) - new Date(a.lastOpenedAt))[0] || null;
+  }
+
   return {
     loadProgress,
     saveProgress,
@@ -223,6 +233,7 @@ export function createProgressService(options = {}) {
     markOpened,
     markCompleted,
     getContentProgress,
+    getLastOpenedContentRecord,
     computeModuleProgress,
     computeLearningPathProgress,
   };

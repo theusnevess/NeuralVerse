@@ -88,6 +88,56 @@
             </div>
             <span class="nv-muted" style="font-size: var(--sys-font-caption-size);" data-workspace-updated>Updated: --:--:--</span>
           </div>
+
+          <section class="nv-continuity-grid" aria-label="Learning continuity">
+            <article class="nv-continuity-card" data-workspace-continue hidden>
+              <p class="nv-continuity-card__eyebrow">Continue Learning</p>
+              <h2>Resume current focus</h2>
+
+              <dl class="nv-continuity-card__meta">
+                <div>
+                  <dt>Path</dt>
+                  <dd data-workspace-continue-path>None</dd>
+                </div>
+                <div>
+                  <dt>Module</dt>
+                  <dd data-workspace-continue-module>None</dd>
+                </div>
+                <div>
+                  <dt>Content</dt>
+                  <dd data-workspace-continue-content>None</dd>
+                </div>
+              </dl>
+
+              <a class="nv-button" href="#/content" data-workspace-continue-action>
+                Resume
+              </a>
+            </article>
+
+            <article class="nv-continuity-card" data-workspace-last-opened hidden>
+              <p class="nv-continuity-card__eyebrow">Last Opened Content</p>
+              <h2 data-workspace-last-opened-title>None</h2>
+
+              <dl class="nv-continuity-card__meta">
+                <div>
+                  <dt>Module</dt>
+                  <dd data-workspace-last-opened-module>None</dd>
+                </div>
+                <div>
+                  <dt>Path</dt>
+                  <dd data-workspace-last-opened-path>None</dd>
+                </div>
+                <div>
+                  <dt>Last opened</dt>
+                  <dd data-workspace-last-opened-time>None</dd>
+                </div>
+              </dl>
+
+              <a class="nv-button" href="#/content" data-workspace-last-opened-action>
+                Open Again
+              </a>
+            </article>
+          </section>
         </div>
 
         <div class="nv-divider" aria-hidden="true" style="margin-block: var(--sys-space-stack-md);"></div>
@@ -128,6 +178,34 @@
           <p class="nv-context-description">
             Scientific Research & AI Agent Environment.
           </p>
+        </section>
+
+        <div class="nv-divider" aria-hidden="true"></div>
+
+        <section class="nv-context-section" aria-labelledby="nv-workspace-context-title">
+          <h3 id="nv-workspace-context-title" class="nv-context-section-title">Workspace Context</h3>
+          <dl class="nv-context-meta-list" style="display: grid; gap: var(--sys-space-stack-xs); margin: 0; padding: 0;">
+            <div style="display: grid; gap: 2px;">
+              <dt style="color: var(--sys-color-text-secondary); font-family: var(--sys-font-code-family); font-size: var(--sys-font-caption-size); text-transform: uppercase; letter-spacing: var(--ref-font-tracking-wide);">Current learning path</dt>
+              <dd data-workspace-context-path style="margin: 0; color: var(--sys-color-text-primary); font-family: var(--sys-font-body-family); font-size: var(--sys-font-body-size);">None</dd>
+            </div>
+            <div style="display: grid; gap: 2px; margin-block-start: var(--sys-space-stack-xs);">
+              <dt style="color: var(--sys-color-text-secondary); font-family: var(--sys-font-code-family); font-size: var(--sys-font-caption-size); text-transform: uppercase; letter-spacing: var(--ref-font-tracking-wide);">Current module</dt>
+              <dd data-workspace-context-module style="margin: 0; color: var(--sys-color-text-primary); font-family: var(--sys-font-body-family); font-size: var(--sys-font-body-size);">None</dd>
+            </div>
+            <div style="display: grid; gap: 2px; margin-block-start: var(--sys-space-stack-xs);">
+              <dt style="color: var(--sys-color-text-secondary); font-family: var(--sys-font-code-family); font-size: var(--sys-font-caption-size); text-transform: uppercase; letter-spacing: var(--ref-font-tracking-wide);">Current content</dt>
+              <dd data-workspace-context-content style="margin: 0; color: var(--sys-color-text-primary); font-family: var(--sys-font-body-family); font-size: var(--sys-font-body-size);">None</dd>
+            </div>
+            <div style="display: grid; gap: 2px; margin-block-start: var(--sys-space-stack-xs);">
+              <dt style="color: var(--sys-color-text-secondary); font-family: var(--sys-font-code-family); font-size: var(--sys-font-caption-size); text-transform: uppercase; letter-spacing: var(--ref-font-tracking-wide);">Last opened content</dt>
+              <dd data-workspace-context-last-opened style="margin: 0; color: var(--sys-color-text-primary); font-family: var(--sys-font-body-family); font-size: var(--sys-font-body-size);">None</dd>
+            </div>
+            <div style="display: grid; gap: 2px; margin-block-start: var(--sys-space-stack-xs);">
+              <dt style="color: var(--sys-color-text-secondary); font-family: var(--sys-font-code-family); font-size: var(--sys-font-caption-size); text-transform: uppercase; letter-spacing: var(--ref-font-tracking-wide);">Progress summary</dt>
+              <dd data-workspace-context-progress style="margin: 0; color: var(--sys-color-text-primary); font-family: var(--sys-font-body-family); font-size: var(--sys-font-body-size);">No progress yet</dd>
+            </div>
+          </dl>
         </section>
 
         <div class="nv-divider" aria-hidden="true"></div>
@@ -207,7 +285,6 @@
   <script src="scripts/router/router.js"></script>
   <script src="scripts/navigation/navigation.js"></script>
   <script src="scripts/workspace/workspace-state.js"></script>
-  <script src="scripts/workspace/workspace-controller.js"></script>
   <script type="module" src="scripts/app.js"></script>
 </body>
 </html>

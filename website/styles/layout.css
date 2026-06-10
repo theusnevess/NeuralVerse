@@ -407,6 +407,23 @@
 /* Progress layout integration */
 /* NV-100-M8: layouts integrated and stabilized. */
 
+/* =========================================================
+   Learning Continuity Layout (NV-101-M1)
+   ========================================================= */
+
+.nv-continuity-grid {
+  display: grid;
+  gap: var(--sys-space-stack-md);
+  margin-block-start: var(--sys-space-stack-lg);
+}
+
+@media (min-width: 48rem) {
+  .nv-continuity-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+
 
 
 

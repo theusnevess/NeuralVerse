@@ -63,11 +63,35 @@ export function createLearningService(paths = DATA_PATHS) {
     );
   }
 
+  function mapModuleId(moduleId) {
+    const mapping = {
+      "module-00-foundations": "foundations",
+      "module-01-classical-ml": "classical-machine-learning",
+      "module-02-deep-learning": "deep-learning",
+      "module-03-computer-vision": "computer-vision",
+      "module-04-mlops": "mlops",
+    };
+    return mapping[moduleId] || moduleId;
+  }
+
+  async function getModuleById(moduleId) {
+    const data = await loadAll();
+    const mappedId = mapModuleId(moduleId);
+    return data.modules.find((module) => module.id === mappedId) || null;
+  }
+
+  async function getLearningPathById(pathId) {
+    const data = await loadAll();
+    return data.learningPaths.find((path) => path.id === pathId) || null;
+  }
+
   return {
     loadAll,
     getLearningPaths,
     getModules,
     getModulesByPath,
     getContentItemsByModule,
+    getModuleById,
+    getLearningPathById,
   };
 }

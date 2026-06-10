@@ -1098,6 +1098,64 @@
 
 /* NV-100-M8: components styling integrated and stabilized. */
 
+/* =========================================================
+   Learning Continuity Components (NV-101-M1)
+   ========================================================= */
+
+.nv-continuity-card {
+  display: grid;
+  gap: var(--sys-space-stack-md);
+  padding: var(--sys-space-inset-lg);
+  border: var(--sys-border-subtle) solid var(--sys-color-border-subtle);
+  border-radius: var(--sys-radius-control);
+  background: var(--sys-color-surface-raised);
+}
+
+.nv-continuity-card__eyebrow {
+  margin: 0;
+  color: var(--sys-color-text-secondary);
+  font-family: var(--sys-font-code-family);
+  font-size: var(--sys-font-caption-size);
+  letter-spacing: var(--ref-font-tracking-wide);
+  text-transform: uppercase;
+}
+
+.nv-continuity-card h2 {
+  margin: 0;
+  color: var(--sys-color-text-primary);
+  font-family: var(--sys-font-display-family);
+  font-size: var(--sys-font-heading-size);
+  line-height: var(--sys-font-heading-line-height);
+}
+
+.nv-continuity-card__meta {
+  display: grid;
+  gap: var(--sys-space-stack-sm);
+  margin: 0;
+}
+
+.nv-continuity-card__meta div {
+  display: grid;
+  gap: var(--sys-space-stack-xs);
+}
+
+.nv-continuity-card__meta dt {
+  color: var(--sys-color-text-secondary);
+  font-family: var(--sys-font-code-family);
+  font-size: var(--sys-font-caption-size);
+  letter-spacing: var(--ref-font-tracking-wide);
+  text-transform: uppercase;
+}
+
+.nv-continuity-card__meta dd {
+  margin: 0;
+  color: var(--sys-color-text-secondary);
+  font-family: var(--sys-font-body-family);
+  font-size: var(--sys-font-body-size);
+  line-height: var(--sys-font-body-line-height);
+}
+
+
 
 
 

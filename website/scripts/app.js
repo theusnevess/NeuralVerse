@@ -1,6 +1,7 @@
 import { createLearningController } from "./learning/learning-controller.js";
 import { createContentController } from "./content/content-controller.js";
 import { createProgressController } from "./progress/progress-controller.js";
+import { createWorkspaceController } from "./workspace/workspace-controller.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   console.log('NeuralVerse App Shell Initialized');
@@ -36,10 +37,20 @@ document.addEventListener("DOMContentLoaded", () => {
     console.error("Progress controller failed to initialize.", error);
   });
 
+  // Initialize the workspace controller
+  const workspaceController = createWorkspaceController({
+    root: document,
+    navigationState: window.navigationState,
+    workspaceState: window.NeuralVerse?.workspaceState,
+  });
+
+  workspaceController.init().catch((error) => {
+    console.error("Workspace controller failed to initialize.", error);
+  });
+
   window.NeuralVerse = window.NeuralVerse || {};
   window.NeuralVerse.learningController = learningController;
   window.NeuralVerse.contentController = contentController;
   window.NeuralVerse.progressController = progressController;
-  
-  // NV-100-M8: MVP integration stabilized.
+  window.NeuralVerse.workspaceController = workspaceController;
 });
