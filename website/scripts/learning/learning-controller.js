@@ -99,7 +99,7 @@ export function createLearningController(options = {}) {
     }
 
     // Trigger progress update for newly created DOM nodes
-    window.dispatchEvent(new CustomEvent("nv:viewrendered"));
+    window.dispatchEvent(new CustomEvent("nv:learningrendered"));
   }
 
   function renderModules(modules) {
@@ -165,7 +165,7 @@ export function createLearningController(options = {}) {
     });
 
     // Trigger progress update for newly created DOM nodes
-    window.dispatchEvent(new CustomEvent("nv:viewrendered"));
+    window.dispatchEvent(new CustomEvent("nv:modulesrendered"));
   }
 
   function announce(message) {

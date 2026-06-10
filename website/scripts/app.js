@@ -40,4 +40,6 @@ document.addEventListener("DOMContentLoaded", () => {
   window.NeuralVerse.learningController = learningController;
   window.NeuralVerse.contentController = contentController;
   window.NeuralVerse.progressController = progressController;
+  
+  // NV-100-M8: MVP integration stabilized.
 });

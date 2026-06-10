@@ -128,6 +128,20 @@ export function createProgressController(options = {}) {
     });
   }
 
+  async function handleContentLoaded(contentItem) {
+    if (!contentItem?.id) return;
+
+    const record = progressService.markOpened(
+      contentItem.id,
+      PROGRESS_ENTITY_TYPES.CONTENT_ITEM
+    );
+
+    syncRecords();
+    renderContentProgress(contentItem.id);
+    await renderLearningAggregates();
+    announce(`Progress updated. ${formatStatus(record.status)}.`);
+  }
+
   async function handleRoute(hashValue = window.location.hash) {
     const contentItemId = getContentIdFromHash(hashValue);
 
@@ -136,15 +150,8 @@ export function createProgressController(options = {}) {
       return;
     }
 
-    const record = progressService.markOpened(
-      contentItemId,
-      PROGRESS_ENTITY_TYPES.CONTENT_ITEM
-    );
-
-    syncRecords();
     renderContentProgress(contentItemId);
     await renderLearningAggregates();
-    announce(`Progress updated. ${formatStatus(record.status)}.`);
   }
 
   function bindCompletionButton() {
@@ -181,9 +188,16 @@ export function createProgressController(options = {}) {
       handleRoute(event.detail?.route || window.location.hash);
     });
 
-    // Make sure we update UI when a view completes dynamic load rendering
-    window.addEventListener("nv:viewrendered", () => {
-      handleRoute(window.location.hash);
+    window.addEventListener("nv:contentloaded", async (event) => {
+      await handleContentLoaded(event.detail?.contentItem);
+    });
+
+    window.addEventListener("nv:learningrendered", async () => {
+      await renderLearningAggregates();
+    });
+
+    window.addEventListener("nv:modulesrendered", async () => {
+      await renderLearningAggregates();
     });
   }
 

@@ -72,6 +72,13 @@ export function createContentController(options = {}) {
       renderContentViewer(currentTarget, content);
       updateWorkspace(content.metadata);
       announce(`${content.metadata.title} loaded.`);
+      window.dispatchEvent(
+        new CustomEvent("nv:contentloaded", {
+          detail: {
+            contentItem: content.metadata,
+          },
+        })
+      );
     } catch (error) {
       console.error("Content viewer failed to load content.", error);
       renderContentEmptyState(currentTarget, "Content could not be loaded.");
