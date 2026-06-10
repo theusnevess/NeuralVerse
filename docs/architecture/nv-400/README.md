@@ -12,4 +12,4 @@
 *   NV-400-M7 — Research Workspace Architecture — COMPLETE
 *   NV-400-M8 — Research Governance Model — COMPLETE
 *   NV-400-M9 — Research Lifecycle Model — COMPLETE
-*   NV-400 Final Review — NEXT
+*   NV-400 Final Review — COMPLETE
