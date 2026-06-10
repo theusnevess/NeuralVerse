@@ -1376,6 +1376,31 @@
   line-height: var(--sys-line-height-body, var(--sys-font-body-line-height));
 }
 
+/* =========================================================
+   Continuity Card Actions (NV-200-M4)
+   ========================================================= */
+
+.nv-continuity-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sys-spacing-inline-sm, var(--sys-space-inline-sm));
+}
+
+.nv-continuity-card__actions .nv-button {
+  justify-content: center;
+}
+
+@media (max-width: 48rem) {
+  .nv-continuity-card__actions {
+    flex-direction: column;
+  }
+
+  .nv-continuity-card__actions .nv-button {
+    inline-size: 100%;
+  }
+}
+
+
 
 
 

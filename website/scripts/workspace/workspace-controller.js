@@ -2,6 +2,83 @@ import { createProgressService } from "../progress/progress-service.js";
 import { createContentService } from "../content/content-service.js";
 import { createLearningService } from "../learning/learning-service.js";
 
+function formatReadingTime(minutes) {
+  const safeMinutes = Number(minutes || 0);
+
+  if (!safeMinutes) {
+    return {
+      text: "0m",
+      label: "0 minutes",
+    };
+  }
+
+  const hours = Math.floor(safeMinutes / 60);
+  const remainingMinutes = safeMinutes % 60;
+
+  if (!hours) {
+    return {
+      text: `${remainingMinutes}m`,
+      label: `${remainingMinutes} minutes`,
+    };
+  }
+
+  if (!remainingMinutes) {
+    return {
+      text: `${hours}h`,
+      label: `${hours} hours`,
+    };
+  }
+
+  return {
+    text: `${hours}h ${remainingMinutes}m`,
+    label: `${hours} hours ${remainingMinutes} minutes`,
+  };
+}
+
+function getCompletedContentIds(progressService) {
+  return progressService
+    .getRecords()
+    .filter(
+      (record) =>
+        record.entityType === "content-item" &&
+        record.status === "completed"
+    )
+    .map((record) => record.entityId);
+}
+
+function getNextOrderedContent(currentContent, moduleContentItems) {
+  if (!currentContent) {
+    return null;
+  }
+
+  const orderedItems = [...moduleContentItems].sort((a, b) => a.order - b.order);
+  const currentIndex = orderedItems.findIndex((item) => item.id === currentContent.id);
+
+  if (currentIndex === -1) {
+    return null;
+  }
+
+  return orderedItems[currentIndex + 1] || null;
+}
+
+function getRemainingContentItems(moduleContentItems, completedContentIds) {
+  return moduleContentItems.filter(
+    (contentItem) => !completedContentIds.includes(contentItem.id)
+  );
+}
+
+function setAllText(targets, value) {
+  targets.forEach((target) => {
+    target.textContent = value;
+  });
+}
+
+function setAllAriaLabel(targets, value) {
+  targets.forEach((target) => {
+    target.setAttribute("aria-label", value);
+  });
+}
+
 export function createWorkspaceController(options = {}) {
   const root = options.root || document;
   const navigationState = options.navigationState || window.navigationState;
@@ -35,6 +112,16 @@ export function createWorkspaceController(options = {}) {
       workspaceModuleProgress: root.querySelector("[data-workspace-progress-module]"),
       workspaceContentStatus: root.querySelector("[data-workspace-progress-content-status]"),
       workspaceContentCount: root.querySelector("[data-workspace-progress-count]"),
+
+      currentFocusPath: root.querySelector("[data-workspace-focus-path]"),
+      currentFocusModule: root.querySelector("[data-workspace-focus-module]"),
+      currentFocusContent: root.querySelector("[data-workspace-focus-content]"),
+
+      nextContentTargets: root.querySelectorAll("[data-workspace-next-content]"),
+      remainingItemsTargets: root.querySelectorAll("[data-workspace-remaining-items]"),
+      remainingReadingTimeTargets: root.querySelectorAll("[data-workspace-remaining-reading-time]"),
+
+      nextContentAction: root.querySelector("[data-workspace-next-content-action]"),
     };
   }
 
@@ -63,11 +150,30 @@ export function createWorkspaceController(options = {}) {
     const module = await learningService.getModuleById(contentItem.moduleId);
     const path = module ? await learningService.getLearningPathById(module.pathId) : null;
 
+    const moduleContentItems = module
+      ? await learningService.getContentItemsByModule(module.id)
+      : [];
+
+    const completedContentIds = getCompletedContentIds(progressService);
+    const nextContent = getNextOrderedContent(contentItem, moduleContentItems);
+    const remainingContentItems = getRemainingContentItems(
+      moduleContentItems,
+      completedContentIds
+    );
+
+    const remainingReadingMinutes = remainingContentItems.reduce(
+      (total, item) => total + Number(item.estimatedReadingTime || 0),
+      0
+    );
+
     return {
       record: lastRecord,
       contentItem,
       module,
       path,
+      nextContent,
+      remainingContentItems,
+      remainingReadingTime: formatReadingTime(remainingReadingMinutes),
     };
   }
 
@@ -96,10 +202,32 @@ export function createWorkspaceController(options = {}) {
       if (elements.contextLastOpened) elements.contextLastOpened.textContent = "None";
       if (elements.contextProgress) elements.contextProgress.textContent = "No progress recorded yet";
 
+      if (elements.currentFocusPath) elements.currentFocusPath.textContent = "None";
+      if (elements.currentFocusModule) elements.currentFocusModule.textContent = "None";
+      if (elements.currentFocusContent) elements.currentFocusContent.textContent = "None";
+
+      setAllText(elements.nextContentTargets, "None");
+      setAllText(elements.remainingItemsTargets, "0 remaining");
+      setAllText(elements.remainingReadingTimeTargets, "0m");
+      setAllAriaLabel(elements.remainingReadingTimeTargets, "0 minutes");
+
+      if (elements.nextContentAction) {
+        elements.nextContentAction.hidden = true;
+        elements.nextContentAction.removeAttribute("href");
+      }
+
       return;
     }
 
-    const { record, contentItem, module, path } = context;
+    const {
+      record,
+      contentItem,
+      module,
+      path,
+      nextContent,
+      remainingContentItems,
+      remainingReadingTime,
+    } = context;
 
     if (elements.continueCard) elements.continueCard.hidden = false;
     if (elements.lastOpenedCard) elements.lastOpenedCard.hidden = false;
@@ -121,6 +249,35 @@ export function createWorkspaceController(options = {}) {
     if (elements.contextLastOpened) elements.contextLastOpened.textContent = formatTimestamp(record.lastOpenedAt);
     if (elements.contextProgress) {
       elements.contextProgress.textContent = `${record.status} · ${record.progressValue}%`;
+    }
+
+    if (elements.currentFocusPath) {
+      elements.currentFocusPath.textContent = path?.title || "Unknown path";
+    }
+    if (elements.currentFocusModule) {
+      elements.currentFocusModule.textContent = module?.title || "Unknown module";
+    }
+    if (elements.currentFocusContent) {
+      elements.currentFocusContent.textContent = contentItem.title;
+    }
+
+    setAllText(elements.nextContentTargets, nextContent?.title || "No next content");
+    setAllText(elements.remainingItemsTargets, `${remainingContentItems.length} remaining`);
+    setAllText(elements.remainingReadingTimeTargets, remainingReadingTime.text);
+    setAllAriaLabel(elements.remainingReadingTimeTargets, remainingReadingTime.label);
+
+    if (elements.nextContentAction) {
+      if (nextContent) {
+        elements.nextContentAction.hidden = false;
+        elements.nextContentAction.href = getContentRoute(nextContent.id);
+        elements.nextContentAction.setAttribute(
+          "aria-label",
+          `Open next ordered content: ${nextContent.title}`
+        );
+      } else {
+        elements.nextContentAction.hidden = true;
+        elements.nextContentAction.removeAttribute("href");
+      }
     }
   }
 
