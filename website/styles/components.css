@@ -1298,6 +1298,51 @@
   min-block-size: 8px;
 }
 
+/* =========================================================
+   Learning Path Overview Metrics (NV-200-M2)
+   ========================================================= */
+
+.nv-path-metrics {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sys-space-stack-sm);
+  margin-block: var(--sys-space-stack-md);
+  padding: var(--sys-space-inset-sm);
+  border: var(--sys-border-subtle) solid var(--sys-color-border-subtle);
+  border-radius: var(--sys-radius-surface);
+  background: var(--sys-color-background-subtle);
+}
+
+.nv-path-metrics__section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: var(--sys-space-inline-md);
+}
+
+.nv-path-metrics__section + .nv-path-metrics__section {
+  border-block-start: var(--sys-border-subtle) solid var(--sys-color-border-subtle);
+  padding-block-start: var(--sys-space-stack-sm);
+}
+
+.nv-path-metric {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sys-space-stack-xs);
+}
+
+.nv-path-metric__label {
+  font-family: var(--sys-font-body-family);
+  font-size: var(--sys-font-caption-size);
+  color: var(--sys-color-text-secondary);
+}
+
+.nv-path-metric__value {
+  font-family: var(--sys-font-code-family);
+  font-size: var(--sys-font-body-size);
+  color: var(--sys-color-text-primary);
+}
+
+
 
 
 

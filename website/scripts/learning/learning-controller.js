@@ -1,5 +1,7 @@
 import { createLearningService } from "./learning-service.js";
 import { createLearningState } from "./learning-state.js";
+import { createContentService } from "../content/content-service.js";
+import { createProgressService } from "../progress/progress-service.js";
 
 function createElement(tagName, className, textContent) {
   const element = document.createElement(tagName);
@@ -21,11 +23,38 @@ function createMeta(label, value) {
   return item;
 }
 
+function formatReadingTime(minutes) {
+  if (minutes < 60) {
+    return `${minutes}m`;
+  }
+  const hours = Math.floor(minutes / 60);
+  const remainingMinutes = minutes % 60;
+  if (remainingMinutes === 0) {
+    return `${hours}h`;
+  }
+  return `${hours}h ${remainingMinutes}m`;
+}
+
+function formatReadingTimeA11y(minutes) {
+  if (minutes < 60) {
+    return `${minutes} minutes`;
+  }
+  const hours = Math.floor(minutes / 60);
+  const remainingMinutes = minutes % 60;
+  const hourText = hours === 1 ? "hour" : "hours";
+  if (remainingMinutes === 0) {
+    return `${hours} ${hourText}`;
+  }
+  return `${hours} ${hourText} ${remainingMinutes} minutes`;
+}
+
 export function createLearningController(options = {}) {
   const root = options.root || document;
   const learningService = options.learningService || createLearningService();
   const learningState = options.learningState || createLearningState();
   const navigationState = options.navigationState || window.navigationState;
+  const contentService = options.contentService || createContentService();
+  const progressService = options.progressService || createProgressService();
 
   const elements = {
     pathList: root.querySelector("[data-learning-path-list]"),
@@ -42,6 +71,18 @@ export function createLearningController(options = {}) {
 
     elements.pathList.innerHTML = "";
 
+    let modules = [];
+    let contentIndex = [];
+    let progressRecords = [];
+
+    try {
+      modules = await learningService.getModules();
+      contentIndex = await contentService.getContentIndex();
+      progressRecords = progressService.getRecords();
+    } catch (error) {
+      console.error("Failed to load metrics data for learning paths", error);
+    }
+
     paths.forEach((path) => {
       const card = createElement("article", "nv-learning-path-card");
       card.setAttribute("aria-labelledby", `learning-path-${path.id}`);
@@ -55,14 +96,55 @@ export function createLearningController(options = {}) {
         path.description
       );
 
-      const meta = createElement("div", "nv-card-meta");
-      meta.append(
-        createMeta("Modules", String(path.moduleIds.length)),
-        createMeta("Status", path.status)
+      const pathModules = modules.filter((module) => module.pathId === path.id);
+      const moduleCount = pathModules.length;
+
+      const pathContentItems = contentIndex.filter((item) =>
+        pathModules.some((mod) => mod.id === item.moduleId)
+      );
+      const contentCount = pathContentItems.length;
+
+      const completedContentCount = pathContentItems.filter((item) => {
+        const record = progressRecords.find(
+          (r) => r.entityId === item.id && r.entityType === "content-item"
+        );
+        return record?.status === "completed";
+      }).length;
+
+      const remainingContentCount = contentCount - completedContentCount;
+
+      const readingLoadMinutes = pathContentItems.reduce(
+        (sum, item) => sum + (item.estimatedReadingTime || 0),
+        0
       );
 
-      const status = createElement("span", "nv-card-status", path.status);
-      status.dataset.status = path.status;
+      const remainingReadingTimeMinutes = pathContentItems.reduce((sum, item) => {
+        const record = progressRecords.find(
+          (r) => r.entityId === item.id && r.entityType === "content-item"
+        );
+        const isCompleted = record?.status === "completed";
+        return sum + (isCompleted ? 0 : (item.estimatedReadingTime || 0));
+      }, 0);
+
+      const progressPercent =
+        contentCount > 0 ? Math.round((completedContentCount / contentCount) * 100) : 0;
+
+      const statusLabel =
+        progressPercent === 0
+          ? "Not Started"
+          : progressPercent === 100
+            ? "Completed"
+            : "In Progress";
+
+      const meta = createElement("div", "nv-card-meta");
+      meta.append(
+        createMeta("Modules", String(moduleCount)),
+        createMeta("Status", statusLabel)
+      );
+
+      const status = createElement("span", "nv-card-status", statusLabel);
+      status.dataset.status = statusLabel.toLowerCase().replace(' ', '-');
+      status.dataset.progressStatus = statusLabel.toLowerCase().replace(' ', '-');
 
       // Inline progress target
       const progressOverview = createElement("div", "nv-progress-overview");
@@ -71,22 +153,55 @@ export function createLearningController(options = {}) {
       progressOverview.innerHTML = `
         <div class="nv-progress-overview__header">
           <span>Progress</span>
-          <strong data-path-progress-id="${path.id}">0%</strong>
+          <strong data-path-progress-id="${path.id}">${progressPercent}%</strong>
         </div>
         <progress
           class="nv-progress-meter"
-          value="0"
+          value="${progressPercent}"
           max="100"
           role="progressbar"
           aria-label="${path.title} progress"
           aria-valuemin="0"
           aria-valuemax="100"
-          aria-valuenow="0"
+          aria-valuenow="${progressPercent}"
           data-path-progress-meter="${path.id}"
         ></progress>
         <div class="nv-progress-overview__meta">
-          <span data-path-progress-count="${path.id}">0 of 0 completed</span>
-          <span class="nv-card-status" data-path-progress-status="${path.id}">Not started</span>
+          <span data-path-progress-count="${path.id}">${completedContentCount} of ${contentCount} completed</span>
+          <span class="nv-card-status" data-path-progress-status="${path.id}" data-progress-status="${statusLabel.toLowerCase().replace(' ', '-')}">${statusLabel}</span>
+        </div>
+      `;
+
+      // Metrics block
+      const metricsBlock = createElement("div", "nv-path-metrics");
+      metricsBlock.innerHTML = `
+        <div class="nv-path-metrics__section" aria-label="Module and Content aggregates">
+          <div class="nv-path-metric">
+            <span class="nv-path-metric__label">Modules</span>
+            <strong class="nv-path-metric__value" aria-label="Module Count: ${moduleCount}">${moduleCount}</strong>
+          </div>
+          <div class="nv-path-metric">
+            <span class="nv-path-metric__label">Content</span>
+            <strong class="nv-path-metric__value" aria-label="Content Count: ${contentCount}">${contentCount}</strong>
+          </div>
+          <div class="nv-path-metric">
+            <span class="nv-path-metric__label">Completed</span>
+            <strong class="nv-path-metric__value" aria-label="Completed Content: ${completedContentCount}">${completedContentCount}</strong>
+          </div>
+          <div class="nv-path-metric">
+            <span class="nv-path-metric__label">Remaining</span>
+            <strong class="nv-path-metric__value" aria-label="Remaining Content: ${remainingContentCount}">${remainingContentCount}</strong>
+          </div>
+        </div>
+        <div class="nv-path-metrics__section" aria-label="Reading estimates">
+          <div class="nv-path-metric">
+            <span class="nv-path-metric__label">Reading Load</span>
+            <strong class="nv-path-metric__value" aria-label="Estimated Reading Time: ${formatReadingTimeA11y(readingLoadMinutes)}">${formatReadingTime(readingLoadMinutes)}</strong>
+          </div>
+          <div class="nv-path-metric">
+            <span class="nv-path-metric__label">Remaining Time</span>
+            <strong class="nv-path-metric__value" aria-label="Remaining Reading Time: ${formatReadingTimeA11y(remainingReadingTimeMinutes)}">${formatReadingTime(remainingReadingTimeMinutes)}</strong>
+          </div>
         </div>
       `;
 
@@ -108,7 +223,7 @@ export function createLearningController(options = {}) {
         announce(`${path.title} selected.`);
       });
 
-      card.append(title, description, meta, status, progressOverview, action);
+      card.append(title, description, meta, status, progressOverview, metricsBlock, action);
       elements.pathList.append(card);
     });
 

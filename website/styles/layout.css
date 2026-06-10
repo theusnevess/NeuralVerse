@@ -498,6 +498,11 @@
   .nv-breadcrumbs__list {
     row-gap: var(--sys-space-stack-xs);
   }
+
+  .nv-path-metrics__section {
+    grid-template-columns: 1fr;
+    gap: var(--sys-space-stack-xs);
+  }
 }
 
 
