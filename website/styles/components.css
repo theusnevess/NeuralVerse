@@ -1155,6 +1155,59 @@
   line-height: var(--sys-font-body-line-height);
 }
 
+/* =========================================================
+   Breadcrumbs Component (NV-101-M2)
+   ========================================================= */
+
+.nv-breadcrumbs {
+  margin-block-end: var(--sys-space-stack-md);
+}
+
+.nv-breadcrumbs__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sys-space-inline-xs);
+  align-items: center;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.nv-breadcrumbs__item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sys-space-inline-xs);
+  color: var(--sys-color-text-secondary);
+  font-family: var(--sys-font-body-family);
+  font-size: var(--sys-font-body-size);
+  line-height: var(--sys-font-body-line-height);
+}
+
+.nv-breadcrumbs__item + .nv-breadcrumbs__item::before {
+  content: "→";
+  color: var(--sys-color-text-secondary);
+}
+
+.nv-breadcrumbs a {
+  color: var(--sys-color-text-secondary);
+  text-decoration: none;
+}
+
+.nv-breadcrumbs a:hover {
+  color: var(--sys-color-text-primary);
+}
+
+.nv-breadcrumbs a:focus-visible {
+  outline: var(--sys-a11y-focus-width) solid var(--sys-a11y-focus-color);
+  outline-offset: var(--sys-a11y-focus-offset);
+}
+
+.nv-breadcrumbs a[aria-current="page"] {
+  color: var(--sys-color-text-primary);
+  font-weight: var(--ref-font-weight-medium);
+}
+
+
 
 
 

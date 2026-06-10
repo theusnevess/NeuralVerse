@@ -2,6 +2,7 @@ import { createLearningController } from "./learning/learning-controller.js";
 import { createContentController } from "./content/content-controller.js";
 import { createProgressController } from "./progress/progress-controller.js";
 import { createWorkspaceController } from "./workspace/workspace-controller.js";
+import { createBreadcrumbsController } from "./navigation/breadcrumbs-controller.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   console.log('NeuralVerse App Shell Initialized');
@@ -48,9 +49,17 @@ document.addEventListener("DOMContentLoaded", () => {
     console.error("Workspace controller failed to initialize.", error);
   });
 
+  // Initialize the breadcrumbs controller
+  const breadcrumbsController = createBreadcrumbsController({
+    root: document,
+  });
+
+  breadcrumbsController.init();
+
   window.NeuralVerse = window.NeuralVerse || {};
   window.NeuralVerse.learningController = learningController;
   window.NeuralVerse.contentController = contentController;
   window.NeuralVerse.progressController = progressController;
   window.NeuralVerse.workspaceController = workspaceController;
+  window.NeuralVerse.breadcrumbsController = breadcrumbsController;
 });

@@ -67,6 +67,9 @@
 
       <!-- Main Workspace -->
       <main class="nv-main-workspace nv-workspace" id="main-content" data-workspace-active-view="home">
+        <nav class="nv-breadcrumbs" aria-label="Breadcrumb" data-breadcrumbs></nav>
+        <p class="nv-sr-only" aria-live="polite" data-breadcrumbs-live></p>
+
         <!-- R3 Workspace Surface -->
         <div class="nv-workspace__surface nv-stack nv-stack--gap-md">
           <div class="nv-cluster nv-cluster--gap-sm" style="justify-content: space-between; align-items: center;">
@@ -204,6 +207,14 @@
             <div style="display: grid; gap: 2px; margin-block-start: var(--sys-space-stack-xs);">
               <dt style="color: var(--sys-color-text-secondary); font-family: var(--sys-font-code-family); font-size: var(--sys-font-caption-size); text-transform: uppercase; letter-spacing: var(--ref-font-tracking-wide);">Progress summary</dt>
               <dd data-workspace-context-progress style="margin: 0; color: var(--sys-color-text-primary); font-family: var(--sys-font-body-family); font-size: var(--sys-font-body-size);">No progress yet</dd>
+            </div>
+            <div style="display: grid; gap: 2px; margin-block-start: var(--sys-space-stack-xs);">
+              <dt style="color: var(--sys-color-text-secondary); font-family: var(--sys-font-code-family); font-size: var(--sys-font-caption-size); text-transform: uppercase; letter-spacing: var(--ref-font-tracking-wide);">Route type</dt>
+              <dd data-workspace-context-route-type style="margin: 0; color: var(--sys-color-text-primary); font-family: var(--sys-font-body-family); font-size: var(--sys-font-body-size);">home</dd>
+            </div>
+            <div style="display: grid; gap: 2px; margin-block-start: var(--sys-space-stack-xs);">
+              <dt style="color: var(--sys-color-text-secondary); font-family: var(--sys-font-code-family); font-size: var(--sys-font-caption-size); text-transform: uppercase; letter-spacing: var(--ref-font-tracking-wide);">Hierarchy depth</dt>
+              <dd data-workspace-context-depth style="margin: 0; color: var(--sys-color-text-primary); font-family: var(--sys-font-body-family); font-size: var(--sys-font-body-size);">1</dd>
             </div>
           </dl>
         </section>
