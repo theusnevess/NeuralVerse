@@ -1,0 +1,47 @@
+[
+  {
+    "id": "foundations",
+    "pathId": "ai-engineering",
+    "title": "Foundations",
+    "description": "Core mathematical, statistical, and programming foundations.",
+    "contentItemIds": ["linear-algebra", "calculus", "probability"],
+    "order": 0,
+    "status": "active"
+  },
+  {
+    "id": "classical-machine-learning",
+    "pathId": "ai-engineering",
+    "title": "Classical Machine Learning",
+    "description": "Traditional supervised and unsupervised machine learning foundations.",
+    "contentItemIds": ["linear-regression", "decision-trees", "clustering"],
+    "order": 1,
+    "status": "planned"
+  },
+  {
+    "id": "deep-learning",
+    "pathId": "ai-engineering",
+    "title": "Deep Learning",
+    "description": "Neural networks, convolutional models, and foundation model preparation.",
+    "contentItemIds": ["neural-networks", "cnn-fundamentals", "transformers"],
+    "order": 2,
+    "status": "planned"
+  },
+  {
+    "id": "computer-vision",
+    "pathId": "ai-engineering",
+    "title": "Computer Vision",
+    "description": "Image processing, feature extraction, detection, segmentation, and visual systems.",
+    "contentItemIds": ["image-processing", "feature-descriptors", "object-detection"],
+    "order": 3,
+    "status": "planned"
+  },
+  {
+    "id": "mlops",
+    "pathId": "ai-engineering",
+    "title": "MLOps",
+    "description": "Reproducibility, monitoring, deployment, and production AI engineering.",
+    "contentItemIds": ["data-versioning", "model-monitoring", "deployment-basics"],
+    "order": 4,
+    "status": "planned"
+  }
+]

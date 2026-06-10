@@ -1,33 +1,15 @@
-<div class="nv-stack nv-stack--gap-md">
-  <header class="nv-stack nv-stack--gap-xs">
-    <h1 class="nv-context-title">Course Modules</h1>
-    <p class="nv-muted">Core study units and cognitive science guides.</p>
+<section class="nv-modules-page" aria-labelledby="modules-title">
+  <header class="nv-page-header">
+    <p class="nv-page-header__eyebrow">Modules</p>
+    <h1 id="modules-title">Modules</h1>
+    <p>
+      Modules are shown for the selected learning path. No content is opened in this milestone.
+    </p>
   </header>
 
-  <div class="nv-stack nv-stack--gap-sm">
-    <div class="nv-card">
-      <div class="nv-cluster nv-cluster--gap-sm" style="justify-content: space-between;">
-        <h3>Module 1: Foundations of Deep Learning</h3>
-        <span class="nv-badge" data-variant="success">Completed</span>
-      </div>
-      <p class="nv-muted">Backpropagation algorithms, stochastic gradient descent, and activation functions catalog.</p>
-    </div>
-    <div class="nv-card">
-      <div class="nv-cluster nv-cluster--gap-sm" style="justify-content: space-between;">
-        <h3>Module 2: Agent Decision Processes</h3>
-        <span class="nv-badge" data-variant="info">Active</span>
-      </div>
-      <p class="nv-muted">State representations, value approximation formulas, and exploration vs. exploitation metrics.</p>
-      <div style="margin-top: var(--sys-space-stack-xs);">
-        <a href="#/content" class="nv-button" data-variant="primary">Start Study</a>
-      </div>
-    </div>
-    <div class="nv-card">
-      <div class="nv-cluster nv-cluster--gap-sm" style="justify-content: space-between;">
-        <h3>Module 3: Multi-Agent Environment Grids</h3>
-        <span class="nv-badge" data-variant="neutral">Locked</span>
-      </div>
-      <p class="nv-muted">Cooperative swarm communication, game theory matrices, and emergent behaviors simulation.</p>
-    </div>
+  <div class="nv-module-list" data-module-list></div>
+
+  <div class="nv-empty-state" data-module-empty>
+    <p>No learning path selected.</p>
   </div>
-</div>
+</section>

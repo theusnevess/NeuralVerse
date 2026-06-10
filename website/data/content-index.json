@@ -1,0 +1,137 @@
+[
+  {
+    "id": "linear-algebra",
+    "moduleId": "foundations",
+    "title": "Linear Algebra",
+    "type": "note",
+    "source": "content/modules/foundations/linear-algebra.md",
+    "order": 0,
+    "estimatedReadingTime": 20
+  },
+  {
+    "id": "calculus",
+    "moduleId": "foundations",
+    "title": "Calculus",
+    "type": "note",
+    "source": "content/modules/foundations/calculus.md",
+    "order": 1,
+    "estimatedReadingTime": 18
+  },
+  {
+    "id": "probability",
+    "moduleId": "foundations",
+    "title": "Probability",
+    "type": "note",
+    "source": "content/modules/foundations/probability.md",
+    "order": 2,
+    "estimatedReadingTime": 22
+  },
+  {
+    "id": "linear-regression",
+    "moduleId": "classical-machine-learning",
+    "title": "Linear Regression",
+    "type": "note",
+    "source": "content/modules/classical-machine-learning/linear-regression.md",
+    "order": 0,
+    "estimatedReadingTime": 16
+  },
+  {
+    "id": "decision-trees",
+    "moduleId": "classical-machine-learning",
+    "title": "Decision Trees",
+    "type": "note",
+    "source": "content/modules/classical-machine-learning/decision-trees.md",
+    "order": 1,
+    "estimatedReadingTime": 15
+  },
+  {
+    "id": "clustering",
+    "moduleId": "classical-machine-learning",
+    "title": "Clustering",
+    "type": "note",
+    "source": "content/modules/classical-machine-learning/clustering.md",
+    "order": 2,
+    "estimatedReadingTime": 17
+  },
+  {
+    "id": "neural-networks",
+    "moduleId": "deep-learning",
+    "title": "Neural Networks",
+    "type": "note",
+    "source": "content/modules/deep-learning/neural-networks.md",
+    "order": 0,
+    "estimatedReadingTime": 22
+  },
+  {
+    "id": "cnn-fundamentals",
+    "moduleId": "deep-learning",
+    "title": "CNN Fundamentals",
+    "type": "note",
+    "source": "content/modules/deep-learning/cnn-fundamentals.md",
+    "order": 1,
+    "estimatedReadingTime": 24
+  },
+  {
+    "id": "transformers",
+    "moduleId": "deep-learning",
+    "title": "Transformers",
+    "type": "note",
+    "source": "content/modules/deep-learning/transformers.md",
+    "order": 2,
+    "estimatedReadingTime": 25
+  },
+  {
+    "id": "image-processing",
+    "moduleId": "computer-vision",
+    "title": "Image Processing",
+    "type": "note",
+    "source": "content/modules/computer-vision/image-processing.md",
+    "order": 0,
+    "estimatedReadingTime": 18
+  },
+  {
+    "id": "feature-descriptors",
+    "moduleId": "computer-vision",
+    "title": "Feature Descriptors",
+    "type": "note",
+    "source": "content/modules/computer-vision/feature-descriptors.md",
+    "order": 1,
+    "estimatedReadingTime": 20
+  },
+  {
+    "id": "object-detection",
+    "moduleId": "computer-vision",
+    "title": "Object Detection",
+    "type": "note",
+    "source": "content/modules/computer-vision/object-detection.md",
+    "order": 2,
+    "estimatedReadingTime": 24
+  },
+  {
+    "id": "data-versioning",
+    "moduleId": "mlops",
+    "title": "Data Versioning",
+    "type": "note",
+    "source": "content/modules/mlops/data-versioning.md",
+    "order": 0,
+    "estimatedReadingTime": 16
+  },
+  {
+    "id": "model-monitoring",
+    "moduleId": "mlops",
+    "title": "Model Monitoring",
+    "type": "note",
+    "source": "content/modules/mlops/model-monitoring.md",
+    "order": 1,
+    "estimatedReadingTime": 18
+  },
+  {
+    "id": "deployment-basics",
+    "moduleId": "mlops",
+    "title": "Deployment Basics",
+    "type": "note",
+    "source": "content/modules/mlops/deployment-basics.md",
+    "order": 2,
+    "estimatedReadingTime": 20
+  }
+]

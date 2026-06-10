@@ -843,3 +843,65 @@
   border: 0;
 }
 
+/* =========================================================
+   Learning Path Components (NV-100-M5)
+   ========================================================= */
+
+.nv-learning-path-list,
+.nv-module-list {
+  display: grid;
+  gap: var(--sys-space-stack-md);
+}
+
+.nv-learning-path-card,
+.nv-module-card {
+  display: grid;
+  gap: var(--sys-space-stack-sm);
+  padding: var(--sys-space-inset-lg);
+  border: var(--sys-border-subtle) solid var(--sys-color-border-subtle);
+  border-radius: var(--sys-radius-control);
+  background: var(--sys-color-surface-raised);
+}
+
+.nv-learning-path-card__title,
+.nv-module-card__title {
+  margin: 0;
+  color: var(--sys-color-text-primary);
+  font-family: var(--sys-font-display-family);
+  font-size: var(--sys-font-heading-size);
+  line-height: var(--sys-font-heading-line-height);
+}
+
+.nv-learning-path-card__description,
+.nv-module-card__description {
+  margin: 0;
+  color: var(--sys-color-text-secondary);
+  font-family: var(--sys-font-body-family);
+  font-size: var(--sys-font-body-size);
+  line-height: var(--sys-font-body-line-height);
+}
+
+.nv-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sys-space-inline-sm);
+  color: var(--sys-color-text-secondary);
+  font-family: var(--sys-font-code-family);
+  font-size: var(--sys-font-caption-size);
+}
+
+.nv-card-status {
+  justify-self: start;
+  padding-block: var(--sys-space-inset-xs);
+  padding-inline: var(--sys-space-inset-sm);
+  border: var(--sys-border-subtle) solid var(--sys-color-border-subtle);
+  border-radius: var(--sys-radius-badge);
+  color: var(--sys-color-text-secondary);
+  background: var(--sys-color-background-subtle);
+  font-family: var(--sys-font-code-family);
+  font-size: var(--sys-font-caption-size);
+  text-transform: uppercase;
+  letter-spacing: var(--ref-font-tracking-wide);
+}
+
+

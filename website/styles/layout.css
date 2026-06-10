@@ -353,3 +353,45 @@
   }
 }
 
+/* =========================================================
+   Learning Page Layout (NV-100-M5)
+   ========================================================= */
+
+.nv-learning-page,
+.nv-modules-page {
+  display: grid;
+  gap: var(--sys-space-stack-lg);
+}
+
+.nv-page-header {
+  display: grid;
+  gap: var(--sys-space-stack-xs);
+  max-inline-size: var(--sys-a11y-reading-width-enhanced);
+}
+
+.nv-page-header__eyebrow {
+  margin: 0;
+  color: var(--sys-color-text-secondary);
+  font-family: var(--sys-font-code-family);
+  font-size: var(--sys-font-caption-size);
+  letter-spacing: var(--ref-font-tracking-wide);
+  text-transform: uppercase;
+}
+
+.nv-page-header h1 {
+  margin: 0;
+  color: var(--sys-color-text-primary);
+  font-family: var(--sys-font-display-family);
+  font-size: var(--sys-font-heading-size);
+  line-height: var(--sys-font-heading-line-height);
+}
+
+.nv-page-header p {
+  margin: 0;
+  color: var(--sys-color-text-secondary);
+  font-family: var(--sys-font-body-family);
+  font-size: var(--sys-font-body-size);
+  line-height: var(--sys-font-body-line-height);
+}
+
+
