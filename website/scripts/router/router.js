@@ -241,9 +241,7 @@ class ViewController {
   }
 
   async render(state) {
-    if (!this.container) {
-      this.container = document.querySelector('.nv-main-workspace');
-    }
+    this.container = document.querySelector('#nv-workspace-content-body') || document.querySelector('.nv-main-workspace');
     if (!this.container) return;
 
     const route = state.currentRoute;

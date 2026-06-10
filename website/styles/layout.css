@@ -341,3 +341,15 @@
   font-size: var(--sys-font-caption-size);
   color: var(--sys-color-text-secondary);
 }
+
+/* Workspace Responsive Layout Override */
+@media (max-width: 768px) {
+  .nv-workspace {
+    padding: var(--sys-space-inset-sm);
+    gap: var(--sys-space-inset-sm);
+  }
+  .nv-workspace__surface {
+    padding: var(--sys-space-inset-sm);
+  }
+}
+

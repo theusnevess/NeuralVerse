@@ -66,8 +66,42 @@
       </nav>
 
       <!-- Main Workspace -->
-      <main class="nv-main-workspace" id="main-content">
-        <!-- Rendered by View Controller -->
+      <main class="nv-main-workspace nv-workspace" id="main-content" data-workspace-active-view="home">
+        <!-- R3 Workspace Surface -->
+        <div class="nv-workspace__surface nv-stack nv-stack--gap-md">
+          <div class="nv-cluster nv-cluster--gap-sm" style="justify-content: space-between; align-items: center;">
+            <div class="nv-workspace__eyebrow" data-workspace-route>Route: home</div>
+            <span class="nv-badge nv-workspace__status" data-workspace-status data-status="idle" data-variant="info">IDLE</span>
+          </div>
+
+          <div class="nv-stack nv-stack--gap-xs">
+            <h1 class="nv-workspace__title" data-workspace-title>Welcome to NeuralVerse</h1>
+            <p class="nv-workspace__description" data-workspace-description>Scientific Research & AI Agent Environment.</p>
+          </div>
+
+          <div class="nv-cluster nv-cluster--gap-sm nv-workspace__actions" style="justify-content: space-between; align-items: center; border-top: var(--sys-border-subtle) solid var(--sys-color-border-subtle); padding-top: var(--sys-space-stack-sm);">
+            <div class="nv-cluster nv-cluster--gap-sm">
+              <button class="nv-button" data-variant="primary" data-workspace-action="open-workspace">Open Workspace</button>
+              <button class="nv-button" data-variant="secondary" data-workspace-action="explore-learning">Explore Learning</button>
+              <button class="nv-button" data-variant="secondary" data-workspace-action="browse-modules">Browse Modules</button>
+              <button class="nv-button" data-variant="secondary" data-workspace-action="open-content">Open Content</button>
+            </div>
+            <span class="nv-muted" style="font-size: var(--sys-font-caption-size);" data-workspace-updated>Updated: --:--:--</span>
+          </div>
+        </div>
+
+        <div class="nv-divider" aria-hidden="true" style="margin-block: var(--sys-space-stack-md);"></div>
+
+        <!-- Dynamic workspace view content target -->
+        <div id="nv-workspace-content-body">
+          <!-- Inner page contents will load here -->
+        </div>
+
+        <!-- Empty State target container -->
+        <div data-workspace-empty-state style="display: none;"></div>
+
+        <!-- A11y Live region announcements -->
+        <div data-workspace-live aria-live="polite" class="nv-sr-only"></div>
       </main>
 
       <!-- Context Panel -->
@@ -172,6 +206,8 @@
   <script src="scripts/state/navigation-state.js"></script>
   <script src="scripts/router/router.js"></script>
   <script src="scripts/navigation/navigation.js"></script>
+  <script src="scripts/workspace/workspace-state.js"></script>
+  <script src="scripts/workspace/workspace-controller.js"></script>
   <script src="scripts/app.js"></script>
 </body>
 </html>
