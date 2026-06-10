@@ -63,3 +63,21 @@ document.addEventListener("DOMContentLoaded", () => {
   window.NeuralVerse.workspaceController = workspaceController;
   window.NeuralVerse.breadcrumbsController = breadcrumbsController;
 });
+
+function announceRouteChange() {
+  const liveRegion = document.querySelector("[data-route-live]");
+  const mainWorkspace = document.querySelector("#main-workspace");
+  const title = document.querySelector("[data-workspace-title]")?.textContent || "Workspace";
+
+  if (liveRegion) {
+    liveRegion.textContent = `Current view changed to ${title}.`;
+  }
+
+  if (mainWorkspace) {
+    mainWorkspace.focus({ preventScroll: true });
+  }
+}
+
+window.addEventListener("hashchange", () => {
+  window.requestAnimationFrame(announceRouteChange);
+});

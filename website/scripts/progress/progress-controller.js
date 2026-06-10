@@ -29,11 +29,13 @@ function setText(target, value) {
   }
 }
 
-function updateMeter(target, value) {
+function updateMeter(target, value, label = "Progress") {
   if (!target) return;
 
   target.value = value;
   target.max = 100;
+  target.setAttribute("role", "progressbar");
+  target.setAttribute("aria-label", label);
   target.setAttribute("aria-valuemin", "0");
   target.setAttribute("aria-valuemax", "100");
   target.setAttribute("aria-valuenow", String(value));
@@ -90,7 +92,7 @@ export function createProgressController(options = {}) {
 
     setText(elements.contentStatus, getProgressLabel(record.progressValue));
     setText(elements.contentValue, `${record.progressValue}%`);
-    updateMeter(elements.contentMeter, record.progressValue);
+    updateMeter(elements.contentMeter, record.progressValue, "Current content progress");
 
     if (elements.completionTimestamp) {
       elements.completionTimestamp.textContent = record.completedAt
@@ -138,7 +140,7 @@ export function createProgressController(options = {}) {
       if (!path) return;
 
       const aggregate = progressService.computeLearningPathProgress(path, modules, records);
-      updateMeter(meter, aggregate.progressValue);
+      updateMeter(meter, aggregate.progressValue, `${path.title} progress`);
     });
 
     elements.pathProgressCounts.forEach((target) => {
@@ -177,7 +179,7 @@ export function createProgressController(options = {}) {
       if (!module) return;
 
       const aggregate = progressService.computeModuleProgress(module, records);
-      updateMeter(meter, aggregate.progressValue);
+      updateMeter(meter, aggregate.progressValue, `${module.title} progress`);
     });
 
     elements.moduleProgressCounts.forEach((target) => {

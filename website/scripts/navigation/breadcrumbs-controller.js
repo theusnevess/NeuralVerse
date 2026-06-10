@@ -51,6 +51,9 @@ export function createBreadcrumbsController(options = {}) {
 
       if (crumb.isCurrent) {
         link.setAttribute("aria-current", "page");
+        link.setAttribute("aria-label", `${crumb.label}, current location`);
+      } else {
+        link.setAttribute("aria-label", `Go to ${crumb.label}`);
       }
 
       item.append(link);

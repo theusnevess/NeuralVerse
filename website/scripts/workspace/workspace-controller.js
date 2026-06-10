@@ -75,11 +75,11 @@ export function createWorkspaceController(options = {}) {
     return `#/content/${contentItemId}`;
   }
 
-  function setAnchorRoute(anchor, contentItemId) {
+  function setAnchorRoute(anchor, contentItemId, label = "content") {
     if (!anchor || !contentItemId) return;
 
     anchor.href = getContentRoute(contentItemId);
-    anchor.setAttribute("aria-label", `Resume ${contentItemId}`);
+    anchor.setAttribute("aria-label", label);
   }
 
   async function renderContinuity() {
@@ -94,7 +94,7 @@ export function createWorkspaceController(options = {}) {
       if (elements.contextModule) elements.contextModule.textContent = "None";
       if (elements.contextContent) elements.contextContent.textContent = "None";
       if (elements.contextLastOpened) elements.contextLastOpened.textContent = "None";
-      if (elements.contextProgress) elements.contextProgress.textContent = "No progress yet";
+      if (elements.contextProgress) elements.contextProgress.textContent = "No progress recorded yet";
 
       return;
     }
@@ -107,13 +107,13 @@ export function createWorkspaceController(options = {}) {
     if (elements.continuePath) elements.continuePath.textContent = path?.title || "Unknown path";
     if (elements.continueModule) elements.continueModule.textContent = module?.title || "Unknown module";
     if (elements.continueContent) elements.continueContent.textContent = contentItem.title;
-    setAnchorRoute(elements.continueAction, contentItem.id);
+    setAnchorRoute(elements.continueAction, contentItem.id, `Resume ${contentItem.title}`);
 
     if (elements.lastOpenedTitle) elements.lastOpenedTitle.textContent = contentItem.title;
     if (elements.lastOpenedModule) elements.lastOpenedModule.textContent = module?.title || "Unknown module";
     if (elements.lastOpenedPath) elements.lastOpenedPath.textContent = path?.title || "Unknown path";
     if (elements.lastOpenedTime) elements.lastOpenedTime.textContent = formatTimestamp(record.lastOpenedAt);
-    setAnchorRoute(elements.lastOpenedAction, contentItem.id);
+    setAnchorRoute(elements.lastOpenedAction, contentItem.id, `Open again ${contentItem.title}`);
 
     if (elements.contextPath) elements.contextPath.textContent = path?.title || "Unknown path";
     if (elements.contextModule) elements.contextModule.textContent = module?.title || "Unknown module";

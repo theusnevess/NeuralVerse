@@ -439,6 +439,58 @@
   inline-size: 100%;
 }
 
+/* =========================================================
+   Accessibility & Mobile Layout Refinements (NV-101-M4)
+   ========================================================= */
+
+#main-workspace:focus {
+  outline: none;
+}
+
+.nv-content-page,
+.nv-learning-page,
+.nv-modules-page {
+  max-inline-size: var(--sys-a11y-reading-width-enhanced);
+}
+
+.nv-markdown-content {
+  max-inline-size: var(--sys-a11y-reading-width-standard);
+}
+
+@media (max-width: 48rem) {
+  .nv-workspace__actions,
+  .nv-progress-overview__header,
+  .nv-progress-overview__meta,
+  .nv-card-meta {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .nv-button,
+  .nv-continuity-card a {
+    inline-size: 100%;
+  }
+
+  .nv-workspace-context,
+  .nv-workspace__surface,
+  .nv-continuity-card,
+  .nv-progress-panel {
+    padding: var(--sys-space-inset-md);
+  }
+}
+
+@media (max-width: 23.5rem) {
+  .nv-breadcrumbs__list {
+    row-gap: var(--sys-space-stack-xs);
+  }
+
+  .nv-content-meta,
+  .nv-workspace-context__list {
+    gap: var(--sys-space-stack-md);
+  }
+}
+
+
 
 
 

@@ -1254,6 +1254,49 @@
   color: var(--sys-color-text-primary);
 }
 
+/* =========================================================
+   Accessibility & Refinements (NV-101-M4)
+   ========================================================= */
+
+.nv-skip-link {
+  position: absolute;
+  inset-block-start: var(--sys-space-inset-sm);
+  inset-inline-start: var(--sys-space-inset-sm);
+  z-index: var(--sys-z-overlay);
+  padding-block: var(--sys-space-inset-sm);
+  padding-inline: var(--sys-space-inset-md);
+  border: var(--sys-border-subtle) solid var(--sys-color-focus-ring);
+  border-radius: var(--sys-radius-control);
+  background: var(--sys-color-surface-raised);
+  color: var(--sys-color-text-primary);
+  transform: translateY(-120%);
+}
+
+.nv-skip-link:focus-visible {
+  transform: translateY(0);
+  outline: var(--sys-border-focus) solid var(--sys-color-focus-ring);
+  outline-offset: var(--sys-space-focus-offset);
+}
+
+.nv-button,
+.nv-breadcrumbs a,
+.nv-continuity-card a {
+  min-block-size: var(--sys-a11y-touch-target-minimum);
+}
+
+.nv-empty-state {
+  line-height: var(--sys-font-body-line-height);
+}
+
+.nv-breadcrumbs__list {
+  overflow-wrap: anywhere;
+}
+
+.nv-progress-meter {
+  min-block-size: 8px;
+}
+
+
 
 
 
