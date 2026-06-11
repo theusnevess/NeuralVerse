@@ -319,6 +319,10 @@
       selectedReferenceId = refId; // select new
     }
 
+    // Clear stale compiled evidence when context selection changes
+    currentCompiledEvidence = null;
+    renderEvidence(null);
+
     // Refresh UI elements concerned with selection
     syncSelectionHighlighting();
     renderSelectedReference();
@@ -397,6 +401,10 @@
 
         currentSearchResults = adapter.searchReferences(retrievalState, query);
         renderSearchResults();
+
+        // Clear stale evidence compilation on search change
+        currentCompiledEvidence = null;
+        renderEvidence(null);
 
         // Update Search Feedback
         if (searchFeedback) {
