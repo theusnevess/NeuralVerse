@@ -218,130 +218,238 @@ class ViewController {
         <div class="nv-stack nv-stack--gap-md">
           <!-- Hero Header -->
           <header class="nv-stack nv-stack--gap-xs">
-            <h1 class="nv-context-title">Retrieval Foundation Playground</h1>
-            <p class="nv-muted">Explore semantic references, direct relational topologies, keyword indexes, and compiler evidence outputs.</p>
+            <h1 class="nv-context-title">Retrieval Workspace</h1>
+            <p class="nv-muted">Advanced Knowledge Exploration and Evidence Synthesis Environment.</p>
           </header>
 
-          <!-- Hero Introduction Panel -->
-          <section class="nv-panel nv-stack nv-stack--gap-sm" aria-labelledby="playground-intro-title">
-            <h2 id="playground-intro-title" style="font-size: var(--ref-font-size-500); font-weight: var(--ref-font-weight-semibold); color: var(--sys-color-text-primary); margin: 0;">
-              Retrieval Engine Core (NV-500)
-            </h2>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--sys-space-layout-gap); margin-top: var(--sys-space-stack-xs);">
-              <div>
-                <p style="font-size: var(--sys-font-body-size); line-height: var(--ref-font-line-height-relaxed); color: var(--sys-color-text-secondary); margin-bottom: var(--sys-space-stack-sm);">
-                  The <strong>Retrieval Foundation (NV-500)</strong> acts as the persistent knowledge layer for NeuralVerse, structuring raw unstructured data into formal cognitive constructs.
-                </p>
-                <p style="font-size: var(--sys-font-body-size); line-height: var(--ref-font-line-height-relaxed); color: var(--sys-color-text-secondary);">
-                  By isolating data registries and graph-based relationships from LLMs and agent controllers, it guarantees strict verification, tracing, and deterministic recall of factual context.
-                </p>
-              </div>
-              <div>
-                <p style="font-size: var(--sys-font-body-size); line-height: var(--ref-font-line-height-relaxed); color: var(--sys-color-text-secondary); margin-bottom: var(--sys-space-stack-sm);">
-                  This simulation integrates a <strong>Reference Registry</strong> and a <strong>Relationship Graph</strong> with a fast keyword-scoring <strong>Retrieval Index</strong> to establish bidirectional linkages between nodes.
-                </p>
-                <p style="font-size: var(--sys-font-body-size); line-height: var(--ref-font-line-height-relaxed); color: var(--sys-color-text-secondary);">
-                  The <strong>Evidence Compiler</strong> aggregates these elements to formulate structured context summaries, evaluating factual confidence levels for execution engines.
-                </p>
-              </div>
-            </div>
-          </section>
-
-          <!-- Pipeline Visualization -->
-          <section class="nv-panel" aria-labelledby="pipeline-title">
-            <h3 id="pipeline-title" style="font-size: var(--sys-font-heading-size); font-weight: var(--sys-font-heading-weight); margin-bottom: var(--sys-space-stack-xs);">
-              Knowledge Synthesis Pipeline
-            </h3>
-            <div class="retrieval-pipeline">
-              <div class="pipeline-step">
-                <div class="pipeline-step-badge">1</div>
-                <h4>Reference Registry</h4>
-                <p>Stores validated papers, codebase repos, and local study notes.</p>
-              </div>
-              <div class="pipeline-arrow" aria-hidden="true">➔</div>
-              <div class="pipeline-step">
-                <div class="pipeline-step-badge">2</div>
-                <h4>Relationship Graph</h4>
-                <p>Maps cross-document links, strengths, and citation context.</p>
-              </div>
-              <div class="pipeline-arrow" aria-hidden="true">➔</div>
-              <div class="pipeline-step">
-                <div class="pipeline-step-badge">3</div>
-                <h4>Retrieval Index</h4>
-                <p>Tokenizes and scores queries to identify key context matches.</p>
-              </div>
-              <div class="pipeline-arrow" aria-hidden="true">➔</div>
-              <div class="pipeline-step">
-                <div class="pipeline-step-badge">4</div>
-                <h4>Evidence Compiler</h4>
-                <p>Consolidates paths into a final research assistant insight.</p>
+          <!-- Knowledge Synthesis Pipeline (Compact & Collapsible) -->
+          <details class="nv-panel" style="background-color: var(--sys-color-surface-container-low); border: var(--sys-border-subtle) solid var(--sys-color-border-subtle);">
+            <summary style="font-size: var(--sys-font-body-size); font-weight: var(--ref-font-weight-semibold); color: var(--sys-color-text-primary); cursor: pointer; user-select: none;">
+              View Pipeline Infrastructure (NV-500 Core)
+            </summary>
+            <div style="margin-top: var(--sys-space-stack-sm);">
+              <p style="font-size: var(--sys-font-caption-size); color: var(--sys-color-text-secondary); margin-bottom: var(--sys-space-stack-sm);">
+                The NV-500 Retrieval Foundation isolates data registries and citation topology from LLMs, ensuring verifiable, deterministic research compilation.
+              </p>
+              <div class="retrieval-pipeline">
+                <div class="pipeline-step">
+                  <div class="pipeline-step-badge">1</div>
+                  <h4>Reference Registry</h4>
+                  <p>Stores papers, repositories, and local study notes.</p>
+                </div>
+                <div class="pipeline-arrow" aria-hidden="true">➔</div>
+                <div class="pipeline-step">
+                  <div class="pipeline-step-badge">2</div>
+                  <h4>Relationship Graph</h4>
+                  <p>Maps cross-document links, strength, and citation context.</p>
+                </div>
+                <div class="pipeline-arrow" aria-hidden="true">➔</div>
+                <div class="pipeline-step">
+                  <div class="pipeline-step-badge">3</div>
+                  <h4>Retrieval Index</h4>
+                  <p>Tokenizes and scores queries to identify key context matches.</p>
+                </div>
+                <div class="pipeline-arrow" aria-hidden="true">➔</div>
+                <div class="pipeline-step">
+                  <div class="pipeline-step-badge">4</div>
+                  <h4>Evidence Compiler</h4>
+                  <p>Consolidates paths into a final research assistant insight.</p>
+                </div>
               </div>
             </div>
-          </section>
+          </details>
 
-          <!-- Seeded Dataset Panel -->
-          <section class="nv-panel" aria-labelledby="seeded-dataset-title">
-            <h3 id="seeded-dataset-title">Seeded Reference Corpora</h3>
-            <p class="nv-muted" style="font-size: var(--sys-font-caption-size); margin-bottom: var(--sys-space-stack-xs);">
-              Select any reference entity below to inspect its detailed metadata, outbound/inbound relationships, or compile its connections.
-            </p>
-            <div id="seeded-references-list" class="nv-grid nv-grid--cols-2" style="margin-top: var(--sys-space-stack-sm);" role="list">
-              <!-- Dynamic list of seeded references -->
-            </div>
-          </section>
+          <!-- Canonical Workspace Grid Layout -->
+          <div class="workspace-layout">
 
-          <!-- Search and Compile Controls Panel -->
-          <section class="nv-panel nv-stack nv-stack--gap-sm" aria-labelledby="controls-title">
-            <h3 id="controls-title">Search & Compilation Control Console</h3>
-            <div class="nv-cluster nv-cluster--gap-sm" style="align-items: center; width: 100%;">
-              <input type="text" id="playground-search-input" class="nv-input" placeholder="Search topics (e.g. Transformer, nlp, vision, pytorch)..." style="flex: 1; min-width: 200px;" aria-label="Search references query" />
-              <button id="playground-search-button" class="nv-button" data-variant="primary" aria-label="Search references">Search Registry</button>
-              <button id="playground-compile-query-button" class="nv-button" data-variant="secondary" aria-label="Compile evidence from query">Compile From Query</button>
-            </div>
-            <div id="playground-search-feedback" class="nv-muted" style="font-size: var(--sys-font-caption-size); min-height: 1.2em;" aria-live="polite">
-              No active query.
-            </div>
-          </section>
+            <!-- Region 2: Exploration Space -->
+            <main class="exploration-space" aria-label="Exploration Space">
 
-          <!-- Results Section -->
-          <div class="playground-results-grid">
-            <!-- Search Results Panel -->
-            <section class="nv-panel nv-stack nv-stack--gap-xs" aria-labelledby="search-results-title">
-              <h3 id="search-results-title">Search Results</h3>
-              <div id="search-results-container">
-                <!-- Search Results list or Empty State -->
+              <!-- Exploration Switcher Tabs -->
+              <div class="workspace-tabs" role="tablist" aria-label="Exploration Modes">
+                <button class="workspace-tab active" data-mode="search" role="tab" aria-selected="true" id="tab-search">Search Mode</button>
+                <button class="workspace-tab" data-mode="graph" role="tab" aria-selected="false" id="tab-graph">Graph Mode</button>
+                <button class="workspace-tab" data-mode="discovery" role="tab" aria-selected="false" id="tab-discovery">Discovery Mode</button>
+                <button class="workspace-tab" data-mode="compare" role="tab" aria-selected="false" id="tab-compare">Compare Mode</button>
               </div>
-            </section>
 
-            <!-- Selected Reference Panel -->
-            <section class="nv-panel nv-stack nv-stack--gap-xs" aria-labelledby="selected-reference-title" style="display: flex; flex-direction: column;">
-              <h3 id="selected-reference-title">Selected Reference</h3>
-              <div id="selected-reference-container" style="flex: 1;">
-                <!-- Selected Reference Details or Empty State -->
-              </div>
-              <div style="margin-top: var(--sys-space-stack-md);">
-                <button id="playground-compile-ref-button" class="nv-button" data-variant="secondary" style="width: 100%;" disabled aria-label="Compile evidence from selected reference">
-                  Compile From Selected Reference
-                </button>
-              </div>
-            </section>
+              <!-- Mode 1: Search Mode -->
+              <section id="mode-search" class="exploration-mode active" aria-labelledby="tab-search">
+                <!-- Search and Compile Controls Console -->
+                <div class="nv-panel nv-stack nv-stack--gap-sm">
+                  <h3 style="margin: 0; font-size: var(--sys-font-body-size);">Search Console</h3>
+                  <div class="nv-cluster nv-cluster--gap-sm" style="align-items: center; width: 100%;">
+                    <input type="text" id="playground-search-input" class="nv-input" placeholder="Search references..." style="flex: 1; min-width: 200px;" aria-label="Search query" />
+                    <button id="playground-search-button" class="nv-button" data-variant="primary" aria-label="Search Registry">Search Registry</button>
+                    <button id="playground-compile-query-button" class="nv-button" data-variant="secondary" aria-label="Compile Evidence from Query">Compile From Query</button>
+                  </div>
+                  <div id="playground-search-feedback" class="nv-muted" style="font-size: var(--sys-font-caption-size); min-height: 1.2em;" aria-live="polite">
+                    No active query.
+                  </div>
+                </div>
 
-            <!-- Direct Relationships Panel -->
-            <section class="nv-panel nv-stack nv-stack--gap-xs" aria-labelledby="relationships-title">
-              <h3 id="relationships-title">Direct Graph Relationships</h3>
-              <div id="relationships-container">
-                <!-- Relationships list or Empty State -->
+                <!-- Search Results Grid -->
+                <div class="nv-panel">
+                  <h3 style="margin: 0 0 var(--sys-space-stack-xs) 0; font-size: var(--sys-font-body-size);">Search Results</h3>
+                  <div id="search-results-container" class="playground-results-grid">
+                    <!-- Dynamic search results lists or empty state -->
+                  </div>
+                </div>
+
+                <!-- Seeded Reference List inside Search Mode for easy browsing -->
+                <div class="nv-panel">
+                  <h3 style="margin: 0 0 var(--sys-space-stack-xs) 0; font-size: var(--sys-font-body-size);">Reference Registry Database</h3>
+                  <div id="seeded-references-list" class="nv-grid nv-grid--cols-2">
+                    <!-- Dynamic seeded list of references -->
+                  </div>
+                </div>
+              </section>
+
+              <!-- Mode 2: Graph Mode -->
+              <section id="mode-graph" class="exploration-mode" aria-labelledby="tab-graph">
+                <div class="nv-panel nv-stack nv-stack--gap-xs">
+                  <div class="nv-cluster nv-cluster--gap-sm" style="justify-content: space-between; align-items: center;">
+                    <h3 style="margin: 0; font-size: var(--sys-font-body-size);">Interactive Topology Graph</h3>
+                    <span class="nv-muted" style="font-size: var(--sys-font-caption-size);">Click nodes to select. Shift-click to trace.</span>
+                  </div>
+                  <div class="graph-container">
+                    <svg id="visual-graph-svg" class="graph-svg" aria-label="Reference network topology graph">
+                      <!-- Graph links and nodes will be dynamically injected here -->
+                    </svg>
+                  </div>
+                </div>
+              </section>
+
+              <!-- Mode 3: Discovery Mode -->
+              <section id="mode-discovery" class="exploration-mode" aria-labelledby="tab-discovery">
+                <div class="nv-panel nv-stack nv-stack--gap-sm">
+                  <h3 style="margin: 0; font-size: var(--sys-font-body-size);">Research Discovery Dashboard</h3>
+                  <p class="nv-muted" style="font-size: var(--sys-font-caption-size); margin: 0;">Automated topological telemetry and quick recommendations.</p>
+                  <div class="nv-grid nv-grid--cols-3" style="gap: var(--sys-space-stack-sm); margin-top: var(--sys-space-stack-xs);">
+                    <div class="nv-card" style="cursor: default;">
+                      <h5 style="margin: 0 0 4px 0; font-size: 0.65rem;">Registry Size</h5>
+                      <p style="margin: 0; font-size: 1.25rem; font-weight: var(--ref-font-weight-bold); color: var(--sys-color-accent-primary);" id="discovery-stat-size">0</p>
+                    </div>
+                    <div class="nv-card" style="cursor: default;">
+                      <h5 style="margin: 0 0 4px 0; font-size: 0.65rem;">Relation Count</h5>
+                      <p style="margin: 0; font-size: 1.25rem; font-weight: var(--ref-font-weight-bold); color: var(--sys-color-accent-primary);" id="discovery-stat-relations">0</p>
+                    </div>
+                    <div class="nv-card" style="cursor: default;">
+                      <h5 style="margin: 0 0 4px 0; font-size: 0.65rem;">Graph Density</h5>
+                      <p style="margin: 0; font-size: 1.25rem; font-weight: var(--ref-font-weight-bold); color: var(--sys-color-accent-primary);" id="discovery-stat-density">0.00</p>
+                    </div>
+                  </div>
+                  <div class="nv-divider" aria-hidden="true" style="margin-block: var(--sys-space-stack-xs);"></div>
+                  <div>
+                    <h4 style="font-size: var(--sys-font-caption-size); text-transform: uppercase; color: var(--sys-color-text-secondary); margin-bottom: var(--sys-space-stack-xs);">Key Research Anchors</h4>
+                    <div id="discovery-anchors-container" class="nv-stack nv-stack--gap-xs">
+                      <!-- Recommended read files dynamic list -->
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <!-- Mode 4: Compare Mode -->
+              <section id="mode-compare" class="exploration-mode" aria-labelledby="tab-compare">
+                <div class="nv-panel nv-stack nv-stack--gap-sm">
+                  <h3 style="margin: 0; font-size: var(--sys-font-body-size);">Cross-Reference Comparison</h3>
+                  <p class="nv-muted" style="font-size: var(--sys-font-caption-size); margin: 0;">Compare type, status, citations, and metadata details side-by-side.</p>
+                  <div style="overflow-x: auto;">
+                    <table class="compare-table" id="compare-workspace-table">
+                      <thead>
+                        <tr>
+                          <th>ID</th>
+                          <th>Title</th>
+                          <th>Type</th>
+                          <th>Status</th>
+                          <th>Source</th>
+                          <th>Direct Relations</th>
+                        </tr>
+                      </thead>
+                      <tbody id="compare-table-body">
+                        <!-- Dynamically populated reference rows -->
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </section>
+
+            </main>
+
+            <!-- Region 3: Inspector Space -->
+            <aside class="inspector-space" aria-label="Inspector Space">
+
+              <!-- Inspector Tabs -->
+              <div class="inspector-tabs" role="tablist" aria-label="Inspector Panels">
+                <button class="inspector-tab active" data-tab="reference" role="tab" aria-selected="true" id="tab-insp-ref">Reference</button>
+                <button class="inspector-tab" data-tab="evidence" role="tab" aria-selected="false" id="tab-insp-ev">Evidence</button>
+                <button class="inspector-tab" data-tab="relationship" role="tab" aria-selected="false" id="tab-insp-rel">Relationship</button>
               </div>
-            </section>
+
+              <!-- Panel 1: Reference Inspector -->
+              <section id="inspector-panel-reference" class="inspector-panel active" aria-labelledby="tab-insp-ref">
+                <div id="selected-reference-container" style="flex: 1;">
+                  <!-- Active reference state details -->
+                </div>
+                <div class="nv-stack nv-stack--gap-xs" style="margin-top: var(--sys-space-stack-md); padding-top: var(--sys-space-stack-sm); border-top: var(--sys-border-subtle) solid var(--sys-color-border-subtle);">
+                  <div class="nv-cluster nv-cluster--gap-sm">
+                    <button id="playground-pin-button" class="nv-button" data-variant="secondary" style="flex: 1;" disabled>
+                      Pin Reference
+                    </button>
+                    <button id="playground-compile-ref-button" class="nv-button" data-variant="primary" style="flex: 1;" disabled>
+                      Compile Evidence
+                    </button>
+                  </div>
+                </div>
+              </section>
+
+              <!-- Panel 2: Evidence Inspector -->
+              <section id="inspector-panel-evidence" class="inspector-panel" aria-labelledby="tab-insp-ev">
+                <div id="evidence-compilation-container" style="flex: 1;">
+                  <!-- Evidence Compiler detailed output -->
+                </div>
+              </section>
+
+              <!-- Panel 3: Relationship Inspector -->
+              <section id="inspector-panel-relationship" class="inspector-panel" aria-labelledby="tab-insp-rel">
+                <div id="selected-relationship-container" style="flex: 1;">
+                  <!-- Selected direct citation link details -->
+                </div>
+              </section>
+
+            </aside>
+
           </div>
 
-          <!-- Evidence Compiler Panel -->
-          <section class="nv-panel" aria-labelledby="evidence-compilation-title">
-            <h3 id="evidence-compilation-title">Evidence Compiler Synthesis Output</h3>
-            <div id="evidence-compilation-container" style="margin-top: var(--sys-space-stack-sm);">
-              <!-- Compiled Evidence or Empty State -->
+          <!-- Region 4: Research Memory Layer -->
+          <footer class="memory-layer" aria-label="Research Memory Layer">
+            <div class="memory-grid">
+              <!-- Column 1: Recently Viewed -->
+              <div class="memory-column">
+                <h4>Recently Viewed</h4>
+                <ul id="memory-recent-list" class="memory-list" aria-label="Recently viewed references">
+                  <!-- Dynamic recently viewed list -->
+                </ul>
+              </div>
+
+              <!-- Column 2: Pinned References -->
+              <div class="memory-column">
+                <h4>Pinned References</h4>
+                <ul id="memory-pinned-list" class="memory-list" aria-label="Pinned references">
+                  <!-- Dynamic pinned list -->
+                </ul>
+              </div>
+
+              <!-- Column 3: Saved Queries -->
+              <div class="memory-column">
+                <h4>Saved Queries</h4>
+                <ul id="memory-queries-list" class="memory-list" aria-label="Saved queries">
+                  <!-- Dynamic saved search queries list -->
+                </ul>
+              </div>
             </div>
-          </section>
+          </footer>
+
         </div>
       `,
       'not-found': `
