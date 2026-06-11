@@ -675,7 +675,7 @@
             <button class="nv-button" id="evidence-empty-compile-ref" data-variant="secondary" style="font-size: var(--sys-font-caption-size);" disabled>
               Compile Selected Reference
             </button>
-            <button class="nv-button" id="evidence-empty-return-explore" data-variant="neutral" style="font-size: var(--sys-font-caption-size);">
+            <button class="nv-button" id="evidence-empty-return-explore" data-variant="ghost" style="font-size: var(--sys-font-caption-size);">
               Return to Exploration
             </button>
           </div>
@@ -750,7 +750,7 @@
     } else {
       confLabel = "Limited Support";
       confExplanation = "Only limited supporting context was identified.";
-      confVariant = "danger";
+      confVariant = "error";
     }
 
     // 2. Structured Recommendation text
@@ -940,7 +940,7 @@
                 Continue Discovery for ${comp.matchedReferences[0].id}
               </button>
             ` : ""}
-            <button class="nv-button" id="action-return-search" data-variant="neutral" style="font-size: var(--sys-font-caption-size); padding: 4px;">
+            <button class="nv-button" id="action-return-search" data-variant="ghost" style="font-size: var(--sys-font-caption-size); padding: 4px;">
               Return to Search Mode
             </button>
           </div>
@@ -1062,7 +1062,7 @@
         <div class="nv-stack nv-stack--gap-xs">
           ${evidenceTimeline.length === 0 ? '<p class="nv-muted" style="font-size: var(--sys-font-caption-size); margin: 0;">No compilation history.</p>' : evidenceTimeline.map((item, idx) => {
             let qualitativeLabel = item.confidence === "high" ? "High" : (item.confidence === "medium" ? "Moderate" : "Limited");
-            let qualVariant = item.confidence === "high" ? "success" : (item.confidence === "medium" ? "warning" : "danger");
+            let qualVariant = item.confidence === "high" ? "success" : (item.confidence === "medium" ? "warning" : "error");
             return `
               <div class="nv-card clickable-history-item" data-index="${idx}" style="padding: var(--sys-space-stack-xs); font-size: 0.6rem; cursor: pointer; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 2px; background-color: var(--sys-color-surface-container-lowest);" tabindex="0" role="button" aria-label="Reopen compilation ${item.id}">
                 <div class="nv-cluster nv-cluster--gap-xs" style="justify-content: space-between; align-items: center;">
