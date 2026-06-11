@@ -1,70 +1,16 @@
 /**
- * NeuralVerse - Retrieval Playground Controller (Hardened Version)
+ * NeuralVerse - Retrieval Playground Page Controller
+ * Handles DOM events, rendering, and UI state synchronization.
  */
 (function () {
-  // Seeded Reference Data
-  const references = [
-    {
-      id: "arxiv-transformer",
-      title: "Attention Is All You Need",
-      type: "paper",
-      status: "active",
-      source: "https://arxiv.org/abs/1706.03762",
-      keywords: ["attention", "transformer", "neural network", "nlp"]
-    },
-    {
-      id: "arxiv-bert",
-      title: "BERT: Bidirectional Transformers",
-      type: "paper",
-      status: "active",
-      source: "https://arxiv.org/abs/1810.04805",
-      keywords: ["bert", "transformer", "bidirectional", "nlp"]
-    },
-    {
-      id: "github-pytorch",
-      title: "PyTorch Deep Learning Framework",
-      type: "repository",
-      status: "active",
-      source: "https://github.com/pytorch/pytorch",
-      keywords: ["pytorch", "library", "deep learning", "python"]
-    },
-    {
-      id: "notes-rag",
-      title: "RAG Evaluation Notes",
-      type: "notes",
-      status: "active",
-      source: "local://notes/rag-eval",
-      keywords: ["rag", "evaluation", "notes", "retrieval"]
-    }
-  ];
+  const adapter = window.NeuralVerseRetrievalAdapter;
+  if (!adapter) {
+    console.error("Retrieval Playground Adapter not found. Make sure retrieval-playground-adapter.js is loaded first.");
+    return;
+  }
 
-  // Seeded Relationships
-  const relationships = [
-    {
-      id: "rel-bert-transformer",
-      sourceReferenceId: "arxiv-bert",
-      targetReferenceId: "arxiv-transformer",
-      type: "cites",
-      context: "transformer architecture core",
-      strength: 0.95
-    },
-    {
-      id: "rel-transformer-pytorch",
-      sourceReferenceId: "arxiv-transformer",
-      targetReferenceId: "github-pytorch",
-      type: "implements",
-      context: "pytorch ecosystem models",
-      strength: 0.80
-    },
-    {
-      id: "rel-rag-transformer",
-      sourceReferenceId: "notes-rag",
-      targetReferenceId: "arxiv-transformer",
-      type: "extends",
-      context: "dense retrieval core component",
-      strength: 0.85
-    }
-  ];
+  // Initialize seeded retrieval state
+  const retrievalState = adapter.createSeededRetrievalState();
 
   // UI State
   let selectedReferenceId = null;
@@ -72,176 +18,12 @@
   let currentSearchResults = [];
   let currentCompiledEvidence = null;
 
-  // Search logic
-  function searchReferences(query) {
-    if (!query || query.trim() === "") {
-      return [];
-    }
-
-    const queryTerms = Array.from(
-      new Set(
-        query
-          .trim()
-          .toLowerCase()
-          .replace(/\s+/g, " ")
-          .split(" ")
-          .filter((t) => t !== "")
-      )
-    );
-
-    if (queryTerms.length === 0) {
-      return [];
-    }
-
-    const results = [];
-    for (const ref of references) {
-      if (ref.status !== "active") continue;
-
-      const matchedKeywords = [];
-      for (const term of queryTerms) {
-        if (ref.keywords.includes(term)) {
-          matchedKeywords.push(term);
-        }
-      }
-
-      const score = matchedKeywords.length;
-      if (score > 0) {
-        results.push({
-          reference: ref,
-          score,
-          matchedKeywords
-        });
-      }
-    }
-
-    results.sort((a, b) => {
-      if (b.score !== a.score) {
-        return b.score - a.score;
-      }
-      return a.reference.id.localeCompare(b.reference.id);
-    });
-
-    return results;
-  }
-
-  // Get relationships involving specific reference IDs
-  function getRelationshipsForReferences(matchedIds) {
-    const relList = [];
-    const relIds = new Set();
-
-    for (const id of matchedIds) {
-      for (const rel of relationships) {
-        if ((rel.sourceReferenceId === id || rel.targetReferenceId === id) && !relIds.has(rel.id)) {
-          relList.push(rel);
-          relIds.add(rel.id);
-        }
-      }
-    }
-    return relList;
-  }
-
-  // Compile evidence from query
-  function compileEvidenceFromQuery(query) {
-    if (!query || query.trim() === "") {
-      return null;
-    }
-
-    const searchResults = searchReferences(query);
-    const matchedReferences = searchResults.map(res => res.reference);
-    const matchedIds = new Set(matchedReferences.map(r => r.id));
-
-    const relList = getRelationshipsForReferences(matchedIds);
-    const relatedReferenceMap = new Map();
-
-    for (const rel of relList) {
-      const candidates = [rel.sourceReferenceId, rel.targetReferenceId];
-      for (const id of candidates) {
-        if (!matchedIds.has(id) && !relatedReferenceMap.has(id)) {
-          const ref = references.find(r => r.id === id);
-          if (ref && ref.status === "active") {
-            relatedReferenceMap.set(id, ref);
-          }
-        }
-      }
-    }
-
-    const relatedReferences = Array.from(relatedReferenceMap.values());
-
-    let confidence = "low";
-    if (matchedReferences.length >= 2 && relList.length >= 1) {
-      confidence = "high";
-    } else if (matchedReferences.length >= 1) {
-      confidence = "medium";
-    }
-
-    let summary = "";
-    if (matchedReferences.length === 0) {
-      summary = `No evidence was found for the query: "${query}".`;
-    } else {
-      summary = `Evidence compilation for query "${query}" retrieved ${matchedReferences.length} matched reference(s) and detected ${relList.length} relationship(s) linking to ${relatedReferences.length} related reference(s). Confidence level is assessed as ${confidence}.`;
-    }
-
-    return {
-      id: `comp-query-${Date.now()}`,
-      mode: "query",
-      input: query,
-      matchedReferences,
-      relatedReferences,
-      relationships: relList,
-      confidence,
-      summary,
-      createdAt: new Date()
-    };
-  }
-
-  // Compile evidence from selected reference ID
-  function compileEvidenceFromReference(referenceId) {
-    if (!referenceId) return null;
-    const seedRef = references.find(r => r.id === referenceId);
-    if (!seedRef) return null;
-
-    // Find direct relationships
-    const rels = relationships.filter(r => r.sourceReferenceId === referenceId || r.targetReferenceId === referenceId);
-    const relatedReferenceMap = new Map();
-
-    for (const rel of rels) {
-      const targetId = rel.sourceReferenceId === referenceId ? rel.targetReferenceId : rel.sourceReferenceId;
-      const ref = references.find(r => r.id === targetId);
-      if (ref && ref.status === "active") {
-        relatedReferenceMap.set(targetId, ref);
-      }
-    }
-
-    const relatedReferences = Array.from(relatedReferenceMap.values());
-
-    let confidence = "low";
-    if (rels.length >= 2) {
-      confidence = "high";
-    } else if (rels.length >= 1) {
-      confidence = "medium";
-    }
-
-    const summary = `Evidence compilation using seed reference "${seedRef.title}" (${seedRef.id}) identified ${rels.length} relationship(s) linking to ${relatedReferences.length} active related reference(s). Confidence level is assessed as ${confidence}.`;
-
-    return {
-      id: `comp-ref-${Date.now()}`,
-      mode: "reference",
-      input: referenceId,
-      matchedReferences: [seedRef],
-      relatedReferences,
-      relationships: rels,
-      confidence,
-      summary,
-      createdAt: new Date()
-    };
-  }
-
   // DOM Rendering & Sync
   function renderSeededReferences() {
     const listContainer = document.getElementById("seeded-references-list");
     if (!listContainer) return;
 
-    listContainer.innerHTML = references.map(ref => {
+    listContainer.innerHTML = retrievalState.references.map(ref => {
       const isSelected = ref.id === selectedReferenceId;
       return `
         <div class="nv-card ${isSelected ? 'nv-card--selected' : ''}"
@@ -326,7 +108,7 @@
       return;
     }
 
-    const ref = references.find(r => r.id === selectedReferenceId);
+    const ref = adapter.getReferenceById(retrievalState, selectedReferenceId);
     if (!ref) {
       container.innerHTML = `
         <div class="nv-empty-state">
@@ -338,8 +120,8 @@
       return;
     }
 
-    // Calculate related relationships count
-    const relCount = relationships.filter(r => r.sourceReferenceId === ref.id || r.targetReferenceId === ref.id).length;
+    // Calculate related relationships count using adapter lookup
+    const relCount = adapter.getRelationshipsForReference(retrievalState, ref.id).length;
 
     container.innerHTML = `
       <div class="nv-card nv-card--selected" style="margin: 0; border: none; background-color: var(--sys-color-surface-container-low) !important;">
@@ -368,12 +150,12 @@
     let relList = [];
 
     if (selectedReferenceId) {
-      // Show relationships involving selected reference
-      relList = relationships.filter(r => r.sourceReferenceId === selectedReferenceId || r.targetReferenceId === selectedReferenceId);
+      // Show relationships involving selected reference using adapter function
+      relList = adapter.getRelationshipsForReference(retrievalState, selectedReferenceId);
     } else if (currentSearchResults.length > 0) {
       // Fallback: Show relationships for search results
       const matchedIds = currentSearchResults.map(res => res.reference.id);
-      relList = getRelationshipsForReferences(matchedIds);
+      relList = adapter.getRelationshipsForReferences(retrievalState, matchedIds);
     }
 
     if (relList.length === 0) {
@@ -556,7 +338,7 @@
 
   // Initialize playground controls
   function initPlayground() {
-    console.log("Initializing Retrieval Playground (Hardened)...");
+    console.log("Initializing Retrieval Playground (Refactored)...");
     renderSeededReferences();
     renderSearchResults();
     renderSelectedReference();
@@ -587,7 +369,7 @@
         currentSearchQuery = query;
         console.log(`Searching references for: ${query}`);
 
-        currentSearchResults = searchReferences(query);
+        currentSearchResults = adapter.searchReferences(retrievalState, query);
         renderSearchResults();
 
         // Update Search Feedback
@@ -599,11 +381,9 @@
           }
         }
 
-        // State Reset Behavior: Preserve selected reference only if it still exists in the visible context (seeded references list or current search results)
-        // Since seeded references list is always visible, it always exists there if it's one of the seeded references.
-        // If not in the list, we clear it.
+        // State Reset Behavior: Preserve selected reference only if it still exists in the visible context
         if (selectedReferenceId) {
-          const exists = references.some(r => r.id === selectedReferenceId) || currentSearchResults.some(res => res.reference.id === selectedReferenceId);
+          const exists = retrievalState.references.some(r => r.id === selectedReferenceId) || currentSearchResults.some(res => res.reference.id === selectedReferenceId);
           if (!exists) {
             selectedReferenceId = null;
             renderSelectedReference();
@@ -618,7 +398,7 @@
       compileQueryBtn.onclick = () => {
         const query = searchInput ? searchInput.value : "";
         console.log(`Compiling evidence from query: ${query}`);
-        currentCompiledEvidence = compileEvidenceFromQuery(query);
+        currentCompiledEvidence = adapter.compileEvidenceFromQuery(retrievalState, query);
         renderEvidence(currentCompiledEvidence);
       };
     }
@@ -627,7 +407,7 @@
       compileRefBtn.onclick = () => {
         if (!selectedReferenceId) return;
         console.log(`Compiling evidence from reference: ${selectedReferenceId}`);
-        currentCompiledEvidence = compileEvidenceFromReference(selectedReferenceId);
+        currentCompiledEvidence = adapter.compileEvidenceFromReference(retrievalState, selectedReferenceId);
         renderEvidence(currentCompiledEvidence);
       };
     }
@@ -647,13 +427,8 @@
   // Expose module globally
   window.NeuralVerse = window.NeuralVerse || {};
   window.NeuralVerse.retrievalPlayground = {
-    searchReferences,
-    getRelationshipsForReferences,
-    compileEvidenceFromQuery,
-    compileEvidenceFromReference,
     initPlayground,
     toggleSelection,
-    references,
-    relationships
+    retrievalState
   };
 })();
