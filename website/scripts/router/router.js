@@ -214,6 +214,65 @@ class ViewController {
           </div>
         </div>
       `,
+      'retrieval-playground': `
+        <div class="nv-stack nv-stack--gap-md">
+          <header class="nv-stack nv-stack--gap-xs">
+            <h1 class="nv-context-title">Retrieval Playground</h1>
+            <p class="nv-muted">Explore references, relationships, search results, and evidence compilation.</p>
+          </header>
+
+          <!-- Seeded Dataset Panel -->
+          <div class="nv-panel">
+            <h3>Seeded Dataset</h3>
+            <div id="seeded-references-list" class="nv-grid nv-grid--cols-2" style="margin-top: var(--sys-space-stack-sm);">
+              <!-- Dynamic list of seeded references -->
+            </div>
+          </div>
+
+          <!-- Search and Compile Controls Panel -->
+          <div class="nv-panel nv-stack nv-stack--gap-sm">
+            <h3>Search & Compilation Control</h3>
+            <div class="nv-cluster nv-cluster--gap-sm" style="align-items: center; width: 100%;">
+              <input type="text" id="playground-search-input" class="nv-input" placeholder="Search references..." style="flex: 1; min-width: 200px;" />
+              <button id="playground-search-button" class="nv-button" data-variant="primary">Search</button>
+              <button id="playground-compile-button" class="nv-button" data-variant="secondary">Compile Evidence</button>
+            </div>
+          </div>
+
+          <!-- Results Section -->
+          <div class="nv-grid nv-grid--cols-2">
+            <!-- Search Results Panel -->
+            <div class="nv-panel">
+              <h3>Search Results</h3>
+              <div id="search-results-container" style="margin-top: var(--sys-space-stack-sm);">
+                <p class="nv-muted">Enter a search query to explore results.</p>
+              </div>
+            </div>
+
+            <!-- Direct Relationships Panel -->
+            <div class="nv-panel">
+              <h3>Direct Relationships</h3>
+              <div id="relationships-container" style="margin-top: var(--sys-space-stack-sm);">
+                <p class="nv-muted">Relationships will load based on active search results.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Evidence Compiler Panel -->
+          <div class="nv-panel">
+            <h3>Evidence Compilation Output</h3>
+            <div id="evidence-compilation-container" style="margin-top: var(--sys-space-stack-sm);">
+              <div class="nv-empty-state">
+                <div class="nv-empty-state-icon" aria-hidden="true">📋</div>
+                <h2 class="nv-empty-state-title">No Compiled Evidence</h2>
+                <p class="nv-empty-state-description">
+                  Click "Compile Evidence" to generate a consolidated evidence summary from the current search query.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      `,
       'not-found': `
         <div class="nv-stack nv-stack--gap-md">
           <header class="nv-stack nv-stack--gap-xs">

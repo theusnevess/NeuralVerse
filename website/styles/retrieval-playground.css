@@ -1,0 +1,39 @@
+/* Custom Styles for Retrieval Playground */
+
+#seeded-references-list .nv-card {
+  border: var(--sys-border-subtle) solid var(--sys-color-border-subtle);
+  background-color: var(--sys-color-surface-container-low);
+  padding: var(--sys-space-stack-sm);
+  border-radius: var(--sys-shape-corner-small);
+}
+
+.nv-panel h3 {
+  margin-top: 0;
+  margin-bottom: var(--sys-space-stack-xs);
+  color: var(--sys-color-text-primary);
+  font-family: var(--sys-font-title-family);
+}
+
+.nv-panel h5 {
+  margin: 0 0 var(--sys-space-stack-xs) 0;
+  color: var(--sys-color-text-secondary);
+  font-family: var(--sys-font-title-family);
+  font-size: var(--sys-font-caption-size);
+  text-transform: uppercase;
+  letter-spacing: var(--ref-font-tracking-wide);
+}
+
+#playground-search-input {
+  background-color: var(--sys-color-surface-container-lowest);
+  border: var(--sys-border-subtle) solid var(--sys-color-border-subtle);
+  color: var(--sys-color-text-primary);
+  padding: var(--sys-space-stack-xs) var(--sys-space-stack-sm);
+  border-radius: var(--sys-shape-corner-small);
+  font-family: var(--sys-font-body-family);
+  font-size: var(--sys-font-body-size);
+}
+
+#playground-search-input:focus {
+  outline: none;
+  border-color: var(--sys-color-primary);
+}

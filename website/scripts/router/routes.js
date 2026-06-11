@@ -14,6 +14,17 @@ const ROUTES = [
     isImplemented: true
   },
   {
+    id: 'retrieval-playground',
+    path: '#/retrieval-playground',
+    pattern: /^#\/retrieval-playground$/,
+    label: 'Retrieval Playground',
+    title: 'Retrieval Playground',
+    description: 'Explore references, relationships, search results, and evidence compilation.',
+    region: 'R3 Workspace',
+    navigationGroup: 'primary',
+    isImplemented: true
+  },
+  {
     id: 'learning-path',
     path: '#/learning/:pathId/module/:moduleId',
     pattern: /^#\/learning\/([^/]+)\/module\/([^/]+)$/,
