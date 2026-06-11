@@ -1,10 +1,37 @@
-/* Custom Styles for Retrieval Playground */
+/* Hardened Custom Styles for Retrieval Playground */
+
+.playground-results-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--sys-space-stack-md);
+  margin-top: var(--sys-space-stack-md);
+}
 
 #seeded-references-list .nv-card {
   border: var(--sys-border-subtle) solid var(--sys-color-border-subtle);
   background-color: var(--sys-color-surface-container-low);
   padding: var(--sys-space-stack-sm);
   border-radius: var(--sys-shape-corner-small);
+  cursor: pointer;
+  transition: border-color var(--ctx-nav-motion, 200ms) var(--sys-motion-ease-interface, ease),
+              box-shadow var(--ctx-nav-motion, 200ms) var(--sys-motion-ease-interface, ease);
+}
+
+#seeded-references-list .nv-card:hover,
+#search-results-container .nv-card:hover {
+  border-color: var(--sys-color-primary, #6200ee);
+}
+
+#seeded-references-list .nv-card:focus-visible,
+#search-results-container .nv-card:focus-visible {
+  outline: var(--sys-a11y-focus-ring);
+  outline-offset: 2px;
+}
+
+.nv-card--selected {
+  border-color: var(--sys-color-primary, #6200ee) !important;
+  box-shadow: 0 0 0 2px var(--sys-color-primary, #6200ee);
+  background-color: var(--sys-color-surface-container, #2c2c2c) !important;
 }
 
 .nv-panel h3 {
@@ -12,6 +39,7 @@
   margin-bottom: var(--sys-space-stack-xs);
   color: var(--sys-color-text-primary);
   font-family: var(--sys-font-title-family);
+  font-size: 1.15rem;
 }
 
 .nv-panel h5 {
@@ -36,4 +64,55 @@
 #playground-search-input:focus {
   outline: none;
   border-color: var(--sys-color-primary);
+}
+
+/* Empty states custom styles */
+.nv-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sys-space-stack-md);
+  text-align: center;
+  border: 1px dashed var(--sys-color-border-subtle);
+  border-radius: var(--sys-shape-corner-small);
+  background-color: var(--sys-color-surface-container-lowest);
+  min-height: 120px;
+}
+
+.nv-empty-state-icon {
+  font-size: 1.5rem;
+  margin-bottom: var(--sys-space-stack-xs);
+}
+
+/* Badges styling */
+.nv-badge[data-variant="success"] {
+  background-color: rgba(76, 175, 80, 0.15);
+  color: #4caf50;
+  border: 1px solid rgba(76, 175, 80, 0.3);
+}
+
+.nv-badge[data-variant="info"] {
+  background-color: rgba(33, 150, 243, 0.15);
+  color: #2196f3;
+  border: 1px solid rgba(33, 150, 243, 0.3);
+}
+
+.nv-badge[data-variant="warning"] {
+  background-color: rgba(255, 152, 0, 0.15);
+  color: #ff9800;
+  border: 1px solid rgba(255, 152, 0, 0.3);
+}
+
+/* Responsive grid layouts */
+@media (max-width: 1024px) {
+  .playground-results-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .playground-results-grid {
+    grid-template-columns: 1fr;
+  }
 }

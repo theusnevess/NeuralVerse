@@ -5,53 +5,66 @@
   </header>
 
   <!-- Seeded Dataset Panel -->
-  <div class="nv-panel">
-    <h3>Seeded Dataset</h3>
-    <div id="seeded-references-list" class="nv-grid nv-grid--cols-2" style="margin-top: var(--sys-space-stack-sm);">
+  <section class="nv-panel" aria-labelledby="seeded-dataset-title">
+    <h3 id="seeded-dataset-title">Seeded Dataset</h3>
+    <p class="nv-muted" style="font-size: var(--sys-font-caption-size); margin-bottom: var(--sys-space-stack-xs);">
+      Select any reference card below to inspect its details and relationships.
+    </p>
+    <div id="seeded-references-list" class="nv-grid nv-grid--cols-2" style="margin-top: var(--sys-space-stack-sm);" role="list">
       <!-- Dynamic list of seeded references -->
     </div>
-  </div>
+  </section>
 
   <!-- Search and Compile Controls Panel -->
-  <div class="nv-panel nv-stack nv-stack--gap-sm">
-    <h3>Search & Compilation Control</h3>
+  <section class="nv-panel nv-stack nv-stack--gap-sm" aria-labelledby="controls-title">
+    <h3 id="controls-title">Search & Compilation Control</h3>
     <div class="nv-cluster nv-cluster--gap-sm" style="align-items: center; width: 100%;">
-      <input type="text" id="playground-search-input" class="nv-input" placeholder="Search references..." style="flex: 1; min-width: 200px;" />
-      <button id="playground-search-button" class="nv-button" data-variant="primary">Search</button>
-      <button id="playground-compile-button" class="nv-button" data-variant="secondary">Compile Evidence</button>
+      <input type="text" id="playground-search-input" class="nv-input" placeholder="Search references..." style="flex: 1; min-width: 200px;" aria-label="Search references query" />
+      <button id="playground-search-button" class="nv-button" data-variant="primary" aria-label="Search references">Search</button>
+      <button id="playground-compile-query-button" class="nv-button" data-variant="secondary" aria-label="Compile evidence from query">Compile From Query</button>
     </div>
-  </div>
+    <div id="playground-search-feedback" class="nv-muted" style="font-size: var(--sys-font-caption-size); min-height: 1.2em;" aria-live="polite">
+      No active query.
+    </div>
+  </section>
 
   <!-- Results Section -->
-  <div class="nv-grid nv-grid--cols-2">
+  <div class="playground-results-grid">
     <!-- Search Results Panel -->
-    <div class="nv-panel">
-      <h3>Search Results</h3>
-      <div id="search-results-container" style="margin-top: var(--sys-space-stack-sm);">
-        <p class="nv-muted">Enter a search query to explore results.</p>
+    <section class="nv-panel nv-stack nv-stack--gap-xs" aria-labelledby="search-results-title">
+      <h3 id="search-results-title">Search Results</h3>
+      <div id="search-results-container">
+        <!-- Search Results list or Empty State -->
       </div>
-    </div>
+    </section>
+
+    <!-- Selected Reference Panel -->
+    <section class="nv-panel nv-stack nv-stack--gap-xs" aria-labelledby="selected-reference-title" style="display: flex; flex-direction: column;">
+      <h3 id="selected-reference-title">Selected Reference</h3>
+      <div id="selected-reference-container" style="flex: 1;">
+        <!-- Selected Reference Details or Empty State -->
+      </div>
+      <div style="margin-top: var(--sys-space-stack-md);">
+        <button id="playground-compile-ref-button" class="nv-button" data-variant="secondary" style="width: 100%;" disabled aria-label="Compile evidence from selected reference">
+          Compile From Selected Reference
+        </button>
+      </div>
+    </section>
 
     <!-- Direct Relationships Panel -->
-    <div class="nv-panel">
-      <h3>Direct Relationships</h3>
-      <div id="relationships-container" style="margin-top: var(--sys-space-stack-sm);">
-        <p class="nv-muted">Relationships will load based on active search results.</p>
+    <section class="nv-panel nv-stack nv-stack--gap-xs" aria-labelledby="relationships-title">
+      <h3 id="relationships-title">Direct Relationships</h3>
+      <div id="relationships-container">
+        <!-- Relationships list or Empty State -->
       </div>
-    </div>
+    </section>
   </div>
 
   <!-- Evidence Compiler Panel -->
-  <div class="nv-panel">
-    <h3>Evidence Compilation Output</h3>
+  <section class="nv-panel" aria-labelledby="evidence-compilation-title">
+    <h3 id="evidence-compilation-title">Evidence Compilation Output</h3>
     <div id="evidence-compilation-container" style="margin-top: var(--sys-space-stack-sm);">
-      <div class="nv-empty-state">
-        <div class="nv-empty-state-icon" aria-hidden="true">📋</div>
-        <h2 class="nv-empty-state-title">No Compiled Evidence</h2>
-        <p class="nv-empty-state-description">
-          Click "Compile Evidence" to generate a consolidated evidence summary from the current search query.
-        </p>
-      </div>
+      <!-- Compiled Evidence or Empty State -->
     </div>
-  </div>
+  </section>
 </div>
