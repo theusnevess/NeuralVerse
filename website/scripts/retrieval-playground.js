@@ -369,14 +369,33 @@
     // Clear previous SVG content
     svg.innerHTML = "";
 
-    // Define Arrow Marker for relationship direction
+    // Define Grid Pattern and Arrow Markers for direction-aware styling
     const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
     defs.innerHTML = `
-      <marker id="arrow" viewBox="0 0 10 10" refX="18" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-        <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--sys-color-accent-primary)" />
+      <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+        <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255, 255, 255, 0.02)" stroke-width="1"/>
+      </pattern>
+      <marker id="arrow-default" viewBox="0 0 10 10" refX="16" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#384c5c" />
+      </marker>
+      <marker id="arrow-selected" viewBox="0 0 10 10" refX="18" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#00f0ff" />
+      </marker>
+      <marker id="arrow-outbound" viewBox="0 0 10 10" refX="18" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#ff0055" />
+      </marker>
+      <marker id="arrow-inbound" viewBox="0 0 10 10" refX="18" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#39ff14" />
       </marker>
     `;
     svg.appendChild(defs);
+
+    // Draw grid background
+    const bgRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    bgRect.setAttribute("width", "100%");
+    bgRect.setAttribute("height", "100%");
+    bgRect.setAttribute("fill", "url(#grid)");
+    svg.appendChild(bgRect);
 
     const width = svg.clientWidth || 600;
     const height = svg.clientHeight || 480;
@@ -400,19 +419,21 @@
       };
     });
 
-    // Determine highlighting state
+    // Determine direction-aware highlighting state
     const activeRefId = selectedReferenceId;
-    const connectedNodeIds = new Set();
-    const connectedRelIds = new Set();
+    const outboundNodeIds = new Set();
+    const inboundNodeIds = new Set();
+    const outboundRelIds = new Set();
+    const inboundRelIds = new Set();
 
     if (activeRefId) {
       rels.forEach(rel => {
         if (rel.sourceReferenceId === activeRefId) {
-          connectedNodeIds.add(rel.targetReferenceId);
-          connectedRelIds.add(rel.id);
+          outboundNodeIds.add(rel.targetReferenceId);
+          outboundRelIds.add(rel.id);
         } else if (rel.targetReferenceId === activeRefId) {
-          connectedNodeIds.add(rel.sourceReferenceId);
-          connectedRelIds.add(rel.id);
+          inboundNodeIds.add(rel.sourceReferenceId);
+          inboundRelIds.add(rel.id);
         }
       });
     }
@@ -429,7 +450,9 @@
       line.setAttribute("x2", tgt.x);
       line.setAttribute("y2", tgt.y);
       line.setAttribute("class", "graph-link");
-      line.setAttribute("marker-end", "url(#arrow)");
+
+      // Default marker
+      line.setAttribute("marker-end", "url(#arrow-default)");
 
       // Click link selects relationship
       line.style.cursor = "pointer";
@@ -441,8 +464,12 @@
       };
 
       if (activeRefId) {
-        if (connectedRelIds.has(rel.id)) {
-          line.classList.add("highlighted");
+        if (outboundRelIds.has(rel.id)) {
+          line.classList.add("outbound");
+          line.setAttribute("marker-end", "url(#arrow-outbound)");
+        } else if (inboundRelIds.has(rel.id)) {
+          line.classList.add("inbound");
+          line.setAttribute("marker-end", "url(#arrow-inbound)");
         } else {
           line.classList.add("faded");
         }
@@ -462,15 +489,16 @@
       if (activeRefId) {
         if (ref.id === activeRefId) {
           g.classList.add("selected");
-        } else if (connectedNodeIds.has(ref.id)) {
-          g.classList.add("connected");
+        } else if (outboundNodeIds.has(ref.id)) {
+          g.classList.add("outbound");
+        } else if (inboundNodeIds.has(ref.id)) {
+          g.classList.add("inbound");
         } else {
           g.classList.add("faded");
         }
       }
 
       const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-      circle.setAttribute("r", ref.id === activeRefId ? 14 : 10);
 
       const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
       text.textContent = ref.id;
