@@ -227,7 +227,7 @@
   /* Accent */
   --sys-color-accent-primary: var(--ref-color-cyan-500);
   --sys-color-accent-hover:   var(--ref-color-cyan-400);
-  --sys-color-accent-active:  var(--ref-color-cyan-300);
+  --sys-color-accent-active:  var(--ref-color-cyan-500);
   /* C-001 accent-subtle: GOVERNED DEFERRED DECISION (NV-023-TASK-007B).
    * A tinted cyan surface requires an alpha-channel reference value not yet
    * in the approved ref.* palette. Preserved as ref.color.transparent until
