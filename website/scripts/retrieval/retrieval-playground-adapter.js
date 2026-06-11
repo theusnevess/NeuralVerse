@@ -181,11 +181,7 @@
     return relList;
   }
 
-  function getRelationshipsForReference(state, referenceId) {
-    return state.relationships.filter(r => r.sourceReferenceId === referenceId || r.targetReferenceId === referenceId);
-  }
-
-  function getRelatedReferences(state, relationships, excludedReferenceIds = []) {
+  function getRelatedReferencesFromRels(state, relationships, excludedReferenceIds = []) {
     const excludedSet = new Set(excludedReferenceIds);
     const relatedMap = new Map();
 
@@ -203,6 +199,245 @@
     return Array.from(relatedMap.values());
   }
 
+  function getRelatedReferences(state, referenceId) {
+    if (!referenceId) return [];
+    const seed = getReferenceById(state, referenceId);
+    if (!seed) return [];
+
+    const related = [];
+    const addedIds = new Set([referenceId]);
+
+    // 1. Direct relationships (sorted by strength descending)
+    const rels = getRelationshipsForReference(state, referenceId);
+    rels.sort((a, b) => (b.strength || 0) - (a.strength || 0));
+
+    for (const rel of rels) {
+      const otherId = rel.sourceReferenceId === referenceId ? rel.targetReferenceId : rel.sourceReferenceId;
+      if (!addedIds.has(otherId)) {
+        const ref = getReferenceById(state, otherId);
+        if (ref && ref.status === "active") {
+          related.push({
+            reference: ref,
+            reason: `Direct relationship (${rel.type})`,
+            relType: rel.type,
+            strength: rel.strength,
+            type: "direct"
+          });
+          addedIds.add(otherId);
+        }
+      }
+    }
+
+    // 2. Shared keywords (sorted by number of shared keywords descending)
+    const seedKeywords = seed.keywords.map(normalizeKeyword);
+    const similar = [];
+    for (const ref of state.references) {
+      if (ref.id === referenceId || ref.status !== "active" || addedIds.has(ref.id)) continue;
+      const shared = ref.keywords.filter(k => seedKeywords.includes(normalizeKeyword(k)));
+      if (shared.length > 0) {
+        similar.push({
+          reference: ref,
+          sharedCount: shared.length,
+          sharedKeywords: shared
+        });
+      }
+    }
+    similar.sort((a, b) => b.sharedCount - a.sharedCount || a.reference.id.localeCompare(b.reference.id));
+    for (const s of similar) {
+      related.push({
+        reference: s.reference,
+        reason: `Shared keywords: ${s.sharedKeywords.slice(0, 3).join(", ")}`,
+        relType: null,
+        strength: 0.5 + (s.sharedCount * 0.1),
+        type: "similar"
+      });
+      addedIds.add(s.reference.id);
+    }
+
+    return related;
+  }
+
+  function getSimilarReferences(state, referenceId) {
+    if (!referenceId) return [];
+    const seed = getReferenceById(state, referenceId);
+    if (!seed) return [];
+    const seedKeywords = seed.keywords.map(normalizeKeyword);
+
+    const similar = [];
+    for (const ref of state.references) {
+      if (ref.id === referenceId || ref.status !== "active") continue;
+      const shared = ref.keywords.filter(k => seedKeywords.includes(normalizeKeyword(k)));
+      if (shared.length > 0) {
+        similar.push({
+          reference: ref,
+          reason: `Similar keywords: ${shared.slice(0, 3).join(", ")}`,
+          sharedCount: shared.length
+        });
+      }
+    }
+    similar.sort((a, b) => b.sharedCount - a.sharedCount || a.reference.id.localeCompare(b.reference.id));
+    return similar;
+  }
+
+  function getDiscoverySuggestions(state, referenceId, sessionState = {}) {
+    if (!referenceId) return { isDeadEnd: true, suggestedQuery: "", suggestions: [] };
+    const seed = getReferenceById(state, referenceId);
+    if (!seed) return { isDeadEnd: true, suggestedQuery: "", suggestions: [] };
+
+    const suggestions = [];
+    const addedIds = new Set([referenceId]);
+    const rels = getRelationshipsForReference(state, referenceId);
+    const isDeadEnd = rels.length === 0;
+
+    // 1. Related references (up to 2)
+    const related = getRelatedReferences(state, referenceId);
+    const directSuggestions = related.filter(r => r.type === "direct");
+    for (const ds of directSuggestions) {
+      if (suggestions.length >= 2) break;
+      suggestions.push({
+        reference: ds.reference,
+        category: "related",
+        reason: ds.reason,
+        relType: ds.relType
+      });
+      addedIds.add(ds.reference.id);
+    }
+
+    // 2. Similar references (up to 2)
+    const similarSuggestions = getSimilarReferences(state, referenceId);
+    for (const ss of similarSuggestions) {
+      if (suggestions.length >= 4) break;
+      if (!addedIds.has(ss.reference.id)) {
+        suggestions.push({
+          reference: ss.reference,
+          category: "similar",
+          reason: ss.reason
+        });
+        addedIds.add(ss.reference.id);
+      }
+    }
+
+    // 3. Category match fallback (if dead end)
+    if (isDeadEnd) {
+      for (const ref of state.references) {
+        if (suggestions.length >= 5) break;
+        if (ref.id !== referenceId && ref.status === "active" && ref.type === seed.type && !addedIds.has(ref.id)) {
+          suggestions.push({
+            reference: ref,
+            category: "similar",
+            reason: `Same category: ${ref.type}`
+          });
+          addedIds.add(ref.id);
+        }
+      }
+    }
+
+    // 4. Continue From Here / session context (up to 2)
+    const recents = sessionState.recentReferences || [];
+    for (const recentId of recents) {
+      if (suggestions.length >= 6) break;
+      if (recentId === referenceId) continue;
+      const recentRef = getReferenceById(state, recentId);
+      if (recentRef && !addedIds.has(recentId)) {
+        suggestions.push({
+          reference: recentRef,
+          category: "continue",
+          reason: `Continue exploring from recently viewed reference`
+        });
+        addedIds.add(recentId);
+      }
+    }
+
+    // Fallback: suggest query based on keywords
+    let suggestedQuery = "";
+    if (seed.keywords && seed.keywords.length > 0) {
+      suggestedQuery = seed.keywords.slice(0, 2).join(" ");
+    }
+
+    return {
+      isDeadEnd,
+      suggestedQuery,
+      suggestions: suggestions.slice(0, 6)
+    };
+  }
+
+  function getRelationshipNeighborhood(state, referenceId) {
+    if (!referenceId) return null;
+    const seed = getReferenceById(state, referenceId);
+    if (!seed) return null;
+
+    const rels = getRelationshipsForReference(state, referenceId);
+    const neighbors = rels.map(rel => {
+      const isOutgoing = rel.sourceReferenceId === referenceId;
+      const neighborId = isOutgoing ? rel.targetReferenceId : rel.sourceReferenceId;
+      const neighbor = getReferenceById(state, neighborId);
+      return {
+        relationshipId: rel.id,
+        neighbor,
+        direction: isOutgoing ? "outgoing" : "incoming",
+        type: rel.type,
+        strength: rel.strength,
+        context: rel.context
+      };
+    });
+
+    return {
+      reference: seed,
+      neighbors
+    };
+  }
+
+  function getCitationContinuations(state, referenceId) {
+    if (!referenceId) return [];
+    const rels = getRelationshipsForReference(state, referenceId);
+    const continuations = [];
+
+    for (const rel of rels) {
+      let actionLabel = "";
+      let desc = "";
+
+      const isOutgoing = rel.sourceReferenceId === referenceId;
+      const targetId = isOutgoing ? rel.targetReferenceId : rel.sourceReferenceId;
+      const targetRef = getReferenceById(state, targetId);
+      if (!targetRef || targetRef.status !== "active") continue;
+
+      const relType = rel.type.toLowerCase();
+      if (relType === "cites") {
+        actionLabel = "Follow citation";
+        desc = `Follow bibliographic reference to ${targetId}`;
+      } else if (relType === "referenced-by" || relType === "cited-by") {
+        actionLabel = "Follow reference-by";
+        desc = `Explore reference that cited this: ${targetId}`;
+      } else if (relType === "extends") {
+        actionLabel = "Explore extension";
+        desc = `Explore extension details on ${targetId}`;
+      } else if (relType === "implements") {
+        actionLabel = "Explore implementation";
+        desc = `Inspect implementation codebase link in ${targetId}`;
+      } else if (relType === "supports" || relType === "uses") {
+        actionLabel = "Inspect supporting evidence";
+        desc = `Analyze supporting utility reference ${targetId}`;
+      } else if (relType === "contrasts") {
+        actionLabel = "Compare contrast";
+        desc = `Compare contrasting findings in ${targetId}`;
+      } else {
+        actionLabel = `Inspect ${rel.type}`;
+        desc = `Investigate relationship with ${targetId}`;
+      }
+
+      continuations.push({
+        relationshipId: rel.id,
+        targetReferenceId: targetId,
+        targetTitle: targetRef.title,
+        actionLabel,
+        description: desc,
+        relType: rel.type
+      });
+    }
+
+    return continuations;
+  }
+
   function compileEvidenceFromQuery(state, query) {
     if (!query || query.trim() === "") {
       return null;
@@ -213,7 +448,7 @@
     const matchedIds = matchedReferences.map(r => r.id);
 
     const relList = getRelationshipsForReferences(state, matchedIds);
-    const relatedReferences = getRelatedReferences(state, relList, matchedIds);
+    const relatedReferences = getRelatedReferencesFromRels(state, relList, matchedIds);
 
     let confidence = "low";
     if (matchedReferences.length >= 2 && relList.length >= 1) {
@@ -248,7 +483,7 @@
     if (!seedRef) return null;
 
     const rels = getRelationshipsForReference(state, referenceId);
-    const relatedReferences = getRelatedReferences(state, rels, [referenceId]);
+    const relatedReferences = getRelatedReferencesFromRels(state, rels, [referenceId]);
 
     let confidence = "low";
     if (rels.length >= 2) {
@@ -281,6 +516,10 @@
     getRelationshipsForReferences,
     getRelationshipsForReference,
     getRelatedReferences,
+    getSimilarReferences,
+    getDiscoverySuggestions,
+    getRelationshipNeighborhood,
+    getCitationContinuations,
     compileEvidenceFromQuery,
     compileEvidenceFromReference
   };

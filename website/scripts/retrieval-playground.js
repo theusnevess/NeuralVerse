@@ -24,41 +24,133 @@
   let pinnedReferences = [];
   let recentReferences = [];
   let savedQueries = [];
+  let knowledgeTrail = [];
   let activeExplorationMode = "search";
   let activeInspectorTab = "reference";
 
   // Load state from localStorage
   function loadWorkspaceState() {
     try {
-      pinnedReferences = JSON.parse(localStorage.getItem("nv_pinned_references") || "[]");
-      recentReferences = JSON.parse(localStorage.getItem("nv_recent_references") || "[]");
-      savedQueries = JSON.parse(localStorage.getItem("nv_saved_queries") || "[]");
-      selectedReferenceId = localStorage.getItem("nv_selected_ref_id") || null;
-      currentSearchQuery = localStorage.getItem("nv_search_query") || "";
-      activeExplorationMode = localStorage.getItem("nv_exploration_mode") || "search";
-      activeInspectorTab = localStorage.getItem("nv_inspector_tab") || "reference";
+      const dataStr = localStorage.getItem("neuralverse.retrievalWorkspace.v1");
+      if (dataStr) {
+        const state = JSON.parse(dataStr);
+        pinnedReferences = state.pinnedReferences || [];
+        recentReferences = state.recentReferences || [];
+        savedQueries = state.savedQueries || [];
+        knowledgeTrail = state.knowledgeTrail || [];
+        selectedReferenceId = state.selectedReferenceId || null;
+        currentSearchQuery = state.currentSearchQuery || "";
+        activeExplorationMode = state.activeExplorationMode || "search";
+        activeInspectorTab = state.activeInspectorTab || "reference";
+        currentCompiledEvidence = state.currentCompiledEvidence || null;
+        selectedRelationship = state.selectedRelationship || null;
+
+        showSessionRestoredIndicator();
+      } else {
+        resetStateToDefaults();
+      }
     } catch (e) {
       console.warn("Failed to load workspace state from localStorage", e);
+      resetStateToDefaults();
     }
+  }
+
+  function resetStateToDefaults() {
+    pinnedReferences = [];
+    recentReferences = [];
+    savedQueries = [];
+    knowledgeTrail = [];
+    selectedReferenceId = null;
+    currentSearchQuery = "";
+    activeExplorationMode = "search";
+    activeInspectorTab = "reference";
+    currentCompiledEvidence = null;
+    selectedRelationship = null;
   }
 
   // Save state to localStorage
   function saveWorkspaceState() {
     try {
-      localStorage.setItem("nv_pinned_references", JSON.stringify(pinnedReferences));
-      localStorage.setItem("nv_recent_references", JSON.stringify(recentReferences));
-      localStorage.setItem("nv_saved_queries", JSON.stringify(savedQueries));
-      if (selectedReferenceId) {
-        localStorage.setItem("nv_selected_ref_id", selectedReferenceId);
-      } else {
-        localStorage.removeItem("nv_selected_ref_id");
-      }
-      localStorage.setItem("nv_search_query", currentSearchQuery);
-      localStorage.setItem("nv_exploration_mode", activeExplorationMode);
-      localStorage.setItem("nv_inspector_tab", activeInspectorTab);
+      const state = {
+        pinnedReferences,
+        recentReferences,
+        savedQueries,
+        knowledgeTrail,
+        selectedReferenceId,
+        currentSearchQuery,
+        activeExplorationMode,
+        activeInspectorTab,
+        currentCompiledEvidence,
+        selectedRelationship
+      };
+      localStorage.setItem("neuralverse.retrievalWorkspace.v1", JSON.stringify(state));
     } catch (e) {
       console.warn("Failed to save workspace state to localStorage", e);
     }
+  }
+
+  // Helper: Show session restored status indicator
+  function showSessionRestoredIndicator() {
+    const indicator = document.getElementById("session-restored-indicator");
+    if (indicator) {
+      indicator.style.opacity = "1";
+      setTimeout(() => {
+        indicator.style.opacity = "0";
+      }, 2500);
+    }
+  }
+
+  // Helper: Add knowledge trail event log
+  function addTrailEvent(type, label, metadata = null) {
+    const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    const event = {
+      id: 'trail_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+      type,
+      label,
+      timestamp,
+      metadata
+    };
+    knowledgeTrail.unshift(event);
+    if (knowledgeTrail.length > 20) {
+      knowledgeTrail.pop();
+    }
+    saveWorkspaceState();
+  }
+
+  // Helper: Restore trail context on click
+  function restoreTrailContext(event) {
+    const meta = event.metadata;
+    if (!meta) return;
+
+    if (meta.referenceId) {
+      selectedReferenceId = meta.referenceId;
+      addToRecentlyViewed(meta.referenceId);
+      switchInspectorTab("reference");
+
+      syncSelectionHighlighting();
+      renderReferenceInspector();
+      renderMemoryLayer();
+
+      if (activeExplorationMode === "graph") {
+        renderVisualGraph();
+      } else if (activeExplorationMode === "discovery") {
+        renderDiscoveryMode();
+      } else if (activeExplorationMode === "compare") {
+        renderCompareMode();
+      }
+    } else if (meta.query) {
+      const searchInput = document.getElementById("playground-search-input");
+      if (searchInput) {
+        searchInput.value = meta.query;
+      }
+      runSearch(meta.query, true);
+    } else if (meta.relationship) {
+      selectedRelationship = meta.relationship;
+      switchInspectorTab("relationship");
+      renderRelationshipInspector();
+    }
+
+    saveWorkspaceState();
   }
 
   // DOM Rendering & Sync: Seeded Reference list (in Search Mode panel)
@@ -167,6 +259,8 @@
       `;
       if (pinBtn) pinBtn.disabled = true;
       if (compileRefBtn) compileRefBtn.disabled = true;
+      renderDiscoverySpace();
+      renderRelationshipNeighborhood();
       return;
     }
 
@@ -180,6 +274,8 @@
       `;
       if (pinBtn) pinBtn.disabled = true;
       if (compileRefBtn) compileRefBtn.disabled = true;
+      renderDiscoverySpace();
+      renderRelationshipNeighborhood();
       return;
     }
 
@@ -225,6 +321,7 @@
         const rel = retrievalState.relationships.find(r => r.id === relId);
         if (rel) {
           selectedRelationship = rel;
+          addTrailEvent("inspect_rel", `Inspected relationship "${rel.sourceReferenceId} ➔ ${rel.targetReferenceId}"`, { relationship: rel });
           switchInspectorTab("relationship");
           renderRelationshipInspector();
         }
@@ -248,10 +345,232 @@
       compileRefBtn.onclick = () => {
         console.log(`Compiling evidence from reference: ${ref.id}`);
         currentCompiledEvidence = adapter.compileEvidenceFromReference(retrievalState, ref.id);
+        addTrailEvent("compile_ref", `Compiled evidence from "${ref.id}"`, { referenceId: ref.id });
         switchInspectorTab("evidence");
         renderEvidence(currentCompiledEvidence);
       };
     }
+
+    renderDiscoverySpace();
+    renderRelationshipNeighborhood();
+  }
+
+  // DOM Rendering: Discovery Space Panel (Carousel, Related, Similar, Citation Continuations, Dead-End Suggestions)
+  function renderDiscoverySpace() {
+    const container = document.getElementById("discovery-container");
+    if (!container) return;
+
+    if (!selectedReferenceId) {
+      container.innerHTML = "";
+      return;
+    }
+
+    const sessionState = { recentReferences };
+    const discoveryData = adapter.getDiscoverySuggestions(retrievalState, selectedReferenceId, sessionState);
+    const continuations = adapter.getCitationContinuations(retrievalState, selectedReferenceId);
+
+    let html = "";
+
+    // 1. Contextual Discovery Carousel
+    if (discoveryData.suggestions && discoveryData.suggestions.length > 0) {
+      html += `
+        <div class="discovery-section-title">Discovery Suggestions</div>
+        <div class="discovery-carousel" role="toolbar" aria-label="Contextual Discovery Carousel">
+      `;
+      for (const item of discoveryData.suggestions) {
+        const ref = item.reference;
+        let categoryLabel = "";
+        if (item.category === "related") categoryLabel = "Related";
+        else if (item.category === "similar") categoryLabel = "Similar";
+        else categoryLabel = "Continue";
+
+        html += `
+          <div class="discovery-card" data-ref-id="${ref.id}" tabindex="0" title="Click to inspect ${ref.title}">
+            <div class="discovery-card-meta">
+              <span class="nv-badge" data-variant="info" style="font-size: 0.55rem; padding: 1px 3px;">${ref.type}</span>
+              <span class="nv-badge" data-variant="neutral" style="font-size: 0.55rem; padding: 1px 3px;">${categoryLabel}</span>
+            </div>
+            <div class="discovery-card-title">${ref.title}</div>
+            <div class="discovery-card-reason">${item.reason}</div>
+          </div>
+        `;
+      }
+      html += `</div>`;
+    }
+
+    // 2. Dead-End Prevention Fallback Banner
+    if (discoveryData.isDeadEnd) {
+      html += `
+        <div class="dead-end-fallback-box">
+          <p class="dead-end-fallback-text">⚠️ No direct relationships found. Try exploring similar references.</p>
+      `;
+      if (discoveryData.suggestedQuery) {
+        html += `
+          <button class="nv-button dead-end-query-btn" data-query="${discoveryData.suggestedQuery}" data-variant="secondary" style="font-size: 0.65rem; padding: 2px 6px; width: 100%; text-align: left; min-block-size: unset;">
+            🔍 Search: "${discoveryData.suggestedQuery}"
+          </button>
+        `;
+      }
+      html += `</div>`;
+    }
+
+    // 3. Citation Continuations
+    if (continuations && continuations.length > 0) {
+      html += `
+        <div class="discovery-section-title">Citation Continuations</div>
+        <div class="continuation-container">
+      `;
+      for (const c of continuations) {
+        html += `
+          <button class="continuation-chip" data-ref-id="${c.targetReferenceId}" data-type="${c.relType}" title="${c.description}">
+            🔗 ${c.actionLabel}: ${c.targetReferenceId}
+          </button>
+        `;
+      }
+      html += `</div>`;
+    }
+
+    // 4. Ranked Related References List (Detailed list below Carousel/Continuations)
+    const allRelated = adapter.getRelatedReferences(retrievalState, selectedReferenceId);
+    if (allRelated && allRelated.length > 0) {
+      html += `
+        <div class="discovery-section-title">Ranked Related References</div>
+        <div class="nv-stack nv-stack--gap-xs" style="max-height: 200px; overflow-y: auto;">
+      `;
+      for (const r of allRelated) {
+        const ref = r.reference;
+        const relBadge = r.relType ? `<span class="nv-badge" data-variant="warning" style="font-size: 0.55rem; padding: 1px 3px; font-family: monospace;">${r.relType}</span>` : "";
+        html += `
+          <div class="nv-card discovery-related-item-card" data-ref-id="${ref.id}" style="padding: 6px; font-size: 0.65rem; display: flex; flex-direction: column; gap: 4px; cursor: pointer;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 4px;">
+              <span style="font-weight: var(--ref-font-weight-semibold); color: var(--sys-color-text-primary); flex: 1;">${ref.title}</span>
+              <span class="nv-badge" data-variant="info" style="font-size: 0.55rem; padding: 1px 3px;">${ref.type}</span>
+            </div>
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: var(--sys-space-inline-xs); margin-top: 2px;">
+              <span style="color: var(--sys-color-text-secondary); font-size: 0.6rem;">${r.reason}</span>
+              ${relBadge}
+            </div>
+          </div>
+        `;
+      }
+      html += `</div>`;
+    }
+
+    container.innerHTML = html;
+
+    // Add interactive click/keydown event listeners
+    // Carousel suggestions
+    container.querySelectorAll(".discovery-card").forEach(card => {
+      card.onclick = () => {
+        const refId = card.getAttribute("data-ref-id");
+        addTrailEvent("Discovery suggestion opened", `Opened suggestion "${refId}"`, { referenceId: refId });
+        toggleSelection(refId);
+      };
+      card.onkeydown = (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          const refId = card.getAttribute("data-ref-id");
+          addTrailEvent("Discovery suggestion opened", `Opened suggestion "${refId}"`, { referenceId: refId });
+          toggleSelection(refId);
+        }
+      };
+    });
+
+    // Dead-end query buttons
+    container.querySelectorAll(".dead-end-query-btn").forEach(btn => {
+      btn.onclick = () => {
+        const query = btn.getAttribute("data-query");
+        addTrailEvent("Dead-end fallback used", `Searched for "${query}" from dead-end`, { query });
+        const searchInput = document.getElementById("playground-search-input");
+        if (searchInput) {
+          searchInput.value = query;
+        }
+        runSearch(query);
+      };
+    });
+
+    // Continuation chips
+    container.querySelectorAll(".continuation-chip").forEach(chip => {
+      chip.onclick = () => {
+        const refId = chip.getAttribute("data-ref-id");
+        const relType = chip.getAttribute("data-type");
+        addTrailEvent("Citation continuation followed", `Followed ${relType} citation to "${refId}"`, { referenceId: refId });
+        toggleSelection(refId);
+      };
+    });
+
+    // Ranked related item cards
+    container.querySelectorAll(".discovery-related-item-card").forEach(card => {
+      card.onclick = () => {
+        const refId = card.getAttribute("data-ref-id");
+        addTrailEvent("Related reference opened", `Opened related reference "${refId}"`, { referenceId: refId });
+        toggleSelection(refId);
+      };
+    });
+  }
+
+  // DOM Rendering: Relationship Neighborhood Panel (Textual/card-based direct relationships)
+  function renderRelationshipNeighborhood() {
+    const container = document.getElementById("relationship-neighborhood-container");
+    if (!container) return;
+
+    if (!selectedReferenceId) {
+      container.innerHTML = `
+        <div class="nv-empty-state">
+          <p class="nv-muted" style="font-size: var(--sys-font-caption-size); margin: 0;">Select a reference to view its relationship neighborhood.</p>
+        </div>
+      `;
+      return;
+    }
+
+    const neighborhood = adapter.getRelationshipNeighborhood(retrievalState, selectedReferenceId);
+    if (!neighborhood || neighborhood.neighbors.length === 0) {
+      container.innerHTML = `
+        <div class="discovery-section-title">Relationship Neighborhood</div>
+        <p class="nv-muted" style="font-size: var(--sys-font-caption-size); margin: 0; padding: var(--sys-space-stack-xs);">No direct relationships in neighborhood.</p>
+      `;
+      return;
+    }
+
+    let html = `
+      <div class="discovery-section-title">Neighborhood of ${neighborhood.reference.id}</div>
+      <div class="neighborhood-grid">
+    `;
+
+    for (const item of neighborhood.neighbors) {
+      const neighbor = item.neighbor;
+      if (!neighbor) continue;
+      const isOutgoing = item.direction === "outgoing";
+      const dirText = isOutgoing ? "➔ Outgoing to" : "➔ Incoming from";
+      const badgeVariant = isOutgoing ? "info" : "neutral";
+
+      html += `
+        <div class="neighborhood-card neighborhood-item-card" data-ref-id="${neighbor.id}" style="cursor: pointer;">
+          <div class="neighborhood-header">
+            <span class="neighborhood-direction nv-badge" data-variant="${badgeVariant}">${dirText}</span>
+            <span class="nv-badge" data-variant="warning">${item.type}</span>
+          </div>
+          <div style="font-weight: var(--ref-font-weight-semibold); font-size: 0.65rem; color: var(--sys-color-text-primary); margin-top: 2px;">
+            ${neighbor.title} (${neighbor.id})
+          </div>
+          <div class="neighborhood-context">
+            Strength: ${item.strength} | "${item.context || 'No context'}"
+          </div>
+        </div>
+      `;
+    }
+
+    html += `</div>`;
+    container.innerHTML = html;
+
+    // Add interactive click to open neighborhood references
+    container.querySelectorAll(".neighborhood-item-card").forEach(card => {
+      card.onclick = () => {
+        const refId = card.getAttribute("data-ref-id");
+        addTrailEvent("Neighborhood reference opened", `Opened neighborhood node "${refId}"`, { referenceId: refId });
+        toggleSelection(refId);
+      };
+    });
   }
 
   // DOM Rendering: Relationship Inspector Panel
@@ -459,6 +778,7 @@
       line.onclick = (e) => {
         e.stopPropagation();
         selectedRelationship = rel;
+        addTrailEvent("inspect_rel", `Inspected relationship "${rel.sourceReferenceId} ➔ ${rel.targetReferenceId}"`, { relationship: rel });
         switchInspectorTab("relationship");
         renderRelationshipInspector();
       };
@@ -607,11 +927,12 @@
     });
   }
 
-  // DOM Rendering: Memory Layer (Recent, Pinned, Queries)
+  // DOM Rendering: Memory Layer (Recent, Pinned, Queries, Trail)
   function renderMemoryLayer() {
     const recentList = document.getElementById("memory-recent-list");
     const pinnedList = document.getElementById("memory-pinned-list");
     const queriesList = document.getElementById("memory-queries-list");
+    const trailList = document.getElementById("memory-trail-list");
 
     if (recentList) {
       if (recentReferences.length === 0) {
@@ -647,13 +968,14 @@
           return `
             <li class="memory-item" data-ref-id="${id}" title="${title}">
               <span>📌 ${id}</span>
-              <button class="nv-button" data-action="unpin" data-id="${id}" style="padding: 1px 4px; min-block-size: unset; font-size: 0.6rem; line-height: 1;" aria-label="Unpin ${id}">×</button>
+              <button class="memory-action-btn" data-action="unpin" data-id="${id}" aria-label="Unpin ${id}">×</button>
             </li>
           `;
         }).join("");
 
         pinnedList.querySelectorAll(".memory-item").forEach(item => {
-          item.onclick = () => {
+          item.onclick = (e) => {
+            if (e.target.tagName.toLowerCase() === 'button' || e.target.classList.contains('memory-action-btn')) return;
             const id = item.getAttribute("data-ref-id");
             toggleSelection(id);
           };
@@ -676,17 +998,17 @@
         queriesList.innerHTML = savedQueries.map(q => `
           <li class="memory-item" data-query="${q}">
             <span>🔍 "${q}"</span>
-            <button class="nv-button" data-action="delete-query" data-query="${q}" style="padding: 1px 4px; min-block-size: unset; font-size: 0.6rem; line-height: 1;" aria-label="Delete query ${q}">×</button>
+            <button class="memory-action-btn" data-action="delete-query" data-query="${q}" aria-label="Delete query ${q}">×</button>
           </li>
         `).join("");
 
         queriesList.querySelectorAll(".memory-item").forEach(item => {
-          item.onclick = () => {
+          item.onclick = (e) => {
+            if (e.target.tagName.toLowerCase() === 'button' || e.target.classList.contains('memory-action-btn')) return;
             const query = item.getAttribute("data-query");
             const searchInput = document.getElementById("playground-search-input");
             if (searchInput) searchInput.value = query;
-            const searchBtn = document.getElementById("playground-search-button");
-            if (searchBtn) searchBtn.click();
+            runSearch(query, true);
           };
         });
 
@@ -695,8 +1017,52 @@
             e.stopPropagation();
             const query = btn.getAttribute("data-query");
             savedQueries = savedQueries.filter(q => q !== query);
+
+            // Enable Save Query button if we just deleted the active search query
+            const searchInput = document.getElementById("playground-search-input");
+            const activeQuery = searchInput ? searchInput.value.trim() : "";
+            const saveQueryBtn = document.getElementById("playground-save-query-button");
+            if (saveQueryBtn && activeQuery === query) {
+              saveQueryBtn.disabled = false;
+            }
+
             saveWorkspaceState();
             renderMemoryLayer();
+          };
+        });
+      }
+    }
+
+    if (trailList) {
+      if (knowledgeTrail.length === 0) {
+        trailList.innerHTML = `<li class="nv-muted" style="font-size: var(--sys-font-caption-size); padding: 4px;">No trail activity.</li>`;
+      } else {
+        trailList.innerHTML = knowledgeTrail.map(event => {
+          let badgeVariant = "neutral";
+          if (event.type === "search" || event.type === "rerun_query") badgeVariant = "info";
+          else if (event.type === "pin") badgeVariant = "success";
+          else if (event.type === "unpin") badgeVariant = "warning";
+          else if (event.type === "compile_query" || event.type === "compile_ref") badgeVariant = "primary";
+          else if (event.type === "open" || event.type === "select_node") badgeVariant = "neutral";
+
+          return `
+            <li class="trail-event" data-event-id="${event.id}">
+              <div class="trail-meta">
+                <span class="nv-badge" data-variant="${badgeVariant}" style="font-size: 0.5rem; padding: 1px 4px; text-transform: uppercase;">${event.type}</span>
+                <span>${event.timestamp}</span>
+              </div>
+              <div style="margin-top: 2px; line-height: 1.3;">${event.label}</div>
+            </li>
+          `;
+        }).join("");
+
+        trailList.querySelectorAll(".trail-event").forEach(item => {
+          item.onclick = () => {
+            const eventId = item.getAttribute("data-event-id");
+            const event = knowledgeTrail.find(e => e.id === eventId);
+            if (event) {
+              restoreTrailContext(event);
+            }
           };
         });
       }
@@ -732,6 +1098,14 @@
     } else {
       selectedReferenceId = refId; // select new
       addToRecentlyViewed(refId);
+
+      // Log trail event
+      if (activeExplorationMode === "graph") {
+        addTrailEvent("select_node", `Selected node "${refId}"`, { referenceId: refId });
+      } else {
+        addTrailEvent("open", `Opened "${refId}"`, { referenceId: refId });
+      }
+
       // Auto-switch to Reference tab in Inspector
       switchInspectorTab("reference");
     }
@@ -762,7 +1136,7 @@
     if (!refId) return;
     recentReferences = recentReferences.filter(id => id !== refId);
     recentReferences.unshift(refId);
-    if (recentReferences.length > 5) {
+    if (recentReferences.length > 8) {
       recentReferences.pop();
     }
     saveWorkspaceState();
@@ -772,8 +1146,13 @@
   // Pin / Unpin active reference
   function pinReference(refId) {
     if (!refId) return;
+    if (pinnedReferences.length >= 8) {
+      // Limit to 8 items
+      return;
+    }
     if (!pinnedReferences.includes(refId)) {
       pinnedReferences.push(refId);
+      addTrailEvent("pin", `Pinned "${refId}"`, { referenceId: refId });
       saveWorkspaceState();
       renderMemoryLayer();
       renderReferenceInspector();
@@ -783,6 +1162,7 @@
   function unpinReference(refId) {
     if (!refId) return;
     pinnedReferences = pinnedReferences.filter(id => id !== refId);
+    addTrailEvent("unpin", `Unpinned "${refId}"`, { referenceId: refId });
     saveWorkspaceState();
     renderMemoryLayer();
     renderReferenceInspector();
@@ -896,10 +1276,95 @@
     }
   }
 
+  // Helper to execute and record a search query
+  function runSearch(query, isRerun = false) {
+    currentSearchQuery = query;
+    console.log(`Searching references for: ${query}`);
+
+    currentSearchResults = adapter.searchReferences(retrievalState, query);
+    renderSearchResults();
+
+    // Clear stale evidence compilation on search change
+    currentCompiledEvidence = null;
+    renderEvidence(null);
+
+    // Update Search Feedback text
+    const searchFeedback = document.getElementById("playground-search-feedback");
+    if (searchFeedback) {
+      if (!query || query.trim() === "") {
+        searchFeedback.textContent = "No active query.";
+      } else {
+        searchFeedback.textContent = `Query: "${query}" | Hits: ${currentSearchResults.length}`;
+      }
+    }
+
+    // Enable / disable Save Query button
+    const saveQueryBtn = document.getElementById("playground-save-query-button");
+    if (saveQueryBtn) {
+      const isSaved = savedQueries.includes(query.trim());
+      saveQueryBtn.disabled = !query || query.trim() === "" || isSaved;
+    }
+
+    // Log Knowledge Trail Event
+    if (query && query.trim() !== "") {
+      if (isRerun) {
+        addTrailEvent("rerun_query", `Reran query "${query}"`, { query });
+      } else {
+        addTrailEvent("search", `Searched "${query}"`, { query });
+      }
+    }
+
+    // State Reset Behavior: Preserve selected reference only if it still exists in the visible context
+    if (selectedReferenceId) {
+      const exists = retrievalState.references.some(r => r.id === selectedReferenceId) || currentSearchResults.some(res => res.reference.id === selectedReferenceId);
+      if (!exists) {
+        selectedReferenceId = null;
+        renderReferenceInspector();
+      }
+    }
+
+    // Refresh dynamic exploration modes
+    if (activeExplorationMode === "graph") {
+      renderVisualGraph();
+    } else if (activeExplorationMode === "discovery") {
+      renderDiscoveryMode();
+    } else if (activeExplorationMode === "compare") {
+      renderCompareMode();
+    }
+
+    saveWorkspaceState();
+    renderMemoryLayer();
+  }
+
   // Initialize workspace controls
   function initPlayground() {
     console.log("Initializing Retrieval Workspace (NV-500)...");
     loadWorkspaceState();
+
+    const searchInput = document.getElementById("playground-search-input");
+    const searchBtn = document.getElementById("playground-search-button");
+    const saveQueryBtn = document.getElementById("playground-save-query-button");
+    const compileQueryBtn = document.getElementById("playground-compile-query-button");
+    const searchFeedback = document.getElementById("playground-search-feedback");
+    const clearSessionBtn = document.getElementById("playground-clear-session-button");
+    const clearTrailBtn = document.getElementById("playground-clear-trail-button");
+
+    // Silently perform the search for the restored query if non-empty
+    if (currentSearchQuery) {
+      currentSearchResults = adapter.searchReferences(retrievalState, currentSearchQuery);
+      if (searchInput) searchInput.value = currentSearchQuery;
+      if (searchFeedback) {
+        searchFeedback.textContent = `Query: "${currentSearchQuery}" | Hits: ${currentSearchResults.length}`;
+      }
+      if (saveQueryBtn) {
+        saveQueryBtn.disabled = savedQueries.includes(currentSearchQuery.trim());
+      }
+    } else {
+      currentSearchResults = [];
+      if (searchInput) searchInput.value = "";
+      if (searchFeedback) searchFeedback.textContent = "No active query.";
+      if (saveQueryBtn) saveQueryBtn.disabled = true;
+    }
 
     // Render tabs configuration
     switchExplorationMode(activeExplorationMode);
@@ -931,14 +1396,7 @@
       };
     });
 
-    // Controls bindings
-    const searchInput = document.getElementById("playground-search-input");
-    const searchBtn = document.getElementById("playground-search-button");
-    const compileQueryBtn = document.getElementById("playground-compile-query-button");
-    const searchFeedback = document.getElementById("playground-search-feedback");
-
     if (searchInput) {
-      searchInput.value = currentSearchQuery;
       // Support Enter key for search
       searchInput.onkeydown = (e) => {
         if (e.key === "Enter") {
@@ -946,59 +1404,34 @@
           if (searchBtn) searchBtn.click();
         }
       };
+      // Toggle save button on input changes
+      searchInput.oninput = () => {
+        const query = searchInput.value.trim();
+        if (saveQueryBtn) {
+          saveQueryBtn.disabled = !query || savedQueries.includes(query);
+        }
+      };
     }
 
     if (searchBtn) {
       searchBtn.onclick = () => {
         const query = searchInput ? searchInput.value : "";
-        currentSearchQuery = query;
-        console.log(`Searching references for: ${query}`);
+        runSearch(query, false);
+      };
+    }
 
-        currentSearchResults = adapter.searchReferences(retrievalState, query);
-        renderSearchResults();
-
-        // Clear stale evidence compilation on search change
-        currentCompiledEvidence = null;
-        renderEvidence(null);
-
-        // Update Search Feedback text
-        if (searchFeedback) {
-          if (!query || query.trim() === "") {
-            searchFeedback.textContent = "No active query.";
-          } else {
-            searchFeedback.textContent = `Query: "${query}" | Hits: ${currentSearchResults.length}`;
+    if (saveQueryBtn) {
+      saveQueryBtn.onclick = () => {
+        const query = searchInput ? searchInput.value.trim() : "";
+        if (query && !savedQueries.includes(query)) {
+          savedQueries.unshift(query);
+          if (savedQueries.length > 8) {
+            savedQueries.pop();
           }
-        }
-
-        // Add to Saved Queries / Search History
-        if (query && query.trim() !== "") {
-          const trimmedQuery = query.trim();
-          if (!savedQueries.includes(trimmedQuery)) {
-            savedQueries.unshift(trimmedQuery);
-            if (savedQueries.length > 5) {
-              savedQueries.pop();
-            }
-            saveWorkspaceState();
-            renderMemoryLayer();
-          }
-        }
-
-        // State Reset Behavior: Preserve selected reference only if it still exists in the visible context
-        if (selectedReferenceId) {
-          const exists = retrievalState.references.some(r => r.id === selectedReferenceId) || currentSearchResults.some(res => res.reference.id === selectedReferenceId);
-          if (!exists) {
-            selectedReferenceId = null;
-            renderReferenceInspector();
-          }
-        }
-
-        // Refresh dynamic exploration modes
-        if (activeExplorationMode === "graph") {
-          renderVisualGraph();
-        } else if (activeExplorationMode === "discovery") {
-          renderDiscoveryMode();
-        } else if (activeExplorationMode === "compare") {
-          renderCompareMode();
+          addTrailEvent("save_query", `Saved query "${query}"`, { query });
+          saveWorkspaceState();
+          renderMemoryLayer();
+          saveQueryBtn.disabled = true;
         }
       };
     }
@@ -1008,8 +1441,51 @@
         const query = searchInput ? searchInput.value : "";
         console.log(`Compiling evidence from query: ${query}`);
         currentCompiledEvidence = adapter.compileEvidenceFromQuery(retrievalState, query);
+        addTrailEvent("compile_query", `Compiled evidence from query "${query}"`, { query });
         switchInspectorTab("evidence");
         renderEvidence(currentCompiledEvidence);
+      };
+    }
+
+    if (clearSessionBtn) {
+      clearSessionBtn.onclick = () => {
+        // Clear localStorage
+        localStorage.removeItem("neuralverse.retrievalWorkspace.v1");
+
+        // Reset state
+        resetStateToDefaults();
+
+        // Clear query input
+        if (searchInput) {
+          searchInput.value = "";
+        }
+
+        // Clear results
+        currentSearchResults = [];
+        renderSearchResults();
+
+        // Render
+        switchExplorationMode("search");
+        switchInspectorTab("reference");
+        renderSeededReferences();
+        renderReferenceInspector();
+        renderEvidence(null);
+        renderRelationshipInspector();
+        renderMemoryLayer();
+
+        if (searchFeedback) searchFeedback.textContent = "No active query.";
+        if (saveQueryBtn) saveQueryBtn.disabled = true;
+
+        console.log("Session cleared.");
+      };
+    }
+
+    if (clearTrailBtn) {
+      clearTrailBtn.onclick = (e) => {
+        e.stopPropagation();
+        knowledgeTrail = [];
+        saveWorkspaceState();
+        renderMemoryLayer();
       };
     }
   }

@@ -259,7 +259,7 @@
 /* Research Memory Lists */
 .memory-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: var(--sys-space-layout-gap);
 }
 
@@ -317,6 +317,59 @@
   overflow: hidden;
   white-space: nowrap;
   flex: 1;
+}
+
+.memory-action-btn {
+  background: none;
+  border: none;
+  color: var(--sys-color-text-secondary);
+  cursor: pointer;
+  font-size: 0.75rem;
+  padding: 2px 4px;
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 100ms ease;
+}
+
+.memory-action-btn:hover {
+  color: #ff0055;
+  background-color: rgba(255, 0, 85, 0.1);
+}
+
+/* Trail Event styling */
+.trail-event {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px var(--sys-space-inline-sm);
+  border-radius: 4px;
+  background-color: var(--sys-color-surface-container-low);
+  border: var(--sys-border-subtle) solid var(--sys-color-border-subtle);
+  font-size: 0.65rem;
+  color: var(--sys-color-text-primary);
+  cursor: pointer;
+  transition: all 100ms ease;
+}
+
+.trail-event:hover {
+  border-color: var(--sys-color-accent-primary);
+  background-color: var(--sys-color-surface-raised);
+}
+
+.trail-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.55rem;
+  color: var(--sys-color-text-secondary);
+}
+
+.trail-type {
+  font-family: var(--sys-font-code-family);
+  font-weight: var(--ref-font-weight-bold);
+  text-transform: uppercase;
 }
 
 /* Empty states */
@@ -516,4 +569,154 @@
   .pipeline-arrow {
     transform: rotate(90deg);
   }
+}
+
+/* Discovery & Carousel Styling */
+.discovery-section-title {
+  font-size: 0.75rem;
+  font-weight: var(--ref-font-weight-semibold);
+  color: var(--sys-color-text-secondary);
+  margin-top: var(--sys-space-stack-sm);
+  margin-bottom: var(--sys-space-stack-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--ref-font-tracking-wide);
+}
+
+.discovery-carousel {
+  display: flex;
+  gap: var(--sys-space-inline-sm);
+  overflow-x: auto;
+  padding-bottom: 6px;
+  scrollbar-width: thin;
+  margin-bottom: var(--sys-space-stack-sm);
+}
+
+.discovery-card {
+  flex: 0 0 160px;
+  background-color: var(--sys-color-surface-container-low);
+  border: var(--sys-border-subtle) solid var(--sys-color-border-subtle);
+  border-radius: var(--ref-radius-soft);
+  padding: 8px;
+  cursor: pointer;
+  transition: all 150ms ease;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.discovery-card:hover {
+  border-color: var(--sys-color-accent-primary);
+  background-color: var(--sys-color-surface-raised);
+  transform: translateY(-1px);
+}
+
+.discovery-card-title {
+  font-size: 0.7rem;
+  font-weight: var(--ref-font-weight-bold);
+  color: var(--sys-color-text-primary);
+  line-height: var(--ref-font-line-height-tight);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.discovery-card-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.6rem;
+}
+
+.discovery-card-reason {
+  font-size: 0.6rem;
+  color: var(--sys-color-text-secondary);
+  line-height: var(--ref-font-line-height-tight);
+}
+
+/* Citation continuation chips */
+.continuation-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: var(--sys-space-stack-xs);
+}
+
+.continuation-chip {
+  background-color: rgba(0, 188, 212, 0.1);
+  color: var(--sys-color-accent-primary);
+  border: 1px solid rgba(0, 188, 212, 0.25);
+  border-radius: 12px;
+  padding: 2px 8px;
+  font-size: 0.65rem;
+  font-weight: var(--ref-font-weight-semibold);
+  cursor: pointer;
+  transition: all 120ms ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.continuation-chip:hover {
+  background-color: var(--sys-color-accent-primary);
+  color: var(--sys-color-text-inverse);
+  border-color: var(--sys-color-accent-primary);
+}
+
+/* Relationship neighborhood styles */
+.neighborhood-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: var(--sys-space-stack-xs);
+}
+
+.neighborhood-card {
+  background-color: var(--sys-color-surface-container-low);
+  border: var(--sys-border-subtle) solid var(--sys-color-border-subtle);
+  border-radius: var(--ref-radius-soft);
+  padding: 8px var(--sys-space-inline-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: border-color 150ms ease;
+}
+
+.neighborhood-card:hover {
+  border-color: var(--sys-color-border-strong);
+}
+
+.neighborhood-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.65rem;
+}
+
+.neighborhood-direction {
+  font-family: var(--sys-font-code-family);
+  text-transform: uppercase;
+  font-weight: var(--ref-font-weight-bold);
+  font-size: 0.55rem;
+}
+
+.neighborhood-context {
+  font-size: 0.65rem;
+  color: var(--sys-color-text-secondary);
+  line-height: var(--ref-font-line-height-relaxed);
+}
+
+/* Dead-end prevention card fallback */
+.dead-end-fallback-box {
+  background-color: rgba(255, 152, 0, 0.05);
+  border: 1px dashed rgba(255, 152, 0, 0.3);
+  border-radius: var(--ref-radius-soft);
+  padding: var(--sys-space-inset-sm);
+  margin-top: var(--sys-space-stack-sm);
+}
+
+.dead-end-fallback-text {
+  font-size: 0.65rem;
+  color: #ff9800;
+  line-height: var(--ref-font-line-height-relaxed);
+  margin: 0 0 8px 0;
 }

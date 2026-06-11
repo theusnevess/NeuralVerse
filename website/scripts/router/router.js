@@ -217,9 +217,15 @@ class ViewController {
       'retrieval-playground': `
         <div class="nv-stack nv-stack--gap-md">
           <!-- Hero Header -->
-          <header class="nv-stack nv-stack--gap-xs">
-            <h1 class="nv-context-title">Retrieval Workspace</h1>
-            <p class="nv-muted">Advanced Knowledge Exploration and Evidence Synthesis Environment.</p>
+          <header class="nv-cluster nv-cluster--gap-md" style="justify-content: space-between; align-items: center; width: 100%;">
+            <div class="nv-stack nv-stack--gap-xs">
+              <h1 class="nv-context-title" style="margin: 0;">Retrieval Workspace</h1>
+              <p class="nv-muted" style="margin: 0;">Advanced Knowledge Exploration and Evidence Synthesis Environment.</p>
+            </div>
+            <div class="nv-cluster nv-cluster--gap-sm" style="align-items: center;">
+              <span id="session-restored-indicator" class="nv-badge" data-variant="success" style="opacity: 0; transition: opacity 0.5s ease; font-size: 0.65rem;">Session Restored</span>
+              <button id="playground-clear-session-button" class="nv-button" data-variant="secondary" style="font-size: 0.75rem; padding: 4px 10px; min-block-size: unset;" aria-label="Clear active session data">Clear Session</button>
+            </div>
           </header>
 
           <!-- Knowledge Synthesis Pipeline (Compact & Collapsible) -->
@@ -281,6 +287,7 @@ class ViewController {
                   <div class="nv-cluster nv-cluster--gap-sm" style="align-items: center; width: 100%;">
                     <input type="text" id="playground-search-input" class="nv-input" placeholder="Search references..." style="flex: 1; min-width: 200px;" aria-label="Search query" />
                     <button id="playground-search-button" class="nv-button" data-variant="primary" aria-label="Search Registry">Search Registry</button>
+                    <button id="playground-save-query-button" class="nv-button" data-variant="secondary" style="background-color: var(--sys-color-surface-container-high); color: var(--sys-color-text-primary);" aria-label="Save current search query" disabled>Save Query</button>
                     <button id="playground-compile-query-button" class="nv-button" data-variant="secondary" aria-label="Compile Evidence from Query">Compile From Query</button>
                   </div>
                   <div id="playground-search-feedback" class="nv-muted" style="font-size: var(--sys-font-caption-size); min-height: 1.2em;" aria-live="polite">
@@ -391,6 +398,8 @@ class ViewController {
                 <div id="selected-reference-container" style="flex: 1;">
                   <!-- Active reference state details -->
                 </div>
+                <!-- Discovery Space (Carousel, Related, Similar, Citation Continuations, Dead-End Suggestions) -->
+                <div id="discovery-container" class="nv-stack nv-stack--gap-xs" style="margin-top: var(--sys-space-stack-sm);"></div>
                 <div class="nv-stack nv-stack--gap-xs" style="margin-top: var(--sys-space-stack-md); padding-top: var(--sys-space-stack-sm); border-top: var(--sys-border-subtle) solid var(--sys-color-border-subtle);">
                   <div class="nv-cluster nv-cluster--gap-sm">
                     <button id="playground-pin-button" class="nv-button" data-variant="secondary" style="flex: 1;" disabled>
@@ -415,6 +424,8 @@ class ViewController {
                 <div id="selected-relationship-container" style="flex: 1;">
                   <!-- Selected direct citation link details -->
                 </div>
+                <!-- Relationship Neighborhood Container -->
+                <div id="relationship-neighborhood-container" class="nv-stack nv-stack--gap-xs" style="margin-top: var(--sys-space-stack-sm);"></div>
               </section>
 
             </aside>
@@ -424,19 +435,19 @@ class ViewController {
           <!-- Region 4: Research Memory Layer -->
           <footer class="memory-layer" aria-label="Research Memory Layer">
             <div class="memory-grid">
-              <!-- Column 1: Recently Viewed -->
-              <div class="memory-column">
-                <h4>Recently Viewed</h4>
-                <ul id="memory-recent-list" class="memory-list" aria-label="Recently viewed references">
-                  <!-- Dynamic recently viewed list -->
-                </ul>
-              </div>
-
-              <!-- Column 2: Pinned References -->
+              <!-- Column 1: Pinned References -->
               <div class="memory-column">
                 <h4>Pinned References</h4>
                 <ul id="memory-pinned-list" class="memory-list" aria-label="Pinned references">
                   <!-- Dynamic pinned list -->
+                </ul>
+              </div>
+
+              <!-- Column 2: Recently Viewed -->
+              <div class="memory-column">
+                <h4>Recently Viewed</h4>
+                <ul id="memory-recent-list" class="memory-list" aria-label="Recently viewed references">
+                  <!-- Dynamic recently viewed list -->
                 </ul>
               </div>
 
@@ -445,6 +456,17 @@ class ViewController {
                 <h4>Saved Queries</h4>
                 <ul id="memory-queries-list" class="memory-list" aria-label="Saved queries">
                   <!-- Dynamic saved search queries list -->
+                </ul>
+              </div>
+
+              <!-- Column 4: Knowledge Trail -->
+              <div class="memory-column">
+                <div class="nv-cluster nv-cluster--gap-xs" style="justify-content: space-between; align-items: center; margin-bottom: var(--sys-space-stack-xs);">
+                  <h4 style="margin: 0;">Knowledge Trail</h4>
+                  <button id="playground-clear-trail-button" class="nv-button" data-variant="secondary" style="padding: 1px 4px; font-size: 0.6rem; min-block-size: unset;" aria-label="Clear knowledge trail logs">Clear</button>
+                </div>
+                <ul id="memory-trail-list" class="memory-list" style="max-height: 180px; overflow-y: auto;" aria-label="Knowledge trail activity log">
+                  <!-- Dynamic knowledge trail activity log -->
                 </ul>
               </div>
             </div>
