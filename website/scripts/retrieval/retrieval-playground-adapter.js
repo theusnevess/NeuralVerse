@@ -5,63 +5,95 @@
 (function () {
   const references = [
     {
-      id: "arxiv-transformer",
-      title: "Attention Is All You Need",
+      id: "paper-transformer",
+      title: "Attention Is All You Need (Transformer)",
       type: "paper",
       status: "active",
       source: "https://arxiv.org/abs/1706.03762",
-      keywords: ["attention", "transformer", "neural network", "nlp"]
+      keywords: ["attention", "transformer", "neural network", "nlp", "translation"]
     },
     {
-      id: "arxiv-bert",
-      title: "BERT: Bidirectional Transformers",
+      id: "paper-bert",
+      title: "BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding",
       type: "paper",
       status: "active",
       source: "https://arxiv.org/abs/1810.04805",
-      keywords: ["bert", "transformer", "bidirectional", "nlp"]
+      keywords: ["bert", "transformer", "bidirectional", "nlp", "pre-training"]
     },
     {
-      id: "github-pytorch",
-      title: "PyTorch Deep Learning Framework",
+      id: "repo-pytorch",
+      title: "PyTorch Deep Learning Framework Core",
       type: "repository",
       status: "active",
       source: "https://github.com/pytorch/pytorch",
-      keywords: ["pytorch", "library", "deep learning", "python"]
+      keywords: ["pytorch", "library", "deep learning", "python", "tensor"]
     },
     {
-      id: "notes-rag",
-      title: "RAG Evaluation Notes",
+      id: "paper-clip",
+      title: "Learning Transferable Visual Models From Natural Language Supervision (CLIP)",
+      type: "paper",
+      status: "active",
+      source: "https://arxiv.org/abs/2103.00020",
+      keywords: ["clip", "vision", "language", "multimodal", "contrastive"]
+    },
+    {
+      id: "paper-yolo",
+      title: "You Only Look Once: Unified, Real-Time Object Detection (YOLO)",
+      type: "paper",
+      status: "active",
+      source: "https://arxiv.org/abs/1506.02640",
+      keywords: ["yolo", "detection", "vision", "real-time", "cnn"]
+    },
+    {
+      id: "notes-rag-eval",
+      title: "RAG Retrieval Context Evaluation Notes",
       type: "notes",
       status: "active",
-      source: "local://notes/rag-eval",
-      keywords: ["rag", "evaluation", "notes", "retrieval"]
+      source: "local://notes/rag-context-eval",
+      keywords: ["rag", "evaluation", "notes", "retrieval", "context"]
     }
   ];
 
   const relationships = [
     {
       id: "rel-bert-transformer",
-      sourceReferenceId: "arxiv-bert",
-      targetReferenceId: "arxiv-transformer",
+      sourceReferenceId: "paper-bert",
+      targetReferenceId: "paper-transformer",
       type: "cites",
-      context: "transformer architecture core",
+      context: "Utilizes the core transformer architecture for bidirectional language representations.",
       strength: 0.95
     },
     {
+      id: "rel-clip-transformer",
+      sourceReferenceId: "paper-clip",
+      targetReferenceId: "paper-transformer",
+      type: "extends",
+      context: "Uses a Vision Transformer (ViT) encoder alongside a Text Transformer encoder.",
+      strength: 0.90
+    },
+    {
       id: "rel-transformer-pytorch",
-      sourceReferenceId: "arxiv-transformer",
-      targetReferenceId: "github-pytorch",
+      sourceReferenceId: "paper-transformer",
+      targetReferenceId: "repo-pytorch",
       type: "implements",
-      context: "pytorch ecosystem models",
-      strength: 0.80
+      context: "Implements multi-head attention layers and feedforward networks in PyTorch.",
+      strength: 0.85
     },
     {
       id: "rel-rag-transformer",
-      sourceReferenceId: "notes-rag",
-      targetReferenceId: "arxiv-transformer",
-      type: "extends",
-      context: "dense retrieval core component",
-      strength: 0.85
+      sourceReferenceId: "notes-rag-eval",
+      targetReferenceId: "paper-transformer",
+      type: "uses",
+      context: "Leverages transformer-based embedding models to calculate document similarities.",
+      strength: 0.80
+    },
+    {
+      id: "rel-clip-pytorch",
+      sourceReferenceId: "paper-clip",
+      targetReferenceId: "repo-pytorch",
+      type: "implements",
+      context: "Maintained training code and weights hosted using PyTorch hub models.",
+      strength: 0.88
     }
   ];
 
