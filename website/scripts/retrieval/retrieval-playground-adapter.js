@@ -51,6 +51,38 @@
       status: "active",
       source: "local://notes/rag-context-eval",
       keywords: ["rag", "evaluation", "notes", "retrieval", "context"]
+    },
+    {
+      id: "paper-vit",
+      title: "An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale (ViT)",
+      type: "paper",
+      status: "active",
+      source: "https://arxiv.org/abs/2010.11929",
+      keywords: ["vit", "vision", "transformer", "attention", "classification"]
+    },
+    {
+      id: "paper-gpt3",
+      title: "Language Models are Few-Shot Learners (GPT-3)",
+      type: "paper",
+      status: "active",
+      source: "https://arxiv.org/abs/2005.14165",
+      keywords: ["gpt-3", "gpt", "few-shot", "llm", "transformer"]
+    },
+    {
+      id: "notes-agent-reasoning",
+      title: "LLM Agent Tool Use and Reasoning Patterns",
+      type: "notes",
+      status: "active",
+      source: "local://notes/agent-reasoning",
+      keywords: ["agent", "tool-use", "reasoning", "notes", "act"]
+    },
+    {
+      id: "paper-llama",
+      title: "LLaMA: Open and Efficient Foundation Language Models",
+      type: "paper",
+      status: "active",
+      source: "https://arxiv.org/abs/2302.13971",
+      keywords: ["llama", "llm", "efficient", "transformer", "open-source"]
     }
   ];
 
@@ -62,6 +94,14 @@
       type: "cites",
       context: "Utilizes the core transformer architecture for bidirectional language representations.",
       strength: 0.95
+    },
+    {
+      id: "rel-transformer-bert-bidirectional",
+      sourceReferenceId: "paper-transformer",
+      targetReferenceId: "paper-bert",
+      type: "related",
+      context: "Both models share the foundational self-attention mechanisms and are frequently compared in NLP benchmarks.",
+      strength: 0.75
     },
     {
       id: "rel-clip-transformer",
@@ -94,6 +134,54 @@
       type: "implements",
       context: "Maintained training code and weights hosted using PyTorch hub models.",
       strength: 0.88
+    },
+    {
+      id: "rel-vit-transformer",
+      sourceReferenceId: "paper-vit",
+      targetReferenceId: "paper-transformer",
+      type: "cites",
+      context: "Adapts the standard NLP transformer structure to operate directly on flattened patches of images.",
+      strength: 0.92
+    },
+    {
+      id: "rel-vit-pytorch",
+      sourceReferenceId: "paper-vit",
+      targetReferenceId: "repo-pytorch",
+      type: "implements",
+      context: "Implemented using PyTorch library components for modeling and attention calculation.",
+      strength: 0.87
+    },
+    {
+      id: "rel-gpt3-transformer",
+      sourceReferenceId: "paper-gpt3",
+      targetReferenceId: "paper-transformer",
+      type: "cites",
+      context: "Leverages the autoregressive decoder portion of the original transformer structure.",
+      strength: 0.94
+    },
+    {
+      id: "rel-llama-transformer",
+      sourceReferenceId: "paper-llama",
+      targetReferenceId: "paper-transformer",
+      type: "cites",
+      context: "Implements the standard decoder-only transformer architecture with optimization variations.",
+      strength: 0.93
+    },
+    {
+      id: "rel-agent-gpt3",
+      sourceReferenceId: "notes-agent-reasoning",
+      targetReferenceId: "paper-gpt3",
+      type: "uses",
+      context: "Uses GPT-3 as the underlying reasoning engine for few-shot prompt execution.",
+      strength: 0.85
+    },
+    {
+      id: "rel-agent-llama",
+      sourceReferenceId: "notes-agent-reasoning",
+      targetReferenceId: "paper-llama",
+      type: "uses",
+      context: "Tests tool-use capabilities using open weights LLaMA models locally.",
+      strength: 0.82
     }
   ];
 
@@ -179,6 +267,10 @@
       }
     }
     return relList;
+  }
+
+  function getRelationshipsForReference(state, referenceId) {
+    return state.relationships.filter(r => r.sourceReferenceId === referenceId || r.targetReferenceId === referenceId);
   }
 
   function getRelatedReferencesFromRels(state, relationships, excludedReferenceIds = []) {
@@ -507,6 +599,280 @@
     };
   }
 
+  function filterRelationships(relationships, filterType) {
+    if (!filterType || filterType === "all") return relationships;
+    const type = filterType.toLowerCase();
+    return relationships.filter(rel => {
+      const relType = rel.type.toLowerCase();
+      if (type === "cites") return relType === "cites";
+      if (type === "supports") return relType === "supports" || relType === "uses";
+      if (type === "contrasts") return relType === "contrasts";
+      if (type === "implements") return relType === "implements";
+      if (type === "depends_on") return relType === "extends" || relType === "depends" || relType === "depends-on";
+      if (type === "related") return relType === "related" || (!["cites", "supports", "uses", "contrasts", "implements", "extends", "depends", "depends-on"].includes(relType));
+      return false;
+    });
+  }
+
+  function getNeighborhoodNodesAndEdges(state, selectedId, depth, filteredRels) {
+    const activeRefs = state.references.filter(r => r.status === "active");
+
+    // If Full Graph or no selection
+    if (depth === "full" || !selectedId) {
+      return {
+        nodes: activeRefs,
+        edges: filteredRels
+      };
+    }
+
+    const visibleNodeIds = new Set([selectedId]);
+    const visibleEdges = [];
+
+    // Find 1-Hop neighbors
+    const hop1Rels = filteredRels.filter(rel => rel.sourceReferenceId === selectedId || rel.targetReferenceId === selectedId);
+    for (const rel of hop1Rels) {
+      visibleNodeIds.add(rel.sourceReferenceId);
+      visibleNodeIds.add(rel.targetReferenceId);
+      visibleEdges.push(rel);
+    }
+
+    if (depth === "2-hop") {
+      const hop1Nodes = Array.from(visibleNodeIds);
+      // Find edges connected to any of the 1-hop nodes
+      const hop2Rels = filteredRels.filter(rel => {
+        // Exclude already added
+        if (visibleEdges.some(e => e.id === rel.id)) return false;
+        return hop1Nodes.includes(rel.sourceReferenceId) || hop1Nodes.includes(rel.targetReferenceId);
+      });
+      for (const rel of hop2Rels) {
+        visibleNodeIds.add(rel.sourceReferenceId);
+        visibleNodeIds.add(rel.targetReferenceId);
+        visibleEdges.push(rel);
+      }
+    }
+
+    // Filter active nodes list to match visibleNodeIds
+    const visibleNodes = activeRefs.filter(ref => visibleNodeIds.has(ref.id));
+
+    return {
+      nodes: visibleNodes,
+      edges: visibleEdges
+    };
+  }
+
+  /**
+   * Lightweight spring-embedder force-directed layout.
+   * Computes (x, y) positions for each node in a bounded area.
+   * Pure function — no side effects, no DOM access.
+   *
+   * @param {Array} nodes - Array of node objects with .id
+   * @param {Array} edges - Array of edge objects with .sourceReferenceId, .targetReferenceId
+   * @param {number} width - Canvas width
+   * @param {number} height - Canvas height
+   * @param {string|null} centroidId - Optional node to pin at center
+   * @returns {Object} Map of nodeId -> { x, y }
+   */
+  function computeForceLayout(nodes, edges, width, height, centroidId) {
+    if (nodes.length === 0) return {};
+    if (nodes.length === 1) {
+      const n = nodes[0];
+      return { [n.id]: { x: width / 2, y: height / 2 } };
+    }
+
+    const padding = 40;
+    const innerW = width - padding * 2;
+    const innerH = height - padding * 2;
+
+    // Initialize with circular seed (converges faster than random)
+    const positions = {};
+    const cx = width / 2;
+    const cy = height / 2;
+    const initR = Math.min(innerW, innerH) * 0.35;
+
+    nodes.forEach((n, i) => {
+      const angle = (i * 2 * Math.PI) / nodes.length;
+      positions[n.id] = {
+        x: cx + initR * Math.cos(angle),
+        y: cy + initR * Math.sin(angle),
+        vx: 0,
+        vy: 0
+      };
+    });
+
+    // Pin centroid at center if specified
+    if (centroidId && positions[centroidId]) {
+      positions[centroidId].x = cx;
+      positions[centroidId].y = cy;
+    }
+
+    // Build adjacency set for quick lookup
+    const adjacency = new Set();
+    edges.forEach(e => {
+      adjacency.add(`${e.sourceReferenceId}:${e.targetReferenceId}`);
+      adjacency.add(`${e.targetReferenceId}:${e.sourceReferenceId}`);
+    });
+
+    // Simulation parameters
+    const iterations = 80;
+    const repulsionStrength = 3000;
+    const attractionStrength = 0.008;
+    const idealEdgeLength = Math.min(innerW, innerH) / Math.max(2, Math.sqrt(nodes.length));
+    const damping = 0.85;
+    const maxVelocity = 12;
+
+    for (let iter = 0; iter < iterations; iter++) {
+      const temperature = 1 - (iter / iterations) * 0.7;
+
+      // Repulsion: all pairs (Coulomb's law)
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          const a = positions[nodes[i].id];
+          const b = positions[nodes[j].id];
+          let dx = a.x - b.x;
+          let dy = a.y - b.y;
+          let dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 1) dist = 1;
+
+          const force = (repulsionStrength * temperature) / (dist * dist);
+          const fx = (dx / dist) * force;
+          const fy = (dy / dist) * force;
+
+          a.vx += fx;
+          a.vy += fy;
+          b.vx -= fx;
+          b.vy -= fy;
+        }
+      }
+
+      // Attraction: connected pairs (Hooke's law)
+      edges.forEach(e => {
+        const a = positions[e.sourceReferenceId];
+        const b = positions[e.targetReferenceId];
+        if (!a || !b) return;
+
+        let dx = b.x - a.x;
+        let dy = b.y - a.y;
+        let dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 1) dist = 1;
+
+        const displacement = dist - idealEdgeLength;
+        const force = attractionStrength * displacement * temperature;
+        const fx = (dx / dist) * force;
+        const fy = (dy / dist) * force;
+
+        a.vx += fx;
+        a.vy += fy;
+        b.vx -= fx;
+        b.vy -= fy;
+      });
+
+      // Apply velocities with damping and clamping
+      nodes.forEach(n => {
+        const p = positions[n.id];
+
+        // Skip pinned centroid
+        if (n.id === centroidId) {
+          p.vx = 0;
+          p.vy = 0;
+          return;
+        }
+
+        p.vx *= damping;
+        p.vy *= damping;
+
+        // Clamp velocity
+        const speed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
+        if (speed > maxVelocity) {
+          p.vx = (p.vx / speed) * maxVelocity;
+          p.vy = (p.vy / speed) * maxVelocity;
+        }
+
+        p.x += p.vx;
+        p.y += p.vy;
+
+        // Clamp to canvas bounds
+        p.x = Math.max(padding, Math.min(width - padding, p.x));
+        p.y = Math.max(padding, Math.min(height - padding, p.y));
+      });
+    }
+
+    // Strip velocity from output
+    const result = {};
+    for (const id in positions) {
+      result[id] = { x: positions[id].x, y: positions[id].y };
+    }
+    return result;
+  }
+
+  /**
+   * Compute edge SVG path data, using quadratic bezier curves for
+   * bidirectional edge pairs to prevent visual overlap.
+   *
+   * @param {Array} edges - Visible edges
+   * @param {Object} nodeCoords - Map of nodeId -> { x, y }
+   * @returns {Array} Array of { edge, pathData, isCurved }
+   */
+  function computeEdgePaths(edges, nodeCoords) {
+    // Build a set of edge pair keys to detect bidirectional connections
+    const pairKeys = new Set();
+    const bidirectionalPairs = new Set();
+
+    edges.forEach(e => {
+      const fwd = `${e.sourceReferenceId}>${e.targetReferenceId}`;
+      const rev = `${e.targetReferenceId}>${e.sourceReferenceId}`;
+
+      if (pairKeys.has(rev)) {
+        bidirectionalPairs.add(fwd);
+        bidirectionalPairs.add(rev);
+      }
+      pairKeys.add(fwd);
+    });
+
+    const curveOffset = 25;
+
+    return edges.map(e => {
+      const src = nodeCoords[e.sourceReferenceId];
+      const tgt = nodeCoords[e.targetReferenceId];
+      if (!src || !tgt) return null;
+
+      const key = `${e.sourceReferenceId}>${e.targetReferenceId}`;
+      const isBidirectional = bidirectionalPairs.has(key);
+
+      if (!isBidirectional) {
+        // Straight line as simple path
+        return {
+          edge: e,
+          pathData: `M ${src.x} ${src.y} L ${tgt.x} ${tgt.y}`,
+          isCurved: false
+        };
+      }
+
+      // Compute perpendicular offset for bezier control point
+      const mx = (src.x + tgt.x) / 2;
+      const my = (src.y + tgt.y) / 2;
+      const dx = tgt.x - src.x;
+      const dy = tgt.y - src.y;
+      const len = Math.sqrt(dx * dx + dy * dy) || 1;
+
+      // Perpendicular unit vector
+      const px = -dy / len;
+      const py = dx / len;
+
+      // Determine offset direction based on source->target ordering
+      const isForwardDirection = e.sourceReferenceId < e.targetReferenceId;
+      const sign = isForwardDirection ? 1 : -1;
+
+      const cpx = mx + px * curveOffset * sign;
+      const cpy = my + py * curveOffset * sign;
+
+      return {
+        edge: e,
+        pathData: `M ${src.x} ${src.y} Q ${cpx} ${cpy} ${tgt.x} ${tgt.y}`,
+        isCurved: true
+      };
+    }).filter(Boolean);
+  }
+
   // Export to namespace
   window.NeuralVerseRetrievalAdapter = {
     createSeededRetrievalState,
@@ -521,6 +887,10 @@
     getRelationshipNeighborhood,
     getCitationContinuations,
     compileEvidenceFromQuery,
-    compileEvidenceFromReference
+    compileEvidenceFromReference,
+    filterRelationships,
+    getNeighborhoodNodesAndEdges,
+    computeForceLayout,
+    computeEdgePaths
   };
 })();

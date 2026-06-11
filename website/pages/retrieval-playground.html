@@ -97,15 +97,42 @@
 
       <!-- Mode 2: Graph Mode -->
       <section id="mode-graph" class="exploration-mode" aria-labelledby="tab-graph">
-        <div class="nv-panel nv-stack nv-stack--gap-xs">
-          <div class="nv-cluster nv-cluster--gap-sm" style="justify-content: space-between; align-items: center;">
+        <div class="nv-panel nv-stack nv-stack--gap-xs" style="position: relative;">
+          <div class="nv-cluster nv-cluster--gap-sm" style="justify-content: space-between; align-items: center; flex-wrap: wrap; width: 100%;">
             <h3 style="margin: 0; font-size: var(--sys-font-body-size);">Interactive Topology Graph</h3>
-            <span class="nv-muted" style="font-size: var(--sys-font-caption-size);">Click nodes to select. Shift-click to trace.</span>
+            <!-- Graph Controls: Filters & Hop selector -->
+            <div class="nv-cluster nv-cluster--gap-xs" style="align-items: center;">
+              <!-- Filter Select -->
+              <label for="graph-filter-select" style="font-size: 0.65rem; color: var(--sys-color-text-secondary);">Filter:</label>
+              <select id="graph-filter-select" class="nv-input" style="padding: 2px 6px; font-size: 0.65rem; min-block-size: unset; width: auto;" aria-label="Filter relationships by type">
+                <option value="all">All Relationships</option>
+                <option value="cites">Cites</option>
+                <option value="supports">Supports / Uses</option>
+                <option value="contrasts">Contrasts</option>
+                <option value="implements">Implements</option>
+                <option value="depends_on">Depends On / Extends</option>
+                <option value="related">Related</option>
+              </select>
+
+              <!-- Hop Depth Select -->
+              <label for="graph-hop-select" style="font-size: 0.65rem; color: var(--sys-color-text-secondary); margin-left: var(--sys-space-inline-xs);">Depth:</label>
+              <select id="graph-hop-select" class="nv-input" style="padding: 2px 6px; font-size: 0.65rem; min-block-size: unset; width: auto;" aria-label="Graph neighborhood expansion depth">
+                <option value="full">Full Graph</option>
+                <option value="1-hop">1-Hop Neighbors</option>
+                <option value="2-hop">2-Hop Neighbors</option>
+              </select>
+            </div>
           </div>
-          <div class="graph-container">
-            <svg id="visual-graph-svg" class="graph-svg" aria-label="Reference network topology graph">
+          <div class="graph-container" style="position: relative; overflow: hidden; min-height: 480px;">
+            <svg id="visual-graph-svg" class="graph-svg" aria-label="Reference network topology graph" style="display: block; width: 100%; height: 100%;">
               <!-- Graph links and nodes will be dynamically injected here -->
             </svg>
+            <!-- Graph Empty State Overlay -->
+            <div id="graph-empty-state-overlay" class="nv-empty-state" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80%; background-color: var(--sys-color-surface-container-lowest); border: 1px dashed var(--sys-color-border-subtle); z-index: 5; pointer-events: auto; padding: 20px; text-align: center; border-radius: 8px;">
+              <div class="nv-empty-state-icon" aria-hidden="true" style="font-size: 1.5rem; margin-bottom: 8px;">🕸️</div>
+              <p id="graph-empty-state-message" class="nv-muted" style="font-size: var(--sys-font-body-size); font-weight: var(--ref-font-weight-medium); color: var(--sys-color-text-primary); margin-bottom: var(--sys-space-stack-xs);">No Selected Reference</p>
+              <p id="graph-empty-state-subtext" class="nv-muted" style="font-size: var(--sys-font-caption-size); margin: 0;"></p>
+            </div>
           </div>
         </div>
       </section>

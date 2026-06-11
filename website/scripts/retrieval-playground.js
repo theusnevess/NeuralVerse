@@ -19,6 +19,8 @@
   let currentSearchResults = [];
   let currentCompiledEvidence = null;
   let selectedRelationship = null;
+  let relationshipFilter = "all";
+  let neighborhoodDepth = "full";
 
   // Persistence State
   let pinnedReferences = [];
@@ -27,6 +29,7 @@
   let knowledgeTrail = [];
   let activeExplorationMode = "search";
   let activeInspectorTab = "reference";
+  let evidenceTimeline = [];
 
   // Load state from localStorage
   function loadWorkspaceState() {
@@ -44,6 +47,9 @@
         activeInspectorTab = state.activeInspectorTab || "reference";
         currentCompiledEvidence = state.currentCompiledEvidence || null;
         selectedRelationship = state.selectedRelationship || null;
+        relationshipFilter = state.relationshipFilter || "all";
+        neighborhoodDepth = state.neighborhoodDepth || "full";
+        evidenceTimeline = state.evidenceTimeline || [];
 
         showSessionRestoredIndicator();
       } else {
@@ -66,6 +72,9 @@
     activeInspectorTab = "reference";
     currentCompiledEvidence = null;
     selectedRelationship = null;
+    relationshipFilter = "all";
+    neighborhoodDepth = "full";
+    evidenceTimeline = [];
   }
 
   // Save state to localStorage
@@ -81,7 +90,10 @@
         activeExplorationMode,
         activeInspectorTab,
         currentCompiledEvidence,
-        selectedRelationship
+        selectedRelationship,
+        relationshipFilter,
+        neighborhoodDepth,
+        evidenceTimeline
       };
       localStorage.setItem("neuralverse.retrievalWorkspace.v1", JSON.stringify(state));
     } catch (e) {
@@ -345,6 +357,9 @@
       compileRefBtn.onclick = () => {
         console.log(`Compiling evidence from reference: ${ref.id}`);
         currentCompiledEvidence = adapter.compileEvidenceFromReference(retrievalState, ref.id);
+        if (currentCompiledEvidence) {
+          addToTimeline(currentCompiledEvidence);
+        }
         addTrailEvent("compile_ref", `Compiled evidence from "${ref.id}"`, { referenceId: ref.id });
         switchInspectorTab("evidence");
         renderEvidence(currentCompiledEvidence);
@@ -604,8 +619,42 @@
         <p class="nv-muted" style="font-size: var(--sys-font-body-size); line-height: 1.5; margin: 0; font-style: italic;">
           "${rel.context || 'No citation context details available.'}"
         </p>
+        <div class="nv-divider" aria-hidden="true" style="margin-block: var(--sys-space-stack-xs); opacity: 0.4;"></div>
+        <div class="nv-cluster nv-cluster--gap-sm" style="margin-top: 8px;">
+          <button id="playground-follow-source-btn" class="nv-button" data-variant="secondary" style="flex: 1; padding: 4px 8px; font-size: 0.65rem; min-block-size: unset;">Follow Source</button>
+          <button id="playground-follow-target-btn" class="nv-button" data-variant="primary" style="flex: 1; padding: 4px 8px; font-size: 0.65rem; min-block-size: unset;">Follow Target</button>
+        </div>
       </div>
     `;
+
+    // Bind Follow buttons
+    const followSrcBtn = document.getElementById("playground-follow-source-btn");
+    const followTgtBtn = document.getElementById("playground-follow-target-btn");
+
+    if (followSrcBtn) {
+      followSrcBtn.onclick = () => {
+        addTrailEvent("Followed relationship source", `Followed source "${rel.sourceReferenceId}" from edge "${rel.id}"`, { referenceId: rel.sourceReferenceId });
+        toggleSelection(rel.sourceReferenceId);
+      };
+    }
+    if (followTgtBtn) {
+      followTgtBtn.onclick = () => {
+        addTrailEvent("Followed relationship target", `Followed target "${rel.targetReferenceId}" from edge "${rel.id}"`, { referenceId: rel.targetReferenceId });
+        toggleSelection(rel.targetReferenceId);
+      };
+    }
+  }
+
+  // Add an evidence compilation to the timeline history
+  function addToTimeline(comp) {
+    if (!comp) return;
+    // Avoid duplicate IDs in timeline
+    evidenceTimeline = evidenceTimeline.filter(item => item.id !== comp.id);
+    evidenceTimeline.unshift(comp);
+    if (evidenceTimeline.length > 5) {
+      evidenceTimeline.pop();
+    }
+    saveWorkspaceState();
   }
 
   // DOM Rendering: Evidence Compiler output (Evidence Inspector Panel)
@@ -615,67 +664,436 @@
 
     if (!comp) {
       container.innerHTML = `
-        <div class="nv-empty-state">
-          <div class="nv-empty-state-icon" aria-hidden="true">📋</div>
-          <p class="nv-muted" style="font-size: var(--sys-font-body-size); font-weight: var(--ref-font-weight-medium); color: var(--sys-color-text-primary); margin-bottom: var(--sys-space-stack-xs);">No Evidence Compiled</p>
-          <p class="nv-muted" style="font-size: var(--sys-font-caption-size); margin: 0;">Compile from search queries or references using the buttons provided.</p>
+        <div class="nv-empty-state" style="padding: var(--sys-space-stack-md); text-align: center;">
+          <div class="nv-empty-state-icon" aria-hidden="true" style="font-size: 2rem; margin-bottom: var(--sys-space-stack-xs);">📋</div>
+          <p class="nv-muted" style="font-size: var(--sys-font-body-size); font-weight: var(--ref-font-weight-medium); color: var(--sys-color-text-primary); margin-bottom: var(--sys-space-stack-xs);">No Evidence Compiled Yet</p>
+          <p class="nv-muted" style="font-size: var(--sys-font-caption-size); margin-bottom: var(--sys-space-stack-md);">Synthesis requires an active query or reference node seed.</p>
+          <div class="nv-stack nv-stack--gap-xs" style="align-items: stretch;">
+            <button class="nv-button" id="evidence-empty-compile-query" data-variant="primary" style="font-size: var(--sys-font-caption-size);">
+              Compile Current Query
+            </button>
+            <button class="nv-button" id="evidence-empty-compile-ref" data-variant="secondary" style="font-size: var(--sys-font-caption-size);" disabled>
+              Compile Selected Reference
+            </button>
+            <button class="nv-button" id="evidence-empty-return-explore" data-variant="neutral" style="font-size: var(--sys-font-caption-size);">
+              Return to Exploration
+            </button>
+          </div>
         </div>
+
+        <div class="nv-divider" aria-hidden="true" style="margin-block: var(--sys-space-stack-md); opacity: 0.4;"></div>
+
+        <!-- Timeline / History at bottom of empty state -->
+        <div id="evidence-timeline-empty-container"></div>
       `;
+
+      // Bind empty state buttons
+      const emptyCompileQuery = document.getElementById("evidence-empty-compile-query");
+      if (emptyCompileQuery) {
+        emptyCompileQuery.disabled = !currentSearchQuery;
+        if (currentSearchQuery) {
+          emptyCompileQuery.innerHTML = `Compile Query: <span style="font-family: var(--sys-font-code-family); font-size: 0.55rem; opacity: 0.8;">"${currentSearchQuery}"</span>`;
+        } else {
+          emptyCompileQuery.innerHTML = `Compile Query <span style="font-size: 0.55rem; opacity: 0.8;">(No Active Query)</span>`;
+        }
+        emptyCompileQuery.onclick = () => {
+          if (currentSearchQuery) {
+            currentCompiledEvidence = adapter.compileEvidenceFromQuery(retrievalState, currentSearchQuery);
+            if (currentCompiledEvidence) addToTimeline(currentCompiledEvidence);
+            addTrailEvent("compile_query", `Compiled evidence from query "${currentSearchQuery}" via empty state`, { query: currentSearchQuery });
+            renderEvidence(currentCompiledEvidence);
+          }
+        };
+      }
+
+      const emptyCompileRef = document.getElementById("evidence-empty-compile-ref");
+      if (emptyCompileRef) {
+        emptyCompileRef.disabled = !selectedReferenceId;
+        if (selectedReferenceId) {
+          emptyCompileRef.innerHTML = `Compile Ref: <span style="font-family: var(--sys-font-code-family); font-size: 0.55rem; opacity: 0.8;">"${selectedReferenceId}"</span>`;
+        } else {
+          emptyCompileRef.innerHTML = `Compile Ref <span style="font-size: 0.55rem; opacity: 0.8;">(No Selected Ref)</span>`;
+        }
+        emptyCompileRef.onclick = () => {
+          if (selectedReferenceId) {
+            currentCompiledEvidence = adapter.compileEvidenceFromReference(retrievalState, selectedReferenceId);
+            if (currentCompiledEvidence) addToTimeline(currentCompiledEvidence);
+            addTrailEvent("compile_ref", `Compiled evidence from "${selectedReferenceId}" via empty state`, { referenceId: selectedReferenceId });
+            renderEvidence(currentCompiledEvidence);
+          }
+        };
+      }
+
+      const emptyReturnExplore = document.getElementById("evidence-empty-return-explore");
+      if (emptyReturnExplore) {
+        emptyReturnExplore.onclick = () => {
+          switchExplorationMode("search");
+        };
+      }
+
+      renderTimelineHistory(document.getElementById("evidence-timeline-empty-container"));
       return;
     }
 
-    const badgeVariant = comp.confidence === 'high' ? 'success' : (comp.confidence === 'medium' ? 'info' : 'warning');
-    const stars = comp.confidence === 'high' ? '★★★' : (comp.confidence === 'medium' ? '★★☆' : '★☆☆');
+    // 1. Confidence Setup
+    let confLabel = "";
+    let confExplanation = "";
+    let confVariant = "neutral";
+    if (comp.confidence === "high") {
+      confLabel = "High Support";
+      confExplanation = "Supported by multiple directly connected references.";
+      confVariant = "success";
+    } else if (comp.confidence === "medium") {
+      confLabel = "Moderate Support";
+      confExplanation = "Supported by relevant evidence with moderate graph coverage.";
+      confVariant = "warning";
+    } else {
+      confLabel = "Limited Support";
+      confExplanation = "Only limited supporting context was identified.";
+      confVariant = "danger";
+    }
+
+    // 2. Structured Recommendation text
+    let recommendation = "";
+    if (comp.confidence === "high") {
+      recommendation = "The graph coverage indicates a highly integrated network topology. Analyze the citation paths in Graph Mode or continue discovery around the primary nodes.";
+    } else if (comp.confidence === "medium") {
+      recommendation = "Moderate graph coverage detected. Try exploring the citation neighborhood of the primary references to uncover additional contextual paths.";
+    } else {
+      recommendation = "Limited evidence identified. Try refining your search query terms or registering new source references in the registry.";
+    }
+
+    // 3. Supporting references
+    const allContributing = [
+      ...comp.matchedReferences.map(r => ({ ref: r, role: "Primary Match" })),
+      ...comp.relatedReferences.map(r => ({ ref: r, role: "Supporting Context" }))
+    ];
 
     container.innerHTML = `
-      <div class="nv-stack nv-stack--gap-sm" role="region" aria-label="Evidence compilation details">
-        <h4 style="margin: 0; font-size: var(--sys-font-body-size); color: var(--sys-color-text-primary);">
-          Job ID: <span style="font-family: var(--sys-font-code-family);">${comp.id}</span>
-        </h4>
-        <span class="nv-badge" data-variant="${badgeVariant}">
-          Confidence: ${comp.confidence.toUpperCase()} ${stars}
-        </span>
+      <div class="nv-stack nv-stack--gap-sm" role="region" aria-label="Evidence compilation details" style="max-height: calc(100vh - 200px); overflow-y: auto; padding-right: 4px;">
 
-        <div class="nv-divider" aria-hidden="true" style="margin-block: var(--sys-space-stack-xs); opacity: 0.4;"></div>
-
-        <div class="nv-stack nv-stack--gap-xs">
-          <h5 style="margin: 0; font-size: 0.65rem; color: var(--sys-color-accent-primary);">Primary Sources (${comp.matchedReferences.length})</h5>
-          ${comp.matchedReferences.length === 0 ? '<p class="nv-muted" style="font-size: var(--sys-font-caption-size); margin: 0;">None.</p>' : comp.matchedReferences.map(r => `
-            <div class="nv-cluster nv-cluster--gap-xs" style="align-items: center; justify-content: space-between; margin-bottom: 2px;">
-              <span style="font-size: var(--sys-font-caption-size); font-family: var(--sys-font-code-family); color: var(--sys-color-text-primary); text-overflow: ellipsis; overflow: hidden; white-space: nowrap; flex: 1;">${r.id}</span>
-              <button class="nv-button" data-action="select-source" data-id="${r.id}" style="padding: 1px 4px; min-block-size: unset; font-size: 0.6rem;">Select</button>
-            </div>
-          `).join("")}
-        </div>
-
-        <div class="nv-divider" aria-hidden="true" style="margin-block: var(--sys-space-stack-xs); opacity: 0.4;"></div>
-
-        <div class="nv-stack nv-stack--gap-xs">
-          <h5 style="margin: 0; font-size: 0.65rem; color: var(--sys-color-accent-primary);">Neighbors (${comp.relatedReferences.length})</h5>
-          ${comp.relatedReferences.length === 0 ? '<p class="nv-muted" style="font-size: var(--sys-font-caption-size); margin: 0;">None.</p>' : comp.relatedReferences.map(r => `
-            <div class="nv-cluster nv-cluster--gap-xs" style="align-items: center; justify-content: space-between; margin-bottom: 2px;">
-              <span style="font-size: var(--sys-font-caption-size); font-family: var(--sys-font-code-family); color: var(--sys-color-text-primary); text-overflow: ellipsis; overflow: hidden; white-space: nowrap; flex: 1;">${r.id}</span>
-              <button class="nv-button" data-action="select-source" data-id="${r.id}" style="padding: 1px 4px; min-block-size: unset; font-size: 0.6rem;">Select</button>
-            </div>
-          `).join("")}
-        </div>
-
-        <div class="nv-divider" aria-hidden="true" style="margin-block: var(--sys-space-stack-xs); opacity: 0.4;"></div>
-
-        <div class="research-assistant-box" style="margin-top: 0;">
-          <div class="research-assistant-header" style="font-size: 0.65rem;">
-            🤖 Synthesis Insight
+        <!-- Job Header & Qualitative Confidence -->
+        <div class="nv-stack nv-stack--gap-xs" style="background-color: var(--sys-color-surface-container-low); padding: var(--sys-space-stack-xs); border-radius: var(--sys-border-radius-sm); border: 1px solid var(--sys-color-border-subtle);">
+          <div class="nv-cluster nv-cluster--gap-xs" style="align-items: center; justify-content: space-between;">
+            <span style="font-size: 0.6rem; font-family: var(--sys-font-code-family); color: var(--sys-color-text-secondary);">ID: ${comp.id}</span>
+            <span class="nv-badge" data-variant="${confVariant}" style="font-weight: var(--ref-font-weight-semibold);">${confLabel}</span>
           </div>
-          <p class="research-assistant-text" style="font-size: 0.75rem;">"${comp.summary}"</p>
+          <p class="nv-muted" style="font-size: var(--sys-font-caption-size); margin: 0; line-height: 1.3;">${confExplanation}</p>
+        </div>
+
+        <!-- Evidence Summary Sections -->
+        <div class="nv-stack nv-stack--gap-xs">
+          <h5 style="margin: 0; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--sys-color-accent-primary);">Main Conclusion</h5>
+          <p style="font-size: var(--sys-font-caption-size); color: var(--sys-color-text-primary); margin: 0; line-height: 1.4; font-style: italic;">
+            "${comp.summary.split(".")[0]}."
+          </p>
+        </div>
+
+        <div class="nv-stack nv-stack--gap-xs">
+          <h5 style="margin: 0; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--sys-color-accent-primary);">Key Findings</h5>
+          <ul style="margin: 0; padding-left: 1rem; font-size: var(--sys-font-caption-size); color: var(--sys-color-text-primary); line-height: 1.4;">
+            <li>Retrieved <strong>${comp.matchedReferences.length}</strong> direct matching reference(s) from registry.</li>
+            <li>Detected <strong>${comp.relationships.length}</strong> semantic relationships between workspace elements.</li>
+            <li>Linked <strong>${comp.relatedReferences.length}</strong> contextual neighbor reference(s) for additional evidence.</li>
+          </ul>
+        </div>
+
+        <div class="nv-stack nv-stack--gap-xs">
+          <h5 style="margin: 0; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--sys-color-accent-primary);">Supporting Context</h5>
+          <p style="font-size: var(--sys-font-caption-size); color: var(--sys-color-text-secondary); margin: 0; line-height: 1.4;">
+            ${comp.summary}
+          </p>
+        </div>
+
+        <div class="nv-stack nv-stack--gap-xs">
+          <h5 style="margin: 0; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--sys-color-accent-primary);">Research Recommendation</h5>
+          <p style="font-size: var(--sys-font-caption-size); color: var(--sys-color-text-secondary); margin: 0; line-height: 1.4;">
+            ${recommendation}
+          </p>
+        </div>
+
+        <div class="nv-divider" aria-hidden="true" style="margin-block: var(--sys-space-stack-xs); opacity: 0.3;"></div>
+
+        <!-- Evidence Lineage (Hierarchy tree style) -->
+        <div class="nv-stack nv-stack--gap-xs">
+          <h5 style="margin: 0; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--sys-color-accent-primary);">Evidence Lineage</h5>
+          <div class="lineage-tree" style="font-family: var(--sys-font-code-family); font-size: var(--sys-font-caption-size); color: var(--sys-color-text-primary); padding-left: 2px;">
+            <div style="font-weight: var(--ref-font-weight-semibold); color: var(--sys-color-text-primary);">📂 Compiled Evidence</div>
+            ${comp.matchedReferences.map(r => `
+              <div style="padding-left: 12px; border-left: 1px solid var(--sys-color-border-subtle); margin-left: 4px; padding-top: 2px; padding-bottom: 2px;">
+                ├── <span class="lineage-node clickable-lineage-node" data-id="${r.id}" style="cursor: pointer; color: var(--sys-color-accent-primary); text-decoration: underline;" tabindex="0" role="button" aria-label="Lineage Node: Primary Match ${r.id}">[Primary] ${r.id}</span>
+              </div>
+            `).join("")}
+            ${comp.relatedReferences.map((r, idx) => {
+              const isLast = idx === comp.relatedReferences.length - 1;
+              const lineChar = isLast ? "└──" : "├──";
+              return `
+                <div style="padding-left: 12px; border-left: ${isLast ? 'none' : '1px solid var(--sys-color-border-subtle)'}; margin-left: 4px; padding-top: 2px; padding-bottom: 2px;">
+                  ${lineChar} <span class="lineage-node clickable-lineage-node" data-id="${r.id}" style="cursor: pointer; color: var(--sys-color-accent-primary); text-decoration: underline;" tabindex="0" role="button" aria-label="Lineage Node: Supporting Context ${r.id}">${r.id}</span>
+                </div>
+              `;
+            }).join("")}
+          </div>
+        </div>
+
+        <div class="nv-divider" aria-hidden="true" style="margin-block: var(--sys-space-stack-xs); opacity: 0.3;"></div>
+
+        <!-- Supporting References interactive list -->
+        <div class="nv-stack nv-stack--gap-xs">
+          <h5 style="margin: 0; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--sys-color-accent-primary);">Supporting References (${allContributing.length})</h5>
+          <div class="nv-stack nv-stack--gap-xs">
+            ${allContributing.length === 0 ? '<p class="nv-muted" style="font-size: var(--sys-font-caption-size); margin: 0;">No contributing references found.</p>' : allContributing.map(item => {
+              const relsCount = adapter.getRelationshipsForReference(retrievalState, item.ref.id).length;
+              const isPinned = pinnedReferences.includes(item.ref.id);
+              return `
+                <div class="nv-card" style="padding: var(--sys-space-stack-xs); background-color: var(--sys-color-surface-container-lowest); border: 1px solid var(--sys-color-border-subtle); border-radius: var(--sys-border-radius-sm);">
+                  <div class="nv-cluster nv-cluster--gap-xs" style="justify-content: space-between; align-items: flex-start; margin-bottom: 2px;">
+                    <span style="font-size: 0.65rem; font-family: var(--sys-font-code-family); color: var(--sys-color-text-primary); font-weight: var(--ref-font-weight-semibold);">${item.ref.id}</span>
+                    <span class="nv-badge" data-variant="${item.role === 'Primary Match' ? 'success' : 'info'}" style="font-size: 0.55rem; padding: 1px 4px;">${item.role}</span>
+                  </div>
+                  <h6 style="margin: 2px 0; font-size: var(--sys-font-caption-size); font-weight: var(--ref-font-weight-medium); color: var(--sys-color-text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.ref.title}</h6>
+                  <p class="nv-muted" style="font-size: 0.6rem; margin: 2px 0;">
+                    Type: <strong>${item.ref.type}</strong> | Status: <strong>${item.ref.status}</strong> | Rels: <strong>${relsCount}</strong>
+                  </p>
+                  <div class="nv-cluster nv-cluster--gap-xs" style="margin-top: var(--sys-space-stack-xs); justify-content: flex-end;">
+                    <button class="nv-button" data-action="pin-supporting" data-id="${item.ref.id}" style="padding: 2px 6px; min-block-size: unset; font-size: 0.55rem;">
+                      ${isPinned ? 'Unpin' : 'Pin'}
+                    </button>
+                    <button class="nv-button" data-action="open-supporting" data-id="${item.ref.id}" data-variant="primary" style="padding: 2px 6px; min-block-size: unset; font-size: 0.55rem;">
+                      Open in Inspector
+                    </button>
+                  </div>
+                </div>
+              `;
+            }).join("")}
+          </div>
+        </div>
+
+        <div class="nv-divider" aria-hidden="true" style="margin-block: var(--sys-space-stack-xs); opacity: 0.3;"></div>
+
+        <!-- Provenance Metadata -->
+        <div class="nv-stack nv-stack--gap-xs">
+          <h5 style="margin: 0; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--sys-color-accent-primary);">Provenance Metadata</h5>
+          <table style="width: 100%; font-size: 0.6rem; border-collapse: collapse; color: var(--sys-color-text-secondary);">
+            <tbody>
+              <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <td style="padding: 2px 0; font-weight: var(--ref-font-weight-medium);">Compilation Mode:</td>
+                <td style="padding: 2px 0; text-align: right; font-family: var(--sys-font-code-family);">${comp.mode === "query" ? "Search Query" : "Reference Seed"}</td>
+              </tr>
+              <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <td style="padding: 2px 0; font-weight: var(--ref-font-weight-medium);">Input Target:</td>
+                <td style="padding: 2px 0; text-align: right; font-family: var(--sys-font-code-family); overflow: hidden; text-overflow: ellipsis; max-width: 120px; white-space: nowrap;">"${comp.input}"</td>
+              </tr>
+              <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <td style="padding: 2px 0; font-weight: var(--ref-font-weight-medium);">Matched Refs:</td>
+                <td style="padding: 2px 0; text-align: right;">${comp.matchedReferences.length}</td>
+              </tr>
+              <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <td style="padding: 2px 0; font-weight: var(--ref-font-weight-medium);">Supporting Refs:</td>
+                <td style="padding: 2px 0; text-align: right;">${comp.relatedReferences.length}</td>
+              </tr>
+              <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <td style="padding: 2px 0; font-weight: var(--ref-font-weight-medium);">Relationships:</td>
+                <td style="padding: 2px 0; text-align: right;">${comp.relationships.length}</td>
+              </tr>
+              <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <td style="padding: 2px 0; font-weight: var(--ref-font-weight-medium);">Timestamp:</td>
+                <td style="padding: 2px 0; text-align: right; font-family: var(--sys-font-code-family);">${new Date(comp.createdAt).toLocaleTimeString()}</td>
+              </tr>
+              <tr>
+                <td colspan="2" style="padding-top: 4px; font-style: italic; font-size: 0.55rem; color: var(--sys-color-text-tertiary);">
+                  Compiled from active ${comp.mode === "query" ? "search query" : "reference node seed"} context.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="nv-divider" aria-hidden="true" style="margin-block: var(--sys-space-stack-xs); opacity: 0.3;"></div>
+
+        <!-- Related Relationships -->
+        <div class="nv-stack nv-stack--gap-xs">
+          <h5 style="margin: 0; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--sys-color-accent-primary);">Related Relationships (${comp.relationships.length})</h5>
+          <div class="nv-stack nv-stack--gap-xs" style="max-height: 120px; overflow-y: auto;">
+            ${comp.relationships.length === 0 ? '<p class="nv-muted" style="font-size: var(--sys-font-caption-size); margin: 0;">No citation links utilized.</p>' : comp.relationships.map(rel => `
+              <div class="nv-card clickable-evidence-rel" data-id="${rel.id}" style="padding: var(--sys-space-stack-xs); font-size: 0.6rem; cursor: pointer; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 2px; background-color: var(--sys-color-surface-container-lowest);" tabindex="0" role="button" aria-label="Inspect relationship ${rel.sourceReferenceId} to ${rel.targetReferenceId}">
+                <div class="nv-cluster nv-cluster--gap-xs" style="justify-content: space-between;">
+                  <span><strong>${rel.sourceReferenceId}</strong> ➔ <strong>${rel.targetReferenceId}</strong></span>
+                  <span class="nv-badge" data-variant="neutral" style="font-size: 0.5rem; padding: 0px 3px;">${rel.type}</span>
+                </div>
+              </div>
+            `).join("")}
+          </div>
+        </div>
+
+        <div class="nv-divider" aria-hidden="true" style="margin-block: var(--sys-space-stack-xs); opacity: 0.3;"></div>
+
+        <!-- Suggested Next Actions -->
+        <div class="nv-stack nv-stack--gap-xs">
+          <h5 style="margin: 0; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--sys-color-accent-primary);">Suggested Next Actions</h5>
+          <div class="nv-stack nv-stack--gap-xs">
+            ${comp.matchedReferences.length > 0 ? `
+              <button class="nv-button" id="action-explore-neighborhood" data-id="${comp.matchedReferences[0].id}" data-variant="secondary" style="font-size: var(--sys-font-caption-size); padding: 4px;">
+                Explore Neighborhood for ${comp.matchedReferences[0].id}
+              </button>
+              <button class="nv-button" id="action-continue-discovery" data-id="${comp.matchedReferences[0].id}" data-variant="secondary" style="font-size: var(--sys-font-caption-size); padding: 4px;">
+                Continue Discovery for ${comp.matchedReferences[0].id}
+              </button>
+            ` : ""}
+            <button class="nv-button" id="action-return-search" data-variant="neutral" style="font-size: var(--sys-font-caption-size); padding: 4px;">
+              Return to Search Mode
+            </button>
+          </div>
+        </div>
+
+        <div class="nv-divider" aria-hidden="true" style="margin-block: var(--sys-space-stack-xs); opacity: 0.3;"></div>
+
+        <!-- Timeline History at bottom of active state -->
+        <div id="evidence-timeline-active-container"></div>
+
+      </div>
+    `;
+
+    // Bind supporting reference actions
+    container.querySelectorAll("button[data-action='open-supporting']").forEach(btn => {
+      const id = btn.getAttribute("data-id");
+      btn.onclick = () => {
+        addTrailEvent("supporting_ref_opened", `Opened supporting reference "${id}"`, { referenceId: id });
+        toggleSelection(id);
+      };
+    });
+
+    container.querySelectorAll("button[data-action='pin-supporting']").forEach(btn => {
+      const id = btn.getAttribute("data-id");
+      btn.onclick = () => {
+        const isPinned = pinnedReferences.includes(id);
+        if (isPinned) {
+          unpinReference(id);
+        } else {
+          pinReference(id);
+        }
+        renderEvidence(comp);
+      };
+    });
+
+    // Bind lineage nodes
+    container.querySelectorAll(".clickable-lineage-node").forEach(node => {
+      const id = node.getAttribute("data-id");
+      const openNode = () => {
+        addTrailEvent("lineage_navigated", `Navigated to reference "${id}" via lineage tree`, { referenceId: id });
+        toggleSelection(id);
+      };
+      node.onclick = openNode;
+      node.onkeydown = (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          openNode();
+        }
+      };
+    });
+
+    // Bind related relationships
+    container.querySelectorAll(".clickable-evidence-rel").forEach(card => {
+      const relId = card.getAttribute("data-id");
+      const openRel = () => {
+        const rel = retrievalState.relationships.find(r => r.id === relId);
+        if (rel) {
+          selectedRelationship = rel;
+          addTrailEvent("relationship_navigated", `Navigated to relationship "${rel.sourceReferenceId} ➔ ${rel.targetReferenceId}" via evidence context`, { relationship: rel });
+          switchInspectorTab("relationship");
+          renderRelationshipInspector();
+        }
+      };
+      card.onclick = openRel;
+      card.onkeydown = (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          openRel();
+        }
+      };
+    });
+
+    // Bind suggested next action buttons
+    const nextExploreBtn = document.getElementById("action-explore-neighborhood");
+    if (nextExploreBtn) {
+      const id = nextExploreBtn.getAttribute("data-id");
+      nextExploreBtn.onclick = () => {
+        selectedReferenceId = id;
+        addToRecentlyViewed(id);
+        switchExplorationMode("graph");
+        addTrailEvent("action_explore_neighborhood", `Explored neighborhood around "${id}" from suggested next actions`, { referenceId: id });
+        saveWorkspaceState();
+        renderVisualGraph();
+      };
+    }
+
+    const nextContinueBtn = document.getElementById("action-continue-discovery");
+    if (nextContinueBtn) {
+      const id = nextContinueBtn.getAttribute("data-id");
+      nextContinueBtn.onclick = () => {
+        selectedReferenceId = id;
+        addToRecentlyViewed(id);
+        switchExplorationMode("discovery");
+        addTrailEvent("action_continue_discovery", `Continued discovery for "${id}" from suggested next actions`, { referenceId: id });
+        saveWorkspaceState();
+        renderDiscoveryMode();
+      };
+    }
+
+    const nextReturnSearchBtn = document.getElementById("action-return-search");
+    if (nextReturnSearchBtn) {
+      nextReturnSearchBtn.onclick = () => {
+        switchExplorationMode("search");
+        addTrailEvent("action_return_search", `Returned to search mode from suggested next actions`);
+        saveWorkspaceState();
+      };
+    }
+
+    renderTimelineHistory(document.getElementById("evidence-timeline-active-container"));
+  }
+
+  // Render compilation history list
+  function renderTimelineHistory(targetContainer) {
+    if (!targetContainer) return;
+
+    targetContainer.innerHTML = `
+      <div class="nv-stack nv-stack--gap-xs" style="margin-top: var(--sys-space-stack-md); padding-top: var(--sys-space-stack-sm); border-top: var(--sys-border-subtle) solid var(--sys-color-border-subtle);">
+        <h5 style="margin: 0; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--sys-color-accent-primary);">Evidence History (${evidenceTimeline.length})</h5>
+        <div class="nv-stack nv-stack--gap-xs">
+          ${evidenceTimeline.length === 0 ? '<p class="nv-muted" style="font-size: var(--sys-font-caption-size); margin: 0;">No compilation history.</p>' : evidenceTimeline.map((item, idx) => {
+            let qualitativeLabel = item.confidence === "high" ? "High" : (item.confidence === "medium" ? "Moderate" : "Limited");
+            let qualVariant = item.confidence === "high" ? "success" : (item.confidence === "medium" ? "warning" : "danger");
+            return `
+              <div class="nv-card clickable-history-item" data-index="${idx}" style="padding: var(--sys-space-stack-xs); font-size: 0.6rem; cursor: pointer; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 2px; background-color: var(--sys-color-surface-container-lowest);" tabindex="0" role="button" aria-label="Reopen compilation ${item.id}">
+                <div class="nv-cluster nv-cluster--gap-xs" style="justify-content: space-between; align-items: center;">
+                  <span style="font-family: var(--sys-font-code-family); font-weight: var(--ref-font-weight-medium); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 140px;">"${item.input}"</span>
+                  <span class="nv-badge" data-variant="${qualVariant}" style="font-size: 0.5rem; padding: 0 3px;">${qualitativeLabel}</span>
+                </div>
+              </div>
+            `;
+          }).join("")}
         </div>
       </div>
     `;
 
-    // Bind selection buttons inside evidence inspector
-    container.querySelectorAll("button[data-action='select-source']").forEach(btn => {
-      btn.onclick = () => {
-        const id = btn.getAttribute("data-id");
-        toggleSelection(id);
+    // Bind timeline history items
+    targetContainer.querySelectorAll(".clickable-history-item").forEach(item => {
+      const idx = parseInt(item.getAttribute("data-index"), 10);
+      const selectHist = () => {
+        const selectedEv = evidenceTimeline[idx];
+        if (selectedEv) {
+          currentCompiledEvidence = selectedEv;
+          addTrailEvent("reopen_evidence", `Reopened evidence compilation "${selectedEv.id}"`, { compilationId: selectedEv.id });
+          saveWorkspaceState();
+          renderEvidence(currentCompiledEvidence);
+        }
+      };
+      item.onclick = selectHist;
+      item.onkeydown = (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          selectHist();
+        }
       };
     });
   }
@@ -716,27 +1134,79 @@
     bgRect.setAttribute("fill", "url(#grid)");
     svg.appendChild(bgRect);
 
+    const overlay = document.getElementById("graph-empty-state-overlay");
+    const msgEl = document.getElementById("graph-empty-state-message");
+    const subtextEl = document.getElementById("graph-empty-state-subtext");
+
+    const hideOverlay = () => {
+      if (overlay) overlay.style.display = "none";
+    };
+    const showOverlay = (msg, subtext) => {
+      if (overlay) {
+        overlay.style.display = "block";
+        if (msgEl) msgEl.textContent = msg;
+        if (subtextEl) subtextEl.textContent = subtext;
+      }
+    };
+
+    // 1. Check if depth is localized but no node is selected
+    if ((neighborhoodDepth === "1-hop" || neighborhoodDepth === "2-hop") && !selectedReferenceId) {
+      showOverlay("Select a reference to focus the graph, or switch to Full Graph.", "Graph neighborhood requires an active selection node.");
+      return;
+    }
+
+    const allRels = retrievalState.relationships;
+
+    // Filter relationships based on the selected filter type
+    const filteredRels = adapter.filterRelationships(allRels, relationshipFilter);
+
+    // Get neighborhood nodes and edges
+    const { nodes: visibleNodes, edges: visibleEdges } = adapter.getNeighborhoodNodesAndEdges(
+      retrievalState,
+      selectedReferenceId,
+      neighborhoodDepth,
+      filteredRels
+    );
+
+    // 2. Check empty states
+    if (selectedReferenceId) {
+      const hasRelsUnderFilter = filteredRels.some(r => r.sourceReferenceId === selectedReferenceId || r.targetReferenceId === selectedReferenceId);
+      if (!hasRelsUnderFilter) {
+        showOverlay(
+          "No visible relationships for this filter.",
+          "Try All, explore similar references, or open discovery suggestions."
+        );
+      } else {
+        hideOverlay();
+      }
+    } else {
+      if (filteredRels.length === 0) {
+        showOverlay("No relationships match this filter.", "Choose another filter option to display active reference nodes.");
+        return;
+      } else {
+        hideOverlay();
+      }
+    }
+
+    if (visibleNodes.length === 0) {
+      showOverlay("No active references available in registry.", "");
+      return;
+    }
+
     const width = svg.clientWidth || 600;
     const height = svg.clientHeight || 480;
 
-    const refs = retrievalState.references.filter(r => r.status === "active");
-    const rels = retrievalState.relationships;
+    // Force-directed layout: compute optimized node positions
+    const nodeCoords = adapter.computeForceLayout(
+      visibleNodes,
+      visibleEdges,
+      width,
+      height,
+      selectedReferenceId || null
+    );
 
-    if (refs.length === 0) return;
-
-    // Layout calculation: Circular arrangement
-    const cx = width / 2;
-    const cy = height / 2;
-    const r = Math.min(width, height) * 0.35;
-    const nodeCoords = {};
-
-    refs.forEach((ref, idx) => {
-      const angle = (idx * 2 * Math.PI) / refs.length;
-      nodeCoords[ref.id] = {
-        x: cx + r * Math.cos(angle),
-        y: cy + r * Math.sin(angle)
-      };
-    });
+    // Compute edge paths with bezier curves for bidirectional pairs
+    const edgePaths = adapter.computeEdgePaths(visibleEdges, nodeCoords);
 
     // Determine direction-aware highlighting state
     const activeRefId = selectedReferenceId;
@@ -746,7 +1216,7 @@
     const inboundRelIds = new Set();
 
     if (activeRefId) {
-      rels.forEach(rel => {
+      visibleEdges.forEach(rel => {
         if (rel.sourceReferenceId === activeRefId) {
           outboundNodeIds.add(rel.targetReferenceId);
           outboundRelIds.add(rel.id);
@@ -757,54 +1227,64 @@
       });
     }
 
-    // Render Relationships (links)
-    rels.forEach(rel => {
-      const src = nodeCoords[rel.sourceReferenceId];
-      const tgt = nodeCoords[rel.targetReferenceId];
-      if (!src || !tgt) return;
-
-      const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-      line.setAttribute("x1", src.x);
-      line.setAttribute("y1", src.y);
-      line.setAttribute("x2", tgt.x);
-      line.setAttribute("y2", tgt.y);
-      line.setAttribute("class", "graph-link");
+    // Render Relationships as <path> elements (straight or curved)
+    edgePaths.forEach(({ edge: rel, pathData }) => {
+      const pathEl = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      pathEl.setAttribute("d", pathData);
+      pathEl.setAttribute("fill", "none");
+      pathEl.setAttribute("class", "graph-link");
 
       // Default marker
-      line.setAttribute("marker-end", "url(#arrow-default)");
+      pathEl.setAttribute("marker-end", "url(#arrow-default)");
 
-      // Click link selects relationship
-      line.style.cursor = "pointer";
-      line.onclick = (e) => {
+      // Click edge selects relationship
+      pathEl.style.cursor = "pointer";
+      pathEl.onclick = (e) => {
         e.stopPropagation();
         selectedRelationship = rel;
-        addTrailEvent("inspect_rel", `Inspected relationship "${rel.sourceReferenceId} ➔ ${rel.targetReferenceId}"`, { relationship: rel });
+        addTrailEvent("Graph edge selected", `Inspected relationship "${rel.sourceReferenceId} ➔ ${rel.targetReferenceId}"`, { relationship: rel });
         switchInspectorTab("relationship");
         renderRelationshipInspector();
+
+        // Highlight this edge in SVG visually
+        svg.querySelectorAll(".graph-link").forEach(l => l.classList.add("faded"));
+        pathEl.classList.remove("faded");
+        pathEl.style.strokeWidth = "4px";
       };
 
       if (activeRefId) {
-        if (outboundRelIds.has(rel.id)) {
-          line.classList.add("outbound");
-          line.setAttribute("marker-end", "url(#arrow-outbound)");
+        if (rel.id === selectedRelationship?.id) {
+          pathEl.style.strokeWidth = "4px";
+          pathEl.setAttribute("marker-end", "url(#arrow-selected)");
+        } else if (outboundRelIds.has(rel.id)) {
+          pathEl.classList.add("outbound");
+          pathEl.setAttribute("marker-end", "url(#arrow-outbound)");
         } else if (inboundRelIds.has(rel.id)) {
-          line.classList.add("inbound");
-          line.setAttribute("marker-end", "url(#arrow-inbound)");
+          pathEl.classList.add("inbound");
+          pathEl.setAttribute("marker-end", "url(#arrow-inbound)");
         } else {
-          line.classList.add("faded");
+          pathEl.classList.add("faded");
+        }
+      } else {
+        if (rel.id === selectedRelationship?.id) {
+          pathEl.style.strokeWidth = "4px";
+          pathEl.setAttribute("marker-end", "url(#arrow-selected)");
         }
       }
-      svg.appendChild(line);
+      svg.appendChild(pathEl);
     });
 
     // Render References (nodes)
-    refs.forEach(ref => {
+    visibleNodes.forEach(ref => {
       const coord = nodeCoords[ref.id];
       if (!coord) return;
 
       const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
       g.setAttribute("class", "graph-node");
       g.setAttribute("transform", `translate(${coord.x}, ${coord.y})`);
+      g.setAttribute("tabindex", "0");
+      g.setAttribute("role", "button");
+      g.setAttribute("aria-label", `Node ${ref.id}: ${ref.title}`);
 
       if (activeRefId) {
         if (ref.id === activeRefId) {
@@ -830,7 +1310,16 @@
 
       g.onclick = (e) => {
         e.stopPropagation();
+        addTrailEvent("Graph node selected", `Selected graph node "${ref.id}"`, { referenceId: ref.id });
         toggleSelection(ref.id);
+      };
+
+      g.onkeydown = (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          addTrailEvent("Graph node selected", `Selected graph node "${ref.id}" via keyboard`, { referenceId: ref.id });
+          toggleSelection(ref.id);
+        }
       };
 
       svg.appendChild(g);
@@ -1379,6 +1868,42 @@
     renderMemoryLayer();
     updateWorkspaceState();
 
+    // Bind graph filters and depth controls if they exist in DOM
+    const filterSelect = document.getElementById("graph-filter-select");
+    const depthSelect = document.getElementById("graph-hop-select");
+
+    if (filterSelect) {
+      filterSelect.value = relationshipFilter;
+      filterSelect.onchange = (e) => {
+        relationshipFilter = e.target.value;
+        addTrailEvent("Relationship filter changed", `Changed relationship filter to "${relationshipFilter}"`, { filter: relationshipFilter });
+
+        if (selectedRelationship) {
+          const allRels = retrievalState.relationships;
+          const filtered = adapter.filterRelationships(allRels, relationshipFilter);
+          const stillVisible = filtered.some(r => r.id === selectedRelationship.id);
+          if (!stillVisible) {
+            selectedRelationship = null;
+            renderRelationshipInspector();
+          }
+        }
+
+        saveWorkspaceState();
+        renderVisualGraph();
+      };
+    }
+
+    if (depthSelect) {
+      depthSelect.value = neighborhoodDepth;
+      depthSelect.onchange = (e) => {
+        neighborhoodDepth = e.target.value;
+        addTrailEvent("Neighborhood depth changed", `Changed depth focus to "${neighborhoodDepth}"`, { depth: neighborhoodDepth });
+
+        saveWorkspaceState();
+        renderVisualGraph();
+      };
+    }
+
     // Bind switchable tab clicks
     const exploreTabs = document.querySelectorAll(".workspace-tab");
     exploreTabs.forEach(tab => {
@@ -1441,6 +1966,9 @@
         const query = searchInput ? searchInput.value : "";
         console.log(`Compiling evidence from query: ${query}`);
         currentCompiledEvidence = adapter.compileEvidenceFromQuery(retrievalState, query);
+        if (currentCompiledEvidence) {
+          addToTimeline(currentCompiledEvidence);
+        }
         addTrailEvent("compile_query", `Compiled evidence from query "${query}"`, { query });
         switchInspectorTab("evidence");
         renderEvidence(currentCompiledEvidence);
@@ -1454,6 +1982,12 @@
 
         // Reset state
         resetStateToDefaults();
+
+        // Reset dropdown inputs in DOM
+        const filterSelect = document.getElementById("graph-filter-select");
+        const depthSelect = document.getElementById("graph-hop-select");
+        if (filterSelect) filterSelect.value = "all";
+        if (depthSelect) depthSelect.value = "full";
 
         // Clear query input
         if (searchInput) {
