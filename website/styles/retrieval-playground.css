@@ -278,21 +278,18 @@
 }
 
 .graph-cluster-halo {
-  fill: var(--sys-color-surface-container-high);
-  stroke: var(--sys-color-border-subtle);
-  stroke-dasharray: 4 7;
-  stroke-width: 1px;
-  opacity: 0.22;
-  pointer-events: none;
+  display: none !important;
 }
 
 .graph-cluster-label {
   fill: var(--sys-color-text-muted);
-  font-size: 0.62rem;
+  font-size: 0.68rem;
   font-weight: var(--ref-font-weight-medium);
-  letter-spacing: 0;
+  letter-spacing: 0.06em;
+  opacity: 0.24;
   pointer-events: none;
-  text-transform: none;
+  text-transform: uppercase;
+  font-family: var(--sys-font-body-family);
 }
 
 .graph-arrow--default {
@@ -385,34 +382,31 @@
 .graph-node-core {
   fill: var(--sys-color-surface-container-high);
   stroke: var(--sys-color-border-strong);
-  stroke-width: 1.5px;
-  r: 9;
+  stroke-width: 1.25px;
+  r: 5.5;
   transition: r 160ms ease, fill 160ms ease, stroke 160ms ease, stroke-width 160ms ease;
 }
 
 .graph-node-cue {
-  fill: var(--sys-color-accent-primary);
-  stroke: var(--sys-color-surface-container-lowest);
-  stroke-width: 1px;
-  opacity: 0.82;
+  display: none !important;
 }
 
 .graph-node--paper .graph-node-core {
-  fill: color-mix(in srgb, var(--sys-color-accent-primary) 18%, var(--sys-color-surface-container-high));
+  fill: color-mix(in srgb, var(--sys-color-accent-primary) 32%, var(--sys-color-surface-container-high));
 }
 
 .graph-node--repository .graph-node-core {
-  fill: color-mix(in srgb, var(--sys-color-warning, var(--sys-color-accent-primary)) 18%, var(--sys-color-surface-container-high));
+  fill: color-mix(in srgb, var(--sys-color-warning, var(--sys-color-accent-primary)) 32%, var(--sys-color-surface-container-high));
 }
 
 .graph-node--notes .graph-node-core {
-  fill: color-mix(in srgb, var(--sys-color-success, var(--sys-color-accent-primary)) 18%, var(--sys-color-surface-container-high));
+  fill: color-mix(in srgb, var(--sys-color-success, var(--sys-color-accent-primary)) 32%, var(--sys-color-surface-container-high));
 }
 
 .graph-node text {
   fill: var(--sys-color-text-secondary);
   font-family: var(--sys-font-code-family);
-  font-size: 0.56rem;
+  font-size: 0.54rem;
   pointer-events: none;
   text-shadow: none;
   transition: fill 160ms ease, font-size 160ms ease, opacity 160ms ease;
@@ -421,8 +415,8 @@
 .graph-node:hover .graph-node-core,
 .graph-node:focus-visible .graph-node-core {
   stroke: var(--sys-color-text-primary);
-  stroke-width: 2px;
-  r: 10;
+  stroke-width: 1.75px;
+  r: 7.5;
 }
 
 .graph-node:focus-visible .graph-node-core {
@@ -433,19 +427,19 @@
   fill: var(--sys-color-text-primary);
   stroke: var(--sys-color-accent-primary);
   stroke-width: 2.25px;
-  r: 11;
+  r: 8.5;
 }
 
 .graph-node.selected text {
   fill: var(--sys-color-text-primary);
   font-weight: var(--ref-font-weight-bold);
-  font-size: 0.64rem;
+  font-size: 0.62rem;
 }
 
 .graph-node.neighbor-hop-1 .graph-node-core {
   stroke: var(--sys-color-accent-primary);
-  stroke-width: 2px;
-  r: 10;
+  stroke-width: 1.75px;
+  r: 7.2;
 }
 
 .graph-node.neighbor-hop-1 text {
@@ -455,21 +449,25 @@
 
 .graph-node.neighbor-hop-2 .graph-node-core {
   stroke: var(--sys-color-border-strong);
-  stroke-width: 1.75px;
-  r: 9.5;
+  stroke-width: 1.5px;
+  r: 6.4;
 }
 
-.graph-node.pinned .graph-node-cue {
-  r: 4;
-  opacity: 1;
+.graph-node.neighbor-hop-2 {
+  opacity: 0.65;
+}
+
+.graph-node.pinned .graph-node-core {
+  stroke: var(--sys-color-accent-primary);
+  stroke-width: 2.2px;
 }
 
 .graph-node.distant {
-  opacity: 0.28;
+  opacity: 0.22;
 }
 
 .graph-node.distant text {
-  opacity: 0.62;
+  opacity: 0.42;
 }
 
 .graph-hover-preview {

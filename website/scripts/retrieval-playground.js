@@ -1469,19 +1469,16 @@
       emptySearchButton.onclick = () => switchExplorationMode("search");
     }
 
-    if ((neighborhoodDepth === "1-hop" || neighborhoodDepth === "2-hop") && !selectedReferenceId) {
-      showOverlay("Select a reference to focus the graph, or switch to Full Graph.", "Graph neighborhood requires an active selection node.");
-      hidePreview();
-      return;
-    }
-
     const allRels = retrievalState.relationships;
     const filteredRels = adapter.filterRelationships(allRels, relationshipFilter);
+
+    // Default to Full Graph if no reference node is selected
+    const activeDepth = selectedReferenceId ? neighborhoodDepth : "full";
 
     const { nodes: visibleNodes, edges: visibleEdges } = adapter.getNeighborhoodNodesAndEdges(
       retrievalState,
       selectedReferenceId,
-      neighborhoodDepth,
+      activeDepth,
       filteredRels
     );
 
@@ -1576,21 +1573,14 @@
     clusterSummaries
       .filter(cluster => cluster.nodes.length > 1 && cluster.x && cluster.y)
       .forEach(cluster => {
-        const halo = createSvgElement("ellipse", {
-          class: "graph-cluster-halo",
-          cx: cluster.x,
-          cy: cluster.y,
-          rx: Math.max(cluster.radius, 72),
-          ry: Math.max(cluster.radius * 0.58, 46)
-        });
+        // Subtle cluster label positioned near cluster center, no halo ellipses
         const label = createSvgElement("text", {
           class: "graph-cluster-label",
           x: cluster.x,
-          y: cluster.y - Math.max(cluster.radius * 0.5, 42),
+          y: cluster.y,
           "text-anchor": "middle"
         });
-        label.textContent = cluster.name;
-        clusterLayer.appendChild(halo);
+        label.textContent = String(cluster.name).toUpperCase();
         clusterLayer.appendChild(label);
       });
 
@@ -1609,7 +1599,7 @@
       pathEl.setAttribute("fill", "none");
       pathEl.setAttribute("class", `graph-link graph-link--${normalizeGraphType(rel.type)}`);
       pathEl.setAttribute("aria-hidden", "true");
-      pathEl.setAttribute("marker-end", "url(#arrow-default)");
+      // Arrowheads completely removed for Obsidian-like organic connections
       const selectEdge = (e) => {
         e.stopPropagation();
         selectedRelationship = rel;
@@ -1624,9 +1614,8 @@
         const target = adapter.getReferenceById(retrievalState, rel.targetReferenceId);
         const context = rel.context || (rel.strength ? `Strength ${rel.strength}` : "Relationship context");
         showPreview(`
-          <strong>${escapeHtml(String(rel.type || "related").replace(/_/g, " "))}</strong>
-          <span>${escapeHtml(source?.title || rel.sourceReferenceId)}</span>
-          <span>${escapeHtml(target?.title || rel.targetReferenceId)}</span>
+          <strong>${escapeHtml(String(rel.type || "related").toUpperCase().replace(/_/g, " "))}</strong>
+          <span>${escapeHtml(source?.title || rel.sourceReferenceId)} ➔ ${escapeHtml(target?.title || rel.targetReferenceId)}</span>
           <small>${escapeHtml(context)}</small>
         `, event);
       };
@@ -1642,10 +1631,8 @@
       if (activeRefId) {
         if (rel.id === selectedRelationship?.id) {
           pathEl.classList.add("selected");
-          pathEl.setAttribute("marker-end", "url(#arrow-selected)");
         } else if (activeRelIds.has(rel.id)) {
           pathEl.classList.add("active");
-          pathEl.setAttribute("marker-end", "url(#arrow-active)");
         } else if (
           firstHopNodeIds.has(rel.sourceReferenceId) ||
           firstHopNodeIds.has(rel.targetReferenceId) ||
@@ -1659,7 +1646,6 @@
       } else {
         if (rel.id === selectedRelationship?.id) {
           pathEl.classList.add("selected");
-          pathEl.setAttribute("marker-end", "url(#arrow-selected)");
         }
       }
 
@@ -1691,16 +1677,33 @@
       }
       if (pinnedReferences.includes(ref.id)) g.classList.add("pinned");
 
-      const typeCue = createSvgElement("circle", { class: "graph-node-cue", cx: -9, cy: -7, r: 3 });
       const circle = createSvgElement("circle", { class: "graph-node-core" });
-
       const text = createSvgElement("text", { class: "graph-node-label" });
-      text.textContent = getShortGraphLabel(ref);
       text.setAttribute("text-anchor", "middle");
-      text.setAttribute("y", 24);
+      text.setAttribute("y", 18); // Position label slightly closer to the small node dot
+
+      // Label hierarchy implementation:
+      if (activeRefId) {
+        if (ref.id === activeRefId) {
+          const fullLabel = String(ref.title || ref.id);
+          text.textContent = fullLabel.length > 40 ? `${fullLabel.slice(0, 38)}...` : fullLabel;
+          text.style.opacity = "1";
+        } else if (firstHopNodeIds.has(ref.id)) {
+          text.textContent = getShortGraphLabel(ref);
+          text.style.opacity = "0.9";
+        } else if (secondHopNodeIds.has(ref.id)) {
+          const label = String(ref.title || ref.id);
+          text.textContent = label.length > 10 ? `${label.slice(0, 8)}..` : label;
+          text.style.opacity = "0.5";
+        } else {
+          text.textContent = "";
+        }
+      } else {
+        text.textContent = getShortGraphLabel(ref);
+        text.style.opacity = "0.85";
+      }
 
       g.appendChild(circle);
-      g.appendChild(typeCue);
       g.appendChild(text);
 
       const activateNode = (e) => {

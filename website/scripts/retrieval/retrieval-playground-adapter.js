@@ -792,11 +792,11 @@
     }
 
     const iterations = 110;
-    const repulsionStrength = 3600;
-    const attractionStrength = 0.012;
-    const clusterGravity = 0.018;
-    const centerGravity = 0.002;
-    const idealEdgeLength = Math.max(86, Math.min(170, Math.min(innerW, innerH) / Math.max(1.8, Math.sqrt(nodes.length) * 0.72)));
+    const repulsionStrength = 5200;
+    const attractionStrength = 0.026;
+    const clusterGravity = 0.0025;
+    const centerGravity = 0.006;
+    const idealEdgeLength = 72;
     const damping = 0.82;
     const maxVelocity = 10;
 
@@ -877,6 +877,30 @@
         p.x = Math.max(padding, Math.min(width - padding, p.x));
         p.y = Math.max(padding, Math.min(height - padding, p.y));
       });
+
+      // Add collision spacing to prevent node overlap
+      const minDistance = 55; // Node diameter + label allowance
+      for (let i = 0; i < sortedNodes.length; i++) {
+        for (let j = i + 1; j < sortedNodes.length; j++) {
+          const a = positions[sortedNodes[i].id];
+          const b = positions[sortedNodes[j].id];
+          let dx = b.x - a.x;
+          let dy = b.y - a.y;
+          let dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < minDistance) {
+            if (dist < 1) {
+              dx = 1; dy = 0; dist = 1;
+            }
+            const overlap = minDistance - dist;
+            const pushX = (dx / dist) * overlap * 0.5;
+            const pushY = (dy / dist) * overlap * 0.5;
+            a.x -= pushX;
+            a.y -= pushY;
+            b.x += pushX;
+            b.y += pushY;
+          }
+        }
+      }
     }
 
     // Strip velocity from output
