@@ -748,41 +748,16 @@
     const cx = width / 2;
     const cy = height / 2;
     const sortedNodes = nodes.slice().sort((a, b) => String(a.id).localeCompare(String(b.id)));
-    const clusterNames = Array.from(new Set(sortedNodes.map(inferReferenceCluster))).sort();
-    const clusterCenters = {};
-    const centerRadiusX = innerW * 0.31;
-    const centerRadiusY = innerH * 0.28;
-
-    clusterNames.forEach((name, index) => {
-      const angle = (-Math.PI / 2) + (index * 2 * Math.PI) / Math.max(1, clusterNames.length);
-      const wobble = (seededUnit(name) - 0.5) * 0.32;
-      clusterCenters[name] = {
-        x: cx + Math.cos(angle + wobble) * centerRadiusX,
-        y: cy + Math.sin(angle + wobble) * centerRadiusY
-      };
-    });
-
-    if (centroidId) {
-      const centroid = sortedNodes.find(node => node.id === centroidId);
-      if (centroid) {
-        clusterCenters[inferReferenceCluster(centroid)] = { x: cx, y: cy };
-      }
-    }
-
-    const clusterIndexes = {};
-    sortedNodes.forEach(node => {
-      const cluster = inferReferenceCluster(node);
-      clusterIndexes[cluster] = clusterIndexes[cluster] || 0;
-      const localIndex = clusterIndexes[cluster]++;
-      const localAngle = seededUnit(`${node.id}:angle`) * Math.PI * 2;
-      const localRadius = 28 + localIndex * 14 + seededUnit(`${node.id}:radius`) * 38;
-      const center = clusterCenters[cluster] || { x: cx, y: cy };
+    sortedNodes.forEach((node, index) => {
+      const angle = (index * 2 * Math.PI) / sortedNodes.length;
+      const wobble = (seededUnit(node.id) - 0.5) * 0.25;
+      const radius = 35 + (seededUnit(node.id + ":radius") * 55);
       positions[node.id] = {
-        x: center.x + Math.cos(localAngle) * localRadius,
-        y: center.y + Math.sin(localAngle) * localRadius,
+        x: cx + Math.cos(angle + wobble) * radius,
+        y: cy + Math.sin(angle + wobble) * radius,
         vx: 0,
         vy: 0,
-        cluster
+        cluster: inferReferenceCluster(node)
       };
     });
 
@@ -791,13 +766,12 @@
       positions[centroidId].y = cy;
     }
 
-    const iterations = 110;
-    const repulsionStrength = 5200;
-    const attractionStrength = 0.026;
-    const clusterGravity = 0.0025;
-    const centerGravity = 0.006;
-    const idealEdgeLength = 72;
-    const damping = 0.82;
+    const iterations = 120;
+    const repulsionStrength = 8500;
+    const attractionStrength = 0.035;
+    const centerGravity = 0.005;
+    const idealEdgeLength = 120;
+    const damping = 0.85;
     const maxVelocity = 10;
 
     for (let iter = 0; iter < iterations; iter++) {
@@ -849,10 +823,7 @@
 
       sortedNodes.forEach(n => {
         const p = positions[n.id];
-        const clusterCenter = clusterCenters[p.cluster] || { x: cx, y: cy };
 
-        p.vx += (clusterCenter.x - p.x) * clusterGravity * temperature;
-        p.vy += (clusterCenter.y - p.y) * clusterGravity * temperature;
         p.vx += (cx - p.x) * centerGravity * temperature;
         p.vy += (cy - p.y) * centerGravity * temperature;
 
@@ -879,7 +850,7 @@
       });
 
       // Add collision spacing to prevent node overlap
-      const minDistance = 55; // Node diameter + label allowance
+      const minDistance = 75; // Node diameter + label allowance
       for (let i = 0; i < sortedNodes.length; i++) {
         for (let j = i + 1; j < sortedNodes.length; j++) {
           const a = positions[sortedNodes[i].id];

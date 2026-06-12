@@ -88,13 +88,17 @@
   }
 
   function clampGraphScale(scale) {
-    return Math.max(0.55, Math.min(2.35, scale));
+    return Math.max(0.3, Math.min(4.0, scale));
   }
 
   function setGraphViewport(nextViewport, shouldSave = true) {
+    const minX = -1200;
+    const maxX = 1200;
+    const minY = -1200;
+    const maxY = 1200;
     graphViewport = {
-      x: Number.isFinite(nextViewport.x) ? nextViewport.x : 0,
-      y: Number.isFinite(nextViewport.y) ? nextViewport.y : 0,
+      x: Math.max(minX, Math.min(maxX, Number.isFinite(nextViewport.x) ? nextViewport.x : 0)),
+      y: Math.max(minY, Math.min(maxY, Number.isFinite(nextViewport.y) ? nextViewport.y : 0)),
       scale: clampGraphScale(Number.isFinite(nextViewport.scale) ? nextViewport.scale : 1)
     };
     const world = document.querySelector("#visual-graph-svg .graph-world");
@@ -1570,19 +1574,7 @@
     svg.appendChild(world);
     setGraphViewport(graphViewport, false);
 
-    clusterSummaries
-      .filter(cluster => cluster.nodes.length > 1 && cluster.x && cluster.y)
-      .forEach(cluster => {
-        // Subtle cluster label positioned near cluster center, no halo ellipses
-        const label = createSvgElement("text", {
-          class: "graph-cluster-label",
-          x: cluster.x,
-          y: cluster.y,
-          "text-anchor": "middle"
-        });
-        label.textContent = String(cluster.name).toUpperCase();
-        clusterLayer.appendChild(label);
-      });
+    // Cluster labels completely removed per user request for organic emergent clustering
 
     edgePaths.forEach(({ edge: rel, pathData }) => {
       const hitEl = createSvgElement("path");
@@ -1683,25 +1675,24 @@
       text.setAttribute("y", 18); // Position label slightly closer to the small node dot
 
       // Label hierarchy implementation:
-      if (activeRefId) {
-        if (ref.id === activeRefId) {
-          const fullLabel = String(ref.title || ref.id);
-          text.textContent = fullLabel.length > 40 ? `${fullLabel.slice(0, 38)}...` : fullLabel;
-          text.style.opacity = "1";
-        } else if (firstHopNodeIds.has(ref.id)) {
-          text.textContent = getShortGraphLabel(ref);
-          text.style.opacity = "0.9";
-        } else if (secondHopNodeIds.has(ref.id)) {
-          const label = String(ref.title || ref.id);
-          text.textContent = label.length > 10 ? `${label.slice(0, 8)}..` : label;
-          text.style.opacity = "0.5";
+      const setLabelState = () => {
+        if (activeRefId) {
+          if (ref.id === activeRefId) {
+            const fullLabel = String(ref.title || ref.id);
+            text.textContent = fullLabel.length > 40 ? `${fullLabel.slice(0, 38)}...` : fullLabel;
+            text.style.opacity = "1";
+          } else if (firstHopNodeIds.has(ref.id)) {
+            text.textContent = getShortGraphLabel(ref);
+            text.style.opacity = "0.9";
+          } else {
+            text.textContent = "";
+          }
         } else {
-          text.textContent = "";
+          text.textContent = getShortGraphLabel(ref);
+          text.style.opacity = "0.85";
         }
-      } else {
-        text.textContent = getShortGraphLabel(ref);
-        text.style.opacity = "0.85";
-      }
+      };
+      setLabelState();
 
       g.appendChild(circle);
       g.appendChild(text);
@@ -1728,6 +1719,10 @@
         });
       };
       g.onmouseenter = (event) => {
+        const fullLabel = String(ref.title || ref.id);
+        text.textContent = fullLabel.length > 40 ? `${fullLabel.slice(0, 38)}...` : fullLabel;
+        text.style.opacity = "1";
+
         const relCount = allRels.filter(rel => rel.sourceReferenceId === ref.id || rel.targetReferenceId === ref.id).length;
         const neighborhoodSize = new Set(allRels.flatMap(rel => (
           rel.sourceReferenceId === ref.id ? [rel.targetReferenceId] :
@@ -1740,9 +1735,15 @@
         `, event);
       };
       g.onmousemove = g.onmouseenter;
-      g.onmouseleave = hidePreview;
+      g.onmouseleave = () => {
+        hidePreview();
+        setLabelState();
+      };
       g.onfocus = (event) => g.onmouseenter(event);
-      g.onblur = hidePreview;
+      g.onblur = () => {
+        hidePreview();
+        setLabelState();
+      };
 
       nodeLayer.appendChild(g);
     });
