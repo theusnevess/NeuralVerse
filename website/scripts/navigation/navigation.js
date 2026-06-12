@@ -15,20 +15,13 @@ class NavigationController {
     const route = state.currentRoute;
     if (!route) return;
 
-    console.log(`Syncing UI for route: ${route.id}`);
+    if (window.NV_DEBUG) console.log(`Syncing UI for route: ${route.id}`);
 
     // 1. Sync Navigation Rail active item
     const navItems = document.querySelectorAll('.nv-nav-item');
     navItems.forEach(item => {
-      const label = item.querySelector('.nv-nav-label')?.textContent?.trim().toLowerCase();
-      const routeLabel = route.label.toLowerCase();
-      
-      // Match if the item's label matches the active route, or paths match exactly
       const itemHref = item.getAttribute('href');
-      const pathMatches = (itemHref === route.path) || 
-                          (route.id === 'home' && label === 'workspace') || 
-                          (routeLabel === label) ||
-                          (route.id.startsWith(label));
+      const pathMatches = itemHref === route.path;
 
       if (pathMatches) {
         item.setAttribute('aria-current', 'page');

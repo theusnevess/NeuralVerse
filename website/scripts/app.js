@@ -4,8 +4,10 @@ import { createProgressController } from "./progress/progress-controller.js?v=9"
 import { createWorkspaceController } from "./workspace/workspace-controller.js?v=9";
 import { createBreadcrumbsController } from "./navigation/breadcrumbs-controller.js?v=9";
 
+window.NV_DEBUG = window.NV_DEBUG || false;
+
 document.addEventListener("DOMContentLoaded", () => {
-  console.log('NeuralVerse App Shell Initialized');
+  if (window.NV_DEBUG) console.log('NeuralVerse App Shell Initialized');
 
   // Set the current year in the footer
   const yearElement = document.querySelector('.nv-footer-year');

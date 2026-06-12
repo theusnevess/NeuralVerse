@@ -30,6 +30,7 @@
   let activeExplorationMode = "search";
   let activeInspectorTab = "reference";
   let evidenceTimeline = [];
+  let preferencesEscapeHandlerBound = false;
 
   function escapeHtml(value) {
     return String(value ?? "")
@@ -715,7 +716,7 @@
     if (compileRefBtn) {
       compileRefBtn.disabled = false;
       compileRefBtn.onclick = () => {
-        console.log(`Compiling evidence from reference: ${ref.id}`);
+        if (window.NV_DEBUG) console.log(`Compiling evidence from reference: ${ref.id}`);
         currentCompiledEvidence = adapter.compileEvidenceFromReference(retrievalState, ref.id);
         if (currentCompiledEvidence) {
           addToTimeline(currentCompiledEvidence);
@@ -1352,16 +1353,16 @@
     const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
     defs.innerHTML = `
       <marker id="arrow-default" viewBox="0 0 10 10" refX="16" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-        <path d="M 0 0 L 10 5 L 0 10 z" fill="#384c5c" />
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#6f7f89" />
       </marker>
       <marker id="arrow-selected" viewBox="0 0 10 10" refX="18" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-        <path d="M 0 0 L 10 5 L 0 10 z" fill="#00f0ff" />
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#b6c9d6" />
       </marker>
       <marker id="arrow-outbound" viewBox="0 0 10 10" refX="18" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-        <path d="M 0 0 L 10 5 L 0 10 z" fill="#ff0055" />
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#9fb8c8" />
       </marker>
       <marker id="arrow-inbound" viewBox="0 0 10 10" refX="18" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-        <path d="M 0 0 L 10 5 L 0 10 z" fill="#39ff14" />
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#9fb8c8" />
       </marker>
     `;
     svg.appendChild(defs);
@@ -1518,7 +1519,7 @@
       if (!coord) return;
 
       const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
-      g.setAttribute("class", "graph-node");
+      g.setAttribute("class", `graph-node graph-node--${ref.type || "reference"}`);
       g.setAttribute("transform", `translate(${coord.x}, ${coord.y})`);
       g.setAttribute("tabindex", "0");
       g.setAttribute("role", "button");
@@ -1539,9 +1540,10 @@
       const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
 
       const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
-      text.textContent = ref.id.replace(/^paper-/, "").replace(/^repo-/, "").replace(/^notes-/, "");
+      const label = ref.id.replace(/^paper-/, "").replace(/^repo-/, "").replace(/^notes-/, "");
+      text.textContent = label;
       text.setAttribute("text-anchor", "middle");
-      text.setAttribute("y", 22);
+      text.setAttribute("y", 23);
 
       g.appendChild(circle);
       g.appendChild(text);
@@ -1987,7 +1989,7 @@
   // Switch exploration modes
   function switchExplorationMode(mode) {
     try {
-      console.log(`Switching exploration mode to: ${mode}`);
+      if (window.NV_DEBUG) console.log(`Switching exploration mode to: ${mode}`);
       activeExplorationMode = mode;
       saveWorkspaceState();
 
@@ -2091,7 +2093,7 @@
   // Helper to execute and record a search query
   function runSearch(query, isRerun = false) {
     currentSearchQuery = query;
-    console.log(`Searching references for: ${query}`);
+    if (window.NV_DEBUG) console.log(`Searching references for: ${query}`);
 
     currentSearchResults = adapter.searchReferences(retrievalState, query);
     renderSearchResults();
@@ -2171,6 +2173,16 @@
           prefsBtn.focus();
         }
       };
+      if (!preferencesEscapeHandlerBound) {
+        document.addEventListener("keydown", (e) => {
+          const panel = document.getElementById("preferences-panel");
+          const trigger = document.getElementById("playground-preferences-button");
+          if (!panel || e.key !== "Escape" || panel.style.display === "none") return;
+          panel.style.display = "none";
+          if (trigger) trigger.focus();
+        });
+        preferencesEscapeHandlerBound = true;
+      }
     }
 
     const clearBtn = document.getElementById("playground-clear-session-button");
@@ -2244,7 +2256,7 @@
   // Initialize workspace controls
   function initPlayground() {
     try {
-      console.log("Initializing Retrieval Workspace (NV-500)...");
+      if (window.NV_DEBUG) console.log("Initializing Retrieval Workspace (NV-500)...");
       loadWorkspaceState();
 
       // Expose selectReference and runSearch globally for empty state / quick actions onclick handlers
@@ -2436,7 +2448,7 @@
             if (searchInput) searchInput.focus();
             return;
           }
-          console.log(`Compiling evidence from query: ${query}`);
+          if (window.NV_DEBUG) console.log(`Compiling evidence from query: ${query}`);
           currentCompiledEvidence = adapter.compileEvidenceFromQuery(retrievalState, query);
           if (currentCompiledEvidence) {
             addToTimeline(currentCompiledEvidence);
@@ -2507,7 +2519,7 @@
           if (searchFeedback) searchFeedback.textContent = "No active query.";
           if (saveQueryBtn) saveQueryBtn.disabled = true;
 
-          console.log("Session cleared.");
+          if (window.NV_DEBUG) console.log("Session cleared.");
         };
       }
 

@@ -15,7 +15,7 @@ class HashRouter {
 
   handleRouting() {
     const hash = window.location.hash || '#/';
-    console.log(`Router resolving hash: ${hash}`);
+    if (window.NV_DEBUG) console.log(`Router resolving hash: ${hash}`);
 
     let matchedRoute = null;
     let matchedParams = {};
@@ -39,7 +39,7 @@ class HashRouter {
       if (matchedRoute.isImplemented) {
         this.stateManager.setCurrentRoute(matchedRoute, matchedParams);
       } else {
-        console.warn(`Route ${matchedRoute.path} is defined but not implemented yet.`);
+        if (window.NV_DEBUG) console.warn(`Route ${matchedRoute.path} is defined but not implemented yet.`);
         this.stateManager.setCurrentRoute({
           id: 'not-found',
           path: hash,
@@ -51,7 +51,7 @@ class HashRouter {
         });
       }
     } else {
-      console.error(`Route not found for: ${hash}`);
+      if (window.NV_DEBUG) console.warn(`Route not found for: ${hash}`);
       this.stateManager.setCurrentRoute({
         id: 'not-found',
         path: hash,
@@ -621,7 +621,7 @@ class ViewController {
     if (!route) return;
 
     const viewId = route.id === 'not-found' ? 'not-found' : (route.isImplemented ? route.id : 'not-found');
-    console.log(`Rendering view: ${viewId}`);
+    if (window.NV_DEBUG) console.log(`Rendering view: ${viewId}`);
 
     let rendered = false;
     // Attempt to load from static files
@@ -633,7 +633,7 @@ class ViewController {
         rendered = true;
       }
     } catch (e) {
-      console.warn(`Fetch failed (likely file:// protocol CORS limit). Falling back to inline JS template for: ${viewId}`);
+      if (window.NV_DEBUG) console.warn(`Fetch failed (likely file:// protocol CORS limit). Falling back to inline JS template for: ${viewId}`);
     }
 
     // Fallback to inline template

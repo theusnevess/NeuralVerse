@@ -129,10 +129,10 @@ const ROUTES = [
     pattern: /^#\/settings$/,
     label: 'Settings',
     title: 'Environment Settings',
-    description: 'Configure nodes, API endpoints, and visualization options.',
+    description: 'Review workspace preferences and environment status.',
     region: 'R3 Workspace',
     navigationGroup: 'secondary',
-    isImplemented: false
+    isImplemented: true
   }
 ];
 

@@ -421,7 +421,7 @@ export function createWorkspaceController(options = {}) {
   }
 
   function syncDOM(state) {
-    console.log('Syncing workspace DOM with state:', state);
+    if (window.NV_DEBUG) console.log('Syncing workspace DOM with state:', state);
 
     // Sync text nodes and attributes
     const titleEl = root.querySelector('[data-workspace-title]');
@@ -494,7 +494,7 @@ export function createWorkspaceController(options = {}) {
     if (!button) return;
 
     const action = button.getAttribute('data-workspace-action');
-    console.log(`Workspace action triggered: ${action}`);
+    if (window.NV_DEBUG) console.log(`Workspace action triggered: ${action}`);
 
     const statusEl = root.querySelector('[data-workspace-status]');
     const liveEl = root.querySelector('[data-workspace-live]');

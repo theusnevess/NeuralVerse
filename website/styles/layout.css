@@ -8,6 +8,7 @@
   flex-direction: column;
   min-block-size: 100vh;
   background-color: var(--ctx-workspace-background);
+  overflow-x: clip;
 }
 
 .nv-global-header {
@@ -24,6 +25,7 @@
   z-index: var(--ctx-shell-z);
   gap: var(--sys-space-inline-md);
   font-family: var(--sys-font-body-family);
+  min-inline-size: 0;
 }
 
 .nv-header-brand {
@@ -67,19 +69,23 @@
   flex-direction: column;
   flex: 1;
   inline-size: 100%;
+  min-inline-size: 0;
+  overflow-x: clip;
 }
 
 .nv-navigation-rail {
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-around;
+  justify-content: flex-start;
   inline-size: 100%;
-  block-size: 4rem;
+  min-block-size: 4rem;
   padding: var(--sys-space-inset-xs);
   background-color: var(--ctx-nav-rail-surface);
   border-bottom: var(--sys-border-default) solid var(--ctx-nav-rail-border);
   z-index: var(--ctx-nav-z);
+  gap: var(--sys-space-inline-xs);
+  overflow: hidden;
 }
 
 .nv-nav-brand {
@@ -98,9 +104,11 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  gap: var(--sys-space-inline-md);
+  gap: var(--sys-space-inline-xs);
   inline-size: auto;
   flex: 1;
+  min-inline-size: 0;
+  flex-wrap: wrap;
 }
 
 .nv-nav-group--secondary {
@@ -115,6 +123,7 @@
   justify-content: center;
   gap: var(--sys-space-inline-xs);
   padding: var(--sys-space-inset-xs) var(--sys-space-inline-sm);
+  min-inline-size: 0;
   border-radius: var(--sys-radius-control);
   color: var(--ctx-nav-item-text);
   text-decoration: none;
@@ -149,10 +158,14 @@
 .nv-nav-label {
   font-size: 0.75rem;
   text-align: center;
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .nv-main-workspace {
   flex: 1;
+  min-inline-size: 0;
   padding: var(--ctx-workspace-padding);
   background-color: var(--ctx-workspace-background);
   border-radius: var(--ctx-workspace-radius);
@@ -181,9 +194,11 @@
     justify-content: space-between;
     inline-size: 5rem;
     block-size: auto;
+    min-block-size: 0;
     border-bottom: none;
     border-right: var(--sys-border-default) solid var(--ctx-nav-rail-border);
     padding: var(--ctx-nav-rail-padding);
+    overflow: visible;
   }
 
   .nv-nav-brand {
@@ -199,6 +214,7 @@
     flex-direction: column;
     inline-size: 100%;
     gap: var(--sys-space-stack-sm);
+    flex-wrap: nowrap;
   }
 
   .nv-nav-group--secondary {
@@ -220,6 +236,52 @@
     inline-size: 20rem;
     border-top: none;
     border-left: var(--sys-border-default) solid var(--ctx-context-panel-border);
+  }
+}
+
+@media (max-width: 767px) {
+  .nv-navigation-rail {
+    align-items: stretch;
+  }
+
+  .nv-nav-group {
+    justify-content: flex-start;
+  }
+
+  .nv-nav-group--secondary {
+    margin-inline-start: auto;
+  }
+
+  .nv-nav-item {
+    flex: 0 1 auto;
+    padding-inline: var(--sys-space-inline-xs);
+  }
+
+  .nv-nav-icon {
+    font-size: 1rem;
+  }
+
+  .nv-nav-label {
+    font-size: 0.68rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .nv-navigation-rail {
+    padding-inline: var(--sys-space-inset-xs);
+  }
+
+  .nv-nav-item {
+    gap: 2px;
+    padding-inline: 5px;
+  }
+
+  .nv-nav-label {
+    display: none;
+  }
+
+  .nv-nav-group--secondary {
+    margin-inline-start: 0;
   }
 }
 
@@ -541,8 +603,6 @@
     padding: var(--sys-spacing-inset-md, var(--sys-space-inset-md));
   }
 }
-
-
 
 
 

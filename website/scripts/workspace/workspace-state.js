@@ -28,7 +28,7 @@
         ...newState,
         lastUpdated: new Date().toISOString()
       };
-      console.log('Workspace state updated:', this.state);
+      if (window.NV_DEBUG) console.log('Workspace state updated:', this.state);
       this.notify();
     }
 
