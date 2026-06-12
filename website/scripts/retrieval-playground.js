@@ -2269,6 +2269,11 @@
       saveWorkspaceState();
       renderMemoryLayer();
       renderReferenceInspector();
+
+      const pinnedList = document.getElementById("memory-pinned-list");
+      if (pinnedList) runTransientClass(pinnedList, "is-updated", 200);
+      const pinBtn = document.getElementById("playground-pin-button");
+      if (pinBtn) runTransientClass(pinBtn, "is-updated", 200);
     }
   }
 
@@ -2279,6 +2284,11 @@
     saveWorkspaceState();
     renderMemoryLayer();
     renderReferenceInspector();
+
+    const pinnedList = document.getElementById("memory-pinned-list");
+    if (pinnedList) runTransientClass(pinnedList, "is-updated", 200);
+    const pinBtn = document.getElementById("playground-pin-button");
+    if (pinBtn) runTransientClass(pinBtn, "is-updated", 200);
   }
 
   // Sync Highlight class across lists in DOM
