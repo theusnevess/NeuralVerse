@@ -113,6 +113,41 @@
     if (shouldRender) renderVisualGraph();
   }
 
+  function runTransientClass(element, className, duration) {
+    if (!element) return;
+    element.classList.remove(className);
+    void element.offsetWidth; // force reflow
+    element.classList.add(className);
+    setTimeout(() => {
+      element.classList.remove(className);
+    }, duration);
+  }
+
+  function setButtonBusy(button, busyText, callback) {
+    if (!button) {
+      callback();
+      return;
+    }
+    const originalContent = button.innerHTML;
+    button.disabled = true;
+    button.innerHTML = `<span class="is-loading-spinner"></span> ${busyText}`;
+    button.classList.add("is-loading");
+
+    setTimeout(() => {
+      button.classList.remove("is-loading");
+      button.innerHTML = `<span class="is-loading-check">✓</span> Updated`;
+      button.classList.add("is-success");
+
+      callback();
+
+      setTimeout(() => {
+        button.classList.remove("is-success");
+        button.innerHTML = originalContent;
+        button.disabled = false;
+      }, 1000);
+    }, 220);
+  }
+
   function createSvgElement(tag, attrs = {}) {
     const element = document.createElementNS("http://www.w3.org/2000/svg", tag);
     Object.entries(attrs).forEach(([key, value]) => {
@@ -181,7 +216,7 @@
         applyDensityStyles();
         applyInspectorWidthStyles();
 
-        if (lastActiveTimestamp > 0 && resumeBannerDismissed) {
+        if (lastActiveTimestamp > 0) {
           showSessionRestoredIndicator();
         }
       } else {
@@ -272,6 +307,7 @@
   function showSessionRestoredIndicator() {
     const indicator = document.getElementById("session-restored-indicator");
     if (indicator) {
+      indicator.textContent = "Previous research restored";
       indicator.style.opacity = "1";
       setTimeout(() => {
         indicator.style.opacity = "0";
@@ -682,6 +718,7 @@
       `;
       if (pinBtn) pinBtn.disabled = true;
       if (compileRefBtn) compileRefBtn.disabled = true;
+      runTransientClass(container, "is-updated", 200);
       renderDiscoverySpace();
       renderRelationshipNeighborhood();
       return;
@@ -696,6 +733,7 @@
       `;
       if (pinBtn) pinBtn.disabled = true;
       if (compileRefBtn) compileRefBtn.disabled = true;
+      runTransientClass(container, "is-updated", 200);
       renderDiscoverySpace();
       renderRelationshipNeighborhood();
       return;
@@ -745,6 +783,8 @@
       </div>
     `;
 
+    runTransientClass(container, "is-updated", 200);
+
     // Bind relationship click inside Reference Inspector
     container.querySelectorAll(".nv-card[data-rel-id]").forEach(card => {
       card.onclick = (e) => {
@@ -776,15 +816,17 @@
     if (compileRefBtn) {
       compileRefBtn.disabled = false;
       compileRefBtn.onclick = () => {
-        if (window.NV_DEBUG) console.log(`Compiling evidence from reference: ${ref.id}`);
-        currentCompiledEvidence = adapter.compileEvidenceFromReference(retrievalState, ref.id);
-        if (currentCompiledEvidence) {
-          addToTimeline(currentCompiledEvidence);
-        }
-        addTrailEvent("compile_ref", `Compiled evidence from "${ref.id}"`, { referenceId: ref.id });
-        switchInspectorTab("evidence");
-        renderEvidence(currentCompiledEvidence);
-        saveWorkspaceState();
+        setButtonBusy(compileRefBtn, "Compiling...", () => {
+          if (window.NV_DEBUG) console.log(`Compiling evidence from reference: ${ref.id}`);
+          currentCompiledEvidence = adapter.compileEvidenceFromReference(retrievalState, ref.id);
+          if (currentCompiledEvidence) {
+            addToTimeline(currentCompiledEvidence);
+          }
+          addTrailEvent("compile_ref", `Compiled evidence from "${ref.id}"`, { referenceId: ref.id });
+          switchInspectorTab("evidence");
+          renderEvidence(currentCompiledEvidence);
+          saveWorkspaceState();
+        });
       };
     }
 
@@ -872,6 +914,7 @@
     }
 
     container.innerHTML = html;
+    runTransientClass(container, "is-updated", 200);
 
     // Add interactive click/keydown event listeners
     // Carousel suggestions
@@ -975,6 +1018,7 @@
           <p class="nv-muted" style="font-size: var(--sys-font-caption-size); margin: 0;">Click a connection line in the topological graph to view properties.</p>
         </div>
       `;
+      runTransientClass(container, "is-updated", 200);
       return;
     }
 
@@ -1000,6 +1044,8 @@
         </div>
       </div>
     `;
+
+    runTransientClass(container, "is-updated", 200);
 
     // Bind Follow buttons
     const followSrcBtn = document.getElementById("playground-follow-source-btn");
@@ -1056,6 +1102,7 @@
         <!-- Timeline / History at bottom of empty state -->
         <div id="evidence-timeline-empty-container"></div>
       `;
+      runTransientClass(container, "is-updated", 200);
 
       // Bind empty state buttons
       const emptyCompileQuery = document.getElementById("evidence-empty-compile-query");
@@ -1068,16 +1115,18 @@
         }
         emptyCompileQuery.onclick = () => {
           if (currentSearchQuery) {
-            currentCompiledEvidence = adapter.compileEvidenceFromQuery(retrievalState, currentSearchQuery);
-            if (currentCompiledEvidence) addToTimeline(currentCompiledEvidence);
-            selectedReferenceId = null;
-            selectedRelationship = null;
-            syncSelectionHighlighting();
-            renderReferenceInspector();
-            renderRelationshipInspector();
-            addTrailEvent("compile_query", `Compiled evidence from query "${currentSearchQuery}" via empty state`, { query: currentSearchQuery });
-            renderEvidence(currentCompiledEvidence);
-            saveWorkspaceState();
+            setButtonBusy(emptyCompileQuery, "Compiling...", () => {
+              currentCompiledEvidence = adapter.compileEvidenceFromQuery(retrievalState, currentSearchQuery);
+              if (currentCompiledEvidence) addToTimeline(currentCompiledEvidence);
+              selectedReferenceId = null;
+              selectedRelationship = null;
+              syncSelectionHighlighting();
+              renderReferenceInspector();
+              renderRelationshipInspector();
+              addTrailEvent("compile_query", `Compiled evidence from query "${currentSearchQuery}" via empty state`, { query: currentSearchQuery });
+              renderEvidence(currentCompiledEvidence);
+              saveWorkspaceState();
+            });
           }
         };
       }
@@ -1092,10 +1141,12 @@
         }
         emptyCompileRef.onclick = () => {
           if (selectedReferenceId) {
-            currentCompiledEvidence = adapter.compileEvidenceFromReference(retrievalState, selectedReferenceId);
-            if (currentCompiledEvidence) addToTimeline(currentCompiledEvidence);
-            addTrailEvent("compile_ref", `Compiled evidence from "${selectedReferenceId}" via empty state`, { referenceId: selectedReferenceId });
-            renderEvidence(currentCompiledEvidence);
+            setButtonBusy(emptyCompileRef, "Compiling...", () => {
+              currentCompiledEvidence = adapter.compileEvidenceFromReference(retrievalState, selectedReferenceId);
+              if (currentCompiledEvidence) addToTimeline(currentCompiledEvidence);
+              addTrailEvent("compile_ref", `Compiled evidence from "${selectedReferenceId}" via empty state`, { referenceId: selectedReferenceId });
+              renderEvidence(currentCompiledEvidence);
+            });
           }
         };
       }
@@ -1259,6 +1310,8 @@
 
       </div>
     `;
+
+    runTransientClass(container, "is-updated", 200);
 
     // Bind supporting reference actions
     container.querySelectorAll("button[data-action='open-supporting']").forEach(btn => {
@@ -2725,22 +2778,24 @@
             if (searchInput) searchInput.focus();
             return;
           }
-          if (window.NV_DEBUG) console.log(`Compiling evidence from query: ${query}`);
-          currentCompiledEvidence = adapter.compileEvidenceFromQuery(retrievalState, query);
-          if (currentCompiledEvidence) {
-            addToTimeline(currentCompiledEvidence);
-          }
-          // Context invalidation: clear active selection derived states
-          selectedReferenceId = null;
-          selectedRelationship = null;
-          syncSelectionHighlighting();
-          renderReferenceInspector();
-          renderRelationshipInspector();
+          setButtonBusy(compileQueryBtn, "Compiling...", () => {
+            if (window.NV_DEBUG) console.log(`Compiling evidence from query: ${query}`);
+            currentCompiledEvidence = adapter.compileEvidenceFromQuery(retrievalState, query);
+            if (currentCompiledEvidence) {
+              addToTimeline(currentCompiledEvidence);
+            }
+            // Context invalidation: clear active selection derived states
+            selectedReferenceId = null;
+            selectedRelationship = null;
+            syncSelectionHighlighting();
+            renderReferenceInspector();
+            renderRelationshipInspector();
 
-          addTrailEvent("compile_query", `Compiled evidence from query "${query}"`, { query });
-          switchInspectorTab("evidence");
-          renderEvidence(currentCompiledEvidence);
-          saveWorkspaceState();
+            addTrailEvent("compile_query", `Compiled evidence from query "${query}"`, { query });
+            switchInspectorTab("evidence");
+            renderEvidence(currentCompiledEvidence);
+            saveWorkspaceState();
+          });
         };
       }
 

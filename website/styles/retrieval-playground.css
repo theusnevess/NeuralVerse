@@ -1492,12 +1492,126 @@ body.nv-focus-mode .nv-main-workspace {
   .nv-transition-all {
     transition: all 200ms ease-in-out;
   }
+
+  /* Inspector panels cross-fade/slide update transition */
+  .is-updated {
+    animation: inspector-fade-slide 200ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  /* One-time scale focus transition for selected nodes */
+  .graph-node.selected .graph-node-core {
+    animation: graph-node-select-pulse 220ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  /* Graph depth entry/exit transitions */
+  .graph-node {
+    transition: opacity 200ms ease, transform 200ms ease;
+  }
+  .graph-link {
+    transition: stroke-opacity 200ms ease, stroke-width 200ms ease, stroke 200ms ease;
+  }
 }
+
 @keyframes nvFadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
 }
+
 @keyframes nvSlideUp {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes inspector-fade-slide {
+  from {
+    opacity: 0.65;
+    transform: translateY(3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes graph-node-select-pulse {
+  0% {
+    r: 5.5;
+  }
+  50% {
+    r: 12;
+  }
+  100% {
+    r: 9;
+  }
+}
+
+/* Reduced Motion Override */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-delay: 0s !important;
+    animation-duration: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0s !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Focus Mode transition reductions */
+body.nv-focus-mode * {
+  transition-duration: 0.05s !important;
+  animation-duration: 0.05s !important;
+}
+
+/* Discovery Cards microinteractions */
+.nv-discovery-card {
+  transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 150ms cubic-bezier(0.4, 0, 0.2, 1), border-color 150ms ease, background-color 150ms ease;
+}
+
+.nv-discovery-card:focus-visible {
+  outline: 2px solid var(--sys-color-accent-primary);
+  outline-offset: 2px;
+}
+
+.nv-discovery-card.active,
+.nv-discovery-card.selected {
+  border-color: var(--sys-color-accent-primary) !important;
+  background-color: color-mix(in srgb, var(--sys-color-accent-primary) 12%, var(--sys-color-surface-container-low)) !important;
+  box-shadow: 0 0 10px rgba(106, 0, 255, 0.15);
+}
+
+/* Button Busy/Loading Feedback */
+.nv-button.is-loading {
+  position: relative;
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+.is-loading-spinner {
+  display: inline-block;
+  width: 0.65rem;
+  height: 0.65rem;
+  border: 1.5px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: button-spin 0.6s linear infinite;
+  margin-right: 4px;
+  vertical-align: middle;
+}
+
+@keyframes button-spin {
+  to { transform: rotate(360deg); }
+}
+
+.nv-button.is-success {
+  background-color: var(--sys-color-success) !important;
+  color: var(--sys-color-surface-container-high) !important;
+  border-color: var(--sys-color-success) !important;
+  pointer-events: none;
+  transition: background-color 150ms ease, border-color 150ms ease;
+}
+
+.is-loading-check {
+  display: inline-block;
+  margin-right: 4px;
+  font-weight: bold;
 }
