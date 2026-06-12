@@ -3,10 +3,22 @@
 /* Main Workspace Grid Layout */
 .workspace-layout {
   display: grid;
-  grid-template-columns: 1fr 340px;
-  gap: var(--sys-space-layout-gap);
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 360px);
+  gap: 14px;
   margin-top: var(--sys-space-stack-sm);
-  align-items: start;
+  align-items: stretch; /* Stretch columns to match the taller column */
+  min-height: max(520px, calc(100vh - 260px));
+  margin-bottom: var(--sys-space-layout-gap);
+}
+
+.retrieval-header {
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.retrieval-header-actions {
+  align-items: center;
 }
 
 .exploration-space {
@@ -16,14 +28,21 @@
   min-width: 0; /* Prevents flex items from breaking layout overflow */
 }
 
+/* Wrapper Column for Sticky Sidebar */
+.inspector-column {
+  position: relative;
+  height: 100%;
+}
+
 .inspector-space {
   background-color: var(--sys-color-surface-container-low);
   border: var(--sys-border-subtle) solid var(--sys-color-border-subtle);
   border-radius: var(--ref-radius-soft);
-  position: sticky;
-  top: 80px;
-  height: calc(100vh - 220px);
-  min-height: 500px;
+  position: sticky !important; /* Force sticky position despite class overrides */
+  top: 76px;
+  height: calc(100vh - 230px);
+  max-height: 100%; /* Constrains height to the parent grid height, preventing footer overflow */
+  min-height: 320px; /* Reduced min-height for responsiveness */
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -35,7 +54,6 @@
   padding-top: var(--sys-space-stack-md);
 }
 
-/* Tabs Navigation Styling */
 .workspace-tabs, .inspector-tabs {
   display: flex;
   background-color: var(--sys-color-surface-container-lowest);
@@ -43,6 +61,37 @@
   border-radius: var(--ref-radius-soft);
   padding: 2px;
   gap: 2px;
+  flex-shrink: 0;
+}
+
+.search-console {
+  border-color: var(--sys-color-accent-primary);
+}
+
+.search-row {
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) auto auto auto;
+  gap: var(--sys-space-inline-sm);
+  align-items: center;
+}
+
+.search-input {
+  min-width: 0;
+  min-height: 44px;
+  font-size: var(--sys-font-body-size);
+}
+
+.search-feedback {
+  font-size: var(--sys-font-caption-size);
+  min-height: 1.2em;
+}
+
+.results-panel {
+  padding: var(--sys-space-inset-sm);
+}
+
+.inspector-tabs {
+  margin: var(--sys-space-stack-xs) var(--sys-space-inline-xs) var(--sys-space-stack-xs) var(--sys-space-inline-xs);
 }
 
 .workspace-tab, .inspector-tab {
@@ -131,29 +180,35 @@
 
 .graph-link {
   stroke: var(--sys-color-border-subtle);
-  stroke-opacity: 0.35;
+  stroke-opacity: 0.48;
   stroke-width: 1.5px;
-  transition: all 300ms ease;
+  transition: stroke 160ms ease, stroke-opacity 160ms ease, stroke-width 160ms ease;
 }
 
 .graph-link.outbound {
-  stroke: #ff0055 !important;
+  stroke: var(--sys-color-accent-primary) !important;
   stroke-opacity: 1 !important;
   stroke-width: 2.5px !important;
-  stroke-dasharray: 6, 4;
-  animation: flowLinkOut 0.8s linear infinite;
 }
 
 .graph-link.inbound {
-  stroke: #39ff14 !important;
+  stroke: var(--sys-color-status-success) !important;
   stroke-opacity: 1 !important;
   stroke-width: 2.5px !important;
-  stroke-dasharray: 6, 4;
-  animation: flowLinkIn 0.8s linear infinite;
 }
 
 .graph-link.faded {
   stroke-opacity: 0.04;
+}
+
+.graph-link.dimmed {
+  stroke-opacity: 0.08;
+}
+
+.graph-link.highlight {
+  stroke: var(--sys-color-accent-primary) !important;
+  stroke-opacity: 1;
+  stroke-width: 3px;
 }
 
 .graph-node {
@@ -165,62 +220,58 @@
   stroke: var(--sys-color-border-subtle);
   stroke-width: 2px;
   r: 10;
-  transition: all 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: r 160ms ease, fill 160ms ease, stroke 160ms ease;
 }
 
 .graph-node text {
   fill: var(--sys-color-text-secondary);
   font-family: var(--sys-font-code-family);
-  font-size: 0.65rem;
+  font-size: 0.6rem;
   pointer-events: none;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9), 0 0 3px rgba(0, 0, 0, 0.9);
   transition: all 300ms ease;
 }
 
 .graph-node:hover circle {
-  r: 14;
   stroke: var(--sys-color-accent-primary);
   fill: var(--sys-color-surface-overlay);
   filter: drop-shadow(0 0 6px var(--sys-color-accent-primary));
 }
 
 .graph-node.selected circle {
-  r: 16;
-  fill: #00f0ff !important;
+  fill: var(--sys-color-accent-primary) !important;
   stroke: #ffffff !important;
   stroke-width: 3px !important;
-  filter: drop-shadow(0 0 10px rgba(0, 240, 255, 0.85));
+  filter: drop-shadow(0 0 8px rgba(138, 180, 248, 0.65));
 }
 
 .graph-node.selected text {
-  fill: #00f0ff !important;
+  fill: var(--sys-color-accent-primary) !important;
   font-weight: var(--ref-font-weight-bold);
   font-size: 0.75rem;
 }
 
 .graph-node.outbound circle {
-  r: 13;
-  fill: #ff0055 !important;
+  fill: var(--sys-color-accent-primary) !important;
   stroke: #ffffff !important;
   stroke-width: 2.5px !important;
-  filter: drop-shadow(0 0 8px rgba(255, 0, 85, 0.75));
+  filter: drop-shadow(0 0 6px rgba(138, 180, 248, 0.55));
 }
 
 .graph-node.outbound text {
-  fill: #ff0055 !important;
+  fill: var(--sys-color-accent-primary) !important;
   font-weight: var(--ref-font-weight-semibold);
 }
 
 .graph-node.inbound circle {
-  r: 13;
-  fill: #39ff14 !important;
+  fill: var(--sys-color-status-success) !important;
   stroke: #ffffff !important;
   stroke-width: 2.5px !important;
-  filter: drop-shadow(0 0 8px rgba(57, 255, 20, 0.75));
+  filter: drop-shadow(0 0 6px rgba(76, 175, 80, 0.55));
 }
 
 .graph-node.inbound text {
-  fill: #39ff14 !important;
+  fill: var(--sys-color-status-success) !important;
   font-weight: var(--ref-font-weight-semibold);
 }
 
@@ -253,21 +304,88 @@
 .playground-results-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--sys-space-stack-sm);
+  gap: 8px;
+}
+
+.result-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: var(--sys-space-inline-sm);
+  align-items: center;
+}
+
+.result-rank {
+  inline-size: 2rem;
+  block-size: 2rem;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--sys-color-surface-container-high);
+  color: var(--sys-color-text-secondary);
+  font-family: var(--sys-font-code-family);
+  font-size: 0.72rem;
+  flex: 0 0 auto;
+}
+
+.result-title {
+  margin: 0;
+  font-size: var(--sys-font-body-size);
+  color: var(--sys-color-text-primary);
+  font-weight: var(--ref-font-weight-semibold);
+  overflow-wrap: anywhere;
+}
+
+.result-meta,
+.reference-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  color: var(--sys-color-text-secondary);
+  font-size: var(--sys-font-caption-size);
+}
+
+.inspector-summary,
+.evidence-summary {
+  line-height: 1.45;
+  margin: 0;
+  color: var(--sys-color-text-primary);
+  font-size: var(--sys-font-caption-size);
+}
+
+.inspector-actions {
+  position: sticky;
+  bottom: 0;
+  z-index: 3;
+  padding-top: var(--sys-space-stack-sm);
+  background: linear-gradient(180deg, transparent, var(--sys-color-surface-container-lowest) 18%);
+}
+
+.compact-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.compact-action-card {
+  width: 100%;
+  text-align: left;
+  justify-content: flex-start;
 }
 
 /* Research Memory Lists */
 .memory-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: var(--sys-space-layout-gap);
+  gap: 10px;
 }
 
 .memory-column {
   background-color: var(--sys-color-surface-container-lowest);
   border: var(--sys-border-subtle) solid var(--sys-color-border-subtle);
   border-radius: var(--ref-radius-soft);
-  padding: var(--sys-space-inset-md);
+  padding: var(--sys-space-inset-sm);
   display: flex;
   flex-direction: column;
   gap: var(--sys-space-stack-xs);
@@ -305,6 +423,30 @@
   color: var(--sys-color-text-primary);
   cursor: pointer;
   transition: all 100ms ease;
+}
+
+.memory-item,
+.trail-event,
+.nv-discovery-card,
+.continuation-chip,
+.neighborhood-item-card {
+  outline: none;
+}
+
+.workspace-tab:focus-visible,
+.inspector-tab:focus-visible,
+.nv-card:focus-visible,
+.memory-item:focus-visible,
+.trail-event:focus-visible,
+.nv-discovery-card:focus-visible,
+.continuation-chip:focus-visible,
+.neighborhood-item-card:focus-visible,
+.graph-node:focus-visible,
+.graph-link:focus-visible,
+.nv-button:focus-visible,
+.nv-input:focus-visible {
+  outline: 2px solid var(--sys-color-accent-primary);
+  outline-offset: 2px;
 }
 
 .memory-item:hover {
@@ -425,6 +567,18 @@
   background-color: rgba(158, 158, 158, 0.15);
   color: #9e9e9e;
   border: 1px solid rgba(158, 158, 158, 0.3);
+}
+
+.nv-badge[data-variant="primary"] {
+  background-color: rgba(33, 150, 243, 0.18);
+  color: #8ab4f8;
+  border: 1px solid rgba(138, 180, 248, 0.35);
+}
+
+.nv-badge[data-variant="error"] {
+  background-color: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.35);
 }
 
 /* Pipeline styles */
@@ -557,17 +711,55 @@
     min-height: unset;
   }
   .memory-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 @media (max-width: 768px) {
+  .retrieval-header,
+  .retrieval-header-actions {
+    align-items: stretch;
+  }
+  .retrieval-header {
+    flex-direction: column;
+  }
+  .search-row {
+    grid-template-columns: 1fr;
+  }
+  .workspace-tabs,
+  .inspector-tabs {
+    overflow-x: auto;
+  }
+  .result-card {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+  .result-card .search-card-compile-btn {
+    grid-column: 2;
+    justify-self: start;
+  }
+  .memory-grid {
+    grid-template-columns: 1fr;
+  }
+  .graph-container {
+    height: 380px;
+  }
   .retrieval-pipeline {
     flex-direction: column;
     gap: var(--sys-space-stack-md);
   }
   .pipeline-arrow {
     transform: rotate(90deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
   }
 }
 
@@ -719,4 +911,264 @@
   color: #ff9800;
   line-height: var(--ref-font-line-height-relaxed);
   margin: 0 0 8px 0;
+}
+
+/* Stage 6 Workspace Personalization Styles */
+
+/* 1. Research Memory Collapse */
+.memory-layer.collapsed .memory-grid {
+  display: none !important;
+}
+
+/* 2. Research Focus Mode */
+body.nv-focus-mode .nv-global-header,
+body.nv-focus-mode .nv-navigation-rail {
+  display: none !important;
+}
+
+body.nv-focus-mode .memory-layer {
+  display: none !important;
+}
+
+body.nv-focus-mode .nv-main-workspace {
+  margin: 0 !important;
+  padding: var(--sys-space-stack-sm) !important;
+}
+
+/* 3. Layout Density Styles */
+.density-compact {
+  --sys-space-stack-sm: 4px;
+  --sys-space-stack-md: 8px;
+  --sys-space-layout-gap: 8px;
+}
+
+.density-compact .nv-panel {
+  padding: var(--sys-space-stack-xs) var(--sys-space-inline-sm) !important;
+}
+
+.density-compact .nv-card {
+  padding: 4px 8px !important;
+  margin-bottom: 2px !important;
+}
+
+.density-compact .workspace-tab,
+.density-compact .inspector-tab {
+  padding: 2px 4px !important;
+  font-size: 0.65rem !important;
+}
+
+.density-compact .inspector-panel {
+  padding: 6px !important;
+}
+
+.density-compact .compare-table th,
+.density-compact .compare-table td {
+  padding: 4px 6px !important;
+  font-size: 0.65rem !important;
+}
+
+.density-compact .graph-container {
+  height: 380px !important;
+}
+
+/* ============================================================
+   STAGE 7: Visual Research Experience (NV-500-UX-007)
+   ============================================================ */
+
+/* --- PHASE 1 & 2: Scientific Visual Language --- */
+.nv-topology-bg {
+  background-image: none;
+}
+
+.nv-scientific-panel {
+  background-color: var(--sys-color-surface-container-lowest);
+  border: 1px solid var(--sys-color-border-subtle);
+  border-radius: var(--ref-radius-soft);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.nv-scientific-panel::before {
+  content: none;
+}
+
+.nv-network-separator {
+  position: relative;
+  text-align: center;
+  margin: var(--sys-space-stack-md) 0;
+}
+.nv-network-separator::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--sys-color-border-subtle);
+  z-index: 1;
+}
+.nv-network-separator-icon {
+  position: relative;
+  z-index: 2;
+  background-color: var(--sys-color-surface-container-lowest);
+  padding: 0 8px;
+  color: var(--sys-color-text-muted);
+  font-size: 0.65rem;
+}
+
+/* --- PHASE 3: Rich Empty States --- */
+.nv-rich-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--sys-space-inset-xl);
+  height: 100%;
+  min-height: 300px;
+}
+.nv-rich-empty-illustration {
+  font-size: 3rem;
+  margin-bottom: var(--sys-space-stack-sm);
+  opacity: 0.8;
+}
+.nv-rich-empty-title {
+  color: var(--sys-color-text-primary);
+  font-weight: var(--ref-font-weight-medium);
+  margin-bottom: var(--sys-space-stack-xs);
+}
+.nv-rich-empty-desc {
+  color: var(--sys-color-text-secondary);
+  font-size: var(--sys-font-caption-size);
+  max-width: 300px;
+  margin-bottom: var(--sys-space-stack-md);
+}
+
+/* --- PHASE 4: Microvisualizations --- */
+.nv-micro-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.6rem;
+  padding: 2px 6px;
+  border-radius: 12px;
+  background: var(--sys-color-surface-container-high);
+  color: var(--sys-color-text-secondary);
+  font-family: var(--sys-font-code-family);
+  border: 1px solid var(--sys-color-border-subtle);
+}
+.nv-micro-bar-container {
+  width: 40px;
+  height: 4px;
+  background: var(--sys-color-surface-container-high);
+  border-radius: 2px;
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: middle;
+}
+.nv-micro-bar-fill {
+  height: 100%;
+  background: var(--sys-color-accent-primary);
+  border-radius: 2px;
+}
+.nv-micro-bar-fill.high { background: var(--sys-color-status-success); }
+.nv-micro-bar-fill.medium { background: var(--sys-color-status-warning); }
+.nv-micro-bar-fill.low { background: var(--sys-color-status-error); }
+
+/* --- PHASE 5: Graph Enhancements --- */
+.node.dimmed circle { opacity: 0.2; }
+.node.dimmed text { opacity: 0.1; }
+.link.dimmed line { opacity: 0.1; stroke: var(--sys-color-border-subtle) !important; }
+.node.neighbor circle { stroke: var(--sys-color-accent-primary); stroke-width: 2px; filter: drop-shadow(0 0 6px rgba(138, 180, 248, 0.4)); }
+.link.highlight line { stroke: var(--sys-color-accent-primary) !important; stroke-width: 2px; stroke-opacity: 0.8; }
+.node text {
+  font-family: var(--sys-font-body-family);
+  font-size: 10px;
+  fill: var(--sys-color-text-primary);
+  pointer-events: none;
+  text-shadow: 0px 1px 3px rgba(0,0,0,0.8);
+}
+
+/* --- PHASE 6: Evidence Visualization --- */
+.nv-lineage-node {
+  position: relative;
+  padding-left: 16px;
+  margin-bottom: 8px;
+}
+.nv-lineage-node::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 10px;
+  width: 10px;
+  height: 1px;
+  background: var(--sys-color-border-subtle);
+}
+.nv-lineage-node::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: -10px;
+  width: 1px;
+  height: 20px;
+  background: var(--sys-color-border-subtle);
+}
+.nv-lineage-node:first-child::after { display: none; }
+
+.nv-provenance-summary {
+  background: rgba(138, 180, 248, 0.05);
+  border-left: 3px solid var(--sys-color-accent-primary);
+  padding: var(--sys-space-inset-sm);
+  font-size: var(--sys-font-caption-size);
+  color: var(--sys-color-text-secondary);
+}
+
+/* --- PHASE 7: Discovery Experience --- */
+.nv-discovery-strip {
+  display: flex;
+  gap: var(--sys-space-inline-md);
+  overflow-x: auto;
+  padding-bottom: var(--sys-space-stack-sm);
+  scrollbar-width: thin;
+}
+.nv-discovery-card {
+  width: 100%;
+  text-align: left;
+  background: var(--sys-color-surface-container-low);
+  border: 1px solid var(--sys-color-border-subtle);
+  border-radius: var(--ref-radius-soft);
+  padding: var(--sys-space-inset-sm);
+  color: inherit;
+  transition: transform 150ms ease, box-shadow 150ms ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.nv-discovery-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  border-color: var(--sys-color-accent-primary);
+}
+
+/* --- PHASE 8: Motion System --- */
+@media (prefers-reduced-motion: no-preference) {
+  .nv-animate-fade {
+    animation: nvFadeIn 200ms ease-out forwards;
+  }
+  .nv-animate-slide-up {
+    animation: nvSlideUp 250ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  }
+  .nv-transition-all {
+    transition: all 200ms ease-in-out;
+  }
+}
+@keyframes nvFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes nvSlideUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }

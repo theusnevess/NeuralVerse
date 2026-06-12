@@ -478,13 +478,26 @@ export function createLearningController(options = {}) {
     };
   }
 
+  window.addEventListener('nv:routerendered', (e) => {
+    const routeId = e.detail?.routeId;
+    if (routeId === 'learning' || routeId === 'modules') {
+      init().catch(err => console.error("Dynamic learning init failed", err));
+    }
+  });
+
   if (navigationState) {
     navigationState.subscribe((navState) => {
       const route = navState.currentRoute;
       if (route && (route.id === 'learning' || route.id === 'modules')) {
-        setTimeout(() => {
+        if (root.querySelector("[data-learning-path-list]") || root.querySelector("[data-module-list]")) {
           init().catch(err => console.error("Dynamic learning init failed", err));
-        }, 50);
+        } else {
+          setTimeout(() => {
+            if (root.querySelector("[data-learning-path-list]") || root.querySelector("[data-module-list]")) {
+              init().catch(err => console.error("Dynamic learning init failed", err));
+            }
+          }, 50);
+        }
       }
     });
   }

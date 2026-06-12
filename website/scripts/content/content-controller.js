@@ -1,9 +1,9 @@
-import { createContentService } from "./content-service.js";
+import { createContentService } from "./content-service.js?v=4";
 import {
   renderContentViewer,
   renderContentEmptyState,
   renderContentLoadingState,
-} from "./content-viewer.js";
+} from "./content-viewer.js?v=4";
 
 function getContentIdFromHash(hashValue = window.location.hash) {
   const cleanHash = String(hashValue || "").replace(/^#\/?/, "");
@@ -96,7 +96,7 @@ export function createContentController(options = {}) {
     });
 
     // Handle initial navigation if the page is loaded directly with a content hash
-    const currentRoute = window.navigationState?.getState()?.currentRoute;
+    const currentRoute = window.navigationState?.state?.currentRoute || window.navigationState?.getCurrentRoute?.();
     if (currentRoute && currentRoute.id === 'content') {
       setTimeout(() => {
         renderFromRoute(window.location.hash);

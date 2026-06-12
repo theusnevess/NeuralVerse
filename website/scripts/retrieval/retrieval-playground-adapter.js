@@ -600,9 +600,11 @@
   }
 
   function filterRelationships(relationships, filterType) {
+    if (!relationships) return [];
     if (!filterType || filterType === "all") return relationships;
     const type = filterType.toLowerCase();
     return relationships.filter(rel => {
+      if (!rel || !rel.type) return false;
       const relType = rel.type.toLowerCase();
       if (type === "cites") return relType === "cites";
       if (type === "supports") return relType === "supports" || relType === "uses";

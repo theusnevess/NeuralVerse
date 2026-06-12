@@ -31,6 +31,47 @@
   let activeInspectorTab = "reference";
   let evidenceTimeline = [];
 
+  function escapeHtml(value) {
+    return String(value ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  function getReferenceLabel(refOrId) {
+    const ref = typeof refOrId === "string" ? adapter.getReferenceById(retrievalState, refOrId) : refOrId;
+    if (!ref) return escapeHtml(refOrId || "");
+    return escapeHtml(ref.title.replace(/\s*\([^)]*\)\s*$/, ""));
+  }
+
+  function bindKeyboardActivation(element, handler) {
+    if (!element || !handler) return;
+    element.onkeydown = (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        handler(e);
+      }
+    };
+  }
+
+  // Stage 6 - Workspace Personalization State
+  let focusModeEnabled = false;
+  let memoryPanelCollapsed = false;
+  let resumeBannerDismissed = false;
+  let pinnedQuickActions = ["compile_evidence", "open_graph", "run_saved_query", "focus_mode", "toggle_density"];
+  let preferences = {
+    defaultExplorationMode: "search",
+    defaultInspectorTab: "reference",
+    autoOpenInspector: true,
+    preferredRelationshipFilter: "all",
+    density: "comfortable",
+    inspectorWidth: "340px"
+  };
+  let lastActiveTimestamp = 0;
+
+
   // Load state from localStorage
   function loadWorkspaceState() {
     try {
@@ -51,9 +92,36 @@
         neighborhoodDepth = state.neighborhoodDepth || "full";
         evidenceTimeline = state.evidenceTimeline || [];
 
-        showSessionRestoredIndicator();
+        // Stage 6 State
+        focusModeEnabled = state.focusModeEnabled || false;
+        memoryPanelCollapsed = state.memoryPanelCollapsed || false;
+        resumeBannerDismissed = state.resumeBannerDismissed || false;
+        pinnedQuickActions = state.pinnedQuickActions || ["compile_evidence", "open_graph", "run_saved_query", "focus_mode", "toggle_density"];
+        preferences = state.preferences || {
+          defaultExplorationMode: "search",
+          defaultInspectorTab: "reference",
+          autoOpenInspector: true,
+          preferredRelationshipFilter: "all",
+          density: "comfortable",
+          inspectorWidth: "340px"
+        };
+        lastActiveTimestamp = state.lastActiveTimestamp || 0;
+
+        // Apply visual preferences
+        applyFocusModeStyles();
+        applyMemoryCollapseStyles();
+        applyDensityStyles();
+        applyInspectorWidthStyles();
+
+        if (lastActiveTimestamp > 0 && resumeBannerDismissed) {
+          showSessionRestoredIndicator();
+        }
       } else {
         resetStateToDefaults();
+        applyFocusModeStyles();
+        applyMemoryCollapseStyles();
+        applyDensityStyles();
+        applyInspectorWidthStyles();
       }
     } catch (e) {
       console.warn("Failed to load workspace state from localStorage", e);
@@ -75,11 +143,32 @@
     relationshipFilter = "all";
     neighborhoodDepth = "full";
     evidenceTimeline = [];
+
+    // Stage 6
+    focusModeEnabled = false;
+    memoryPanelCollapsed = false;
+    resumeBannerDismissed = false;
+    pinnedQuickActions = ["compile_evidence", "open_graph", "run_saved_query", "focus_mode", "toggle_density"];
+    preferences = {
+      defaultExplorationMode: "search",
+      defaultInspectorTab: "reference",
+      autoOpenInspector: true,
+      preferredRelationshipFilter: "all",
+      density: "comfortable",
+      inspectorWidth: "340px"
+    };
+    lastActiveTimestamp = 0;
+
+    applyFocusModeStyles();
+    applyMemoryCollapseStyles();
+    applyDensityStyles();
+    applyInspectorWidthStyles();
   }
 
   // Save state to localStorage
   function saveWorkspaceState() {
     try {
+      lastActiveTimestamp = Date.now();
       const state = {
         pinnedReferences,
         recentReferences,
@@ -93,13 +182,21 @@
         selectedRelationship,
         relationshipFilter,
         neighborhoodDepth,
-        evidenceTimeline
+        evidenceTimeline,
+        // Stage 6
+        focusModeEnabled,
+        memoryPanelCollapsed,
+        resumeBannerDismissed,
+        pinnedQuickActions,
+        preferences,
+        lastActiveTimestamp
       };
       localStorage.setItem("neuralverse.retrievalWorkspace.v1", JSON.stringify(state));
     } catch (e) {
       console.warn("Failed to save workspace state to localStorage", e);
     }
   }
+
 
   // Helper: Show session restored status indicator
   function showSessionRestoredIndicator() {
@@ -110,6 +207,297 @@
         indicator.style.opacity = "0";
       }, 2500);
     }
+  }
+
+  // Stage 6 Visual layout helper functions
+  function applyFocusModeStyles() {
+    const body = document.body;
+    const focusBtn = document.getElementById("playground-focus-button");
+    if (focusModeEnabled) {
+      body.classList.add("nv-focus-mode");
+      if (focusBtn) {
+        focusBtn.textContent = "Exit Focus";
+        focusBtn.setAttribute("data-variant", "primary");
+      }
+    } else {
+      body.classList.remove("nv-focus-mode");
+      if (focusBtn) {
+        focusBtn.textContent = "Focus Mode";
+        focusBtn.setAttribute("data-variant", "secondary");
+      }
+    }
+  }
+
+  function applyMemoryCollapseStyles() {
+    const memorySection = document.getElementById("memory-layer-section");
+    const collapseBtn = document.getElementById("memory-toggle-collapse-button");
+    if (memorySection) {
+      if (memoryPanelCollapsed) {
+        memorySection.classList.add("collapsed");
+        if (collapseBtn) collapseBtn.textContent = "Expand Layer";
+      } else {
+        memorySection.classList.remove("collapsed");
+        if (collapseBtn) collapseBtn.textContent = "Collapse Layer";
+      }
+    }
+  }
+
+  function applyDensityStyles() {
+    const mainWorkspace = document.querySelector(".nv-main-workspace");
+    const densitySelect = document.getElementById("pref-density");
+    if (mainWorkspace) {
+      if (preferences.density === "compact") {
+        mainWorkspace.classList.add("density-compact");
+      } else {
+        mainWorkspace.classList.remove("density-compact");
+      }
+    }
+    if (densitySelect) {
+      densitySelect.value = preferences.density;
+    }
+  }
+
+  function applyInspectorWidthStyles() {
+    const inspectorSpace = document.querySelector(".inspector-space");
+    const workspaceLayout = document.querySelector(".workspace-layout");
+    const widthSelect = document.getElementById("pref-inspector-width");
+    if (inspectorSpace && workspaceLayout) {
+      inspectorSpace.style.width = preferences.inspectorWidth;
+      workspaceLayout.style.gridTemplateColumns = `1fr ${preferences.inspectorWidth}`;
+    }
+    if (widthSelect) {
+      widthSelect.value = preferences.inspectorWidth;
+    }
+  }
+
+  // Resume Banner Rendering
+  function renderResumeBanner() {
+    const container = document.getElementById("resume-banner-container");
+    if (!container) return;
+
+    const hasData = (recentReferences.length > 0 || pinnedReferences.length > 0 || currentSearchQuery || evidenceTimeline.length > 0);
+    if (lastActiveTimestamp > 0 && !resumeBannerDismissed && hasData) {
+      const lastDate = new Date(lastActiveTimestamp).toLocaleString();
+      container.innerHTML = `
+        <div class="nv-panel nv-cluster nv-cluster--gap-md" style="background-color: var(--sys-color-surface-container-high); border: 1px solid var(--sys-color-accent-primary); padding: var(--sys-space-stack-sm) var(--sys-space-inline-md); justify-content: space-between; align-items: center; border-radius: var(--ref-radius-soft); margin-bottom: var(--sys-space-stack-sm);" role="status" aria-live="polite">
+          <div class="nv-stack nv-stack--gap-xs" style="flex: 1;">
+            <strong style="color: var(--sys-color-accent-primary); font-size: 0.75rem;">Previous research session</strong>
+            <span style="font-size: 0.65rem; color: var(--sys-color-text-secondary);">
+              Last active ${lastDate}${currentSearchQuery ? ` · query "${escapeHtml(currentSearchQuery)}"` : ""}${selectedReferenceId ? ` · ${getReferenceLabel(selectedReferenceId)}` : ""}
+            </span>
+          </div>
+          <div class="nv-cluster nv-cluster--gap-sm">
+            <button id="resume-banner-action-restore" class="nv-button" data-variant="primary" style="font-size: 0.7rem; padding: 4px 12px; min-block-size: unset;">Resume</button>
+            <button id="resume-banner-action-dismiss" class="nv-button" data-variant="secondary" style="font-size: 0.7rem; padding: 4px 12px; min-block-size: unset;">Dismiss</button>
+          </div>
+        </div>
+      `;
+
+      document.getElementById("resume-banner-action-restore").onclick = () => {
+        resumeBannerDismissed = true;
+        saveWorkspaceState();
+        container.innerHTML = "";
+        showSessionRestoredIndicator();
+        initPlayground();
+      };
+
+      document.getElementById("resume-banner-action-dismiss").onclick = () => {
+        resumeBannerDismissed = true;
+        saveWorkspaceState();
+        container.innerHTML = "";
+      };
+
+    } else {
+      container.innerHTML = "";
+    }
+  }
+
+  // Live Research Snapshot
+  function renderResearchSnapshot() {}
+
+  // Smart Empty State
+  function renderSmartEmptyWorkspace() {
+    const resultsContainer = document.getElementById("search-results-container");
+    if (!resultsContainer) return;
+
+    if (!currentSearchQuery && currentSearchResults.length === 0) {
+      let pinnedSection = "";
+      if (pinnedReferences.length > 0) {
+        pinnedSection = `
+          <div class="nv-stack nv-stack--gap-xs" style="flex: 1; min-width: 200px;">
+            <h4 style="margin: 0; font-size: 0.7rem; color: var(--sys-color-text-secondary);">Pinned</h4>
+            <div class="nv-stack nv-stack--gap-xs">
+              ${pinnedReferences.slice(0, 3).map(id => {
+                const ref = retrievalState.references.find(r => r.id === id);
+                return ref ? `
+                  <button class="nv-card compact-action-card" onclick="window.selectReference('${ref.id}')">
+                    ${escapeHtml(ref.title)}
+                  </button>
+                ` : "";
+              }).join("")}
+            </div>
+          </div>
+        `;
+      }
+
+      let recentQuerySection = "";
+      if (savedQueries.length > 0) {
+        recentQuerySection = `
+          <div class="nv-stack nv-stack--gap-xs" style="flex: 1; min-width: 200px;">
+            <h4 style="margin: 0; font-size: 0.7rem; color: var(--sys-color-text-secondary);">Saved Queries</h4>
+            <div class="nv-stack nv-stack--gap-xs">
+              ${savedQueries.slice(0, 3).map(q => `
+                <button class="nv-button" data-variant="secondary" style="text-align: left; padding: 4px 8px; font-size: 0.65rem; width: 100%; min-block-size: unset;" onclick="window.runSearch('${q.replace(/'/g, "\\'")}', true)">
+                  ${escapeHtml(q)}
+                </button>
+              `).join("")}
+            </div>
+          </div>
+        `;
+      }
+
+      let recentRefSection = "";
+      if (recentReferences.length > 0) {
+        recentRefSection = `
+          <div class="nv-stack nv-stack--gap-xs" style="flex: 1; min-width: 200px;">
+            <h4 style="margin: 0; font-size: 0.7rem; color: var(--sys-color-text-secondary);">Recent</h4>
+            <div class="nv-stack nv-stack--gap-xs">
+              ${recentReferences.slice(0, 3).map(id => {
+                const ref = retrievalState.references.find(r => r.id === id);
+                return ref ? `
+                  <button class="nv-card compact-action-card" onclick="window.selectReference('${ref.id}')">
+                    ${escapeHtml(ref.title)}
+                  </button>
+                ` : "";
+              }).join("")}
+            </div>
+          </div>
+        `;
+      }
+
+      resultsContainer.innerHTML = `
+        <div class="nv-panel nv-stack nv-stack--gap-md" style="background-color: var(--sys-color-surface-container-lowest); border: 1px dashed var(--sys-color-border-subtle); padding: var(--sys-space-inset-md); text-align: center; border-radius: var(--ref-radius-soft); width: 100%;">
+          <h3 style="margin: 0; font-size: var(--sys-font-body-size); color: var(--sys-color-text-primary); font-weight: var(--ref-font-weight-semibold);">Start with a search</h3>
+          <p class="nv-muted" style="font-size: var(--sys-font-caption-size); margin: 0 0 var(--sys-space-stack-sm) 0;">
+            Type a concept or reopen a saved research context.
+          </p>
+          <div class="nv-cluster nv-cluster--gap-md" style="justify-content: center; align-items: start; width: 100%; text-align: left; flex-wrap: wrap;">
+            ${pinnedSection || recentQuerySection || recentRefSection ? `
+              ${pinnedSection}
+              ${recentQuerySection}
+              ${recentRefSection}
+            ` : createRichEmptyState({
+                 icon: "",
+                 title: "Search the registry",
+                 explanation: "Use Enter to run a query. Select any result to inspect it immediately.",
+                 primaryAction: {
+                   label: "Focus Search",
+                   onclick: "document.getElementById('playground-search-input').focus()"
+                 }
+               })}
+          </div>
+        </div>
+      `;
+    }
+  }
+
+  function renderQuickActions() {}
+
+  // Progressive Workspace Adaptation Controls
+  function updateProgressiveFeatures() {
+    const evTab = document.getElementById("tab-insp-ev");
+    if (evTab) {
+      if (evidenceTimeline && evidenceTimeline.length > 0) {
+        evTab.style.display = "block";
+      } else {
+        evTab.style.display = "none";
+        if (activeInspectorTab === "evidence") {
+          switchInspectorTab("reference");
+        }
+      }
+    }
+
+    // Always keep Search, Graph, and Discovery modes available
+    const alwaysVisibleTabs = ["tab-search", "tab-graph", "tab-discovery"];
+    alwaysVisibleTabs.forEach(tabId => {
+      const tab = document.getElementById(tabId);
+      if (tab) {
+        tab.style.display = "flex";
+        tab.style.pointerEvents = "auto";
+      }
+    });
+
+    const compareTab = document.getElementById("tab-compare");
+    if (compareTab) {
+      if (pinnedReferences && pinnedReferences.length >= 2) {
+        compareTab.style.display = "flex";
+        compareTab.style.pointerEvents = "auto";
+      } else {
+        compareTab.style.display = "none";
+        compareTab.style.pointerEvents = "none";
+        if (activeExplorationMode === "compare") {
+          switchExplorationMode("search");
+        }
+      }
+    }
+
+    const filterSelect = document.getElementById("graph-filter-select");
+    const depthSelect = document.getElementById("graph-hop-select");
+    const filterLabel = filterSelect ? filterSelect.previousElementSibling : null;
+    const depthLabel = depthSelect ? depthSelect.previousElementSibling : null;
+    const chipsContainer = document.getElementById("graph-filter-chips-container");
+
+    const graphEventsCount = knowledgeTrail.filter(e => e.type === "select_node" || e.type === "explore_neighborhood" || e.type === "change_graph_filter").length;
+
+    if (graphEventsCount >= 3) {
+      if (filterSelect) filterSelect.style.display = "inline-block";
+      if (depthSelect) depthSelect.style.display = "inline-block";
+      if (filterLabel) filterLabel.style.display = "inline";
+      if (depthLabel) depthLabel.style.display = "inline";
+      if (chipsContainer) chipsContainer.style.display = "flex";
+      renderGraphFilterChips();
+    } else {
+      if (filterSelect) filterSelect.style.display = "none";
+      if (depthSelect) depthSelect.style.display = "none";
+      if (filterLabel) filterLabel.style.display = "none";
+      if (depthLabel) depthLabel.style.display = "none";
+      if (chipsContainer) chipsContainer.style.display = "none";
+    }
+  }
+
+  // Render progressive filter chips in the graph container
+  function renderGraphFilterChips() {
+    const container = document.getElementById("graph-filter-chips-container");
+    if (!container) return;
+
+    if (!relationshipFilter || relationshipFilter === "all") {
+      container.innerHTML = `
+        <span class="nv-muted" style="font-size: 0.65rem;">No active filter</span>
+      `;
+      return;
+    }
+
+    container.innerHTML = `
+      <div class="nv-micro-badge" style="gap: 6px; padding: 2px 8px; border-radius: 12px; background: var(--sys-color-surface-container-high); border: 1px solid var(--sys-color-border-subtle); color: var(--sys-color-text-secondary); display: inline-flex; align-items: center; font-size: 0.65rem;">
+        <span>Filter: <strong>${relationshipFilter.toUpperCase()}</strong></span>
+        <button onclick="window.resetGraphFilter && window.resetGraphFilter()" aria-label="Clear filter" style="background: none; border: none; padding: 0; margin-left: 4px; cursor: pointer; color: var(--sys-color-text-muted); font-size: 0.85rem; line-height: 1; display: inline-flex; align-items: center; justify-content: center;">&times;</button>
+      </div>
+    `;
+  }
+
+  // Helper: Create a compact empty state.
+  function createRichEmptyState(config) {
+    return `
+      <div class="nv-rich-empty-state nv-animate-fade">
+        ${config.icon ? `<div class="nv-rich-empty-illustration" aria-hidden="true">${config.icon}</div>` : ""}
+        <h4 class="nv-rich-empty-title">${config.title}</h4>
+        <p class="nv-rich-empty-desc">${config.explanation}</p>
+        <div class="nv-cluster nv-cluster--gap-sm" style="justify-content: center; align-items: center;">
+          ${config.primaryAction ? `<button class="nv-button" data-variant="primary" style="font-size: 0.65rem; padding: 4px 10px; min-block-size: unset;" onclick="${config.primaryAction.onclick}">${config.primaryAction.label}</button>` : ''}
+          ${config.secondaryAction ? `<button class="nv-button" data-variant="secondary" style="font-size: 0.65rem; padding: 4px 10px; min-block-size: unset;" onclick="${config.secondaryAction.onclick}">${config.secondaryAction.label}</button>` : ''}
+        </div>
+      </div>
+    `;
   }
 
   // Helper: Add knowledge trail event log
@@ -127,6 +515,7 @@
       knowledgeTrail.pop();
     }
     saveWorkspaceState();
+    updateWorkspaceState();
   }
 
   // Helper: Restore trail context on click
@@ -166,39 +555,7 @@
   }
 
   // DOM Rendering & Sync: Seeded Reference list (in Search Mode panel)
-  function renderSeededReferences() {
-    const listContainer = document.getElementById("seeded-references-list");
-    if (!listContainer) return;
-
-    listContainer.innerHTML = retrievalState.references.map(ref => {
-      const isSelected = ref.id === selectedReferenceId;
-      const rels = adapter.getRelationshipsForReference(retrievalState, ref.id);
-      const relCount = rels.length;
-      return `
-        <div class="nv-card ${isSelected ? 'nv-card--selected' : ''}"
-             data-ref-id="${ref.id}"
-             tabindex="0"
-             role="listitem"
-             aria-selected="${isSelected ? 'true' : 'false'}"
-             aria-label="Reference ${ref.title}">
-          <div class="nv-cluster nv-cluster--gap-sm" style="justify-content: space-between; align-items: flex-start;">
-            <h4 style="margin: 0; font-size: var(--sys-font-body-size); color: var(--sys-color-text-primary); flex: 1; font-weight: var(--ref-font-weight-medium);">${ref.title}</h4>
-            <div class="nv-cluster nv-cluster--gap-xs" style="flex-shrink: 0; align-items: center;">
-              <span class="nv-badge" data-variant="info" style="font-size: 0.65rem; text-transform: uppercase;">${ref.type}</span>
-              <span class="nv-badge" data-variant="${ref.status === 'active' ? 'success' : 'neutral'}" style="font-size: 0.65rem; text-transform: uppercase;">${ref.status}</span>
-            </div>
-          </div>
-          <div class="nv-divider" aria-hidden="true" style="margin-block: var(--sys-space-stack-xs); opacity: 0.4;"></div>
-          <p class="nv-muted" style="font-size: var(--sys-font-caption-size); margin: 0; pointer-events: none; line-height: 1.5;">
-            <strong>ID:</strong> <span style="font-family: var(--sys-font-code-family);">${ref.id}</span> | <strong>Relations:</strong> ${relCount}<br>
-            <strong>Source:</strong> <span style="font-family: var(--sys-font-code-family); font-size: 0.7rem;">${ref.source}</span>
-          </p>
-        </div>
-      `;
-    }).join("");
-
-    bindSelectionClicks(listContainer);
-  }
+  function renderSeededReferences() {}
 
   // DOM Rendering: Search Results
   function renderSearchResults() {
@@ -206,47 +563,41 @@
     if (!container) return;
 
     if (!currentSearchQuery || currentSearchQuery.trim() === "") {
-      container.innerHTML = `
-        <div class="nv-empty-state">
-          <div class="nv-empty-state-icon" aria-hidden="true">🔍</div>
-          <p class="nv-muted" style="font-size: var(--sys-font-body-size); font-weight: var(--ref-font-weight-medium); color: var(--sys-color-text-primary); margin-bottom: var(--sys-space-stack-xs);">Start by searching a topic</p>
-          <p class="nv-muted" style="font-size: var(--sys-font-caption-size); margin: 0;">Try searching: Transformer, Vision, Detection, NLP...</p>
-        </div>
-      `;
+      renderSmartEmptyWorkspace();
       return;
     }
 
     if (currentSearchResults.length === 0) {
       container.innerHTML = `
         <div class="nv-empty-state">
-          <div class="nv-empty-state-icon" aria-hidden="true">⚠️</div>
-          <p class="nv-muted" style="font-size: var(--sys-font-body-size); font-weight: var(--ref-font-weight-medium); color: var(--sys-color-text-primary); margin-bottom: var(--sys-space-stack-xs);">No related evidence was found</p>
-          <p class="nv-muted" style="font-size: var(--sys-font-caption-size); margin: 0;">Try searching a different keyword or check spelling.</p>
+          <p class="nv-muted" style="font-size: var(--sys-font-body-size); font-weight: var(--ref-font-weight-medium); color: var(--sys-color-text-primary); margin-bottom: var(--sys-space-stack-xs);">No matches for "${escapeHtml(currentSearchQuery)}"</p>
+          <p class="nv-muted" style="font-size: var(--sys-font-caption-size); margin: 0;">Try a broader concept such as transformer, vision, rag, agent, or pytorch.</p>
         </div>
       `;
       return;
     }
 
-    container.innerHTML = currentSearchResults.map(res => {
+    container.innerHTML = currentSearchResults.map((res, index) => {
       const isSelected = res.reference.id === selectedReferenceId;
-      const rels = adapter.getRelationshipsForReference(retrievalState, res.reference.id);
-      const relCount = rels.length;
       return `
-        <div class="nv-card ${isSelected ? 'nv-card--selected' : ''}"
+        <div class="nv-card result-card ${isSelected ? 'nv-card--selected' : ''}"
              data-ref-id="${res.reference.id}"
              tabindex="0"
              role="button"
              aria-selected="${isSelected ? 'true' : 'false'}"
-             aria-label="Result ${res.reference.title}">
-          <div class="nv-cluster nv-cluster--gap-sm" style="justify-content: space-between; align-items: flex-start;">
-            <h4 style="margin: 0; font-size: var(--sys-font-body-size); color: var(--sys-color-text-primary); flex: 1; font-weight: var(--ref-font-weight-medium);">${res.reference.title}</h4>
-            <span class="nv-badge" data-variant="info" style="font-size: 0.65rem; text-transform: uppercase;">Score: ${res.score}</span>
+             aria-label="Result ${index + 1}: ${escapeHtml(res.reference.title)}">
+          <span class="result-rank" aria-hidden="true">${index + 1}</span>
+          <div class="nv-stack nv-stack--gap-xs" style="min-width: 0;">
+            <h4 class="result-title">${escapeHtml(res.reference.title)}</h4>
+            <div class="result-meta">
+              <span class="nv-badge" data-variant="info">${escapeHtml(res.reference.type)}</span>
+              <span>${res.score} match${res.score === 1 ? "" : "es"}</span>
+              <span>${escapeHtml(res.matchedKeywords.slice(0, 3).join(", "))}</span>
+            </div>
           </div>
-          <div class="nv-divider" aria-hidden="true" style="margin-block: var(--sys-space-stack-xs); opacity: 0.4;"></div>
-          <p class="nv-muted" style="font-size: var(--sys-font-caption-size); margin: 0; pointer-events: none; line-height: 1.5;">
-            <strong>ID:</strong> <span style="font-family: var(--sys-font-code-family);">${res.reference.id}</span> | <strong>Relations:</strong> ${relCount}<br>
-            <strong>Matches:</strong> [${res.matchedKeywords.join(", ")}]
-          </p>
+          <button class="nv-button search-card-compile-btn" data-id="${res.reference.id}" data-variant="primary" style="padding: 4px 10px; font-size: 0.7rem; min-block-size: unset;" aria-label="Compile evidence for ${escapeHtml(res.reference.title)}">
+            Compile
+          </button>
         </div>
       `;
     }).join("");
@@ -264,9 +615,8 @@
     if (!selectedReferenceId) {
       container.innerHTML = `
         <div class="nv-empty-state">
-          <div class="nv-empty-state-icon" aria-hidden="true">📌</div>
-          <p class="nv-muted" style="font-size: var(--sys-font-body-size); font-weight: var(--ref-font-weight-medium); color: var(--sys-color-text-primary); margin-bottom: var(--sys-space-stack-xs);">No Reference Selected</p>
-          <p class="nv-muted" style="font-size: var(--sys-font-caption-size); margin: 0;">Select a reference from search results, graph, or list to inspect details.</p>
+          <p class="nv-muted" style="font-size: var(--sys-font-body-size); font-weight: var(--ref-font-weight-medium); color: var(--sys-color-text-primary); margin-bottom: var(--sys-space-stack-xs);">No reference selected</p>
+          <p class="nv-muted" style="font-size: var(--sys-font-caption-size); margin: 0;">Choose a result, graph node, or memory item.</p>
         </div>
       `;
       if (pinBtn) pinBtn.disabled = true;
@@ -280,7 +630,6 @@
     if (!ref) {
       container.innerHTML = `
         <div class="nv-empty-state">
-          <div class="nv-empty-state-icon" aria-hidden="true">⚠️</div>
           <p class="nv-muted">Selected reference details could not be loaded.</p>
         </div>
       `;
@@ -293,35 +642,45 @@
 
     const rels = adapter.getRelationshipsForReference(retrievalState, ref.id);
     const isPinned = pinnedReferences.includes(ref.id);
+    const topKeywords = ref.keywords.slice(0, 4);
+    const sourceLabel = ref.source.startsWith("local://") ? ref.source.replace("local://", "") : new URL(ref.source).hostname;
 
     container.innerHTML = `
-      <div class="nv-card nv-card--selected" style="margin: 0; border: none; background-color: var(--sys-color-surface-container-low) !important; cursor: default;">
-        <h4 style="margin: 0; font-size: var(--sys-font-body-size); color: var(--sys-color-text-primary); font-weight: var(--ref-font-weight-semibold);">${ref.title}</h4>
-        <div class="nv-divider" aria-hidden="true" style="margin-block: var(--sys-space-stack-xs); opacity: 0.4;"></div>
-        <p class="nv-muted" style="font-size: var(--sys-font-caption-size); line-height: 1.6; margin: 0;">
-          <strong>Identifier:</strong> <span style="font-family: var(--sys-font-code-family);">${ref.id}</span><br>
-          <strong>Type:</strong> <span class="nv-badge" data-variant="info">${ref.type}</span><br>
-          <strong>Status:</strong> <span class="nv-badge" data-variant="success">${ref.status}</span><br>
-          <strong>Source Path:</strong> <a href="${ref.source}" target="_blank" style="color: var(--sys-color-accent-primary); text-decoration: none; word-break: break-all;">${ref.source}</a>
+      <div class="nv-stack nv-stack--gap-sm">
+        <div class="nv-stack nv-stack--gap-xs">
+          <h4 style="margin: 0; font-size: var(--sys-font-body-size); color: var(--sys-color-text-primary); font-weight: var(--ref-font-weight-semibold);">${escapeHtml(ref.title)}</h4>
+          <div class="reference-meta">
+            <span class="nv-badge" data-variant="info">${escapeHtml(ref.type)}</span>
+            <span>${rels.length} connection${rels.length === 1 ? "" : "s"}</span>
+            <a href="${ref.source}" target="_blank" rel="noreferrer" style="color: var(--sys-color-accent-primary); text-decoration: none;">${escapeHtml(sourceLabel)}</a>
+          </div>
+        </div>
+        <p class="inspector-summary">
+          ${topKeywords.length ? `Useful for ${escapeHtml(topKeywords.join(", "))}.` : "No keywords available."}
         </p>
-        <div class="nv-divider" aria-hidden="true" style="margin-block: var(--sys-space-stack-xs); opacity: 0.4;"></div>
-        <h5 style="margin: 0 0 4px 0; font-size: 0.65rem;">Keywords</h5>
-        <div class="nv-cluster nv-cluster--gap-xs" style="flex-wrap: wrap;">
-          ${ref.keywords.map(kw => `<span class="nv-badge" data-variant="neutral" style="font-size: 0.6rem;">${kw}</span>`).join("")}
-        </div>
-        <div class="nv-divider" aria-hidden="true" style="margin-block: var(--sys-space-stack-xs); opacity: 0.4;"></div>
-        <h5 style="margin: 0 0 var(--sys-space-stack-xs) 0; font-size: 0.65rem;">Citations (${rels.length})</h5>
-        <div class="nv-stack nv-stack--gap-xs" style="max-height: 150px; overflow-y: auto;">
-          ${rels.length === 0 ? '<p class="nv-muted" style="font-size: var(--sys-font-caption-size); margin: 0;">No direct graph connections.</p>' : rels.map(rel => {
-            const isOutgoing = rel.sourceReferenceId === ref.id;
-            const targetId = isOutgoing ? rel.targetReferenceId : rel.sourceReferenceId;
-            return `
-              <div class="nv-card" style="padding: 4px; font-size: 0.65rem; margin-bottom: 2px;" data-rel-id="${rel.id}">
-                <strong>${isOutgoing ? '➔ Out' : '➔ In'}</strong> | ${rel.type} | <strong>${targetId}</strong>
-              </div>
-            `;
-          }).join("")}
-        </div>
+
+        <details>
+          <summary style="font-size: 0.7rem; font-weight: bold; cursor: pointer; color: var(--sys-color-text-secondary);">Keywords</summary>
+          <div class="nv-cluster nv-cluster--gap-xs" style="flex-wrap: wrap; padding-top: 4px;">
+            ${ref.keywords.map(kw => `<span class="nv-badge" data-variant="neutral" style="font-size: 0.6rem;">${escapeHtml(kw)}</span>`).join("")}
+          </div>
+        </details>
+
+        <details>
+          <summary style="font-size: 0.7rem; font-weight: bold; cursor: pointer; color: var(--sys-color-text-secondary);">Connections</summary>
+          <div class="compact-list" style="max-height: 150px; overflow-y: auto; padding-top: 6px;">
+            ${rels.length === 0 ? '<p class="nv-muted" style="font-size: var(--sys-font-caption-size); margin: 0;">No direct graph connections.</p>' : rels.map(rel => {
+              const isOutgoing = rel.sourceReferenceId === ref.id;
+              const targetId = isOutgoing ? rel.targetReferenceId : rel.sourceReferenceId;
+              const target = adapter.getReferenceById(retrievalState, targetId);
+              return `
+                <button class="nv-card compact-action-card" style="padding: 6px; font-size: 0.65rem;" data-rel-id="${rel.id}">
+                  <strong>${escapeHtml(rel.type)}</strong> ${isOutgoing ? "to" : "from"} ${escapeHtml(target ? target.title : targetId)}
+                </button>
+              `;
+            }).join("")}
+          </div>
+        </details>
       </div>
     `;
 
@@ -338,6 +697,7 @@
           renderRelationshipInspector();
         }
       };
+      bindKeyboardActivation(card, card.onclick);
     });
 
     if (pinBtn) {
@@ -363,6 +723,7 @@
         addTrailEvent("compile_ref", `Compiled evidence from "${ref.id}"`, { referenceId: ref.id });
         switchInspectorTab("evidence");
         renderEvidence(currentCompiledEvidence);
+        saveWorkspaceState();
       };
     }
 
@@ -370,13 +731,22 @@
     renderRelationshipNeighborhood();
   }
 
-  // DOM Rendering: Discovery Space Panel (Carousel, Related, Similar, Citation Continuations, Dead-End Suggestions)
+  // DOM Rendering: contextual discovery recommendations.
   function renderDiscoverySpace() {
     const container = document.getElementById("discovery-container");
     if (!container) return;
 
     if (!selectedReferenceId) {
-      container.innerHTML = "";
+      // Show Discovery Empty State
+      container.innerHTML = createRichEmptyState({
+        icon: "",
+        title: "Recommendations appear after selection",
+        explanation: "Select a reference to see the next useful paths.",
+        primaryAction: {
+          label: "Focus Search",
+          onclick: "document.getElementById('playground-search-input').focus()"
+        }
+      });
       return;
     }
 
@@ -384,111 +754,73 @@
     const discoveryData = adapter.getDiscoverySuggestions(retrievalState, selectedReferenceId, sessionState);
     const continuations = adapter.getCitationContinuations(retrievalState, selectedReferenceId);
 
+    const cards = [];
+    if (discoveryData.suggestions && discoveryData.suggestions.length > 0) {
+      discoveryData.suggestions.slice(0, 4).forEach(item => {
+        cards.push({
+          ref: item.reference,
+          category: item.category,
+          reason: item.reason
+        });
+      });
+    }
+
+    continuations.slice(0, 2).forEach(c => {
+      if (!cards.some(item => item.ref.id === c.targetReferenceId)) {
+        const ref = adapter.getReferenceById(retrievalState, c.targetReferenceId);
+        if (ref) {
+          cards.push({
+            ref,
+            category: c.relType,
+            reason: c.description
+          });
+        }
+      }
+    });
+
     let html = "";
 
-    // 1. Contextual Discovery Carousel
-    if (discoveryData.suggestions && discoveryData.suggestions.length > 0) {
+    if (cards.length > 0) {
       html += `
-        <div class="discovery-section-title">Discovery Suggestions</div>
-        <div class="discovery-carousel" role="toolbar" aria-label="Contextual Discovery Carousel">
+        <div class="discovery-section-title">Recommended Next</div>
+        <div class="compact-list" aria-label="Contextual recommendations">
+          ${cards.slice(0, 6).map(item => `
+            <button class="nv-discovery-card" data-ref-id="${item.ref.id}">
+              <div style="display: flex; justify-content: space-between; gap: 8px; align-items: center;">
+                <span style="font-weight: var(--ref-font-weight-semibold); font-size: 0.68rem; color: var(--sys-color-text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${escapeHtml(item.ref.title)}</span>
+                <span class="nv-badge" data-variant="neutral">${escapeHtml(item.category)}</span>
+              </div>
+              <span style="font-size: 0.6rem; color: var(--sys-color-text-secondary); line-height: 1.3;">${escapeHtml(item.reason)}</span>
+            </button>
+          `).join("")}
+        </div>
       `;
-      for (const item of discoveryData.suggestions) {
-        const ref = item.reference;
-        let categoryLabel = "";
-        if (item.category === "related") categoryLabel = "Related";
-        else if (item.category === "similar") categoryLabel = "Similar";
-        else categoryLabel = "Continue";
-
-        html += `
-          <div class="discovery-card" data-ref-id="${ref.id}" tabindex="0" title="Click to inspect ${ref.title}">
-            <div class="discovery-card-meta">
-              <span class="nv-badge" data-variant="info" style="font-size: 0.55rem; padding: 1px 3px;">${ref.type}</span>
-              <span class="nv-badge" data-variant="neutral" style="font-size: 0.55rem; padding: 1px 3px;">${categoryLabel}</span>
-            </div>
-            <div class="discovery-card-title">${ref.title}</div>
-            <div class="discovery-card-reason">${item.reason}</div>
-          </div>
-        `;
-      }
-      html += `</div>`;
     }
 
-    // 2. Dead-End Prevention Fallback Banner
     if (discoveryData.isDeadEnd) {
       html += `
-        <div class="dead-end-fallback-box">
-          <p class="dead-end-fallback-text">⚠️ No direct relationships found. Try exploring similar references.</p>
+        <div class="dead-end-fallback-box" style="padding: 6px; background-color: rgba(239, 68, 68, 0.05); border: 1px dashed var(--sys-color-semantic-error); border-radius: var(--ref-radius-soft); margin-top: var(--sys-space-stack-xs);">
+          <p style="margin: 0; font-size: 0.6rem; color: var(--sys-color-semantic-error);">No direct connections yet.</p>
+          ${discoveryData.suggestedQuery ? `
+            <button class="nv-button dead-end-query-btn" data-query="${discoveryData.suggestedQuery}" data-variant="secondary" style="font-size: 0.6rem; padding: 2px 6px; width: 100%; text-align: left; margin-top: 4px; min-block-size: unset;">
+              Search "${escapeHtml(discoveryData.suggestedQuery)}"
+            </button>
+          ` : ""}
+        </div>
       `;
-      if (discoveryData.suggestedQuery) {
-        html += `
-          <button class="nv-button dead-end-query-btn" data-query="${discoveryData.suggestedQuery}" data-variant="secondary" style="font-size: 0.65rem; padding: 2px 6px; width: 100%; text-align: left; min-block-size: unset;">
-            🔍 Search: "${discoveryData.suggestedQuery}"
-          </button>
-        `;
-      }
-      html += `</div>`;
-    }
-
-    // 3. Citation Continuations
-    if (continuations && continuations.length > 0) {
-      html += `
-        <div class="discovery-section-title">Citation Continuations</div>
-        <div class="continuation-container">
-      `;
-      for (const c of continuations) {
-        html += `
-          <button class="continuation-chip" data-ref-id="${c.targetReferenceId}" data-type="${c.relType}" title="${c.description}">
-            🔗 ${c.actionLabel}: ${c.targetReferenceId}
-          </button>
-        `;
-      }
-      html += `</div>`;
-    }
-
-    // 4. Ranked Related References List (Detailed list below Carousel/Continuations)
-    const allRelated = adapter.getRelatedReferences(retrievalState, selectedReferenceId);
-    if (allRelated && allRelated.length > 0) {
-      html += `
-        <div class="discovery-section-title">Ranked Related References</div>
-        <div class="nv-stack nv-stack--gap-xs" style="max-height: 200px; overflow-y: auto;">
-      `;
-      for (const r of allRelated) {
-        const ref = r.reference;
-        const relBadge = r.relType ? `<span class="nv-badge" data-variant="warning" style="font-size: 0.55rem; padding: 1px 3px; font-family: monospace;">${r.relType}</span>` : "";
-        html += `
-          <div class="nv-card discovery-related-item-card" data-ref-id="${ref.id}" style="padding: 6px; font-size: 0.65rem; display: flex; flex-direction: column; gap: 4px; cursor: pointer;">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 4px;">
-              <span style="font-weight: var(--ref-font-weight-semibold); color: var(--sys-color-text-primary); flex: 1;">${ref.title}</span>
-              <span class="nv-badge" data-variant="info" style="font-size: 0.55rem; padding: 1px 3px;">${ref.type}</span>
-            </div>
-            <div style="display: flex; align-items: center; justify-content: space-between; gap: var(--sys-space-inline-xs); margin-top: 2px;">
-              <span style="color: var(--sys-color-text-secondary); font-size: 0.6rem;">${r.reason}</span>
-              ${relBadge}
-            </div>
-          </div>
-        `;
-      }
-      html += `</div>`;
     }
 
     container.innerHTML = html;
 
     // Add interactive click/keydown event listeners
     // Carousel suggestions
-    container.querySelectorAll(".discovery-card").forEach(card => {
+    container.querySelectorAll(".nv-discovery-card").forEach(card => {
       card.onclick = () => {
         const refId = card.getAttribute("data-ref-id");
         addTrailEvent("Discovery suggestion opened", `Opened suggestion "${refId}"`, { referenceId: refId });
-        toggleSelection(refId);
+        selectReference(refId);
       };
-      card.onkeydown = (e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          const refId = card.getAttribute("data-ref-id");
-          addTrailEvent("Discovery suggestion opened", `Opened suggestion "${refId}"`, { referenceId: refId });
-          toggleSelection(refId);
-        }
-      };
+      bindKeyboardActivation(card, card.onclick);
     });
 
     // Dead-end query buttons
@@ -504,24 +836,6 @@
       };
     });
 
-    // Continuation chips
-    container.querySelectorAll(".continuation-chip").forEach(chip => {
-      chip.onclick = () => {
-        const refId = chip.getAttribute("data-ref-id");
-        const relType = chip.getAttribute("data-type");
-        addTrailEvent("Citation continuation followed", `Followed ${relType} citation to "${refId}"`, { referenceId: refId });
-        toggleSelection(refId);
-      };
-    });
-
-    // Ranked related item cards
-    container.querySelectorAll(".discovery-related-item-card").forEach(card => {
-      card.onclick = () => {
-        const refId = card.getAttribute("data-ref-id");
-        addTrailEvent("Related reference opened", `Opened related reference "${refId}"`, { referenceId: refId });
-        toggleSelection(refId);
-      };
-    });
   }
 
   // DOM Rendering: Relationship Neighborhood Panel (Textual/card-based direct relationships)
@@ -531,9 +845,7 @@
 
     if (!selectedReferenceId) {
       container.innerHTML = `
-        <div class="nv-empty-state">
-          <p class="nv-muted" style="font-size: var(--sys-font-caption-size); margin: 0;">Select a reference to view its relationship neighborhood.</p>
-        </div>
+        <div class="nv-empty-state"><p class="nv-muted" style="font-size: var(--sys-font-caption-size); margin: 0;">Select a reference to view neighbors.</p></div>
       `;
       return;
     }
@@ -548,7 +860,7 @@
     }
 
     let html = `
-      <div class="discovery-section-title">Neighborhood of ${neighborhood.reference.id}</div>
+      <div class="discovery-section-title">Neighbors</div>
       <div class="neighborhood-grid">
     `;
 
@@ -556,22 +868,22 @@
       const neighbor = item.neighbor;
       if (!neighbor) continue;
       const isOutgoing = item.direction === "outgoing";
-      const dirText = isOutgoing ? "➔ Outgoing to" : "➔ Incoming from";
+      const dirText = isOutgoing ? "to" : "from";
       const badgeVariant = isOutgoing ? "info" : "neutral";
 
       html += `
-        <div class="neighborhood-card neighborhood-item-card" data-ref-id="${neighbor.id}" style="cursor: pointer;">
+        <button class="neighborhood-card neighborhood-item-card" data-ref-id="${neighbor.id}" style="cursor: pointer; text-align: left;">
           <div class="neighborhood-header">
             <span class="neighborhood-direction nv-badge" data-variant="${badgeVariant}">${dirText}</span>
-            <span class="nv-badge" data-variant="warning">${item.type}</span>
+            <span class="nv-badge" data-variant="warning">${escapeHtml(item.type)}</span>
           </div>
           <div style="font-weight: var(--ref-font-weight-semibold); font-size: 0.65rem; color: var(--sys-color-text-primary); margin-top: 2px;">
-            ${neighbor.title} (${neighbor.id})
+            ${escapeHtml(neighbor.title)}
           </div>
           <div class="neighborhood-context">
-            Strength: ${item.strength} | "${item.context || 'No context'}"
+            ${escapeHtml(item.context || "No context")}
           </div>
-        </div>
+        </button>
       `;
     }
 
@@ -583,8 +895,9 @@
       card.onclick = () => {
         const refId = card.getAttribute("data-ref-id");
         addTrailEvent("Neighborhood reference opened", `Opened neighborhood node "${refId}"`, { referenceId: refId });
-        toggleSelection(refId);
+        selectReference(refId);
       };
+      bindKeyboardActivation(card, card.onclick);
     });
   }
 
@@ -634,13 +947,13 @@
     if (followSrcBtn) {
       followSrcBtn.onclick = () => {
         addTrailEvent("Followed relationship source", `Followed source "${rel.sourceReferenceId}" from edge "${rel.id}"`, { referenceId: rel.sourceReferenceId });
-        toggleSelection(rel.sourceReferenceId);
+        selectReference(rel.sourceReferenceId);
       };
     }
     if (followTgtBtn) {
       followTgtBtn.onclick = () => {
         addTrailEvent("Followed relationship target", `Followed target "${rel.targetReferenceId}" from edge "${rel.id}"`, { referenceId: rel.targetReferenceId });
-        toggleSelection(rel.targetReferenceId);
+        selectReference(rel.targetReferenceId);
       };
     }
   }
@@ -665,18 +978,14 @@
     if (!comp) {
       container.innerHTML = `
         <div class="nv-empty-state" style="padding: var(--sys-space-stack-md); text-align: center;">
-          <div class="nv-empty-state-icon" aria-hidden="true" style="font-size: 2rem; margin-bottom: var(--sys-space-stack-xs);">📋</div>
-          <p class="nv-muted" style="font-size: var(--sys-font-body-size); font-weight: var(--ref-font-weight-medium); color: var(--sys-color-text-primary); margin-bottom: var(--sys-space-stack-xs);">No Evidence Compiled Yet</p>
-          <p class="nv-muted" style="font-size: var(--sys-font-caption-size); margin-bottom: var(--sys-space-stack-md);">Synthesis requires an active query or reference node seed.</p>
+          <p class="nv-muted" style="font-size: var(--sys-font-body-size); font-weight: var(--ref-font-weight-medium); color: var(--sys-color-text-primary); margin-bottom: var(--sys-space-stack-xs);">No evidence compiled</p>
+          <p class="nv-muted" style="font-size: var(--sys-font-caption-size); margin-bottom: var(--sys-space-stack-md);">Compile the current query or selected reference.</p>
           <div class="nv-stack nv-stack--gap-xs" style="align-items: stretch;">
             <button class="nv-button" id="evidence-empty-compile-query" data-variant="primary" style="font-size: var(--sys-font-caption-size);">
               Compile Current Query
             </button>
             <button class="nv-button" id="evidence-empty-compile-ref" data-variant="secondary" style="font-size: var(--sys-font-caption-size);" disabled>
               Compile Selected Reference
-            </button>
-            <button class="nv-button" id="evidence-empty-return-explore" data-variant="ghost" style="font-size: var(--sys-font-caption-size);">
-              Return to Exploration
             </button>
           </div>
         </div>
@@ -700,8 +1009,14 @@
           if (currentSearchQuery) {
             currentCompiledEvidence = adapter.compileEvidenceFromQuery(retrievalState, currentSearchQuery);
             if (currentCompiledEvidence) addToTimeline(currentCompiledEvidence);
+            selectedReferenceId = null;
+            selectedRelationship = null;
+            syncSelectionHighlighting();
+            renderReferenceInspector();
+            renderRelationshipInspector();
             addTrailEvent("compile_query", `Compiled evidence from query "${currentSearchQuery}" via empty state`, { query: currentSearchQuery });
             renderEvidence(currentCompiledEvidence);
+            saveWorkspaceState();
           }
         };
       }
@@ -721,13 +1036,6 @@
             addTrailEvent("compile_ref", `Compiled evidence from "${selectedReferenceId}" via empty state`, { referenceId: selectedReferenceId });
             renderEvidence(currentCompiledEvidence);
           }
-        };
-      }
-
-      const emptyReturnExplore = document.getElementById("evidence-empty-return-explore");
-      if (emptyReturnExplore) {
-        emptyReturnExplore.onclick = () => {
-          switchExplorationMode("search");
         };
       }
 
@@ -753,17 +1061,6 @@
       confVariant = "error";
     }
 
-    // 2. Structured Recommendation text
-    let recommendation = "";
-    if (comp.confidence === "high") {
-      recommendation = "The graph coverage indicates a highly integrated network topology. Analyze the citation paths in Graph Mode or continue discovery around the primary nodes.";
-    } else if (comp.confidence === "medium") {
-      recommendation = "Moderate graph coverage detected. Try exploring the citation neighborhood of the primary references to uncover additional contextual paths.";
-    } else {
-      recommendation = "Limited evidence identified. Try refining your search query terms or registering new source references in the registry.";
-    }
-
-    // 3. Supporting references
     const allContributing = [
       ...comp.matchedReferences.map(r => ({ ref: r, role: "Primary Match" })),
       ...comp.relatedReferences.map(r => ({ ref: r, role: "Supporting Context" }))
@@ -772,95 +1069,40 @@
     container.innerHTML = `
       <div class="nv-stack nv-stack--gap-sm" role="region" aria-label="Evidence compilation details" style="max-height: calc(100vh - 200px); overflow-y: auto; padding-right: 4px;">
 
-        <!-- Job Header & Qualitative Confidence -->
         <div class="nv-stack nv-stack--gap-xs" style="background-color: var(--sys-color-surface-container-low); padding: var(--sys-space-stack-xs); border-radius: var(--sys-border-radius-sm); border: 1px solid var(--sys-color-border-subtle);">
           <div class="nv-cluster nv-cluster--gap-xs" style="align-items: center; justify-content: space-between;">
-            <span style="font-size: 0.6rem; font-family: var(--sys-font-code-family); color: var(--sys-color-text-secondary);">ID: ${comp.id}</span>
+            <span style="font-size: 0.68rem; color: var(--sys-color-text-secondary);">${comp.mode === "query" ? "Query evidence" : "Reference evidence"}</span>
             <span class="nv-badge" data-variant="${confVariant}" style="font-weight: var(--ref-font-weight-semibold);">${confLabel}</span>
           </div>
-          <p class="nv-muted" style="font-size: var(--sys-font-caption-size); margin: 0; line-height: 1.3;">${confExplanation}</p>
-        </div>
-
-        <!-- Evidence Summary Sections -->
-        <div class="nv-stack nv-stack--gap-xs">
-          <h5 style="margin: 0; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--sys-color-accent-primary);">Main Conclusion</h5>
-          <p style="font-size: var(--sys-font-caption-size); color: var(--sys-color-text-primary); margin: 0; line-height: 1.4; font-style: italic;">
-            "${comp.summary.split(".")[0]}."
-          </p>
+          <p class="nv-muted" style="font-size: var(--sys-font-caption-size); margin: 0; line-height: 1.3;">${escapeHtml(confExplanation)}</p>
         </div>
 
         <div class="nv-stack nv-stack--gap-xs">
-          <h5 style="margin: 0; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--sys-color-accent-primary);">Key Findings</h5>
-          <ul style="margin: 0; padding-left: 1rem; font-size: var(--sys-font-caption-size); color: var(--sys-color-text-primary); line-height: 1.4;">
-            <li>Retrieved <strong>${comp.matchedReferences.length}</strong> direct matching reference(s) from registry.</li>
-            <li>Detected <strong>${comp.relationships.length}</strong> semantic relationships between workspace elements.</li>
-            <li>Linked <strong>${comp.relatedReferences.length}</strong> contextual neighbor reference(s) for additional evidence.</li>
-          </ul>
-        </div>
-
-        <div class="nv-stack nv-stack--gap-xs">
-          <h5 style="margin: 0; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--sys-color-accent-primary);">Supporting Context</h5>
-          <p style="font-size: var(--sys-font-caption-size); color: var(--sys-color-text-secondary); margin: 0; line-height: 1.4;">
-            ${comp.summary}
-          </p>
-        </div>
-
-        <div class="nv-stack nv-stack--gap-xs">
-          <h5 style="margin: 0; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--sys-color-accent-primary);">Research Recommendation</h5>
-          <p style="font-size: var(--sys-font-caption-size); color: var(--sys-color-text-secondary); margin: 0; line-height: 1.4;">
-            ${recommendation}
+          <h5 style="margin: 0; font-size: 0.65rem; text-transform: uppercase; color: var(--sys-color-accent-primary);">Summary</h5>
+          <p class="evidence-summary">
+            ${escapeHtml(comp.summary)}
           </p>
         </div>
 
         <div class="nv-divider" aria-hidden="true" style="margin-block: var(--sys-space-stack-xs); opacity: 0.3;"></div>
 
-        <!-- Evidence Lineage (Hierarchy tree style) -->
-        <div class="nv-stack nv-stack--gap-xs">
-          <h5 style="margin: 0; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--sys-color-accent-primary);">Evidence Lineage</h5>
-          <div class="lineage-tree" style="font-family: var(--sys-font-code-family); font-size: var(--sys-font-caption-size); color: var(--sys-color-text-primary); padding-left: 2px;">
-            <div style="font-weight: var(--ref-font-weight-semibold); color: var(--sys-color-text-primary);">📂 Compiled Evidence</div>
-            ${comp.matchedReferences.map(r => `
-              <div style="padding-left: 12px; border-left: 1px solid var(--sys-color-border-subtle); margin-left: 4px; padding-top: 2px; padding-bottom: 2px;">
-                ├── <span class="lineage-node clickable-lineage-node" data-id="${r.id}" style="cursor: pointer; color: var(--sys-color-accent-primary); text-decoration: underline;" tabindex="0" role="button" aria-label="Lineage Node: Primary Match ${r.id}">[Primary] ${r.id}</span>
-              </div>
-            `).join("")}
-            ${comp.relatedReferences.map((r, idx) => {
-              const isLast = idx === comp.relatedReferences.length - 1;
-              const lineChar = isLast ? "└──" : "├──";
-              return `
-                <div style="padding-left: 12px; border-left: ${isLast ? 'none' : '1px solid var(--sys-color-border-subtle)'}; margin-left: 4px; padding-top: 2px; padding-bottom: 2px;">
-                  ${lineChar} <span class="lineage-node clickable-lineage-node" data-id="${r.id}" style="cursor: pointer; color: var(--sys-color-accent-primary); text-decoration: underline;" tabindex="0" role="button" aria-label="Lineage Node: Supporting Context ${r.id}">${r.id}</span>
-                </div>
-              `;
-            }).join("")}
-          </div>
-        </div>
-
-        <div class="nv-divider" aria-hidden="true" style="margin-block: var(--sys-space-stack-xs); opacity: 0.3;"></div>
-
-        <!-- Supporting References interactive list -->
-        <div class="nv-stack nv-stack--gap-xs">
-          <h5 style="margin: 0; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--sys-color-accent-primary);">Supporting References (${allContributing.length})</h5>
+        <div class="nv-stack nv-stack--gap-xs nv-provenance-summary">
+          <h5 style="margin: 0; font-size: 0.65rem; text-transform: uppercase; color: var(--sys-color-accent-primary);">Supporting References</h5>
           <div class="nv-stack nv-stack--gap-xs">
             ${allContributing.length === 0 ? '<p class="nv-muted" style="font-size: var(--sys-font-caption-size); margin: 0;">No contributing references found.</p>' : allContributing.map(item => {
-              const relsCount = adapter.getRelationshipsForReference(retrievalState, item.ref.id).length;
               const isPinned = pinnedReferences.includes(item.ref.id);
               return `
                 <div class="nv-card" style="padding: var(--sys-space-stack-xs); background-color: var(--sys-color-surface-container-lowest); border: 1px solid var(--sys-color-border-subtle); border-radius: var(--sys-border-radius-sm);">
                   <div class="nv-cluster nv-cluster--gap-xs" style="justify-content: space-between; align-items: flex-start; margin-bottom: 2px;">
-                    <span style="font-size: 0.65rem; font-family: var(--sys-font-code-family); color: var(--sys-color-text-primary); font-weight: var(--ref-font-weight-semibold);">${item.ref.id}</span>
+                    <span style="font-size: 0.65rem; color: var(--sys-color-text-primary); font-weight: var(--ref-font-weight-semibold);">${escapeHtml(item.ref.title)}</span>
                     <span class="nv-badge" data-variant="${item.role === 'Primary Match' ? 'success' : 'info'}" style="font-size: 0.55rem; padding: 1px 4px;">${item.role}</span>
                   </div>
-                  <h6 style="margin: 2px 0; font-size: var(--sys-font-caption-size); font-weight: var(--ref-font-weight-medium); color: var(--sys-color-text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.ref.title}</h6>
-                  <p class="nv-muted" style="font-size: 0.6rem; margin: 2px 0;">
-                    Type: <strong>${item.ref.type}</strong> | Status: <strong>${item.ref.status}</strong> | Rels: <strong>${relsCount}</strong>
-                  </p>
                   <div class="nv-cluster nv-cluster--gap-xs" style="margin-top: var(--sys-space-stack-xs); justify-content: flex-end;">
                     <button class="nv-button" data-action="pin-supporting" data-id="${item.ref.id}" style="padding: 2px 6px; min-block-size: unset; font-size: 0.55rem;">
                       ${isPinned ? 'Unpin' : 'Pin'}
                     </button>
                     <button class="nv-button" data-action="open-supporting" data-id="${item.ref.id}" data-variant="primary" style="padding: 2px 6px; min-block-size: unset; font-size: 0.55rem;">
-                      Open in Inspector
+                      Open
                     </button>
                   </div>
                 </div>
@@ -871,77 +1113,80 @@
 
         <div class="nv-divider" aria-hidden="true" style="margin-block: var(--sys-space-stack-xs); opacity: 0.3;"></div>
 
-        <!-- Provenance Metadata -->
-        <div class="nv-stack nv-stack--gap-xs">
-          <h5 style="margin: 0; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--sys-color-accent-primary);">Provenance Metadata</h5>
-          <table style="width: 100%; font-size: 0.6rem; border-collapse: collapse; color: var(--sys-color-text-secondary);">
-            <tbody>
-              <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-                <td style="padding: 2px 0; font-weight: var(--ref-font-weight-medium);">Compilation Mode:</td>
-                <td style="padding: 2px 0; text-align: right; font-family: var(--sys-font-code-family);">${comp.mode === "query" ? "Search Query" : "Reference Seed"}</td>
-              </tr>
-              <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-                <td style="padding: 2px 0; font-weight: var(--ref-font-weight-medium);">Input Target:</td>
-                <td style="padding: 2px 0; text-align: right; font-family: var(--sys-font-code-family); overflow: hidden; text-overflow: ellipsis; max-width: 120px; white-space: nowrap;">"${comp.input}"</td>
-              </tr>
-              <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-                <td style="padding: 2px 0; font-weight: var(--ref-font-weight-medium);">Matched Refs:</td>
-                <td style="padding: 2px 0; text-align: right;">${comp.matchedReferences.length}</td>
-              </tr>
-              <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-                <td style="padding: 2px 0; font-weight: var(--ref-font-weight-medium);">Supporting Refs:</td>
-                <td style="padding: 2px 0; text-align: right;">${comp.relatedReferences.length}</td>
-              </tr>
-              <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-                <td style="padding: 2px 0; font-weight: var(--ref-font-weight-medium);">Relationships:</td>
-                <td style="padding: 2px 0; text-align: right;">${comp.relationships.length}</td>
-              </tr>
-              <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-                <td style="padding: 2px 0; font-weight: var(--ref-font-weight-medium);">Timestamp:</td>
-                <td style="padding: 2px 0; text-align: right; font-family: var(--sys-font-code-family);">${new Date(comp.createdAt).toLocaleTimeString()}</td>
-              </tr>
-              <tr>
-                <td colspan="2" style="padding-top: 4px; font-style: italic; font-size: 0.55rem; color: var(--sys-color-text-tertiary);">
-                  Compiled from active ${comp.mode === "query" ? "search query" : "reference node seed"} context.
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div class="nv-divider" aria-hidden="true" style="margin-block: var(--sys-space-stack-xs); opacity: 0.3;"></div>
-
-        <!-- Related Relationships -->
-        <div class="nv-stack nv-stack--gap-xs">
-          <h5 style="margin: 0; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--sys-color-accent-primary);">Related Relationships (${comp.relationships.length})</h5>
-          <div class="nv-stack nv-stack--gap-xs" style="max-height: 120px; overflow-y: auto;">
-            ${comp.relationships.length === 0 ? '<p class="nv-muted" style="font-size: var(--sys-font-caption-size); margin: 0;">No citation links utilized.</p>' : comp.relationships.map(rel => `
-              <div class="nv-card clickable-evidence-rel" data-id="${rel.id}" style="padding: var(--sys-space-stack-xs); font-size: 0.6rem; cursor: pointer; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 2px; background-color: var(--sys-color-surface-container-lowest);" tabindex="0" role="button" aria-label="Inspect relationship ${rel.sourceReferenceId} to ${rel.targetReferenceId}">
-                <div class="nv-cluster nv-cluster--gap-xs" style="justify-content: space-between;">
-                  <span><strong>${rel.sourceReferenceId}</strong> ➔ <strong>${rel.targetReferenceId}</strong></span>
-                  <span class="nv-badge" data-variant="neutral" style="font-size: 0.5rem; padding: 0px 3px;">${rel.type}</span>
+        <details>
+          <summary style="font-size: 0.65rem; font-weight: bold; cursor: pointer; color: var(--sys-color-text-secondary); margin-bottom: 2px;">Lineage and provenance</summary>
+          <div style="padding-top: 4px;" class="nv-stack nv-stack--gap-sm">
+            <div class="lineage-tree" style="font-family: var(--sys-font-code-family); font-size: var(--sys-font-caption-size); color: var(--sys-color-text-primary); padding-left: 2px;">
+              ${comp.matchedReferences.map(r => `
+                <div class="nv-lineage-node">
+                  <span class="lineage-node clickable-lineage-node" data-id="${r.id}" style="cursor: pointer; color: var(--sys-color-accent-primary); text-decoration: underline;" tabindex="0" role="button" aria-label="Primary evidence ${escapeHtml(r.title)}">Primary: ${escapeHtml(r.title)}</span>
                 </div>
+              `).join("")}
+              ${comp.relatedReferences.map(r => `
+                <div class="nv-lineage-node">
+                  <span class="lineage-node clickable-lineage-node" data-id="${r.id}" style="cursor: pointer; color: var(--sys-color-text-secondary); text-decoration: underline;" tabindex="0" role="button" aria-label="Supporting evidence ${escapeHtml(r.title)}">Support: ${escapeHtml(r.title)}</span>
+                </div>
+              `).join("")}
+            </div>
+            <div class="nv-stack nv-stack--gap-xs">
+              <h6 style="margin: 0; font-size: 0.6rem; text-transform: uppercase; color: var(--sys-color-text-secondary);">Key Findings</h6>
+              <ul style="margin: 0; padding-left: 1rem; font-size: var(--sys-font-caption-size); color: var(--sys-color-text-primary); line-height: 1.4;">
+                <li>Retrieved <strong>${comp.matchedReferences.length}</strong> direct matching reference(s) from registry.</li>
+                <li>Detected <strong>${comp.relationships.length}</strong> semantic relationships between workspace elements.</li>
+                <li>Linked <strong>${comp.relatedReferences.length}</strong> contextual neighbor reference(s) for additional evidence.</li>
+              </ul>
+            </div>
+
+            <!-- Provenance Metadata Table -->
+            <div class="nv-stack nv-stack--gap-xs">
+              <h6 style="margin: 0; font-size: 0.6rem; text-transform: uppercase; color: var(--sys-color-text-secondary);">Metadata Details</h6>
+              <table style="width: 100%; font-size: 0.6rem; border-collapse: collapse; color: var(--sys-color-text-secondary);">
+                <tbody>
+                  <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                    <td style="padding: 2px 0; font-weight: var(--ref-font-weight-medium);">Compilation Mode:</td>
+                    <td style="padding: 2px 0; text-align: right; font-family: var(--sys-font-code-family);">${comp.mode === "query" ? "Search Query" : "Reference Seed"}</td>
+                  </tr>
+                  <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                    <td style="padding: 2px 0; font-weight: var(--ref-font-weight-medium);">Input Target:</td>
+                    <td style="padding: 2px 0; text-align: right; font-family: var(--sys-font-code-family); overflow: hidden; text-overflow: ellipsis; max-width: 120px; white-space: nowrap;">"${comp.input}"</td>
+                  </tr>
+                  <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                    <td style="padding: 2px 0; font-weight: var(--ref-font-weight-medium);">Timestamp:</td>
+                    <td style="padding: 2px 0; text-align: right; font-family: var(--sys-font-code-family);">${new Date(comp.createdAt).toLocaleTimeString()}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Related Relationships -->
+            <div class="nv-stack nv-stack--gap-xs">
+              <h6 style="margin: 0; font-size: 0.6rem; text-transform: uppercase; color: var(--sys-color-text-secondary);">Related Relationships (${comp.relationships.length})</h6>
+              <div class="nv-stack nv-stack--gap-xs" style="max-height: 120px; overflow-y: auto;">
+                ${comp.relationships.length === 0 ? '<p class="nv-muted" style="font-size: var(--sys-font-caption-size); margin: 0;">No citation links utilized.</p>' : comp.relationships.map(rel => `
+                  <div class="nv-card clickable-evidence-rel" data-id="${rel.id}" style="padding: var(--sys-space-stack-xs); font-size: 0.6rem; cursor: pointer; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 2px; background-color: var(--sys-color-surface-container-lowest);" tabindex="0" role="button" aria-label="Inspect relationship ${rel.sourceReferenceId} to ${rel.targetReferenceId}">
+                    <div class="nv-cluster nv-cluster--gap-xs" style="justify-content: space-between;">
+                      <span><strong>${rel.sourceReferenceId}</strong> ➔ <strong>${rel.targetReferenceId}</strong></span>
+                      <span class="nv-badge" data-variant="neutral" style="font-size: 0.5rem; padding: 0px 3px;">${rel.type}</span>
+                    </div>
+                  </div>
+                `).join("")}
               </div>
-            `).join("")}
+            </div>
           </div>
-        </div>
+        </details>
 
         <div class="nv-divider" aria-hidden="true" style="margin-block: var(--sys-space-stack-xs); opacity: 0.3;"></div>
 
-        <!-- Suggested Next Actions -->
         <div class="nv-stack nv-stack--gap-xs">
-          <h5 style="margin: 0; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--sys-color-accent-primary);">Suggested Next Actions</h5>
+          <h5 style="margin: 0; font-size: 0.65rem; text-transform: uppercase; color: var(--sys-color-accent-primary);">Next</h5>
           <div class="nv-stack nv-stack--gap-xs">
             ${comp.matchedReferences.length > 0 ? `
               <button class="nv-button" id="action-explore-neighborhood" data-id="${comp.matchedReferences[0].id}" data-variant="secondary" style="font-size: var(--sys-font-caption-size); padding: 4px;">
-                Explore Neighborhood for ${comp.matchedReferences[0].id}
-              </button>
-              <button class="nv-button" id="action-continue-discovery" data-id="${comp.matchedReferences[0].id}" data-variant="secondary" style="font-size: var(--sys-font-caption-size); padding: 4px;">
-                Continue Discovery for ${comp.matchedReferences[0].id}
+                Explore Graph
               </button>
             ` : ""}
             <button class="nv-button" id="action-return-search" data-variant="ghost" style="font-size: var(--sys-font-caption-size); padding: 4px;">
-              Return to Search Mode
+              Continue Search
             </button>
           </div>
         </div>
@@ -959,7 +1204,7 @@
       const id = btn.getAttribute("data-id");
       btn.onclick = () => {
         addTrailEvent("supporting_ref_opened", `Opened supporting reference "${id}"`, { referenceId: id });
-        toggleSelection(id);
+        selectReference(id);
       };
     });
 
@@ -981,7 +1226,7 @@
       const id = node.getAttribute("data-id");
       const openNode = () => {
         addTrailEvent("lineage_navigated", `Navigated to reference "${id}" via lineage tree`, { referenceId: id });
-        toggleSelection(id);
+        selectReference(id);
       };
       node.onclick = openNode;
       node.onkeydown = (e) => {
@@ -1024,19 +1269,6 @@
         addTrailEvent("action_explore_neighborhood", `Explored neighborhood around "${id}" from suggested next actions`, { referenceId: id });
         saveWorkspaceState();
         renderVisualGraph();
-      };
-    }
-
-    const nextContinueBtn = document.getElementById("action-continue-discovery");
-    if (nextContinueBtn) {
-      const id = nextContinueBtn.getAttribute("data-id");
-      nextContinueBtn.onclick = () => {
-        selectedReferenceId = id;
-        addToRecentlyViewed(id);
-        switchExplorationMode("discovery");
-        addTrailEvent("action_continue_discovery", `Continued discovery for "${id}" from suggested next actions`, { referenceId: id });
-        saveWorkspaceState();
-        renderDiscoveryMode();
       };
     }
 
@@ -1083,6 +1315,16 @@
         const selectedEv = evidenceTimeline[idx];
         if (selectedEv) {
           currentCompiledEvidence = selectedEv;
+          if (selectedEv.mode === "reference" && selectedEv.input) {
+            selectReference(selectedEv.input);
+            switchInspectorTab("evidence");
+          } else {
+            selectedReferenceId = null;
+            selectedRelationship = null;
+            syncSelectionHighlighting();
+            renderReferenceInspector();
+            renderRelationshipInspector();
+          }
           addTrailEvent("reopen_evidence", `Reopened evidence compilation "${selectedEv.id}"`, { compilationId: selectedEv.id });
           saveWorkspaceState();
           renderEvidence(currentCompiledEvidence);
@@ -1106,12 +1348,9 @@
     // Clear previous SVG content
     svg.innerHTML = "";
 
-    // Define Grid Pattern and Arrow Markers for direction-aware styling
+    // Define arrow markers for direction-aware styling
     const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
     defs.innerHTML = `
-      <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-        <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255, 255, 255, 0.02)" stroke-width="1"/>
-      </pattern>
       <marker id="arrow-default" viewBox="0 0 10 10" refX="16" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
         <path d="M 0 0 L 10 5 L 0 10 z" fill="#384c5c" />
       </marker>
@@ -1126,13 +1365,6 @@
       </marker>
     `;
     svg.appendChild(defs);
-
-    // Draw grid background
-    const bgRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-    bgRect.setAttribute("width", "100%");
-    bgRect.setAttribute("height", "100%");
-    bgRect.setAttribute("fill", "url(#grid)");
-    svg.appendChild(bgRect);
 
     const overlay = document.getElementById("graph-empty-state-overlay");
     const msgEl = document.getElementById("graph-empty-state-message");
@@ -1233,6 +1465,9 @@
       pathEl.setAttribute("d", pathData);
       pathEl.setAttribute("fill", "none");
       pathEl.setAttribute("class", "graph-link");
+      pathEl.setAttribute("tabindex", "0");
+      pathEl.setAttribute("role", "button");
+      pathEl.setAttribute("aria-label", `Relationship ${rel.sourceReferenceId} to ${rel.targetReferenceId}`);
 
       // Default marker
       pathEl.setAttribute("marker-end", "url(#arrow-default)");
@@ -1247,10 +1482,11 @@
         renderRelationshipInspector();
 
         // Highlight this edge in SVG visually
-        svg.querySelectorAll(".graph-link").forEach(l => l.classList.add("faded"));
-        pathEl.classList.remove("faded");
-        pathEl.style.strokeWidth = "4px";
+        svg.querySelectorAll(".graph-link").forEach(l => l.classList.add("dimmed"));
+        pathEl.classList.remove("dimmed");
+        pathEl.classList.add("highlight");
       };
+      bindKeyboardActivation(pathEl, pathEl.onclick);
 
       if (activeRefId) {
         if (rel.id === selectedRelationship?.id) {
@@ -1258,12 +1494,14 @@
           pathEl.setAttribute("marker-end", "url(#arrow-selected)");
         } else if (outboundRelIds.has(rel.id)) {
           pathEl.classList.add("outbound");
+          pathEl.classList.add("highlight");
           pathEl.setAttribute("marker-end", "url(#arrow-outbound)");
         } else if (inboundRelIds.has(rel.id)) {
           pathEl.classList.add("inbound");
+          pathEl.classList.add("highlight");
           pathEl.setAttribute("marker-end", "url(#arrow-inbound)");
         } else {
-          pathEl.classList.add("faded");
+          pathEl.classList.add("dimmed");
         }
       } else {
         if (rel.id === selectedRelationship?.id) {
@@ -1289,19 +1527,19 @@
       if (activeRefId) {
         if (ref.id === activeRefId) {
           g.classList.add("selected");
-        } else if (outboundNodeIds.has(ref.id)) {
-          g.classList.add("outbound");
-        } else if (inboundNodeIds.has(ref.id)) {
-          g.classList.add("inbound");
+        } else if (outboundNodeIds.has(ref.id) || inboundNodeIds.has(ref.id)) {
+          g.classList.add("neighbor");
+          if (outboundNodeIds.has(ref.id)) g.classList.add("outbound");
+          if (inboundNodeIds.has(ref.id)) g.classList.add("inbound");
         } else {
-          g.classList.add("faded");
+          g.classList.add("dimmed");
         }
       }
 
       const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
 
       const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
-      text.textContent = ref.id;
+      text.textContent = ref.id.replace(/^paper-/, "").replace(/^repo-/, "").replace(/^notes-/, "");
       text.setAttribute("text-anchor", "middle");
       text.setAttribute("y", 22);
 
@@ -1310,15 +1548,13 @@
 
       g.onclick = (e) => {
         e.stopPropagation();
-        addTrailEvent("Graph node selected", `Selected graph node "${ref.id}"`, { referenceId: ref.id });
-        toggleSelection(ref.id);
+        selectReference(ref.id);
       };
 
       g.onkeydown = (e) => {
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
-          addTrailEvent("Graph node selected", `Selected graph node "${ref.id}" via keyboard`, { referenceId: ref.id });
-          toggleSelection(ref.id);
+          selectReference(ref.id);
         }
       };
 
@@ -1375,7 +1611,7 @@
       anchorsContainer.querySelectorAll("button[data-action='select-anchor']").forEach(btn => {
         btn.onclick = () => {
           const id = btn.getAttribute("data-id");
-          toggleSelection(id);
+          selectReference(id);
         };
       });
     }
@@ -1411,7 +1647,7 @@
     tbody.querySelectorAll("tr").forEach(row => {
       row.onclick = () => {
         const refId = row.getAttribute("data-ref-id");
-        toggleSelection(refId);
+        selectReference(refId);
       };
     });
   }
@@ -1424,15 +1660,16 @@
     const trailList = document.getElementById("memory-trail-list");
 
     if (recentList) {
-      if (recentReferences.length === 0) {
+      const visibleRecent = recentReferences.filter(id => !pinnedReferences.includes(id));
+      if (visibleRecent.length === 0) {
         recentList.innerHTML = `<li class="nv-muted" style="font-size: var(--sys-font-caption-size); padding: 4px;">No recently viewed references.</li>`;
       } else {
-        recentList.innerHTML = recentReferences.map(id => {
+        recentList.innerHTML = visibleRecent.map(id => {
           const ref = adapter.getReferenceById(retrievalState, id);
           const title = ref ? ref.title : id;
           return `
-            <li class="memory-item" data-ref-id="${id}" title="${title}">
-              <span>${id}</span>
+            <li class="memory-item" data-ref-id="${id}" title="${escapeHtml(title)}" tabindex="0" role="button">
+              <span>${escapeHtml(ref ? ref.title : id)}</span>
               <span class="nv-muted" style="font-size: 0.6rem; text-align: right; overflow: hidden; text-overflow: ellipsis;">${ref ? ref.type : ''}</span>
             </li>
           `;
@@ -1441,8 +1678,9 @@
         recentList.querySelectorAll(".memory-item").forEach(item => {
           item.onclick = () => {
             const id = item.getAttribute("data-ref-id");
-            toggleSelection(id);
+            selectReference(id);
           };
+          bindKeyboardActivation(item, item.onclick);
         });
       }
     }
@@ -1455,8 +1693,8 @@
           const ref = adapter.getReferenceById(retrievalState, id);
           const title = ref ? ref.title : id;
           return `
-            <li class="memory-item" data-ref-id="${id}" title="${title}">
-              <span>📌 ${id}</span>
+            <li class="memory-item" data-ref-id="${id}" title="${escapeHtml(title)}" tabindex="0" role="button">
+              <span>${escapeHtml(ref ? ref.title : id)}</span>
               <button class="memory-action-btn" data-action="unpin" data-id="${id}" aria-label="Unpin ${id}">×</button>
             </li>
           `;
@@ -1466,8 +1704,9 @@
           item.onclick = (e) => {
             if (e.target.tagName.toLowerCase() === 'button' || e.target.classList.contains('memory-action-btn')) return;
             const id = item.getAttribute("data-ref-id");
-            toggleSelection(id);
+            selectReference(id);
           };
+          bindKeyboardActivation(item, item.onclick);
         });
 
         pinnedList.querySelectorAll("button[data-action='unpin']").forEach(btn => {
@@ -1485,8 +1724,8 @@
         queriesList.innerHTML = `<li class="nv-muted" style="font-size: var(--sys-font-caption-size); padding: 4px;">No saved queries.</li>`;
       } else {
         queriesList.innerHTML = savedQueries.map(q => `
-          <li class="memory-item" data-query="${q}">
-            <span>🔍 "${q}"</span>
+          <li class="memory-item" data-query="${escapeHtml(q)}" tabindex="0" role="button">
+            <span>${escapeHtml(q)}</span>
             <button class="memory-action-btn" data-action="delete-query" data-query="${q}" aria-label="Delete query ${q}">×</button>
           </li>
         `).join("");
@@ -1499,6 +1738,7 @@
             if (searchInput) searchInput.value = query;
             runSearch(query, true);
           };
+          bindKeyboardActivation(item, item.onclick);
         });
 
         queriesList.querySelectorAll("button[data-action='delete-query']").forEach(btn => {
@@ -1535,12 +1775,12 @@
           else if (event.type === "open" || event.type === "select_node") badgeVariant = "neutral";
 
           return `
-            <li class="trail-event" data-event-id="${event.id}">
+            <li class="trail-event" data-event-id="${event.id}" tabindex="0" role="button">
               <div class="trail-meta">
-                <span class="nv-badge" data-variant="${badgeVariant}" style="font-size: 0.5rem; padding: 1px 4px; text-transform: uppercase;">${event.type}</span>
+                <span class="nv-badge" data-variant="${badgeVariant}" style="font-size: 0.5rem; padding: 1px 4px; text-transform: uppercase;">${escapeHtml(event.type)}</span>
                 <span>${event.timestamp}</span>
               </div>
-              <div style="margin-top: 2px; line-height: 1.3;">${event.label}</div>
+              <div style="margin-top: 2px; line-height: 1.3;">${escapeHtml(event.label)}</div>
             </li>
           `;
         }).join("");
@@ -1553,6 +1793,7 @@
               restoreTrailContext(event);
             }
           };
+          bindKeyboardActivation(item, item.onclick);
         });
       }
     }
@@ -1563,10 +1804,11 @@
     if (!containerElement) return;
 
     const cards = containerElement.querySelectorAll(".nv-card");
-    cards.forEach(card => {
-      card.onclick = () => {
+    cards.forEach((card, index) => {
+      card.onclick = (e) => {
+        if (e.target.closest("button")) return;
         const refId = card.getAttribute("data-ref-id");
-        toggleSelection(refId);
+        selectReference(refId);
       };
 
       // Keyboard navigation support
@@ -1574,9 +1816,34 @@
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
           const refId = card.getAttribute("data-ref-id");
-          toggleSelection(refId);
+          selectReference(refId);
+        } else if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+          e.preventDefault();
+          const nextIndex = e.key === "ArrowDown" ? Math.min(cards.length - 1, index + 1) : Math.max(0, index - 1);
+          cards[nextIndex]?.focus();
         }
       };
+
+      const compileBtn = card.querySelector(".search-card-compile-btn");
+      if (compileBtn) {
+        compileBtn.onclick = (e) => {
+          e.stopPropagation();
+          const refId = compileBtn.getAttribute("data-id");
+          selectedReferenceId = refId;
+          addToRecentlyViewed(refId);
+          currentCompiledEvidence = adapter.compileEvidenceFromReference(retrievalState, refId);
+          if (currentCompiledEvidence) {
+            addToTimeline(currentCompiledEvidence);
+          }
+          addTrailEvent("compile_ref", `Compiled evidence from "${refId}" via search card action`, { referenceId: refId });
+          switchInspectorTab("evidence");
+          renderEvidence(currentCompiledEvidence);
+          saveWorkspaceState();
+          syncSelectionHighlighting();
+          renderReferenceInspector();
+          renderMemoryLayer();
+        };
+      }
     });
   }
 
@@ -1598,6 +1865,43 @@
       // Auto-switch to Reference tab in Inspector
       switchInspectorTab("reference");
     }
+
+    // Clear stale relationship select
+    selectedRelationship = null;
+    renderRelationshipInspector();
+
+    saveWorkspaceState();
+
+    // Refresh UI elements concerned with selection
+    syncSelectionHighlighting();
+    renderReferenceInspector();
+    renderMemoryLayer();
+
+    // Refresh Mode displays
+    if (activeExplorationMode === "graph") {
+      renderVisualGraph();
+    } else if (activeExplorationMode === "discovery") {
+      renderDiscoveryMode();
+    } else if (activeExplorationMode === "compare") {
+      renderCompareMode();
+    }
+  }
+
+  // Select Reference and sync all panels
+  function selectReference(refId) {
+    if (!refId) return;
+    selectedReferenceId = refId;
+    addToRecentlyViewed(refId);
+
+    // Log trail event
+    if (activeExplorationMode === "graph") {
+      addTrailEvent("select_node", `Selected node "${refId}"`, { referenceId: refId });
+    } else {
+      addTrailEvent("open", `Opened "${refId}"`, { referenceId: refId });
+    }
+
+    // Auto-switch to Reference tab in Inspector
+    switchInspectorTab("reference");
 
     // Clear stale relationship select
     selectedRelationship = null;
@@ -1682,41 +1986,58 @@
 
   // Switch exploration modes
   function switchExplorationMode(mode) {
-    activeExplorationMode = mode;
-    saveWorkspaceState();
+    try {
+      console.log(`Switching exploration mode to: ${mode}`);
+      activeExplorationMode = mode;
+      saveWorkspaceState();
 
-    // Toggle tab selection
-    const tabs = document.querySelectorAll(".workspace-tab");
-    tabs.forEach(tab => {
-      if (tab.getAttribute("data-mode") === mode) {
-        tab.classList.add("active");
-        tab.setAttribute("aria-selected", "true");
-      } else {
-        tab.classList.remove("active");
-        tab.setAttribute("aria-selected", "false");
+      // Update developer diagnostics badge if present
+      const diagBadge = document.getElementById("nv-diagnostics-badge");
+      if (diagBadge) {
+        diagBadge.textContent = `JS Active: ${mode}`;
+        diagBadge.setAttribute("data-variant", "success");
       }
-    });
 
-    // Toggle mode panel visibility
-    const modes = ["search", "graph", "discovery", "compare"];
-    modes.forEach(m => {
-      const el = document.getElementById(`mode-${m}`);
-      if (el) {
-        if (m === mode) {
-          el.classList.add("active");
+      // Toggle tab selection
+      const tabs = document.querySelectorAll(".workspace-tab");
+      tabs.forEach(tab => {
+        if (tab.getAttribute("data-mode") === mode) {
+          tab.classList.add("active");
+          tab.setAttribute("aria-selected", "true");
         } else {
-          el.classList.remove("active");
+          tab.classList.remove("active");
+          tab.setAttribute("aria-selected", "false");
         }
-      }
-    });
+      });
 
-    // Refresh mode specific content
-    if (mode === "graph") {
-      renderVisualGraph();
-    } else if (mode === "discovery") {
-      renderDiscoveryMode();
-    } else if (mode === "compare") {
-      renderCompareMode();
+      // Toggle mode panel visibility
+      const modes = ["search", "graph", "discovery", "compare"];
+      modes.forEach(m => {
+        const el = document.getElementById(`mode-${m}`);
+        if (el) {
+          if (m === mode) {
+            el.classList.add("active");
+          } else {
+            el.classList.remove("active");
+          }
+        }
+      });
+
+      // Refresh mode specific content
+      if (mode === "graph") {
+        renderVisualGraph();
+      } else if (mode === "discovery") {
+        renderDiscoveryMode();
+      } else if (mode === "compare") {
+        renderCompareMode();
+      }
+    } catch (err) {
+      console.error(`Error in switchExplorationMode(${mode}):`, err);
+      const diagBadge = document.getElementById("nv-diagnostics-badge");
+      if (diagBadge) {
+        diagBadge.textContent = `Error: ${err.message}`;
+        diagBadge.setAttribute("data-variant", "error");
+      }
     }
   }
 
@@ -1763,6 +2084,8 @@
         status: "active"
       });
     }
+    renderResearchSnapshot();
+    updateProgressiveFeatures();
   }
 
   // Helper to execute and record a search query
@@ -1783,7 +2106,7 @@
       if (!query || query.trim() === "") {
         searchFeedback.textContent = "No active query.";
       } else {
-        searchFeedback.textContent = `Query: "${query}" | Hits: ${currentSearchResults.length}`;
+        searchFeedback.textContent = `${currentSearchResults.length} result${currentSearchResults.length === 1 ? "" : "s"} for "${query}"`;
       }
     }
 
@@ -1825,212 +2148,407 @@
     renderMemoryLayer();
   }
 
-  // Initialize workspace controls
-  function initPlayground() {
-    console.log("Initializing Retrieval Workspace (NV-500)...");
-    loadWorkspaceState();
-
-    const searchInput = document.getElementById("playground-search-input");
-    const searchBtn = document.getElementById("playground-search-button");
-    const saveQueryBtn = document.getElementById("playground-save-query-button");
-    const compileQueryBtn = document.getElementById("playground-compile-query-button");
-    const searchFeedback = document.getElementById("playground-search-feedback");
-    const clearSessionBtn = document.getElementById("playground-clear-session-button");
-    const clearTrailBtn = document.getElementById("playground-clear-trail-button");
-
-    // Silently perform the search for the restored query if non-empty
-    if (currentSearchQuery) {
-      currentSearchResults = adapter.searchReferences(retrievalState, currentSearchQuery);
-      if (searchInput) searchInput.value = currentSearchQuery;
-      if (searchFeedback) {
-        searchFeedback.textContent = `Query: "${currentSearchQuery}" | Hits: ${currentSearchResults.length}`;
-      }
-      if (saveQueryBtn) {
-        saveQueryBtn.disabled = savedQueries.includes(currentSearchQuery.trim());
-      }
-    } else {
-      currentSearchResults = [];
-      if (searchInput) searchInput.value = "";
-      if (searchFeedback) searchFeedback.textContent = "No active query.";
-      if (saveQueryBtn) saveQueryBtn.disabled = true;
-    }
-
-    // Render tabs configuration
-    switchExplorationMode(activeExplorationMode);
-    switchInspectorTab(activeInspectorTab);
-
-    // Initial renders
-    renderSeededReferences();
-    renderSearchResults();
-    renderReferenceInspector();
-    renderEvidence(currentCompiledEvidence);
-    renderRelationshipInspector();
-    renderMemoryLayer();
-    updateWorkspaceState();
-
-    // Bind graph filters and depth controls if they exist in DOM
-    const filterSelect = document.getElementById("graph-filter-select");
-    const depthSelect = document.getElementById("graph-hop-select");
-
-    if (filterSelect) {
-      filterSelect.value = relationshipFilter;
-      filterSelect.onchange = (e) => {
-        relationshipFilter = e.target.value;
-        addTrailEvent("Relationship filter changed", `Changed relationship filter to "${relationshipFilter}"`, { filter: relationshipFilter });
-
-        if (selectedRelationship) {
-          const allRels = retrievalState.relationships;
-          const filtered = adapter.filterRelationships(allRels, relationshipFilter);
-          const stillVisible = filtered.some(r => r.id === selectedRelationship.id);
-          if (!stillVisible) {
-            selectedRelationship = null;
-            renderRelationshipInspector();
-          }
-        }
-
+  // Stage 6 Initialization
+  function initStage6Controls() {
+    const focusBtn = document.getElementById("playground-focus-button");
+    if (focusBtn) {
+      focusBtn.onclick = () => {
+        focusModeEnabled = !focusModeEnabled;
         saveWorkspaceState();
-        renderVisualGraph();
+        applyFocusModeStyles();
       };
     }
 
-    if (depthSelect) {
-      depthSelect.value = neighborhoodDepth;
-      depthSelect.onchange = (e) => {
-        neighborhoodDepth = e.target.value;
-        addTrailEvent("Neighborhood depth changed", `Changed depth focus to "${neighborhoodDepth}"`, { depth: neighborhoodDepth });
-
-        saveWorkspaceState();
-        renderVisualGraph();
+    const prefsBtn = document.getElementById("playground-preferences-button");
+    const prefsPanel = document.getElementById("preferences-panel");
+    if (prefsBtn && prefsPanel) {
+      prefsBtn.onclick = () => {
+        prefsPanel.style.display = prefsPanel.style.display === "none" ? "flex" : "none";
       };
-    }
-
-    // Bind switchable tab clicks
-    const exploreTabs = document.querySelectorAll(".workspace-tab");
-    exploreTabs.forEach(tab => {
-      tab.onclick = () => {
-        const mode = tab.getAttribute("data-mode");
-        switchExplorationMode(mode);
-      };
-    });
-
-    const inspTabs = document.querySelectorAll(".inspector-tab");
-    inspTabs.forEach(tab => {
-      tab.onclick = () => {
-        const t = tab.getAttribute("data-tab");
-        switchInspectorTab(t);
-      };
-    });
-
-    if (searchInput) {
-      // Support Enter key for search
-      searchInput.onkeydown = (e) => {
-        if (e.key === "Enter") {
-          e.preventDefault();
-          if (searchBtn) searchBtn.click();
-        }
-      };
-      // Toggle save button on input changes
-      searchInput.oninput = () => {
-        const query = searchInput.value.trim();
-        if (saveQueryBtn) {
-          saveQueryBtn.disabled = !query || savedQueries.includes(query);
+      prefsPanel.onkeydown = (e) => {
+        if (e.key === "Escape") {
+          prefsPanel.style.display = "none";
+          prefsBtn.focus();
         }
       };
     }
 
-    if (searchBtn) {
-      searchBtn.onclick = () => {
-        const query = searchInput ? searchInput.value : "";
-        runSearch(query, false);
-      };
-    }
-
-    if (saveQueryBtn) {
-      saveQueryBtn.onclick = () => {
-        const query = searchInput ? searchInput.value.trim() : "";
-        if (query && !savedQueries.includes(query)) {
-          savedQueries.unshift(query);
-          if (savedQueries.length > 8) {
-            savedQueries.pop();
-          }
-          addTrailEvent("save_query", `Saved query "${query}"`, { query });
-          saveWorkspaceState();
-          renderMemoryLayer();
-          saveQueryBtn.disabled = true;
-        }
-      };
-    }
-
-    if (compileQueryBtn) {
-      compileQueryBtn.onclick = () => {
-        const query = searchInput ? searchInput.value : "";
-        console.log(`Compiling evidence from query: ${query}`);
-        currentCompiledEvidence = adapter.compileEvidenceFromQuery(retrievalState, query);
-        if (currentCompiledEvidence) {
-          addToTimeline(currentCompiledEvidence);
-        }
-        addTrailEvent("compile_query", `Compiled evidence from query "${query}"`, { query });
-        switchInspectorTab("evidence");
-        renderEvidence(currentCompiledEvidence);
-      };
-    }
-
-    if (clearSessionBtn) {
-      clearSessionBtn.onclick = () => {
-        // Clear localStorage
+    const clearBtn = document.getElementById("playground-clear-session-button");
+    if (clearBtn) {
+      clearBtn.onclick = () => {
         localStorage.removeItem("neuralverse.retrievalWorkspace.v1");
-
-        // Reset state
         resetStateToDefaults();
-
-        // Reset dropdown inputs in DOM
-        const filterSelect = document.getElementById("graph-filter-select");
-        const depthSelect = document.getElementById("graph-hop-select");
-        if (filterSelect) filterSelect.value = "all";
-        if (depthSelect) depthSelect.value = "full";
-
-        // Clear query input
-        if (searchInput) {
-          searchInput.value = "";
-        }
-
-        // Clear results
-        currentSearchResults = [];
-        renderSearchResults();
-
-        // Render
-        switchExplorationMode("search");
-        switchInspectorTab("reference");
-        renderSeededReferences();
-        renderReferenceInspector();
-        renderEvidence(null);
-        renderRelationshipInspector();
-        renderMemoryLayer();
-
-        if (searchFeedback) searchFeedback.textContent = "No active query.";
-        if (saveQueryBtn) saveQueryBtn.disabled = true;
-
-        console.log("Session cleared.");
+        initPlayground();
       };
     }
 
-    if (clearTrailBtn) {
-      clearTrailBtn.onclick = (e) => {
-        e.stopPropagation();
-        knowledgeTrail = [];
+
+
+    const defMode = document.getElementById("pref-default-mode");
+    if (defMode) {
+      defMode.value = activeExplorationMode;
+      defMode.onchange = (e) => { activeExplorationMode = e.target.value; saveWorkspaceState(); switchExplorationMode(activeExplorationMode); };
+    }
+
+    const defTab = document.getElementById("pref-default-tab");
+    if (defTab) {
+      defTab.value = activeInspectorTab;
+      defTab.onchange = (e) => { activeInspectorTab = e.target.value; saveWorkspaceState(); switchInspectorTab(activeInspectorTab); };
+    }
+
+    const defRelFilter = document.getElementById("pref-relationship-filter");
+    if (defRelFilter) {
+      defRelFilter.value = preferences.preferredRelationshipFilter;
+      defRelFilter.onchange = (e) => {
+        preferences.preferredRelationshipFilter = e.target.value;
+        relationshipFilter = e.target.value;
+        const filterSelect = document.getElementById("graph-filter-select");
+        if (filterSelect) {
+          filterSelect.value = relationshipFilter;
+        }
         saveWorkspaceState();
-        renderMemoryLayer();
+        renderVisualGraph();
+      };
+    }
+
+    const density = document.getElementById("pref-density");
+    if (density) {
+      density.value = preferences.density;
+      density.onchange = (e) => {
+        preferences.density = e.target.value;
+        saveWorkspaceState();
+        applyDensityStyles();
+      };
+    }
+
+    const autoOpen = document.getElementById("pref-auto-open");
+    if (autoOpen) {
+      autoOpen.checked = preferences.autoOpenInspector;
+      autoOpen.onchange = (e) => {
+        preferences.autoOpenInspector = e.target.checked;
+        saveWorkspaceState();
+      };
+    }
+
+    const widthSelect = document.getElementById("pref-inspector-width");
+    if (widthSelect) {
+      widthSelect.value = preferences.inspectorWidth;
+      widthSelect.onchange = (e) => {
+        preferences.inspectorWidth = e.target.value;
+        saveWorkspaceState();
+        applyInspectorWidthStyles();
       };
     }
   }
 
-  // Subscribe to navigation route changes
+  // Initialize workspace controls
+  function initPlayground() {
+    try {
+      console.log("Initializing Retrieval Workspace (NV-500)...");
+      loadWorkspaceState();
+
+      // Expose selectReference and runSearch globally for empty state / quick actions onclick handlers
+      window.selectReference = (refId) => {
+        selectReference(refId);
+      };
+      window.runSearch = (query, isRerun = false) => {
+        const searchInput = document.getElementById("playground-search-input");
+        if (searchInput) {
+          searchInput.value = query;
+        }
+        runSearch(query, isRerun);
+      };
+      window.switchExplorationMode = (mode) => {
+        switchExplorationMode(mode);
+      };
+      window.switchInspectorTab = (tabId) => {
+        switchInspectorTab(tabId);
+      };
+      window.resetGraphFilter = () => {
+        relationshipFilter = "all";
+        const filterSelect = document.getElementById("graph-filter-select");
+        if (filterSelect) {
+          filterSelect.value = "all";
+        }
+        saveWorkspaceState();
+        renderVisualGraph();
+        updateProgressiveFeatures();
+      };
+
+      const searchInput = document.getElementById("playground-search-input");
+      const searchBtn = document.getElementById("playground-search-button");
+      const saveQueryBtn = document.getElementById("playground-save-query-button");
+      const compileQueryBtn = document.getElementById("playground-compile-query-button");
+      const searchFeedback = document.getElementById("playground-search-feedback");
+      const clearSessionBtn = document.getElementById("playground-clear-session-button");
+      const clearTrailBtn = document.getElementById("playground-clear-trail-button");
+
+      // Silently perform the search for the restored query if non-empty
+      if (currentSearchQuery) {
+        currentSearchResults = adapter.searchReferences(retrievalState, currentSearchQuery);
+        if (searchInput) searchInput.value = currentSearchQuery;
+        if (searchFeedback) {
+          searchFeedback.textContent = `${currentSearchResults.length} result${currentSearchResults.length === 1 ? "" : "s"} for "${currentSearchQuery}"`;
+        }
+        if (saveQueryBtn) {
+          saveQueryBtn.disabled = savedQueries.includes(currentSearchQuery.trim());
+        }
+      } else {
+        currentSearchResults = [];
+        if (searchInput) searchInput.value = "";
+        if (searchFeedback) searchFeedback.textContent = "No active query.";
+        if (saveQueryBtn) saveQueryBtn.disabled = true;
+      }
+
+      // Render tabs configuration
+      switchExplorationMode(activeExplorationMode);
+      switchInspectorTab(activeInspectorTab);
+
+      // Initial renders
+      renderResumeBanner();
+      renderQuickActions();
+      initStage6Controls();
+
+      renderSeededReferences();
+      renderSearchResults();
+      renderReferenceInspector();
+      renderEvidence(currentCompiledEvidence);
+      renderRelationshipInspector();
+      renderMemoryLayer();
+      updateWorkspaceState();
+
+      // Bind graph filters and depth controls if they exist in DOM
+      const filterSelect = document.getElementById("graph-filter-select");
+      const depthSelect = document.getElementById("graph-hop-select");
+
+      if (filterSelect) {
+        filterSelect.value = relationshipFilter;
+        filterSelect.onchange = (e) => {
+          relationshipFilter = e.target.value;
+          addTrailEvent("Relationship filter changed", `Changed relationship filter to "${relationshipFilter}"`, { filter: relationshipFilter });
+
+          if (selectedRelationship) {
+            const allRels = retrievalState.relationships;
+            const filtered = adapter.filterRelationships(allRels, relationshipFilter);
+            const stillVisible = filtered.some(r => r.id === selectedRelationship.id);
+            if (!stillVisible) {
+              selectedRelationship = null;
+              renderRelationshipInspector();
+            }
+          }
+
+          saveWorkspaceState();
+          renderVisualGraph();
+        };
+      }
+
+      if (depthSelect) {
+        depthSelect.value = neighborhoodDepth;
+        depthSelect.onchange = (e) => {
+          neighborhoodDepth = e.target.value;
+          addTrailEvent("Neighborhood depth changed", `Changed depth focus to "${neighborhoodDepth}"`, { depth: neighborhoodDepth });
+
+          saveWorkspaceState();
+          renderVisualGraph();
+        };
+      }
+
+      const exploreTabs = document.querySelectorAll(".workspace-tab");
+      exploreTabs.forEach((tab, index) => {
+        tab.onclick = () => {
+          const mode = tab.getAttribute("data-mode");
+          switchExplorationMode(mode);
+        };
+        tab.onkeydown = (e) => {
+          if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+            e.preventDefault();
+            const nextIndex = e.key === "ArrowRight" ? Math.min(exploreTabs.length - 1, index + 1) : Math.max(0, index - 1);
+            exploreTabs[nextIndex]?.focus();
+          }
+        };
+      });
+
+      const inspTabs = document.querySelectorAll(".inspector-tab");
+      inspTabs.forEach((tab, index) => {
+        tab.onclick = () => {
+          const t = tab.getAttribute("data-tab");
+          switchInspectorTab(t);
+        };
+        tab.onkeydown = (e) => {
+          if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+            e.preventDefault();
+            const nextIndex = e.key === "ArrowRight" ? Math.min(inspTabs.length - 1, index + 1) : Math.max(0, index - 1);
+            inspTabs[nextIndex]?.focus();
+          }
+        };
+      });
+
+      if (searchInput) {
+        // Support Enter key for search
+        searchInput.onkeydown = (e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            if (searchBtn) searchBtn.click();
+          } else if (e.key === "ArrowDown") {
+            const firstResult = document.querySelector("#search-results-container .nv-card[data-ref-id]");
+            if (firstResult) {
+              e.preventDefault();
+              firstResult.focus();
+            }
+          }
+        };
+        // Toggle save button on input changes
+        searchInput.oninput = () => {
+          const query = searchInput.value.trim();
+          if (saveQueryBtn) {
+            saveQueryBtn.disabled = !query || savedQueries.includes(query);
+          }
+        };
+      }
+
+      if (searchBtn) {
+        searchBtn.onclick = () => {
+          const query = searchInput ? searchInput.value : "";
+          runSearch(query, false);
+        };
+      }
+
+      if (saveQueryBtn) {
+        saveQueryBtn.onclick = () => {
+          const query = searchInput ? searchInput.value.trim() : "";
+          if (query && !savedQueries.includes(query)) {
+            savedQueries.unshift(query);
+            if (savedQueries.length > 8) {
+              savedQueries.pop();
+            }
+            addTrailEvent("save_query", `Saved query "${query}"`, { query });
+            saveWorkspaceState();
+            renderMemoryLayer();
+            saveQueryBtn.disabled = true;
+          }
+        };
+      }
+
+      if (compileQueryBtn) {
+        compileQueryBtn.onclick = () => {
+          const query = searchInput ? searchInput.value.trim() : "";
+          if (!query) {
+            if (searchInput) searchInput.focus();
+            return;
+          }
+          console.log(`Compiling evidence from query: ${query}`);
+          currentCompiledEvidence = adapter.compileEvidenceFromQuery(retrievalState, query);
+          if (currentCompiledEvidence) {
+            addToTimeline(currentCompiledEvidence);
+          }
+          // Context invalidation: clear active selection derived states
+          selectedReferenceId = null;
+          selectedRelationship = null;
+          syncSelectionHighlighting();
+          renderReferenceInspector();
+          renderRelationshipInspector();
+
+          addTrailEvent("compile_query", `Compiled evidence from query "${query}"`, { query });
+          switchInspectorTab("evidence");
+          renderEvidence(currentCompiledEvidence);
+          saveWorkspaceState();
+        };
+      }
+
+      if (clearSessionBtn) {
+        clearSessionBtn.onclick = () => {
+          // Clear localStorage
+          localStorage.removeItem("neuralverse.retrievalWorkspace.v1");
+
+          // Reset state
+          resetStateToDefaults();
+
+          // Reset dropdown inputs in DOM
+          const filterSelect = document.getElementById("graph-filter-select");
+          const depthSelect = document.getElementById("graph-hop-select");
+          if (filterSelect) filterSelect.value = "all";
+          if (depthSelect) depthSelect.value = "full";
+
+          // Clear query input
+          if (searchInput) {
+            searchInput.value = "";
+          }
+
+          // Clear results
+          currentSearchResults = [];
+          renderSearchResults();
+
+          // Render
+          switchExplorationMode("search");
+          switchInspectorTab("reference");
+          renderSeededReferences();
+          renderReferenceInspector();
+          renderEvidence(null);
+          renderRelationshipInspector();
+          renderMemoryLayer();
+          renderResumeBanner();
+          renderQuickActions();
+
+          // Reset dropdown inputs for prefs in DOM
+          const prefDefaultMode = document.getElementById("pref-default-mode");
+          const prefDefaultTab = document.getElementById("pref-default-tab");
+          const prefDensity = document.getElementById("pref-density");
+          const prefRelationshipFilter = document.getElementById("pref-relationship-filter");
+          const prefAutoOpen = document.getElementById("pref-auto-open");
+          const prefInspectorWidth = document.getElementById("pref-inspector-width");
+
+          if (prefDefaultMode) prefDefaultMode.value = preferences.defaultExplorationMode;
+          if (prefDefaultTab) prefDefaultTab.value = preferences.defaultInspectorTab;
+          if (prefDensity) prefDensity.value = preferences.density;
+          if (prefRelationshipFilter) prefRelationshipFilter.value = preferences.preferredRelationshipFilter;
+          if (prefAutoOpen) prefAutoOpen.checked = preferences.autoOpenInspector;
+          if (prefInspectorWidth) prefInspectorWidth.value = preferences.inspectorWidth;
+
+          if (searchFeedback) searchFeedback.textContent = "No active query.";
+          if (saveQueryBtn) saveQueryBtn.disabled = true;
+
+          console.log("Session cleared.");
+        };
+      }
+
+      if (clearTrailBtn) {
+        clearTrailBtn.onclick = (e) => {
+          e.stopPropagation();
+          knowledgeTrail = [];
+          saveWorkspaceState();
+          renderMemoryLayer();
+        };
+      }
+    } catch (err) {
+      console.error("Error in initPlayground():", err);
+      const diagBadge = document.getElementById("nv-diagnostics-badge");
+      if (diagBadge) {
+        diagBadge.textContent = `Init Error: ${err.message}`;
+        diagBadge.setAttribute("data-variant", "error");
+      }
+    }
+  }
+
+  // Listen for the custom route render event or fallback if already loaded
+  window.addEventListener('nv:routerendered', (e) => {
+    if (e.detail?.routeId === "retrieval-playground") {
+      initPlayground();
+    }
+  });
+
+  // Subscribe to navigation route changes (legacy fallback/refreshes)
   if (window.navigationState) {
     window.navigationState.subscribe((state) => {
       if (state.currentRoute?.id === "retrieval-playground") {
-        setTimeout(() => {
+        if (!document.getElementById("playground-search-input")) {
+          setTimeout(() => {
+            if (document.getElementById("playground-search-input")) {
+              initPlayground();
+            }
+          }, 50);
+        } else {
           initPlayground();
-        }, 50);
+        }
       }
     });
   }
@@ -2040,6 +2558,55 @@
   window.NeuralVerse.retrievalPlayground = {
     initPlayground,
     toggleSelection,
-    retrievalState
+    retrievalState,
+    switchExplorationMode,
+    switchInspectorTab
   };
+
+  // Diagnostic floating console wrapper for development testing
+  window.addEventListener('error', (event) => {
+    let debugContainer = document.getElementById("nv-debug-error-console");
+    if (!debugContainer) {
+      debugContainer = document.createElement("div");
+      debugContainer.id = "nv-debug-error-console";
+      debugContainer.style.position = "fixed";
+      debugContainer.style.bottom = "20px";
+      debugContainer.style.right = "20px";
+      debugContainer.style.backgroundColor = "rgba(239, 68, 68, 0.95)";
+      debugContainer.style.color = "white";
+      debugContainer.style.padding = "12px 18px";
+      debugContainer.style.borderRadius = "var(--ref-radius-soft, 6px)";
+      debugContainer.style.zIndex = "999999";
+      debugContainer.style.fontFamily = "var(--sys-font-code-family, monospace)";
+      debugContainer.style.fontSize = "0.75rem";
+      debugContainer.style.maxWidth = "400px";
+      debugContainer.style.boxShadow = "var(--sys-shadow-depth-3, 0 10px 15px -3px rgba(0, 0, 0, 0.3))";
+      debugContainer.style.border = "1px solid rgba(255, 255, 255, 0.2)";
+      document.body.appendChild(debugContainer);
+    }
+    debugContainer.innerHTML = `<strong>NeuralVerse Diagnostic Error:</strong><br>${event.message}<br><small>${event.filename || 'unknown'}:${event.lineno || 0}</small>`;
+  });
+
+  window.addEventListener('unhandledrejection', (event) => {
+    let debugContainer = document.getElementById("nv-debug-error-console");
+    if (!debugContainer) {
+      debugContainer = document.createElement("div");
+      debugContainer.id = "nv-debug-error-console";
+      debugContainer.style.position = "fixed";
+      debugContainer.style.bottom = "20px";
+      debugContainer.style.right = "20px";
+      debugContainer.style.backgroundColor = "rgba(239, 68, 68, 0.95)";
+      debugContainer.style.color = "white";
+      debugContainer.style.padding = "12px 18px";
+      debugContainer.style.borderRadius = "var(--ref-radius-soft, 6px)";
+      debugContainer.style.zIndex = "999999";
+      debugContainer.style.fontFamily = "var(--sys-font-code-family, monospace)";
+      debugContainer.style.fontSize = "0.75rem";
+      debugContainer.style.maxWidth = "400px";
+      debugContainer.style.boxShadow = "var(--sys-shadow-depth-3, 0 10px 15px -3px rgba(0, 0, 0, 0.3))";
+      debugContainer.style.border = "1px solid rgba(255, 255, 255, 0.2)";
+      document.body.appendChild(debugContainer);
+    }
+    debugContainer.innerHTML = `<strong>NeuralVerse Unhandled Promise Rejection:</strong><br>${event.reason}`;
+  });
 })();

@@ -530,6 +530,13 @@ export function createWorkspaceController(options = {}) {
       console.error("Workspace continuity failed to render.", error);
     });
 
+    window.addEventListener('nv:routerendered', (e) => {
+      const routeId = e.detail?.routeId;
+      if (routeId === 'workspace') {
+        renderContinuity().catch(console.error);
+      }
+    });
+
     window.addEventListener("nv:contentloaded", () => {
       renderContinuity().catch(console.error);
     });

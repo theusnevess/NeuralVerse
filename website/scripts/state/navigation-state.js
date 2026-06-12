@@ -26,6 +26,10 @@ class NavigationStateManager {
     return this.state.params;
   }
 
+  getState() {
+    return this.state;
+  }
+
   subscribe(listener) {
     this.listeners.push(listener);
     // Return unsubscribe function

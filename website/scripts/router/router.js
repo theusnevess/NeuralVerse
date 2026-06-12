@@ -215,7 +215,10 @@ class ViewController {
         </div>
       `,
       'retrieval-playground': `
-        <div class="nv-stack nv-stack--gap-md">
+        <div class="nv-stack nv-stack--gap-md nv-topology-bg" style="min-height: 100vh;">
+          <!-- Resume Banner Placement -->
+          <div id="resume-banner-container"></div>
+
           <!-- Hero Header -->
           <header class="nv-cluster nv-cluster--gap-md" style="justify-content: space-between; align-items: center; width: 100%;">
             <div class="nv-stack nv-stack--gap-xs">
@@ -223,10 +226,85 @@ class ViewController {
               <p class="nv-muted" style="margin: 0;">Advanced Knowledge Exploration and Evidence Synthesis Environment.</p>
             </div>
             <div class="nv-cluster nv-cluster--gap-sm" style="align-items: center;">
+              <span id="nv-diagnostics-badge" class="nv-badge" data-variant="info" style="font-size: 0.65rem;">JS Ready</span>
               <span id="session-restored-indicator" class="nv-badge" data-variant="success" style="opacity: 0; transition: opacity 0.5s ease; font-size: 0.65rem;">Session Restored</span>
+              <button id="playground-focus-button" class="nv-button" data-variant="secondary" style="font-size: 0.75rem; padding: 4px 10px; min-block-size: unset;" aria-label="Toggle focus mode">Focus Mode</button>
+              <button id="playground-preferences-button" class="nv-button" data-variant="secondary" style="font-size: 0.75rem; padding: 4px 10px; min-block-size: unset;" aria-label="Toggle workspace preferences">⚙ Prefs</button>
               <button id="playground-clear-session-button" class="nv-button" data-variant="secondary" style="font-size: 0.75rem; padding: 4px 10px; min-block-size: unset;" aria-label="Clear active session data">Clear Session</button>
             </div>
           </header>
+
+          <!-- Preferences Panel -->
+          <div id="preferences-panel" class="nv-panel nv-stack nv-stack--gap-sm" style="display: none; background-color: var(--sys-color-surface-container-high); border: 1px solid var(--sys-color-border-subtle); margin-bottom: 2px;">
+            <h3 style="margin: 0; font-size: var(--sys-font-body-size);">Workspace Preferences</h3>
+            <div class="nv-grid nv-grid--cols-3" style="gap: var(--sys-space-stack-sm);">
+              <div class="nv-stack nv-stack--gap-xs">
+                <label for="pref-default-mode" style="font-size: 0.65rem; color: var(--sys-color-text-secondary);">Default Mode:</label>
+                <select id="pref-default-mode" class="nv-input" style="font-size: 0.7rem; padding: 2px 6px; min-block-size: unset;">
+                  <option value="search">Search Mode</option>
+                  <option value="graph">Graph Mode</option>
+                  <option value="discovery">Discovery Mode</option>
+                  <option value="compare">Compare Mode</option>
+                </select>
+              </div>
+              <div class="nv-stack nv-stack--gap-xs">
+                <label for="pref-default-tab" style="font-size: 0.65rem; color: var(--sys-color-text-secondary);">Default Inspector Tab:</label>
+                <select id="pref-default-tab" class="nv-input" style="font-size: 0.7rem; padding: 2px 6px; min-block-size: unset;">
+                  <option value="reference">Reference</option>
+                  <option value="evidence">Evidence</option>
+                  <option value="relationship">Relationship</option>
+                </select>
+              </div>
+              <div class="nv-stack nv-stack--gap-xs">
+                <label for="pref-density" style="font-size: 0.65rem; color: var(--sys-color-text-secondary);">Layout Density:</label>
+                <select id="pref-density" class="nv-input" style="font-size: 0.7rem; padding: 2px 6px; min-block-size: unset;">
+                  <option value="comfortable">Comfortable</option>
+                  <option value="compact">Compact</option>
+                </select>
+              </div>
+              <div class="nv-stack nv-stack--gap-xs">
+                <label for="pref-relationship-filter" style="font-size: 0.65rem; color: var(--sys-color-text-secondary);">Default Relation Filter:</label>
+                <select id="pref-relationship-filter" class="nv-input" style="font-size: 0.7rem; padding: 2px 6px; min-block-size: unset;">
+                  <option value="all">All Relationships</option>
+                  <option value="cites">Cites</option>
+                  <option value="supports">Supports / Uses</option>
+                  <option value="contrasts">Contrasts</option>
+                  <option value="implements">Implements</option>
+                  <option value="depends_on">Depends On / Extends</option>
+                  <option value="related">Related</option>
+                </select>
+              </div>
+              <div class="nv-stack nv-stack--gap-xs" style="justify-content: center;">
+                <label style="font-size: 0.65rem; color: var(--sys-color-text-secondary); display: flex; align-items: center; gap: var(--sys-space-inline-xs); cursor: pointer;">
+                  <input type="checkbox" id="pref-auto-open" checked /> Auto-open Inspector
+                </label>
+              </div>
+              <div class="nv-stack nv-stack--gap-xs">
+                <label for="pref-inspector-width" style="font-size: 0.65rem; color: var(--sys-color-text-secondary);">Inspector Width:</label>
+                <select id="pref-inspector-width" class="nv-input" style="font-size: 0.7rem; padding: 2px 6px; min-block-size: unset;">
+                  <option value="300px">Narrow (300px)</option>
+                  <option value="340px">Standard (340px)</option>
+                  <option value="420px">Wide (420px)</option>
+                  <option value="480px">Extra Wide (480px)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Custom Quick Actions Bar -->
+          <div class="quick-actions-bar nv-cluster nv-cluster--gap-xs" style="align-items: center; justify-content: space-between; margin-bottom: 2px;">
+            <div id="quick-actions-list" class="nv-cluster nv-cluster--gap-xs"></div>
+            <button id="customize-actions-button" class="nv-button" data-variant="ghost" style="padding: 2px 8px; font-size: 0.65rem; min-block-size: unset;" aria-label="Customize pinned quick actions">Customize Shortcuts</button>
+          </div>
+          <div id="quick-actions-customize-panel" class="nv-panel" style="display: none; background-color: var(--sys-color-surface-container-high); padding: var(--sys-space-stack-xs); border: 1px dashed var(--sys-color-border-subtle); margin-bottom: 4px;">
+            <h4 style="margin: 0 0 var(--sys-space-stack-xs) 0; font-size: 0.7rem; color: var(--sys-color-text-secondary);">Toggle Quick Actions</h4>
+            <div class="nv-cluster nv-cluster--gap-sm" id="customize-checkboxes-container"></div>
+          </div>
+
+          <!-- Research Live Snapshot -->
+          <div id="research-snapshot-container" class="nv-panel nv-cluster nv-cluster--gap-sm" style="background-color: var(--sys-color-surface-container-low); padding: 4px var(--sys-space-inline-sm); border: var(--sys-border-subtle) solid var(--sys-color-border-subtle); font-size: 0.65rem; justify-content: space-between; align-items: center; border-radius: var(--ref-radius-soft); margin-bottom: 2px;">
+          </div>
+
 
           <!-- Knowledge Synthesis Pipeline (Compact & Collapsible) -->
           <details class="nv-panel" style="background-color: var(--sys-color-surface-container-low); border: var(--sys-border-subtle) solid var(--sys-color-border-subtle);">
@@ -340,7 +418,9 @@ class ViewController {
                       </select>
                     </div>
                   </div>
-                  <div class="graph-container" style="position: relative; overflow: hidden; min-height: 480px;">
+                  <!-- Progressive Filter Chips Container -->
+                  <div id="graph-filter-chips-container" class="nv-cluster nv-cluster--gap-xs" style="display: none; align-items: center; padding: 2px 0; margin-bottom: var(--sys-space-stack-xs);"></div>
+                  <div class="graph-container nv-scientific-panel" style="position: relative; overflow: hidden; min-height: 480px;">
                     <svg id="visual-graph-svg" class="graph-svg" aria-label="Reference network topology graph" style="display: block; width: 100%; height: 100%;">
                       <!-- Graph links and nodes will be dynamically injected here -->
                     </svg>
@@ -410,58 +490,64 @@ class ViewController {
 
             </main>
 
-            <!-- Region 3: Inspector Space -->
-            <aside class="inspector-space" aria-label="Inspector Space">
+            <!-- Region 3: Inspector Space Column Wrapper -->
+            <div class="inspector-column">
+              <aside class="inspector-space nv-scientific-panel" aria-label="Inspector Space">
 
-              <!-- Inspector Tabs -->
-              <div class="inspector-tabs" role="tablist" aria-label="Inspector Panels">
-                <button class="inspector-tab active" data-tab="reference" role="tab" aria-selected="true" id="tab-insp-ref">Reference</button>
-                <button class="inspector-tab" data-tab="evidence" role="tab" aria-selected="false" id="tab-insp-ev">Evidence</button>
-                <button class="inspector-tab" data-tab="relationship" role="tab" aria-selected="false" id="tab-insp-rel">Relationship</button>
-              </div>
-
-              <!-- Panel 1: Reference Inspector -->
-              <section id="inspector-panel-reference" class="inspector-panel active" aria-labelledby="tab-insp-ref">
-                <div id="selected-reference-container" style="flex: 1;">
-                  <!-- Active reference state details -->
+                <!-- Inspector Tabs -->
+                <div class="inspector-tabs" role="tablist" aria-label="Inspector Panels">
+                  <button class="inspector-tab active" data-tab="reference" role="tab" aria-selected="true" id="tab-insp-ref">Reference</button>
+                  <button class="inspector-tab" data-tab="evidence" role="tab" aria-selected="false" id="tab-insp-ev">Evidence</button>
+                  <button class="inspector-tab" data-tab="relationship" role="tab" aria-selected="false" id="tab-insp-rel">Relationship</button>
                 </div>
-                <!-- Discovery Space (Carousel, Related, Similar, Citation Continuations, Dead-End Suggestions) -->
-                <div id="discovery-container" class="nv-stack nv-stack--gap-xs" style="margin-top: var(--sys-space-stack-sm);"></div>
-                <div class="nv-stack nv-stack--gap-xs" style="margin-top: var(--sys-space-stack-md); padding-top: var(--sys-space-stack-sm); border-top: var(--sys-border-subtle) solid var(--sys-color-border-subtle);">
-                  <div class="nv-cluster nv-cluster--gap-sm">
-                    <button id="playground-pin-button" class="nv-button" data-variant="secondary" style="flex: 1;" disabled>
-                      Pin Reference
-                    </button>
-                    <button id="playground-compile-ref-button" class="nv-button" data-variant="primary" style="flex: 1;" disabled>
-                      Compile Evidence
-                    </button>
+
+                <!-- Panel 1: Reference Inspector -->
+                <section id="inspector-panel-reference" class="inspector-panel active" aria-labelledby="tab-insp-ref">
+                  <div id="selected-reference-container" style="flex: 1;">
+                    <!-- Active reference state details -->
                   </div>
-                </div>
-              </section>
+                  <!-- Discovery Space (Carousel, Related, Similar, Citation Continuations, Dead-End Suggestions) -->
+                  <div id="discovery-container" class="nv-stack nv-stack--gap-xs" style="margin-top: var(--sys-space-stack-sm);"></div>
+                  <div class="nv-stack nv-stack--gap-xs" style="margin-top: var(--sys-space-stack-md); padding-top: var(--sys-space-stack-sm); border-top: var(--sys-border-subtle) solid var(--sys-color-border-subtle);">
+                    <div class="nv-cluster nv-cluster--gap-sm">
+                      <button id="playground-pin-button" class="nv-button" data-variant="secondary" style="flex: 1;" disabled>
+                        Pin Reference
+                      </button>
+                      <button id="playground-compile-ref-button" class="nv-button" data-variant="primary" style="flex: 1;" disabled>
+                        Compile Evidence
+                      </button>
+                    </div>
+                  </div>
+                </section>
 
-              <!-- Panel 2: Evidence Inspector -->
-              <section id="inspector-panel-evidence" class="inspector-panel" aria-labelledby="tab-insp-ev">
-                <div id="evidence-compilation-container" style="flex: 1;">
-                  <!-- Evidence Compiler detailed output -->
-                </div>
-              </section>
+                <!-- Panel 2: Evidence Inspector -->
+                <section id="inspector-panel-evidence" class="inspector-panel" aria-labelledby="tab-insp-ev">
+                  <div id="evidence-compilation-container" style="flex: 1;">
+                    <!-- Evidence Compiler detailed output -->
+                  </div>
+                </section>
 
-              <!-- Panel 3: Relationship Inspector -->
-              <section id="inspector-panel-relationship" class="inspector-panel" aria-labelledby="tab-insp-rel">
-                <div id="selected-relationship-container" style="flex: 1;">
-                  <!-- Selected direct citation link details -->
-                </div>
-                <!-- Relationship Neighborhood Container -->
-                <div id="relationship-neighborhood-container" class="nv-stack nv-stack--gap-xs" style="margin-top: var(--sys-space-stack-sm);"></div>
-              </section>
+                <!-- Panel 3: Relationship Inspector -->
+                <section id="inspector-panel-relationship" class="inspector-panel" aria-labelledby="tab-insp-rel">
+                  <div id="selected-relationship-container" style="flex: 1;">
+                    <!-- Selected direct citation link details -->
+                  </div>
+                  <!-- Relationship Neighborhood Container -->
+                  <div id="relationship-neighborhood-container" class="nv-stack nv-stack--gap-xs" style="margin-top: var(--sys-space-stack-sm);"></div>
+                </section>
 
-            </aside>
+              </aside>
+            </div>
 
           </div>
 
           <!-- Region 4: Research Memory Layer -->
-          <footer class="memory-layer" aria-label="Research Memory Layer">
-            <div class="memory-grid">
+          <footer class="memory-layer" aria-label="Research Memory Layer" id="memory-layer-section">
+            <div class="nv-cluster nv-cluster--gap-sm" style="justify-content: space-between; align-items: center; margin-bottom: var(--sys-space-stack-xs); border-bottom: var(--sys-border-subtle) solid var(--sys-color-border-subtle); padding-bottom: 4px;">
+              <h3 style="margin: 0; font-size: var(--sys-font-body-size); color: var(--sys-color-text-primary);">Research Memory Layer</h3>
+              <button id="memory-toggle-collapse-button" class="nv-button" data-variant="ghost" style="padding: 2px 6px; font-size: 0.65rem; min-block-size: unset;" aria-label="Toggle memory layer visibility">Collapse Layer</button>
+            </div>
+            <div class="memory-grid" id="memory-layer-grid">
               <!-- Column 1: Pinned References -->
               <div class="memory-column">
                 <h4>Pinned References</h4>
@@ -537,21 +623,27 @@ class ViewController {
     const viewId = route.id === 'not-found' ? 'not-found' : (route.isImplemented ? route.id : 'not-found');
     console.log(`Rendering view: ${viewId}`);
 
+    let rendered = false;
     // Attempt to load from static files
     try {
-      const response = await fetch(`./pages/${viewId}.html`);
+      const response = await fetch(`./pages/${viewId}.html?v=9`);
       if (response.ok) {
         const html = await response.text();
         this.container.innerHTML = html;
-        return;
+        rendered = true;
       }
     } catch (e) {
       console.warn(`Fetch failed (likely file:// protocol CORS limit). Falling back to inline JS template for: ${viewId}`);
     }
 
     // Fallback to inline template
-    const template = this.templates[viewId] || this.templates['not-found'];
-    this.container.innerHTML = template;
+    if (!rendered) {
+      const template = this.templates[viewId] || this.templates['not-found'];
+      this.container.innerHTML = template;
+    }
+
+    // Dispatch custom event to notify all components that page content has been rendered
+    window.dispatchEvent(new CustomEvent('nv:routerendered', { detail: { routeId: viewId } }));
   }
 }
 

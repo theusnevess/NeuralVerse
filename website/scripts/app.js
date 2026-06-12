@@ -1,8 +1,8 @@
-import { createLearningController } from "./learning/learning-controller.js";
-import { createContentController } from "./content/content-controller.js";
-import { createProgressController } from "./progress/progress-controller.js";
-import { createWorkspaceController } from "./workspace/workspace-controller.js";
-import { createBreadcrumbsController } from "./navigation/breadcrumbs-controller.js";
+import { createLearningController } from "./learning/learning-controller.js?v=9";
+import { createContentController } from "./content/content-controller.js?v=9";
+import { createProgressController } from "./progress/progress-controller.js?v=9";
+import { createWorkspaceController } from "./workspace/workspace-controller.js?v=9";
+import { createBreadcrumbsController } from "./navigation/breadcrumbs-controller.js?v=9";
 
 document.addEventListener("DOMContentLoaded", () => {
   console.log('NeuralVerse App Shell Initialized');
