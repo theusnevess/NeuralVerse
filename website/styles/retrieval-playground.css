@@ -366,6 +366,16 @@
   stroke-opacity: 0.1;
 }
 
+.graph-link.hover-active {
+  stroke: var(--sys-color-accent-primary) !important;
+  stroke-opacity: 0.95 !important;
+  stroke-width: 2.2px !important;
+}
+
+.graph-link.hover-dimmed {
+  stroke-opacity: 0.05 !important;
+}
+
 .graph-link:hover,
 .graph-link:focus-visible {
   stroke: var(--sys-color-text-primary);
@@ -384,7 +394,7 @@
   stroke: var(--sys-color-border-strong);
   stroke-width: 1.25px;
   r: 5.5;
-  transition: r 160ms ease, fill 160ms ease, stroke 160ms ease, stroke-width 160ms ease;
+  transition: r 160ms ease, fill 160ms ease, stroke 160ms ease, stroke-width 160ms ease, filter 160ms ease;
 }
 
 .graph-node-cue {
@@ -392,48 +402,63 @@
 }
 
 .graph-node--paper .graph-node-core {
-  fill: color-mix(in srgb, var(--sys-color-accent-primary) 32%, var(--sys-color-surface-container-high));
+  fill: var(--sys-color-accent-primary);
+  stroke: color-mix(in srgb, var(--sys-color-accent-primary) 40%, var(--sys-color-surface-container-high));
 }
 
 .graph-node--repository .graph-node-core {
-  fill: color-mix(in srgb, var(--sys-color-warning, var(--sys-color-accent-primary)) 32%, var(--sys-color-surface-container-high));
+  fill: var(--sys-color-warning);
+  stroke: color-mix(in srgb, var(--sys-color-warning) 40%, var(--sys-color-surface-container-high));
 }
 
 .graph-node--notes .graph-node-core {
-  fill: color-mix(in srgb, var(--sys-color-success, var(--sys-color-accent-primary)) 32%, var(--sys-color-surface-container-high));
+  fill: var(--sys-color-success);
+  stroke: color-mix(in srgb, var(--sys-color-success) 40%, var(--sys-color-surface-container-high));
 }
 
 .graph-node text {
   fill: var(--sys-color-text-secondary);
-  font-family: var(--sys-font-code-family);
-  font-size: 0.54rem;
+  font-family: var(--sys-font-body-family);
+  font-size: 0.62rem;
   pointer-events: none;
-  text-shadow: none;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
   transition: fill 160ms ease, font-size 160ms ease, opacity 160ms ease;
 }
 
 .graph-node:hover .graph-node-core,
 .graph-node:focus-visible .graph-node-core {
   stroke: var(--sys-color-text-primary);
-  stroke-width: 1.75px;
-  r: 7.5;
+  stroke-width: 2px;
+  r: 8.5;
 }
 
-.graph-node:focus-visible .graph-node-core {
-  filter: drop-shadow(0 0 0.35rem color-mix(in srgb, var(--sys-color-accent-primary) 28%, transparent));
+.graph-node--paper:hover .graph-node-core,
+.graph-node--paper:focus-visible .graph-node-core {
+  filter: drop-shadow(0 0 6px var(--sys-color-accent-primary));
+}
+
+.graph-node--repository:hover .graph-node-core,
+.graph-node--repository:focus-visible .graph-node-core {
+  filter: drop-shadow(0 0 6px var(--sys-color-warning));
+}
+
+.graph-node--notes:hover .graph-node-core,
+.graph-node--notes:focus-visible .graph-node-core {
+  filter: drop-shadow(0 0 6px var(--sys-color-success));
 }
 
 .graph-node.selected .graph-node-core {
   fill: var(--sys-color-text-primary);
   stroke: var(--sys-color-accent-primary);
-  stroke-width: 2.25px;
-  r: 8.5;
+  stroke-width: 2.5px;
+  r: 9;
+  filter: drop-shadow(0 0 8px var(--sys-color-accent-primary));
 }
 
 .graph-node.selected text {
   fill: var(--sys-color-text-primary);
   font-weight: var(--ref-font-weight-bold);
-  font-size: 0.62rem;
+  font-size: 0.68rem;
 }
 
 .graph-node.neighbor-hop-1 .graph-node-core {

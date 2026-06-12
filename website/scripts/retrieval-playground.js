@@ -1591,6 +1591,8 @@
       pathEl.setAttribute("fill", "none");
       pathEl.setAttribute("class", `graph-link graph-link--${normalizeGraphType(rel.type)}`);
       pathEl.setAttribute("aria-hidden", "true");
+      pathEl.setAttribute("data-source", rel.sourceReferenceId);
+      pathEl.setAttribute("data-target", rel.targetReferenceId);
       // Arrowheads completely removed for Obsidian-like organic connections
       const selectEdge = (e) => {
         e.stopPropagation();
@@ -1671,8 +1673,10 @@
 
       const circle = createSvgElement("circle", { class: "graph-node-core" });
       const text = createSvgElement("text", { class: "graph-node-label" });
-      text.setAttribute("text-anchor", "middle");
-      text.setAttribute("y", 18); // Position label slightly closer to the small node dot
+      const isLeft = coord.x < width * 0.5;
+      text.setAttribute("text-anchor", isLeft ? "start" : "end");
+      text.setAttribute("x", isLeft ? 10 : -10);
+      text.setAttribute("y", 4);
 
       // Label hierarchy implementation:
       const setLabelState = () => {
@@ -1696,6 +1700,24 @@
 
       g.appendChild(circle);
       g.appendChild(text);
+
+      const highlightNodeConnections = (nodeId) => {
+        const connectedEdgePaths = Array.from(edgeLayer.querySelectorAll(`.graph-link`));
+        connectedEdgePaths.forEach(path => {
+          if (path.getAttribute("data-source") === nodeId || path.getAttribute("data-target") === nodeId) {
+            path.classList.add("hover-active");
+          } else {
+            path.classList.add("hover-dimmed");
+          }
+        });
+      };
+
+      const resetNodeConnections = () => {
+        const connectedEdgePaths = Array.from(edgeLayer.querySelectorAll(`.graph-link`));
+        connectedEdgePaths.forEach(path => {
+          path.classList.remove("hover-active", "hover-dimmed");
+        });
+      };
 
       const activateNode = (e) => {
         e.stopPropagation();
@@ -1723,6 +1745,8 @@
         text.textContent = fullLabel.length > 40 ? `${fullLabel.slice(0, 38)}...` : fullLabel;
         text.style.opacity = "1";
 
+        highlightNodeConnections(ref.id);
+
         const relCount = allRels.filter(rel => rel.sourceReferenceId === ref.id || rel.targetReferenceId === ref.id).length;
         const neighborhoodSize = new Set(allRels.flatMap(rel => (
           rel.sourceReferenceId === ref.id ? [rel.targetReferenceId] :
@@ -1737,11 +1761,13 @@
       g.onmousemove = g.onmouseenter;
       g.onmouseleave = () => {
         hidePreview();
+        resetNodeConnections();
         setLabelState();
       };
       g.onfocus = (event) => g.onmouseenter(event);
       g.onblur = () => {
         hidePreview();
+        resetNodeConnections();
         setLabelState();
       };
 
