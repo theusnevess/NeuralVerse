@@ -136,6 +136,9 @@
                 <option value="1-hop">1-Hop Neighbors</option>
                 <option value="2-hop">2-Hop Neighbors</option>
               </select>
+              <button id="graph-reset-view-button" class="nv-button" data-variant="secondary" type="button" style="min-block-size: unset; padding: 3px 8px; font-size: 0.65rem;" aria-label="Reset graph zoom and pan">
+                Reset View
+              </button>
             </div>
           </div>
           <!-- Progressive Filter Chips Container -->
@@ -146,10 +149,14 @@
             </svg>
             <!-- Graph Empty State Overlay -->
             <div id="graph-empty-state-overlay" class="nv-empty-state" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80%; background-color: var(--sys-color-surface-container-lowest); border: 1px dashed var(--sys-color-border-subtle); z-index: 5; pointer-events: auto; padding: 20px; text-align: center; border-radius: 8px;">
-              <div class="nv-empty-state-icon" aria-hidden="true" style="font-size: 1.5rem; margin-bottom: 8px;">🕸️</div>
               <p id="graph-empty-state-message" class="nv-muted" style="font-size: var(--sys-font-body-size); font-weight: var(--ref-font-weight-medium); color: var(--sys-color-text-primary); margin-bottom: var(--sys-space-stack-xs);">No Selected Reference</p>
               <p id="graph-empty-state-subtext" class="nv-muted" style="font-size: var(--sys-font-caption-size); margin: 0;"></p>
+              <div class="graph-empty-actions" style="display: flex; flex-wrap: wrap; justify-content: center; gap: var(--sys-space-inline-xs); margin-top: var(--sys-space-stack-sm);">
+                <button id="graph-empty-full-button" class="nv-button" data-variant="secondary" type="button">Full Graph</button>
+                <button id="graph-empty-search-button" class="nv-button" data-variant="ghost" type="button">Search</button>
+              </div>
             </div>
+            <div id="graph-hover-preview" class="graph-hover-preview" role="status" aria-live="polite" hidden></div>
           </div>
         </div>
       </section>

@@ -662,16 +662,76 @@
     };
   }
 
+  function hashString(value) {
+    const text = String(value || "");
+    let hash = 2166136261;
+    for (let i = 0; i < text.length; i++) {
+      hash ^= text.charCodeAt(i);
+      hash = Math.imul(hash, 16777619);
+    }
+    return hash >>> 0;
+  }
+
+  function seededUnit(value) {
+    return (hashString(value) % 10000) / 10000;
+  }
+
+  function inferReferenceCluster(ref) {
+    const keywords = (ref?.keywords || []).map(normalizeKeyword);
+    const title = normalizeKeyword(ref?.title || "");
+    const text = `${keywords.join(" ")} ${title}`;
+
+    if (/\b(yolo|detection|real-time|cnn)\b/.test(text)) return "Detection";
+    if (/\b(clip|vision|multimodal|vit|classification|image)\b/.test(text)) return "Vision";
+    if (/\b(transformer|attention|bert|gpt|llama|llm)\b/.test(text)) return "Transformers";
+    if (/\b(nlp|translation|language|pre-training|few-shot)\b/.test(text)) return "Language";
+    if (/\b(rag|retrieval|evaluation|context|lineage)\b/.test(text)) return "Evaluation";
+    if (/\b(agent|tool-use|reasoning|act)\b/.test(text)) return "Agents";
+    if (/\b(pytorch|library|tensor|python|repository|framework)\b/.test(text) || ref?.type === "repository") return "Frameworks";
+    if (ref?.type === "notes") return "Notes";
+    return "Research";
+  }
+
+  function getClusterSummaries(nodes, positions = {}) {
+    const clusters = new Map();
+    nodes.forEach(node => {
+      const name = inferReferenceCluster(node);
+      if (!clusters.has(name)) {
+        clusters.set(name, { name, nodes: [], x: 0, y: 0, radius: 0 });
+      }
+      clusters.get(name).nodes.push(node);
+    });
+
+    return Array.from(clusters.values()).map(cluster => {
+      let totalX = 0;
+      let totalY = 0;
+      let positioned = 0;
+
+      cluster.nodes.forEach(node => {
+        const point = positions[node.id];
+        if (!point) return;
+        totalX += point.x;
+        totalY += point.y;
+        positioned += 1;
+      });
+
+      cluster.x = positioned ? totalX / positioned : 0;
+      cluster.y = positioned ? totalY / positioned : 0;
+      cluster.radius = Math.max(54, Math.min(150, 34 + cluster.nodes.length * 18));
+
+      return cluster;
+    });
+  }
+
   /**
-   * Lightweight spring-embedder force-directed layout.
-   * Computes (x, y) positions for each node in a bounded area.
-   * Pure function — no side effects, no DOM access.
+   * Deterministic, cluster-aware force-directed layout.
+   * Runs a fixed relaxation pass and returns stable coordinates.
    *
    * @param {Array} nodes - Array of node objects with .id
    * @param {Array} edges - Array of edge objects with .sourceReferenceId, .targetReferenceId
    * @param {number} width - Canvas width
    * @param {number} height - Canvas height
-   * @param {string|null} centroidId - Optional node to pin at center
+   * @param {string|null} centroidId - Optional node to anchor near center
    * @returns {Object} Map of nodeId -> { x, y }
    */
   function computeForceLayout(nodes, edges, width, height, centroidId) {
@@ -681,61 +741,79 @@
       return { [n.id]: { x: width / 2, y: height / 2 } };
     }
 
-    const padding = 40;
-    const innerW = width - padding * 2;
-    const innerH = height - padding * 2;
-
-    // Initialize with circular seed (converges faster than random)
+    const padding = Math.max(48, Math.min(width, height) * 0.1);
+    const innerW = Math.max(240, width - padding * 2);
+    const innerH = Math.max(240, height - padding * 2);
     const positions = {};
     const cx = width / 2;
     const cy = height / 2;
-    const initR = Math.min(innerW, innerH) * 0.35;
+    const sortedNodes = nodes.slice().sort((a, b) => String(a.id).localeCompare(String(b.id)));
+    const clusterNames = Array.from(new Set(sortedNodes.map(inferReferenceCluster))).sort();
+    const clusterCenters = {};
+    const centerRadiusX = innerW * 0.31;
+    const centerRadiusY = innerH * 0.28;
 
-    nodes.forEach((n, i) => {
-      const angle = (i * 2 * Math.PI) / nodes.length;
-      positions[n.id] = {
-        x: cx + initR * Math.cos(angle),
-        y: cy + initR * Math.sin(angle),
-        vx: 0,
-        vy: 0
+    clusterNames.forEach((name, index) => {
+      const angle = (-Math.PI / 2) + (index * 2 * Math.PI) / Math.max(1, clusterNames.length);
+      const wobble = (seededUnit(name) - 0.5) * 0.32;
+      clusterCenters[name] = {
+        x: cx + Math.cos(angle + wobble) * centerRadiusX,
+        y: cy + Math.sin(angle + wobble) * centerRadiusY
       };
     });
 
-    // Pin centroid at center if specified
+    if (centroidId) {
+      const centroid = sortedNodes.find(node => node.id === centroidId);
+      if (centroid) {
+        clusterCenters[inferReferenceCluster(centroid)] = { x: cx, y: cy };
+      }
+    }
+
+    const clusterIndexes = {};
+    sortedNodes.forEach(node => {
+      const cluster = inferReferenceCluster(node);
+      clusterIndexes[cluster] = clusterIndexes[cluster] || 0;
+      const localIndex = clusterIndexes[cluster]++;
+      const localAngle = seededUnit(`${node.id}:angle`) * Math.PI * 2;
+      const localRadius = 28 + localIndex * 14 + seededUnit(`${node.id}:radius`) * 38;
+      const center = clusterCenters[cluster] || { x: cx, y: cy };
+      positions[node.id] = {
+        x: center.x + Math.cos(localAngle) * localRadius,
+        y: center.y + Math.sin(localAngle) * localRadius,
+        vx: 0,
+        vy: 0,
+        cluster
+      };
+    });
+
     if (centroidId && positions[centroidId]) {
       positions[centroidId].x = cx;
       positions[centroidId].y = cy;
     }
 
-    // Build adjacency set for quick lookup
-    const adjacency = new Set();
-    edges.forEach(e => {
-      adjacency.add(`${e.sourceReferenceId}:${e.targetReferenceId}`);
-      adjacency.add(`${e.targetReferenceId}:${e.sourceReferenceId}`);
-    });
-
-    // Simulation parameters
-    const iterations = 80;
-    const repulsionStrength = 3000;
-    const attractionStrength = 0.008;
-    const idealEdgeLength = Math.min(innerW, innerH) / Math.max(2, Math.sqrt(nodes.length));
-    const damping = 0.85;
-    const maxVelocity = 12;
+    const iterations = 110;
+    const repulsionStrength = 3600;
+    const attractionStrength = 0.012;
+    const clusterGravity = 0.018;
+    const centerGravity = 0.002;
+    const idealEdgeLength = Math.max(86, Math.min(170, Math.min(innerW, innerH) / Math.max(1.8, Math.sqrt(nodes.length) * 0.72)));
+    const damping = 0.82;
+    const maxVelocity = 10;
 
     for (let iter = 0; iter < iterations; iter++) {
-      const temperature = 1 - (iter / iterations) * 0.7;
+      const temperature = 1 - (iter / iterations) * 0.76;
 
-      // Repulsion: all pairs (Coulomb's law)
-      for (let i = 0; i < nodes.length; i++) {
-        for (let j = i + 1; j < nodes.length; j++) {
-          const a = positions[nodes[i].id];
-          const b = positions[nodes[j].id];
+      for (let i = 0; i < sortedNodes.length; i++) {
+        for (let j = i + 1; j < sortedNodes.length; j++) {
+          const a = positions[sortedNodes[i].id];
+          const b = positions[sortedNodes[j].id];
           let dx = a.x - b.x;
           let dy = a.y - b.y;
           let dist = Math.sqrt(dx * dx + dy * dy);
           if (dist < 1) dist = 1;
 
-          const force = (repulsionStrength * temperature) / (dist * dist);
+          const sameCluster = a.cluster === b.cluster;
+          const force = ((sameCluster ? repulsionStrength * 0.62 : repulsionStrength) * temperature) / (dist * dist);
           const fx = (dx / dist) * force;
           const fy = (dy / dist) * force;
 
@@ -746,7 +824,6 @@
         }
       }
 
-      // Attraction: connected pairs (Hooke's law)
       edges.forEach(e => {
         const a = positions[e.sourceReferenceId];
         const b = positions[e.targetReferenceId];
@@ -757,8 +834,10 @@
         let dist = Math.sqrt(dx * dx + dy * dy);
         if (dist < 1) dist = 1;
 
-        const displacement = dist - idealEdgeLength;
-        const force = attractionStrength * displacement * temperature;
+        const strength = typeof e.strength === "number" ? Math.max(0.45, Math.min(1.4, e.strength)) : 1;
+        const targetLength = idealEdgeLength * (a.cluster === b.cluster ? 0.82 : 1.12);
+        const displacement = dist - targetLength;
+        const force = attractionStrength * strength * displacement * temperature;
         const fx = (dx / dist) * force;
         const fy = (dy / dist) * force;
 
@@ -768,11 +847,15 @@
         b.vy -= fy;
       });
 
-      // Apply velocities with damping and clamping
-      nodes.forEach(n => {
+      sortedNodes.forEach(n => {
         const p = positions[n.id];
+        const clusterCenter = clusterCenters[p.cluster] || { x: cx, y: cy };
 
-        // Skip pinned centroid
+        p.vx += (clusterCenter.x - p.x) * clusterGravity * temperature;
+        p.vy += (clusterCenter.y - p.y) * clusterGravity * temperature;
+        p.vx += (cx - p.x) * centerGravity * temperature;
+        p.vy += (cy - p.y) * centerGravity * temperature;
+
         if (n.id === centroidId) {
           p.vx = 0;
           p.vy = 0;
@@ -782,7 +865,6 @@
         p.vx *= damping;
         p.vy *= damping;
 
-        // Clamp velocity
         const speed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
         if (speed > maxVelocity) {
           p.vx = (p.vx / speed) * maxVelocity;
@@ -792,7 +874,6 @@
         p.x += p.vx;
         p.y += p.vy;
 
-        // Clamp to canvas bounds
         p.x = Math.max(padding, Math.min(width - padding, p.x));
         p.y = Math.max(padding, Math.min(height - padding, p.y));
       });
@@ -892,6 +973,8 @@
     compileEvidenceFromReference,
     filterRelationships,
     getNeighborhoodNodesAndEdges,
+    inferReferenceCluster,
+    getClusterSummaries,
     computeForceLayout,
     computeEdgePaths
   };

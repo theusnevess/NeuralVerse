@@ -21,6 +21,7 @@
   let selectedRelationship = null;
   let relationshipFilter = "all";
   let neighborhoodDepth = "full";
+  let graphViewport = { x: 0, y: 0, scale: 1 };
 
   // Persistence State
   let pinnedReferences = [];
@@ -31,6 +32,7 @@
   let activeInspectorTab = "reference";
   let evidenceTimeline = [];
   let preferencesEscapeHandlerBound = false;
+  let inspectorResizeHandlerBound = false;
 
   function escapeHtml(value) {
     return String(value ?? "")
@@ -55,6 +57,66 @@
         handler(e);
       }
     };
+  }
+
+  function normalizeGraphType(value) {
+    return String(value || "related").toLowerCase().replace(/_/g, "-").replace(/\s+/g, "-");
+  }
+
+  function getShortGraphLabel(ref) {
+    const id = String(ref?.id || "");
+    const title = String(ref?.title || id).replace(/\s*\([^)]*\)\s*$/, "");
+    const label = title || id.replace(/^(paper|repo|notes)-/, "");
+    return label.length > 18 ? `${label.slice(0, 16)}...` : label;
+  }
+
+  function getEvidenceCountForReference(refId) {
+    return evidenceTimeline.reduce((count, item) => {
+      const related = [
+        item?.input,
+        ...(item?.supportingReferences || []),
+        ...(item?.lineage || [])
+      ];
+      return related.includes(refId) ? count + 1 : count;
+    }, 0);
+  }
+
+  function getRelationshipLabel(rel) {
+    const source = adapter.getReferenceById(retrievalState, rel.sourceReferenceId);
+    const target = adapter.getReferenceById(retrievalState, rel.targetReferenceId);
+    return `${source ? source.title : rel.sourceReferenceId} ${String(rel.type || "related").replace(/_/g, " ")} ${target ? target.title : rel.targetReferenceId}`;
+  }
+
+  function clampGraphScale(scale) {
+    return Math.max(0.55, Math.min(2.35, scale));
+  }
+
+  function setGraphViewport(nextViewport, shouldSave = true) {
+    graphViewport = {
+      x: Number.isFinite(nextViewport.x) ? nextViewport.x : 0,
+      y: Number.isFinite(nextViewport.y) ? nextViewport.y : 0,
+      scale: clampGraphScale(Number.isFinite(nextViewport.scale) ? nextViewport.scale : 1)
+    };
+    const world = document.querySelector("#visual-graph-svg .graph-world");
+    if (world) {
+      world.setAttribute("transform", `translate(${graphViewport.x} ${graphViewport.y}) scale(${graphViewport.scale})`);
+    }
+    if (shouldSave) saveWorkspaceState();
+  }
+
+  function resetGraphViewport(shouldRender = false) {
+    setGraphViewport({ x: 0, y: 0, scale: 1 });
+    if (shouldRender) renderVisualGraph();
+  }
+
+  function createSvgElement(tag, attrs = {}) {
+    const element = document.createElementNS("http://www.w3.org/2000/svg", tag);
+    Object.entries(attrs).forEach(([key, value]) => {
+      if (value !== null && value !== undefined) {
+        element.setAttribute(key, String(value));
+      }
+    });
+    return element;
   }
 
   // Stage 6 - Workspace Personalization State
@@ -91,6 +153,7 @@
         selectedRelationship = state.selectedRelationship || null;
         relationshipFilter = state.relationshipFilter || "all";
         neighborhoodDepth = state.neighborhoodDepth || "full";
+        graphViewport = state.graphViewport || { x: 0, y: 0, scale: 1 };
         evidenceTimeline = state.evidenceTimeline || [];
 
         // Stage 6 State
@@ -143,6 +206,7 @@
     selectedRelationship = null;
     relationshipFilter = "all";
     neighborhoodDepth = "full";
+    graphViewport = { x: 0, y: 0, scale: 1 };
     evidenceTimeline = [];
 
     // Stage 6
@@ -183,6 +247,7 @@
         selectedRelationship,
         relationshipFilter,
         neighborhoodDepth,
+        graphViewport,
         evidenceTimeline,
         // Stage 6
         focusModeEnabled,
@@ -263,8 +328,9 @@
     const workspaceLayout = document.querySelector(".workspace-layout");
     const widthSelect = document.getElementById("pref-inspector-width");
     if (inspectorSpace && workspaceLayout) {
-      inspectorSpace.style.width = preferences.inspectorWidth;
-      workspaceLayout.style.gridTemplateColumns = `1fr ${preferences.inspectorWidth}`;
+      const canUseSplitLayout = window.matchMedia("(min-width: 1025px)").matches;
+      inspectorSpace.style.width = canUseSplitLayout ? preferences.inspectorWidth : "";
+      workspaceLayout.style.gridTemplateColumns = canUseSplitLayout ? `minmax(0, 1fr) ${preferences.inspectorWidth}` : "";
     }
     if (widthSelect) {
       widthSelect.value = preferences.inspectorWidth;
@@ -448,22 +514,12 @@
     const depthLabel = depthSelect ? depthSelect.previousElementSibling : null;
     const chipsContainer = document.getElementById("graph-filter-chips-container");
 
-    const graphEventsCount = knowledgeTrail.filter(e => e.type === "select_node" || e.type === "explore_neighborhood" || e.type === "change_graph_filter").length;
-
-    if (graphEventsCount >= 3) {
-      if (filterSelect) filterSelect.style.display = "inline-block";
-      if (depthSelect) depthSelect.style.display = "inline-block";
-      if (filterLabel) filterLabel.style.display = "inline";
-      if (depthLabel) depthLabel.style.display = "inline";
-      if (chipsContainer) chipsContainer.style.display = "flex";
-      renderGraphFilterChips();
-    } else {
-      if (filterSelect) filterSelect.style.display = "none";
-      if (depthSelect) depthSelect.style.display = "none";
-      if (filterLabel) filterLabel.style.display = "none";
-      if (depthLabel) depthLabel.style.display = "none";
-      if (chipsContainer) chipsContainer.style.display = "none";
-    }
+    if (filterSelect) filterSelect.style.display = "inline-block";
+    if (depthSelect) depthSelect.style.display = "inline-block";
+    if (filterLabel) filterLabel.style.display = "inline";
+    if (depthLabel) depthLabel.style.display = "inline";
+    if (chipsContainer) chipsContainer.style.display = relationshipFilter === "all" ? "none" : "flex";
+    renderGraphFilterChips();
   }
 
   // Render progressive filter chips in the graph container
@@ -1346,23 +1402,18 @@
     const svg = document.getElementById("visual-graph-svg");
     if (!svg) return;
 
-    // Clear previous SVG content
     svg.innerHTML = "";
 
-    // Define arrow markers for direction-aware styling
-    const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+    const defs = createSvgElement("defs");
     defs.innerHTML = `
-      <marker id="arrow-default" viewBox="0 0 10 10" refX="16" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-        <path d="M 0 0 L 10 5 L 0 10 z" fill="#6f7f89" />
+      <marker id="arrow-default" viewBox="0 0 10 10" refX="16" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" class="graph-arrow graph-arrow--default" />
       </marker>
       <marker id="arrow-selected" viewBox="0 0 10 10" refX="18" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-        <path d="M 0 0 L 10 5 L 0 10 z" fill="#b6c9d6" />
+        <path d="M 0 0 L 10 5 L 0 10 z" class="graph-arrow graph-arrow--selected" />
       </marker>
-      <marker id="arrow-outbound" viewBox="0 0 10 10" refX="18" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-        <path d="M 0 0 L 10 5 L 0 10 z" fill="#9fb8c8" />
-      </marker>
-      <marker id="arrow-inbound" viewBox="0 0 10 10" refX="18" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-        <path d="M 0 0 L 10 5 L 0 10 z" fill="#9fb8c8" />
+      <marker id="arrow-active" viewBox="0 0 10 10" refX="18" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" class="graph-arrow graph-arrow--active" />
       </marker>
     `;
     svg.appendChild(defs);
@@ -1370,6 +1421,9 @@
     const overlay = document.getElementById("graph-empty-state-overlay");
     const msgEl = document.getElementById("graph-empty-state-message");
     const subtextEl = document.getElementById("graph-empty-state-subtext");
+    const preview = document.getElementById("graph-hover-preview");
+    const emptyFullButton = document.getElementById("graph-empty-full-button");
+    const emptySearchButton = document.getElementById("graph-empty-search-button");
 
     const hideOverlay = () => {
       if (overlay) overlay.style.display = "none";
@@ -1382,18 +1436,48 @@
       }
     };
 
-    // 1. Check if depth is localized but no node is selected
+    const hidePreview = () => {
+      if (!preview) return;
+      preview.hidden = true;
+      preview.innerHTML = "";
+    };
+    const showPreview = (content, event) => {
+      if (!preview) return;
+      preview.innerHTML = content;
+      preview.hidden = false;
+      const containerBox = svg.parentElement.getBoundingClientRect();
+      const x = event?.clientX ? event.clientX - containerBox.left : containerBox.width / 2;
+      const y = event?.clientY ? event.clientY - containerBox.top : containerBox.height / 2;
+      preview.style.left = `${Math.min(containerBox.width - 230, Math.max(12, x + 14))}px`;
+      preview.style.top = `${Math.min(containerBox.height - 120, Math.max(12, y + 14))}px`;
+    };
+
+    if (emptyFullButton) {
+      emptyFullButton.onclick = () => {
+        neighborhoodDepth = "full";
+        relationshipFilter = "all";
+        const filterSelect = document.getElementById("graph-filter-select");
+        const depthSelect = document.getElementById("graph-hop-select");
+        if (filterSelect) filterSelect.value = relationshipFilter;
+        if (depthSelect) depthSelect.value = neighborhoodDepth;
+        addTrailEvent("Graph empty state resolved", "Opened full graph from empty graph state", { depth: neighborhoodDepth, filter: relationshipFilter });
+        saveWorkspaceState();
+        renderVisualGraph();
+      };
+    }
+    if (emptySearchButton) {
+      emptySearchButton.onclick = () => switchExplorationMode("search");
+    }
+
     if ((neighborhoodDepth === "1-hop" || neighborhoodDepth === "2-hop") && !selectedReferenceId) {
       showOverlay("Select a reference to focus the graph, or switch to Full Graph.", "Graph neighborhood requires an active selection node.");
+      hidePreview();
       return;
     }
 
     const allRels = retrievalState.relationships;
-
-    // Filter relationships based on the selected filter type
     const filteredRels = adapter.filterRelationships(allRels, relationshipFilter);
 
-    // Get neighborhood nodes and edges
     const { nodes: visibleNodes, edges: visibleEdges } = adapter.getNeighborhoodNodesAndEdges(
       retrievalState,
       selectedReferenceId,
@@ -1423,13 +1507,14 @@
 
     if (visibleNodes.length === 0) {
       showOverlay("No active references available in registry.", "");
+      hidePreview();
       return;
     }
 
     const width = svg.clientWidth || 600;
     const height = svg.clientHeight || 480;
+    svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
 
-    // Force-directed layout: compute optimized node positions
     const nodeCoords = adapter.computeForceLayout(
       visibleNodes,
       visibleEdges,
@@ -1438,120 +1523,191 @@
       selectedReferenceId || null
     );
 
-    // Compute edge paths with bezier curves for bidirectional pairs
     const edgePaths = adapter.computeEdgePaths(visibleEdges, nodeCoords);
+    const clusterSummaries = adapter.getClusterSummaries ? adapter.getClusterSummaries(visibleNodes, nodeCoords) : [];
 
-    // Determine direction-aware highlighting state
     const activeRefId = selectedReferenceId;
-    const outboundNodeIds = new Set();
-    const inboundNodeIds = new Set();
-    const outboundRelIds = new Set();
-    const inboundRelIds = new Set();
+    const firstHopNodeIds = new Set();
+    const secondHopNodeIds = new Set();
+    const activeRelIds = new Set();
 
     if (activeRefId) {
       visibleEdges.forEach(rel => {
         if (rel.sourceReferenceId === activeRefId) {
-          outboundNodeIds.add(rel.targetReferenceId);
-          outboundRelIds.add(rel.id);
+          firstHopNodeIds.add(rel.targetReferenceId);
+          activeRelIds.add(rel.id);
         } else if (rel.targetReferenceId === activeRefId) {
-          inboundNodeIds.add(rel.sourceReferenceId);
-          inboundRelIds.add(rel.id);
+          firstHopNodeIds.add(rel.sourceReferenceId);
+          activeRelIds.add(rel.id);
+        }
+      });
+
+      visibleEdges.forEach(rel => {
+        const sourceIsFirstHop = firstHopNodeIds.has(rel.sourceReferenceId);
+        const targetIsFirstHop = firstHopNodeIds.has(rel.targetReferenceId);
+        if (sourceIsFirstHop && rel.targetReferenceId !== activeRefId && !firstHopNodeIds.has(rel.targetReferenceId)) {
+          secondHopNodeIds.add(rel.targetReferenceId);
+        }
+        if (targetIsFirstHop && rel.sourceReferenceId !== activeRefId && !firstHopNodeIds.has(rel.sourceReferenceId)) {
+          secondHopNodeIds.add(rel.sourceReferenceId);
         }
       });
     }
 
-    // Render Relationships as <path> elements (straight or curved)
+    const panSurface = createSvgElement("rect", {
+      class: "graph-pan-surface",
+      x: 0,
+      y: 0,
+      width,
+      height
+    });
+    svg.appendChild(panSurface);
+
+    const world = createSvgElement("g", { class: "graph-world" });
+    const clusterLayer = createSvgElement("g", { class: "graph-clusters" });
+    const edgeLayer = createSvgElement("g", { class: "graph-edges" });
+    const nodeLayer = createSvgElement("g", { class: "graph-nodes" });
+    world.appendChild(clusterLayer);
+    world.appendChild(edgeLayer);
+    world.appendChild(nodeLayer);
+    svg.appendChild(world);
+    setGraphViewport(graphViewport, false);
+
+    clusterSummaries
+      .filter(cluster => cluster.nodes.length > 1 && cluster.x && cluster.y)
+      .forEach(cluster => {
+        const halo = createSvgElement("ellipse", {
+          class: "graph-cluster-halo",
+          cx: cluster.x,
+          cy: cluster.y,
+          rx: Math.max(cluster.radius, 72),
+          ry: Math.max(cluster.radius * 0.58, 46)
+        });
+        const label = createSvgElement("text", {
+          class: "graph-cluster-label",
+          x: cluster.x,
+          y: cluster.y - Math.max(cluster.radius * 0.5, 42),
+          "text-anchor": "middle"
+        });
+        label.textContent = cluster.name;
+        clusterLayer.appendChild(halo);
+        clusterLayer.appendChild(label);
+      });
+
     edgePaths.forEach(({ edge: rel, pathData }) => {
-      const pathEl = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      const hitEl = createSvgElement("path");
+      hitEl.setAttribute("d", pathData);
+      hitEl.setAttribute("fill", "none");
+      hitEl.setAttribute("class", "graph-link-target");
+      hitEl.setAttribute("tabindex", "0");
+      hitEl.setAttribute("role", "button");
+      hitEl.setAttribute("pointer-events", "stroke");
+      hitEl.setAttribute("aria-label", `Relationship: ${getRelationshipLabel(rel)}`);
+
+      const pathEl = createSvgElement("path");
       pathEl.setAttribute("d", pathData);
       pathEl.setAttribute("fill", "none");
-      pathEl.setAttribute("class", "graph-link");
-      pathEl.setAttribute("tabindex", "0");
-      pathEl.setAttribute("role", "button");
-      pathEl.setAttribute("aria-label", `Relationship ${rel.sourceReferenceId} to ${rel.targetReferenceId}`);
-
-      // Default marker
+      pathEl.setAttribute("class", `graph-link graph-link--${normalizeGraphType(rel.type)}`);
+      pathEl.setAttribute("aria-hidden", "true");
       pathEl.setAttribute("marker-end", "url(#arrow-default)");
-
-      // Click edge selects relationship
-      pathEl.style.cursor = "pointer";
-      pathEl.onclick = (e) => {
+      const selectEdge = (e) => {
         e.stopPropagation();
         selectedRelationship = rel;
         addTrailEvent("Graph edge selected", `Inspected relationship "${rel.sourceReferenceId} ➔ ${rel.targetReferenceId}"`, { relationship: rel });
         switchInspectorTab("relationship");
         renderRelationshipInspector();
-
-        // Highlight this edge in SVG visually
-        svg.querySelectorAll(".graph-link").forEach(l => l.classList.add("dimmed"));
-        pathEl.classList.remove("dimmed");
-        pathEl.classList.add("highlight");
+        saveWorkspaceState();
+        renderVisualGraph();
       };
-      bindKeyboardActivation(pathEl, pathEl.onclick);
+      const showEdgePreview = (event) => {
+        const source = adapter.getReferenceById(retrievalState, rel.sourceReferenceId);
+        const target = adapter.getReferenceById(retrievalState, rel.targetReferenceId);
+        const context = rel.context || (rel.strength ? `Strength ${rel.strength}` : "Relationship context");
+        showPreview(`
+          <strong>${escapeHtml(String(rel.type || "related").replace(/_/g, " "))}</strong>
+          <span>${escapeHtml(source?.title || rel.sourceReferenceId)}</span>
+          <span>${escapeHtml(target?.title || rel.targetReferenceId)}</span>
+          <small>${escapeHtml(context)}</small>
+        `, event);
+      };
+      hitEl.onclick = selectEdge;
+      pathEl.onclick = selectEdge;
+      bindKeyboardActivation(hitEl, selectEdge);
+      hitEl.onmouseenter = showEdgePreview;
+      hitEl.onmousemove = showEdgePreview;
+      hitEl.onmouseleave = hidePreview;
+      hitEl.onfocus = showEdgePreview;
+      hitEl.onblur = hidePreview;
 
       if (activeRefId) {
         if (rel.id === selectedRelationship?.id) {
-          pathEl.style.strokeWidth = "4px";
+          pathEl.classList.add("selected");
           pathEl.setAttribute("marker-end", "url(#arrow-selected)");
-        } else if (outboundRelIds.has(rel.id)) {
-          pathEl.classList.add("outbound");
-          pathEl.classList.add("highlight");
-          pathEl.setAttribute("marker-end", "url(#arrow-outbound)");
-        } else if (inboundRelIds.has(rel.id)) {
-          pathEl.classList.add("inbound");
-          pathEl.classList.add("highlight");
-          pathEl.setAttribute("marker-end", "url(#arrow-inbound)");
+        } else if (activeRelIds.has(rel.id)) {
+          pathEl.classList.add("active");
+          pathEl.setAttribute("marker-end", "url(#arrow-active)");
+        } else if (
+          firstHopNodeIds.has(rel.sourceReferenceId) ||
+          firstHopNodeIds.has(rel.targetReferenceId) ||
+          secondHopNodeIds.has(rel.sourceReferenceId) ||
+          secondHopNodeIds.has(rel.targetReferenceId)
+        ) {
+          pathEl.classList.add("nearby");
         } else {
           pathEl.classList.add("dimmed");
         }
       } else {
         if (rel.id === selectedRelationship?.id) {
-          pathEl.style.strokeWidth = "4px";
+          pathEl.classList.add("selected");
           pathEl.setAttribute("marker-end", "url(#arrow-selected)");
         }
       }
-      svg.appendChild(pathEl);
+
+      edgeLayer.appendChild(hitEl);
+      edgeLayer.appendChild(pathEl);
     });
 
-    // Render References (nodes)
     visibleNodes.forEach(ref => {
       const coord = nodeCoords[ref.id];
       if (!coord) return;
 
-      const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+      const g = createSvgElement("g");
       g.setAttribute("class", `graph-node graph-node--${ref.type || "reference"}`);
       g.setAttribute("transform", `translate(${coord.x}, ${coord.y})`);
       g.setAttribute("tabindex", "0");
       g.setAttribute("role", "button");
-      g.setAttribute("aria-label", `Node ${ref.id}: ${ref.title}`);
+      g.setAttribute("aria-label", `Reference node: ${ref.title}. ${ref.type || "reference"}. Press Enter to inspect.`);
 
       if (activeRefId) {
         if (ref.id === activeRefId) {
           g.classList.add("selected");
-        } else if (outboundNodeIds.has(ref.id) || inboundNodeIds.has(ref.id)) {
-          g.classList.add("neighbor");
-          if (outboundNodeIds.has(ref.id)) g.classList.add("outbound");
-          if (inboundNodeIds.has(ref.id)) g.classList.add("inbound");
+        } else if (firstHopNodeIds.has(ref.id)) {
+          g.classList.add("neighbor-hop-1");
+        } else if (secondHopNodeIds.has(ref.id)) {
+          g.classList.add("neighbor-hop-2");
         } else {
-          g.classList.add("dimmed");
+          g.classList.add("distant");
         }
       }
+      if (pinnedReferences.includes(ref.id)) g.classList.add("pinned");
 
-      const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      const typeCue = createSvgElement("circle", { class: "graph-node-cue", cx: -9, cy: -7, r: 3 });
+      const circle = createSvgElement("circle", { class: "graph-node-core" });
 
-      const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
-      const label = ref.id.replace(/^paper-/, "").replace(/^repo-/, "").replace(/^notes-/, "");
-      text.textContent = label;
+      const text = createSvgElement("text", { class: "graph-node-label" });
+      text.textContent = getShortGraphLabel(ref);
       text.setAttribute("text-anchor", "middle");
-      text.setAttribute("y", 23);
+      text.setAttribute("y", 24);
 
       g.appendChild(circle);
+      g.appendChild(typeCue);
       g.appendChild(text);
 
-      g.onclick = (e) => {
+      const activateNode = (e) => {
         e.stopPropagation();
         selectReference(ref.id);
       };
+      g.onclick = activateNode;
 
       g.onkeydown = (e) => {
         if (e.key === "Enter" || e.key === " ") {
@@ -1559,9 +1715,88 @@
           selectReference(ref.id);
         }
       };
+      g.ondblclick = (e) => {
+        e.stopPropagation();
+        const nextScale = Math.max(graphViewport.scale, 1.35);
+        setGraphViewport({
+          scale: nextScale,
+          x: width / 2 - coord.x * nextScale,
+          y: height / 2 - coord.y * nextScale
+        });
+      };
+      g.onmouseenter = (event) => {
+        const relCount = allRels.filter(rel => rel.sourceReferenceId === ref.id || rel.targetReferenceId === ref.id).length;
+        const neighborhoodSize = new Set(allRels.flatMap(rel => (
+          rel.sourceReferenceId === ref.id ? [rel.targetReferenceId] :
+          rel.targetReferenceId === ref.id ? [rel.sourceReferenceId] : []
+        ))).size;
+        showPreview(`
+          <strong>${escapeHtml(ref.title)}</strong>
+          <span>${escapeHtml(ref.type || "reference")} · ${escapeHtml(adapter.inferReferenceCluster ? adapter.inferReferenceCluster(ref) : "Research")}</span>
+          <small>${relCount} relationships · ${getEvidenceCountForReference(ref.id)} evidence · ${neighborhoodSize} neighbors</small>
+        `, event);
+      };
+      g.onmousemove = g.onmouseenter;
+      g.onmouseleave = hidePreview;
+      g.onfocus = (event) => g.onmouseenter(event);
+      g.onblur = hidePreview;
 
-      svg.appendChild(g);
+      nodeLayer.appendChild(g);
     });
+
+    let isPanning = false;
+    let panStart = null;
+    svg.onwheel = (event) => {
+      event.preventDefault();
+      hidePreview();
+      const containerBox = svg.getBoundingClientRect();
+      const pointerX = event.clientX - containerBox.left;
+      const pointerY = event.clientY - containerBox.top;
+      const oldScale = graphViewport.scale;
+      const nextScale = clampGraphScale(oldScale * (event.deltaY < 0 ? 1.1 : 0.9));
+      const graphX = (pointerX - graphViewport.x) / oldScale;
+      const graphY = (pointerY - graphViewport.y) / oldScale;
+      setGraphViewport({
+        scale: nextScale,
+        x: pointerX - graphX * nextScale,
+        y: pointerY - graphY * nextScale
+      });
+    };
+    svg.onpointerdown = (event) => {
+      if (event.target !== svg && !event.target.classList.contains("graph-pan-surface")) return;
+      isPanning = true;
+      panStart = {
+        pointerId: event.pointerId,
+        x: event.clientX,
+        y: event.clientY,
+        viewportX: graphViewport.x,
+        viewportY: graphViewport.y
+      };
+      svg.setPointerCapture(event.pointerId);
+      svg.classList.add("is-panning");
+      hidePreview();
+    };
+    svg.onpointermove = (event) => {
+      if (!isPanning || !panStart) return;
+      setGraphViewport({
+        scale: graphViewport.scale,
+        x: panStart.viewportX + event.clientX - panStart.x,
+        y: panStart.viewportY + event.clientY - panStart.y
+      }, false);
+    };
+    svg.onpointerup = (event) => {
+      if (!isPanning) return;
+      isPanning = false;
+      panStart = null;
+      svg.classList.remove("is-panning");
+      try {
+        svg.releasePointerCapture(event.pointerId);
+      } catch (err) {
+        if (window.NV_DEBUG) console.warn("Graph pointer release skipped", err);
+      }
+      saveWorkspaceState();
+    };
+    svg.onpointercancel = svg.onpointerup;
   }
 
   // DOM Rendering: Discovery Mode
@@ -2258,6 +2493,10 @@
     try {
       if (window.NV_DEBUG) console.log("Initializing Retrieval Workspace (NV-500)...");
       loadWorkspaceState();
+      if (!inspectorResizeHandlerBound) {
+        window.addEventListener("resize", applyInspectorWidthStyles);
+        inspectorResizeHandlerBound = true;
+      }
 
       // Expose selectReference and runSearch globally for empty state / quick actions onclick handlers
       window.selectReference = (refId) => {
@@ -2294,6 +2533,14 @@
       const searchFeedback = document.getElementById("playground-search-feedback");
       const clearSessionBtn = document.getElementById("playground-clear-session-button");
       const clearTrailBtn = document.getElementById("playground-clear-trail-button");
+      const graphResetButton = document.getElementById("graph-reset-view-button");
+
+      if (graphResetButton) {
+        graphResetButton.onclick = () => {
+          resetGraphViewport(true);
+          addTrailEvent("Graph view reset", "Reset graph zoom and pan", { viewport: graphViewport });
+        };
+      }
 
       // Silently perform the search for the restored query if non-empty
       if (currentSearchQuery) {
