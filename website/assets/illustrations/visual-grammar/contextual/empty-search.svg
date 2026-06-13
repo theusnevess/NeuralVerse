@@ -1,0 +1,8 @@
+<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.75" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="50" cy="50" r="40" stroke-dasharray="3 3" stroke-opacity="0.3"/>
+  <circle cx="45" cy="45" r="20" fill="currentColor" fill-opacity="0.05"/>
+  <line x1="59" y1="59" x2="85" y2="85"/>
+  <line x1="45" y1="15" x2="45" y2="25" stroke-dasharray="2 2"/>
+  <line x1="15" y1="45" x2="25" y2="45" stroke-dasharray="2 2"/>
+  <circle cx="75" cy="25" r="3" fill="currentColor"/>
+</svg>

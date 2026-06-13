@@ -494,13 +494,17 @@
               ${recentQuerySection}
               ${recentRefSection}
             ` : createRichEmptyState({
-                 icon: "",
-                 title: "Search the registry",
-                 explanation: "Use Enter to run a query. Select any result to inspect it immediately.",
+                 icon: "search",
+                 title: "Start a knowledge search",
+                 explanation: "Search references, models, papers, or research notes to begin exploration.",
                  primaryAction: {
                    label: "Focus Search",
                    onclick: "document.getElementById('playground-search-input').focus()"
-                 }
+                 },
+                 secondaryAction: savedQueries.length > 0 ? {
+                   label: "Run Saved Query",
+                   onclick: `window.runSearch('${savedQueries[0].replace(/'/g, "\\'")}', true)`
+                 } : null
                })}
           </div>
         </div>
@@ -582,17 +586,147 @@
     `;
   }
 
-  // Helper: Create a compact empty state.
+  // Reusable scientific SVG motifs for empty states
+  function getSvgMotif(name) {
+    const color = "var(--sys-color-accent-primary)";
+    const colorMuted = "rgba(138, 180, 248, 0.25)";
+    
+    switch (name) {
+      case 'search':
+        return `
+          <svg viewBox="0 0 100 100" width="80" height="80" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display: block; margin: 0 auto;" aria-hidden="true">
+            <circle cx="50" cy="50" r="40" stroke-dasharray="3 3" stroke-opacity="0.3" stroke="${color}"/>
+            <circle cx="45" cy="45" r="20" fill="currentColor" fill-opacity="0.05" stroke="${color}" stroke-width="1.75"/>
+            <line x1="59" y1="59" x2="85" y2="85" stroke="${color}" stroke-width="1.75"/>
+            <line x1="45" y1="15" x2="45" y2="25" stroke="${colorMuted}" stroke-width="1.5" stroke-dasharray="2 2"/>
+            <line x1="15" y1="45" x2="25" y2="45" stroke="${colorMuted}" stroke-width="1.5" stroke-dasharray="2 2"/>
+            <circle cx="75" cy="25" r="3" fill="currentColor"/>
+          </svg>
+        `;
+      case 'no_results':
+        return `
+          <svg viewBox="0 0 100 100" width="80" height="80" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display: block; margin: 0 auto;" aria-hidden="true">
+            <circle cx="50" cy="50" r="35" stroke-dasharray="4 4" stroke-opacity="0.3" stroke="${color}"/>
+            <line x1="35" y1="35" x2="65" y2="65" stroke="var(--sys-color-semantic-error, #f28b82)" stroke-width="1.75"/>
+            <line x1="65" y1="35" x2="35" y2="65" stroke="var(--sys-color-semantic-error, #f28b82)" stroke-width="1.75"/>
+            <circle cx="50" cy="50" r="25" stroke="${colorMuted}" stroke-width="1.5" stroke-opacity="0.4"/>
+          </svg>
+        `;
+      case 'graph':
+        return `
+          <svg viewBox="0 0 100 100" width="80" height="80" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display: block; margin: 0 auto;" aria-hidden="true">
+            <path d="M 0 50 H 100 M 50 0 V 100" stroke="${colorMuted}" stroke-width="0.5" stroke-opacity="0.1"/>
+            <circle cx="50" cy="50" r="30" stroke-dasharray="4 4" stroke-opacity="0.2" stroke="${color}"/>
+            <circle cx="30" cy="30" r="4" fill="currentColor" fill-opacity="0.5"/>
+            <circle cx="70" cy="30" r="4" fill="currentColor" fill-opacity="0.5"/>
+            <circle cx="35" cy="70" r="4" fill="currentColor" fill-opacity="0.5"/>
+            <circle cx="65" cy="70" r="4" fill="currentColor" fill-opacity="0.5"/>
+          </svg>
+        `;
+      case 'evidence':
+        return `
+          <svg viewBox="0 0 100 100" width="80" height="80" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display: block; margin: 0 auto;" aria-hidden="true">
+            <rect x="30" y="30" width="40" height="40" rx="4" stroke-dasharray="3 3" stroke-opacity="0.5" stroke="${color}"/>
+            <circle cx="50" cy="50" r="4" fill="currentColor"/>
+            <line x1="15" y1="50" x2="30" y2="50" stroke="${colorMuted}" stroke-width="1.5" stroke-opacity="0.3"/>
+            <line x1="85" y1="50" x2="70" y2="50" stroke="${colorMuted}" stroke-width="1.5" stroke-opacity="0.3"/>
+            <line x1="50" y1="15" x2="50" y2="30" stroke="${colorMuted}" stroke-width="1.5" stroke-opacity="0.3"/>
+            <line x1="50" y1="85" x2="50" y2="70" stroke="${colorMuted}" stroke-width="1.5" stroke-opacity="0.3"/>
+          </svg>
+        `;
+      case 'discovery':
+        return `
+          <svg viewBox="0 0 100 100" width="80" height="80" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display: block; margin: 0 auto;" aria-hidden="true">
+            <circle cx="50" cy="50" r="10" stroke-opacity="0.3" stroke="${color}"/>
+            <circle cx="50" cy="50" r="30" stroke-dasharray="3 3" stroke-opacity="0.3" stroke="${colorMuted}"/>
+            <line x1="50" y1="50" x2="80" y2="20" stroke="${colorMuted}" stroke-width="1.5" stroke-opacity="0.3"/>
+            <circle cx="80" cy="20" r="3" fill="currentColor" fill-opacity="0.3"/>
+          </svg>
+        `;
+      case 'relationship':
+        return `
+          <svg viewBox="0 0 100 100" width="80" height="80" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display: block; margin: 0 auto;" aria-hidden="true">
+            <line x1="10" y1="50" x2="90" y2="50" stroke="${colorMuted}" stroke-width="1.5" stroke-opacity="0.2"/>
+            <line x1="50" y1="10" x2="50" y2="90" stroke="${colorMuted}" stroke-width="1.5" stroke-opacity="0.2"/>
+            <circle cx="50" cy="50" r="5" fill="currentColor"/>
+            <circle cx="20" cy="30" r="4" fill="currentColor" fill-opacity="0.2"/>
+            <circle cx="80" cy="70" r="4" fill="currentColor" fill-opacity="0.2"/>
+          </svg>
+        `;
+      case 'pinned':
+        return `
+          <svg viewBox="0 0 100 100" width="40" height="40" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display: block; margin: 0 auto;" aria-hidden="true">
+            <circle cx="50" cy="50" r="18" stroke="${colorMuted}" stroke-width="1.2" stroke-dasharray="3,3" />
+            <circle cx="50" cy="50" r="6" fill="${color}" stroke="${color}" stroke-width="1" />
+            <path d="M 50,18 L 50,30 M 50,70 L 50,82 M 18,50 L 30,50 M 70,50 L 82,50" stroke="${color}" stroke-width="1.2" />
+          </svg>
+        `;
+      case 'recent':
+        return `
+          <svg viewBox="0 0 100 100" width="40" height="40" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display: block; margin: 0 auto;" aria-hidden="true">
+            <circle cx="50" cy="50" r="15" stroke="${color}" stroke-width="1.5" />
+            <polyline points="50,42 50,50 58,50" stroke="${color}" stroke-width="1.5" />
+            <path d="M 22,22 A 38,38 0 0 1 78,22" stroke="${colorMuted}" stroke-width="1" stroke-dasharray="3,3" />
+          </svg>
+        `;
+      case 'queries':
+        return `
+          <svg viewBox="0 0 100 100" width="40" height="40" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display: block; margin: 0 auto;" aria-hidden="true">
+            <rect x="35" y="24" width="30" height="42" rx="3" stroke="${color}" stroke-width="1.5" />
+            <line x1="42" y1="34" x2="58" y2="34" stroke="${colorMuted}" stroke-width="1.5" />
+            <line x1="42" y1="44" x2="58" y2="44" stroke="${colorMuted}" stroke-width="1.5" />
+            <circle cx="68" cy="62" r="8" stroke="${color}" stroke-width="1.5" fill="var(--sys-color-surface-container-lowest)" />
+            <line x1="74" y1="68" x2="82" y2="76" stroke="${color}" stroke-width="1.5" />
+          </svg>
+        `;
+      case 'trail':
+        return `
+          <svg viewBox="0 0 100 100" width="40" height="40" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display: block; margin: 0 auto;" aria-hidden="true">
+            <line x1="50" y1="85" x2="50" y2="50" stroke="${color}" stroke-width="1.5"/>
+            <line x1="50" y1="50" x2="25" y2="25" stroke="${color}" stroke-width="1.5"/>
+            <line x1="50" y1="50" x2="75" y2="25" stroke="${color}" stroke-width="1.5"/>
+            <circle cx="50" cy="85" r="4" fill="currentColor"/>
+            <circle cx="25" cy="25" r="4" fill="${color}" fill-opacity="0.1"/>
+            <circle cx="75" cy="25" r="4" fill="${color}" fill-opacity="0.1"/>
+          </svg>
+        `;
+      default:
+        return '';
+    }
+  }
+
+  // Reusable empty-state visual system helper
   function createRichEmptyState(config) {
-    return `
-      <div class="nv-rich-empty-state nv-animate-fade">
-        ${config.icon ? `<div class="nv-rich-empty-illustration" aria-hidden="true">${config.icon}</div>` : ""}
-        <h4 class="nv-rich-empty-title">${config.title}</h4>
-        <p class="nv-rich-empty-desc">${config.explanation}</p>
-        <div class="nv-cluster nv-cluster--gap-sm" style="justify-content: center; align-items: center;">
-          ${config.primaryAction ? `<button class="nv-button" data-variant="primary" style="font-size: 0.65rem; padding: 4px 10px; min-block-size: unset;" onclick="${config.primaryAction.onclick}">${config.primaryAction.label}</button>` : ''}
-          ${config.secondaryAction ? `<button class="nv-button" data-variant="secondary" style="font-size: 0.65rem; padding: 4px 10px; min-block-size: unset;" onclick="${config.secondaryAction.onclick}">${config.secondaryAction.label}</button>` : ''}
+    const variantClass = config.variant ? `nv-empty-state--${config.variant}` : '';
+    const compactClass = config.compact ? 'nv-empty-state--compact' : '';
+    const panelClass = config.panel ? 'nv-empty-state--panel' : '';
+    
+    const svgMotif = getSvgMotif(config.motif || config.icon);
+    
+    let actionsHtml = '';
+    if (config.primaryAction || config.secondaryAction) {
+      actionsHtml = `
+        <div class="nv-empty-state__actions">
+          ${config.primaryAction ? `
+            <button class="nv-button" id="${config.primaryAction.id || ''}" data-variant="primary" style="font-size: 0.65rem; padding: 4px 10px; min-block-size: unset;" ${typeof config.primaryAction.onclick === 'string' && config.primaryAction.onclick ? `onclick="${config.primaryAction.onclick}"` : ''}>
+              ${config.primaryAction.label}
+            </button>
+          ` : ''}
+          ${config.secondaryAction ? `
+            <button class="nv-button" id="${config.secondaryAction.id || ''}" data-variant="secondary" style="font-size: 0.65rem; padding: 4px 10px; min-block-size: unset;" ${typeof config.secondaryAction.onclick === 'string' && config.secondaryAction.onclick ? `onclick="${config.secondaryAction.onclick}"` : ''}>
+              ${config.secondaryAction.label}
+            </button>
+          ` : ''}
         </div>
+      `;
+    }
+
+    return `
+      <div class="nv-empty-state ${variantClass} ${compactClass} ${panelClass} nv-animate-fade">
+        ${svgMotif ? `<div class="nv-empty-state__visual" aria-hidden="true">${svgMotif}</div>` : ''}
+        <h4 class="nv-empty-state__title">${config.title}</h4>
+        <p class="nv-empty-state__message">${config.explanation || config.message || ''}</p>
+        ${actionsHtml}
       </div>
     `;
   }
@@ -665,12 +799,19 @@
     }
 
     if (currentSearchResults.length === 0) {
-      container.innerHTML = `
-        <div class="nv-empty-state">
-          <p class="nv-muted" style="font-size: var(--sys-font-body-size); font-weight: var(--ref-font-weight-medium); color: var(--sys-color-text-primary); margin-bottom: var(--sys-space-stack-xs);">No matches for "${escapeHtml(currentSearchQuery)}"</p>
-          <p class="nv-muted" style="font-size: var(--sys-font-caption-size); margin: 0;">Try a broader concept such as transformer, vision, rag, agent, or pytorch.</p>
-        </div>
-      `;
+      container.innerHTML = createRichEmptyState({
+        icon: "no_results",
+        title: "No matching references found",
+        explanation: "Try a broader concept or inspect saved queries and pinned references.",
+        primaryAction: {
+          label: "Clear Search",
+          onclick: "document.getElementById('playground-search-input').value = ''; window.runSearch('');"
+        },
+        secondaryAction: savedQueries.length > 0 ? {
+          label: "Open Saved Queries",
+          onclick: "const qEl = document.getElementById('memory-queries-list'); if (qEl) qEl.scrollIntoView({ behavior: 'smooth' });"
+        } : null
+      });
       return;
     }
 
@@ -710,12 +851,15 @@
     if (!container) return;
 
     if (!selectedReferenceId) {
-      container.innerHTML = `
-        <div class="nv-empty-state">
-          <p class="nv-muted" style="font-size: var(--sys-font-body-size); font-weight: var(--ref-font-weight-medium); color: var(--sys-color-text-primary); margin-bottom: var(--sys-space-stack-xs);">No reference selected</p>
-          <p class="nv-muted" style="font-size: var(--sys-font-caption-size); margin: 0;">Choose a result, graph node, or memory item.</p>
-        </div>
-      `;
+      container.innerHTML = createRichEmptyState({
+        icon: "search",
+        title: "No reference selected",
+        explanation: "Choose a result, graph node, or memory item to inspect its details.",
+        primaryAction: {
+          label: "Focus Search",
+          onclick: "document.getElementById('playground-search-input').focus();"
+        }
+      });
       if (pinBtn) pinBtn.disabled = true;
       if (compileRefBtn) compileRefBtn.disabled = true;
       runTransientClass(container, "is-updated", 200);
@@ -726,11 +870,15 @@
 
     const ref = adapter.getReferenceById(retrievalState, selectedReferenceId);
     if (!ref) {
-      container.innerHTML = `
-        <div class="nv-empty-state">
-          <p class="nv-muted">Selected reference details could not be loaded.</p>
-        </div>
-      `;
+      container.innerHTML = createRichEmptyState({
+        icon: "no_results",
+        title: "Reference not found",
+        explanation: "Selected reference details could not be loaded from registry.",
+        primaryAction: {
+          label: "Return to Search",
+          onclick: "window.switchExplorationMode('search'); document.getElementById('playground-search-input').focus();"
+        }
+      });
       if (pinBtn) pinBtn.disabled = true;
       if (compileRefBtn) compileRefBtn.disabled = true;
       runTransientClass(container, "is-updated", 200);
@@ -842,13 +990,9 @@
     if (!selectedReferenceId) {
       // Show Discovery Empty State
       container.innerHTML = createRichEmptyState({
-        icon: "",
+        icon: "discovery",
         title: "Recommendations appear after selection",
-        explanation: "Select a reference to see the next useful paths.",
-        primaryAction: {
-          label: "Focus Search",
-          onclick: "document.getElementById('playground-search-input').focus()"
-        }
+        explanation: "Select a reference to see the next useful paths."
       });
       return;
     }
@@ -881,19 +1025,43 @@
       }
     });
 
-    let html = "";
+    if (cards.length === 0) {
+      container.innerHTML = createRichEmptyState({
+        icon: "discovery",
+        title: "No discovery path available",
+        explanation: "Try a broader search or inspect a related reference to open new research paths.",
+        primaryAction: {
+          label: "Return to Search",
+          onclick: "window.switchExplorationMode('search'); document.getElementById('playground-search-input').focus();"
+        },
+        secondaryAction: pinnedReferences.length > 0 ? {
+          label: "Open Pinned Reference",
+          onclick: `window.selectReference('${pinnedReferences[0]}');`
+        } : null
+      });
+      runTransientClass(container, "is-updated", 200);
+      return;
+    }
 
+    let html = "";
     if (cards.length > 0) {
       html += `
         <div class="discovery-section-title">Recommended Next</div>
         <div class="compact-list" aria-label="Contextual recommendations">
           ${cards.slice(0, 6).map(item => `
             <button class="nv-discovery-card" data-ref-id="${item.ref.id}">
-              <div style="display: flex; justify-content: space-between; gap: 8px; align-items: center;">
-                <span style="font-weight: var(--ref-font-weight-semibold); font-size: 0.68rem; color: var(--sys-color-text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${escapeHtml(item.ref.title)}</span>
-                <span class="nv-badge" data-variant="neutral">${escapeHtml(item.category)}</span>
+              <div class="nv-cluster nv-cluster--gap-xs" style="align-items: center; justify-content: space-between; width: 100%; margin-bottom: 2px;">
+                <span class="nv-badge" data-variant="info" style="font-size: 0.55rem; padding: 1px 4px; text-transform: uppercase;">${escapeHtml(item.ref.type || 'reference')}</span>
+                <span style="font-size: 0.55rem; color: var(--sys-color-text-secondary); font-family: var(--sys-font-code-family);">${escapeHtml(item.ref.id)}</span>
               </div>
-              <span style="font-size: 0.6rem; color: var(--sys-color-text-secondary); line-height: 1.3;">${escapeHtml(item.reason)}</span>
+              <div style="font-weight: var(--ref-font-weight-semibold); font-size: 0.68rem; color: var(--sys-color-text-primary); display: flex; align-items: center; gap: 4px; width: 100%;">
+                <span style="color: var(--sys-color-accent-primary); flex-shrink: 0;">↳</span>
+                <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; text-align: left;">${escapeHtml(item.ref.title)}</span>
+              </div>
+              <div class="nv-cluster nv-cluster--gap-xs" style="align-items: center; justify-content: space-between; margin-top: 2px; width: 100%;">
+                <span style="font-size: 0.6rem; color: var(--sys-color-text-secondary); flex: 1; line-height: 1.3; text-align: left; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">${escapeHtml(item.reason)}</span>
+                <span class="nv-badge" data-variant="neutral" style="font-size: 0.55rem; padding: 1px 4px; text-transform: capitalize; flex-shrink: 0; margin-left: 6px;">${escapeHtml(item.category)}</span>
+              </div>
             </button>
           `).join("")}
         </div>
@@ -1011,13 +1179,15 @@
     if (!container) return;
 
     if (!selectedRelationship) {
-      container.innerHTML = `
-        <div class="nv-empty-state">
-          <div class="nv-empty-state-icon" aria-hidden="true">🔗</div>
-          <p class="nv-muted" style="font-size: var(--sys-font-body-size); font-weight: var(--ref-font-weight-medium); color: var(--sys-color-text-primary); margin-bottom: var(--sys-space-stack-xs);">No Relationship Selected</p>
-          <p class="nv-muted" style="font-size: var(--sys-font-caption-size); margin: 0;">Click a connection line in the topological graph to view properties.</p>
-        </div>
-      `;
+      container.innerHTML = createRichEmptyState({
+        icon: "relationship",
+        title: "No relationship selected",
+        explanation: "Select a graph edge to inspect how two references are connected.",
+        primaryAction: {
+          label: "Open Graph Mode",
+          onclick: "window.switchExplorationMode('graph');"
+        }
+      });
       runTransientClass(container, "is-updated", 200);
       return;
     }
@@ -1084,18 +1254,21 @@
 
     if (!comp) {
       container.innerHTML = `
-        <div class="nv-empty-state" style="padding: var(--sys-space-stack-md); text-align: center;">
-          <p class="nv-muted" style="font-size: var(--sys-font-body-size); font-weight: var(--ref-font-weight-medium); color: var(--sys-color-text-primary); margin-bottom: var(--sys-space-stack-xs);">No evidence compiled</p>
-          <p class="nv-muted" style="font-size: var(--sys-font-caption-size); margin-bottom: var(--sys-space-stack-md);">Compile the current query or selected reference.</p>
-          <div class="nv-stack nv-stack--gap-xs" style="align-items: stretch;">
-            <button class="nv-button" id="evidence-empty-compile-query" data-variant="primary" style="font-size: var(--sys-font-caption-size);">
-              Compile Current Query
-            </button>
-            <button class="nv-button" id="evidence-empty-compile-ref" data-variant="secondary" style="font-size: var(--sys-font-caption-size);" disabled>
-              Compile Selected Reference
-            </button>
-          </div>
-        </div>
+        ${createRichEmptyState({
+          icon: "evidence",
+          title: "No evidence compiled yet",
+          explanation: "Compile from a query or selected reference to create an explainable synthesis.",
+          primaryAction: currentSearchQuery ? {
+            id: "evidence-empty-compile-query",
+            label: "Compile Current Query",
+            onclick: ""
+          } : null,
+          secondaryAction: selectedReferenceId ? {
+            id: "evidence-empty-compile-ref",
+            label: "Compile Selected Reference",
+            onclick: ""
+          } : null
+        })}
 
         <div class="nv-divider" aria-hidden="true" style="margin-block: var(--sys-space-stack-md); opacity: 0.4;"></div>
 
@@ -1181,7 +1354,7 @@
     container.innerHTML = `
       <div class="nv-stack nv-stack--gap-sm" role="region" aria-label="Evidence compilation details" style="max-height: calc(100vh - 200px); overflow-y: auto; padding-right: 4px;">
 
-        <div class="nv-stack nv-stack--gap-xs" style="background-color: var(--sys-color-surface-container-low); padding: var(--sys-space-stack-xs); border-radius: var(--sys-border-radius-sm); border: 1px solid var(--sys-color-border-subtle);">
+        <div class="nv-stack nv-stack--gap-xs" style="background-color: var(--sys-color-surface-container-low); padding: var(--sys-space-stack-xs); border-radius: var(--sys-border-radius-sm); border: 1px solid var(--sys-color-border-subtle); border-left: 3px solid var(--sys-color-status-${confVariant});">
           <div class="nv-cluster nv-cluster--gap-xs" style="align-items: center; justify-content: space-between;">
             <span style="font-size: 0.68rem; color: var(--sys-color-text-secondary);">${comp.mode === "query" ? "Query evidence" : "Reference evidence"}</span>
             <span class="nv-badge" data-variant="${confVariant}" style="font-weight: var(--ref-font-weight-semibold);">${confLabel}</span>
@@ -1203,11 +1376,18 @@
           <div class="nv-stack nv-stack--gap-xs">
             ${allContributing.length === 0 ? '<p class="nv-muted" style="font-size: var(--sys-font-caption-size); margin: 0;">No contributing references found.</p>' : allContributing.map(item => {
               const isPinned = pinnedReferences.includes(item.ref.id);
+              const colorToken = item.role === 'Primary Match' ? 'success' : 'warning';
               return `
                 <div class="nv-card" style="padding: var(--sys-space-stack-xs); background-color: var(--sys-color-surface-container-lowest); border: 1px solid var(--sys-color-border-subtle); border-radius: var(--sys-border-radius-sm);">
                   <div class="nv-cluster nv-cluster--gap-xs" style="justify-content: space-between; align-items: flex-start; margin-bottom: 2px;">
                     <span style="font-size: 0.65rem; color: var(--sys-color-text-primary); font-weight: var(--ref-font-weight-semibold);">${escapeHtml(item.ref.title)}</span>
                     <span class="nv-badge" data-variant="${item.role === 'Primary Match' ? 'success' : 'info'}" style="font-size: 0.55rem; padding: 1px 4px;">${item.role}</span>
+                  </div>
+                  <div class="nv-cluster nv-cluster--gap-xs" style="align-items: center; margin-top: 4px; margin-bottom: 2px; gap: 6px;">
+                    <span style="font-size: 0.55rem; color: var(--sys-color-text-secondary); opacity: 0.85;">Contribution:</span>
+                    <div class="nv-micro-bar-container" title="Weight: ${item.role === 'Primary Match' ? '90%' : '55%'}">
+                      <div class="nv-micro-bar-fill ${colorToken}" style="width: ${item.role === 'Primary Match' ? '90%' : '55%'}"></div>
+                    </div>
                   </div>
                   <div class="nv-cluster nv-cluster--gap-xs" style="margin-top: var(--sys-space-stack-xs); justify-content: flex-end;">
                     <button class="nv-button" data-action="pin-supporting" data-id="${item.ref.id}" style="padding: 2px 6px; min-block-size: unset; font-size: 0.55rem;">
@@ -1476,21 +1656,10 @@
     svg.appendChild(defs);
 
     const overlay = document.getElementById("graph-empty-state-overlay");
-    const msgEl = document.getElementById("graph-empty-state-message");
-    const subtextEl = document.getElementById("graph-empty-state-subtext");
     const preview = document.getElementById("graph-hover-preview");
-    const emptyFullButton = document.getElementById("graph-empty-full-button");
-    const emptySearchButton = document.getElementById("graph-empty-search-button");
 
     const hideOverlay = () => {
       if (overlay) overlay.style.display = "none";
-    };
-    const showOverlay = (msg, subtext) => {
-      if (overlay) {
-        overlay.style.display = "block";
-        if (msgEl) msgEl.textContent = msg;
-        if (subtextEl) subtextEl.textContent = subtext;
-      }
     };
 
     const hidePreview = () => {
@@ -1509,22 +1678,92 @@
       preview.style.top = `${Math.min(containerBox.height - 120, Math.max(12, y + 14))}px`;
     };
 
-    if (emptyFullButton) {
-      emptyFullButton.onclick = () => {
-        neighborhoodDepth = "full";
-        relationshipFilter = "all";
-        const filterSelect = document.getElementById("graph-filter-select");
-        const depthSelect = document.getElementById("graph-hop-select");
-        if (filterSelect) filterSelect.value = relationshipFilter;
-        if (depthSelect) depthSelect.value = neighborhoodDepth;
-        addTrailEvent("Graph empty state resolved", "Opened full graph from empty graph state", { depth: neighborhoodDepth, filter: relationshipFilter });
-        saveWorkspaceState();
-        renderVisualGraph();
-      };
-    }
-    if (emptySearchButton) {
-      emptySearchButton.onclick = () => switchExplorationMode("search");
-    }
+    const showOverlay = (type) => {
+      if (!overlay) return;
+      overlay.style.display = "flex";
+      overlay.style.flexDirection = "column";
+      overlay.style.alignItems = "center";
+      overlay.style.justifyContent = "center";
+
+      let config = {};
+      if (type === 'no-focus') {
+        config = {
+          icon: 'graph',
+          title: 'No relationship focus yet',
+          explanation: 'Select a reference or switch to Full Graph to reveal the knowledge map.',
+          primaryAction: {
+            id: 'graph-empty-full-button',
+            label: 'Open Full Graph'
+          },
+          secondaryAction: {
+            id: 'graph-empty-search-button',
+            label: 'Return to Search'
+          }
+        };
+      } else if (type === 'no-filter') {
+        config = {
+          icon: 'relationship',
+          title: 'No relationships match this filter',
+          explanation: 'Try another relationship type or return to All connections.',
+          primaryAction: {
+            id: 'graph-empty-all-button',
+            label: 'All Connections'
+          }
+        };
+      } else {
+        config = {
+          icon: 'graph',
+          title: 'No relationship focus yet',
+          explanation: 'Select a reference or switch to Full Graph to reveal the knowledge map.',
+          primaryAction: {
+            id: 'graph-empty-full-button',
+            label: 'Open Full Graph'
+          },
+          secondaryAction: {
+            id: 'graph-empty-search-button',
+            label: 'Return to Search'
+          }
+        };
+      }
+
+      overlay.innerHTML = createRichEmptyState(config);
+
+      const fullBtn = overlay.querySelector('#graph-empty-full-button');
+      if (fullBtn) {
+        fullBtn.onclick = () => {
+          neighborhoodDepth = "full";
+          relationshipFilter = "all";
+          const filterSelect = document.getElementById("graph-filter-select");
+          const depthSelect = document.getElementById("graph-hop-select");
+          if (filterSelect) filterSelect.value = relationshipFilter;
+          if (depthSelect) depthSelect.value = neighborhoodDepth;
+          addTrailEvent("Graph empty state resolved", "Opened full graph from empty graph state", { depth: neighborhoodDepth, filter: relationshipFilter });
+          saveWorkspaceState();
+          renderVisualGraph();
+        };
+      }
+
+      const searchBtn = overlay.querySelector('#graph-empty-search-button');
+      if (searchBtn) {
+        searchBtn.onclick = () => {
+          switchExplorationMode("search");
+          const searchInput = document.getElementById("playground-search-input");
+          if (searchInput) searchInput.focus();
+        };
+      }
+
+      const allBtn = overlay.querySelector('#graph-empty-all-button');
+      if (allBtn) {
+        allBtn.onclick = () => {
+          relationshipFilter = "all";
+          const filterSelect = document.getElementById("graph-filter-select");
+          if (filterSelect) filterSelect.value = relationshipFilter;
+          addTrailEvent("Graph filter cleared", "Returned to All connections from empty state", { filter: relationshipFilter });
+          saveWorkspaceState();
+          renderVisualGraph();
+        };
+      }
+    };
 
     const allRels = retrievalState.relationships;
     const filteredRels = adapter.filterRelationships(allRels, relationshipFilter);
@@ -1543,16 +1782,13 @@
     if (selectedReferenceId) {
       const hasRelsUnderFilter = filteredRels.some(r => r.sourceReferenceId === selectedReferenceId || r.targetReferenceId === selectedReferenceId);
       if (!hasRelsUnderFilter) {
-        showOverlay(
-          "No visible relationships for this filter.",
-          "Try All, explore similar references, or open discovery suggestions."
-        );
+        showOverlay('no-filter');
       } else {
         hideOverlay();
       }
     } else {
       if (filteredRels.length === 0) {
-        showOverlay("No relationships match this filter.", "Choose another filter option to display active reference nodes.");
+        showOverlay('no-filter');
         return;
       } else {
         hideOverlay();
@@ -1560,7 +1796,7 @@
     }
 
     if (visibleNodes.length === 0) {
-      showOverlay("No active references available in registry.", "");
+      showOverlay('no-focus');
       hidePreview();
       return;
     }
@@ -1982,7 +2218,12 @@
     if (recentList) {
       const visibleRecent = recentReferences.filter(id => !pinnedReferences.includes(id));
       if (visibleRecent.length === 0) {
-        recentList.innerHTML = `<li class="nv-muted" style="font-size: var(--sys-font-caption-size); padding: 4px;">No recently viewed references.</li>`;
+        recentList.innerHTML = createRichEmptyState({
+          icon: "recent",
+          title: "No recent references",
+          explanation: "Opened references will appear here for short-term recall.",
+          compact: true
+        });
       } else {
         recentList.innerHTML = visibleRecent.map(id => {
           const ref = adapter.getReferenceById(retrievalState, id);
@@ -2007,7 +2248,12 @@
 
     if (pinnedList) {
       if (pinnedReferences.length === 0) {
-        pinnedList.innerHTML = `<li class="nv-muted" style="font-size: var(--sys-font-caption-size); padding: 4px;">No pinned references.</li>`;
+        pinnedList.innerHTML = createRichEmptyState({
+          icon: "pinned",
+          title: "No pinned references",
+          explanation: "Pin important references to preserve your research anchors.",
+          compact: true
+        });
       } else {
         pinnedList.innerHTML = pinnedReferences.map(id => {
           const ref = adapter.getReferenceById(retrievalState, id);
@@ -2041,7 +2287,12 @@
 
     if (queriesList) {
       if (savedQueries.length === 0) {
-        queriesList.innerHTML = `<li class="nv-muted" style="font-size: var(--sys-font-caption-size); padding: 4px;">No saved queries.</li>`;
+        queriesList.innerHTML = createRichEmptyState({
+          icon: "queries",
+          title: "No saved queries",
+          explanation: "Save useful searches to resume recurring investigations.",
+          compact: true
+        });
       } else {
         queriesList.innerHTML = savedQueries.map(q => `
           <li class="memory-item" data-query="${escapeHtml(q)}" tabindex="0" role="button">
@@ -2084,7 +2335,12 @@
 
     if (trailList) {
       if (knowledgeTrail.length === 0) {
-        trailList.innerHTML = `<li class="nv-muted" style="font-size: var(--sys-font-caption-size); padding: 4px;">No trail activity.</li>`;
+        trailList.innerHTML = createRichEmptyState({
+          icon: "trail",
+          title: "No research trail yet",
+          explanation: "Your exploration path will appear here as you search, inspect, and compile evidence.",
+          compact: true
+        });
       } else {
         trailList.innerHTML = knowledgeTrail.map(event => {
           let badgeVariant = "neutral";

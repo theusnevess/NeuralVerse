@@ -318,8 +318,8 @@
 
 .graph-link {
   stroke: var(--sys-color-text-muted);
-  stroke-opacity: 0.18;
-  stroke-width: 0.85px;
+  stroke-opacity: 0.12;
+  stroke-width: 0.65px;
   pointer-events: stroke;
   transition: stroke 160ms ease, stroke-opacity 160ms ease, stroke-width 160ms ease;
 }
@@ -450,21 +450,21 @@
 .graph-node.selected .graph-node-core {
   fill: var(--sys-color-text-primary);
   stroke: var(--sys-color-accent-primary);
-  stroke-width: 2.5px;
-  r: 9;
-  filter: drop-shadow(0 0 8px var(--sys-color-accent-primary));
+  stroke-width: 3px;
+  r: 10;
+  filter: drop-shadow(0 0 10px var(--sys-color-accent-primary));
 }
 
 .graph-node.selected text {
   fill: var(--sys-color-text-primary);
   font-weight: var(--ref-font-weight-bold);
-  font-size: 0.68rem;
+  font-size: 0.7rem;
 }
 
 .graph-node.neighbor-hop-1 .graph-node-core {
   stroke: var(--sys-color-accent-primary);
-  stroke-width: 1.75px;
-  r: 7.2;
+  stroke-width: 2px;
+  r: 8;
 }
 
 .graph-node.neighbor-hop-1 text {
@@ -475,11 +475,11 @@
 .graph-node.neighbor-hop-2 .graph-node-core {
   stroke: var(--sys-color-border-strong);
   stroke-width: 1.5px;
-  r: 6.4;
+  r: 6.8;
 }
 
 .graph-node.neighbor-hop-2 {
-  opacity: 0.65;
+  opacity: 0.55;
 }
 
 .graph-node.pinned .graph-node-core {
@@ -488,15 +488,15 @@
 }
 
 .graph-node.distant {
-  opacity: 0.22;
+  opacity: 0.12;
 }
 
 .graph-node.distant .graph-node-core {
-  r: 4.2;
+  r: 3.5;
 }
 
 .graph-node.distant text {
-  opacity: 0.42;
+  opacity: 0.2;
 }
 
 .graph-hover-preview {
@@ -650,7 +650,9 @@
   bottom: 0;
   z-index: 3;
   padding-top: var(--sys-space-stack-sm);
-  background: linear-gradient(180deg, transparent, var(--sys-color-surface-container-lowest) 18%);
+  padding-bottom: var(--sys-space-stack-sm);
+  background: var(--sys-color-surface-container-lowest);
+  margin-top: auto;
 }
 
 .compact-list {
@@ -811,20 +813,108 @@
 }
 
 /* Empty states */
+/* Reusable Empty State Visual System */
 .nv-empty-state {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: var(--sys-space-stack-md);
   text-align: center;
-  border: 1px dashed rgba(138, 180, 248, 0.28);
+  padding: var(--sys-space-stack-md);
+  border: 1px dashed rgba(138, 180, 248, 0.18);
   border-radius: var(--ref-radius-soft);
-  background:
-    linear-gradient(180deg, rgba(138, 180, 248, 0.04), transparent),
-    var(--sys-color-surface-container-lowest);
-  min-height: 120px;
+  background: linear-gradient(180deg, rgba(138, 180, 248, 0.03), transparent),
+              var(--sys-color-surface-container-lowest);
+  min-height: 180px;
   color: var(--sys-color-text-secondary);
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.nv-empty-state__visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--sys-space-stack-sm);
+  color: var(--sys-color-accent-primary);
+  opacity: 0.8;
+}
+
+.nv-empty-state__visual svg {
+  max-width: 96px;
+  height: auto;
+}
+
+.nv-empty-state__title {
+  font-size: var(--sys-font-body-size);
+  font-weight: var(--ref-font-weight-semibold);
+  color: var(--sys-color-text-primary);
+  margin: 0 0 var(--sys-space-stack-xs) 0;
+}
+
+.nv-empty-state__message {
+  font-size: var(--sys-font-caption-size);
+  color: var(--sys-color-text-secondary);
+  max-width: 280px;
+  margin: 0 auto var(--sys-space-stack-md) auto;
+  line-height: 1.4;
+}
+
+.nv-empty-state__actions {
+  display: flex;
+  flex-direction: row;
+  gap: var(--sys-space-inline-sm);
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+/* Modifiers */
+.nv-empty-state--compact {
+  padding: var(--sys-space-stack-sm);
+  min-height: 110px;
+  border-style: none;
+  background: transparent;
+}
+
+.nv-empty-state--compact .nv-empty-state__visual {
+  margin-bottom: var(--sys-space-stack-xs);
+}
+
+.nv-empty-state--compact .nv-empty-state__visual svg {
+  max-width: 56px;
+}
+
+.nv-empty-state--compact .nv-empty-state__title {
+  font-size: 0.75rem;
+  margin-bottom: 2px;
+}
+
+.nv-empty-state--compact .nv-empty-state__message {
+  font-size: 0.65rem;
+  max-width: 220px;
+  margin-bottom: var(--sys-space-stack-xs);
+}
+
+.nv-empty-state--inline {
+  display: inline-flex;
+  border: none;
+  background: transparent;
+  padding: 0;
+  min-height: auto;
+  flex-direction: row;
+  align-items: center;
+  text-align: left;
+  gap: var(--sys-space-inline-sm);
+}
+
+.nv-empty-state--panel {
+  border-color: var(--sys-color-border-subtle);
+  background: var(--sys-color-surface-container-low);
+  padding: var(--sys-space-stack-md);
+  height: 100%;
+  min-height: 100%;
 }
 
 .nv-empty-state-icon {
@@ -1342,33 +1432,7 @@ body.nv-focus-mode .nv-main-workspace {
   font-size: 0.65rem;
 }
 
-/* --- PHASE 3: Rich Empty States --- */
-.nv-rich-empty-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: var(--sys-space-inset-lg);
-  height: 100%;
-  min-height: 240px;
-}
-.nv-rich-empty-illustration {
-  font-size: 3rem;
-  margin-bottom: var(--sys-space-stack-sm);
-  opacity: 0.8;
-}
-.nv-rich-empty-title {
-  color: var(--sys-color-text-primary);
-  font-weight: var(--ref-font-weight-medium);
-  margin-bottom: var(--sys-space-stack-xs);
-}
-.nv-rich-empty-desc {
-  color: var(--sys-color-text-secondary);
-  font-size: var(--sys-font-caption-size);
-  max-width: 300px;
-  margin-bottom: var(--sys-space-stack-md);
-}
+
 
 /* --- PHASE 4: Microvisualizations --- */
 .nv-micro-badge {
@@ -1614,4 +1678,36 @@ body.nv-focus-mode * {
   display: inline-block;
   margin-right: 4px;
   font-weight: bold;
+}
+
+/* --- PHASE 9: Observatory Identity & Spacing Refinements --- */
+.nv-scientific-panel .nv-divider,
+#evidence-compilation-container .nv-divider {
+  background: radial-gradient(circle, var(--sys-color-accent-primary) 15%, transparent 20%) repeat-x;
+  background-size: 8px 8px;
+  background-position: center;
+  border: none;
+  height: 4px;
+  opacity: 0.35;
+}
+
+.nv-scientific-panel {
+  position: relative;
+  background: var(--sys-color-surface-container-lowest);
+  border: 1px solid var(--sys-color-border-subtle);
+  border-radius: var(--ref-radius-soft);
+}
+
+.nv-scientific-panel::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(180deg, var(--sys-color-accent-primary) 0%, transparent 65%);
+  border-top-left-radius: var(--ref-radius-soft);
+  border-bottom-left-radius: var(--ref-radius-soft);
+  opacity: 0.45;
+  pointer-events: none;
 }

@@ -1,0 +1,7 @@
+<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.75" xmlns="http://www.w3.org/2000/svg">
+  <rect x="15" y="40" width="16" height="20" rx="2"/>
+  <rect x="69" y="40" width="16" height="20" rx="2"/>
+  <path d="M 31 50 C 45 35, 55 35, 69 50" stroke-dasharray="3 3"/>
+  <path d="M 31 50 H 69"/>
+  <circle cx="50" cy="42" r="3" fill="currentColor"/>
+</svg>

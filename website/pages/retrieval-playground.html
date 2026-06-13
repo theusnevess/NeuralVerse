@@ -148,13 +148,7 @@
               <!-- Graph links and nodes will be dynamically injected here -->
             </svg>
             <!-- Graph Empty State Overlay -->
-            <div id="graph-empty-state-overlay" class="nv-empty-state" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80%; background-color: var(--sys-color-surface-container-lowest); border: 1px dashed var(--sys-color-border-subtle); z-index: 5; pointer-events: auto; padding: 20px; text-align: center; border-radius: 8px;">
-              <p id="graph-empty-state-message" class="nv-muted" style="font-size: var(--sys-font-body-size); font-weight: var(--ref-font-weight-medium); color: var(--sys-color-text-primary); margin-bottom: var(--sys-space-stack-xs);">No Selected Reference</p>
-              <p id="graph-empty-state-subtext" class="nv-muted" style="font-size: var(--sys-font-caption-size); margin: 0;"></p>
-              <div class="graph-empty-actions" style="display: flex; flex-wrap: wrap; justify-content: center; gap: var(--sys-space-inline-xs); margin-top: var(--sys-space-stack-sm);">
-                <button id="graph-empty-full-button" class="nv-button" data-variant="secondary" type="button">Full Graph</button>
-                <button id="graph-empty-search-button" class="nv-button" data-variant="ghost" type="button">Search</button>
-              </div>
+            <div id="graph-empty-state-overlay" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80%; z-index: 5; pointer-events: auto;">
             </div>
             <div id="graph-hover-preview" class="graph-hover-preview" role="status" aria-live="polite" hidden></div>
           </div>
