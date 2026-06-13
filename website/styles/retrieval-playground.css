@@ -278,17 +278,21 @@
 }
 
 .graph-cluster-halo {
-  display: none !important;
+  fill: transparent;
+  stroke: transparent;
+  stroke-width: 0;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .graph-cluster-label {
   fill: var(--sys-color-text-muted);
-  font-size: 0.68rem;
+  font-size: 0.54rem;
   font-weight: var(--ref-font-weight-medium);
-  letter-spacing: 0.06em;
-  opacity: 0.24;
+  letter-spacing: 0;
+  opacity: 0.16;
   pointer-events: none;
-  text-transform: uppercase;
+  text-transform: none;
   font-family: var(--sys-font-body-family);
 }
 
@@ -303,7 +307,7 @@
 
 .graph-link-target {
   stroke: transparent;
-  stroke-width: 18px;
+  stroke-width: 16px;
   fill: none;
   pointer-events: stroke;
   cursor: pointer;
@@ -318,8 +322,8 @@
 
 .graph-link {
   stroke: var(--sys-color-text-muted);
-  stroke-opacity: 0.12;
-  stroke-width: 0.65px;
+  stroke-opacity: 0.34;
+  stroke-width: 1px;
   pointer-events: stroke;
   transition: stroke 160ms ease, stroke-opacity 160ms ease, stroke-width 160ms ease;
 }
@@ -348,18 +352,18 @@
 }
 
 .graph-link--related {
-  stroke-opacity: 0.26;
+  stroke-opacity: 0.3;
 }
 
 .graph-link.active,
 .graph-link.selected {
-  stroke: var(--sys-color-text-primary);
-  stroke-opacity: 0.84;
-  stroke-width: 2.25px;
+  stroke: color-mix(in srgb, var(--sys-color-accent-primary) 68%, var(--sys-color-text-secondary));
+  stroke-opacity: 0.76;
+  stroke-width: 1.65px;
 }
 
 .graph-link.nearby {
-  stroke-opacity: 0.52;
+  stroke-opacity: 0.5;
 }
 
 .graph-link.dimmed {
@@ -368,8 +372,8 @@
 
 .graph-link.hover-active {
   stroke: var(--sys-color-accent-primary) !important;
-  stroke-opacity: 0.95 !important;
-  stroke-width: 2.2px !important;
+  stroke-opacity: 0.82 !important;
+  stroke-width: 1.8px !important;
 }
 
 .graph-link.hover-dimmed {
@@ -379,8 +383,8 @@
 .graph-link:hover,
 .graph-link:focus-visible {
   stroke: var(--sys-color-text-primary);
-  stroke-opacity: 0.92;
-  stroke-width: 2.6px;
+  stroke-opacity: 0.78;
+  stroke-width: 1.8px;
   outline: none;
 }
 
@@ -389,11 +393,17 @@
   outline: none;
 }
 
+.graph-node-hit {
+  fill: transparent;
+  stroke: transparent;
+  pointer-events: fill;
+}
+
 .graph-node-core {
   fill: var(--sys-color-surface-container-high);
   stroke: var(--sys-color-border-strong);
-  stroke-width: 1.25px;
-  r: 5.5;
+  stroke-width: 1.1px;
+  r: 5.25;
   transition: r 160ms ease, fill 160ms ease, stroke 160ms ease, stroke-width 160ms ease, filter 160ms ease;
 }
 
@@ -402,69 +412,76 @@
 }
 
 .graph-node--paper .graph-node-core {
-  fill: var(--sys-color-accent-primary);
-  stroke: color-mix(in srgb, var(--sys-color-accent-primary) 40%, var(--sys-color-surface-container-high));
+  fill: color-mix(in srgb, var(--sys-color-accent-primary) 62%, var(--sys-color-surface-container-high));
+  stroke: color-mix(in srgb, var(--sys-color-accent-primary) 38%, var(--sys-color-text-primary));
 }
 
 .graph-node--repository .graph-node-core {
-  fill: var(--sys-color-warning);
-  stroke: color-mix(in srgb, var(--sys-color-warning) 40%, var(--sys-color-surface-container-high));
+  fill: color-mix(in srgb, var(--sys-color-warning) 58%, var(--sys-color-surface-container-high));
+  stroke: color-mix(in srgb, var(--sys-color-warning) 36%, var(--sys-color-text-primary));
 }
 
 .graph-node--notes .graph-node-core {
-  fill: var(--sys-color-success);
-  stroke: color-mix(in srgb, var(--sys-color-success) 40%, var(--sys-color-surface-container-high));
+  fill: color-mix(in srgb, var(--sys-color-success) 58%, var(--sys-color-surface-container-high));
+  stroke: color-mix(in srgb, var(--sys-color-success) 36%, var(--sys-color-text-primary));
 }
 
 .graph-node text {
   fill: var(--sys-color-text-secondary);
   font-family: var(--sys-font-body-family);
-  font-size: 0.62rem;
+  font-size: 0.56rem;
   pointer-events: none;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+  text-shadow: 0 1px 2px var(--sys-color-background-base);
   transition: fill 160ms ease, font-size 160ms ease, opacity 160ms ease;
+}
+
+.graph-node:hover text,
+.graph-node:focus-visible text,
+.graph-node.selected text,
+.graph-node.neighbor-hop-1 text {
+  opacity: 1 !important;
 }
 
 .graph-node:hover .graph-node-core,
 .graph-node:focus-visible .graph-node-core {
   stroke: var(--sys-color-text-primary);
-  stroke-width: 2px;
-  r: 8.5;
+  stroke-width: 1.8px;
+  r: 7;
 }
 
 .graph-node--paper:hover .graph-node-core,
 .graph-node--paper:focus-visible .graph-node-core {
-  filter: drop-shadow(0 0 6px var(--sys-color-accent-primary));
+  filter: drop-shadow(0 0 5px color-mix(in srgb, var(--sys-color-accent-primary) 58%, transparent));
 }
 
 .graph-node--repository:hover .graph-node-core,
 .graph-node--repository:focus-visible .graph-node-core {
-  filter: drop-shadow(0 0 6px var(--sys-color-warning));
+  filter: drop-shadow(0 0 5px color-mix(in srgb, var(--sys-color-warning) 52%, transparent));
 }
 
 .graph-node--notes:hover .graph-node-core,
 .graph-node--notes:focus-visible .graph-node-core {
-  filter: drop-shadow(0 0 6px var(--sys-color-success));
+  filter: drop-shadow(0 0 5px color-mix(in srgb, var(--sys-color-success) 52%, transparent));
 }
 
 .graph-node.selected .graph-node-core {
-  fill: var(--sys-color-text-primary);
+  fill: color-mix(in srgb, var(--sys-color-accent-primary) 84%, var(--sys-color-text-primary));
   stroke: var(--sys-color-accent-primary);
-  stroke-width: 3px;
-  r: 10;
-  filter: drop-shadow(0 0 10px var(--sys-color-accent-primary));
+  stroke-width: 2.2px;
+  r: 8.6;
+  filter: drop-shadow(0 0 5px color-mix(in srgb, var(--sys-color-accent-primary) 46%, transparent));
 }
 
 .graph-node.selected text {
   fill: var(--sys-color-text-primary);
   font-weight: var(--ref-font-weight-bold);
-  font-size: 0.7rem;
+  font-size: 0.62rem;
 }
 
 .graph-node.neighbor-hop-1 .graph-node-core {
   stroke: var(--sys-color-accent-primary);
-  stroke-width: 2px;
-  r: 8;
+  stroke-width: 1.55px;
+  r: 6.7;
 }
 
 .graph-node.neighbor-hop-1 text {
@@ -474,12 +491,12 @@
 
 .graph-node.neighbor-hop-2 .graph-node-core {
   stroke: var(--sys-color-border-strong);
-  stroke-width: 1.5px;
-  r: 6.8;
+  stroke-width: 1.25px;
+  r: 5.8;
 }
 
 .graph-node.neighbor-hop-2 {
-  opacity: 0.55;
+  opacity: 0.62;
 }
 
 .graph-node.pinned .graph-node-core {
@@ -488,11 +505,11 @@
 }
 
 .graph-node.distant {
-  opacity: 0.12;
+  opacity: 0.32;
 }
 
 .graph-node.distant .graph-node-core {
-  r: 3.5;
+  r: 4.2;
 }
 
 .graph-node.distant text {
@@ -502,8 +519,8 @@
 .graph-hover-preview {
   position: absolute;
   z-index: 6;
-  width: min(240px, calc(100% - 24px));
-  padding: var(--sys-space-inset-sm);
+  width: min(260px, calc(100% - 24px));
+  padding: 4px 8px;
   border: var(--sys-border-subtle) solid var(--sys-color-border-subtle);
   border-radius: var(--ref-radius-soft);
   background: var(--sys-color-surface-overlay);
@@ -511,8 +528,8 @@
   box-shadow: var(--retrieval-shadow-card);
   pointer-events: none;
   display: grid;
-  gap: 4px;
-  font-size: var(--sys-font-caption-size);
+  gap: 1px;
+  font-size: 0.64rem;
 }
 
 .graph-hover-preview[hidden] {
@@ -521,14 +538,22 @@
 
 .graph-hover-preview strong {
   color: var(--sys-color-text-primary);
-  font-size: var(--sys-font-caption-size);
-  line-height: 1.25;
+  font-size: 0.66rem;
+  line-height: 1.14;
+  display: block;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .graph-hover-preview span,
 .graph-hover-preview small {
   color: var(--sys-color-text-secondary);
-  line-height: 1.3;
+  line-height: 1.12;
+  display: block;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .graph-empty-actions .nv-button {
@@ -646,13 +671,22 @@
 }
 
 .inspector-actions {
-  position: sticky;
-  bottom: 0;
+  position: static;
   z-index: 3;
   padding-top: var(--sys-space-stack-sm);
   padding-bottom: var(--sys-space-stack-sm);
   background: var(--sys-color-surface-container-lowest);
   margin-top: auto;
+  flex-shrink: 0;
+  box-shadow: none;
+}
+
+#inspector-panel-reference {
+  scroll-padding-block-end: var(--sys-space-stack-md);
+}
+
+#inspector-panel-reference #discovery-container {
+  padding-block-end: var(--sys-space-stack-sm);
 }
 
 .compact-list {
@@ -840,6 +874,141 @@
 
 .nv-relevance-meter__segment.is-active {
   background-color: var(--sys-color-accent-primary);
+}
+
+.nv-microvisualization-row,
+.nv-discovery-panel__microvisualization {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sys-space-inline-xs);
+}
+
+.nv-contribution-bar,
+.nv-density-meter,
+.nv-coverage-strip,
+.nv-confidence-gauge,
+.nv-connectivity-score,
+.nv-trail-sparkline,
+.nv-cluster-indicator,
+.nv-session-progress {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sys-space-inline-xs);
+  max-inline-size: 100%;
+  color: var(--sys-color-text-secondary);
+  font-size: var(--sys-font-caption-size);
+  line-height: var(--ref-font-line-height-tight);
+}
+
+.nv-contribution-bar__track,
+.nv-density-meter__track,
+.nv-coverage-strip__track,
+.nv-confidence-gauge__track,
+.nv-connectivity-score__track,
+.nv-session-progress__track {
+  display: inline-grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 0.45rem;
+  gap: 2px;
+  flex: 0 0 auto;
+}
+
+.nv-contribution-bar__segment,
+.nv-density-meter__segment,
+.nv-coverage-strip__segment,
+.nv-confidence-gauge__segment,
+.nv-connectivity-score__segment,
+.nv-session-progress__segment {
+  block-size: 0.35rem;
+  border-radius: var(--ref-radius-round);
+  background-color: var(--sys-color-border-subtle);
+  transition: background-color 140ms var(--sys-motion-ease-interface);
+}
+
+.nv-contribution-bar__segment.is-active,
+.nv-density-meter__segment.is-active,
+.nv-coverage-strip__segment.is-active,
+.nv-confidence-gauge__segment.is-active,
+.nv-connectivity-score__segment.is-active,
+.nv-session-progress__segment.is-active {
+  background-color: var(--sys-color-accent-primary);
+}
+
+.nv-contribution-bar__label,
+.nv-density-meter__label,
+.nv-coverage-strip__label,
+.nv-confidence-gauge__label,
+.nv-connectivity-score__label,
+.nv-session-progress > span:last-child,
+.nv-trail-sparkline > span:last-child,
+.nv-cluster-indicator > span:last-child {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+.nv-cluster-indicator {
+  padding-inline: var(--sys-space-inline-xs);
+  min-block-size: 1.25rem;
+  border: var(--sys-border-subtle) solid var(--sys-color-border-subtle);
+  border-radius: var(--ref-radius-round);
+  background-color: color-mix(in srgb, var(--sys-color-surface-overlay) 58%, transparent);
+}
+
+.nv-cluster-indicator__nodes {
+  position: relative;
+  display: inline-block;
+  inline-size: 1rem;
+  block-size: 0.75rem;
+  flex: 0 0 auto;
+}
+
+.nv-cluster-indicator__nodes span {
+  position: absolute;
+  inline-size: 0.25rem;
+  block-size: 0.25rem;
+  border-radius: var(--ref-radius-round);
+  background-color: var(--sys-color-accent-primary);
+}
+
+.nv-cluster-indicator__nodes span:nth-child(1) {
+  inset-block-start: 0;
+  inset-inline-start: 0.1rem;
+}
+
+.nv-cluster-indicator__nodes span:nth-child(2) {
+  inset-block-start: 0.4rem;
+  inset-inline-start: 0.38rem;
+}
+
+.nv-cluster-indicator__nodes span:nth-child(3) {
+  inset-block-start: 0.1rem;
+  inset-inline-start: 0.7rem;
+}
+
+.nv-trail-sparkline__track {
+  display: inline-grid;
+  grid-template-columns: repeat(8, 0.35rem);
+  align-items: end;
+  gap: 2px;
+  block-size: 0.85rem;
+  flex: 0 0 auto;
+}
+
+.nv-trail-sparkline__dot {
+  inline-size: 0.35rem;
+  block-size: calc(0.2rem + (var(--nv-trail-step) * 0.04rem));
+  border-radius: var(--ref-radius-round);
+  background-color: var(--sys-color-accent-primary);
+}
+
+.memory-microvisualization-summary {
+  display: grid;
+  gap: var(--sys-space-stack-xs);
+  padding: var(--sys-space-inset-xs);
+  border: var(--sys-border-subtle) solid var(--sys-color-border-subtle);
+  border-radius: var(--ref-radius-soft);
+  background-color: color-mix(in srgb, var(--sys-color-surface-overlay) 46%, transparent);
 }
 
 .nv-discovery-panel__actions {

@@ -99,6 +99,112 @@
     return "Dense cluster";
   }
 
+  function getDensityLabel(count) {
+    if (count <= 0) return "Isolated";
+    if (count <= 2) return "Sparse";
+    if (count <= 5) return "Connected";
+    return "Dense";
+  }
+
+  function getConnectivityScoreLabel(count) {
+    if (count <= 2) return "Peripheral";
+    if (count <= 5) return "Local Hub";
+    return "Highly Connected";
+  }
+
+  function getEvidenceCoverageLabel(count) {
+    if (count <= 1) return "Narrow";
+    if (count <= 3) return "Balanced";
+    return "Broad";
+  }
+
+  function getClusterLabel(ref) {
+    const keywords = Array.isArray(ref?.keywords) ? ref.keywords.map(k => String(k).toLowerCase()) : [];
+    if (keywords.some(k => ["transformer", "bert", "gpt", "llm", "nlp", "language"].includes(k))) return "Language models";
+    if (keywords.some(k => ["vision", "detection", "classification", "clip", "vit", "yolo"].includes(k))) return "Vision systems";
+    if (keywords.some(k => ["pytorch", "library", "framework", "tensor"].includes(k))) return "Frameworks";
+    if (keywords.some(k => ["rag", "retrieval", "evaluation", "context"].includes(k))) return "Retrieval evaluation";
+    if (keywords.some(k => ["agent", "reasoning", "tool-use"].includes(k))) return "Agent reasoning";
+    return ref?.type ? `${ref.type} context` : "Context cluster";
+  }
+
+  function renderSegmentedMicroviz(className, label, activeCount, totalCount = 4) {
+    const active = Math.max(0, Math.min(totalCount, activeCount));
+    return `
+      <span class="${className}" role="img" aria-label="${escapeHtml(label)}">
+        <span class="${className}__track" aria-hidden="true">
+          ${Array.from({ length: totalCount }, (_, index) => `<span class="${className}__segment${index < active ? " is-active" : ""}"></span>`).join("")}
+        </span>
+        <span class="${className}__label">${escapeHtml(label)}</span>
+      </span>
+    `;
+  }
+
+  function renderContributionBar(label, level) {
+    return renderSegmentedMicroviz("nv-contribution-bar", label, level, 4);
+  }
+
+  function renderRelationshipDensityMeter(count) {
+    const label = getDensityLabel(count);
+    const level = label === "Isolated" ? 1 : label === "Sparse" ? 2 : label === "Connected" ? 3 : 4;
+    return renderSegmentedMicroviz("nv-density-meter", `${label} relationship density`, level, 4);
+  }
+
+  function renderEvidenceCoverageStrip(count) {
+    const label = `${getEvidenceCoverageLabel(count)} evidence coverage`;
+    const level = count <= 1 ? 1 : count <= 3 ? 2 : 3;
+    return renderSegmentedMicroviz("nv-coverage-strip", label, level, 3);
+  }
+
+  function renderConfidenceGauge(confidence) {
+    const label = confidence === "high" ? "High Support" : confidence === "medium" ? "Moderate Support" : "Limited Support";
+    const level = confidence === "high" ? 3 : confidence === "medium" ? 2 : 1;
+    return renderSegmentedMicroviz("nv-confidence-gauge", label, level, 3);
+  }
+
+  function renderConnectivityScore(count) {
+    const label = getConnectivityScoreLabel(count);
+    const level = label === "Peripheral" ? 1 : label === "Local Hub" ? 2 : 3;
+    return renderSegmentedMicroviz("nv-connectivity-score", label, level, 3);
+  }
+
+  function renderClusterIndicator(ref) {
+    return `
+      <span class="nv-cluster-indicator" role="img" aria-label="Cluster context: ${escapeHtml(getClusterLabel(ref))}">
+        <span class="nv-cluster-indicator__nodes" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </span>
+        <span>${escapeHtml(getClusterLabel(ref))}</span>
+      </span>
+    `;
+  }
+
+  function renderTrailSparkline(events) {
+    const visible = (events || []).slice(0, 8).reverse();
+    if (visible.length === 0) return "";
+    return `
+      <span class="nv-trail-sparkline" role="img" aria-label="${visible.length} chronological trail events">
+        <span class="nv-trail-sparkline__track" aria-hidden="true">
+          ${visible.map((event, index) => `<span class="nv-trail-sparkline__dot" style="--nv-trail-step: ${index + 1};"></span>`).join("")}
+        </span>
+        <span>${visible.length} trail events</span>
+      </span>
+    `;
+  }
+
+  function renderSessionProgress() {
+    const artifactCount = pinnedReferences.length + recentReferences.length + savedQueries.length + evidenceTimeline.length + knowledgeTrail.length;
+    const activeKinds = [pinnedReferences.length, recentReferences.length, savedQueries.length, evidenceTimeline.length, knowledgeTrail.length].filter(Boolean).length;
+    return `
+      <span class="nv-session-progress" role="img" aria-label="${artifactCount} session artifacts across ${activeKinds} active artifact types">
+        <span class="nv-session-progress__track" aria-hidden="true">
+          ${Array.from({ length: 5 }, (_, index) => `<span class="nv-session-progress__segment${index < activeKinds ? " is-active" : ""}"></span>`).join("")}
+        </span>
+        <span>${artifactCount} session artifacts</span>
+      </span>
+    `;
+  }
+
   function getDiscoveryRelationship(seedId, targetId) {
     if (!seedId || !targetId) return null;
     return adapter.getRelationshipsForReference(retrievalState, seedId)
@@ -201,6 +307,7 @@
     relevanceLabel,
     connectivityLabel,
     iconPath,
+    microvisualization = "",
     showDescription = true,
     actions = ["preview", "open", "pin"]
   }) {
@@ -230,8 +337,10 @@
           <div class="nv-discovery-panel__metrics" aria-label="Recommendation metrics">
             <span>${relCount} relationships</span>
             ${renderRelevanceMeter(relevance)}
-            <span class="nv-connectivity-indicator">${escapeHtml(connectivity)}</span>
+            ${renderRelationshipDensityMeter(relCount)}
+            ${renderConnectivityScore(relCount)}
           </div>
+          ${microvisualization ? `<div class="nv-discovery-panel__microvisualization">${microvisualization}</div>` : ""}
           <div class="nv-discovery-panel__preview" id="${previewId}" hidden>
             <strong>${escapeHtml(reference.title)}</strong>
             <span>${escapeHtml(description || "No additional preview available.")}</span>
@@ -1114,6 +1223,12 @@
           ${topKeywords.length ? `Useful for ${escapeHtml(topKeywords.join(", "))}.` : "No keywords available."}
         </p>
 
+        <div class="nv-microvisualization-row" aria-label="Reference microvisualizations">
+          ${renderRelationshipDensityMeter(rels.length)}
+          ${renderConnectivityScore(rels.length)}
+          ${renderClusterIndicator(ref)}
+        </div>
+
         <details>
           <summary style="font-size: 0.7rem; font-weight: bold; cursor: pointer; color: var(--sys-color-text-secondary);">Keywords</summary>
           <div class="nv-cluster nv-cluster--gap-xs" style="flex-wrap: wrap; padding-top: 4px;">
@@ -1553,6 +1668,10 @@
             <span style="font-size: 0.68rem; color: var(--sys-color-text-secondary);">${comp.mode === "query" ? "Query evidence" : "Reference evidence"}</span>
             <span class="nv-badge" data-variant="${confVariant}" style="font-weight: var(--ref-font-weight-semibold);">${confLabel}</span>
           </div>
+          <div class="nv-microvisualization-row">
+            ${renderConfidenceGauge(comp.confidence)}
+            ${renderEvidenceCoverageStrip(allContributing.length)}
+          </div>
           <p class="nv-muted" style="font-size: var(--sys-font-caption-size); margin: 0; line-height: 1.3;">${escapeHtml(confExplanation)}</p>
         </div>
 
@@ -1571,6 +1690,8 @@
             ${allContributing.length === 0 ? '<p class="nv-muted" style="font-size: var(--sys-font-caption-size); margin: 0;">No contributing references found.</p>' : allContributing.map(item => {
               const relCount = getDiscoveryRelationshipCount(item.ref.id);
               const reasonLabel = item.role === "Primary Match" ? "Supports current evidence" : "Same knowledge neighborhood";
+              const contributionLevel = item.role === "Primary Match" ? 4 : 2;
+              const contributionLabel = item.role === "Primary Match" ? "Primary contribution" : "Supporting contribution";
               return renderDiscoveryPanel({
                 variant: "standard",
                 reference: item.ref,
@@ -1580,6 +1701,7 @@
                 relevanceLabel: item.role === "Primary Match" ? "High relevance" : "Moderate relevance",
                 connectivityLabel: getConnectivityLabel(relCount),
                 iconPath: "assets/icons/scientific/evidence/evidence-convergence.svg",
+                microvisualization: renderContributionBar(contributionLabel, contributionLevel),
                 actions: ["preview", "open", "pin"]
               });
             }).join("")}
@@ -2004,6 +2126,7 @@
     const firstHopNodeIds = new Set();
     const secondHopNodeIds = new Set();
     const activeRelIds = new Set();
+    const labeledNeighborIds = new Set();
 
     if (activeRefId) {
       visibleEdges.forEach(rel => {
@@ -2026,6 +2149,14 @@
           secondHopNodeIds.add(rel.sourceReferenceId);
         }
       });
+
+      visibleEdges
+        .filter(rel => rel.sourceReferenceId === activeRefId || rel.targetReferenceId === activeRefId)
+        .sort((a, b) => (b.strength || 0) - (a.strength || 0))
+        .slice(0, 2)
+        .forEach(rel => {
+          labeledNeighborIds.add(rel.sourceReferenceId === activeRefId ? rel.targetReferenceId : rel.sourceReferenceId);
+        });
     }
 
     const panSurface = createSvgElement("rect", {
@@ -2047,7 +2178,26 @@
     svg.appendChild(world);
     setGraphViewport(graphViewport, false);
 
-    // Cluster labels completely removed per user request for organic emergent clustering
+    clusterSummaries
+      .filter(cluster => cluster.nodes.length > 1 && cluster.x && cluster.y)
+      .forEach(cluster => {
+        const halo = createSvgElement("ellipse", {
+          class: "graph-cluster-halo",
+          cx: cluster.x,
+          cy: cluster.y,
+          rx: Math.max(cluster.radius * 0.46, 42),
+          ry: Math.max(cluster.radius * 0.26, 24)
+        });
+        const label = createSvgElement("text", {
+          class: "graph-cluster-label",
+          x: cluster.x,
+          y: cluster.y - Math.max(cluster.radius * 0.24, 22),
+          "text-anchor": "middle"
+        });
+        label.textContent = cluster.name;
+        clusterLayer.appendChild(halo);
+        clusterLayer.appendChild(label);
+      });
 
     edgePaths.forEach(({ edge: rel, pathData }) => {
       const hitEl = createSvgElement("path");
@@ -2094,6 +2244,9 @@
       hitEl.onmouseleave = hidePreview;
       hitEl.onfocus = showEdgePreview;
       hitEl.onblur = hidePreview;
+      pathEl.onmouseenter = showEdgePreview;
+      pathEl.onmousemove = showEdgePreview;
+      pathEl.onmouseleave = hidePreview;
 
       if (activeRefId) {
         if (rel.id === selectedRelationship?.id) {
@@ -2144,6 +2297,7 @@
       }
       if (pinnedReferences.includes(ref.id)) g.classList.add("pinned");
 
+      const hitArea = createSvgElement("circle", { class: "graph-node-hit", r: 18 });
       const circle = createSvgElement("circle", { class: "graph-node-core" });
       const text = createSvgElement("text", { class: "graph-node-label" });
       const isLeft = coord.x < width * 0.5;
@@ -2156,21 +2310,22 @@
         if (activeRefId) {
           if (ref.id === activeRefId) {
             const fullLabel = String(ref.title || ref.id);
-            text.textContent = fullLabel.length > 40 ? `${fullLabel.slice(0, 38)}...` : fullLabel;
+            text.textContent = fullLabel.length > 30 ? `${fullLabel.slice(0, 28)}...` : fullLabel;
             text.style.opacity = "1";
           } else if (firstHopNodeIds.has(ref.id)) {
-            text.textContent = getShortGraphLabel(ref);
-            text.style.opacity = "0.9";
+            text.textContent = labeledNeighborIds.has(ref.id) ? getShortGraphLabel(ref) : "";
+            text.style.opacity = labeledNeighborIds.has(ref.id) ? "0.78" : "0";
           } else {
             text.textContent = "";
           }
         } else {
-          text.textContent = getShortGraphLabel(ref);
-          text.style.opacity = "0.85";
+          text.textContent = "";
+          text.style.opacity = "0";
         }
       };
       setLabelState();
 
+      g.appendChild(hitArea);
       g.appendChild(circle);
       g.appendChild(text);
 
@@ -2550,7 +2705,13 @@
           compact: true
         });
       } else {
-        trailList.innerHTML = knowledgeTrail.map(event => {
+        const trailSummary = `
+          <li class="memory-microvisualization-summary">
+            ${renderSessionProgress()}
+            ${renderTrailSparkline(knowledgeTrail)}
+          </li>
+        `;
+        trailList.innerHTML = trailSummary + knowledgeTrail.map(event => {
           let badgeVariant = "neutral";
           if (event.type === "search" || event.type === "rerun_query") badgeVariant = "info";
           else if (event.type === "pin") badgeVariant = "success";
