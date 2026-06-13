@@ -463,15 +463,23 @@ export function createWorkspaceController(options = {}) {
       if (state.status === 'empty') {
         emptyStateEl.innerHTML = `
           <div class="nv-empty-state">
-            <div class="nv-empty-state-icon" aria-hidden="true">📭</div>
-            <h2 class="nv-empty-state-title">Workspace is Empty</h2>
-            <p class="nv-empty-state-description">
+            <div class="nv-empty-state__visual" aria-hidden="true">
+              <svg viewBox="0 0 100 100" width="80" height="80" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display: block; margin: 0 auto;" aria-hidden="true">
+                <rect x="20" y="25" width="60" height="50" rx="4" stroke="rgba(138, 180, 248, 0.2)" stroke-width="1.5" stroke-dasharray="3 3"/>
+                <path d="M 20 45 H 80 M 35 45 V 35 H 65 V 45" stroke="var(--sys-color-accent-primary)" stroke-width="1.75"/>
+                <circle cx="50" cy="60" r="4" fill="currentColor"/>
+              </svg>
+            </div>
+            <h4 class="nv-empty-state__title">Workspace is Empty</h4>
+            <p class="nv-empty-state__message">
               No learning modules, publications, or simulation agents have been initialized for the current path block. Select a path block to get started or initialize the default view.
             </p>
-            <div class="nv-cluster nv-cluster--gap-sm" style="justify-content: center; align-items: center; margin-block-start: var(--sys-space-stack-md);">
-              <button class="nv-button" data-variant="primary" data-workspace-action="open-workspace">Initialize Workspace</button>
-              <button class="nv-button" data-variant="secondary" data-workspace-action="explore-learning">Explore Learning Paths</button>
-              <button class="nv-button" data-variant="secondary" data-workspace-action="browse-modules">Browse Modules</button>
+            <div class="nv-empty-state__actions">
+              <div class="nv-cluster nv-cluster--gap-sm" style="justify-content: center; align-items: center;">
+                <button class="nv-button" data-variant="primary" data-workspace-action="open-workspace">Initialize Workspace</button>
+                <button class="nv-button" data-variant="secondary" data-workspace-action="explore-learning">Explore Learning Paths</button>
+                <button class="nv-button" data-variant="secondary" data-workspace-action="browse-modules">Browse Modules</button>
+              </div>
             </div>
           </div>
         `;

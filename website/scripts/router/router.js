@@ -82,12 +82,26 @@ class ViewController {
           </header>
           <div class="nv-panel">
             <div class="nv-empty-state">
-              <div class="nv-empty-state-icon" aria-hidden="true">🌌</div>
-              <h2 class="nv-empty-state-title">Welcome to NeuralVerse</h2>
-              <p class="nv-empty-state-description">
+              <div class="nv-empty-state__visual" aria-hidden="true">
+                <svg viewBox="0 0 100 100" width="80" height="80" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display: block; margin: 0 auto;" aria-hidden="true">
+                  <circle cx="50" cy="50" r="35" stroke="rgba(138, 180, 248, 0.2)" stroke-width="1" stroke-dasharray="3 3"/>
+                  <circle cx="50" cy="50" r="20" stroke="rgba(138, 180, 248, 0.15)" stroke-width="1"/>
+                  <line x1="25" y1="25" x2="50" y2="50" stroke="var(--sys-color-accent-primary)" stroke-width="1.5"/>
+                  <line x1="75" y1="25" x2="50" y2="50" stroke="var(--sys-color-accent-primary)" stroke-width="1.5"/>
+                  <line x1="50" y1="50" x2="50" y2="85" stroke="var(--sys-color-accent-primary)" stroke-width="1.5"/>
+                  <circle cx="50" cy="50" r="5" fill="currentColor"/>
+                  <circle cx="25" cy="25" r="4" fill="var(--sys-color-accent-primary)"/>
+                  <circle cx="75" cy="25" r="4" fill="var(--sys-color-accent-primary)"/>
+                  <circle cx="50" cy="85" r="4" fill="var(--sys-color-accent-primary)"/>
+                </svg>
+              </div>
+              <h4 class="nv-empty-state__title">Welcome to NeuralVerse</h4>
+              <p class="nv-empty-state__message">
                 NeuralVerse is an advanced agentic scientific platform designed to orchestrate reinforcement learning pipelines, cognitive modeling tasks, and specialized deep learning paths.
               </p>
-              <a href="#/learning" class="nv-button" data-variant="primary">View Learning Paths</a>
+              <div class="nv-empty-state__actions">
+                <a href="#/learning" class="nv-button" data-variant="primary">View Learning Paths</a>
+              </div>
             </div>
           </div>
         </div>
@@ -177,12 +191,23 @@ class ViewController {
           </div>
           <div class="nv-panel">
             <div class="nv-empty-state">
-              <div class="nv-empty-state-icon" aria-hidden="true">⚙</div>
-              <h2 class="nv-empty-state-title">No Active Simulation</h2>
-              <p class="nv-empty-state-description">
+              <div class="nv-empty-state__visual" aria-hidden="true">
+                <svg viewBox="0 0 100 100" width="80" height="80" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display: block; margin: 0 auto;" aria-hidden="true">
+                  <rect x="25" y="25" width="50" height="50" rx="6" stroke="rgba(138, 180, 248, 0.2)" stroke-width="1.5" stroke-dasharray="3 3"/>
+                  <circle cx="50" cy="50" r="15" stroke="var(--sys-color-accent-primary)" stroke-width="1.75"/>
+                  <line x1="50" y1="20" x2="50" y2="35" stroke="var(--sys-color-accent-primary)" stroke-width="1.75"/>
+                  <line x1="50" y1="65" x2="50" y2="80" stroke="var(--sys-color-accent-primary)" stroke-width="1.75"/>
+                  <line x1="20" y1="50" x2="35" y2="50" stroke="var(--sys-color-accent-primary)" stroke-width="1.75"/>
+                  <line x1="65" y1="50" x2="80" y2="50" stroke="var(--sys-color-accent-primary)" stroke-width="1.75"/>
+                </svg>
+              </div>
+              <h4 class="nv-empty-state__title">No Active Simulation</h4>
+              <p class="nv-empty-state__message">
                 Configure your environment node parameters in the sidebar or rail navigation to deploy an AI agent instance.
               </p>
-              <button class="nv-button" data-variant="primary">Initialize Agent Loop</button>
+              <div class="nv-empty-state__actions">
+                <button class="nv-button" data-variant="primary">Initialize Agent Loop</button>
+              </div>
             </div>
           </div>
         </div>
@@ -595,12 +620,20 @@ class ViewController {
           </header>
           <div class="nv-panel">
             <div class="nv-empty-state">
-              <div class="nv-empty-state-icon" aria-hidden="true">⚠️</div>
-              <h2 class="nv-empty-state-title">Node Not Found</h2>
-              <p class="nv-empty-state-description">
+              <div class="nv-empty-state__visual" aria-hidden="true">
+                <svg viewBox="0 0 100 100" width="80" height="80" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display: block; margin: 0 auto;" aria-hidden="true">
+                  <polygon points="50,15 90,85 10,85" stroke="var(--sys-color-semantic-error, #f28b82)" stroke-width="1.75" stroke-linejoin="round"/>
+                  <line x1="50" y1="35" x2="50" y2="60" stroke="var(--sys-color-semantic-error, #f28b82)" stroke-width="2"/>
+                  <circle cx="50" cy="73" r="3" fill="var(--sys-color-semantic-error, #f28b82)"/>
+                </svg>
+              </div>
+              <h4 class="nv-empty-state__title">Node Not Found</h4>
+              <p class="nv-empty-state__message">
                 The workspace or route path you selected does not exist or has not been fully implemented in this MVP v0.1 release.
               </p>
-              <a href="#/" class="nv-button" data-variant="primary">Return Home</a>
+              <div class="nv-empty-state__actions">
+                <a href="#/" class="nv-button" data-variant="primary">Return Home</a>
+              </div>
             </div>
           </div>
         </div>
@@ -626,7 +659,19 @@ class ViewController {
     let rendered = false;
     // Attempt to load from static files
     try {
-      const response = await fetch(`./pages/${viewId}.html?v=9`);
+      const pathParts = window.location.pathname.split('/');
+      let dirPath = '';
+      if (window.location.pathname.endsWith('/')) {
+        dirPath = window.location.pathname;
+      } else {
+        const lastPart = pathParts[pathParts.length - 1];
+        if (lastPart.includes('.') || lastPart === '') {
+          dirPath = pathParts.slice(0, -1).join('/') + '/';
+        } else {
+          dirPath = pathParts.join('/') + '/';
+        }
+      }
+      const response = await fetch(`${dirPath}pages/${viewId}.html?v=10`);
       if (response.ok) {
         const html = await response.text();
         this.container.innerHTML = html;
