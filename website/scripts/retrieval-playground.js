@@ -87,6 +87,214 @@
     return `${source ? source.title : rel.sourceReferenceId} ${String(rel.type || "related").replace(/_/g, " ")} ${target ? target.title : rel.targetReferenceId}`;
   }
 
+  function getDiscoveryRelationshipCount(refId) {
+    if (!refId) return 0;
+    return adapter.getRelationshipsForReference(retrievalState, refId).length;
+  }
+
+  function getConnectivityLabel(count) {
+    if (count <= 0) return "Isolated";
+    if (count <= 2) return "Sparse";
+    if (count <= 5) return "Connected";
+    return "Dense cluster";
+  }
+
+  function getDiscoveryRelationship(seedId, targetId) {
+    if (!seedId || !targetId) return null;
+    return adapter.getRelationshipsForReference(retrievalState, seedId)
+      .find(rel => rel.sourceReferenceId === targetId || rel.targetReferenceId === targetId) || null;
+  }
+
+  function getRelevanceLabel({ strength, rank = 0, reason = "" } = {}) {
+    if (Number.isFinite(strength)) {
+      if (strength >= 0.82) return "High relevance";
+      if (strength >= 0.6) return "Moderate relevance";
+      return "Exploratory match";
+    }
+    const reasonText = String(reason).toLowerCase();
+    if (reasonText.includes("direct") || reasonText.includes("citation") || reasonText.includes("support")) {
+      return "High relevance";
+    }
+    if (rank <= 1) return "High relevance";
+    if (rank <= 3) return "Moderate relevance";
+    return "Exploratory match";
+  }
+
+  function getRelevanceLevel(label) {
+    if (label === "High relevance") return 4;
+    if (label === "Moderate relevance") return 3;
+    return 2;
+  }
+
+  function normalizeRecommendationReason(rawReason, category, relType) {
+    const reason = String(rawReason || "").toLowerCase();
+    const type = String(relType || category || "").toLowerCase();
+    if (type === "cites" || reason.includes("citation") || reason.includes("cites")) return "Related by citation";
+    if (type === "supports" || type === "uses" || reason.includes("support")) return "Supports current evidence";
+    if (type === "contrasts" || reason.includes("contrast")) return "Contrasts with selected reference";
+    if (type === "implements" || reason.includes("implementation")) return "Direct relationship";
+    if (type === "related" || reason.includes("direct relationship")) return "Direct relationship";
+    if (type === "similar" || reason.includes("keyword") || reason.includes("concept")) return "Shares key concepts";
+    if (type === "continue" || reason.includes("recent")) return "Frequently explored with current reference";
+    if (reason.includes("same category") || reason.includes("same type")) return "Similar reference type";
+    if (reason.includes("pinned")) return "Pinned context match";
+    if (reason.includes("saved query")) return "Saved query match";
+    if (reason.includes("graph") || reason.includes("path")) return "Connected through graph path";
+    if (reason.includes("neighborhood")) return "Same knowledge neighborhood";
+    if (reason.includes("build")) return "Builds on selected reference";
+    return "Contextual match";
+  }
+
+  function getDiscoveryIconPath({ ref, reason, category, isPinned = false } = {}) {
+    if (isPinned) return "assets/icons/scientific/collections/pinned-references.svg";
+    const reasonText = String(reason || "").toLowerCase();
+    const categoryText = String(category || "").toLowerCase();
+    if (reasonText.includes("citation") || reasonText.includes("direct relationship") || categoryText === "related") {
+      return "assets/icons/scientific/knowledge-graph/citation-bridge.svg";
+    }
+    if (reasonText.includes("evidence") || reasonText.includes("support")) {
+      return "assets/icons/scientific/evidence/evidence-convergence.svg";
+    }
+    if (reasonText.includes("neighborhood")) {
+      return "assets/icons/scientific/knowledge-graph/active-neighborhood.svg";
+    }
+    if (reasonText.includes("concept") || reasonText.includes("path") || categoryText === "similar") {
+      return "assets/icons/scientific/knowledge-graph/semantic-path.svg";
+    }
+    if (categoryText === "recent") return "assets/icons/scientific/memory-session/recent-activity.svg";
+    if (categoryText === "saved-query") return "assets/icons/scientific/collections/saved-queries.svg";
+    if (ref?.type === "paper" || ref?.type === "notes") return "assets/icons/scientific/inspector/document-review.svg";
+    return "assets/icons/scientific/inspector/reference-details.svg";
+  }
+
+  function getReferenceDescription(ref) {
+    if (!ref) return "";
+    if (Array.isArray(ref.keywords) && ref.keywords.length > 0) {
+      return `Key concepts: ${ref.keywords.slice(0, 4).join(", ")}`;
+    }
+    return ref.source ? `Source: ${ref.source}` : "";
+  }
+
+  function renderScientificIcon(path, extraClass = "") {
+    const iconPath = String(path || "").startsWith("/") ? path : `/${path}`;
+    return `<span class="nv-scientific-icon nv-discovery-panel__icon-glyph ${extraClass}" style="--nv-scientific-icon-url: url('${iconPath}');" aria-hidden="true"></span>`;
+  }
+
+  function renderRelevanceMeter(label) {
+    const level = getRelevanceLevel(label);
+    return `
+      <span class="nv-relevance-meter" aria-label="${escapeHtml(label)}">
+        <span class="nv-relevance-meter__track" aria-hidden="true">
+          ${[1, 2, 3, 4].map(step => `<span class="nv-relevance-meter__segment${step <= level ? " is-active" : ""}"></span>`).join("")}
+        </span>
+        <span>${escapeHtml(label)}</span>
+      </span>
+    `;
+  }
+
+  function renderDiscoveryPanel({
+    variant = "standard",
+    reference,
+    reason,
+    category,
+    relationshipCount,
+    relevanceLabel,
+    connectivityLabel,
+    iconPath,
+    showDescription = true,
+    actions = ["preview", "open", "pin"]
+  }) {
+    if (!reference) return "";
+    const relCount = Number.isFinite(relationshipCount) ? relationshipCount : getDiscoveryRelationshipCount(reference.id);
+    const connectivity = connectivityLabel || getConnectivityLabel(relCount);
+    const relevance = relevanceLabel || getRelevanceLabel({ reason });
+    const reasonLabel = normalizeRecommendationReason(reason, category);
+    const description = getReferenceDescription(reference);
+    const isPinned = pinnedReferences.includes(reference.id);
+    const panelIcon = iconPath || getDiscoveryIconPath({ ref: reference, reason: reasonLabel, category, isPinned });
+    const previewId = `discovery-preview-${String(reference.id).replace(/[^a-zA-Z0-9_-]/g, "-")}`;
+    const actionSet = new Set(actions);
+
+    return `
+      <article class="nv-discovery-panel nv-discovery-panel--${variant}" data-ref-id="${escapeHtml(reference.id)}" tabindex="0" aria-labelledby="discovery-title-${escapeHtml(reference.id)}">
+        <div class="nv-discovery-panel__icon">
+          ${renderScientificIcon(panelIcon)}
+        </div>
+        <div class="nv-discovery-panel__body">
+          <div class="nv-discovery-panel__meta">
+            <span class="nv-badge" data-variant="info">${escapeHtml(reference.type || "reference")}</span>
+            <span class="nv-discovery-panel__reason">${escapeHtml(reasonLabel)}</span>
+          </div>
+          <h4 class="nv-discovery-panel__title" id="discovery-title-${escapeHtml(reference.id)}">${escapeHtml(reference.title)}</h4>
+          ${showDescription && variant !== "compact" && description ? `<p class="nv-discovery-panel__description">${escapeHtml(description)}</p>` : ""}
+          <div class="nv-discovery-panel__metrics" aria-label="Recommendation metrics">
+            <span>${relCount} relationships</span>
+            ${renderRelevanceMeter(relevance)}
+            <span class="nv-connectivity-indicator">${escapeHtml(connectivity)}</span>
+          </div>
+          <div class="nv-discovery-panel__preview" id="${previewId}" hidden>
+            <strong>${escapeHtml(reference.title)}</strong>
+            <span>${escapeHtml(description || "No additional preview available.")}</span>
+          </div>
+          <div class="nv-discovery-panel__actions">
+            ${actionSet.has("preview") ? `<button class="nv-button nv-discovery-panel__action" data-action="preview-discovery" data-id="${escapeHtml(reference.id)}" data-preview-id="${previewId}" data-variant="ghost" aria-expanded="false">Preview</button>` : ""}
+            ${actionSet.has("open") ? `<button class="nv-button nv-discovery-panel__action" data-action="open-discovery" data-id="${escapeHtml(reference.id)}" data-variant="primary">Open</button>` : ""}
+            ${actionSet.has("pin") ? `<button class="nv-button nv-discovery-panel__action" data-action="pin-discovery" data-id="${escapeHtml(reference.id)}" data-variant="secondary">${isPinned ? "Unpin" : "Pin"}</button>` : ""}
+          </div>
+        </div>
+      </article>
+    `;
+  }
+
+  function bindDiscoveryPanelActions(container, options = {}) {
+    if (!container) return;
+    container.querySelectorAll(".nv-discovery-panel").forEach(panel => {
+      const refId = panel.getAttribute("data-ref-id");
+      const openPanel = () => {
+        addTrailEvent("discovery_open", `Opened discovery panel "${refId}"`, { referenceId: refId });
+        selectReference(refId);
+      };
+      panel.onclick = (event) => {
+        if (event.target.closest("button")) return;
+        openPanel();
+      };
+      bindKeyboardActivation(panel, openPanel);
+    });
+
+    container.querySelectorAll("button[data-action='preview-discovery']").forEach(btn => {
+      btn.onclick = (event) => {
+        event.stopPropagation();
+        const preview = document.getElementById(btn.getAttribute("data-preview-id"));
+        if (!preview) return;
+        const willOpen = preview.hidden;
+        preview.hidden = !willOpen;
+        btn.setAttribute("aria-expanded", String(willOpen));
+      };
+    });
+
+    container.querySelectorAll("button[data-action='open-discovery']").forEach(btn => {
+      btn.onclick = (event) => {
+        event.stopPropagation();
+        const id = btn.getAttribute("data-id");
+        addTrailEvent("discovery_open", `Opened discovery panel "${id}"`, { referenceId: id });
+        selectReference(id);
+      };
+    });
+
+    container.querySelectorAll("button[data-action='pin-discovery']").forEach(btn => {
+      btn.onclick = (event) => {
+        event.stopPropagation();
+        const id = btn.getAttribute("data-id");
+        if (pinnedReferences.includes(id)) {
+          unpinReference(id);
+        } else {
+          pinReference(id);
+        }
+        if (typeof options.onPinChange === "function") options.onPinChange(id);
+      };
+    });
+  }
+
   function clampGraphScale(scale) {
     return Math.max(0.3, Math.min(4.0, scale));
   }
@@ -1004,10 +1212,13 @@
     const cards = [];
     if (discoveryData.suggestions && discoveryData.suggestions.length > 0) {
       discoveryData.suggestions.slice(0, 4).forEach(item => {
+        const rel = getDiscoveryRelationship(selectedReferenceId, item.reference.id);
         cards.push({
           ref: item.reference,
           category: item.category,
-          reason: item.reason
+          reason: item.reason,
+          relType: item.relType,
+          strength: rel?.strength
         });
       });
     }
@@ -1019,7 +1230,9 @@
           cards.push({
             ref,
             category: c.relType,
-            reason: c.description
+            reason: c.description,
+            relType: c.relType,
+            strength: getDiscoveryRelationship(selectedReferenceId, ref.id)?.strength
           });
         }
       }
@@ -1047,23 +1260,21 @@
     if (cards.length > 0) {
       html += `
         <div class="discovery-section-title">Recommended Next</div>
-        <div class="compact-list" aria-label="Contextual recommendations">
-          ${cards.slice(0, 6).map(item => `
-            <button class="nv-discovery-card" data-ref-id="${item.ref.id}">
-              <div class="nv-cluster nv-cluster--gap-xs" style="align-items: center; justify-content: space-between; width: 100%; margin-bottom: 2px;">
-                <span class="nv-badge" data-variant="info" style="font-size: 0.55rem; padding: 1px 4px; text-transform: uppercase;">${escapeHtml(item.ref.type || 'reference')}</span>
-                <span style="font-size: 0.55rem; color: var(--sys-color-text-secondary); font-family: var(--sys-font-code-family);">${escapeHtml(item.ref.id)}</span>
-              </div>
-              <div style="font-weight: var(--ref-font-weight-semibold); font-size: 0.68rem; color: var(--sys-color-text-primary); display: flex; align-items: center; gap: 4px; width: 100%;">
-                <span style="color: var(--sys-color-accent-primary); flex-shrink: 0;">↳</span>
-                <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; text-align: left;">${escapeHtml(item.ref.title)}</span>
-              </div>
-              <div class="nv-cluster nv-cluster--gap-xs" style="align-items: center; justify-content: space-between; margin-top: 2px; width: 100%;">
-                <span style="font-size: 0.6rem; color: var(--sys-color-text-secondary); flex: 1; line-height: 1.3; text-align: left; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">${escapeHtml(item.reason)}</span>
-                <span class="nv-badge" data-variant="neutral" style="font-size: 0.55rem; padding: 1px 4px; text-transform: capitalize; flex-shrink: 0; margin-left: 6px;">${escapeHtml(item.category)}</span>
-              </div>
-            </button>
-          `).join("")}
+        <div class="nv-discovery-panel-list" aria-label="Contextual recommendations">
+          ${cards.slice(0, 6).map((item, index) => {
+            const relCount = getDiscoveryRelationshipCount(item.ref.id);
+            const reasonLabel = normalizeRecommendationReason(item.reason, item.category, item.relType);
+            return renderDiscoveryPanel({
+              variant: index === 0 ? "rich" : "standard",
+              reference: item.ref,
+              reason: reasonLabel,
+              category: item.category,
+              relationshipCount: relCount,
+              relevanceLabel: getRelevanceLabel({ strength: item.strength, rank: index, reason: reasonLabel }),
+              connectivityLabel: getConnectivityLabel(relCount),
+              actions: ["preview", "open", "pin"]
+            });
+          }).join("")}
         </div>
       `;
     }
@@ -1083,17 +1294,7 @@
 
     container.innerHTML = html;
     runTransientClass(container, "is-updated", 200);
-
-    // Add interactive click/keydown event listeners
-    // Carousel suggestions
-    container.querySelectorAll(".nv-discovery-card").forEach(card => {
-      card.onclick = () => {
-        const refId = card.getAttribute("data-ref-id");
-        addTrailEvent("Discovery suggestion opened", `Opened suggestion "${refId}"`, { referenceId: refId });
-        selectReference(refId);
-      };
-      bindKeyboardActivation(card, card.onclick);
-    });
+    bindDiscoveryPanelActions(container, { onPinChange: renderDiscoverySpace });
 
     // Dead-end query buttons
     container.querySelectorAll(".dead-end-query-btn").forEach(btn => {
@@ -1141,36 +1342,29 @@
       if (!neighbor) continue;
       const isOutgoing = item.direction === "outgoing";
       const dirText = isOutgoing ? "to" : "from";
-      const badgeVariant = isOutgoing ? "info" : "neutral";
+      const reasonLabel = normalizeRecommendationReason(item.context, "related", item.type);
+      const relCount = getDiscoveryRelationshipCount(neighbor.id);
 
       html += `
-        <button class="neighborhood-card neighborhood-item-card" data-ref-id="${neighbor.id}" style="cursor: pointer; text-align: left;">
-          <div class="neighborhood-header">
-            <span class="neighborhood-direction nv-badge" data-variant="${badgeVariant}">${dirText}</span>
-            <span class="nv-badge" data-variant="warning">${escapeHtml(item.type)}</span>
-          </div>
-          <div style="font-weight: var(--ref-font-weight-semibold); font-size: 0.65rem; color: var(--sys-color-text-primary); margin-top: 2px;">
-            ${escapeHtml(neighbor.title)}
-          </div>
-          <div class="neighborhood-context">
-            ${escapeHtml(item.context || "No context")}
-          </div>
-        </button>
+        ${renderDiscoveryPanel({
+          variant: "compact",
+          reference: neighbor,
+          reason: `${reasonLabel} ${dirText}`,
+          category: item.type,
+          relationshipCount: relCount,
+          relevanceLabel: getRelevanceLabel({ strength: item.strength, reason: reasonLabel }),
+          connectivityLabel: getConnectivityLabel(relCount),
+          iconPath: "assets/icons/scientific/knowledge-graph/active-neighborhood.svg",
+          showDescription: false,
+          actions: ["open", "pin"]
+        })}
       `;
     }
 
     html += `</div>`;
     container.innerHTML = html;
 
-    // Add interactive click to open neighborhood references
-    container.querySelectorAll(".neighborhood-item-card").forEach(card => {
-      card.onclick = () => {
-        const refId = card.getAttribute("data-ref-id");
-        addTrailEvent("Neighborhood reference opened", `Opened neighborhood node "${refId}"`, { referenceId: refId });
-        selectReference(refId);
-      };
-      bindKeyboardActivation(card, card.onclick);
-    });
+    bindDiscoveryPanelActions(container, { onPinChange: renderRelationshipNeighborhood });
   }
 
   // DOM Rendering: Relationship Inspector Panel
@@ -1375,30 +1569,19 @@
           <h5 style="margin: 0; font-size: 0.65rem; text-transform: uppercase; color: var(--sys-color-accent-primary);">Supporting References</h5>
           <div class="nv-stack nv-stack--gap-xs">
             ${allContributing.length === 0 ? '<p class="nv-muted" style="font-size: var(--sys-font-caption-size); margin: 0;">No contributing references found.</p>' : allContributing.map(item => {
-              const isPinned = pinnedReferences.includes(item.ref.id);
-              const colorToken = item.role === 'Primary Match' ? 'success' : 'warning';
-              return `
-                <div class="nv-card" style="padding: var(--sys-space-stack-xs); background-color: var(--sys-color-surface-container-lowest); border: 1px solid var(--sys-color-border-subtle); border-radius: var(--sys-border-radius-sm);">
-                  <div class="nv-cluster nv-cluster--gap-xs" style="justify-content: space-between; align-items: flex-start; margin-bottom: 2px;">
-                    <span style="font-size: 0.65rem; color: var(--sys-color-text-primary); font-weight: var(--ref-font-weight-semibold);">${escapeHtml(item.ref.title)}</span>
-                    <span class="nv-badge" data-variant="${item.role === 'Primary Match' ? 'success' : 'info'}" style="font-size: 0.55rem; padding: 1px 4px;">${item.role}</span>
-                  </div>
-                  <div class="nv-cluster nv-cluster--gap-xs" style="align-items: center; margin-top: 4px; margin-bottom: 2px; gap: 6px;">
-                    <span style="font-size: 0.55rem; color: var(--sys-color-text-secondary); opacity: 0.85;">Contribution:</span>
-                    <div class="nv-micro-bar-container" title="Weight: ${item.role === 'Primary Match' ? '90%' : '55%'}">
-                      <div class="nv-micro-bar-fill ${colorToken}" style="width: ${item.role === 'Primary Match' ? '90%' : '55%'}"></div>
-                    </div>
-                  </div>
-                  <div class="nv-cluster nv-cluster--gap-xs" style="margin-top: var(--sys-space-stack-xs); justify-content: flex-end;">
-                    <button class="nv-button" data-action="pin-supporting" data-id="${item.ref.id}" style="padding: 2px 6px; min-block-size: unset; font-size: 0.55rem;">
-                      ${isPinned ? 'Unpin' : 'Pin'}
-                    </button>
-                    <button class="nv-button" data-action="open-supporting" data-id="${item.ref.id}" data-variant="primary" style="padding: 2px 6px; min-block-size: unset; font-size: 0.55rem;">
-                      Open
-                    </button>
-                  </div>
-                </div>
-              `;
+              const relCount = getDiscoveryRelationshipCount(item.ref.id);
+              const reasonLabel = item.role === "Primary Match" ? "Supports current evidence" : "Same knowledge neighborhood";
+              return renderDiscoveryPanel({
+                variant: "standard",
+                reference: item.ref,
+                reason: reasonLabel,
+                category: item.role,
+                relationshipCount: relCount,
+                relevanceLabel: item.role === "Primary Match" ? "High relevance" : "Moderate relevance",
+                connectivityLabel: getConnectivityLabel(relCount),
+                iconPath: "assets/icons/scientific/evidence/evidence-convergence.svg",
+                actions: ["preview", "open", "pin"]
+              });
             }).join("")}
           </div>
         </div>
@@ -1492,6 +1675,7 @@
     `;
 
     runTransientClass(container, "is-updated", 200);
+    bindDiscoveryPanelActions(container, { onPinChange: () => renderEvidence(comp) });
 
     // Bind supporting reference actions
     container.querySelectorAll("button[data-action='open-supporting']").forEach(btn => {
@@ -2147,29 +2331,18 @@
 
       const sortedRefs = [...activeRefs].sort((a, b) => counts[b.id] - counts[a.id]);
 
-      anchorsContainer.innerHTML = sortedRefs.slice(0, 3).map(ref => `
-        <div class="nv-card" style="margin-bottom: var(--sys-space-stack-xs); cursor: default;">
-          <div class="nv-cluster nv-cluster--gap-sm" style="justify-content: space-between; align-items: center;">
-            <h4 style="margin: 0; font-size: var(--sys-font-body-size);">${ref.title}</h4>
-            <span class="nv-badge" data-variant="info">${counts[ref.id]} links</span>
-          </div>
-          <p class="nv-muted" style="font-size: var(--sys-font-caption-size); margin: var(--sys-space-stack-xs) 0 0 0;">
-            ID: ${ref.id} | Type: ${ref.type}
-          </p>
-          <div style="margin-top: var(--sys-space-stack-sm);">
-            <button class="nv-button" data-action="select-anchor" data-id="${ref.id}" style="font-size: 0.7rem; padding: 2px 8px; min-block-size: unset;">
-              Select Anchor
-            </button>
-          </div>
-        </div>
-      `).join("");
-
-      anchorsContainer.querySelectorAll("button[data-action='select-anchor']").forEach(btn => {
-        btn.onclick = () => {
-          const id = btn.getAttribute("data-id");
-          selectReference(id);
-        };
-      });
+      anchorsContainer.innerHTML = sortedRefs.slice(0, 3).map((ref, index) => renderDiscoveryPanel({
+        variant: "rich",
+        reference: ref,
+        reason: index === 0 ? "Same knowledge neighborhood" : "Connected through graph path",
+        category: "discovery-anchor",
+        relationshipCount: counts[ref.id],
+        relevanceLabel: index === 0 ? "High relevance" : "Moderate relevance",
+        connectivityLabel: getConnectivityLabel(counts[ref.id]),
+        iconPath: "assets/icons/scientific/knowledge-graph/knowledge-cluster.svg",
+        actions: ["preview", "open", "pin"]
+      })).join("");
+      bindDiscoveryPanelActions(anchorsContainer, { onPinChange: renderDiscoveryMode });
     }
   }
 
@@ -2227,14 +2400,31 @@
       } else {
         recentList.innerHTML = visibleRecent.map(id => {
           const ref = adapter.getReferenceById(retrievalState, id);
-          const title = ref ? ref.title : id;
+          if (!ref) {
+            return `
+              <li class="memory-item" data-ref-id="${id}" title="${escapeHtml(id)}" tabindex="0" role="button">
+                <span>${escapeHtml(id)}</span>
+              </li>
+            `;
+          }
           return `
-            <li class="memory-item" data-ref-id="${id}" title="${escapeHtml(title)}" tabindex="0" role="button">
-              <span>${escapeHtml(ref ? ref.title : id)}</span>
-              <span class="nv-muted" style="font-size: 0.6rem; text-align: right; overflow: hidden; text-overflow: ellipsis;">${ref ? ref.type : ''}</span>
+            <li class="memory-panel-item">
+              ${renderDiscoveryPanel({
+                variant: "compact",
+                reference: ref,
+                reason: "Frequently explored with current reference",
+                category: "recent",
+                relationshipCount: getDiscoveryRelationshipCount(ref.id),
+                relevanceLabel: "Moderate relevance",
+                connectivityLabel: getConnectivityLabel(getDiscoveryRelationshipCount(ref.id)),
+                iconPath: "assets/icons/scientific/memory-session/recent-activity.svg",
+                showDescription: false,
+                actions: ["open", "pin"]
+              })}
             </li>
           `;
         }).join("");
+        bindDiscoveryPanelActions(recentList, { onPinChange: renderMemoryLayer });
 
         recentList.querySelectorAll(".memory-item").forEach(item => {
           item.onclick = () => {
@@ -2257,14 +2447,32 @@
       } else {
         pinnedList.innerHTML = pinnedReferences.map(id => {
           const ref = adapter.getReferenceById(retrievalState, id);
-          const title = ref ? ref.title : id;
+          if (!ref) {
+            return `
+              <li class="memory-item" data-ref-id="${id}" title="${escapeHtml(id)}" tabindex="0" role="button">
+                <span>${escapeHtml(id)}</span>
+                <button class="memory-action-btn" data-action="unpin" data-id="${id}" aria-label="Unpin ${id}">×</button>
+              </li>
+            `;
+          }
           return `
-            <li class="memory-item" data-ref-id="${id}" title="${escapeHtml(title)}" tabindex="0" role="button">
-              <span>${escapeHtml(ref ? ref.title : id)}</span>
-              <button class="memory-action-btn" data-action="unpin" data-id="${id}" aria-label="Unpin ${id}">×</button>
+            <li class="memory-panel-item">
+              ${renderDiscoveryPanel({
+                variant: "compact",
+                reference: ref,
+                reason: "Pinned context match",
+                category: "pinned",
+                relationshipCount: getDiscoveryRelationshipCount(ref.id),
+                relevanceLabel: "High relevance",
+                connectivityLabel: getConnectivityLabel(getDiscoveryRelationshipCount(ref.id)),
+                iconPath: "assets/icons/scientific/collections/pinned-references.svg",
+                showDescription: false,
+                actions: ["open", "pin"]
+              })}
             </li>
           `;
         }).join("");
+        bindDiscoveryPanelActions(pinnedList, { onPinChange: renderMemoryLayer });
 
         pinnedList.querySelectorAll(".memory-item").forEach(item => {
           item.onclick = (e) => {
