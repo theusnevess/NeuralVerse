@@ -1,0 +1,67 @@
+/**
+ * NeuralVerse Scientific Iconography Utilities
+ *
+ * Scope:
+ * Reusable sizing and state classes for the official scientific icon library.
+ * SVG assets inherit currentColor and must not define state-specific variants.
+ */
+
+.nv-scientific-icon {
+  --nv-scientific-icon-size: 1.5rem;
+
+  display: inline-block;
+  inline-size: var(--nv-scientific-icon-size);
+  block-size: var(--nv-scientific-icon-size);
+  flex: 0 0 auto;
+  color: currentColor;
+  vertical-align: middle;
+  stroke-width: 1.75;
+  transition:
+    color var(--sys-motion-duration-feedback) var(--sys-motion-ease-interface),
+    opacity var(--sys-motion-duration-feedback) var(--sys-motion-ease-interface),
+    transform var(--sys-motion-duration-feedback) var(--sys-motion-ease-interface);
+}
+
+.nv-scientific-icon--sm {
+  --nv-scientific-icon-size: 1rem;
+}
+
+.nv-scientific-icon--md {
+  --nv-scientific-icon-size: 1.5rem;
+}
+
+.nv-scientific-icon--lg {
+  --nv-scientific-icon-size: 3rem;
+}
+
+.nv-scientific-icon--xl {
+  --nv-scientific-icon-size: 6rem;
+}
+
+.nv-scientific-icon--muted {
+  color: var(--sys-color-text-muted);
+  opacity: 0.78;
+}
+
+.nv-scientific-icon--active {
+  color: var(--sys-color-accent-primary);
+}
+
+.nv-scientific-icon--selected {
+  color: var(--sys-color-accent-primary);
+  outline: var(--sys-border-subtle) solid currentColor;
+  outline-offset: var(--sys-space-inline-xs);
+}
+
+.nv-scientific-icon--disabled {
+  color: var(--sys-color-text-disabled);
+  cursor: not-allowed;
+  opacity: 0.42;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nv-scientific-icon {
+    transition: none;
+  }
+}
