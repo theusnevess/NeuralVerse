@@ -25,6 +25,7 @@
   let shouldFitGraphViewport = true;
   let graphLabelMode = "context";
   let graphFocusMode = "follow";
+  let richPreviewController = null;
 
   // Persistence State
   let pinnedReferences = [];
@@ -503,7 +504,7 @@
     const actionSet = new Set(actions);
 
     return `
-      <article class="nv-discovery-panel nv-discovery-panel--${variant}" data-ref-id="${escapeHtml(reference.id)}" tabindex="0" aria-labelledby="discovery-title-${escapeHtml(reference.id)}">
+      <article class="nv-discovery-panel nv-discovery-panel--${variant}" data-ref-id="${escapeHtml(reference.id)}" data-preview-ref="${escapeHtml(reference.id)}" tabindex="0" aria-labelledby="discovery-title-${escapeHtml(reference.id)}">
         <div class="nv-discovery-panel__icon">
           ${renderScientificIcon(panelIcon)}
         </div>
@@ -583,6 +584,326 @@
         if (typeof options.onPinChange === "function") options.onPinChange(id);
       };
     });
+  }
+
+  function getRelationshipById(relId) {
+    if (!relId) return null;
+    return retrievalState.relationships.find(rel => rel.id === relId) || null;
+  }
+
+  function getReferencePreviewPayload(refId, sourceLabel = "") {
+    const ref = adapter.getReferenceById(retrievalState, refId);
+    if (!ref) return null;
+    const relationshipCount = getDiscoveryRelationshipCount(ref.id);
+    const evidenceCount = getEvidenceCountForReference(ref.id);
+    return {
+      type: "reference",
+      ref,
+      iconPath: getDiscoveryIconPath({ ref, category: sourceLabel }),
+      eyebrow: [
+        ref.type || "reference",
+        adapter.inferReferenceCluster ? adapter.inferReferenceCluster(ref) : getClusterLabel(ref)
+      ].filter(Boolean).join(" · "),
+      title: ref.title,
+      description: getReferenceDescription(ref),
+      metrics: [
+        `${relationshipCount} relationship${relationshipCount === 1 ? "" : "s"}`,
+        getConnectivityLabel(relationshipCount),
+        evidenceCount > 0 ? `${evidenceCount} evidence input${evidenceCount === 1 ? "" : "s"}` : ""
+      ].filter(Boolean),
+      microvisualizations: [
+        renderRelationshipDensityMeter(relationshipCount),
+        renderConnectivityScore(relationshipCount),
+        renderClusterIndicator(ref)
+      ].join(""),
+      actions: [
+        { action: "open-reference", label: "Open", id: ref.id, variant: "primary" },
+        { action: "pin-reference", label: pinnedReferences.includes(ref.id) ? "Unpin" : "Pin", id: ref.id, variant: "secondary" }
+      ]
+    };
+  }
+
+  function getRelationshipPreviewPayload(relId) {
+    const rel = getRelationshipById(relId);
+    if (!rel) return null;
+    const source = adapter.getReferenceById(retrievalState, rel.sourceReferenceId);
+    const target = adapter.getReferenceById(retrievalState, rel.targetReferenceId);
+    const relType = String(rel.type || "related").replace(/_/g, " ");
+    const strength = typeof rel.strength === "number" ? `Strength ${rel.strength}` : "";
+    return {
+      type: "relationship",
+      rel,
+      iconPath: "assets/icons/scientific/knowledge-graph/citation-bridge.svg",
+      eyebrow: `Relationship · ${relType}`,
+      title: `${source?.title || rel.sourceReferenceId} → ${target?.title || rel.targetReferenceId}`,
+      description: rel.context || "Relationship context from the current graph.",
+      metrics: [strength, relType].filter(Boolean),
+      microvisualizations: "",
+      actions: [
+        { action: "open-relationship", label: "Open Relationship", id: rel.id, variant: "primary" },
+        { action: "follow-source", label: "Follow Source", id: rel.sourceReferenceId, variant: "secondary" },
+        { action: "follow-target", label: "Follow Target", id: rel.targetReferenceId, variant: "secondary" }
+      ]
+    };
+  }
+
+  function getQueryPreviewPayload(query) {
+    if (!query) return null;
+    const results = adapter.searchReferences(retrievalState, query);
+    return {
+      type: "query",
+      iconPath: "assets/icons/scientific/search-discovery/query-signal.svg",
+      eyebrow: "Saved query",
+      title: query,
+      description: "Rerun this query to resume the investigation from the current workspace.",
+      metrics: [`${results.length} current match${results.length === 1 ? "" : "es"}`],
+      microvisualizations: "",
+      actions: [
+        { action: "rerun-query", label: "Rerun", id: query, variant: "primary" }
+      ]
+    };
+  }
+
+  function getTrailPreviewPayload(eventId) {
+    const event = knowledgeTrail.find(item => item.id === eventId);
+    if (!event) return null;
+    const meta = event.meta || {};
+    const actions = [];
+    if (meta.referenceId) {
+      actions.push({ action: "open-reference", label: "Open Reference", id: meta.referenceId, variant: "primary" });
+    }
+    if (meta.query) {
+      actions.push({ action: "rerun-query", label: "Rerun Query", id: meta.query, variant: "primary" });
+    }
+    return {
+      type: "trail",
+      iconPath: "assets/icons/scientific/memory-session/knowledge-trail.svg",
+      eyebrow: `Knowledge trail · ${event.timestamp || "session"}`,
+      title: event.label || event.type || "Research event",
+      description: `Action: ${event.type || "workspace event"}`,
+      metrics: [meta.referenceId ? `Reference ${meta.referenceId}` : "", meta.query ? `Query "${meta.query}"` : ""].filter(Boolean),
+      microvisualizations: "",
+      actions
+    };
+  }
+
+  function renderRichPreview(payload) {
+    if (!payload) return "";
+    const actions = payload.actions || [];
+    return `
+      <section class="nv-hover-preview nv-hover-preview--${escapeHtml(payload.type || "reference")}" role="region" aria-label="${escapeHtml(payload.title || "Research preview")}">
+        <div class="nv-hover-preview__header">
+          <span class="nv-hover-preview__icon">
+            ${renderScientificIcon(payload.iconPath || "assets/icons/scientific/inspector/reference-details.svg")}
+          </span>
+          <span class="nv-hover-preview__eyebrow">${escapeHtml(payload.eyebrow || "Preview")}</span>
+        </div>
+        <h3 class="nv-hover-preview__title">${escapeHtml(payload.title || "Untitled reference")}</h3>
+        ${payload.description ? `<p class="nv-hover-preview__description">${escapeHtml(payload.description)}</p>` : ""}
+        ${payload.microvisualizations ? `<div class="nv-hover-preview__microviz">${payload.microvisualizations}</div>` : ""}
+        ${payload.metrics?.length ? `
+          <div class="nv-hover-preview__metrics">
+            ${payload.metrics.map(metric => `<span>${escapeHtml(metric)}</span>`).join("")}
+          </div>
+        ` : ""}
+        ${actions.length ? `
+          <div class="nv-hover-preview__actions">
+            ${actions.map(item => `
+              <button class="nv-button nv-hover-preview__action" data-preview-action="${escapeHtml(item.action)}" data-id="${escapeHtml(item.id)}" data-variant="${escapeHtml(item.variant || "secondary")}">
+                ${escapeHtml(item.label)}
+              </button>
+            `).join("")}
+          </div>
+        ` : ""}
+      </section>
+    `;
+  }
+
+  function createRichHoverPreviewController() {
+    let layer = document.querySelector(".nv-hover-preview-layer");
+    if (!layer) {
+      layer = document.createElement("div");
+      layer.className = "nv-hover-preview-layer";
+      layer.setAttribute("aria-live", "polite");
+      document.body.appendChild(layer);
+    }
+
+    let activeTrigger = null;
+    let showTimer = null;
+    let hideTimer = null;
+    let lastShownAt = 0;
+
+    const clearTimers = () => {
+      if (showTimer) window.clearTimeout(showTimer);
+      if (hideTimer) window.clearTimeout(hideTimer);
+      showTimer = null;
+      hideTimer = null;
+    };
+
+    const getTrigger = (target) => {
+      if (!target || !target.closest) return null;
+      return target.closest([
+        "[data-preview-ref]",
+        ".graph-node[data-id]",
+        ".graph-link-target[data-rel-id]",
+        ".nv-discovery-panel[data-ref-id]",
+        ".nv-card[data-ref-id]",
+        ".memory-item[data-ref-id]",
+        ".clickable-lineage-node[data-id]",
+        "button[data-action='open-supporting'][data-id]",
+        ".nv-card[data-rel-id]",
+        ".memory-item[data-query]",
+        ".trail-event[data-event-id]"
+      ].join(","));
+    };
+
+    const payloadForTrigger = (trigger) => {
+      if (!trigger) return null;
+      const relId = trigger.getAttribute("data-rel-id");
+      if (relId) return getRelationshipPreviewPayload(relId);
+      const query = trigger.getAttribute("data-query");
+      if (query) return getQueryPreviewPayload(query);
+      const eventId = trigger.getAttribute("data-event-id");
+      if (eventId) return getTrailPreviewPayload(eventId);
+      const refId = trigger.getAttribute("data-preview-ref") || trigger.getAttribute("data-ref-id") || trigger.getAttribute("data-id");
+      if (refId) return getReferencePreviewPayload(refId, trigger.classList?.contains("graph-node") ? "graph" : "");
+      return null;
+    };
+
+    const position = (trigger) => {
+      const preview = layer.querySelector(".nv-hover-preview");
+      if (!preview || !trigger?.getBoundingClientRect) return;
+      const padding = 14;
+      const triggerRect = trigger.getBoundingClientRect();
+      const previewRect = preview.getBoundingClientRect();
+      let left = triggerRect.right + 12;
+      let top = triggerRect.top + Math.min(12, triggerRect.height / 2);
+
+      if (left + previewRect.width > window.innerWidth - padding) {
+        left = triggerRect.left - previewRect.width - 12;
+      }
+      if (top + previewRect.height > window.innerHeight - padding) {
+        top = triggerRect.bottom - previewRect.height;
+      }
+      left = Math.max(padding, Math.min(left, window.innerWidth - previewRect.width - padding));
+      top = Math.max(padding, Math.min(top, window.innerHeight - previewRect.height - padding));
+
+      preview.style.left = `${left}px`;
+      preview.style.top = `${top}px`;
+    };
+
+    const show = (trigger, immediate = false) => {
+      clearTimers();
+      if (!trigger || window.matchMedia("(max-width: 640px)").matches) return;
+      activeTrigger = trigger;
+      const delay = immediate ? 0 : 180;
+      showTimer = window.setTimeout(() => {
+        const payload = payloadForTrigger(trigger);
+        const html = renderRichPreview(payload);
+        if (!html) return;
+        layer.innerHTML = html;
+        layer.classList.add("is-visible");
+        lastShownAt = Date.now();
+        window.requestAnimationFrame(() => position(trigger));
+      }, delay);
+    };
+
+    const hide = () => {
+      clearTimers();
+      activeTrigger = null;
+      const preview = layer.querySelector(".nv-hover-preview");
+      if (preview) preview.classList.add("is-closing");
+      layer.classList.remove("is-visible");
+      hideTimer = window.setTimeout(() => {
+        if (!activeTrigger) layer.innerHTML = "";
+      }, 140);
+    };
+
+    document.addEventListener("mouseover", (event) => {
+      const trigger = getTrigger(event.target);
+      if (!trigger || trigger === activeTrigger || layer.contains(event.target)) return;
+      show(trigger, false);
+    });
+
+    document.addEventListener("mouseout", (event) => {
+      const trigger = getTrigger(event.target);
+      if (!trigger) return;
+      const related = event.relatedTarget;
+      if (related && (trigger.contains(related) || layer.contains(related))) return;
+      hideTimer = window.setTimeout(() => {
+        if (!layer.matches(":hover")) hide();
+      }, 80);
+    });
+
+    document.addEventListener("focusin", (event) => {
+      const trigger = getTrigger(event.target);
+      if (trigger) show(trigger, true);
+    });
+
+    document.addEventListener("focusout", (event) => {
+      if (event.relatedTarget && layer.contains(event.relatedTarget)) return;
+      hide();
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && layer.classList.contains("is-visible")) {
+        event.preventDefault();
+        event.stopPropagation();
+        const triggerToRestore = activeTrigger;
+        const shouldRestoreFocus = layer.contains(document.activeElement);
+        hide();
+        if (shouldRestoreFocus && triggerToRestore?.focus) triggerToRestore.focus();
+      }
+    }, true);
+
+    document.addEventListener("scroll", () => {
+      if (Date.now() - lastShownAt < 250) return;
+      if (activeTrigger && document.activeElement === activeTrigger) return;
+      if (activeTrigger?.matches?.(":hover")) return;
+      hide();
+    }, true);
+    window.addEventListener("resize", hide);
+    window.addEventListener("hashchange", hide);
+
+    layer.addEventListener("mouseleave", () => {
+      hideTimer = window.setTimeout(hide, 80);
+    });
+    layer.addEventListener("mouseenter", () => {
+      if (hideTimer) window.clearTimeout(hideTimer);
+    });
+    layer.addEventListener("click", (event) => {
+      const action = event.target.closest("[data-preview-action]");
+      if (!action) return;
+      event.preventDefault();
+      event.stopPropagation();
+      const id = action.getAttribute("data-id");
+      const type = action.getAttribute("data-preview-action");
+      hide();
+      if (type === "open-reference" || type === "follow-source" || type === "follow-target") {
+        selectReference(id);
+      } else if (type === "pin-reference") {
+        if (pinnedReferences.includes(id)) {
+          unpinReference(id);
+        } else {
+          pinReference(id);
+        }
+      } else if (type === "open-relationship") {
+        const rel = getRelationshipById(id);
+        if (rel) {
+          selectedRelationship = rel;
+          addTrailEvent("inspect_rel", `Inspected relationship "${rel.sourceReferenceId} ➔ ${rel.targetReferenceId}"`, { relationship: rel });
+          switchInspectorTab("relationship");
+          renderRelationshipInspector();
+          saveWorkspaceState();
+        }
+      } else if (type === "rerun-query") {
+        const searchInput = document.getElementById("playground-search-input");
+        if (searchInput) searchInput.value = id;
+        runSearch(id, true);
+      }
+    });
+
+    return { hide, show };
   }
 
   function clampGraphScale(scale) {
@@ -2292,14 +2613,10 @@
       preview.innerHTML = "";
     };
     const showPreview = (content, event) => {
+      // Rich previews are handled by delegated hover/focus bindings.
       if (!preview) return;
-      preview.innerHTML = content;
-      preview.hidden = false;
-      const containerBox = svg.parentElement.getBoundingClientRect();
-      const x = event?.clientX ? event.clientX - containerBox.left : containerBox.width / 2;
-      const y = event?.clientY ? event.clientY - containerBox.top : containerBox.height / 2;
-      preview.style.left = `${Math.min(containerBox.width - 230, Math.max(12, x + 14))}px`;
-      preview.style.top = `${Math.min(containerBox.height - 120, Math.max(12, y + 14))}px`;
+      preview.hidden = true;
+      preview.innerHTML = "";
     };
 
     const showOverlay = (type) => {
@@ -2629,6 +2946,7 @@
       hitEl.setAttribute("d", pathData);
       hitEl.setAttribute("fill", "none");
       hitEl.setAttribute("class", "graph-link-target");
+      hitEl.setAttribute("data-rel-id", rel.id);
       hitEl.setAttribute("tabindex", "0");
       hitEl.setAttribute("role", "button");
       hitEl.setAttribute("pointer-events", "stroke");
@@ -2661,6 +2979,7 @@
           hidePreview();
           return;
         }
+        if (richPreviewController) richPreviewController.show(hitEl, false);
         const source = adapter.getReferenceById(retrievalState, rel.sourceReferenceId);
         const target = adapter.getReferenceById(retrievalState, rel.targetReferenceId);
         const context = rel.context || (rel.strength ? `Strength ${rel.strength}` : "Relationship context");
@@ -2995,6 +3314,7 @@
         });
       };
       g.onmouseenter = (event) => {
+        if (richPreviewController) richPreviewController.show(g, false);
         setNodeLabel(wrapGraphLabel(ref.title || ref.id, ref.id === activeRefId ? 38 : 32, ref.id === activeRefId ? 3 : 2), 1);
 
         highlightNodeConnections(ref.id);
@@ -3045,6 +3365,7 @@
     svg.onwheel = (event) => {
       event.preventDefault();
       hidePreview();
+      if (richPreviewController) richPreviewController.hide();
       const containerBox = svg.getBoundingClientRect();
       const pointerX = event.clientX - containerBox.left;
       const pointerY = event.clientY - containerBox.top;
@@ -3071,6 +3392,7 @@
       svg.setPointerCapture(event.pointerId);
       svg.classList.add("is-panning");
       hidePreview();
+      if (richPreviewController) richPreviewController.hide();
     };
     svg.onpointermove = (event) => {
       if (!isPanning || !panStart) return;
@@ -3866,6 +4188,9 @@
     try {
       if (window.NV_DEBUG) console.log("Initializing Retrieval Workspace (NV-500)...");
       loadWorkspaceState();
+      if (!richPreviewController) {
+        richPreviewController = createRichHoverPreviewController();
+      }
       if (!inspectorResizeHandlerBound) {
         window.addEventListener("resize", applyInspectorWidthStyles);
         inspectorResizeHandlerBound = true;
