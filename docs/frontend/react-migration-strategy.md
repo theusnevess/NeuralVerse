@@ -19,13 +19,13 @@
 ### ✅ Slice 1 — Minimal React Foundation
 
 **Deliverables:**
-- `website/react/vendor/react.esm.js` — React 18 via esm.sh CDN
-- `website/react/vendor/react-dom.esm.js` — ReactDOM 18 via esm.sh CDN  
-- `website/react/index.js` — Public barrel + `window.NeuralVerse.react` registration
-- `website/react/utils/bridge.js` — Idempotent mount/update/unmount API
-- `website/index.html` — Non-blocking `<script type="module">` load
+- `react-build/` — Local Vite build package for React islands
+- `react-build/src/index.jsx` — Public bundle entry + `window.NeuralVerse.react` registration
+- `react-build/src/bridge.js` — Idempotent mount/update/unmount API
+- `website/dist/react-islands.js` — Self-contained local runtime bundle
+- `website/index.html` — Non-blocking deferred bundle load
 
-**Approach:** Zero-bundler ESM. No npm, no build step required.
+**Approach:** Local bundle. No CDN runtime dependency.
 
 ---
 
@@ -49,7 +49,7 @@
 
 ### ✅ Slice 3 — First Production Island: NvHoverPreview
 
-**Island file:** `website/react/islands/NvHoverPreview.js`
+**Island file:** `react-build/src/NvHoverPreview.jsx`
 
 **Bridge integration:** `website/scripts/retrieval-playground.js`  
 → `createRichHoverPreviewController()` → `show()` function
@@ -107,7 +107,7 @@
 
 ```
 [ ] Branch created
-[ ] Island file created in website/react/islands/
+[ ] Island file created in react-build/src/
 [ ] Props interface documented
 [ ] Component uses only existing CSS classes
 [ ] bridge.mount() call added to JS layer

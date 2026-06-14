@@ -110,7 +110,9 @@ An island **must never**:
 
 ## Bridge API
 
-See `website/react/utils/bridge.js`.
+Runtime bridge source lives in `react-build/src/bridge.js` and is bundled into
+`website/dist/react-islands.js`. `website/react/utils/bridge.js` remains as a
+small compatibility note for the retired zero-bundler path.
 
 ```javascript
 // Mount or reuse

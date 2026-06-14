@@ -2,7 +2,7 @@
 
 ## NV-500-UX-007E.2 — Shared Presentation Primitives
 
-All components live in `website/react/components/`.
+All shared React island presentation primitives live in `react-build/src/components.jsx`.
 
 ---
 
@@ -10,15 +10,15 @@ All components live in `website/react/components/`.
 
 | Component | File | Status | Description |
 |---|---|---|---|
-| `NvScientificIcon` | `NvScientificIcon.js` | ✅ v1 | CSS-mask scientific icon |
-| `NvButton` | `NvButton.js` | ✅ v1 | Token-driven button |
-| `NvBadge` | `NvBadge.js` | ✅ v1 | Status badge |
-| `NvChip` | `NvChip.js` | ✅ v1 | Inline label chip |
-| `NvMetric` | `NvMetric.js` | ✅ v1 | Single metric display |
-| `NvMicroViz` | `NvMicroViz.js` | ✅ v1 | Pre-rendered HTML wrapper |
-| `NvCardShell` | `NvCardShell.js` | ✅ v1 | Card container |
-| `NvEmptyState` | `NvEmptyState.js` | ✅ v1 | Empty state block |
-| `NvSectionHeader` | `NvSectionHeader.js` | ✅ v1 | Section title with line |
+| `NvScientificIcon` | `react-build/src/components.jsx` | ✅ v1 | CSS-mask scientific icon |
+| `NvButton` | `react-build/src/components.jsx` | ✅ v1 | Token-driven button |
+| `NvBadge` | `react-build/src/components.jsx` | ✅ v1 | Status badge |
+| `NvChip` | `react-build/src/components.jsx` | ✅ v1 | Inline label chip |
+| `NvMetric` | `react-build/src/components.jsx` | ✅ v1 | Single metric display |
+| `NvMicroViz` | `react-build/src/components.jsx` | ✅ v1 | Pre-rendered HTML wrapper |
+| `NvCardShell` | `react-build/src/components.jsx` | ✅ v1 | Card container |
+| `NvEmptyState` | `react-build/src/components.jsx` | ✅ v1 | Empty state block |
+| `NvSectionHeader` | `react-build/src/components.jsx` | ✅ v1 | Section title with line |
 
 ---
 

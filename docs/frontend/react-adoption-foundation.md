@@ -52,33 +52,35 @@ React is responsible for **rendering** only. It never owns:
 
 ## Build Strategy
 
-This implementation uses the **zero-bundler ESM island** approach:
+This implementation uses a **local React Islands bundle**:
 
 ```
-website/react/vendor/react.esm.js      → re-exports React 18 from esm.sh CDN
-website/react/vendor/react-dom.esm.js  → re-exports ReactDOM 18 from esm.sh CDN
-website/react/index.js                 → loaded as <script type="module">
+react-build/                       → Vite build package and React island source
+react-build/src/index.jsx          → local bundle entry point
+react-build/src/bridge.js          → mount/update/unmount bridge implementation
+react-build/src/NvHoverPreview.jsx → first production island
+website/dist/react-islands.js      → self-contained runtime bundle
+website/index.html                 → loads dist/react-islands.js with defer
 ```
 
-**No build step is required.** This satisfies the constraint that no npm/bundler infrastructure exists in the current repository while allowing incremental adoption.
+The browser runtime has **zero CDN dependency**. React, ReactDOM, the bridge,
+and active islands are bundled into `website/dist/react-islands.js`.
 
-When/if a bundler is introduced in the future, the vendor shim files can be replaced with local builds without changing any import paths.
+To rebuild:
 
-### Why esm.sh?
-
-- Provides individual package imports via standard HTTP
-- Ships proper ES module output  
-- Versioned URLs (`react@18.3.1`) ensure stability
-- Zero local tooling required
+```bash
+cd react-build
+npm ci
+npm run build
+```
 
 ### Graceful Degradation
 
-If the CDN is unreachable:
+If the local bundle is unavailable:
 
-1. `react/index.js` fails silently
-2. `window.NeuralVerse.react` remains `undefined`
-3. The `show()` function inside `retrieval-playground.js` detects this and falls back to `innerHTML` rendering — **identical to the previous behavior**
-4. All other application functionality is unaffected
+1. `window.NeuralVerse.react` remains `undefined`
+2. The `show()` function inside `retrieval-playground.js` detects this and falls back to `innerHTML` rendering — **identical to the previous behavior**
+3. All other application functionality is unaffected
 
 ---
 

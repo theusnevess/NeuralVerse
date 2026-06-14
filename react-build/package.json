@@ -1,0 +1,21 @@
+{
+  "name": "neuralverse-react-islands",
+  "private": true,
+  "version": "1.0.0",
+  "description": "NeuralVerse React Islands build pipeline — NV-500-UX-007E.2",
+  "type": "module",
+  "scripts": {
+    "build": "vite build",
+    "build:watch": "vite build --watch",
+    "dev": "vite"
+  },
+  "dependencies": {
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.0.1",
+    "esbuild": "^0.28.1",
+    "vite": "^8.0.12"
+  }
+}
