@@ -741,42 +741,203 @@
       return { [n.id]: { x: width / 2, y: height / 2 } };
     }
 
-    const padding = Math.max(48, Math.min(width, height) * 0.1);
-    const innerW = Math.max(240, width - padding * 2);
-    const innerH = Math.max(240, height - padding * 2);
+    const padding = Math.max(42, Math.min(width, height) * 0.085);
     const positions = {};
     const cx = width / 2;
     const cy = height / 2;
+    const focusX = centroidId ? cx - width * 0.06 : cx;
+    const focusY = centroidId ? cy + height * 0.02 : cy;
+    const usableRadiusX = Math.max(120, width * 0.34);
+    const usableRadiusY = Math.max(108, height * 0.31);
+
     const sortedNodes = nodes.slice().sort((a, b) => String(a.id).localeCompare(String(b.id)));
-    sortedNodes.forEach((node, index) => {
-      const angle = (index * 2 * Math.PI) / sortedNodes.length;
-      const wobble = (seededUnit(node.id) - 0.5) * 0.25;
-      const radius = 35 + (seededUnit(node.id + ":radius") * 55);
-      positions[node.id] = {
-        x: cx + Math.cos(angle + wobble) * radius,
-        y: cy + Math.sin(angle + wobble) * radius,
+    const degree = new Map(sortedNodes.map(node => [node.id, 0]));
+    const adjacency = new Map(sortedNodes.map(node => [node.id, new Set()]));
+    edges.forEach(edge => {
+      degree.set(edge.sourceReferenceId, (degree.get(edge.sourceReferenceId) || 0) + 1);
+      degree.set(edge.targetReferenceId, (degree.get(edge.targetReferenceId) || 0) + 1);
+      adjacency.get(edge.sourceReferenceId)?.add(edge.targetReferenceId);
+      adjacency.get(edge.targetReferenceId)?.add(edge.sourceReferenceId);
+    });
+
+    const clusterNames = Array.from(new Set(sortedNodes.map(inferReferenceCluster))).sort();
+    const clusterAnchors = new Map();
+    // Anchor communities in different directions of the canvas (separate neighborhoods)
+    clusterNames.forEach((name, index) => {
+      const angle = (index * 2 * Math.PI) / Math.max(clusterNames.length, 1) + 0.45;
+      const radiusX = usableRadiusX * (0.6 + 0.1 * seededUnit(name + "-rx"));
+      const radiusY = usableRadiusY * (0.55 + 0.08 * seededUnit(name + "-ry"));
+      clusterAnchors.set(name, {
+        x: cx + Math.cos(angle) * radiusX,
+        y: cy + Math.sin(angle) * radiusY
+      });
+    });
+
+    const activeNeighbors = centroidId && adjacency.has(centroidId)
+      ? Array.from(adjacency.get(centroidId)).sort((a, b) => {
+          return (degree.get(b) || 0) - (degree.get(a) || 0) || String(a).localeCompare(String(b));
+        })
+      : [];
+    const activeNeighborSet = new Set(activeNeighbors);
+
+    if (centroidId && sortedNodes.some(node => node.id === centroidId)) {
+      const visibleIds = new Set(sortedNodes.map(node => node.id));
+      const hop1Ids = Array.from(adjacency.get(centroidId) || [])
+        .filter(id => visibleIds.has(id))
+        .sort((a, b) => (degree.get(b) || 0) - (degree.get(a) || 0) || String(a).localeCompare(String(b)));
+      const hop1Set = new Set(hop1Ids);
+      const hop2Ids = sortedNodes
+        .map(node => node.id)
+        .filter(id => id !== centroidId && !hop1Set.has(id) && Array.from(adjacency.get(id) || []).some(nextId => hop1Set.has(nextId)))
+        .sort((a, b) => (degree.get(b) || 0) - (degree.get(a) || 0) || String(a).localeCompare(String(b)));
+      const contextIds = new Set([centroidId, ...hop1Ids, ...hop2Ids]);
+      const distantIds = sortedNodes
+        .map(node => node.id)
+        .filter(id => !contextIds.has(id))
+        .sort((a, b) => String(a).localeCompare(String(b)));
+      const activeNode = sortedNodes.find(node => node.id === centroidId);
+      const activeCluster = activeNode ? inferReferenceCluster(activeNode) : "Research";
+      const neighborCount = Math.max(1, hop1Ids.length);
+      const primaryRadiusX = Math.min(width * 0.34, Math.max(102, 82 + neighborCount * 11));
+      const primaryRadiusY = Math.min(height * 0.28, Math.max(82, 68 + neighborCount * 9));
+      const startAngle = -Math.PI * 0.78 + seededUnit(`${centroidId}-constellation`) * 0.34;
+
+      positions[centroidId] = {
+        x: focusX,
+        y: focusY,
         vx: 0,
         vy: 0,
-        cluster: inferReferenceCluster(node)
+        cluster: activeCluster,
+        degree: degree.get(centroidId) || 0,
+        ring: 0
+      };
+
+      hop1Ids.forEach((id, index) => {
+        const ref = sortedNodes.find(node => node.id === id);
+        const clusterOffset = inferReferenceCluster(ref) === activeCluster ? -0.1 : 0.18;
+        const angle = startAngle + ((index + 0.35) / neighborCount) * Math.PI * 1.58 + clusterOffset;
+        const radialNoise = 0.9 + seededUnit(`${id}-orbit`) * 0.24;
+        positions[id] = {
+          x: focusX + Math.cos(angle) * primaryRadiusX * radialNoise,
+          y: focusY + Math.sin(angle) * primaryRadiusY * radialNoise,
+          vx: 0,
+          vy: 0,
+          cluster: inferReferenceCluster(ref),
+          degree: degree.get(id) || 0,
+          ring: 1
+        };
+      });
+
+      hop2Ids.forEach((id, index) => {
+        const ref = sortedNodes.find(node => node.id === id);
+        const parentId = hop1Ids.find(candidate => adjacency.get(id)?.has(candidate));
+        const parent = positions[parentId] || positions[centroidId];
+        const parentAngle = Math.atan2(parent.y - focusY, parent.x - focusX);
+        const side = index % 2 === 0 ? 1 : -1;
+        const angle = parentAngle + side * (0.38 + seededUnit(`${id}-branch`) * 0.35);
+        const distance = Math.min(Math.max(width, height) * 0.22, 72 + seededUnit(`${id}-branch-distance`) * 42);
+        positions[id] = {
+          x: parent.x + Math.cos(angle) * distance,
+          y: parent.y + Math.sin(angle) * distance * 0.76,
+          vx: 0,
+          vy: 0,
+          cluster: inferReferenceCluster(ref),
+          degree: degree.get(id) || 0,
+          ring: 2
+        };
+      });
+
+      distantIds.forEach((id, index) => {
+        const ref = sortedNodes.find(node => node.id === id);
+        const side = index % 2 === 0 ? -1 : 1;
+        const row = Math.floor(index / 2);
+        positions[id] = {
+          x: cx + side * (width * (0.31 + seededUnit(`${id}-park-x`) * 0.08)),
+          y: cy - height * 0.28 + row * Math.max(34, height * 0.11) + seededUnit(`${id}-park-y`) * 22,
+          vx: 0,
+          vy: 0,
+          cluster: inferReferenceCluster(ref),
+          degree: degree.get(id) || 0,
+          ring: 3
+        };
+      });
+    }
+
+    // Seed initial position using community anchors plus deterministic offsets
+    const goldenAngle = Math.PI * (3 - Math.sqrt(5));
+    sortedNodes.forEach((node, index) => {
+      if (positions[node.id]) return;
+      const cluster = inferReferenceCluster(node);
+      const anchor = clusterAnchors.get(cluster) || { x: cx, y: cy };
+
+      let seedX = anchor.x;
+      let seedY = anchor.y;
+
+      if (centroidId && node.id !== centroidId) {
+        if (activeNeighborSet.has(node.id)) {
+          // Direct neighbor: seed it between focusX/Y and the cluster anchor with irregular angles/distances
+          const dx = anchor.x - focusX;
+          const dy = anchor.y - focusY;
+          const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+          const pct = 0.35 + seededUnit(node.id + "-pct") * 0.35;
+          const wobbleAngle = (seededUnit(node.id + "-wobble") - 0.5) * 0.8;
+          const targetDist = dist * pct;
+          const angle = Math.atan2(dy, dx) + wobbleAngle;
+
+          seedX = focusX + Math.cos(angle) * targetDist;
+          seedY = focusY + Math.sin(angle) * targetDist;
+        } else {
+          // Secondary neighbor: seed close to its connected parent
+          const parentId = activeNeighbors.find(id => adjacency.get(node.id)?.has(id));
+          if (parentId && positions[parentId]) {
+            const pCoord = positions[parentId];
+            const angle = index * goldenAngle;
+            const dist = 45 + seededUnit(node.id + "-dist") * 30;
+            seedX = pCoord.x + Math.cos(angle) * dist;
+            seedY = pCoord.y + Math.sin(angle) * dist;
+          } else {
+            // Disconnected node: seed on outer margins of community anchor
+            const angle = index * goldenAngle;
+            const dist = 80 + seededUnit(node.id + "-dist") * 40;
+            seedX = anchor.x + Math.cos(angle) * dist;
+            seedY = anchor.y + Math.sin(angle) * dist;
+          }
+        }
+      } else {
+        const angle = index * goldenAngle;
+        const dist = 15 + Math.sqrt(index) * 28;
+        seedX = anchor.x + Math.cos(angle) * dist;
+        seedY = anchor.y + Math.sin(angle) * dist;
+      }
+
+      positions[node.id] = {
+        x: seedX,
+        y: seedY,
+        vx: 0,
+        vy: 0,
+        cluster,
+        degree: degree.get(node.id) || 0
       };
     });
 
     if (centroidId && positions[centroidId]) {
-      positions[centroidId].x = cx;
-      positions[centroidId].y = cy;
+      positions[centroidId].x = focusX;
+      positions[centroidId].y = focusY;
     }
 
-    const iterations = 120;
-    const repulsionStrength = 8500;
-    const attractionStrength = 0.035;
-    const centerGravity = 0.005;
-    const idealEdgeLength = 120;
+    const iterations = centroidId ? 90 : 150;
+    const repulsionStrength = centroidId ? 12500 : 18000;
+    const attractionStrength = centroidId ? 0.04 : 0.055;
+    const centerGravity = 0.001;
+    const clusterGravity = centroidId ? 0.012 : 0.022;
+    const idealEdgeLength = centroidId ? 118 : 130;
     const damping = 0.85;
-    const maxVelocity = 10;
+    const maxVelocity = centroidId ? 5.8 : 9.5;
 
     for (let iter = 0; iter < iterations; iter++) {
-      const temperature = 1 - (iter / iterations) * 0.76;
+      const temperature = 1 - (iter / iterations) * 0.8;
 
+      // 1. Repulsion force between node pairs
       for (let i = 0; i < sortedNodes.length; i++) {
         for (let j = i + 1; j < sortedNodes.length; j++) {
           const a = positions[sortedNodes[i].id];
@@ -798,6 +959,7 @@
         }
       }
 
+      // 2. Attraction force along edges
       edges.forEach(e => {
         const a = positions[e.sourceReferenceId];
         const b = positions[e.targetReferenceId];
@@ -809,7 +971,7 @@
         if (dist < 1) dist = 1;
 
         const strength = typeof e.strength === "number" ? Math.max(0.45, Math.min(1.4, e.strength)) : 1;
-        const targetLength = idealEdgeLength * (a.cluster === b.cluster ? 0.82 : 1.12);
+        const targetLength = idealEdgeLength * (a.cluster === b.cluster ? 0.8 : 1.25);
         const displacement = dist - targetLength;
         const force = attractionStrength * strength * displacement * temperature;
         const fx = (dx / dist) * force;
@@ -821,17 +983,48 @@
         b.vy -= fy;
       });
 
+      // 3. Gravity/Anchor Updates
       sortedNodes.forEach(n => {
         const p = positions[n.id];
 
-        p.vx += (cx - p.x) * centerGravity * temperature;
-        p.vy += (cy - p.y) * centerGravity * temperature;
-
         if (n.id === centroidId) {
+          p.x = focusX;
+          p.y = focusY;
           p.vx = 0;
           p.vy = 0;
           return;
         }
+
+        if (centroidId && p.ring === 3) {
+          p.vx += (cx - p.x) * 0.0005 * temperature;
+          p.vy += (cy - p.y) * 0.0005 * temperature;
+          p.vx *= 0.72;
+          p.vy *= 0.72;
+          p.x += p.vx;
+          p.y += p.vy;
+          p.x = Math.max(padding, Math.min(width - padding, p.x));
+          p.y = Math.max(padding, Math.min(height - padding, p.y));
+          return;
+        }
+
+        // Pull toward community anchor
+        const anchor = clusterAnchors.get(p.cluster) || { x: cx, y: cy };
+        p.vx += (anchor.x - p.x) * clusterGravity * temperature;
+        p.vy += (anchor.y - p.y) * clusterGravity * temperature;
+
+        // Soft pull toward the focus node if connected
+        if (centroidId && adjacency.get(n.id)?.has(centroidId)) {
+          const dx = focusX - p.x;
+          const dy = focusY - p.y;
+          const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+          const linkAttraction = 0.05 * temperature;
+          p.vx += dx * linkAttraction;
+          p.vy += dy * linkAttraction;
+        }
+
+        // Global soft centering
+        p.vx += (cx - p.x) * centerGravity * temperature;
+        p.vy += (cy - p.y) * centerGravity * temperature;
 
         p.vx *= damping;
         p.vy *= damping;
@@ -849,8 +1042,8 @@
         p.y = Math.max(padding, Math.min(height - padding, p.y));
       });
 
-      // Add collision spacing to prevent node overlap
-      const minDistance = 75; // Node diameter + label allowance
+      // 4. Collision spacing (prevent overlaps)
+      const minDistance = centroidId ? 58 : 78;
       for (let i = 0; i < sortedNodes.length; i++) {
         for (let j = i + 1; j < sortedNodes.length; j++) {
           const a = positions[sortedNodes[i].id];
@@ -863,15 +1056,53 @@
               dx = 1; dy = 0; dist = 1;
             }
             const overlap = minDistance - dist;
-            const pushX = (dx / dist) * overlap * 0.5;
-            const pushY = (dy / dist) * overlap * 0.5;
-            a.x -= pushX;
-            a.y -= pushY;
-            b.x += pushX;
-            b.y += pushY;
+            const pushX = (dx / dist) * overlap * 0.52;
+            const pushY = (dy / dist) * overlap * 0.52;
+            if (sortedNodes[i].id !== centroidId) {
+              a.x -= pushX;
+              a.y -= pushY;
+            }
+            if (sortedNodes[j].id !== centroidId) {
+              b.x += pushX;
+              b.y += pushY;
+            }
           }
         }
       }
+    }
+
+    // Final deterministic fit: occupy most of the observatory canvas without clipping.
+    const xs = Object.values(positions).map(p => p.x);
+    const ys = Object.values(positions).map(p => p.y);
+    const minX = Math.min(...xs);
+    const maxX = Math.max(...xs);
+    const minY = Math.min(...ys);
+    const maxY = Math.max(...ys);
+    const spanX = maxX - minX || 1;
+    const spanY = maxY - minY || 1;
+    const targetWidth = Math.max(1, width * (centroidId ? 0.72 : 0.76));
+    const targetHeight = Math.max(1, height * (centroidId ? 0.68 : 0.72));
+    const fitScaleX = Math.min(targetWidth / spanX, 1.75);
+    const fitScaleY = Math.min(targetHeight / spanY, 1.65);
+    const currentCx = minX + spanX / 2;
+    const currentCy = minY + spanY / 2;
+
+    Object.values(positions).forEach(p => {
+      p.x = cx + (p.x - currentCx) * fitScaleX;
+      p.y = cy + (p.y - currentCy) * fitScaleY;
+      p.x = Math.max(padding, Math.min(width - padding, p.x));
+      p.y = Math.max(padding, Math.min(height - padding, p.y));
+    });
+
+    if (centroidId && positions[centroidId]) {
+      const offsetX = focusX - positions[centroidId].x;
+      const offsetY = focusY - positions[centroidId].y;
+      Object.values(positions).forEach(p => {
+        p.x = Math.max(padding, Math.min(width - padding, p.x + offsetX));
+        p.y = Math.max(padding, Math.min(height - padding, p.y + offsetY));
+      });
+      positions[centroidId].x = focusX;
+      positions[centroidId].y = focusY;
     }
 
     // Strip velocity from output
@@ -906,7 +1137,7 @@
       pairKeys.add(fwd);
     });
 
-    const curveOffset = 25;
+    const curveOffset = 28;
 
     return edges.map(e => {
       const src = nodeCoords[e.sourceReferenceId];
@@ -915,15 +1146,6 @@
 
       const key = `${e.sourceReferenceId}>${e.targetReferenceId}`;
       const isBidirectional = bidirectionalPairs.has(key);
-
-      if (!isBidirectional) {
-        // Straight line as simple path
-        return {
-          edge: e,
-          pathData: `M ${src.x} ${src.y} L ${tgt.x} ${tgt.y}`,
-          isCurved: false
-        };
-      }
 
       // Compute perpendicular offset for bezier control point
       const mx = (src.x + tgt.x) / 2;
@@ -939,9 +1161,12 @@
       // Determine offset direction based on source->target ordering
       const isForwardDirection = e.sourceReferenceId < e.targetReferenceId;
       const sign = isForwardDirection ? 1 : -1;
+      const organicOffset = isBidirectional
+        ? curveOffset
+        : Math.max(26, len * 0.16);
 
-      const cpx = mx + px * curveOffset * sign;
-      const cpy = my + py * curveOffset * sign;
+      const cpx = mx + px * organicOffset * sign;
+      const cpy = my + py * organicOffset * sign;
 
       return {
         edge: e,

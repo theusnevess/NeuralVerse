@@ -2,15 +2,17 @@
   <!-- Resume Banner Placement -->
   <div id="resume-banner-container"></div>
 
-  <header class="retrieval-header nv-cluster nv-cluster--gap-md">
+  <!-- Hero Header -->
+  <header class="nv-cluster nv-cluster--gap-md" style="justify-content: space-between; align-items: center; width: 100%;">
     <div class="nv-stack nv-stack--gap-xs">
       <h1 class="nv-context-title" style="margin: 0;">Retrieval Workspace</h1>
-      <p class="nv-muted" style="margin: 0;">Search, inspect, connect, and compile evidence.</p>
+      <p class="nv-muted" style="margin: 0;">Advanced Knowledge Exploration and Evidence Synthesis Environment.</p>
     </div>
-    <div class="retrieval-header-actions nv-cluster nv-cluster--gap-sm">
+    <div class="nv-cluster nv-cluster--gap-sm" style="align-items: center;">
+      <span id="nv-diagnostics-badge" class="nv-badge" data-variant="info" style="font-size: 0.65rem;">JS Ready</span>
       <span id="session-restored-indicator" class="nv-badge" data-variant="success" style="opacity: 0; transition: opacity 0.5s ease; font-size: 0.65rem;">Session Restored</span>
       <button id="playground-focus-button" class="nv-button" data-variant="secondary" style="font-size: 0.75rem; padding: 4px 10px; min-block-size: unset;" aria-label="Toggle focus mode">Focus Mode</button>
-      <button id="playground-preferences-button" class="nv-button" data-variant="secondary" style="font-size: 0.75rem; padding: 4px 10px; min-block-size: unset;" aria-label="Toggle workspace preferences">Prefs</button>
+      <button id="playground-preferences-button" class="nv-button" data-variant="secondary" style="font-size: 0.75rem; padding: 4px 10px; min-block-size: unset;" aria-label="Toggle workspace preferences">⚙ Prefs</button>
       <button id="playground-clear-session-button" class="nv-button" data-variant="secondary" style="font-size: 0.75rem; padding: 4px 10px; min-block-size: unset;" aria-label="Clear active session data">Clear Session</button>
     </div>
   </header>
@@ -72,7 +74,57 @@
     </div>
   </div>
 
+  <!-- Custom Quick Actions Bar -->
+  <div class="quick-actions-bar nv-cluster nv-cluster--gap-xs" style="align-items: center; justify-content: space-between; margin-bottom: 2px;">
+    <div id="quick-actions-list" class="nv-cluster nv-cluster--gap-xs"></div>
+    <button id="customize-actions-button" class="nv-button" data-variant="ghost" style="padding: 2px 8px; font-size: 0.65rem; min-block-size: unset;" aria-label="Customize pinned quick actions">Customize Shortcuts</button>
+  </div>
+  <div id="quick-actions-customize-panel" class="nv-panel" style="display: none; background-color: var(--sys-color-surface-container-high); padding: var(--sys-space-stack-xs); border: 1px dashed var(--sys-color-border-subtle); margin-bottom: 4px;">
+    <h4 style="margin: 0 0 var(--sys-space-stack-xs) 0; font-size: 0.7rem; color: var(--sys-color-text-secondary);">Toggle Quick Actions</h4>
+    <div class="nv-cluster nv-cluster--gap-sm" id="customize-checkboxes-container"></div>
+  </div>
 
+  <!-- Research Live Snapshot -->
+  <div id="research-snapshot-container" class="nv-panel nv-cluster nv-cluster--gap-sm" style="background-color: var(--sys-color-surface-container-low); padding: 4px var(--sys-space-inline-sm); border: var(--sys-border-subtle) solid var(--sys-color-border-subtle); font-size: 0.65rem; justify-content: space-between; align-items: center; border-radius: var(--ref-radius-soft); margin-bottom: 2px;">
+  </div>
+
+
+  <!-- Knowledge Synthesis Pipeline (Compact & Collapsible) -->
+  <details class="nv-panel" style="background-color: var(--sys-color-surface-container-low); border: var(--sys-border-subtle) solid var(--sys-color-border-subtle);">
+    <summary style="font-size: var(--sys-font-body-size); font-weight: var(--ref-font-weight-semibold); color: var(--sys-color-text-primary); cursor: pointer; user-select: none;">
+      View Pipeline Infrastructure (NV-500 Core)
+    </summary>
+    <div style="margin-top: var(--sys-space-stack-sm);">
+      <p style="font-size: var(--sys-font-caption-size); color: var(--sys-color-text-secondary); margin-bottom: var(--sys-space-stack-sm);">
+        The NV-500 Retrieval Foundation isolates data registries and citation topology from LLMs, ensuring verifiable, deterministic research compilation.
+      </p>
+      <div class="retrieval-pipeline">
+        <div class="pipeline-step">
+          <div class="pipeline-step-badge">1</div>
+          <h4>Reference Registry</h4>
+          <p>Stores papers, repositories, and local study notes.</p>
+        </div>
+        <div class="pipeline-arrow" aria-hidden="true">➔</div>
+        <div class="pipeline-step">
+          <div class="pipeline-step-badge">2</div>
+          <h4>Relationship Graph</h4>
+          <p>Maps cross-document links, strength, and citation context.</p>
+        </div>
+        <div class="pipeline-arrow" aria-hidden="true">➔</div>
+        <div class="pipeline-step">
+          <div class="pipeline-step-badge">3</div>
+          <h4>Retrieval Index</h4>
+          <p>Tokenizes and scores queries to identify key context matches.</p>
+        </div>
+        <div class="pipeline-arrow" aria-hidden="true">➔</div>
+        <div class="pipeline-step">
+          <div class="pipeline-step-badge">4</div>
+          <h4>Evidence Compiler</h4>
+          <p>Consolidates paths into a final research assistant insight.</p>
+        </div>
+      </div>
+    </div>
+  </details>
 
   <!-- Canonical Workspace Grid Layout -->
   <div class="workspace-layout">
@@ -82,32 +134,43 @@
 
       <!-- Exploration Switcher Tabs -->
       <div class="workspace-tabs" role="tablist" aria-label="Exploration Modes">
-        <button class="workspace-tab active" data-mode="search" role="tab" aria-selected="true" id="tab-search">Search</button>
-        <button class="workspace-tab" data-mode="graph" role="tab" aria-selected="false" id="tab-graph">Graph</button>
-        <button class="workspace-tab" data-mode="discovery" role="tab" aria-selected="false" id="tab-discovery">Discover</button>
-        <button class="workspace-tab" data-mode="compare" role="tab" aria-selected="false" id="tab-compare">Compare</button>
+        <button class="workspace-tab active" data-mode="search" role="tab" aria-selected="true" id="tab-search">Search Mode</button>
+        <button class="workspace-tab" data-mode="graph" role="tab" aria-selected="false" id="tab-graph">Graph Mode</button>
+        <button class="workspace-tab" data-mode="discovery" role="tab" aria-selected="false" id="tab-discovery">Discovery Mode</button>
+        <button class="workspace-tab" data-mode="compare" role="tab" aria-selected="false" id="tab-compare">Compare Mode</button>
       </div>
 
       <!-- Mode 1: Search Mode -->
       <section id="mode-search" class="exploration-mode active" aria-labelledby="tab-search">
-        <div class="search-console nv-panel nv-stack nv-stack--gap-sm" role="search">
-          <div class="search-row">
-            <input type="text" id="playground-search-input" class="nv-input search-input" placeholder="Search papers, notes, repositories, or concepts..." aria-label="Search references" autocomplete="off" />
-            <button id="playground-search-button" class="nv-button" data-variant="primary" aria-label="Search">Search</button>
+        <!-- Search and Compile Controls Console -->
+        <div class="nv-panel nv-stack nv-stack--gap-sm">
+          <h3 style="margin: 0; font-size: var(--sys-font-body-size);">Search Console</h3>
+          <div class="nv-cluster nv-cluster--gap-sm" style="align-items: center; width: 100%;">
+            <input type="text" id="playground-search-input" class="nv-input" placeholder="Search references..." style="flex: 1; min-width: 200px;" aria-label="Search query" />
+            <button id="playground-search-button" class="nv-button" data-variant="primary" aria-label="Search Registry">Search Registry</button>
             <button id="playground-save-query-button" class="nv-button" data-variant="secondary" style="background-color: var(--sys-color-surface-container-high); color: var(--sys-color-text-primary);" aria-label="Save current search query" disabled>Save Query</button>
-            <button id="playground-compile-query-button" class="nv-button" data-variant="secondary" aria-label="Compile evidence from current query">Compile Query</button>
+            <button id="playground-compile-query-button" class="nv-button" data-variant="secondary" aria-label="Compile Evidence from Query">Compile From Query</button>
           </div>
-          <div id="playground-search-feedback" class="search-feedback nv-muted" aria-live="polite">
+          <div id="playground-search-feedback" class="nv-muted" style="font-size: var(--sys-font-caption-size); min-height: 1.2em;" aria-live="polite">
             No active query.
           </div>
         </div>
 
-        <div class="nv-panel results-panel" aria-label="Search results">
+        <!-- Search Results Grid -->
+        <div class="nv-panel">
+          <h3 style="margin: 0 0 var(--sys-space-stack-xs) 0; font-size: var(--sys-font-body-size);">Search Results</h3>
           <div id="search-results-container" class="playground-results-grid">
+            <!-- Dynamic search results lists or empty state -->
           </div>
         </div>
 
-
+        <!-- Seeded Reference List inside Search Mode for easy browsing -->
+        <div class="nv-panel">
+          <h3 style="margin: 0 0 var(--sys-space-stack-xs) 0; font-size: var(--sys-font-body-size);">Reference Registry Database</h3>
+          <div id="seeded-references-list" class="nv-grid nv-grid--cols-2">
+            <!-- Dynamic seeded list of references -->
+          </div>
+        </div>
       </section>
 
       <!-- Mode 2: Graph Mode -->
@@ -136,9 +199,23 @@
                 <option value="1-hop">1-Hop Neighbors</option>
                 <option value="2-hop">2-Hop Neighbors</option>
               </select>
-              <button id="graph-reset-view-button" class="nv-button" data-variant="secondary" type="button" style="min-block-size: unset; padding: 3px 8px; font-size: 0.65rem;" aria-label="Reset graph zoom and pan">
-                Reset View
-              </button>
+
+              <label for="graph-label-mode-select" style="font-size: 0.65rem; color: var(--sys-color-text-secondary); margin-left: var(--sys-space-inline-xs);">Labels:</label>
+              <select id="graph-label-mode-select" class="nv-input" style="padding: 2px 6px; font-size: 0.65rem; min-block-size: unset; width: auto;" aria-label="Graph label disclosure mode">
+                <option value="minimal">Minimal</option>
+                <option value="context">Context</option>
+                <option value="expanded">Expanded</option>
+              </select>
+
+              <label for="graph-focus-mode-select" style="font-size: 0.65rem; color: var(--sys-color-text-secondary); margin-left: var(--sys-space-inline-xs);">Focus:</label>
+              <select id="graph-focus-mode-select" class="nv-input" style="padding: 2px 6px; font-size: 0.65rem; min-block-size: unset; width: auto;" aria-label="Graph focus behavior">
+                <option value="follow">Follow Connections</option>
+                <option value="map">Static Map</option>
+              </select>
+
+              <button id="graph-zoom-out-button" class="nv-button" data-variant="secondary" style="padding: 2px 8px; font-size: 0.65rem; min-block-size: unset;" aria-label="Zoom graph out">−</button>
+              <button id="graph-zoom-in-button" class="nv-button" data-variant="secondary" style="padding: 2px 8px; font-size: 0.65rem; min-block-size: unset;" aria-label="Zoom graph in">+</button>
+              <button id="graph-reset-view-button" class="nv-button" data-variant="secondary" style="padding: 2px 8px; font-size: 0.65rem; min-block-size: unset;" aria-label="Reset graph view">Reset View</button>
             </div>
           </div>
           <!-- Progressive Filter Chips Container -->
@@ -148,7 +225,10 @@
               <!-- Graph links and nodes will be dynamically injected here -->
             </svg>
             <!-- Graph Empty State Overlay -->
-            <div id="graph-empty-state-overlay" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80%; z-index: 5; pointer-events: auto;">
+            <div id="graph-empty-state-overlay" class="nv-empty-state graph-empty-state-overlay">
+              <div class="nv-empty-state-icon" aria-hidden="true">🕸️</div>
+              <p id="graph-empty-state-message" class="nv-muted" style="font-size: var(--sys-font-body-size); font-weight: var(--ref-font-weight-medium); color: var(--sys-color-text-primary); margin-bottom: var(--sys-space-stack-xs);">No Selected Reference</p>
+              <p id="graph-empty-state-subtext" class="nv-muted" style="font-size: var(--sys-font-caption-size); margin: 0;"></p>
             </div>
             <div id="graph-hover-preview" class="graph-hover-preview" role="status" aria-live="polite" hidden></div>
           </div>
@@ -158,8 +238,9 @@
       <!-- Mode 3: Discovery Mode -->
       <section id="mode-discovery" class="exploration-mode" aria-labelledby="tab-discovery">
         <div class="nv-panel nv-stack nv-stack--gap-sm">
-          <h3 style="margin: 0; font-size: var(--sys-font-body-size);">Contextual Discovery</h3>
-          <div class="nv-grid nv-grid--cols-3 discovery-stats" style="gap: var(--sys-space-stack-sm); margin-top: var(--sys-space-stack-xs);">
+          <h3 style="margin: 0; font-size: var(--sys-font-body-size);">Research Discovery Dashboard</h3>
+          <p class="nv-muted" style="font-size: var(--sys-font-caption-size); margin: 0;">Automated topological telemetry and quick recommendations.</p>
+          <div class="nv-grid nv-grid--cols-3" style="gap: var(--sys-space-stack-sm); margin-top: var(--sys-space-stack-xs);">
             <div class="nv-card" style="cursor: default;">
               <h5 style="margin: 0 0 4px 0; font-size: 0.65rem;">Registry Size</h5>
               <p style="margin: 0; font-size: 1.25rem; font-weight: var(--ref-font-weight-bold); color: var(--sys-color-accent-primary);" id="discovery-stat-size">0</p>
@@ -175,7 +256,7 @@
           </div>
           <div class="nv-divider" aria-hidden="true" style="margin-block: var(--sys-space-stack-xs);"></div>
           <div>
-            <h4 style="font-size: var(--sys-font-caption-size); text-transform: uppercase; color: var(--sys-color-text-secondary); margin-bottom: var(--sys-space-stack-xs);">Recommended Anchors</h4>
+            <h4 style="font-size: var(--sys-font-caption-size); text-transform: uppercase; color: var(--sys-color-text-secondary); margin-bottom: var(--sys-space-stack-xs);">Key Research Anchors</h4>
             <div id="discovery-anchors-container" class="nv-stack nv-stack--gap-xs">
               <!-- Recommended read files dynamic list -->
             </div>
@@ -226,9 +307,9 @@
           <div id="selected-reference-container" style="flex: 1;">
             <!-- Active reference state details -->
           </div>
-          <!-- Contextual discovery recommendations -->
+          <!-- Discovery Space (Carousel, Related, Similar, Citation Continuations, Dead-End Suggestions) -->
           <div id="discovery-container" class="nv-stack nv-stack--gap-xs" style="margin-top: var(--sys-space-stack-sm);"></div>
-          <div class="inspector-actions nv-stack nv-stack--gap-xs" style="margin-top: var(--sys-space-stack-md); padding-top: var(--sys-space-stack-sm); border-top: var(--sys-border-subtle) solid var(--sys-color-border-subtle);">
+          <div class="nv-stack nv-stack--gap-xs" style="margin-top: var(--sys-space-stack-md); padding-top: var(--sys-space-stack-sm); border-top: var(--sys-border-subtle) solid var(--sys-color-border-subtle);">
             <div class="nv-cluster nv-cluster--gap-sm">
               <button id="playground-pin-button" class="nv-button" data-variant="secondary" style="flex: 1;" disabled>
                 Pin Reference
@@ -264,13 +345,13 @@
   <!-- Region 4: Research Memory Layer -->
   <footer class="memory-layer" aria-label="Research Memory Layer" id="memory-layer-section">
     <div class="nv-cluster nv-cluster--gap-sm" style="justify-content: space-between; align-items: center; margin-bottom: var(--sys-space-stack-xs); border-bottom: var(--sys-border-subtle) solid var(--sys-color-border-subtle); padding-bottom: 4px;">
-      <h3 style="margin: 0; font-size: var(--sys-font-body-size); color: var(--sys-color-text-primary);">Research Memory</h3>
-      <button id="memory-toggle-collapse-button" class="nv-button" data-variant="ghost" style="padding: 2px 6px; font-size: 0.65rem; min-block-size: unset;" aria-label="Toggle memory visibility">Collapse</button>
+      <h3 style="margin: 0; font-size: var(--sys-font-body-size); color: var(--sys-color-text-primary);">Research Memory Layer</h3>
+      <button id="memory-toggle-collapse-button" class="nv-button" data-variant="ghost" style="padding: 2px 6px; font-size: 0.65rem; min-block-size: unset;" aria-label="Toggle memory layer visibility">Collapse Layer</button>
     </div>
     <div class="memory-grid" id="memory-layer-grid">
       <!-- Column 1: Pinned References -->
       <div class="memory-column">
-        <h4>Pinned</h4>
+        <h4>Pinned References</h4>
         <ul id="memory-pinned-list" class="memory-list" aria-label="Pinned references">
           <!-- Dynamic pinned list -->
         </ul>
@@ -278,7 +359,7 @@
 
       <!-- Column 2: Recently Viewed -->
       <div class="memory-column">
-        <h4>Recent</h4>
+        <h4>Recently Viewed</h4>
         <ul id="memory-recent-list" class="memory-list" aria-label="Recently viewed references">
           <!-- Dynamic recently viewed list -->
         </ul>

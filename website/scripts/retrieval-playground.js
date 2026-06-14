@@ -22,6 +22,9 @@
   let relationshipFilter = "all";
   let neighborhoodDepth = "full";
   let graphViewport = { x: 0, y: 0, scale: 1 };
+  let shouldFitGraphViewport = true;
+  let graphLabelMode = "context";
+  let graphFocusMode = "follow";
 
   // Persistence State
   let pinnedReferences = [];
@@ -67,7 +70,172 @@
     const id = String(ref?.id || "");
     const title = String(ref?.title || id).replace(/\s*\([^)]*\)\s*$/, "");
     const label = title || id.replace(/^(paper|repo|notes)-/, "");
-    return label.length > 18 ? `${label.slice(0, 16)}...` : label;
+    return label.length > 25 ? `${label.slice(0, 23)}...` : label;
+  }
+
+  function getGraphNodeTier(relationshipCount, isActive = false) {
+    if (isActive || relationshipCount >= 6) return "hub";
+    if (relationshipCount >= 3) return "connected";
+    if (relationshipCount >= 1) return "leaf";
+    return "inactive";
+  }
+
+  function getGraphNodeRadius(tier, isDistant = false) {
+    if (isDistant) return 3.2;
+    if (tier === "hub") return 8.5;
+    if (tier === "connected") return 6.2;
+    if (tier === "leaf") return 4.5;
+    return 4.0;
+  }
+
+  function getGraphNodeShape(ref, radius) {
+    if (ref?.type === "repository") {
+      const size = radius * 1.7;
+      return {
+        tag: "rect",
+        attrs: {
+          x: -size / 2,
+          y: -size / 2,
+          width: size,
+          height: size,
+          rx: Math.max(2, radius * 0.34)
+        }
+      };
+    }
+
+    if (ref?.type === "notes") {
+      const points = Array.from({ length: 6 }, (_, index) => {
+        const angle = -Math.PI / 2 + (index * Math.PI * 2) / 6;
+        const x = Math.cos(angle) * radius * 1.02;
+        const y = Math.sin(angle) * radius * 1.02;
+        return `${x.toFixed(2)},${y.toFixed(2)}`;
+      }).join(" ");
+      return {
+        tag: "polygon",
+        attrs: { points }
+      };
+    }
+
+    return {
+      tag: "circle",
+      attrs: { r: radius }
+    };
+  }
+
+  function getGraphNodeMark(ref, radius, relCount) {
+    if (pinnedReferences.includes(ref.id)) {
+      return createSvgElement("path", {
+        class: "graph-node-mark graph-node-mark--pinned",
+        d: `M ${radius * 0.15} ${-radius - 4} L ${radius + 4} ${-radius - 4} L ${radius + 4} ${-radius * 0.15}`
+      });
+    }
+    if (getEvidenceCountForReference(ref.id) > 0) {
+      return createSvgElement("circle", {
+        class: "graph-node-mark graph-node-mark--evidence",
+        cx: radius + 4,
+        cy: radius + 4,
+        r: Math.max(1.8, Math.min(3, relCount * 0.45))
+      });
+    }
+    return null;
+  }
+
+  function shouldShowGraphLabel({ ref, activeRefId, firstHopNodeIds, secondHopNodeIds, labeledNeighborIds }) {
+    if (!activeRefId) return graphLabelMode === "expanded" && graphViewport.scale >= 1.25;
+    if (ref.id === activeRefId) return true;
+    if (graphLabelMode === "minimal") return false;
+    // Strictly active node and direct 1-hop neighbors are labeled persistently
+    return firstHopNodeIds.has(ref.id);
+  }
+
+  function wrapGraphLabel(label, maxChars = 28, maxLines = 2) {
+    const cleanLabel = String(label || "").replace(/\s*\([^)]*\)\s*$/, "");
+    const words = cleanLabel.split(/\s+/).filter(Boolean);
+    const lines = [];
+    let current = "";
+    words.forEach(word => {
+      const next = `${current} ${word}`.trim();
+      if (next.length > maxChars && current) {
+        lines.push(current);
+        current = word;
+      } else {
+        current = next;
+      }
+    });
+    if (current) lines.push(current);
+
+    if (lines.length > maxLines) {
+      const result = lines.slice(0, maxLines);
+      let lastLine = result[maxLines - 1];
+      if (lastLine) {
+        if (lastLine.endsWith(".") || lastLine.endsWith(",")) {
+          lastLine = lastLine.slice(0, -1);
+        }
+        result[maxLines - 1] = lastLine + "...";
+      }
+      return result;
+    }
+    return lines;
+  }
+
+  function getGraphLabelPlacement(ref, coord, activeCoord, radius, width, height, index = 0) {
+    const isActive = ref.id === selectedReferenceId;
+    const dx = activeCoord ? coord.x - activeCoord.x : coord.x - width / 2;
+    const dy = activeCoord ? coord.y - activeCoord.y : coord.y - height / 2;
+    const horizontal = Math.abs(dx) >= Math.abs(dy) * 0.72;
+    let side = horizontal ? (dx >= 0 ? 1 : -1) : (coord.x >= width / 2 ? -1 : 1);
+    if (coord.x < width * 0.26) side = 1;
+    if (coord.x > width * 0.74) side = -1;
+    const vertical = dy >= 0 ? 1 : -1;
+    const stagger = ((index % 3) - 1) * 8;
+    if (isActive) {
+      const lines = wrapGraphLabel(ref.title, 30, 2);
+      return {
+        anchor: "start",
+        x: radius + 12,
+        y: -radius - 12,
+        lines,
+        metricsX: radius + 12,
+        metricsY: 17
+      };
+    }
+    const lines = wrapGraphLabel(ref.title, 26, 2);
+    const longestLine = lines.reduce((max, line) => Math.max(max, line.length), 0);
+    const estimatedWidth = Math.max(88, longestLine * 7.4);
+    const distanceToActive = activeCoord ? Math.hypot(dx, dy) : Infinity;
+    if (distanceToActive < 155) {
+      const verticalDirection = dy >= 0 ? 1 : -1;
+      return {
+        anchor: "middle",
+        x: 0,
+        y: verticalDirection * (radius + 18),
+        lines,
+        metricsX: 0,
+        metricsY: verticalDirection * (radius + 34)
+      };
+    }
+    if (side > 0 && coord.x + radius + 10 + estimatedWidth > width - 18) side = -1;
+    if (side < 0 && coord.x - radius - 10 - estimatedWidth < 18) side = 1;
+    return {
+      anchor: side > 0 ? "start" : "end",
+      x: side * (radius + 10),
+      y: horizontal ? 4 + stagger : vertical * (radius + 16),
+      lines,
+      metricsX: side * (radius + 10),
+      metricsY: horizontal ? 18 + stagger : vertical * (radius + 30)
+    };
+  }
+
+  function getElegantGraphLabel(ref) {
+    const title = String(ref?.title || ref?.id || "").replace(/\s*\([^)]*\)\s*$/, "");
+    if (title.length <= 34) return title;
+    const words = title.split(/\s+/);
+    let line = "";
+    for (const word of words) {
+      if ((line + " " + word).trim().length > 34) break;
+      line = `${line} ${word}`.trim();
+    }
+    return line || title.slice(0, 34);
   }
 
   function getEvidenceCountForReference(refId) {
@@ -150,10 +318,18 @@
     return renderSegmentedMicroviz("nv-density-meter", `${label} relationship density`, level, 4);
   }
 
+  function renderDensityMeter(count) {
+    return renderRelationshipDensityMeter(count);
+  }
+
   function renderEvidenceCoverageStrip(count) {
     const label = `${getEvidenceCoverageLabel(count)} evidence coverage`;
     const level = count <= 1 ? 1 : count <= 3 ? 2 : 3;
     return renderSegmentedMicroviz("nv-coverage-strip", label, level, 3);
+  }
+
+  function renderCoverageStrip(count) {
+    return renderEvidenceCoverageStrip(count);
   }
 
   function renderConfidenceGauge(confidence) {
@@ -166,6 +342,10 @@
     const label = getConnectivityScoreLabel(count);
     const level = label === "Peripheral" ? 1 : label === "Local Hub" ? 2 : 3;
     return renderSegmentedMicroviz("nv-connectivity-score", label, level, 3);
+  }
+
+  function renderConnectivityIndicator(count) {
+    return renderConnectivityScore(count);
   }
 
   function renderClusterIndicator(ref) {
@@ -339,6 +519,7 @@
             ${renderRelevanceMeter(relevance)}
             ${renderRelationshipDensityMeter(relCount)}
             ${renderConnectivityScore(relCount)}
+            ${renderClusterIndicator(reference)}
           </div>
           ${microvisualization ? `<div class="nv-discovery-panel__microvisualization">${microvisualization}</div>` : ""}
           <div class="nv-discovery-panel__preview" id="${previewId}" hidden>
@@ -426,6 +607,7 @@
   }
 
   function resetGraphViewport(shouldRender = false) {
+    shouldFitGraphViewport = true;
     setGraphViewport({ x: 0, y: 0, scale: 1 });
     if (shouldRender) renderVisualGraph();
   }
@@ -509,6 +691,8 @@
         selectedRelationship = state.selectedRelationship || null;
         relationshipFilter = state.relationshipFilter || "all";
         neighborhoodDepth = state.neighborhoodDepth || "full";
+        graphLabelMode = state.graphLabelMode || "context";
+        graphFocusMode = state.graphFocusMode || "follow";
         graphViewport = state.graphViewport || { x: 0, y: 0, scale: 1 };
         evidenceTimeline = state.evidenceTimeline || [];
 
@@ -562,6 +746,8 @@
     selectedRelationship = null;
     relationshipFilter = "all";
     neighborhoodDepth = "full";
+    graphLabelMode = "context";
+    graphFocusMode = "follow";
     graphViewport = { x: 0, y: 0, scale: 1 };
     evidenceTimeline = [];
 
@@ -603,6 +789,8 @@
         selectedRelationship,
         relationshipFilter,
         neighborhoodDepth,
+        graphLabelMode,
+        graphFocusMode,
         graphViewport,
         evidenceTimeline,
         // Stage 6
@@ -706,8 +894,9 @@
         <div class="nv-panel nv-cluster nv-cluster--gap-md" style="background-color: var(--sys-color-surface-container-high); border: 1px solid var(--sys-color-accent-primary); padding: var(--sys-space-stack-sm) var(--sys-space-inline-md); justify-content: space-between; align-items: center; border-radius: var(--ref-radius-soft); margin-bottom: var(--sys-space-stack-sm);" role="status" aria-live="polite">
           <div class="nv-stack nv-stack--gap-xs" style="flex: 1;">
             <strong style="color: var(--sys-color-accent-primary); font-size: 0.75rem;">Previous research session</strong>
-            <span style="font-size: 0.65rem; color: var(--sys-color-text-secondary);">
-              Last active ${lastDate}${currentSearchQuery ? ` · query "${escapeHtml(currentSearchQuery)}"` : ""}${selectedReferenceId ? ` · ${getReferenceLabel(selectedReferenceId)}` : ""}
+            <span style="font-size: 0.65rem; color: var(--sys-color-text-secondary); display: flex; align-items: center; gap: 8px;">
+              <span>Last active ${lastDate}${currentSearchQuery ? ` · query "${escapeHtml(currentSearchQuery)}"` : ""}${selectedReferenceId ? ` · ${getReferenceLabel(selectedReferenceId)}` : ""}</span>
+              ${renderSessionProgress()}
             </span>
           </div>
           <div class="nv-cluster nv-cluster--gap-sm">
@@ -737,7 +926,21 @@
   }
 
   // Live Research Snapshot
-  function renderResearchSnapshot() {}
+  function renderResearchSnapshot() {
+    const container = document.getElementById("research-snapshot-container");
+    if (!container) return;
+
+    const progressHtml = renderSessionProgress();
+    const sparklineHtml = renderTrailSparkline(knowledgeTrail);
+
+    container.innerHTML = `
+      <span class="nv-muted" style="font-weight: var(--ref-font-weight-medium);">Research Snapshot:</span>
+      <div class="nv-cluster nv-cluster--gap-sm" style="align-items: center;">
+        ${progressHtml}
+        ${sparklineHtml}
+      </div>
+    `;
+  }
 
   // Smart Empty State
   function renderSmartEmptyWorkspace() {
@@ -907,7 +1110,7 @@
   function getSvgMotif(name) {
     const color = "var(--sys-color-accent-primary)";
     const colorMuted = "rgba(138, 180, 248, 0.25)";
-    
+
     switch (name) {
       case 'search':
         return `
@@ -1017,9 +1220,9 @@
     const variantClass = config.variant ? `nv-empty-state--${config.variant}` : '';
     const compactClass = config.compact ? 'nv-empty-state--compact' : '';
     const panelClass = config.panel ? 'nv-empty-state--panel' : '';
-    
+
     const svgMotif = getSvgMotif(config.motif || config.icon);
-    
+
     let actionsHtml = '';
     if (config.primaryAction || config.secondaryAction) {
       actionsHtml = `
@@ -1160,6 +1363,105 @@
     bindSelectionClicks(container);
   }
 
+  function renderLocalConstellationMinimap(ref, rels) {
+    if (!ref) return "";
+    const activeId = ref.id;
+    const neighbors = [];
+    const seen = new Set();
+    rels.forEach(rel => {
+      const isOutgoing = rel.sourceReferenceId === activeId;
+      const neighborId = isOutgoing ? rel.targetReferenceId : rel.sourceReferenceId;
+      if (!seen.has(neighborId)) {
+        seen.add(neighborId);
+        const neighborRef = adapter.getReferenceById(retrievalState, neighborId);
+        if (neighborRef) {
+          neighbors.push({
+            id: neighborId,
+            title: neighborRef.title,
+            type: neighborRef.type,
+            relType: rel.type
+          });
+        }
+      }
+    });
+
+    const width = 240;
+    const height = 120;
+    const cx = width / 2;
+    const cy = height / 2;
+
+    let svgContent = "";
+
+    // Draw edges first
+    neighbors.forEach((n, index) => {
+      const angle = (index * 2 * Math.PI) / neighbors.length;
+      const nx = cx + Math.cos(angle) * 40;
+      const ny = cy + Math.sin(angle) * 40;
+      svgContent += `
+        <line x1="${cx}" y1="${cy}" x2="${nx}" y2="${ny}"
+              stroke="var(--sys-color-border-subtle)"
+              stroke-width="1.2"
+              stroke-opacity="0.6" />
+      `;
+    });
+
+    // Draw active node (center)
+    svgContent += `
+      <circle cx="${cx}" cy="${cy}" r="7"
+              fill="var(--sys-color-accent-primary)"
+              stroke="var(--sys-color-text-primary)"
+              stroke-width="1.5"
+              role="img"
+              aria-label="Active Node: ${escapeHtml(ref.title)}" />
+      <text x="${cx}" y="${cy - 10}"
+            fill="var(--sys-color-text-primary)"
+            font-size="8"
+            font-weight="bold"
+            text-anchor="middle">Active</text>
+    `;
+
+    // Draw neighbors
+    neighbors.forEach((n, index) => {
+      const angle = (index * 2 * Math.PI) / neighbors.length;
+      const nx = cx + Math.cos(angle) * 40;
+      const ny = cy + Math.sin(angle) * 40;
+
+      let color = "var(--sys-color-surface-container-high)";
+      if (n.type === "paper") {
+        color = "color-mix(in srgb, var(--sys-color-accent-primary) 62%, var(--sys-color-surface-container-high))";
+      } else if (n.type === "repository") {
+        color = "color-mix(in srgb, var(--sys-color-warning) 58%, var(--sys-color-surface-container-high))";
+      } else if (n.type === "notes") {
+        color = "color-mix(in srgb, var(--sys-color-success) 58%, var(--sys-color-surface-container-high))";
+      }
+
+      svgContent += `
+        <g class="minimap-node"
+           data-id="${escapeHtml(n.id)}"
+           tabindex="0"
+           role="button"
+           aria-label="Neighbor: ${escapeHtml(n.title)}. Click to view."
+           style="cursor: pointer; outline: none;">
+          <circle cx="${nx}" cy="${ny}" r="5"
+                  fill="${color}"
+                  stroke="var(--sys-color-border-strong)"
+                  stroke-width="1" />
+        </g>
+      `;
+    });
+
+    return `
+      <div class="local-constellation-minimap" style="margin-top: 10px; border-top: var(--sys-border-subtle) solid var(--sys-color-border-subtle); padding-top: 8px;">
+        <h5 style="margin: 0 0 6px 0; font-size: 0.65rem; text-transform: uppercase; color: var(--sys-color-text-secondary); letter-spacing: 0.05em;">Local Constellation Minimap</h5>
+        <div style="background-color: var(--sys-color-surface-container-lowest); border: 1px dashed var(--sys-color-border-subtle); border-radius: var(--ref-radius-soft); padding: 4px; display: flex; justify-content: center; align-items: center;">
+          <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" style="display: block; overflow: visible;">
+            ${svgContent}
+          </svg>
+        </div>
+      </div>
+    `;
+  }
+
   // DOM Rendering: Reference Inspector Panel
   function renderReferenceInspector() {
     const container = document.getElementById("selected-reference-container");
@@ -1229,6 +1531,8 @@
           ${renderClusterIndicator(ref)}
         </div>
 
+        ${renderLocalConstellationMinimap(ref, rels)}
+
         <details>
           <summary style="font-size: 0.7rem; font-weight: bold; cursor: pointer; color: var(--sys-color-text-secondary);">Keywords</summary>
           <div class="nv-cluster nv-cluster--gap-xs" style="flex-wrap: wrap; padding-top: 4px;">
@@ -1270,6 +1574,16 @@
         }
       };
       bindKeyboardActivation(card, card.onclick);
+    });
+
+    // Bind minimap node clicks
+    container.querySelectorAll(".minimap-node[data-id]").forEach(node => {
+      node.onclick = (e) => {
+        e.stopPropagation();
+        const refId = node.getAttribute("data-id");
+        selectReference(refId);
+      };
+      bindKeyboardActivation(node, node.onclick);
     });
 
     if (pinBtn) {
@@ -1661,9 +1975,9 @@
     ];
 
     container.innerHTML = `
-      <div class="nv-stack nv-stack--gap-sm" role="region" aria-label="Evidence compilation details" style="max-height: calc(100vh - 200px); overflow-y: auto; padding-right: 4px;">
+      <div class="evidence-report nv-stack nv-stack--gap-sm" role="region" aria-label="Evidence compilation details">
 
-        <div class="nv-stack nv-stack--gap-xs" style="background-color: var(--sys-color-surface-container-low); padding: var(--sys-space-stack-xs); border-radius: var(--sys-border-radius-sm); border: 1px solid var(--sys-color-border-subtle); border-left: 3px solid var(--sys-color-status-${confVariant});">
+        <div class="evidence-confidence-card nv-stack nv-stack--gap-xs" data-confidence="${confVariant}">
           <div class="nv-cluster nv-cluster--gap-xs" style="align-items: center; justify-content: space-between;">
             <span style="font-size: 0.68rem; color: var(--sys-color-text-secondary);">${comp.mode === "query" ? "Query evidence" : "Reference evidence"}</span>
             <span class="nv-badge" data-variant="${confVariant}" style="font-weight: var(--ref-font-weight-semibold);">${confLabel}</span>
@@ -1675,17 +1989,17 @@
           <p class="nv-muted" style="font-size: var(--sys-font-caption-size); margin: 0; line-height: 1.3;">${escapeHtml(confExplanation)}</p>
         </div>
 
-        <div class="nv-stack nv-stack--gap-xs">
-          <h5 style="margin: 0; font-size: 0.65rem; text-transform: uppercase; color: var(--sys-color-accent-primary);">Summary</h5>
+        <div class="evidence-section nv-stack nv-stack--gap-xs">
+          <h5>Summary</h5>
           <p class="evidence-summary">
             ${escapeHtml(comp.summary)}
           </p>
         </div>
 
-        <div class="nv-divider" aria-hidden="true" style="margin-block: var(--sys-space-stack-xs); opacity: 0.3;"></div>
+        <div class="nv-divider evidence-divider" aria-hidden="true"></div>
 
-        <div class="nv-stack nv-stack--gap-xs nv-provenance-summary">
-          <h5 style="margin: 0; font-size: 0.65rem; text-transform: uppercase; color: var(--sys-color-accent-primary);">Supporting References</h5>
+        <div class="evidence-section nv-stack nv-stack--gap-xs nv-provenance-summary">
+          <h5>Supporting References</h5>
           <div class="nv-stack nv-stack--gap-xs">
             ${allContributing.length === 0 ? '<p class="nv-muted" style="font-size: var(--sys-font-caption-size); margin: 0;">No contributing references found.</p>' : allContributing.map(item => {
               const relCount = getDiscoveryRelationshipCount(item.ref.id);
@@ -1708,7 +2022,7 @@
           </div>
         </div>
 
-        <div class="nv-divider" aria-hidden="true" style="margin-block: var(--sys-space-stack-xs); opacity: 0.3;"></div>
+        <div class="nv-divider evidence-divider" aria-hidden="true"></div>
 
         <details>
           <summary style="font-size: 0.65rem; font-weight: bold; cursor: pointer; color: var(--sys-color-text-secondary); margin-bottom: 2px;">Lineage and provenance</summary>
@@ -1772,10 +2086,10 @@
           </div>
         </details>
 
-        <div class="nv-divider" aria-hidden="true" style="margin-block: var(--sys-space-stack-xs); opacity: 0.3;"></div>
+        <div class="nv-divider evidence-divider" aria-hidden="true"></div>
 
-        <div class="nv-stack nv-stack--gap-xs">
-          <h5 style="margin: 0; font-size: 0.65rem; text-transform: uppercase; color: var(--sys-color-accent-primary);">Next</h5>
+        <div class="evidence-section nv-stack nv-stack--gap-xs">
+          <h5>Next</h5>
           <div class="nv-stack nv-stack--gap-xs">
             ${comp.matchedReferences.length > 0 ? `
               <button class="nv-button" id="action-explore-neighborhood" data-id="${comp.matchedReferences[0].id}" data-variant="secondary" style="font-size: var(--sys-font-caption-size); padding: 4px;">
@@ -1788,7 +2102,7 @@
           </div>
         </div>
 
-        <div class="nv-divider" aria-hidden="true" style="margin-block: var(--sys-space-stack-xs); opacity: 0.3;"></div>
+        <div class="nv-divider evidence-divider" aria-hidden="true"></div>
 
         <!-- Timeline History at bottom of active state -->
         <div id="evidence-timeline-active-container"></div>
@@ -1949,15 +2263,19 @@
 
     const defs = createSvgElement("defs");
     defs.innerHTML = `
-      <marker id="arrow-default" viewBox="0 0 10 10" refX="16" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
-        <path d="M 0 0 L 10 5 L 0 10 z" class="graph-arrow graph-arrow--default" />
-      </marker>
-      <marker id="arrow-selected" viewBox="0 0 10 10" refX="18" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-        <path d="M 0 0 L 10 5 L 0 10 z" class="graph-arrow graph-arrow--selected" />
-      </marker>
-      <marker id="arrow-active" viewBox="0 0 10 10" refX="18" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-        <path d="M 0 0 L 10 5 L 0 10 z" class="graph-arrow graph-arrow--active" />
-      </marker>
+      <pattern id="graph-grid" width="36" height="36" patternUnits="userSpaceOnUse">
+        <circle cx="18" cy="18" r="0.65" fill="var(--sys-color-text-muted)" fill-opacity="0.09" />
+      </pattern>
+      <radialGradient id="radial-halo-gradient" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="var(--sys-color-accent-primary)" stop-opacity="0.42" />
+        <stop offset="44%" stop-color="var(--sys-color-accent-primary)" stop-opacity="0.12" />
+        <stop offset="100%" stop-color="var(--sys-color-accent-primary)" stop-opacity="0" />
+      </radialGradient>
+      <linearGradient id="graph-edge-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="var(--sys-color-text-muted)" stop-opacity="0.08" />
+        <stop offset="48%" stop-color="var(--sys-color-text-primary)" stop-opacity="0.34" />
+        <stop offset="100%" stop-color="var(--sys-color-text-muted)" stop-opacity="0.08" />
+      </linearGradient>
     `;
     svg.appendChild(defs);
 
@@ -2119,8 +2437,64 @@
       selectedReferenceId || null
     );
 
+    if (shouldFitGraphViewport) {
+      shouldFitGraphViewport = false;
+      const xs = Object.values(nodeCoords).map(c => c.x);
+      const ys = Object.values(nodeCoords).map(c => c.y);
+      if (xs.length > 0) {
+        const minX = Math.min(...xs);
+        const maxX = Math.max(...xs);
+        const minY = Math.min(...ys);
+        const maxY = Math.max(...ys);
+
+        const graphWidth = maxX - minX || 1;
+        const graphHeight = maxY - minY || 1;
+
+        const paddingRatio = 0.75;
+        const scaleX = (width * paddingRatio) / graphWidth;
+        const scaleY = (height * paddingRatio) / graphHeight;
+        const autoScale = clampGraphScale(Math.min(scaleX, scaleY, 1.2));
+
+        const graphCenterX = minX + graphWidth / 2;
+        const graphCenterY = minY + graphHeight / 2;
+
+        const autoX = width / 2 - graphCenterX * autoScale;
+        const autoY = height / 2 - graphCenterY * autoScale;
+
+        graphViewport = {
+          x: autoX,
+          y: autoY,
+          scale: autoScale
+        };
+      }
+    }
+
     const edgePaths = adapter.computeEdgePaths(visibleEdges, nodeCoords);
     const clusterSummaries = adapter.getClusterSummaries ? adapter.getClusterSummaries(visibleNodes, nodeCoords) : [];
+    const nodeHitZones = visibleNodes
+      .map(ref => {
+        const coord = nodeCoords[ref.id];
+        if (!coord) return null;
+        const relCount = allRels.filter(rel => rel.sourceReferenceId === ref.id || rel.targetReferenceId === ref.id).length;
+        const isActiveNode = ref.id === selectedReferenceId;
+        const isDistant = Boolean(selectedReferenceId && ref.id !== selectedReferenceId);
+        const radius = getGraphNodeRadius(getGraphNodeTier(relCount, isActiveNode), isDistant);
+        return { id: ref.id, x: coord.x, y: coord.y, radius: Math.max(22, radius + 12) };
+      })
+      .filter(Boolean);
+
+    const isPointerInsideNodeHitZone = (event) => {
+      if (!event || typeof event.clientX !== "number" || typeof event.clientY !== "number" || !Number.isFinite(event.clientX) || !Number.isFinite(event.clientY)) return false;
+      const point = svg.createSVGPoint();
+      point.x = event.clientX;
+      point.y = event.clientY;
+      const matrix = svg.getScreenCTM();
+      if (!matrix) return false;
+      const local = point.matrixTransform(matrix.inverse());
+      const gx = (local.x - graphViewport.x) / graphViewport.scale;
+      const gy = (local.y - graphViewport.y) / graphViewport.scale;
+      return nodeHitZones.some(zone => Math.hypot(gx - zone.x, gy - zone.y) <= zone.radius);
+    };
 
     const activeRefId = selectedReferenceId;
     const firstHopNodeIds = new Set();
@@ -2153,7 +2527,7 @@
       visibleEdges
         .filter(rel => rel.sourceReferenceId === activeRefId || rel.targetReferenceId === activeRefId)
         .sort((a, b) => (b.strength || 0) - (a.strength || 0))
-        .slice(0, 2)
+        .slice(0, 3)
         .forEach(rel => {
           labeledNeighborIds.add(rel.sourceReferenceId === activeRefId ? rel.targetReferenceId : rel.sourceReferenceId);
         });
@@ -2161,41 +2535,92 @@
 
     const panSurface = createSvgElement("rect", {
       class: "graph-pan-surface",
-      x: 0,
-      y: 0,
-      width,
-      height
+      x: -width * 4,
+      y: -height * 4,
+      width: width * 9,
+      height: height * 9,
+      fill: "url(#graph-grid)"
     });
     svg.appendChild(panSurface);
 
+
+
     const world = createSvgElement("g", { class: "graph-world" });
     const clusterLayer = createSvgElement("g", { class: "graph-clusters" });
+    const observatoryLayer = createSvgElement("g", { class: "graph-observatory-signals" });
     const edgeLayer = createSvgElement("g", { class: "graph-edges" });
     const nodeLayer = createSvgElement("g", { class: "graph-nodes" });
+
+    // Active reference observatory signals (subtle crosshair)
+    if (activeRefId && nodeCoords[activeRefId]) {
+      const activeCoord = nodeCoords[activeRefId];
+      const crosshairX = createSvgElement("line", {
+        x1: activeCoord.x - 12,
+        y1: activeCoord.y,
+        x2: activeCoord.x + 12,
+        y2: activeCoord.y,
+        stroke: "var(--sys-color-accent-primary)",
+        "stroke-width": "0.75",
+        "stroke-opacity": "0.25"
+      });
+      const crosshairY = createSvgElement("line", {
+        x1: activeCoord.x,
+        y1: activeCoord.y - 12,
+        x2: activeCoord.x,
+        y2: activeCoord.y + 12,
+        stroke: "var(--sys-color-accent-primary)",
+        "stroke-width": "0.75",
+        "stroke-opacity": "0.25"
+      });
+      observatoryLayer.appendChild(crosshairX);
+      observatoryLayer.appendChild(crosshairY);
+    }
     world.appendChild(clusterLayer);
+    world.appendChild(observatoryLayer);
     world.appendChild(edgeLayer);
     world.appendChild(nodeLayer);
     svg.appendChild(world);
     setGraphViewport(graphViewport, false);
 
+    const summaryLayer = createSvgElement("g", { class: "graph-summary-readout" });
+    const summaryText = createSvgElement("text", {
+      x: width - 18,
+      y: 24,
+      "text-anchor": "end"
+    });
+    summaryText.textContent = `${visibleNodes.length} refs · ${visibleEdges.length} rels · ${relationshipFilter === "all" ? "all" : relationshipFilter} · ${activeDepth}`;
+    summaryLayer.appendChild(summaryText);
+    svg.appendChild(summaryLayer);
+
+    if (activeRefId) {
+      const recentTrail = [activeRefId, ...recentReferences.filter(id => id !== activeRefId)]
+        .slice(0, 3)
+        .map(id => adapter.getReferenceById(retrievalState, id))
+        .filter(Boolean)
+        .reverse();
+      if (recentTrail.length > 0) {
+        const trailLayer = createSvgElement("g", { class: "graph-breadcrumb-readout" });
+        const trailText = createSvgElement("text", {
+          x: 18,
+          y: 24,
+          "text-anchor": "start"
+        });
+        trailText.textContent = recentTrail.map(ref => getShortGraphLabel(ref)).join("  →  ");
+        trailLayer.appendChild(trailText);
+        svg.appendChild(trailLayer);
+      }
+    }
+
     clusterSummaries
       .filter(cluster => cluster.nodes.length > 1 && cluster.x && cluster.y)
       .forEach(cluster => {
-        const halo = createSvgElement("ellipse", {
-          class: "graph-cluster-halo",
-          cx: cluster.x,
-          cy: cluster.y,
-          rx: Math.max(cluster.radius * 0.46, 42),
-          ry: Math.max(cluster.radius * 0.26, 24)
-        });
         const label = createSvgElement("text", {
           class: "graph-cluster-label",
           x: cluster.x,
-          y: cluster.y - Math.max(cluster.radius * 0.24, 22),
+          y: cluster.y,
           "text-anchor": "middle"
         });
         label.textContent = cluster.name;
-        clusterLayer.appendChild(halo);
         clusterLayer.appendChild(label);
       });
 
@@ -2216,9 +2641,14 @@
       pathEl.setAttribute("aria-hidden", "true");
       pathEl.setAttribute("data-source", rel.sourceReferenceId);
       pathEl.setAttribute("data-target", rel.targetReferenceId);
+      pathEl.setAttribute("stroke", "url(#graph-edge-gradient)");
+      const strength = typeof rel.strength === "number" ? rel.strength : 1.0;
+      const strokeWidth = 0.6 + strength * 1.05;
+      pathEl.style.setProperty("--link-width", `${strokeWidth}px`);
       // Arrowheads completely removed for Obsidian-like organic connections
       const selectEdge = (e) => {
         e.stopPropagation();
+        if (isPointerInsideNodeHitZone(e)) return;
         selectedRelationship = rel;
         addTrailEvent("Graph edge selected", `Inspected relationship "${rel.sourceReferenceId} ➔ ${rel.targetReferenceId}"`, { relationship: rel });
         switchInspectorTab("relationship");
@@ -2227,13 +2657,19 @@
         renderVisualGraph();
       };
       const showEdgePreview = (event) => {
+        if (isPointerInsideNodeHitZone(event)) {
+          hidePreview();
+          return;
+        }
         const source = adapter.getReferenceById(retrievalState, rel.sourceReferenceId);
         const target = adapter.getReferenceById(retrievalState, rel.targetReferenceId);
         const context = rel.context || (rel.strength ? `Strength ${rel.strength}` : "Relationship context");
         showPreview(`
-          <strong>${escapeHtml(String(rel.type || "related").toUpperCase().replace(/_/g, " "))}</strong>
-          <span>${escapeHtml(source?.title || rel.sourceReferenceId)} ➔ ${escapeHtml(target?.title || rel.targetReferenceId)}</span>
-          <small>${escapeHtml(context)}</small>
+          <div class="nv-stack nv-stack--gap-xs" style="min-width: 185px;">
+            <strong style="font-size: 0.7rem; color: var(--sys-color-accent-primary); text-transform: uppercase; display: block;">${escapeHtml(String(rel.type || "related").replace(/_/g, " "))}</strong>
+            <span style="font-size: 0.65rem; color: var(--sys-color-text-primary); display: block; line-height: 1.3;">${escapeHtml(source?.title || rel.sourceReferenceId)} to ${escapeHtml(target?.title || rel.targetReferenceId)}</span>
+            <small style="font-size: 0.6rem; color: var(--sys-color-text-muted); display: block; margin-top: 2px; line-height: 1.3;">${escapeHtml(context)}</small>
+          </div>
         `, event);
       };
       hitEl.onclick = selectEdge;
@@ -2273,16 +2709,26 @@
       edgeLayer.appendChild(pathEl);
     });
 
-    visibleNodes.forEach(ref => {
+    const activeCoord = activeRefId ? nodeCoords[activeRefId] : null;
+
+    const placedLabelBoxes = [];
+
+    visibleNodes.forEach((ref, nodeIndex) => {
       const coord = nodeCoords[ref.id];
       if (!coord) return;
 
       const g = createSvgElement("g");
       g.setAttribute("class", `graph-node graph-node--${ref.type || "reference"}`);
+      g.setAttribute("data-id", ref.id);
       g.setAttribute("transform", `translate(${coord.x}, ${coord.y})`);
       g.setAttribute("tabindex", "0");
       g.setAttribute("role", "button");
       g.setAttribute("aria-label", `Reference node: ${ref.title}. ${ref.type || "reference"}. Press Enter to inspect.`);
+
+      const relsForNode = allRels.filter(rel => rel.sourceReferenceId === ref.id || rel.targetReferenceId === ref.id).length;
+      const isDistantNode = Boolean(activeRefId && ref.id !== activeRefId && !firstHopNodeIds.has(ref.id) && !secondHopNodeIds.has(ref.id));
+      const tier = getGraphNodeTier(relsForNode, ref.id === activeRefId);
+      g.classList.add(`graph-node-tier-${tier}`);
 
       if (activeRefId) {
         if (ref.id === activeRefId) {
@@ -2297,37 +2743,217 @@
       }
       if (pinnedReferences.includes(ref.id)) g.classList.add("pinned");
 
-      const hitArea = createSvgElement("circle", { class: "graph-node-hit", r: 18 });
-      const circle = createSvgElement("circle", { class: "graph-node-core" });
+      const radius = getGraphNodeRadius(tier, isDistantNode);
+      const placement = getGraphLabelPlacement(ref, coord, activeCoord, radius, width, height, nodeIndex);
+      const labelIsPersistent = Boolean(activeRefId && (ref.id === activeRefId || labeledNeighborIds.has(ref.id)));
+      if (labelIsPersistent && placement.lines.length > 0) {
+        const longestLine = placement.lines.reduce((max, line) => Math.max(max, line.length), 0);
+        const boxWidth = Math.max(72, longestLine * 5.4);
+        const boxHeight = Math.max(14, placement.lines.length * 10);
+        const direction = coord.y >= (activeCoord?.y || height / 2) ? 1 : -1;
+        let attempts = 0;
+        const makeBox = () => {
+          const x1 = coord.x + placement.x + (placement.anchor === "end" ? -boxWidth : placement.anchor === "middle" ? -boxWidth / 2 : 0);
+          const y1 = coord.y + placement.y - 9;
+          return { x1, y1, x2: x1 + boxWidth, y2: y1 + boxHeight };
+        };
+        let box = makeBox();
+        const overlaps = (a, b) => a.x1 < b.x2 && a.x2 > b.x1 && a.y1 < b.y2 && a.y2 > b.y1;
+        while (placedLabelBoxes.some(existing => overlaps(box, existing)) && attempts < 5) {
+          placement.y += direction * 11;
+          placement.metricsY += direction * 11;
+          box = makeBox();
+          attempts += 1;
+        }
+        placedLabelBoxes.push(box);
+      }
+
+      const hitArea = createSvgElement("circle", { class: "graph-node-hit", r: Math.max(18, radius + 8) });
+      const aura = createSvgElement("circle", { class: "graph-node-aura", r: radius + 7 });
+      const shape = getGraphNodeShape(ref, radius);
+      const circle = createSvgElement(shape.tag, { class: "graph-node-core", ...shape.attrs });
       const text = createSvgElement("text", { class: "graph-node-label" });
-      const isLeft = coord.x < width * 0.5;
-      text.setAttribute("text-anchor", isLeft ? "start" : "end");
-      text.setAttribute("x", isLeft ? 10 : -10);
-      text.setAttribute("y", 4);
+      const subtitle = createSvgElement("text", { class: "graph-node-subtitle" });
+      text.setAttribute("text-anchor", placement.anchor);
+      text.setAttribute("x", placement.x);
+      text.setAttribute("y", placement.y);
+      subtitle.setAttribute("text-anchor", placement.anchor);
+      subtitle.setAttribute("x", placement.x);
+      subtitle.setAttribute("y", placement.y + Math.max(12, placement.lines.length * 10 + 4));
+      subtitle.textContent = "";
+
+      const setNodeLabel = (lines, opacity) => {
+        text.innerHTML = "";
+        lines.forEach((line, index) => {
+          const tspan = createSvgElement("tspan");
+          tspan.setAttribute("x", placement.x);
+          tspan.setAttribute("dy", index === 0 ? "0" : "1.18em");
+          tspan.textContent = line;
+          text.appendChild(tspan);
+        });
+        text.style.opacity = String(opacity);
+      };
 
       // Label hierarchy implementation:
       const setLabelState = () => {
+        const showPersistentLabel = shouldShowGraphLabel({
+          ref,
+          activeRefId,
+          firstHopNodeIds,
+          secondHopNodeIds,
+          labeledNeighborIds
+        });
         if (activeRefId) {
           if (ref.id === activeRefId) {
-            const fullLabel = String(ref.title || ref.id);
-            text.textContent = fullLabel.length > 30 ? `${fullLabel.slice(0, 28)}...` : fullLabel;
-            text.style.opacity = "1";
-          } else if (firstHopNodeIds.has(ref.id)) {
-            text.textContent = labeledNeighborIds.has(ref.id) ? getShortGraphLabel(ref) : "";
-            text.style.opacity = labeledNeighborIds.has(ref.id) ? "0.78" : "0";
+            setNodeLabel(placement.lines, 1);
+            subtitle.textContent = "";
+            subtitle.style.opacity = "0";
+          } else if (showPersistentLabel && firstHopNodeIds.has(ref.id)) {
+            setNodeLabel(placement.lines, graphLabelMode === "expanded" ? 0.78 : 0.84);
+            subtitle.textContent = "";
+            subtitle.style.opacity = "0";
+          } else if (showPersistentLabel && secondHopNodeIds.has(ref.id)) {
+            setNodeLabel(wrapGraphLabel(ref.title, 24).slice(0, 2), 0.46);
+            subtitle.textContent = "";
+            subtitle.style.opacity = "0";
           } else {
-            text.textContent = "";
+            setNodeLabel([], 0);
+            subtitle.textContent = "";
+            subtitle.style.opacity = "0";
           }
         } else {
-          text.textContent = "";
-          text.style.opacity = "0";
+          if (showPersistentLabel) {
+            setNodeLabel(wrapGraphLabel(ref.title, 24).slice(0, 2), 0.58);
+            subtitle.textContent = "";
+            subtitle.style.opacity = "0";
+          } else {
+            setNodeLabel([], 0);
+            subtitle.textContent = "";
+            subtitle.style.opacity = "0";
+          }
         }
       };
       setLabelState();
 
+      // Dynamic hover to reveal full title and highlight paths (Obsidian-style)
+      g.addEventListener("mouseenter", () => {
+        setNodeLabel(wrapGraphLabel(ref.title || ref.id, 32), 1);
+        world.classList.add("has-hovered-node");
+        g.classList.add("is-hovered");
+
+        // Find immediate neighbors
+        const neighbors = new Set();
+        visibleEdges.forEach(rel => {
+          if (rel.sourceReferenceId === ref.id) {
+            neighbors.add(rel.targetReferenceId);
+          } else if (rel.targetReferenceId === ref.id) {
+            neighbors.add(rel.sourceReferenceId);
+          }
+        });
+
+        // Set hover classes on node elements
+        const allNodeEls = world.querySelectorAll(".graph-node");
+        allNodeEls.forEach(nodeEl => {
+          const nodeId = nodeEl.getAttribute("data-id");
+          if (neighbors.has(nodeId)) {
+            nodeEl.classList.add("hover-neighbor");
+            const neighborText = nodeEl.querySelector(".graph-node-label");
+            if (neighborText) {
+              const nodeRef = visibleNodes.find(n => n.id === nodeId);
+              if (nodeRef) {
+                const lines = wrapGraphLabel(nodeRef.title, 26, 2);
+                neighborText.innerHTML = "";
+                lines.forEach((line, index) => {
+                  const tspan = createSvgElement("tspan");
+                  tspan.setAttribute("x", neighborText.getAttribute("x") || "0");
+                  tspan.setAttribute("dy", index === 0 ? "0" : "1.18em");
+                  tspan.textContent = line;
+                  neighborText.appendChild(tspan);
+                });
+              }
+              neighborText.style.opacity = "0.85";
+            }
+          }
+        });
+
+        // Highlight connected paths
+        highlightNodeConnections(ref.id);
+      });
+
+      g.addEventListener("mouseleave", () => {
+        setLabelState();
+        world.classList.remove("has-hovered-node");
+        g.classList.remove("is-hovered");
+
+        const allNodeEls = world.querySelectorAll(".graph-node");
+        allNodeEls.forEach(nodeEl => {
+          nodeEl.classList.remove("hover-neighbor");
+          const nodeText = nodeEl.querySelector(".graph-node-label");
+          if (nodeText) {
+            const nodeId = nodeEl.getAttribute("data-id");
+            const nodeRef = visibleNodes.find(n => n.id === nodeId);
+            if (nodeRef) {
+              const showPersistent = shouldShowGraphLabel({
+                ref: nodeRef,
+                activeRefId,
+                firstHopNodeIds,
+                secondHopNodeIds,
+                labeledNeighborIds
+              });
+              if (showPersistent) {
+                const lines = wrapGraphLabel(nodeRef.title, 26, 2);
+                nodeText.innerHTML = "";
+                lines.forEach((line, idx) => {
+                  const tspan = createSvgElement("tspan");
+                  tspan.setAttribute("x", nodeText.getAttribute("x") || "0");
+                  tspan.setAttribute("dy", idx === 0 ? "0" : "1.18em");
+                  tspan.textContent = line;
+                  nodeText.appendChild(tspan);
+                });
+                nodeText.style.opacity = nodeId === activeRefId ? "1.0" : "0.78";
+              } else {
+                nodeText.innerHTML = "";
+                nodeText.style.opacity = "0";
+              }
+            }
+          }
+        });
+
+        resetNodeConnections();
+      });
+
       g.appendChild(hitArea);
+      g.appendChild(aura);
       g.appendChild(circle);
       g.appendChild(text);
+      g.appendChild(subtitle);
+
+      if (ref.id === activeRefId) {
+        const metrics = createSvgElement("g", {
+          class: "graph-node-microviz",
+          transform: `translate(${placement.metricsX}, ${placement.metricsY})`
+        });
+        const activeRelationshipCount = allRels.filter(rel => rel.sourceReferenceId === ref.id || rel.targetReferenceId === ref.id).length;
+        const filledSegments = Math.max(1, Math.min(5, Math.ceil(activeRelationshipCount / 2)));
+        for (let i = 0; i < 5; i++) {
+          metrics.appendChild(createSvgElement("rect", {
+            class: i < filledSegments ? "graph-node-microviz-segment is-filled" : "graph-node-microviz-segment",
+            x: i * 6,
+            y: 0,
+            width: 4,
+            height: 4,
+            rx: 1
+          }));
+        }
+        const densityText = createSvgElement("text", {
+          class: "graph-node-microviz-label",
+          x: 35,
+          y: 5
+        });
+        densityText.textContent = `${getConnectivityLabel(activeRelationshipCount)} · ${activeRelationshipCount} relationships`;
+        metrics.appendChild(densityText);
+        g.appendChild(metrics);
+      }
 
       const highlightNodeConnections = (nodeId) => {
         const connectedEdgePaths = Array.from(edgeLayer.querySelectorAll(`.graph-link`));
@@ -2369,9 +2995,7 @@
         });
       };
       g.onmouseenter = (event) => {
-        const fullLabel = String(ref.title || ref.id);
-        text.textContent = fullLabel.length > 40 ? `${fullLabel.slice(0, 38)}...` : fullLabel;
-        text.style.opacity = "1";
+        setNodeLabel(wrapGraphLabel(ref.title || ref.id, ref.id === activeRefId ? 38 : 32, ref.id === activeRefId ? 3 : 2), 1);
 
         highlightNodeConnections(ref.id);
 
@@ -2381,9 +3005,23 @@
           rel.targetReferenceId === ref.id ? [rel.sourceReferenceId] : []
         ))).size;
         showPreview(`
-          <strong>${escapeHtml(ref.title)}</strong>
-          <span>${escapeHtml(ref.type || "reference")} · ${escapeHtml(adapter.inferReferenceCluster ? adapter.inferReferenceCluster(ref) : "Research")}</span>
-          <small>${relCount} relationships · ${getEvidenceCountForReference(ref.id)} evidence · ${neighborhoodSize} neighbors</small>
+          <div class="nv-stack nv-stack--gap-xs" style="min-width: 195px;">
+            <strong style="font-size: 0.75rem; color: var(--sys-color-text-primary); display: block; line-height: 1.3;">${escapeHtml(ref.title)}</strong>
+            <span style="font-size: 0.65rem; color: var(--sys-color-text-secondary); display: block; margin-bottom: 4px;">
+              ${escapeHtml(ref.type || "reference")} · ${escapeHtml(adapter.inferReferenceCluster ? adapter.inferReferenceCluster(ref) : "Research")} · ${escapeHtml(tier)}
+            </span>
+            <div class="nv-cluster nv-cluster--gap-xs" style="display: flex; align-items: center; gap: 4px; margin-block: 2px;">
+              ${renderRelationshipDensityMeter ? renderRelationshipDensityMeter(relCount) : ""}
+              ${renderConnectivityScore ? renderConnectivityScore(relCount) : ""}
+              ${renderClusterIndicator ? renderClusterIndicator(ref) : ""}
+            </div>
+            <small style="font-size: 0.6rem; color: var(--sys-color-text-muted); display: block; margin-top: 4px; line-height: 1.3;">
+              ${relCount} relationships · ${getEvidenceCountForReference(ref.id)} evidence · ${neighborhoodSize} neighbors
+            </small>
+            <small style="font-size: 0.58rem; color: var(--sys-color-accent-primary); display: block; margin-top: 3px; line-height: 1.2;">
+              Click to inspect · Enter to open
+            </small>
+          </div>
         `, event);
       };
       g.onmousemove = g.onmouseenter;
@@ -2799,6 +3437,11 @@
     } else {
       selectedReferenceId = refId; // select new
       addToRecentlyViewed(refId);
+      if (activeExplorationMode === "graph" && graphFocusMode === "follow" && neighborhoodDepth === "full") {
+        neighborhoodDepth = "2-hop";
+        const depthSelect = document.getElementById("graph-hop-select");
+        if (depthSelect) depthSelect.value = neighborhoodDepth;
+      }
 
       // Log trail event
       if (activeExplorationMode === "graph") {
@@ -2837,6 +3480,12 @@
     if (!refId) return;
     selectedReferenceId = refId;
     addToRecentlyViewed(refId);
+    shouldFitGraphViewport = true;
+    if (activeExplorationMode === "graph" && graphFocusMode === "follow" && neighborhoodDepth === "full") {
+      neighborhoodDepth = "2-hop";
+      const depthSelect = document.getElementById("graph-hop-select");
+      if (depthSelect) depthSelect.value = neighborhoodDepth;
+    }
 
     // Log trail event
     if (activeExplorationMode === "graph") {
@@ -2944,6 +3593,12 @@
     try {
       if (window.NV_DEBUG) console.log(`Switching exploration mode to: ${mode}`);
       activeExplorationMode = mode;
+      if (mode === "graph" && graphFocusMode === "follow" && selectedReferenceId && neighborhoodDepth === "full") {
+        neighborhoodDepth = "2-hop";
+        const depthSelect = document.getElementById("graph-hop-select");
+        if (depthSelect) depthSelect.value = neighborhoodDepth;
+        shouldFitGraphViewport = true;
+      }
       saveWorkspaceState();
 
       // Update developer diagnostics badge if present
@@ -3252,11 +3907,37 @@
       const clearSessionBtn = document.getElementById("playground-clear-session-button");
       const clearTrailBtn = document.getElementById("playground-clear-trail-button");
       const graphResetButton = document.getElementById("graph-reset-view-button");
+      const graphZoomInButton = document.getElementById("graph-zoom-in-button");
+      const graphZoomOutButton = document.getElementById("graph-zoom-out-button");
 
       if (graphResetButton) {
         graphResetButton.onclick = () => {
           resetGraphViewport(true);
           addTrailEvent("Graph view reset", "Reset graph zoom and pan", { viewport: graphViewport });
+        };
+      }
+
+      if (graphZoomInButton) {
+        graphZoomInButton.onclick = () => {
+          setGraphViewport({
+            x: graphViewport.x,
+            y: graphViewport.y,
+            scale: clampGraphScale(graphViewport.scale * 1.16)
+          });
+          renderVisualGraph();
+          addTrailEvent("Graph zoom changed", "Zoomed graph in", { scale: graphViewport.scale });
+        };
+      }
+
+      if (graphZoomOutButton) {
+        graphZoomOutButton.onclick = () => {
+          setGraphViewport({
+            x: graphViewport.x,
+            y: graphViewport.y,
+            scale: clampGraphScale(graphViewport.scale * 0.86)
+          });
+          renderVisualGraph();
+          addTrailEvent("Graph zoom changed", "Zoomed graph out", { scale: graphViewport.scale });
         };
       }
 
@@ -3297,6 +3978,8 @@
       // Bind graph filters and depth controls if they exist in DOM
       const filterSelect = document.getElementById("graph-filter-select");
       const depthSelect = document.getElementById("graph-hop-select");
+      const labelModeSelect = document.getElementById("graph-label-mode-select");
+      const focusModeSelect = document.getElementById("graph-focus-mode-select");
 
       if (filterSelect) {
         filterSelect.value = relationshipFilter;
@@ -3325,6 +4008,31 @@
           neighborhoodDepth = e.target.value;
           addTrailEvent("Neighborhood depth changed", `Changed depth focus to "${neighborhoodDepth}"`, { depth: neighborhoodDepth });
 
+          saveWorkspaceState();
+          renderVisualGraph();
+        };
+      }
+
+      if (labelModeSelect) {
+        labelModeSelect.value = graphLabelMode;
+        labelModeSelect.onchange = (e) => {
+          graphLabelMode = e.target.value;
+          addTrailEvent("Graph labels changed", `Changed graph label mode to "${graphLabelMode}"`, { labelMode: graphLabelMode });
+          saveWorkspaceState();
+          renderVisualGraph();
+        };
+      }
+
+      if (focusModeSelect) {
+        focusModeSelect.value = graphFocusMode;
+        focusModeSelect.onchange = (e) => {
+          graphFocusMode = e.target.value;
+          if (graphFocusMode === "follow" && selectedReferenceId && neighborhoodDepth === "full") {
+            neighborhoodDepth = "2-hop";
+            if (depthSelect) depthSelect.value = neighborhoodDepth;
+          }
+          shouldFitGraphViewport = true;
+          addTrailEvent("Graph focus changed", `Changed graph focus behavior to "${graphFocusMode}"`, { focusMode: graphFocusMode });
           saveWorkspaceState();
           renderVisualGraph();
         };
@@ -3445,8 +4153,10 @@
           // Reset dropdown inputs in DOM
           const filterSelect = document.getElementById("graph-filter-select");
           const depthSelect = document.getElementById("graph-hop-select");
+          const focusModeSelect = document.getElementById("graph-focus-mode-select");
           if (filterSelect) filterSelect.value = "all";
           if (depthSelect) depthSelect.value = "full";
+          if (focusModeSelect) focusModeSelect.value = "follow";
 
           // Clear query input
           if (searchInput) {
@@ -3588,4 +4298,14 @@
     }
     debugContainer.innerHTML = `<strong>NeuralVerse Unhandled Promise Rejection:</strong><br>${event.reason}`;
   });
+
+  // Export standardized microvisualization rendering helpers
+  window.renderContributionBar = renderContributionBar;
+  window.renderDensityMeter = renderDensityMeter;
+  window.renderCoverageStrip = renderCoverageStrip;
+  window.renderConfidenceGauge = renderConfidenceGauge;
+  window.renderConnectivityIndicator = renderConnectivityIndicator;
+  window.renderTrailSparkline = renderTrailSparkline;
+  window.renderClusterIndicator = renderClusterIndicator;
+  window.renderSessionProgress = renderSessionProgress;
 })();
