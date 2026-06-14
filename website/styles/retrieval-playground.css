@@ -235,20 +235,67 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* SVG Graph Visualization */
+/* ====================================================================
+   OBSERVATORY BACKGROUND KEYFRAMES
+   Very slow gradient drift (≥ 90 s cycle). Almost imperceptible.
+   ==================================================================== */
+@keyframes observatory-bloom-drift {
+  0%   { background-position: 52% 46%; }
+  33%  { background-position: 48% 50%; }
+  66%  { background-position: 55% 44%; }
+  100% { background-position: 52% 46%; }
+}
+
+/* ====================================================================
+   SVG Graph Visualization — 5-Layer Observatory Background
+   ==================================================================== */
 .graph-container {
   position: relative;
-  background:
+
+  /* ------------------------------------------------------------------
+     LAYER 1 — Base Gradient
+     Near-black (#0a0f16) → deep navy (#101824) diagonal blend.
+     No bright fills; no visible color bands.
+     ------------------------------------------------------------------ */
+  background-color: #0a0f16;
+  background-image:
+    /* LAYER 5 — Ambient Noise (SVG feTurbulence, static, ~1.8% opacity)            */
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='256' height='256' filter='url(%23n)' opacity='0.018'/%3E%3C/svg%3E"),
+    /* LAYER 4 — Observatory Signals (sparse arcs, partial circles, acquisition marks) */
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 480' preserveAspectRatio='xMidYMid slice'%3E%3Cg fill='none' stroke='%238ab4f8' stroke-opacity='0.028'%3E%3C!-- Orbital arc, upper-right quadrant --%3E%3Cpath d='M520,60 A200,200 0 0,1 700,220' stroke-width='0.6' stroke-linecap='round'/%3E%3C!-- Partial circle, lower-left --%3E%3Cpath d='M60,380 A140,140 0 0,1 180,460' stroke-width='0.5' stroke-linecap='round'/%3E%3C!-- Acquisition lines --%3E%3Cline x1='580' y1='310' x2='620' y2='310' stroke-width='0.5' stroke-opacity='0.035'/%3E%3Cline x1='600' y1='290' x2='600' y2='330' stroke-width='0.5' stroke-opacity='0.035'/%3E%3C!-- Constellation anchor points --%3E%3Ccircle cx='480' cy='130' r='1.4' fill='%238ab4f8' fill-opacity='0.045' stroke='none'/%3E%3Ccircle cx='160' cy='340' r='1.1' fill='%238ab4f8' fill-opacity='0.038' stroke='none'/%3E%3Ccircle cx='680' cy='80'  r='0.9' fill='%238ab4f8' fill-opacity='0.03'  stroke='none'/%3E%3C!-- Long faint acquisition arc, lower area --%3E%3Cpath d='M100,420 A320,320 0 0,1 420,140' stroke-width='0.4' stroke-opacity='0.018' stroke-dasharray='4 18'/%3E%3C/g%3E%3C/svg%3E"),
+    /* LAYER 3 — Instrument Grid (72 px, 2.5% opacity, barely perceptible)           */
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72'%3E%3Cpath d='M72 0L0 0 0 72' fill='none' stroke='%238ab4f8' stroke-opacity='0.025' stroke-width='0.4'/%3E%3C/svg%3E"),
+    /* LAYER 2 — Galaxy Bloom haze (4% blue, large, offset from center)              */
     radial-gradient(
-      ellipse at 52% 46%,
-      color-mix(in srgb, var(--sys-color-accent-primary) 24%, var(--sys-color-background-base)) 0%,
-      var(--sys-color-background-base) 76%
+      ellipse 68% 54% at 42% 52%,
+      color-mix(in srgb, #1a3a5c 4%, transparent) 0%,
+      transparent 100%
     ),
+    /* LAYER 1 — Base diagonal gradient                                              */
     linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--sys-color-background-subtle) 84%, var(--sys-color-background-base)) 0%,
-      var(--sys-color-background-base) 100%
+      158deg,
+      #0a0f16 0%,
+      #0d1520 38%,
+      #0a0f16 72%,
+      #08111a 100%
     );
+
+  background-size:
+    256px 256px,   /* noise tile         */
+    100% 100%,     /* observatory signals */
+    72px 72px,     /* instrument grid    */
+    100% 100%,     /* bloom              */
+    100% 100%;     /* base gradient      */
+
+  background-repeat:
+    repeat,        /* noise              */
+    no-repeat,     /* signals            */
+    repeat,        /* grid               */
+    no-repeat,     /* bloom              */
+    no-repeat;     /* base               */
+
+  animation: observatory-bloom-drift 110s ease-in-out infinite;
+
   border: var(--sys-border-subtle) solid var(--sys-color-border-subtle);
   border-radius: var(--ref-radius-soft);
   overflow: hidden;
@@ -256,18 +303,11 @@
   width: 100%;
 }
 
+/* nv-scientific-panel inherits all layers — no override needed */
 .graph-container.nv-scientific-panel {
-  background:
-    radial-gradient(
-      ellipse at 52% 46%,
-      color-mix(in srgb, var(--sys-color-accent-primary) 24%, var(--sys-color-background-base)) 0%,
-      var(--sys-color-background-base) 76%
-    ),
-    linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--sys-color-background-subtle) 84%, var(--sys-color-background-base)) 0%,
-      var(--sys-color-background-base) 100%
-    );
+  /* Intentionally left without background override:
+     All 5 observatory layers are defined on .graph-container above.
+     Any future panel-specific tweaks go here. */
 }
 
 .graph-svg {

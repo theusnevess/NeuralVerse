@@ -799,9 +799,69 @@
       const delay = immediate ? 0 : 180;
       showTimer = window.setTimeout(() => {
         const payload = payloadForTrigger(trigger);
-        const html = renderRichPreview(payload);
-        if (!html) return;
-        layer.innerHTML = html;
+        if (!payload) return;
+
+        // ----------------------------------------------------------------
+        // NV-500-UX-007E.2: Use React NvHoverPreview island when available.
+        // Falls back to innerHTML if React layer is not yet loaded.
+        // The JS layer retains full ownership of payload, position, actions.
+        // ----------------------------------------------------------------
+        const reactBridge = window.NeuralVerse?.react;
+        if (reactBridge) {
+          // Ensure a clean container node inside the layer
+          let previewContainer = layer.querySelector(".nv-react-hover-preview-root");
+          if (!previewContainer) {
+            layer.innerHTML = ""; // clear any stale HTML fallback content
+            previewContainer = document.createElement("div");
+            previewContainer.className = "nv-react-hover-preview-root";
+            layer.appendChild(previewContainer);
+          }
+
+          reactBridge.bridge.mount(
+            previewContainer,
+            reactBridge.islands.NvHoverPreview,
+            {
+              data: payload,
+              callbacks: {
+                onAction: (action, id) => {
+                  // Dispatch back to the existing JS action handler
+                  const syntheticEvent = { target: document.createElement("button") };
+                  syntheticEvent.target.setAttribute("data-preview-action", action);
+                  syntheticEvent.target.setAttribute("data-id", id);
+                  hide();
+                  if (action === "open-reference" || action === "follow-source" || action === "follow-target") {
+                    selectReference(id);
+                  } else if (action === "pin-reference") {
+                    if (pinnedReferences.includes(id)) {
+                      unpinReference(id);
+                    } else {
+                      pinReference(id);
+                    }
+                  } else if (action === "open-relationship") {
+                    const rel = getRelationshipById(id);
+                    if (rel) {
+                      selectedRelationship = rel;
+                      addTrailEvent("inspect_rel", `Inspected relationship "${rel.sourceReferenceId} \u27A4 ${rel.targetReferenceId}"`, { relationship: rel });
+                      switchInspectorTab("relationship");
+                      renderRelationshipInspector();
+                      saveWorkspaceState();
+                    }
+                  } else if (action === "rerun-query") {
+                    const searchInput = document.getElementById("playground-search-input");
+                    if (searchInput) searchInput.value = id;
+                    runSearch(id, true);
+                  }
+                },
+              },
+            }
+          );
+        } else {
+          // Vanilla-JS fallback (identical to original behaviour)
+          const html = renderRichPreview(payload);
+          if (!html) return;
+          layer.innerHTML = html;
+        }
+
         layer.classList.add("is-visible");
         lastShownAt = Date.now();
         window.requestAnimationFrame(() => position(trigger));
@@ -811,6 +871,11 @@
     const hide = () => {
       clearTimers();
       activeTrigger = null;
+      // Unmount React island if present
+      const previewContainer = layer.querySelector(".nv-react-hover-preview-root");
+      if (previewContainer && window.NeuralVerse?.react?.bridge) {
+        window.NeuralVerse.react.bridge.unmount(previewContainer);
+      }
       const preview = layer.querySelector(".nv-hover-preview");
       if (preview) preview.classList.add("is-closing");
       layer.classList.remove("is-visible");
