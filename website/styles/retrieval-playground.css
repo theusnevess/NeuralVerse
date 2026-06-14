@@ -238,12 +238,36 @@
 /* SVG Graph Visualization */
 .graph-container {
   position: relative;
-  background: var(--sys-color-background-base, #0b0b0b);
+  background:
+    radial-gradient(
+      ellipse at 52% 46%,
+      color-mix(in srgb, var(--sys-color-accent-primary) 24%, var(--sys-color-background-base)) 0%,
+      var(--sys-color-background-base) 76%
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--sys-color-background-subtle) 84%, var(--sys-color-background-base)) 0%,
+      var(--sys-color-background-base) 100%
+    );
   border: var(--sys-border-subtle) solid var(--sys-color-border-subtle);
   border-radius: var(--ref-radius-soft);
   overflow: hidden;
   height: 480px;
   width: 100%;
+}
+
+.graph-container.nv-scientific-panel {
+  background:
+    radial-gradient(
+      ellipse at 52% 46%,
+      color-mix(in srgb, var(--sys-color-accent-primary) 24%, var(--sys-color-background-base)) 0%,
+      var(--sys-color-background-base) 76%
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--sys-color-background-subtle) 84%, var(--sys-color-background-base)) 0%,
+      var(--sys-color-background-base) 100%
+    );
 }
 
 .graph-svg {
