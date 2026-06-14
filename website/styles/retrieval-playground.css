@@ -374,7 +374,7 @@
   fill: var(--sys-color-text-muted);
   font-family: var(--sys-font-body-family);
   font-size: 0.52rem;
-  font-weight: var(--ref-font-weight-medium);
+  font-weight: var(--ref-font-weight-regular);
   letter-spacing: 0.04em;
   opacity: 0.46;
   text-transform: uppercase;
@@ -388,7 +388,7 @@
   fill: var(--sys-color-text-secondary);
   font-family: var(--sys-font-body-family);
   font-size: 0.52rem;
-  font-weight: var(--ref-font-weight-medium);
+  font-weight: var(--ref-font-weight-regular);
   letter-spacing: 0.02em;
   opacity: 0.42;
 }
@@ -534,12 +534,12 @@
   fill: var(--sys-color-text-secondary);
   font-family: var(--sys-font-body-family);
   font-size: 0.54rem;
-  font-weight: var(--ref-font-weight-medium);
+  font-weight: var(--ref-font-weight-regular);
   letter-spacing: 0.02em;
   pointer-events: none;
   paint-order: stroke;
   stroke: var(--sys-color-background-base);
-  stroke-width: 2px;
+  stroke-width: 1.15px;
   stroke-linejoin: round;
   text-shadow: none;
   transition: fill 160ms ease, font-size 160ms ease, opacity 160ms ease;
@@ -570,7 +570,7 @@
 
 .graph-node.selected text {
   fill: var(--sys-color-text-primary);
-  font-weight: var(--ref-font-weight-semibold);
+  font-weight: var(--ref-font-weight-regular);
   font-size: 0.6rem;
 }
 
@@ -581,7 +581,7 @@
 
 .graph-node.neighbor-hop-1 text {
   fill: var(--sys-color-text-primary);
-  font-weight: var(--ref-font-weight-medium);
+  font-weight: var(--ref-font-weight-regular);
 }
 
 .graph-node.neighbor-hop-2 .graph-node-core {
@@ -679,11 +679,16 @@
   fill: var(--sys-color-text-muted);
   font-family: var(--sys-font-body-family);
   font-size: 0.52rem;
-  font-weight: var(--ref-font-weight-medium);
+  font-weight: var(--ref-font-weight-regular);
   paint-order: stroke;
   stroke: var(--sys-color-background-base);
-  stroke-width: 3px;
+  stroke-width: 1.5px;
   stroke-linejoin: round;
+}
+
+.graph-node.selected .graph-node-microviz-label {
+  font-weight: var(--ref-font-weight-regular);
+  stroke-width: 1.5px;
 }
 
 .graph-hover-preview {

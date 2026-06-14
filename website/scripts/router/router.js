@@ -82,18 +82,8 @@ class ViewController {
           </header>
           <div class="nv-panel">
             <div class="nv-empty-state">
-              <div class="nv-empty-state__visual" aria-hidden="true">
-                <svg viewBox="0 0 100 100" width="80" height="80" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display: block; margin: 0 auto;" aria-hidden="true">
-                  <circle cx="50" cy="50" r="35" stroke="rgba(138, 180, 248, 0.2)" stroke-width="1" stroke-dasharray="3 3"/>
-                  <circle cx="50" cy="50" r="20" stroke="rgba(138, 180, 248, 0.15)" stroke-width="1"/>
-                  <line x1="25" y1="25" x2="50" y2="50" stroke="var(--sys-color-accent-primary)" stroke-width="1.5"/>
-                  <line x1="75" y1="25" x2="50" y2="50" stroke="var(--sys-color-accent-primary)" stroke-width="1.5"/>
-                  <line x1="50" y1="50" x2="50" y2="85" stroke="var(--sys-color-accent-primary)" stroke-width="1.5"/>
-                  <circle cx="50" cy="50" r="5" fill="currentColor"/>
-                  <circle cx="25" cy="25" r="4" fill="var(--sys-color-accent-primary)"/>
-                  <circle cx="75" cy="25" r="4" fill="var(--sys-color-accent-primary)"/>
-                  <circle cx="50" cy="85" r="4" fill="var(--sys-color-accent-primary)"/>
-                </svg>
+              <div class="nv-empty-state__visual nv-brand-home-visual" aria-hidden="true">
+                <img src="assets/brand/neuralverse-lockup.png" alt="">
               </div>
               <h4 class="nv-empty-state__title">Welcome to NeuralVerse</h4>
               <p class="nv-empty-state__message">
