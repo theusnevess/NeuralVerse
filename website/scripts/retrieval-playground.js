@@ -26,6 +26,7 @@
   let graphLabelMode = "context";
   let graphFocusMode = "follow";
   let richPreviewController = null;
+  let contextMenuController = null;
 
   // Persistence State
   let pinnedReferences = [];
@@ -56,6 +57,12 @@
   function bindKeyboardActivation(element, handler) {
     if (!element || !handler) return;
     element.onkeydown = (e) => {
+      const isContextKey = e.key === "ContextMenu" || e.key === "F10" || (e.shiftKey && e.key === "F10");
+      if (isContextKey && contextMenuController?.open?.(element, e)) {
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+      }
       if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
         handler(e);
@@ -531,6 +538,7 @@
             ${actionSet.has("preview") ? `<button class="nv-button nv-discovery-panel__action" data-action="preview-discovery" data-id="${escapeHtml(reference.id)}" data-preview-id="${previewId}" data-variant="ghost" aria-expanded="false">Preview</button>` : ""}
             ${actionSet.has("open") ? `<button class="nv-button nv-discovery-panel__action" data-action="open-discovery" data-id="${escapeHtml(reference.id)}" data-variant="primary">Open</button>` : ""}
             ${actionSet.has("pin") ? `<button class="nv-button nv-discovery-panel__action" data-action="pin-discovery" data-id="${escapeHtml(reference.id)}" data-variant="secondary">${isPinned ? "Unpin" : "Pin"}</button>` : ""}
+            <button class="nv-button nv-discovery-panel__action nv-context-menu-trigger" data-context-menu-trigger data-ref-id="${escapeHtml(reference.id)}" data-variant="ghost" aria-label="More actions for ${escapeHtml(reference.title)}">More</button>
           </div>
         </div>
       </article>
@@ -969,6 +977,459 @@
     });
 
     return { hide, show };
+  }
+
+  function getContextActionIcon(actionId) {
+    const icons = {
+      open: "assets/icons/scientific/inspector/reference-details.svg",
+      preview: "assets/icons/scientific/search-discovery/research-lens.svg",
+      pin: "assets/icons/scientific/collections/pinned-references.svg",
+      unpin: "assets/icons/scientific/collections/pinned-references.svg",
+      compare: "assets/icons/scientific/knowledge-graph/semantic-path.svg",
+      "compile-evidence": "assets/icons/scientific/evidence/evidence-convergence.svg",
+      "follow-source": "assets/icons/scientific/knowledge-graph/citation-bridge.svg",
+      "follow-target": "assets/icons/scientific/knowledge-graph/citation-bridge.svg",
+      "open-relationship": "assets/icons/scientific/knowledge-graph/citation-bridge.svg",
+      "explore-neighborhood": "assets/icons/scientific/knowledge-graph/active-neighborhood.svg",
+      "rerun-query": "assets/icons/scientific/search-discovery/query-signal.svg",
+      "restore-trail-context": "assets/icons/scientific/memory-session/knowledge-trail.svg",
+      "copy-reference-id": "assets/icons/scientific/inspector/metadata-panel.svg",
+      "copy-query": "assets/icons/scientific/collections/saved-queries.svg",
+      "copy-relationship-id": "assets/icons/scientific/inspector/metadata-panel.svg"
+    };
+    return icons[actionId] || "assets/icons/scientific/inspector/reference-details.svg";
+  }
+
+  function contextAction(id, label, options = {}) {
+    return {
+      id,
+      label,
+      iconPath: getContextActionIcon(id),
+      variant: options.variant || "default",
+      disabled: Boolean(options.disabled),
+      shortcut: options.shortcut || ""
+    };
+  }
+
+  function getReferenceContextActions(refId, targetType) {
+    const isPinned = pinnedReferences.includes(refId);
+    const actions = [
+      contextAction("open", "Open", { variant: "primary" }),
+      contextAction("preview", "Preview"),
+      contextAction(isPinned ? "unpin" : "pin", isPinned ? "Unpin" : "Pin")
+    ];
+
+    if (targetType !== "recent-reference") {
+      actions.push(contextAction("compare", "Compare"));
+    }
+
+    actions.push(contextAction("compile-evidence", "Compile Evidence"));
+
+    if (["graph-node", "discovery-panel", "pinned-reference", "evidence-reference", "inspector-cross-link"].includes(targetType)) {
+      actions.push(contextAction("explore-neighborhood", "Explore Neighborhood"));
+    }
+
+    actions.push(contextAction("copy-reference-id", "Copy Reference ID"));
+    return actions;
+  }
+
+  function getTargetTypeForTrigger(trigger) {
+    if (!trigger) return "";
+    if (trigger.classList?.contains("graph-node")) return "graph-node";
+    if (trigger.classList?.contains("graph-link-target")) return "graph-edge";
+    if (trigger.classList?.contains("trail-event")) return "knowledge-trail-entry";
+    if (trigger.classList?.contains("clickable-lineage-node")) return "evidence-reference";
+    if (trigger.classList?.contains("clickable-evidence-rel")) return "relationship-chip";
+    if (trigger.classList?.contains("compact-action-card") && trigger.hasAttribute("data-rel-id")) return "relationship-chip";
+    if (trigger.hasAttribute("data-query")) return "saved-query";
+    if (trigger.closest?.("#memory-pinned-list")) return "pinned-reference";
+    if (trigger.closest?.("#memory-recent-list")) return "recent-reference";
+    if (trigger.closest?.("#evidence-compilation-container")) return "evidence-reference";
+    if (trigger.closest?.("#selected-reference-container") || trigger.closest?.("#selected-relationship-container")) return "inspector-cross-link";
+    if (trigger.classList?.contains("nv-discovery-panel") || trigger.closest?.(".nv-discovery-panel")) return "discovery-panel";
+    if (trigger.classList?.contains("result-card")) return "reference-card";
+    if (trigger.hasAttribute("data-ref-id") || trigger.hasAttribute("data-preview-ref") || trigger.hasAttribute("data-id")) return "reference-card";
+    return "";
+  }
+
+  function buildReferenceContextMenuPayload(trigger, targetType, point) {
+    const refId = trigger.getAttribute("data-preview-ref") || trigger.getAttribute("data-ref-id") || trigger.getAttribute("data-id") || trigger.closest?.("[data-ref-id]")?.getAttribute("data-ref-id");
+    const ref = adapter.getReferenceById(retrievalState, refId);
+    if (!ref) return null;
+    const relCount = getDiscoveryRelationshipCount(ref.id);
+    return {
+      id: `context-${targetType}-${ref.id}`,
+      targetType,
+      refId: ref.id,
+      title: ref.title,
+      subtitle: `${ref.type || "reference"} · ${getConnectivityLabel(relCount)}`,
+      metadata: [`${relCount} relationship${relCount === 1 ? "" : "s"}`, getClusterLabel(ref)].filter(Boolean),
+      iconPath: getDiscoveryIconPath({ ref, category: targetType }),
+      position: point,
+      actions: getReferenceContextActions(ref.id, targetType)
+    };
+  }
+
+  function buildRelationshipContextMenuPayload(trigger, targetType, point) {
+    const relId = trigger.getAttribute("data-rel-id") || trigger.getAttribute("data-id");
+    const rel = getRelationshipById(relId);
+    if (!rel) return null;
+    const source = adapter.getReferenceById(retrievalState, rel.sourceReferenceId);
+    const target = adapter.getReferenceById(retrievalState, rel.targetReferenceId);
+    const relType = String(rel.type || "related").replace(/_/g, " ");
+    return {
+      id: `context-${targetType}-${rel.id}`,
+      targetType,
+      relationshipId: rel.id,
+      sourceReferenceId: rel.sourceReferenceId,
+      targetReferenceId: rel.targetReferenceId,
+      title: relType,
+      subtitle: `${source?.title || rel.sourceReferenceId} → ${target?.title || rel.targetReferenceId}`,
+      metadata: [typeof rel.strength === "number" ? `Strength ${rel.strength}` : "", rel.context || ""].filter(Boolean).slice(0, 2),
+      iconPath: "assets/icons/scientific/knowledge-graph/citation-bridge.svg",
+      position: point,
+      actions: [
+        contextAction("preview", "Preview"),
+        contextAction("follow-source", "Follow Source"),
+        contextAction("follow-target", "Follow Target"),
+        contextAction("open-relationship", "Open Relationship", { variant: "primary" }),
+        contextAction("copy-relationship-id", "Copy Relationship ID")
+      ]
+    };
+  }
+
+  function buildQueryContextMenuPayload(trigger, point) {
+    const query = trigger.getAttribute("data-query");
+    if (!query) return null;
+    const results = adapter.searchReferences(retrievalState, query);
+    return {
+      id: `context-saved-query-${query}`,
+      targetType: "saved-query",
+      query,
+      title: query,
+      subtitle: "Saved query",
+      metadata: [`${results.length} current match${results.length === 1 ? "" : "es"}`],
+      iconPath: "assets/icons/scientific/collections/saved-queries.svg",
+      position: point,
+      actions: [
+        contextAction("rerun-query", "Rerun Query", { variant: "primary" }),
+        contextAction("preview", "Preview"),
+        contextAction("copy-query", "Copy Query")
+      ]
+    };
+  }
+
+  function buildTrailContextMenuPayload(trigger, point) {
+    const eventId = trigger.getAttribute("data-event-id");
+    const event = knowledgeTrail.find(item => item.id === eventId);
+    if (!event) return null;
+    const meta = event.meta || {};
+    const actions = [
+      contextAction("restore-trail-context", "Restore Trail Context", { variant: "primary" }),
+      contextAction("preview", "Preview")
+    ];
+    if (meta.referenceId) actions.push(contextAction("open", "Open Reference"));
+    if (meta.query) actions.push(contextAction("rerun-query", "Rerun Query"));
+    if (meta.referenceId) actions.push(contextAction("copy-reference-id", "Copy Reference ID"));
+    return {
+      id: `context-trail-${event.id}`,
+      targetType: "knowledge-trail-entry",
+      eventId: event.id,
+      refId: meta.referenceId || "",
+      query: meta.query || "",
+      title: event.label || event.type || "Research event",
+      subtitle: `Knowledge trail · ${event.timestamp || "session"}`,
+      metadata: [event.type, meta.referenceId ? `Reference ${meta.referenceId}` : "", meta.query ? `Query "${meta.query}"` : ""].filter(Boolean),
+      iconPath: "assets/icons/scientific/memory-session/knowledge-trail.svg",
+      position: point,
+      actions
+    };
+  }
+
+  function buildContextMenuPayload(trigger, point) {
+    if (!trigger) return null;
+    const targetType = getTargetTypeForTrigger(trigger);
+    if (!targetType) return null;
+    if (targetType === "graph-edge" || targetType === "relationship-chip") {
+      return buildRelationshipContextMenuPayload(trigger, targetType, point);
+    }
+    if (targetType === "saved-query") {
+      return buildQueryContextMenuPayload(trigger, point);
+    }
+    if (targetType === "knowledge-trail-entry") {
+      return buildTrailContextMenuPayload(trigger, point);
+    }
+    return buildReferenceContextMenuPayload(trigger, targetType, point);
+  }
+
+  function openRelationshipById(relId) {
+    const rel = getRelationshipById(relId);
+    if (!rel) return;
+    selectedRelationship = rel;
+    addTrailEvent("inspect_rel", `Inspected relationship "${rel.sourceReferenceId} ➔ ${rel.targetReferenceId}"`, { relationship: rel });
+    switchInspectorTab("relationship");
+    renderRelationshipInspector();
+    saveWorkspaceState();
+    if (activeExplorationMode === "graph") renderVisualGraph();
+  }
+
+  function compileEvidenceFromReference(refId) {
+    if (!refId) return;
+    selectedReferenceId = refId;
+    addToRecentlyViewed(refId);
+    currentCompiledEvidence = adapter.compileEvidenceFromReference(retrievalState, refId);
+    if (currentCompiledEvidence) addToTimeline(currentCompiledEvidence);
+    addTrailEvent("compile_ref", `Compiled evidence from "${refId}" via context menu`, { referenceId: refId });
+    switchInspectorTab("evidence");
+    renderEvidence(currentCompiledEvidence);
+    renderReferenceInspector();
+    renderRelationshipInspector();
+    renderMemoryLayer();
+    saveWorkspaceState();
+    syncSelectionHighlighting();
+    if (activeExplorationMode === "graph") renderVisualGraph();
+  }
+
+  function exploreReferenceNeighborhood(refId) {
+    if (!refId) return;
+    selectedReferenceId = refId;
+    selectedRelationship = null;
+    addToRecentlyViewed(refId);
+    shouldFitGraphViewport = true;
+    if (neighborhoodDepth === "full") {
+      neighborhoodDepth = "2-hop";
+      const depthSelect = document.getElementById("graph-hop-select");
+      if (depthSelect) depthSelect.value = neighborhoodDepth;
+    }
+    switchExplorationMode("graph");
+    switchInspectorTab("reference");
+    addTrailEvent("explore_neighborhood", `Explored neighborhood around "${refId}"`, { referenceId: refId });
+    saveWorkspaceState();
+    renderReferenceInspector();
+    renderRelationshipInspector();
+    renderVisualGraph();
+  }
+
+  function compareReference(refId) {
+    if (!refId) return;
+    selectedReferenceId = refId;
+    addToRecentlyViewed(refId);
+    switchExplorationMode("compare");
+    switchInspectorTab("reference");
+    addTrailEvent("compare_reference", `Opened compare view from "${refId}"`, { referenceId: refId });
+    saveWorkspaceState();
+    renderReferenceInspector();
+    renderCompareMode();
+  }
+
+  function restoreTrailContextById(eventId) {
+    const event = knowledgeTrail.find(item => item.id === eventId);
+    if (event) restoreTrailContext(event);
+  }
+
+  async function copyContextValue(value) {
+    if (!value) return;
+    try {
+      await navigator.clipboard?.writeText?.(value);
+    } catch (err) {
+      if (window.NV_DEBUG) console.warn("Clipboard copy unavailable:", err);
+    }
+  }
+
+  function executeContextMenuAction(actionId, payload, trigger) {
+    if (!actionId || !payload) return;
+    const refId = payload.refId;
+    const relId = payload.relationshipId;
+    if (richPreviewController) richPreviewController.hide();
+
+    if (actionId === "open") {
+      if (refId) selectReference(refId);
+    } else if (actionId === "preview") {
+      if (richPreviewController && trigger) {
+        window.setTimeout(() => richPreviewController.show(trigger, true), 0);
+      }
+    } else if (actionId === "pin") {
+      pinReference(refId);
+    } else if (actionId === "unpin") {
+      unpinReference(refId);
+    } else if (actionId === "compare") {
+      compareReference(refId);
+    } else if (actionId === "compile-evidence") {
+      compileEvidenceFromReference(refId);
+    } else if (actionId === "explore-neighborhood") {
+      exploreReferenceNeighborhood(refId);
+    } else if (actionId === "follow-source") {
+      selectReference(payload.sourceReferenceId);
+    } else if (actionId === "follow-target") {
+      selectReference(payload.targetReferenceId);
+    } else if (actionId === "open-relationship") {
+      openRelationshipById(relId);
+    } else if (actionId === "rerun-query") {
+      const query = payload.query;
+      const searchInput = document.getElementById("playground-search-input");
+      if (searchInput) searchInput.value = query;
+      runSearch(query, true);
+    } else if (actionId === "restore-trail-context") {
+      restoreTrailContextById(payload.eventId);
+    } else if (actionId === "copy-reference-id") {
+      copyContextValue(refId);
+    } else if (actionId === "copy-query") {
+      copyContextValue(payload.query);
+    } else if (actionId === "copy-relationship-id") {
+      copyContextValue(relId);
+    }
+  }
+
+  function createContextMenuController() {
+    let layer = document.querySelector(".nv-context-menu-layer");
+    if (!layer) {
+      layer = document.createElement("div");
+      layer.className = "nv-context-menu-layer";
+      document.body.appendChild(layer);
+    }
+
+    let root = layer.querySelector(".nv-react-context-menu-root");
+    if (!root) {
+      root = document.createElement("div");
+      root.className = "nv-react-context-menu-root";
+      layer.appendChild(root);
+    }
+
+    let activeTrigger = null;
+    let activePayload = null;
+
+    const getReactIsland = () => {
+      const reactLayer = window.NeuralVerse?.react;
+      if (!reactLayer?.bridge || !reactLayer?.islands?.NvContextMenu) return null;
+      return reactLayer;
+    };
+
+    const getTrigger = (target) => {
+      if (!target?.closest) return null;
+      return target.closest([
+        "[data-context-menu-trigger]",
+        ".graph-node[data-id]",
+        ".graph-link-target[data-rel-id]",
+        ".nv-discovery-panel[data-ref-id]",
+        ".nv-card[data-ref-id]",
+        ".memory-item[data-ref-id]",
+        ".clickable-lineage-node[data-id]",
+        "button[data-action='open-supporting'][data-id]",
+        ".nv-card[data-rel-id]",
+        ".clickable-evidence-rel[data-id]",
+        ".memory-item[data-query]",
+        ".trail-event[data-event-id]"
+      ].join(","));
+    };
+
+    const getPointForTrigger = (trigger, event) => {
+      if (event && Number.isFinite(event.clientX) && Number.isFinite(event.clientY)) {
+        return { x: event.clientX, y: event.clientY };
+      }
+      const rect = trigger.getBoundingClientRect();
+      return { x: rect.left + Math.min(rect.width, 36), y: rect.bottom + 8 };
+    };
+
+    const positionMenu = (point) => {
+      const menu = layer.querySelector(".nv-context-menu");
+      if (!menu) return;
+      const padding = 14;
+      const rect = menu.getBoundingClientRect();
+      let left = point.x;
+      let top = point.y;
+      if (left + rect.width > window.innerWidth - padding) left = point.x - rect.width;
+      if (top + rect.height > window.innerHeight - padding) top = point.y - rect.height;
+      left = Math.max(padding, Math.min(left, window.innerWidth - rect.width - padding));
+      top = Math.max(padding, Math.min(top, window.innerHeight - rect.height - padding));
+      menu.style.left = `${left}px`;
+      menu.style.top = `${top}px`;
+    };
+
+    const hide = (restoreFocus = false) => {
+      const triggerToRestore = activeTrigger;
+      const reactLayer = getReactIsland();
+      if (reactLayer) reactLayer.bridge.unmount(root);
+      layer.classList.remove("is-visible");
+      activeTrigger = null;
+      activePayload = null;
+      root.innerHTML = "";
+      if (restoreFocus && triggerToRestore?.focus) triggerToRestore.focus();
+    };
+
+    const open = (trigger, event) => {
+      const reactLayer = getReactIsland();
+      if (!reactLayer || !trigger) return false;
+      const point = getPointForTrigger(trigger, event);
+      const payload = buildContextMenuPayload(trigger, point);
+      if (!payload || !payload.actions?.length) return false;
+
+      if (richPreviewController) richPreviewController.hide();
+      activeTrigger = trigger;
+      activePayload = payload;
+      layer.classList.add("is-visible");
+      reactLayer.bridge.mount(root, reactLayer.islands.NvContextMenu, {
+        data: payload,
+        callbacks: {
+          onAction: (actionId, currentPayload) => {
+            const payloadToUse = currentPayload || activePayload;
+            const triggerToUse = activeTrigger;
+            hide(false);
+            executeContextMenuAction(actionId, payloadToUse, triggerToUse);
+          },
+          onClose: () => hide(true)
+        }
+      });
+      window.requestAnimationFrame(() => positionMenu(point));
+      return true;
+    };
+
+    document.addEventListener("contextmenu", (event) => {
+      const trigger = getTrigger(event.target);
+      if (!trigger) return;
+      if (open(trigger, event)) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+    });
+
+    document.addEventListener("click", (event) => {
+      const explicitTrigger = event.target.closest?.("[data-context-menu-trigger]");
+      if (explicitTrigger) {
+        if (open(explicitTrigger, event)) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        return;
+      }
+      if (layer.classList.contains("is-visible") && !layer.contains(event.target)) {
+        hide(false);
+      }
+    }, true);
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && layer.classList.contains("is-visible")) {
+        event.preventDefault();
+        event.stopPropagation();
+        hide(true);
+        return;
+      }
+      const isContextKey = event.key === "ContextMenu" || event.key === "F10" || (event.shiftKey && event.key === "F10");
+      if (!isContextKey) return;
+      const trigger = getTrigger(event.target);
+      if (!trigger) return;
+      if (open(trigger, event)) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+    }, true);
+
+    document.addEventListener("scroll", () => {
+      if (layer.classList.contains("is-visible")) hide(false);
+    }, true);
+    window.addEventListener("resize", () => hide(false));
+    window.addEventListener("hashchange", () => hide(false));
+
+    return { hide, open };
   }
 
   function clampGraphScale(scale) {
@@ -3364,7 +3825,11 @@
       g.onclick = activateNode;
 
       g.onkeydown = (e) => {
-        if (e.key === "Enter" || e.key === " ") {
+        const isContextKey = e.key === "ContextMenu" || e.key === "F10" || (e.shiftKey && e.key === "F10");
+        if (isContextKey && contextMenuController?.open?.(g, e)) {
+          e.preventDefault();
+          e.stopPropagation();
+        } else if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
           selectReference(ref.id);
         }
@@ -3783,7 +4248,11 @@
 
       // Keyboard navigation support
       card.onkeydown = (e) => {
-        if (e.key === "Enter" || e.key === " ") {
+        const isContextKey = e.key === "ContextMenu" || e.key === "F10" || (e.shiftKey && e.key === "F10");
+        if (isContextKey && contextMenuController?.open?.(card, e)) {
+          e.preventDefault();
+          e.stopPropagation();
+        } else if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
           const refId = card.getAttribute("data-ref-id");
           selectReference(refId);
@@ -4255,6 +4724,9 @@
       loadWorkspaceState();
       if (!richPreviewController) {
         richPreviewController = createRichHoverPreviewController();
+      }
+      if (!contextMenuController) {
+        contextMenuController = createContextMenuController();
       }
       if (!inspectorResizeHandlerBound) {
         window.addEventListener("resize", applyInspectorWidthStyles);

@@ -161,3 +161,53 @@ export function NvSectionHeader({ label, trailing, className = '', level = 3 }) 
     </Tag>
   )
 }
+
+// ---------------------------------------------------------------------------
+// NvMenuGroup — contextual menu grouping primitive
+// ---------------------------------------------------------------------------
+export function NvMenuGroup({ label, children, className = '' }) {
+  return (
+    <div className={`nv-context-menu__group ${className}`.trim()} role="group" aria-label={label}>
+      {label && <div className="nv-context-menu__group-label">{label}</div>}
+      <div className="nv-context-menu__items">{children}</div>
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
+// NvMenuItem — button-backed menu item with token-driven styling
+// ---------------------------------------------------------------------------
+export function NvMenuItem({ action, onAction }) {
+  if (!action) return null
+  const {
+    id,
+    label,
+    iconPath,
+    variant = 'default',
+    disabled = false,
+    shortcut = '',
+  } = action
+
+  return (
+    <button
+      className="nv-context-menu__item"
+      data-variant={variant}
+      data-action-id={id}
+      disabled={disabled}
+      aria-disabled={disabled ? 'true' : undefined}
+      role="menuitem"
+      type="button"
+      onClick={() => {
+        if (!disabled && typeof onAction === 'function') onAction(id)
+      }}
+    >
+      {iconPath && (
+        <span className="nv-context-menu__item-icon" aria-hidden="true">
+          <NvScientificIcon iconPath={iconPath} size="sm" />
+        </span>
+      )}
+      <span className="nv-context-menu__item-label">{label}</span>
+      {shortcut && <span className="nv-context-menu__item-shortcut">{shortcut}</span>}
+    </button>
+  )
+}
