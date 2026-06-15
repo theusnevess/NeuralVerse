@@ -27,6 +27,7 @@
   let graphFocusMode = "follow";
   let richPreviewController = null;
   let contextMenuController = null;
+  const discoveryPanelPayloads = new Map();
 
   // Persistence State
   let pinnedReferences = [];
@@ -509,8 +510,37 @@
     const panelIcon = iconPath || getDiscoveryIconPath({ ref: reference, reason: reasonLabel, category, isPinned });
     const previewId = `discovery-preview-${String(reference.id).replace(/[^a-zA-Z0-9_-]/g, "-")}`;
     const actionSet = new Set(actions);
+    const panelId = `discovery-card-${String(reference.id).replace(/[^a-zA-Z0-9_-]/g, "-")}-${variant}-${discoveryPanelPayloads.size}`;
+    const relevanceHtml = renderRelevanceMeter(relevance);
+    const densityHtml = renderRelationshipDensityMeter(relCount);
+    const connectivityHtml = renderConnectivityScore(relCount);
+    const clusterHtml = renderClusterIndicator(reference);
 
-    return `
+    discoveryPanelPayloads.set(panelId, {
+      variant,
+      reference: {
+        id: reference.id,
+        title: reference.title,
+        type: reference.type || "reference",
+        source: reference.source || "",
+        keywords: Array.isArray(reference.keywords) ? reference.keywords : []
+      },
+      reasonLabel,
+      description,
+      relationshipCount: relCount,
+      relevanceHtml,
+      densityHtml,
+      connectivityHtml,
+      clusterHtml,
+      microvisualization,
+      iconPath: panelIcon,
+      isPinned,
+      showDescription,
+      actions,
+      previewId
+    });
+
+    const fallbackHtml = `
       <article class="nv-discovery-panel nv-discovery-panel--${variant}" data-ref-id="${escapeHtml(reference.id)}" data-preview-ref="${escapeHtml(reference.id)}" tabindex="0" aria-labelledby="discovery-title-${escapeHtml(reference.id)}">
         <div class="nv-discovery-panel__icon">
           ${renderScientificIcon(panelIcon)}
@@ -524,10 +554,10 @@
           ${showDescription && variant !== "compact" && description ? `<p class="nv-discovery-panel__description">${escapeHtml(description)}</p>` : ""}
           <div class="nv-discovery-panel__metrics" aria-label="Recommendation metrics">
             <span>${relCount} relationships</span>
-            ${renderRelevanceMeter(relevance)}
-            ${renderRelationshipDensityMeter(relCount)}
-            ${renderConnectivityScore(relCount)}
-            ${renderClusterIndicator(reference)}
+            ${relevanceHtml}
+            ${densityHtml}
+            ${connectivityHtml}
+            ${clusterHtml}
           </div>
           ${microvisualization ? `<div class="nv-discovery-panel__microvisualization">${microvisualization}</div>` : ""}
           <div class="nv-discovery-panel__preview" id="${previewId}" hidden>
@@ -543,10 +573,49 @@
         </div>
       </article>
     `;
+
+    return `
+      <div class="nv-react-discovery-card-root" data-discovery-card-id="${escapeHtml(panelId)}">
+        ${fallbackHtml}
+      </div>
+    `;
+  }
+
+  function mountDiscoveryCards(container, options = {}) {
+    if (!container) return false;
+    const reactLayer = window.NeuralVerse?.react;
+    if (!reactLayer?.bridge || !reactLayer?.islands?.NvDiscoveryCard) return false;
+
+    container.querySelectorAll(".nv-react-discovery-card-root[data-discovery-card-id]").forEach(root => {
+      const panelId = root.getAttribute("data-discovery-card-id");
+      const payload = discoveryPanelPayloads.get(panelId);
+      if (!payload) return;
+      reactLayer.bridge.mount(root, reactLayer.islands.NvDiscoveryCard, {
+        data: payload,
+        callbacks: {
+          onAction: (action, id) => {
+            if (action === "open") {
+              addTrailEvent("discovery_open", `Opened discovery panel "${id}"`, { referenceId: id });
+              selectReference(id);
+            } else if (action === "pin") {
+              if (pinnedReferences.includes(id)) {
+                unpinReference(id);
+              } else {
+                pinReference(id);
+              }
+              if (typeof options.onPinChange === "function") options.onPinChange(id);
+            }
+          }
+        }
+      });
+    });
+    return true;
   }
 
   function bindDiscoveryPanelActions(container, options = {}) {
     if (!container) return;
+    if (mountDiscoveryCards(container, options)) return;
+
     container.querySelectorAll(".nv-discovery-panel").forEach(panel => {
       const refId = panel.getAttribute("data-ref-id");
       const openPanel = () => {

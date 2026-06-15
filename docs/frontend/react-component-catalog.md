@@ -12,13 +12,19 @@ All shared React island presentation primitives live in `react-build/src/compone
 |---|---|---|---|
 | `NvScientificIcon` | `react-build/src/components.jsx` | ✅ v1 | CSS-mask scientific icon |
 | `NvButton` | `react-build/src/components.jsx` | ✅ v1 | Token-driven button |
+| `NvActionGroup` | `react-build/src/components.jsx` | ✅ v1 | Token-driven action grouping |
 | `NvBadge` | `react-build/src/components.jsx` | ✅ v1 | Status badge |
 | `NvChip` | `react-build/src/components.jsx` | ✅ v1 | Inline label chip |
+| `NvContributionBar` | `react-build/src/components.jsx` | ✅ v1 | Qualitative contribution microvisualization |
+| `NvDiscoveryCard` | `react-build/src/NvDiscoveryCard.jsx` | ✅ v1 | Discovery Panel island card |
+| `NvInspectorSection` | `react-build/src/components.jsx` | ✅ v1 | Inspector section wrapper |
+| `NvMemoryCard` | `react-build/src/components.jsx` | ✅ v1 | Memory-layer card primitive |
 | `NvMetric` | `react-build/src/components.jsx` | ✅ v1 | Single metric display |
 | `NvMicroViz` | `react-build/src/components.jsx` | ✅ v1 | Pre-rendered HTML wrapper |
 | `NvCardShell` | `react-build/src/components.jsx` | ✅ v1 | Card container |
 | `NvEmptyState` | `react-build/src/components.jsx` | ✅ v1 | Empty state block |
 | `NvSectionHeader` | `react-build/src/components.jsx` | ✅ v1 | Section title with line |
+| `NvStatusPill` | `react-build/src/components.jsx` | ✅ v1 | Compact status label |
 
 ---
 
@@ -148,6 +154,33 @@ NvSectionHeader({
   level: 4,
 })
 ```
+
+---
+
+## NvDiscoveryCard
+
+Production island for Retrieval Workspace Discovery Panels.
+
+```javascript
+bridge.mount(root, NvDiscoveryCard, {
+  data: {
+    reference,
+    reasonLabel,
+    relationshipCount,
+    relevanceHtml,
+    densityHtml,
+    connectivityHtml,
+    clusterHtml,
+    actions: ["preview", "open", "pin"],
+  },
+  callbacks: {
+    onAction(action, referenceId) {},
+  },
+})
+```
+
+React owns card layout and local preview disclosure. The JS layer owns opening,
+pinning, context menus, hover previews, persistence, and Retrieval state.
 
 ---
 

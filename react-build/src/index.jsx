@@ -14,24 +14,30 @@
 import { mount, update, unmount } from './bridge.js'
 import { NvHoverPreview } from './NvHoverPreview.jsx'
 import { NvContextMenu } from './NvContextMenu.jsx'
+import { NvDiscoveryCard } from './NvDiscoveryCard.jsx'
 
 // Shared component exports (available for future host-page usage)
 export {
   NvButton,
+  NvActionGroup,
   NvBadge,
   NvChip,
+  NvContributionBar,
   NvMetric,
   NvMicroViz,
   NvCardShell,
   NvEmptyState,
+  NvInspectorSection,
+  NvMemoryCard,
   NvMenuGroup,
   NvMenuItem,
   NvSectionHeader,
   NvScientificIcon,
+  NvStatusPill,
 } from './components.jsx'
 
 // Island exports
-export { NvHoverPreview, NvContextMenu }
+export { NvHoverPreview, NvContextMenu, NvDiscoveryCard }
 
 // Bridge exports
 export { mount, update, unmount }
@@ -40,7 +46,7 @@ export { mount, update, unmount }
 window.NeuralVerse = window.NeuralVerse || {}
 window.NeuralVerse.react = {
   bridge: { mount, update, unmount },
-  islands: { NvHoverPreview, NvContextMenu },
+  islands: { NvHoverPreview, NvContextMenu, NvDiscoveryCard },
 }
 
 if (window.NV_DEBUG) {

@@ -1099,6 +1099,112 @@
   min-block-size: unset;
 }
 
+.nv-action-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ref-space-200);
+}
+
+.nv-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ref-space-100);
+}
+
+.nv-inspector-section {
+  display: grid;
+  gap: var(--ref-space-300);
+  padding-block: var(--ref-space-300);
+  border-block-end: var(--sys-border-subtle) solid var(--sys-color-border-subtle);
+}
+
+.nv-inspector-section__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--ref-space-300);
+  min-inline-size: 0;
+}
+
+.nv-inspector-section__heading {
+  min-inline-size: 0;
+}
+
+.nv-inspector-section__title {
+  margin: 0;
+  color: var(--sys-color-text-primary);
+  font-size: var(--sys-font-body-size);
+  font-weight: var(--ref-font-weight-semibold);
+  line-height: var(--ref-font-line-height-tight);
+}
+
+.nv-inspector-section__subtitle {
+  margin: var(--ref-space-100) 0 0;
+  color: var(--sys-color-text-secondary);
+  font-size: var(--sys-font-caption-size);
+  line-height: var(--sys-line-height-tight);
+}
+
+.nv-inspector-section__body {
+  min-inline-size: 0;
+}
+
+.nv-memory-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--ref-space-200);
+  padding: var(--ref-space-300);
+  border: var(--sys-border-subtle) solid var(--sys-color-border-subtle);
+  border-radius: var(--ref-radius-soft);
+  background: var(--retrieval-surface-quiet);
+  color: var(--sys-color-text-secondary);
+}
+
+.nv-memory-card[role="button"] {
+  cursor: pointer;
+}
+
+.nv-memory-card[role="button"]:hover,
+.nv-memory-card[role="button"]:focus-visible {
+  border-color: var(--retrieval-border-glow);
+  outline: var(--sys-focus-ring-width) solid var(--sys-color-focus-ring);
+  outline-offset: var(--sys-focus-ring-offset);
+}
+
+.nv-memory-card__icon {
+  color: var(--sys-color-accent-primary);
+}
+
+.nv-memory-card__body {
+  min-inline-size: 0;
+}
+
+.nv-memory-card__title {
+  overflow: hidden;
+  color: var(--sys-color-text-primary);
+  font-size: var(--ref-font-size-300);
+  font-weight: var(--ref-font-weight-semibold);
+  line-height: var(--ref-font-line-height-tight);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nv-memory-card__subtitle,
+.nv-memory-card__meta {
+  color: var(--sys-color-text-muted);
+  font-size: var(--sys-font-caption-size);
+  line-height: var(--sys-line-height-tight);
+}
+
+.nv-memory-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ref-space-100);
+  margin-block-start: var(--ref-space-100);
+}
+
 @media (max-width: 640px) {
   .nv-context-menu {
     inline-size: min(300px, calc(100vw - 28px));

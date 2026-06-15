@@ -88,7 +88,8 @@ bridge.unmount(container)
 | Island | Container selector | Status |
 |---|---|---|
 | `NvHoverPreview` | `.nv-hover-preview-layer .nv-react-hover-preview-root` | ✅ Active |
-| `NvDiscoveryCard` | TBD | ⏳ Phase 2 |
+| `NvContextMenu` | `.nv-context-menu-layer .nv-react-context-menu-root` | ✅ Active |
+| `NvDiscoveryCard` | `.nv-react-discovery-card-root[data-discovery-card-id]` | ✅ Active |
 
 ---
 
