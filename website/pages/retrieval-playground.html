@@ -11,15 +11,15 @@
     <div class="nv-cluster nv-cluster--gap-sm" style="align-items: center;">
       <span id="nv-diagnostics-badge" class="nv-badge" data-variant="info" style="font-size: 0.65rem;">JS Ready</span>
       <span id="session-restored-indicator" class="nv-badge" data-variant="success" style="opacity: 0; transition: opacity 0.5s ease; font-size: 0.65rem;">Session Restored</span>
-      <button id="playground-focus-button" class="nv-button" data-variant="secondary" style="font-size: 0.75rem; padding: 4px 10px; min-block-size: unset;" aria-label="Toggle focus mode">Focus Mode</button>
-      <button id="playground-preferences-button" class="nv-button" data-variant="secondary" style="font-size: 0.75rem; padding: 4px 10px; min-block-size: unset;" aria-label="Toggle workspace preferences">⚙ Prefs</button>
+      <button id="playground-focus-button" class="nv-button" data-variant="secondary" style="font-size: 0.75rem; padding: 4px 10px; min-block-size: unset;" aria-label="Toggle focus mode" aria-pressed="false">Focus Mode</button>
+      <button id="playground-preferences-button" class="nv-button" data-variant="secondary" style="font-size: 0.75rem; padding: 4px 10px; min-block-size: unset;" aria-label="Toggle workspace preferences" aria-controls="preferences-panel" aria-expanded="false">⚙ Prefs</button>
       <button id="playground-clear-session-button" class="nv-button" data-variant="secondary" style="font-size: 0.75rem; padding: 4px 10px; min-block-size: unset;" aria-label="Clear active session data">Clear Session</button>
     </div>
   </header>
 
   <!-- Preferences Panel -->
-  <div id="preferences-panel" class="nv-panel nv-stack nv-stack--gap-sm" style="display: none; background-color: var(--sys-color-surface-container-high); border: 1px solid var(--sys-color-border-subtle); margin-bottom: 2px;">
-    <h3 style="margin: 0; font-size: var(--sys-font-body-size);">Workspace Preferences</h3>
+  <div id="preferences-panel" class="nv-panel nv-stack nv-stack--gap-sm" role="region" aria-labelledby="preferences-panel-title" style="display: none; background-color: var(--sys-color-surface-container-high); border: 1px solid var(--sys-color-border-subtle); margin-bottom: 2px;">
+    <h3 id="preferences-panel-title" style="margin: 0; font-size: var(--sys-font-body-size);">Workspace Preferences</h3>
     <div class="nv-grid nv-grid--cols-3" style="gap: var(--sys-space-stack-sm);">
       <div class="nv-stack nv-stack--gap-xs">
         <label for="pref-default-mode" style="font-size: 0.65rem; color: var(--sys-color-text-secondary);">Default Mode:</label>

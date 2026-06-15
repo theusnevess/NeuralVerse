@@ -1745,12 +1745,14 @@
       if (focusBtn) {
         focusBtn.textContent = "Exit Focus";
         focusBtn.setAttribute("data-variant", "primary");
+        focusBtn.setAttribute("aria-pressed", "true");
       }
     } else {
       body.classList.remove("nv-focus-mode");
       if (focusBtn) {
         focusBtn.textContent = "Focus Mode";
         focusBtn.setAttribute("data-variant", "secondary");
+        focusBtn.setAttribute("aria-pressed", "false");
       }
     }
   }
@@ -1873,7 +1875,7 @@
               ${pinnedReferences.slice(0, 3).map(id => {
                 const ref = retrievalState.references.find(r => r.id === id);
                 return ref ? `
-                  <button class="nv-card compact-action-card" onclick="window.selectReference('${ref.id}')">
+                  <button class="nv-card compact-action-card" data-empty-ref="${escapeHtml(ref.id)}">
                     ${escapeHtml(ref.title)}
                   </button>
                 ` : "";
@@ -1890,7 +1892,7 @@
             <h4 style="margin: 0; font-size: 0.7rem; color: var(--sys-color-text-secondary);">Saved Queries</h4>
             <div class="nv-stack nv-stack--gap-xs">
               ${savedQueries.slice(0, 3).map(q => `
-                <button class="nv-button" data-variant="secondary" style="text-align: left; padding: 4px 8px; font-size: 0.65rem; width: 100%; min-block-size: unset;" onclick="window.runSearch('${q.replace(/'/g, "\\'")}', true)">
+                <button class="nv-button" data-empty-query="${escapeHtml(q)}" data-variant="secondary" style="text-align: left; padding: 4px 8px; font-size: 0.65rem; width: 100%; min-block-size: unset;">
                   ${escapeHtml(q)}
                 </button>
               `).join("")}
@@ -1908,7 +1910,7 @@
               ${recentReferences.slice(0, 3).map(id => {
                 const ref = retrievalState.references.find(r => r.id === id);
                 return ref ? `
-                  <button class="nv-card compact-action-card" onclick="window.selectReference('${ref.id}')">
+                  <button class="nv-card compact-action-card" data-empty-ref="${escapeHtml(ref.id)}">
                     ${escapeHtml(ref.title)}
                   </button>
                 ` : "";
@@ -1934,17 +1936,44 @@
                  title: "Start a knowledge search",
                  explanation: "Search references, models, papers, or research notes to begin exploration.",
                  primaryAction: {
+                   id: "smart-empty-focus-search",
                    label: "Focus Search",
-                   onclick: "document.getElementById('playground-search-input').focus()"
+                   onclick: ""
                  },
                  secondaryAction: savedQueries.length > 0 ? {
+                   id: "smart-empty-run-saved-query",
                    label: "Run Saved Query",
-                   onclick: `window.runSearch('${savedQueries[0].replace(/'/g, "\\'")}', true)`
+                   onclick: ""
                  } : null
                })}
           </div>
         </div>
       `;
+
+      resultsContainer.querySelectorAll("[data-empty-ref]").forEach(button => {
+        button.onclick = () => selectReference(button.getAttribute("data-empty-ref"));
+      });
+      resultsContainer.querySelectorAll("[data-empty-query]").forEach(button => {
+        button.onclick = () => {
+          const query = button.getAttribute("data-empty-query");
+          const searchInput = document.getElementById("playground-search-input");
+          if (searchInput) searchInput.value = query;
+          runSearch(query, true);
+        };
+      });
+      const focusSearchButton = document.getElementById("smart-empty-focus-search");
+      if (focusSearchButton) {
+        focusSearchButton.onclick = () => document.getElementById("playground-search-input")?.focus();
+      }
+      const runSavedQueryButton = document.getElementById("smart-empty-run-saved-query");
+      if (runSavedQueryButton) {
+        runSavedQueryButton.onclick = () => {
+          const query = savedQueries[0];
+          const searchInput = document.getElementById("playground-search-input");
+          if (searchInput) searchInput.value = query;
+          runSearch(query, true);
+        };
+      }
     }
   }
 
@@ -4697,12 +4726,17 @@
     const prefsBtn = document.getElementById("playground-preferences-button");
     const prefsPanel = document.getElementById("preferences-panel");
     if (prefsBtn && prefsPanel) {
+      const setPreferencesOpen = (isOpen) => {
+        prefsPanel.style.display = isOpen ? "flex" : "none";
+        prefsBtn.setAttribute("aria-expanded", String(isOpen));
+      };
+      setPreferencesOpen(prefsPanel.style.display !== "none");
       prefsBtn.onclick = () => {
-        prefsPanel.style.display = prefsPanel.style.display === "none" ? "flex" : "none";
+        setPreferencesOpen(prefsPanel.style.display === "none");
       };
       prefsPanel.onkeydown = (e) => {
         if (e.key === "Escape") {
-          prefsPanel.style.display = "none";
+          setPreferencesOpen(false);
           prefsBtn.focus();
         }
       };
@@ -4712,7 +4746,10 @@
           const trigger = document.getElementById("playground-preferences-button");
           if (!panel || e.key !== "Escape" || panel.style.display === "none") return;
           panel.style.display = "none";
-          if (trigger) trigger.focus();
+          if (trigger) {
+            trigger.setAttribute("aria-expanded", "false");
+            trigger.focus();
+          }
         });
         preferencesEscapeHandlerBound = true;
       }

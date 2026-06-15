@@ -12,7 +12,23 @@ function getRouteType(parts) {
   if (parts[0] === "modules") return "module";
   if (parts[0] === "content") return "content";
   if (parts[0] === "workspace") return "workspace";
+  if (parts[0] === "retrieval-playground") return "retrieval-playground";
+  if (parts[0] === "settings") return "settings";
   return "unknown";
+}
+
+function getRouteLabel(routeType, parts = []) {
+  const labels = {
+    home: "Home",
+    learning: "Learning Paths",
+    module: "Modules",
+    content: "Content",
+    workspace: "Workspace",
+    "retrieval-playground": "Retrieval Playground",
+    settings: "Settings",
+    unknown: "Not Found",
+  };
+  return labels[routeType] || parts[0] || "Not Found";
 }
 
 function createCrumb(label, href, isCurrent = false) {
@@ -50,7 +66,7 @@ export function createBreadcrumbsController(options = {}) {
       link.textContent = crumb.label;
 
       if (crumb.isCurrent) {
-        link.setAttribute("aria-current", "page");
+        link.setAttribute("aria-current", "location");
         link.setAttribute("aria-label", `${crumb.label}, current location`);
       } else {
         link.setAttribute("aria-label", `Go to ${crumb.label}`);
@@ -125,7 +141,8 @@ export function createBreadcrumbsController(options = {}) {
     }
 
     if (!path && routeType !== "home") {
-      crumbs.push(createCrumb(routeType, `#/${routeType}`, true));
+      const href = routeType === "unknown" ? `#/${parts.join("/")}` : `#/${routeType}`;
+      crumbs.push(createCrumb(getRouteLabel(routeType, parts), href, true));
     }
 
     renderBreadcrumbs(crumbs);
