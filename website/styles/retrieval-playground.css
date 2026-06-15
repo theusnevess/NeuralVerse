@@ -2806,3 +2806,169 @@ body.nv-focus-mode * {
   opacity: 0.45;
   pointer-events: none;
 }
+
+/* =========================================================================
+   NV-500-UX-007E.5 — Inspector & Memory React Island Styles
+   All rules extend existing token classes. Zero hardcoded colors or spacing.
+   ========================================================================= */
+
+/* Inspector header — React island variant */
+.nv-inspector-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sys-space-stack-xs);
+}
+
+.nv-inspector-header__title {
+  margin: 0;
+  font-size: var(--sys-font-body-size);
+  color: var(--sys-color-text-primary);
+  font-weight: var(--ref-font-weight-semibold);
+  line-height: 1.35;
+}
+
+.nv-inspector-header__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--sys-space-inline-xs);
+  flex-wrap: wrap;
+  font-size: var(--sys-font-caption-size);
+  color: var(--sys-color-text-secondary);
+}
+
+.nv-inspector-header__meta-item {
+  font-size: var(--sys-font-caption-size);
+}
+
+/* Inspector source link */
+.nv-inspector-source-link {
+  color: var(--sys-color-accent-primary);
+  text-decoration: none;
+  font-size: var(--sys-font-caption-size);
+}
+
+.nv-inspector-source-link:hover {
+  text-decoration: underline;
+}
+
+/* Inspector details summary */
+.nv-inspector-details-summary {
+  font-size: 0.7rem;
+  font-weight: var(--ref-font-weight-bold);
+  cursor: pointer;
+  color: var(--sys-color-text-secondary);
+}
+
+/* Inspector keyword badge */
+.nv-inspector-keyword-badge {
+  font-size: 0.6rem;
+}
+
+/* Inspector confidence badge */
+.nv-inspector-confidence-badge {
+  font-weight: var(--ref-font-weight-semibold);
+}
+
+/* Inspector action bar */
+.nv-inspector-action-bar {
+  display: flex;
+  gap: var(--sys-space-inline-xs);
+  flex-wrap: wrap;
+}
+
+/* Relationship inspector buttons */
+.nv-inspector-rel-btn {
+  flex: 1;
+  padding: 4px 8px;
+  font-size: 0.65rem;
+  min-block-size: unset;
+}
+
+/* Supporting reference row */
+.nv-supporting-ref-row {
+  padding: var(--sys-space-inset-xs);
+  border: var(--sys-border-subtle) solid var(--sys-color-border-subtle);
+  border-radius: var(--ref-radius-soft);
+  background-color: var(--sys-color-surface-container-lowest);
+  transition: background-color 120ms ease;
+}
+
+.nv-supporting-ref-row:hover {
+  background-color: var(--sys-color-surface-container-low);
+}
+
+.nv-supporting-ref-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+/* Memory column header — override only when inside React island */
+.memory-column .nv-cluster {
+  align-items: center;
+}
+
+/* Pinned / Recent / Query memory cards — React island variants */
+.nv-memory-pinned-card,
+.nv-memory-recent-card,
+.nv-memory-query-card {
+  padding: var(--sys-space-inset-xs);
+  cursor: default;
+  border: var(--sys-border-subtle) solid var(--sys-color-border-subtle);
+  border-radius: var(--ref-radius-soft);
+  background-color: var(--sys-color-surface-container-low);
+  transition: background-color 120ms ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.nv-memory-pinned-card:hover,
+.nv-memory-recent-card:hover,
+.nv-memory-query-card:hover {
+  background-color: var(--sys-color-surface-container-high);
+}
+
+.nv-memory-item-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nv-memory-query-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  min-width: 0;
+}
+
+/* Memory panel list item reset for React island */
+.memory-panel-item {
+  list-style: none;
+  padding: 0;
+  margin-bottom: var(--sys-space-stack-xs);
+}
+
+.memory-panel-item:last-child {
+  margin-bottom: 0;
+}
+
+/* NvContributionBar inside supporting ref rows */
+.nv-supporting-ref-row .nv-contribution-bar {
+  margin-top: var(--sys-space-stack-xs);
+  display: flex;
+  align-items: center;
+  gap: var(--sys-space-inline-xs);
+}
+
+/* Reduced motion overrides */
+@media (prefers-reduced-motion: reduce) {
+  .nv-memory-pinned-card,
+  .nv-memory-recent-card,
+  .nv-memory-query-card,
+  .nv-supporting-ref-row {
+    transition: none;
+  }
+}

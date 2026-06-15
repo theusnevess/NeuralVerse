@@ -40,6 +40,62 @@
   let preferencesEscapeHandlerBound = false;
   let inspectorResizeHandlerBound = false;
 
+  // ---------------------------------------------------------------------------
+  // React Island Bridge Helpers — NV-500-UX-007E.5
+  // Safe wrappers: if React bundle is unavailable the fallback HTML remains.
+  // ---------------------------------------------------------------------------
+  function getNvReactBridge() {
+    return window.NeuralVerse?.react?.bridge ?? null;
+  }
+
+  function getNvReactIsland(name) {
+    return window.NeuralVerse?.react?.islands?.[name] ?? null;
+  }
+
+  /**
+   * Attempt to mount or update a React island inside `container`.
+   * If the bridge or island is unavailable, does nothing (fallback HTML persists).
+   */
+  function tryMountReactIsland(container, islandName, data, callbacks) {
+    if (!container) return false;
+    const bridge = getNvReactBridge();
+    const Island = getNvReactIsland(islandName);
+    if (!bridge || !Island) return false;
+    try {
+      bridge.mount(container, Island, { data, callbacks });
+      return true;
+    } catch (err) {
+      if (window.NV_DEBUG) console.warn(`[NvIsland] mount failed for ${islandName}:`, err);
+      return false;
+    }
+  }
+
+  /**
+   * Update props on an already-mounted React island.
+   * Falls back to a full remount if update fails.
+   */
+  function tryUpdateReactIsland(container, islandName, data, callbacks) {
+    if (!container) return false;
+    const bridge = getNvReactBridge();
+    const Island = getNvReactIsland(islandName);
+    if (!bridge || !Island) return false;
+    try {
+      bridge.update(container, Island, { data, callbacks });
+      return true;
+    } catch (err) {
+      if (window.NV_DEBUG) console.warn(`[NvIsland] update failed for ${islandName}:`, err);
+      return false;
+    }
+  }
+
+  /** Unmount a React island from a container (safe no-op if not mounted). */
+  function tryUnmountReactIsland(container) {
+    if (!container) return;
+    const bridge = getNvReactBridge();
+    if (!bridge) return;
+    try { bridge.unmount(container); } catch (_) {}
+  }
+
   function escapeHtml(value) {
     return String(value ?? "")
       .replace(/&/g, "&amp;")
@@ -2562,6 +2618,76 @@
 
     renderDiscoverySpace();
     renderRelationshipNeighborhood();
+
+    // ── React Island Enhancement ──────────────────────────────────────────
+    // Attempt to upgrade the reference inspector container with React.
+    // Fallback HTML rendered above persists if React is unavailable.
+    const rels = adapter.getRelationshipsForReference(retrievalState, ref.id);
+    const isPinned = pinnedReferences.includes(ref.id);
+    let sourceLabel = '';
+    try {
+      sourceLabel = ref.source.startsWith('local://')
+        ? ref.source.replace('local://', '')
+        : new URL(ref.source).hostname;
+    } catch (_) {
+      sourceLabel = ref.source;
+    }
+
+    const inspectorPayload = {
+      mode: 'reference',
+      reference: {
+        id: ref.id,
+        title: ref.title,
+        type: ref.type,
+        source: ref.source,
+        sourceLabel,
+        relationshipCount: rels.length,
+        summary: ref.keywords.slice(0, 4).length
+          ? `Useful for ${ref.keywords.slice(0, 4).join(', ')}.`
+          : 'No keywords available.',
+        isPinned,
+        keywords: ref.keywords || [],
+        connections: rels.map(rel => {
+          const isOutgoing = rel.sourceReferenceId === ref.id;
+          const targetId = isOutgoing ? rel.targetReferenceId : rel.sourceReferenceId;
+          const targetRef = adapter.getReferenceById(retrievalState, targetId);
+          return {
+            relId: rel.id,
+            type: rel.type,
+            direction: isOutgoing ? 'to' : 'from',
+            targetTitle: targetRef ? targetRef.title : targetId,
+          };
+        }),
+        metrics: [
+          renderRelationshipDensityMeter(rels.length),
+          renderConnectivityScore(rels.length),
+          renderClusterIndicator(ref),
+        ],
+        minimapHtml: renderLocalConstellationMinimap(ref, rels),
+      },
+    };
+
+    const inspectorCallbacks = {
+      onOpenReference: (id) => selectReference(id),
+      onPinReference: (id) => pinReference(id),
+      onUnpinReference: (id) => unpinReference(id),
+      onCompileEvidence: () => {
+        if (compileRefBtn) compileRefBtn.click();
+      },
+      onFollowRelationship: (relId) => {
+        const rel = retrievalState.relationships.find(r => r.id === relId);
+        if (rel) {
+          selectedRelationship = rel;
+          addTrailEvent('inspect_rel', `Inspected relationship "${rel.sourceReferenceId} ➔ ${rel.targetReferenceId}"`, { relationship: rel });
+          switchInspectorTab('relationship');
+          renderRelationshipInspector();
+        }
+      },
+      onOpenNeighbor: (id) => selectReference(id),
+    };
+
+    tryMountReactIsland(container, 'NvInspectorPanel', inspectorPayload, inspectorCallbacks);
+    // ── End React Island Enhancement ──────────────────────────────────────
   }
 
   // DOM Rendering: contextual discovery recommendations.
@@ -2801,6 +2927,31 @@
         selectReference(rel.targetReferenceId);
       };
     }
+
+    // ── React Island Enhancement ──────────────────────────────────────────
+    const relPayload = {
+      mode: 'relationship',
+      relationship: {
+        id: rel.id,
+        type: rel.type,
+        strength: rel.strength,
+        sourceReferenceId: rel.sourceReferenceId,
+        targetReferenceId: rel.targetReferenceId,
+        context: rel.context || '',
+      },
+    };
+    const relCallbacks = {
+      onFollowSource: (srcId) => {
+        addTrailEvent('Followed relationship source', `Followed source "${srcId}" from edge "${rel.id}"`, { referenceId: srcId });
+        selectReference(srcId);
+      },
+      onFollowTarget: (tgtId) => {
+        addTrailEvent('Followed relationship target', `Followed target "${tgtId}" from edge "${rel.id}"`, { referenceId: tgtId });
+        selectReference(tgtId);
+      },
+    };
+    tryMountReactIsland(container, 'NvInspectorPanel', relPayload, relCallbacks);
+    // ── End React Island Enhancement ──────────────────────────────────────
   }
 
   // Add an evidence compilation to the timeline history
@@ -3141,6 +3292,54 @@
     }
 
     renderTimelineHistory(document.getElementById("evidence-timeline-active-container"));
+
+    // ── React Island Enhancement ──────────────────────────────────────────
+    // NvContributionBar levels come from existing qualitative assignment in
+    // allContributing; this is read-only — no new numeric values invented.
+    const allContributing = [
+      ...(comp.matchedReferences || []).map(r => ({ ref: r, role: 'Primary Match' })),
+      ...(comp.relatedReferences || []).map(r => ({ ref: r, role: 'Supporting Context' })),
+    ];
+
+    let confLabel = 'Limited Support';
+    let confExplanation = 'Only limited supporting context was identified.';
+    let confVariant = 'error';
+    if (comp.confidence === 'high') {
+      confLabel = 'High Support'; confExplanation = 'Supported by multiple directly connected references.'; confVariant = 'success';
+    } else if (comp.confidence === 'medium') {
+      confLabel = 'Moderate Support'; confExplanation = 'Supported by relevant evidence with moderate graph coverage.'; confVariant = 'warning';
+    }
+
+    const evidencePayload = {
+      mode: 'evidence',
+      evidence: {
+        mode: comp.mode || 'query',
+        confidence: comp.confidence,
+        confidenceLabel: confLabel,
+        confidenceExplanation: confExplanation,
+        confidenceVariant: confVariant,
+        summary: comp.summary || '',
+        confidenceGaugeHtml: renderConfidenceGauge(comp.confidence),
+        coverageStripHtml: renderEvidenceCoverageStrip(allContributing.length),
+        supportingRefs: allContributing.map(item => ({
+          ref: { id: item.ref.id, title: item.ref.title, type: item.ref.type },
+          role: item.role,
+          contributionLevel: item.role === 'Primary Match' ? 4 : 2,
+          contributionLabel: item.role === 'Primary Match' ? 'Primary contribution' : 'Supporting contribution',
+          reasonLabel: item.role === 'Primary Match' ? 'Supports current evidence' : 'Same knowledge neighborhood',
+          relevanceLabel: item.role === 'Primary Match' ? 'High relevance' : 'Moderate relevance',
+          connectionCount: getDiscoveryRelationshipCount(item.ref.id),
+        })),
+      },
+    };
+    const evidenceCallbacks = {
+      onOpenReference: (id) => {
+        addTrailEvent('supporting_ref_opened', `Opened supporting reference "${id}"`, { referenceId: id });
+        selectReference(id);
+      },
+    };
+    tryMountReactIsland(container, 'NvInspectorPanel', evidencePayload, evidenceCallbacks);
+    // ── End React Island Enhancement ──────────────────────────────────────
   }
 
   // Render compilation history list
@@ -4330,6 +4529,69 @@
         });
       }
     }
+
+    // ── React Island Enhancement ──────────────────────────────────────────
+    // Mount the NvMemoryLayer island over the memory-layer-grid container.
+    // Fallback HTML rendered above persists if React is unavailable.
+    // JS callbacks own all state mutations; React only enhances the UI.
+    const memoryGridContainer = document.getElementById('memory-layer-grid');
+    if (memoryGridContainer) {
+      const visibleRecent = recentReferences.filter(id => !pinnedReferences.includes(id));
+
+      const buildMemoryItem = (id) => {
+        const ref = adapter.getReferenceById(retrievalState, id);
+        if (!ref) return { id, title: id, type: 'reference', relationshipCount: 0 };
+        return {
+          id: ref.id,
+          title: ref.title,
+          type: ref.type,
+          relationshipCount: getDiscoveryRelationshipCount(ref.id),
+        };
+      };
+
+      const memoryPayload = {
+        pinned: pinnedReferences.map(buildMemoryItem),
+        recent: visibleRecent.map(buildMemoryItem),
+        savedQueries: [...savedQueries],
+        trail: knowledgeTrail.map(event => ({
+          id: event.id,
+          type: event.type,
+          label: event.label,
+          timestamp: event.timestamp,
+        })),
+        trailSummaryHtml: knowledgeTrail.length > 0
+          ? renderSessionProgress() + renderTrailSparkline(knowledgeTrail)
+          : '',
+      };
+
+      const memoryCallbacks = {
+        onOpenReference: (id) => selectReference(id),
+        onPinReference: (id) => pinReference(id),
+        onUnpinReference: (id) => unpinReference(id),
+        onRerunQuery: (query) => {
+          const searchInput = document.getElementById('playground-search-input');
+          if (searchInput) searchInput.value = query;
+          runSearch(query, true);
+        },
+        onDeleteQuery: (query) => {
+          savedQueries = savedQueries.filter(q => q !== query);
+          const searchInput = document.getElementById('playground-search-input');
+          const activeQuery = searchInput ? searchInput.value.trim() : '';
+          const saveQueryBtn = document.getElementById('playground-save-query-button');
+          if (saveQueryBtn && activeQuery === query) saveQueryBtn.disabled = false;
+          saveWorkspaceState();
+          renderMemoryLayer();
+        },
+        onRestoreTrail: (event) => restoreTrailContext(event),
+        onClearTrail: () => {
+          const clearTrailBtn = document.getElementById('playground-clear-trail-button');
+          if (clearTrailBtn) clearTrailBtn.click();
+        },
+      };
+
+      tryMountReactIsland(memoryGridContainer, 'NvMemoryLayer', memoryPayload, memoryCallbacks);
+    }
+    // ── End React Island Enhancement ──────────────────────────────────────
   }
 
   // Bind Selection Clicks to Reference Cards

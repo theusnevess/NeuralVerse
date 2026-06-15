@@ -67,6 +67,43 @@ Every migrated surface must validate:
 
 ## Current Production Islands
 
-- `NvHoverPreview`
-- `NvContextMenu`
-- `NvDiscoveryCard`
+| Island | Container | Status |
+|---|---|---|
+| `NvHoverPreview` | `.nv-hover-preview-layer .nv-react-hover-preview-root` | ✅ Active |
+| `NvContextMenu` | `.nv-context-menu-layer .nv-react-context-menu-root` | ✅ Active |
+| `NvDiscoveryCard` | `.nv-react-discovery-card-root[data-discovery-card-id]` | ✅ Active |
+| `NvInspectorPanel` | `#selected-reference-container` / `#evidence-compilation-container` / `#selected-relationship-container` | ✅ Active (E.5) |
+| `NvMemoryLayer` | `#memory-layer-grid` | ✅ Active (E.5) |
+
+## QA Parity Checklist — E.5
+
+| Check | Required |
+|---|---|
+| Reference Inspector renders after select | ✅ |
+| Evidence Inspector renders after compile | ✅ |
+| Relationship Inspector renders after edge select | ✅ |
+| NvContributionBar visible in Evidence supporting refs | ✅ |
+| Memory Layer columns all visible | ✅ |
+| Knowledge Trail updates on exploration | ✅ |
+| Pinned references persist after reload | ✅ |
+| Saved queries persist after reload | ✅ |
+| Fallback HTML remains if React unavailable | ✅ |
+| Context menus unchanged | ✅ |
+| Hover previews unchanged | ✅ |
+| Discovery Panels unchanged | ✅ |
+| Graph interactions unchanged | ✅ |
+| No horizontal overflow at 390–1440px | ✅ |
+| No console errors | ✅ |
+| 53/53 runtime tests pass | ✅ |
+| React build passes | ✅ |
+
+## Forbidden Migrations (All Phases)
+
+- Graph rendering internals (SVG, D3 force simulation)
+- Router
+- Retrieval state (`retrievalState` object)
+- Evidence compiler logic
+- Persistence ownership (localStorage read/write)
+- Discovery recommendation logic
+- Reference Registry domain logic
+- Relationship Graph domain logic

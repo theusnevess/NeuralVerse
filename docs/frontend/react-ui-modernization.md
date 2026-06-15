@@ -88,3 +88,46 @@ Forbidden future migrations remain:
 - Retrieval state
 - Evidence compiler logic
 - Persistence ownership
+
+---
+
+## NV-500-UX-007E.5 — Inspector & Memory React Islands
+
+This phase migrates the Inspector Space and Memory Layer footer to React islands while preserving JavaScript ownership of all state, actions, and persistence.
+
+### Surfaces Migrated
+
+| Surface | Island | Container |
+|---|---|---|
+| Reference Inspector | `NvInspectorPanel` (mode: reference) | `#selected-reference-container` |
+| Evidence Inspector | `NvInspectorPanel` (mode: evidence) | `#evidence-compilation-container` |
+| Relationship Inspector | `NvInspectorPanel` (mode: relationship) | `#selected-relationship-container` |
+| Memory Layer Grid | `NvMemoryLayer` | `#memory-layer-grid` |
+
+### Inspector Island Boundary
+
+`NvInspectorPanel` dispatches to sub-panels by `data.mode`:
+
+- **reference** → `NvReferenceInspectorPanel`
+- **evidence** → `NvEvidenceInspectorPanel` (uses `NvContributionBar`)
+- **relationship** → `NvRelationshipInspectorPanel`
+- **empty** → `NvEmptyState`
+
+React owns: layout, headers, badges, buttons, contribution bars, empty states.
+
+JavaScript owns: selected reference, selected relationship, evidence compilation, follow actions, pin/unpin, open reference, state persistence.
+
+### Memory Island Boundary
+
+`NvMemoryLayer` renders four columns: Pinned, Recently Viewed, Saved Queries, Knowledge Trail.
+
+React owns: column layout, cards, labels, icons, buttons, empty states.
+
+JavaScript owns: memory arrays, trail events, saved queries, pin state, query execution, localStorage persistence.
+
+### Fallback Policy
+
+1. JavaScript renders fallback HTML into the container first.
+2. `tryMountReactIsland()` attempts to mount the React island.
+3. If React bundle is unavailable, fallback HTML persists and all behavior works as before.
+4. Fallback HTML is **not** removed.

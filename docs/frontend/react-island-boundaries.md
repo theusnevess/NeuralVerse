@@ -90,6 +90,10 @@ bridge.unmount(container)
 | `NvHoverPreview` | `.nv-hover-preview-layer .nv-react-hover-preview-root` | ✅ Active |
 | `NvContextMenu` | `.nv-context-menu-layer .nv-react-context-menu-root` | ✅ Active |
 | `NvDiscoveryCard` | `.nv-react-discovery-card-root[data-discovery-card-id]` | ✅ Active |
+| `NvInspectorPanel` | `#selected-reference-container` (mode: reference) | ✅ Active (E.5) |
+| `NvInspectorPanel` | `#evidence-compilation-container` (mode: evidence) | ✅ Active (E.5) |
+| `NvInspectorPanel` | `#selected-relationship-container` (mode: relationship) | ✅ Active (E.5) |
+| `NvMemoryLayer` | `#memory-layer-grid` | ✅ Active (E.5) |
 
 ---
 

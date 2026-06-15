@@ -1,6 +1,6 @@
 # React Component Catalog
 
-## NV-500-UX-007E.2 — Shared Presentation Primitives
+## NV-500-UX-007E.2 / E.5 — Shared Presentation Primitives
 
 All shared React island presentation primitives live in `react-build/src/components.jsx`.
 
@@ -25,6 +25,16 @@ All shared React island presentation primitives live in `react-build/src/compone
 | `NvEmptyState` | `react-build/src/components.jsx` | ✅ v1 | Empty state block |
 | `NvSectionHeader` | `react-build/src/components.jsx` | ✅ v1 | Section title with line |
 | `NvStatusPill` | `react-build/src/components.jsx` | ✅ v1 | Compact status label |
+| `NvInspectorPanel` | `react-build/src/NvInspectorPanel.jsx` | ✅ v1 | Multi-mode Inspector Island (reference/evidence/relationship/empty) |
+| `NvInspectorHeader` | `react-build/src/NvInspectorPanel.jsx` | ✅ v1 | Inspector title + meta row |
+| `NvInspectorMetricRow` | `react-build/src/NvInspectorPanel.jsx` | ✅ v1 | Row of pre-rendered microvisualization HTML |
+| `NvInspectorActionBar` | `react-build/src/NvInspectorPanel.jsx` | ✅ v1 | Token-mapped inspector action row |
+| `NvMemoryLayer` | `react-build/src/NvMemoryLayer.jsx` | ✅ v1 | Memory Layer Island (four-column footer) |
+| `NvMemoryColumn` | `react-build/src/NvMemoryLayer.jsx` | ✅ v1 | Single memory column wrapper |
+| `NvPinnedReferenceItem` | `react-build/src/NvMemoryLayer.jsx` | ✅ v1 | Pinned reference card |
+| `NvRecentReferenceItem` | `react-build/src/NvMemoryLayer.jsx` | ✅ v1 | Recently viewed reference card |
+| `NvSavedQueryItem` | `react-build/src/NvMemoryLayer.jsx` | ✅ v1 | Saved query row with rerun + delete |
+| `NvKnowledgeTrailItem` | `react-build/src/NvMemoryLayer.jsx` | ✅ v1 | Knowledge trail event row |
 
 ---
 
@@ -195,3 +205,91 @@ All components in this catalog must:
 5. Compose via children, not inheritance
 6. Support `className` passthrough for layout adjustments
 7. Include an `ariaLabel` or forward aria attributes where needed
+
+---
+
+## NvInspectorPanel
+
+Multi-mode Inspector Island. `data.mode` determines which panel is rendered.
+
+```javascript
+// Reference mode
+bridge.mount(root, NvInspectorPanel, {
+  data: {
+    mode: 'reference',
+    reference: {
+      id, title, type, source, sourceLabel,
+      relationshipCount, summary, isPinned,
+      keywords, connections, metrics, minimapHtml,
+    },
+  },
+  callbacks: {
+    onOpenReference(id) {},
+    onPinReference(id) {},
+    onUnpinReference(id) {},
+    onFollowRelationship(relId) {},
+  },
+})
+
+// Evidence mode
+bridge.mount(root, NvInspectorPanel, {
+  data: {
+    mode: 'evidence',
+    evidence: {
+      mode, confidence, confidenceLabel, confidenceExplanation,
+      confidenceVariant, summary, confidenceGaugeHtml, coverageStripHtml,
+      supportingRefs: [
+        { ref, role, contributionLevel, contributionLabel, reasonLabel }
+      ],
+    },
+  },
+  callbacks: { onOpenReference(id) {} },
+})
+
+// Relationship mode
+bridge.mount(root, NvInspectorPanel, {
+  data: {
+    mode: 'relationship',
+    relationship: { id, type, strength, sourceReferenceId, targetReferenceId, context },
+  },
+  callbacks: {
+    onFollowSource(id) {},
+    onFollowTarget(id) {},
+  },
+})
+```
+
+React owns inspector section layout, headers, metrics, badges, buttons, contribution bars, empty states.
+
+JS owns all state, selection, actions, persistence.
+
+---
+
+## NvMemoryLayer
+
+Memory Layer Island. Renders four memory columns.
+
+```javascript
+bridge.mount(root, NvMemoryLayer, {
+  data: {
+    pinned: [{ id, title, type, relationshipCount }],
+    recent: [{ id, title, type, relationshipCount }],
+    savedQueries: ['neural networks'],
+    trail: [{ id, type, label, timestamp }],
+    trailSummaryHtml: '',
+  },
+  callbacks: {
+    onOpenReference(id) {},
+    onPinReference(id) {},
+    onUnpinReference(id) {},
+    onRerunQuery(query) {},
+    onDeleteQuery(query) {},
+    onRestoreTrail(event) {},
+    onClearTrail() {},
+  },
+})
+```
+
+React owns column layout, cards, labels, icons, buttons, empty states.
+
+JS owns memory arrays, trail events, saved queries, pin state, localStorage persistence.
