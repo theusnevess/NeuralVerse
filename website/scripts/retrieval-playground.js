@@ -1911,52 +1911,86 @@
     const container = document.getElementById("research-snapshot-container");
     if (!container) return;
 
-    const progressHtml = renderSessionProgress();
     const sparklineHtml = renderTrailSparkline(knowledgeTrail);
     const selectedRef = selectedReferenceId ? adapter.getReferenceById(retrievalState, selectedReferenceId) : null;
     const selectedRelCount = selectedRef ? adapter.getRelationshipsForReference(retrievalState, selectedRef.id).length : 0;
     const lastActivity = knowledgeTrail[0] || null;
     const artifactCount = pinnedReferences.length + recentReferences.length + savedQueries.length + evidenceTimeline.length + knowledgeTrail.length;
     const hasResearchContext = Boolean(currentSearchQuery || selectedRef || artifactCount > 0);
-    const focusCluster = selectedRef ? getClusterLabel(selectedRef) : activeExplorationMode ? `${activeExplorationMode} mode` : "";
+    const focusCluster = selectedRef ? getClusterLabel(selectedRef) : "";
     const evidenceCount = evidenceTimeline.length || (currentCompiledEvidence ? 1 : 0);
+    const uniqueVisitedCount = new Set(recentReferences.concat(selectedReferenceId ? [selectedReferenceId] : [])).size;
     const compactTrailLabel = (event) => {
       if (!event) return "";
       const type = String(event.type || "activity").replace(/_/g, " ");
       return type.charAt(0).toUpperCase() + type.slice(1);
     };
+    const compactEventLabel = (event) => String(event?.label || "")
+      .replace(/^Searched /, "Search: ")
+      .replace(/^Opened /, "Opened: ")
+      .replace(/^Pinned /, "Pinned: ")
+      .replace(/^Compiled evidence from /, "Compiled: ");
+    const compactTimeline = [];
+    knowledgeTrail.slice(0, 10).forEach(event => {
+      if (compactTimeline.length >= 5) return;
+      const previous = compactTimeline[compactTimeline.length - 1];
+      const label = compactEventLabel(event);
+      const type = compactTrailLabel(event);
+      if (previous && previous.type === type && previous.label === label) {
+        previous.repeatCount = (previous.repeatCount || 1) + 1;
+        previous.label = `${label} (${previous.repeatCount})`;
+        return;
+      }
+      compactTimeline.push({
+        id: event.id,
+        type,
+        label,
+        timestamp: event.timestamp,
+        targetId: event.metadata?.referenceId || event.metadata?.query || "",
+      });
+    });
+    const sessionProgressSegments = [
+      pinnedReferences.length > 0,
+      uniqueVisitedCount > 0,
+      savedQueries.length > 0,
+      evidenceCount > 0,
+      knowledgeTrail.length > 0,
+    ];
+    const subgraphDensityLabel = selectedRef ? getDensityLabel(selectedRelCount) : "";
+    const confidenceLabel = currentCompiledEvidence?.confidence
+      ? `${String(currentCompiledEvidence.confidence).charAt(0).toUpperCase()}${String(currentCompiledEvidence.confidence).slice(1)} support`
+      : "";
+    const connectivityLabel = selectedRef ? getConnectivityScoreLabel(selectedRelCount) : "";
 
-    getNvReactBridge()?.unmount?.(container);
-    container.innerHTML = `
-      <div class="nv-workspace-dashboard-fallback">
-        <span class="nv-muted">Research Snapshot</span>
-        <strong>${currentSearchQuery ? escapeHtml(currentSearchQuery) : selectedRef ? escapeHtml(selectedRef.title) : "Workspace Ready"}</strong>
-        <span>${artifactCount} session artifact${artifactCount === 1 ? "" : "s"}</span>
-      </div>
-    `;
+    if (container.dataset.nvReactMounted !== "true") {
+      container.innerHTML = `
+        <div class="nv-workspace-dashboard-fallback">
+          <span class="nv-muted">Research Snapshot</span>
+          <strong>${currentSearchQuery ? escapeHtml(currentSearchQuery) : selectedRef ? escapeHtml(selectedRef.title) : "Workspace Ready"}</strong>
+          <span>${artifactCount} session artifact${artifactCount === 1 ? "" : "s"}</span>
+        </div>
+      `;
+    }
 
     const dashboardPayload = {
-      snapshot: {
+      activeInvestigation: {
         currentQuery: currentSearchQuery || "",
-        selectedReference: selectedRef ? selectedRef.title : "",
+        selectedReferenceTitle: selectedRef ? selectedRef.title : "",
+        selectedReferenceId: selectedRef ? selectedRef.id : "",
         focusedCluster: focusCluster,
-        lastActivity: lastActivity ? `${compactTrailLabel(lastActivity)} · ${lastActivity.timestamp}` : "",
-        resumeContext: hasResearchContext
-          ? "Resume the current investigation from the active query, selected reference, or recent trail."
-          : "Workspace ready. Start a search to begin your investigation.",
+        explorationDepth: selectedRef && neighborhoodDepth !== "full" ? neighborhoodDepth : "",
+        activeMode: activeExplorationMode || "",
+        lastEventLabel: lastActivity ? `${compactTrailLabel(lastActivity)} · ${lastActivity.timestamp || "session"}` : "",
       },
-      session: {
-        isActive: hasResearchContext,
-        lastUpdate: lastActiveTimestamp ? new Date(lastActiveTimestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "",
-        progressHtml,
+      researchHealth: {
+        evidenceCount,
+        uniqueVisitedCount,
+        pinnedCount: pinnedReferences.length,
+        savedQueryCount: savedQueries.length,
+        trailEventCount: knowledgeTrail.length,
+        subgraphDensityLabel,
       },
-      stats: [
-        { id: "pinned", label: "Pinned", value: pinnedReferences.length },
-        { id: "recent", label: "Recent", value: recentReferences.length },
-        { id: "saved", label: "Saved", value: savedQueries.length },
-        { id: "evidence", label: "Evidence", value: evidenceCount },
-        { id: "trail", label: "Trail", value: knowledgeTrail.length },
-      ],
+      timeline: compactTimeline,
       pulse: {
         summary: selectedRef
           ? `${getConnectivityScoreLabel(selectedRelCount)} in ${getClusterLabel(selectedRef)}.`
@@ -1965,30 +1999,71 @@
             : currentSearchQuery
               ? `${currentSearchResults.length} result${currentSearchResults.length === 1 ? "" : "s"} in the active query.`
               : "No active research signals yet.",
+        trailShape: knowledgeTrail.slice(0, 8).map((_, index) => index + 1),
+        sessionProgressSegments,
+        confidenceLabel,
+        connectivityLabel,
         microvisuals: [
-          selectedRef ? renderRelationshipDensityMeter(selectedRelCount) : "",
-          selectedRef ? renderConnectivityScore(selectedRelCount) : "",
-          currentCompiledEvidence ? renderConfidenceGauge(currentCompiledEvidence.confidence) : "",
-          sparklineHtml,
+          selectedRef ? { id: "density", html: renderRelationshipDensityMeter(selectedRelCount), ariaLabel: `Subgraph density: ${subgraphDensityLabel}` } : null,
+          selectedRef ? { id: "connectivity", html: renderConnectivityScore(selectedRelCount), ariaLabel: `Connectivity summary: ${connectivityLabel}` } : null,
+          currentCompiledEvidence ? { id: "confidence", html: renderConfidenceGauge(currentCompiledEvidence.confidence), ariaLabel: `Confidence summary: ${confidenceLabel}` } : null,
+          { id: "progress", html: renderSessionProgress(), ariaLabel: `${artifactCount} session artifacts` },
+          sparklineHtml ? { id: "trail", html: sparklineHtml, ariaLabel: `${knowledgeTrail.length} knowledge trail events` } : null,
         ].filter(Boolean),
       },
-      timeline: knowledgeTrail.slice(0, 4).map(event => ({
-        id: event.id,
-        type: compactTrailLabel(event),
-        label: String(event.label || "").replace(/^Searched /, "Search ").replace(/^Opened /, "Opened "),
-        timestamp: event.timestamp,
-      })),
+      actions: {
+        canResume: hasResearchContext,
+        canCompileCurrentEvidence: Boolean(currentSearchQuery || selectedReferenceId),
+        canSaveQuery: Boolean(currentSearchQuery && !savedQueries.includes(currentSearchQuery.trim())),
+        canOpenPinned: pinnedReferences.length > 0,
+        canClearSession: hasResearchContext,
+      },
       isEmpty: !hasResearchContext,
     };
 
     const dashboardCallbacks = {
+      onResumeInvestigation: () => {
+        if (selectedReferenceId) {
+          selectReference(selectedReferenceId);
+          return;
+        }
+        if (currentSearchQuery) {
+          const searchInput = document.getElementById("playground-search-input");
+          if (searchInput) searchInput.value = currentSearchQuery;
+          runSearch(currentSearchQuery, true);
+          return;
+        }
+        if (pinnedReferences[0]) selectReference(pinnedReferences[0]);
+      },
+      onCompileCurrentEvidence: () => {
+        if (selectedReferenceId) {
+          compileEvidenceFromReference(selectedReferenceId);
+          return;
+        }
+        document.getElementById("playground-compile-query-button")?.click();
+      },
+      onSaveQuery: () => {
+        document.getElementById("playground-save-query-button")?.click();
+        renderResearchSnapshot();
+      },
+      onOpenPinned: () => {
+        if (pinnedReferences[0]) selectReference(pinnedReferences[0]);
+      },
+      onClearSession: () => {
+        document.getElementById("playground-clear-session-button")?.click();
+        renderResearchSnapshot();
+      },
+      onOpenTimelineEvent: (event) => {
+        if (event?.id) restoreTrailContextById(event.id);
+      },
       onRunSearch: () => {
         switchExplorationMode("search");
         document.getElementById("playground-search-input")?.focus();
       },
     };
 
-    tryMountReactIsland(container, "NvWorkspaceSnapshot", dashboardPayload, dashboardCallbacks);
+    const mounted = tryUpdateReactIsland(container, "NvWorkspaceSnapshot", dashboardPayload, dashboardCallbacks);
+    if (mounted) container.dataset.nvReactMounted = "true";
   }
 
   // Smart Empty State
@@ -4962,6 +5037,7 @@
       } else if (mode === "compare") {
         renderCompareMode();
       }
+      renderResearchSnapshot();
     } catch (err) {
       console.error(`Error in switchExplorationMode(${mode}):`, err);
       const diagBadge = document.getElementById("nv-diagnostics-badge");
@@ -5513,6 +5589,7 @@
           renderMemoryLayer();
           renderResumeBanner();
           renderQuickActions();
+          renderResearchSnapshot();
 
           // Reset dropdown inputs for prefs in DOM
           const prefDefaultMode = document.getElementById("pref-default-mode");
@@ -5542,6 +5619,7 @@
           knowledgeTrail = [];
           saveWorkspaceState();
           renderMemoryLayer();
+          renderResearchSnapshot();
         };
       }
 

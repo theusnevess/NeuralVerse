@@ -5,10 +5,13 @@
 | Component | Responsibility |
 |---|---|
 | `NvWorkspaceSnapshot` | Top-level dashboard island |
-| `NvSessionStatus` | Compact session state and progress |
-| `NvResearchStats` | Pinned, recent, saved query, evidence, and trail counts |
+| `NvActiveInvestigation` | Current query, selected reference, cluster, depth, mode, and last event |
+| `NvResearchHealth` | Accumulated research context counts and qualitative state |
+| `NvResearchHealthMetric` | Accessible compact metric chip |
+| `NvSessionTimeline` | Last five meaningful Knowledge Trail events |
+| `NvTimelineEventCompact` | Keyboard-accessible compact timeline event |
 | `NvKnowledgePulse` | Current investigation summary and microvisual signals |
-| `NvActivityTimelineMini` | Compact recent activity trail |
+| `NvSnapshotActions` | Valid quick actions wired to JavaScript callbacks |
 
 ## Reused Primitives
 
@@ -24,14 +27,16 @@
 - Prefer readable labels over icon-only meaning.
 - Show unavailable values as neutral state, not fake data.
 - Use one microvisualization for one concept.
+- Hide invalid actions instead of rendering disabled dead controls.
+- Use `Starting`, `Building`, `Active`, and `Dense` only as context accumulation labels.
 
 ## Accessibility
 
 - The dashboard uses a labelled `section`.
-- The mini timeline is an ordered list.
+- The session timeline is an ordered list.
 - Stats expose text labels.
 - Icons are decorative unless paired with accessible text.
-- The empty-state CTA is a semantic button.
+- Snapshot actions are semantic buttons with visible focus states.
 
 ## Reuse Guidelines
 
@@ -42,3 +47,10 @@ The ownership rule remains:
 ```text
 Data in. Callbacks out. No domain ownership.
 ```
+
+## Forbidden Responsibilities
+
+- React must not read or write `localStorage`.
+- React must not call retrieval, graph, evidence, or registry services directly.
+- React must not introduce global state libraries or routing.
+- Dashboard components must not fabricate analytics, confidence, density, or quality scores.

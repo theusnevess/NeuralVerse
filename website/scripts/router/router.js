@@ -317,7 +317,7 @@ class ViewController {
           </div>
 
           <!-- Research Live Snapshot -->
-          <div id="research-snapshot-container" class="nv-panel nv-cluster nv-cluster--gap-sm" style="background-color: var(--sys-color-surface-container-low); padding: 4px var(--sys-space-inline-sm); border: var(--sys-border-subtle) solid var(--sys-color-border-subtle); font-size: 0.65rem; justify-content: space-between; align-items: center; border-radius: var(--ref-radius-soft); margin-bottom: 2px;">
+          <div id="research-snapshot-container" class="nv-panel nv-workspace-dashboard-shell">
           </div>
 
 

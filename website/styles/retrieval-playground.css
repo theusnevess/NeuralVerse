@@ -3368,11 +3368,33 @@ body.nv-focus-mode * {
   font-size: var(--sys-font-caption-size);
 }
 
+.nv-snapshot-actions {
+  display: flex;
+  flex: 0 1 auto;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--sys-space-inline-xs);
+}
+
+.nv-snapshot-actions .nv-button {
+  min-block-size: unset;
+  padding-block: var(--sys-space-stack-2xs, 0.25rem);
+  padding-inline: var(--sys-space-inline-sm);
+  font-size: var(--sys-font-caption-size);
+}
+
 .nv-workspace-dashboard__grid {
   display: grid;
-  grid-template-columns: minmax(14rem, 1.25fr) minmax(11rem, 0.8fr) minmax(15rem, 1fr);
+  grid-template-columns: minmax(15rem, 1.2fr) minmax(16rem, 1fr) minmax(15rem, 1fr);
   gap: var(--sys-space-stack-sm) var(--sys-space-inline-md);
   align-items: stretch;
+}
+
+.nv-active-investigation,
+.nv-research-health,
+.nv-knowledge-pulse,
+.nv-activity-timeline-mini {
+  min-inline-size: 0;
 }
 
 .nv-workspace-snapshot {
@@ -3390,6 +3412,7 @@ body.nv-focus-mode * {
 .nv-workspace-snapshot__field span,
 .nv-session-status__body,
 .nv-knowledge-pulse p,
+.nv-active-investigation__empty,
 .nv-activity-timeline-mini__empty {
   margin: 0;
   color: var(--sys-color-text-secondary);
@@ -3415,7 +3438,8 @@ body.nv-focus-mode * {
   line-height: 1.35;
 }
 
-.nv-session-status,
+.nv-active-investigation,
+.nv-research-health,
 .nv-knowledge-pulse,
 .nv-activity-timeline-mini {
   display: grid;
@@ -3437,11 +3461,18 @@ body.nv-focus-mode * {
   gap: var(--sys-space-inline-xs);
 }
 
+.nv-dashboard-section-title h3 {
+  margin: 0;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+}
+
 .nv-research-stats {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--sys-space-inline-xs);
-  grid-column: 1 / 3;
 }
 
 .nv-research-stat-chip {
@@ -3471,7 +3502,6 @@ body.nv-focus-mode * {
 
 .nv-knowledge-pulse {
   grid-column: 3;
-  grid-row: 1 / span 2;
 }
 
 .nv-knowledge-pulse__signals {
@@ -3488,7 +3518,7 @@ body.nv-focus-mode * {
 
 .nv-activity-timeline-mini ol {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: var(--sys-space-inline-sm);
   margin: 0;
   padding: 0;
@@ -3496,11 +3526,32 @@ body.nv-focus-mode * {
 }
 
 .nv-activity-timeline-mini li {
-  display: grid;
-  gap: var(--sys-space-stack-2xs, 0.25rem);
   min-inline-size: 0;
   padding-inline-start: var(--sys-space-inline-sm);
   border-inline-start: var(--sys-border-subtle) solid color-mix(in srgb, var(--sys-color-accent-primary) 34%, transparent);
+}
+
+.nv-timeline-event-compact {
+  display: grid;
+  gap: var(--sys-space-stack-2xs, 0.25rem);
+  inline-size: 100%;
+  min-inline-size: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+}
+
+button.nv-timeline-event-compact {
+  cursor: pointer;
+}
+
+button.nv-timeline-event-compact:focus-visible {
+  outline: var(--sys-focus-ring-width, 2px) solid var(--sys-color-focus-ring, var(--sys-color-accent-primary));
+  outline-offset: var(--sys-focus-ring-offset, 2px);
+  border-radius: var(--ref-radius-soft);
 }
 
 .nv-activity-timeline-mini__type,
@@ -3527,7 +3578,6 @@ body.nv-focus-mode * {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   }
 
-  .nv-research-stats,
   .nv-knowledge-pulse,
   .nv-activity-timeline-mini {
     grid-column: 1 / -1;
@@ -3550,6 +3600,10 @@ body.nv-focus-mode * {
 
   .nv-workspace-dashboard__header {
     display: grid;
+  }
+
+  .nv-snapshot-actions {
+    justify-content: flex-start;
   }
 }
 

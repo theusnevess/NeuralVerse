@@ -31,7 +31,19 @@ import {
   NvRelationshipInspectorPanel,
 } from './NvInspectorPanel.jsx'
 import { NvMemoryLayer, NvMemoryColumn, NvPinnedReferenceItem, NvRecentReferenceItem, NvSavedQueryItem, NvKnowledgeTrailItem } from './NvMemoryLayer.jsx'
-import { NvWorkspaceSnapshot, NvSessionStatus, NvResearchStats, NvKnowledgePulse, NvActivityTimelineMini } from './NvWorkspaceSnapshot.jsx'
+import {
+  NvWorkspaceSnapshot,
+  NvActiveInvestigation,
+  NvResearchHealth,
+  NvSessionTimeline,
+  NvKnowledgePulse,
+  NvSnapshotActions,
+  NvResearchHealthMetric,
+  NvTimelineEventCompact,
+  NvSessionStatus,
+  NvResearchStats,
+  NvActivityTimelineMini,
+} from './NvWorkspaceSnapshot.jsx'
 
 // Shared component exports (available for future host-page usage)
 export {
@@ -72,7 +84,19 @@ export {
 export { NvMemoryLayer, NvMemoryColumn, NvPinnedReferenceItem, NvRecentReferenceItem, NvSavedQueryItem, NvKnowledgeTrailItem }
 
 // Workspace snapshot island exports
-export { NvWorkspaceSnapshot, NvSessionStatus, NvResearchStats, NvKnowledgePulse, NvActivityTimelineMini }
+export {
+  NvWorkspaceSnapshot,
+  NvActiveInvestigation,
+  NvResearchHealth,
+  NvSessionTimeline,
+  NvKnowledgePulse,
+  NvSnapshotActions,
+  NvResearchHealthMetric,
+  NvTimelineEventCompact,
+  NvSessionStatus,
+  NvResearchStats,
+  NvActivityTimelineMini,
+}
 
 // Legacy island exports
 export { NvHoverPreview, NvContextMenu, NvDiscoveryCard }

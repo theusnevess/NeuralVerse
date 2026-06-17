@@ -2,7 +2,7 @@
 
 ## Purpose
 
-`NV-500-UX-007E.7` adds a compact Workspace Snapshot and Research Dashboard to the top of the Retrieval Workspace.
+`NV-500-UX-007E.8` extends the compact Workspace Snapshot into the Living Research Workspace at the top of the Retrieval Workspace.
 
 It provides orientation without replacing navigation or controls.
 
@@ -30,9 +30,11 @@ React owns:
 
 - dashboard layout
 - stat chips
-- session status presentation
+- active investigation presentation
+- research health presentation
+- session timeline presentation
 - knowledge pulse presentation
-- mini activity timeline presentation
+- valid quick action buttons
 
 ## Data Contract
 
@@ -40,24 +42,39 @@ The JavaScript layer passes plain data:
 
 ```js
 {
-  snapshot: {
+  activeInvestigation: {
     currentQuery,
-    selectedReference,
+    selectedReferenceTitle,
+    selectedReferenceId,
     focusedCluster,
-    lastActivity,
-    resumeContext
+    explorationDepth,
+    activeMode,
+    lastEventLabel
   },
-  session: {
-    isActive,
-    lastUpdate,
-    progressHtml
-  },
-  stats: [],
-  pulse: {
-    summary,
-    microvisuals
+  researchHealth: {
+    evidenceCount,
+    uniqueVisitedCount,
+    pinnedCount,
+    savedQueryCount,
+    trailEventCount,
+    subgraphDensityLabel
   },
   timeline: [],
+  pulse: {
+    summary,
+    trailShape,
+    sessionProgressSegments,
+    confidenceLabel,
+    connectivityLabel,
+    microvisuals
+  },
+  actions: {
+    canResume,
+    canCompileCurrentEvidence,
+    canSaveQuery,
+    canOpenPinned,
+    canClearSession
+  },
   isEmpty
 }
 ```
@@ -66,7 +83,12 @@ Callbacks remain explicit:
 
 ```js
 {
-  onRunSearch
+  onResumeInvestigation,
+  onCompileCurrentEvidence,
+  onSaveQuery,
+  onOpenPinned,
+  onClearSession,
+  onOpenTimelineEvent
 }
 ```
 
@@ -83,6 +105,9 @@ Validate that:
 - pinned count updates after pin/unpin
 - evidence count updates after compilation
 - knowledge trail summary updates after actions
+- invalid quick actions are hidden
+- timeline shows at most five events
+- fallback HTML remains useful when React is unavailable
 - no horizontal overflow at 390, 768, 1024, and 1440 px
 
 ## Forbidden Responsibilities
@@ -95,3 +120,5 @@ The snapshot must not:
 - own evidence state
 - replace navigation
 - poll or continuously update timers
+- read or write localStorage from React
+- invent quality scores or analytics
