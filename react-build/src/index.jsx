@@ -17,7 +17,7 @@ import { mount, update, unmount } from './bridge.js'
 import { NvHoverPreview } from './NvHoverPreview.jsx'
 import { NvContextMenu } from './NvContextMenu.jsx'
 import { NvDiscoveryCard } from './NvDiscoveryCard.jsx'
-import { NvInspectorPanel, NvInspectorHeader, NvInspectorMetricRow, NvInspectorActionBar } from './NvInspectorPanel.jsx'
+import { NvInspectorPanel, NvInspectorHeader, NvInspectorMetricRow, NvInspectorActionBar, NvReferenceInspectorPanel, NvEvidenceInspectorPanel, NvRelationshipInspectorPanel } from './NvInspectorPanel.jsx'
 import { NvMemoryLayer, NvMemoryColumn, NvPinnedReferenceItem, NvRecentReferenceItem, NvSavedQueryItem, NvKnowledgeTrailItem } from './NvMemoryLayer.jsx'
 
 // Shared component exports (available for future host-page usage)
@@ -41,7 +41,7 @@ export {
 } from './components.jsx'
 
 // Inspector island exports
-export { NvInspectorPanel, NvInspectorHeader, NvInspectorMetricRow, NvInspectorActionBar }
+export { NvInspectorPanel, NvInspectorHeader, NvInspectorMetricRow, NvInspectorActionBar, NvReferenceInspectorPanel, NvEvidenceInspectorPanel, NvRelationshipInspectorPanel }
 
 // Memory island exports
 export { NvMemoryLayer, NvMemoryColumn, NvPinnedReferenceItem, NvRecentReferenceItem, NvSavedQueryItem, NvKnowledgeTrailItem }

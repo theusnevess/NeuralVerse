@@ -131,3 +131,30 @@ JavaScript owns: memory arrays, trail events, saved queries, pin state, query ex
 2. `tryMountReactIsland()` attempts to mount the React island.
 3. If React bundle is unavailable, fallback HTML persists and all behavior works as before.
 4. Fallback HTML is **not** removed.
+
+### Payload Contracts
+
+Inspector payloads are plain view models:
+
+- `mode`: `reference`, `evidence`, `relationship`, or `empty`
+- `reference`: title, type, source labels, relationship metrics, keywords, connections, and pre-rendered minimap HTML
+- `evidence`: confidence labels, summary, pre-rendered confidence/coverage microvisualizations, and supporting references
+- `relationship`: relationship id, type, strength, source, target, and context
+
+Memory payloads are plain arrays:
+
+- `pinned`: reference cards derived from existing `pinnedReferences`
+- `recent`: reference cards derived from existing `recentReferences`
+- `savedQueries`: existing saved query strings
+- `trail`: knowledge trail event summaries
+- `trailSummaryHtml`: pre-rendered session progress/sparkline HTML from JavaScript
+
+### Callback Contract
+
+Inspector callbacks delegate back to existing JavaScript functions for opening references, following relationships, compiling evidence, and navigating source/target references.
+
+Memory callbacks delegate back to existing JavaScript functions for pin/unpin, rerun/delete query, restore trail, and clear trail behavior.
+
+### Surfaces Still JavaScript-Owned
+
+The Retrieval Engine, Evidence Compiler, Reference Registry, Relationship Graph, search ranking, persistence, router, graph rendering, graph layout, context menu orchestration, hover preview orchestration, and Discovery recommendation logic remain JavaScript-owned.

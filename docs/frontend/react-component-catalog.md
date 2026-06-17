@@ -29,6 +29,9 @@ All shared React island presentation primitives live in `react-build/src/compone
 | `NvInspectorHeader` | `react-build/src/NvInspectorPanel.jsx` | ✅ v1 | Inspector title + meta row |
 | `NvInspectorMetricRow` | `react-build/src/NvInspectorPanel.jsx` | ✅ v1 | Row of pre-rendered microvisualization HTML |
 | `NvInspectorActionBar` | `react-build/src/NvInspectorPanel.jsx` | ✅ v1 | Token-mapped inspector action row |
+| `NvReferenceInspectorPanel` | `react-build/src/NvInspectorPanel.jsx` | ✅ v1 | Reference mode body for `NvInspectorPanel` |
+| `NvEvidenceInspectorPanel` | `react-build/src/NvInspectorPanel.jsx` | ✅ v1 | Evidence mode body for `NvInspectorPanel` |
+| `NvRelationshipInspectorPanel` | `react-build/src/NvInspectorPanel.jsx` | ✅ v1 | Relationship mode body for `NvInspectorPanel` |
 | `NvMemoryLayer` | `react-build/src/NvMemoryLayer.jsx` | ✅ v1 | Memory Layer Island (four-column footer) |
 | `NvMemoryColumn` | `react-build/src/NvMemoryLayer.jsx` | ✅ v1 | Single memory column wrapper |
 | `NvPinnedReferenceItem` | `react-build/src/NvMemoryLayer.jsx` | ✅ v1 | Pinned reference card |
@@ -263,6 +266,16 @@ React owns inspector section layout, headers, metrics, badges, buttons, contribu
 
 JS owns all state, selection, actions, persistence.
 
+Callbacks currently used by the Retrieval Workspace host page:
+
+- `onOpenReference(id)`
+- `onPinReference(id)`
+- `onUnpinReference(id)`
+- `onCompileEvidence()`
+- `onFollowRelationship(relId)`
+- `onFollowSource(id)`
+- `onFollowTarget(id)`
+
 ---
 
 ## NvMemoryLayer
@@ -293,3 +306,5 @@ bridge.mount(root, NvMemoryLayer, {
 React owns column layout, cards, labels, icons, buttons, empty states.
 
 JS owns memory arrays, trail events, saved queries, pin state, localStorage persistence.
+
+Fallback remains the existing `renderMemoryLayer()` HTML in `website/scripts/retrieval-playground.js`. React mounts into `#memory-layer-grid` only after that fallback has been rendered, and `NvMemoryLayer` does not create a nested grid wrapper.

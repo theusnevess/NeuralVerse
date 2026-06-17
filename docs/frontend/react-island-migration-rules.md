@@ -42,7 +42,7 @@ React Islands must never own:
 
 ## Fallback Requirement
 
-When a visible surface is migrated, the JavaScript layer should keep a safe fallback where practical. The Discovery Panel migration keeps the previous HTML inside each React root until the bundle mounts.
+When a visible surface is migrated, the JavaScript layer must keep a safe fallback where practical. Discovery, Inspector, Evidence, Relationship, and Memory surfaces render fallback HTML first; React then mounts through `tryMountReactIsland()`. If the bundle, bridge, or component is unavailable, the fallback remains visible and functional.
 
 ## Styling Rules
 
@@ -96,6 +96,25 @@ Every migrated surface must validate:
 | No console errors | ✅ |
 | 53/53 runtime tests pass | ✅ |
 | React build passes | ✅ |
+
+## E.5 Ownership Boundaries
+
+React owns only visible UI for Inspector sections, Memory cards/columns, and qualitative evidence contribution bars.
+
+JavaScript remains the owner for selected reference state, selected relationship state, evidence data, pin state, saved queries, knowledge trail events, context menus, hover previews, localStorage persistence, Retrieval state, and graph state.
+
+Allowed E.5 callbacks:
+
+- `onOpenReference`
+- `onPinReference`
+- `onUnpinReference`
+- `onCompileEvidence`
+- `onFollowSource`
+- `onFollowTarget`
+- `onRerunQuery`
+- `onRestoreTrail`
+- `onOpenContextMenu`
+- `onShowHoverPreview`
 
 ## Forbidden Migrations (All Phases)
 

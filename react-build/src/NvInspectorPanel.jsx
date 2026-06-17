@@ -92,7 +92,7 @@ export function NvInspectorActionBar({ actions = [], className = '' }) {
 // ---------------------------------------------------------------------------
 // NvReferenceInspectorPanel
 // ---------------------------------------------------------------------------
-function NvReferenceInspectorPanel({ reference = {}, metrics = [], keywords = [], connections = [], callbacks = {} }) {
+export function NvReferenceInspectorPanel({ reference = {}, metrics = [], keywords = [], connections = [], callbacks = {} }) {
   const {
     title = 'Untitled Reference',
     type = 'reference',
@@ -195,7 +195,7 @@ function NvReferenceInspectorPanel({ reference = {}, metrics = [], keywords = []
 // ---------------------------------------------------------------------------
 // NvEvidenceInspectorPanel
 // ---------------------------------------------------------------------------
-function NvEvidenceInspectorPanel({ evidence = {}, callbacks = {} }) {
+export function NvEvidenceInspectorPanel({ evidence = {}, callbacks = {} }) {
   const {
     mode = 'query',
     confidence = 'low',
@@ -313,7 +313,7 @@ function NvSupportingRefRow({ item, onOpenReference }) {
 // ---------------------------------------------------------------------------
 // NvRelationshipInspectorPanel
 // ---------------------------------------------------------------------------
-function NvRelationshipInspectorPanel({ relationship = {}, callbacks = {} }) {
+export function NvRelationshipInspectorPanel({ relationship = {}, callbacks = {} }) {
   const {
     id = '',
     type = '',

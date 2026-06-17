@@ -251,7 +251,7 @@ export function NvMemoryLayer({ data = {}, callbacks = {} }) {
   } = callbacks
 
   return (
-    <div className="memory-grid" id="memory-layer-grid">
+    <>
 
       {/* Column 1: Pinned References */}
       <NvMemoryColumn title="Pinned References">
@@ -380,6 +380,6 @@ export function NvMemoryLayer({ data = {}, callbacks = {} }) {
         </ul>
       </NvMemoryColumn>
 
-    </div>
+    </>
   )
 }

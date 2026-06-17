@@ -2622,17 +2622,6 @@
     // ── React Island Enhancement ──────────────────────────────────────────
     // Attempt to upgrade the reference inspector container with React.
     // Fallback HTML rendered above persists if React is unavailable.
-    const rels = adapter.getRelationshipsForReference(retrievalState, ref.id);
-    const isPinned = pinnedReferences.includes(ref.id);
-    let sourceLabel = '';
-    try {
-      sourceLabel = ref.source.startsWith('local://')
-        ? ref.source.replace('local://', '')
-        : new URL(ref.source).hostname;
-    } catch (_) {
-      sourceLabel = ref.source;
-    }
-
     const inspectorPayload = {
       mode: 'reference',
       reference: {
@@ -3296,20 +3285,6 @@
     // ── React Island Enhancement ──────────────────────────────────────────
     // NvContributionBar levels come from existing qualitative assignment in
     // allContributing; this is read-only — no new numeric values invented.
-    const allContributing = [
-      ...(comp.matchedReferences || []).map(r => ({ ref: r, role: 'Primary Match' })),
-      ...(comp.relatedReferences || []).map(r => ({ ref: r, role: 'Supporting Context' })),
-    ];
-
-    let confLabel = 'Limited Support';
-    let confExplanation = 'Only limited supporting context was identified.';
-    let confVariant = 'error';
-    if (comp.confidence === 'high') {
-      confLabel = 'High Support'; confExplanation = 'Supported by multiple directly connected references.'; confVariant = 'success';
-    } else if (comp.confidence === 'medium') {
-      confLabel = 'Moderate Support'; confExplanation = 'Supported by relevant evidence with moderate graph coverage.'; confVariant = 'warning';
-    }
-
     const evidencePayload = {
       mode: 'evidence',
       evidence: {
