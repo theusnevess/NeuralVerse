@@ -10,7 +10,7 @@
       type: "paper",
       status: "active",
       source: "https://arxiv.org/abs/1706.03762",
-      keywords: ["attention", "transformer", "neural network", "nlp", "translation"]
+      keywords: ["attention", "transformer", "neural network", "deep", "learning", "nlp", "translation"]
     },
     {
       id: "paper-bert",
@@ -18,7 +18,7 @@
       type: "paper",
       status: "active",
       source: "https://arxiv.org/abs/1810.04805",
-      keywords: ["bert", "transformer", "bidirectional", "nlp", "pre-training"]
+      keywords: ["bert", "transformer", "deep", "learning", "bidirectional", "nlp", "pre-training"]
     },
     {
       id: "repo-pytorch",
@@ -26,7 +26,7 @@
       type: "repository",
       status: "active",
       source: "https://github.com/pytorch/pytorch",
-      keywords: ["pytorch", "library", "deep learning", "python", "tensor"]
+      keywords: ["pytorch", "library", "deep learning", "deep", "learning", "python", "tensor"]
     },
     {
       id: "paper-clip",
@@ -34,7 +34,7 @@
       type: "paper",
       status: "active",
       source: "https://arxiv.org/abs/2103.00020",
-      keywords: ["clip", "vision", "language", "multimodal", "contrastive"]
+      keywords: ["clip", "deep", "learning", "vision", "language", "multimodal", "contrastive"]
     },
     {
       id: "paper-yolo",
@@ -42,7 +42,7 @@
       type: "paper",
       status: "active",
       source: "https://arxiv.org/abs/1506.02640",
-      keywords: ["yolo", "detection", "vision", "real-time", "cnn"]
+      keywords: ["yolo", "deep", "learning", "detection", "vision", "real-time", "cnn"]
     },
     {
       id: "notes-rag-eval",
