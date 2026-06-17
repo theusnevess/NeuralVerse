@@ -130,17 +130,17 @@ export function NvEmptyState({ icon, title, subtitle, actions, className = '' })
     <div className={`nv-empty-state ${className}`.trim()}>
       {icon && <div className="nv-empty-state-icon" aria-hidden="true">{icon}</div>}
       {title && (
-        <p className="nv-muted" style={{ fontSize: 'var(--sys-font-body-size)', fontWeight: 'var(--ref-font-weight-medium)', color: 'var(--sys-color-text-primary)', marginBottom: 'var(--sys-space-stack-xs)' }}>
+        <p className="nv-empty-state__title">
           {title}
         </p>
       )}
       {subtitle && (
-        <p className="nv-muted" style={{ fontSize: 'var(--sys-font-caption-size)', margin: 0 }}>
+        <p className="nv-empty-state__subtitle">
           {subtitle}
         </p>
       )}
       {actions && (
-        <div className="graph-empty-actions" style={{ marginTop: 'var(--sys-space-stack-sm)' }}>
+        <div className="graph-empty-actions nv-empty-state__actions">
           {actions}
         </div>
       )}

@@ -2932,7 +2932,9 @@
         type: rel.type,
         strength: rel.strength,
         sourceReferenceId: rel.sourceReferenceId,
+        sourceTitle: adapter.getReferenceById(retrievalState, rel.sourceReferenceId)?.title || rel.sourceReferenceId,
         targetReferenceId: rel.targetReferenceId,
+        targetTitle: adapter.getReferenceById(retrievalState, rel.targetReferenceId)?.title || rel.targetReferenceId,
         context: rel.context || '',
       },
     };
@@ -3303,6 +3305,25 @@
         summary: comp.summary || '',
         confidenceGaugeHtml: renderConfidenceGauge(comp.confidence),
         coverageStripHtml: renderEvidenceCoverageStrip(allContributing.length),
+        primaryReferenceId: comp.matchedReferences[0]?.id || '',
+        lineage: [
+          ...comp.matchedReferences.map(r => ({ id: r.id, title: r.title, role: 'Primary' })),
+          ...comp.relatedReferences.map(r => ({ id: r.id, title: r.title, role: 'Support' })),
+        ],
+        relatedRelationships: comp.relationships.map(rel => ({
+          id: rel.id,
+          type: rel.type,
+          sourceReferenceId: rel.sourceReferenceId,
+          targetReferenceId: rel.targetReferenceId,
+        })),
+        metadata: [
+          { label: 'Compilation Mode', value: comp.mode === 'query' ? 'Search Query' : 'Reference Seed' },
+          { label: 'Input Target', value: `"${comp.input}"` },
+          { label: 'Timestamp', value: new Date(comp.createdAt).toLocaleTimeString() },
+          { label: 'Direct Matches', value: String(comp.matchedReferences.length) },
+          { label: 'Graph Relationships', value: String(comp.relationships.length) },
+          { label: 'Context References', value: String(comp.relatedReferences.length) },
+        ],
         supportingRefs: allContributing.map(item => ({
           ref: { id: item.ref.id, title: item.ref.title, type: item.ref.type },
           role: item.role,
@@ -3318,6 +3339,28 @@
       onOpenReference: (id) => {
         addTrailEvent('supporting_ref_opened', `Opened supporting reference "${id}"`, { referenceId: id });
         selectReference(id);
+      },
+      onOpenRelationship: (relId) => {
+        const rel = retrievalState.relationships.find(r => r.id === relId);
+        if (rel) {
+          selectedRelationship = rel;
+          addTrailEvent('relationship_navigated', `Navigated to relationship "${rel.sourceReferenceId} ➔ ${rel.targetReferenceId}" via evidence context`, { relationship: rel });
+          switchInspectorTab('relationship');
+          renderRelationshipInspector();
+        }
+      },
+      onExploreNeighborhood: (id) => {
+        selectedReferenceId = id;
+        addToRecentlyViewed(id);
+        switchExplorationMode('graph');
+        addTrailEvent('action_explore_neighborhood', `Explored neighborhood around "${id}" from suggested next actions`, { referenceId: id });
+        saveWorkspaceState();
+        renderVisualGraph();
+      },
+      onReturnToSearch: () => {
+        switchExplorationMode('search');
+        addTrailEvent('action_return_search', 'Returned to search mode from suggested next actions');
+        saveWorkspaceState();
       },
     };
     tryMountReactIsland(container, 'NvInspectorPanel', evidencePayload, evidenceCallbacks);
