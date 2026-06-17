@@ -20,6 +20,9 @@ import {
   NvButton,
   NvEmptyState,
   NvContributionBar,
+  NvMemoryCard,
+  NvMicroViz,
+  NvScientificIcon,
 } from './components.jsx'
 
 // ---------------------------------------------------------------------------
@@ -27,16 +30,61 @@ import {
 // ---------------------------------------------------------------------------
 export function NvMemoryColumn({ title, trailing, children, className = '' }) {
   return (
-    <div className={`memory-column ${className}`.trim()}>
+    <section className={`memory-column nv-memory-dashboard__section ${className}`.trim()} aria-labelledby={title ? `memory-${title.toLowerCase().replace(/\s+/g, '-')}` : undefined}>
       {title && (
-        <div className="nv-cluster nv-cluster--gap-xs" style={{ justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--sys-space-stack-xs)' }}>
-          <h4 style={{ margin: 0 }}>{title}</h4>
+        <div className="nv-memory-section-header">
+          <div className="nv-memory-section-heading">
+            <span className="nv-memory-section-label">Memory</span>
+            <h4 id={`memory-${title.toLowerCase().replace(/\s+/g, '-')}`}>{title}</h4>
+          </div>
           {trailing}
         </div>
       )}
       {children}
-    </div>
+    </section>
   )
+}
+
+function relationshipDensityLabel(count = 0) {
+  if (count >= 3) return 'Dense Cluster'
+  if (count > 0) return 'Linked Reference'
+  return 'Quiet Node'
+}
+
+function relationshipDensityLevel(count = 0) {
+  if (count >= 4) return 4
+  if (count >= 2) return 3
+  if (count >= 1) return 2
+  return 1
+}
+
+function compactTrailLabel(label = '') {
+  return String(label)
+    .replace(/^Searched for /i, 'Search ')
+    .replace(/^Opened /i, 'Opened ')
+    .replace(/^Pinned /i, 'Pinned ')
+    .replace(/^Unpinned /i, 'Unpinned ')
+    .replace(/^Compiled evidence from /i, 'Compiled ')
+}
+
+function MemoryStatusChip({ icon, label, value }) {
+  return (
+    <span className="nv-memory-status-chip" aria-label={`${label}: ${value}`}>
+      <span aria-hidden="true">{icon}</span>
+      <strong>{value}</strong>
+    </span>
+  )
+}
+
+const TRAIL_ICON_PATH = {
+  search: 'assets/icons/scientific/search-discovery/query-signal.svg',
+  rerun_query: 'assets/icons/scientific/search-discovery/research-lens.svg',
+  pin: 'assets/icons/scientific/collections/pinned-references.svg',
+  unpin: 'assets/icons/scientific/collections/pinned-references.svg',
+  compile_query: 'assets/icons/scientific/evidence/synthesis-core.svg',
+  compile_ref: 'assets/icons/scientific/evidence/evidence-convergence.svg',
+  open: 'assets/icons/scientific/inspector/reference-details.svg',
+  select_node: 'assets/icons/scientific/knowledge-graph/active-neighborhood.svg',
 }
 
 // ---------------------------------------------------------------------------
@@ -44,50 +92,24 @@ export function NvMemoryColumn({ title, trailing, children, className = '' }) {
 // ---------------------------------------------------------------------------
 export function NvPinnedReferenceItem({ item, onOpen, onUnpin }) {
   if (!item) return null
-  const { id, title, type, relationshipCount = 0, isPinned = true } = item
+  const { id, title, type, relationshipCount = 0 } = item
 
   return (
     <li className="memory-panel-item">
-      <div
-        className="nv-card nv-memory-pinned-card"
-        role="article"
-        aria-label={`Pinned: ${title}`}
-      >
-        <div className="nv-stack nv-stack--gap-xs">
-          <div className="nv-cluster nv-cluster--gap-xs" style={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
-            <div className="nv-stack nv-stack--gap-xs" style={{ minWidth: 0 }}>
-              <div className="nv-cluster nv-cluster--gap-xs">
-                <NvBadge variant="info">{type || 'reference'}</NvBadge>
-                <span className="nv-muted" style={{ fontSize: '0.6rem' }}>
-                  {relationshipCount} link{relationshipCount === 1 ? '' : 's'}
-                </span>
-              </div>
-              <span
-                className="nv-memory-item-title"
-                style={{ fontSize: 'var(--sys-font-caption-size)', color: 'var(--sys-color-text-primary)', fontWeight: 'var(--ref-font-weight-medium)', lineHeight: 1.3 }}
-              >
-                {title}
-              </span>
-            </div>
-            <div className="nv-cluster nv-cluster--gap-xs" style={{ flexShrink: 0 }}>
-              <NvButton
-                variant="primary"
-                ariaLabel={`Open pinned reference: ${title}`}
-                onClick={() => typeof onOpen === 'function' && onOpen(id)}
-              >
-                Open
-              </NvButton>
-              <NvButton
-                variant="secondary"
-                ariaLabel={`Unpin reference: ${title}`}
-                onClick={() => typeof onUnpin === 'function' && onUnpin(id)}
-              >
-                Unpin
-              </NvButton>
-            </div>
-          </div>
-        </div>
-      </div>
+      <NvMemoryCard
+        title={title}
+        subtitle={relationshipDensityLabel(relationshipCount)}
+        meta={[<NvBadge key="type" variant="info">{type || 'reference'}</NvBadge>, `${relationshipCount} link${relationshipCount === 1 ? '' : 's'}`]}
+        iconPath="assets/icons/scientific/collections/pinned-references.svg"
+        className="nv-memory-pinned-card nv-memory-card--compact"
+        ariaLabel={`Pinned reference: ${title}`}
+        actions={(
+          <>
+            <NvButton variant="ghost" className="nv-memory-action" ariaLabel={`Open pinned reference: ${title}`} onClick={() => typeof onOpen === 'function' && onOpen(id)}>Open</NvButton>
+            <NvButton variant="ghost" className="nv-memory-action" ariaLabel={`Unpin reference: ${title}`} onClick={() => typeof onUnpin === 'function' && onUnpin(id)}>Unpin</NvButton>
+          </>
+        )}
+      />
     </li>
   )
 }
@@ -98,44 +120,25 @@ export function NvPinnedReferenceItem({ item, onOpen, onUnpin }) {
 export function NvRecentReferenceItem({ item, onOpen, onPin }) {
   if (!item) return null
   const { id, title, type, relationshipCount = 0 } = item
+  const densityLabel = relationshipDensityLabel(relationshipCount)
 
   return (
     <li className="memory-panel-item">
-      <div
-        className="nv-card nv-memory-recent-card"
-        role="article"
-        aria-label={`Recent: ${title}`}
-      >
-        <div className="nv-cluster nv-cluster--gap-xs" style={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
-          <div className="nv-stack nv-stack--gap-xs" style={{ minWidth: 0 }}>
-            <div className="nv-cluster nv-cluster--gap-xs">
-              <NvBadge variant="info">{type || 'reference'}</NvBadge>
-            </div>
-            <span
-              className="nv-memory-item-title"
-              style={{ fontSize: 'var(--sys-font-caption-size)', color: 'var(--sys-color-text-primary)', fontWeight: 'var(--ref-font-weight-medium)', lineHeight: 1.3 }}
-            >
-              {title}
-            </span>
-          </div>
-          <div className="nv-cluster nv-cluster--gap-xs" style={{ flexShrink: 0 }}>
-            <NvButton
-              variant="primary"
-              ariaLabel={`Open recently viewed: ${title}`}
-              onClick={() => typeof onOpen === 'function' && onOpen(id)}
-            >
-              Open
-            </NvButton>
-            <NvButton
-              variant="secondary"
-              ariaLabel={`Pin reference: ${title}`}
-              onClick={() => typeof onPin === 'function' && onPin(id)}
-            >
-              Pin
-            </NvButton>
-          </div>
-        </div>
-      </div>
+      <NvMemoryCard
+        title={title}
+        subtitle="Viewed recently"
+        meta={[<NvBadge key="type" variant="info">{type || 'reference'}</NvBadge>, densityLabel]}
+        iconPath="assets/icons/scientific/memory-session/recent-activity.svg"
+        className="nv-memory-recent-card nv-memory-card--compact"
+        ariaLabel={`Recently viewed reference: ${title}`}
+        actions={(
+          <>
+            <NvContributionBar label={`${densityLabel}: ${relationshipCount} link${relationshipCount === 1 ? '' : 's'}`} level={relationshipDensityLevel(relationshipCount)} max={4} className="nv-memory-density" />
+            <NvButton variant="ghost" className="nv-memory-action" ariaLabel={`Open recently viewed: ${title}`} onClick={() => typeof onOpen === 'function' && onOpen(id)}>Open</NvButton>
+            <NvButton variant="ghost" className="nv-memory-action" ariaLabel={`Pin reference: ${title}`} onClick={() => typeof onPin === 'function' && onPin(id)}>Pin</NvButton>
+          </>
+        )}
+      />
     </li>
   )
 }
@@ -143,42 +146,31 @@ export function NvRecentReferenceItem({ item, onOpen, onPin }) {
 // ---------------------------------------------------------------------------
 // NvSavedQueryItem
 // ---------------------------------------------------------------------------
-export function NvSavedQueryItem({ query, onRerun, onDelete }) {
+export function NvSavedQueryItem({ item, query: legacyQuery, onRerun, onDelete }) {
+  const normalized = typeof item === 'string' ? { query: item } : (item || { query: legacyQuery })
+  const { query, matchCount } = normalized
   if (!query) return null
+
+  const matchLabel = Number.isFinite(matchCount)
+    ? `${matchCount} current match${matchCount === 1 ? '' : 'es'}`
+    : 'Ready to rerun'
 
   return (
     <li className="memory-panel-item">
-      <div
-        className="nv-card nv-memory-query-card"
-        role="article"
-        aria-label={`Saved query: ${query}`}
-      >
-        <div className="nv-cluster nv-cluster--gap-xs" style={{ justifyContent: 'space-between', alignItems: 'center' }}>
-          <span
-            className="nv-memory-query-text"
-            style={{ fontSize: 'var(--sys-font-caption-size)', color: 'var(--sys-color-text-primary)', fontWeight: 'var(--ref-font-weight-medium)', minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
-            title={query}
-          >
-            {query}
-          </span>
-          <div className="nv-cluster nv-cluster--gap-xs" style={{ flexShrink: 0 }}>
-            <NvButton
-              variant="primary"
-              ariaLabel={`Rerun saved query: ${query}`}
-              onClick={() => typeof onRerun === 'function' && onRerun(query)}
-            >
-              Rerun
-            </NvButton>
-            <NvButton
-              variant="secondary"
-              ariaLabel={`Delete saved query: ${query}`}
-              onClick={() => typeof onDelete === 'function' && onDelete(query)}
-            >
-              ×
-            </NvButton>
-          </div>
-        </div>
-      </div>
+      <NvMemoryCard
+        title={query}
+        subtitle="Saved investigation"
+        meta={[matchLabel, 'Registry query']}
+        iconPath="assets/icons/scientific/collections/saved-queries.svg"
+        className="nv-memory-query-card nv-memory-card--compact"
+        ariaLabel={`Saved query: ${query}`}
+        actions={(
+          <>
+            <NvButton variant="ghost" className="nv-memory-action" ariaLabel={`Rerun saved query: ${query}`} onClick={() => typeof onRerun === 'function' && onRerun(query)}>Rerun</NvButton>
+            <NvButton variant="ghost" className="nv-memory-action" ariaLabel={`Delete saved query: ${query}`} onClick={() => typeof onDelete === 'function' && onDelete(query)}>Delete</NvButton>
+          </>
+        )}
+      />
     </li>
   )
 }
@@ -202,10 +194,11 @@ export function NvKnowledgeTrailItem({ event, onRestore }) {
   if (!event) return null
   const { id, type = 'open', label = '', timestamp = '' } = event
   const badgeVariant = TRAIL_BADGE_VARIANT[type] || 'neutral'
+  const iconPath = TRAIL_ICON_PATH[type] || 'assets/icons/scientific/memory-session/knowledge-trail.svg'
 
   return (
     <li
-      className="trail-event"
+      className="trail-event nv-memory-trail-event"
       tabIndex={0}
       role="button"
       aria-label={`Trail event: ${label} at ${timestamp}. Press Enter to restore.`}
@@ -217,14 +210,29 @@ export function NvKnowledgeTrailItem({ event, onRestore }) {
         }
       }}
     >
-      <div className="trail-meta">
-        <NvBadge variant={badgeVariant} style={{ fontSize: '0.5rem', padding: '1px 4px', textTransform: 'uppercase' }}>
-          {type}
-        </NvBadge>
-        <span>{timestamp}</span>
+      <span className="nv-memory-trail-event__marker" aria-hidden="true">
+        <NvScientificIcon iconPath={iconPath} size="sm" />
+      </span>
+      <div className="nv-memory-trail-event__body">
+        <div className="trail-meta nv-memory-trail-event__meta">
+          <NvBadge variant={badgeVariant}>{type}</NvBadge>
+          <span>{timestamp}</span>
+        </div>
+        <div className="nv-memory-trail-event__label">{compactTrailLabel(label)}</div>
       </div>
-      <div style={{ marginTop: '2px', lineHeight: 1.3 }}>{label}</div>
     </li>
+  )
+}
+
+function NvMemoryEmptyState({ iconPath, title, subtitle, actionLabel, onAction }) {
+  return (
+    <NvEmptyState
+      icon={<NvScientificIcon iconPath={iconPath} size="lg" />}
+      title={title}
+      subtitle={subtitle}
+      className="nv-empty-state--compact nv-memory-empty-state"
+      actions={actionLabel && typeof onAction === 'function' ? <NvButton variant="ghost" className="nv-memory-action" onClick={onAction}>{actionLabel}</NvButton> : null}
+    />
   )
 }
 
@@ -248,21 +256,39 @@ export function NvMemoryLayer({ data = {}, callbacks = {} }) {
     onDeleteQuery,
     onRestoreTrail,
     onClearTrail,
+    onToggleCollapse,
+    onRunSearchFocus,
   } = callbacks
 
   return (
-    <>
+    <div className="nv-memory-dashboard">
+      <header className="nv-memory-dashboard__header">
+        <div className="nv-memory-dashboard__title-group">
+          <p className="nv-memory-dashboard__eyebrow">Research Memory</p>
+          <h3>Continue your investigation.</h3>
+        </div>
+        <div className="nv-memory-dashboard__summary" aria-label="Research memory summary">
+          <MemoryStatusChip icon="⌖" label="Pinned" value={pinned.length} />
+          <MemoryStatusChip icon="◷" label="Recent" value={recent.length} />
+          <MemoryStatusChip icon="▱" label="Saved queries" value={savedQueries.length} />
+          <MemoryStatusChip icon="◇" label="Knowledge trail" value={trail.length} />
+        </div>
+        <div className="nv-memory-dashboard__toolbar">
+          {typeof onToggleCollapse === 'function' && <NvButton variant="ghost" className="nv-memory-action" ariaLabel="Collapse research memory" onClick={onToggleCollapse}>Collapse</NvButton>}
+          {typeof onClearTrail === 'function' && <NvButton variant="ghost" className="nv-memory-action" ariaLabel="Clear knowledge trail logs" onClick={onClearTrail}>Clear</NvButton>}
+        </div>
+      </header>
 
       {/* Column 1: Pinned References */}
-      <NvMemoryColumn title="Pinned References">
+      <div className="nv-memory-dashboard__row nv-memory-dashboard__row--primary">
+      <NvMemoryColumn title="Pinned References" className="nv-memory-section--pinned">
         <ul className="memory-list" aria-label="Pinned references">
           {pinned.length === 0 ? (
             <li>
-              <NvEmptyState
-                icon={null}
+              <NvMemoryEmptyState
+                iconPath="assets/icons/scientific/memory-session/research-archive.svg"
                 title="No pinned references"
                 subtitle="Pin important references to preserve your research anchors."
-                className="nv-empty-state--compact"
               />
             </li>
           ) : (
@@ -279,15 +305,14 @@ export function NvMemoryLayer({ data = {}, callbacks = {} }) {
       </NvMemoryColumn>
 
       {/* Column 2: Recently Viewed */}
-      <NvMemoryColumn title="Recently Viewed">
+      <NvMemoryColumn title="Recent Activity" className="nv-memory-section--recent">
         <ul className="memory-list" aria-label="Recently viewed references">
           {recent.length === 0 ? (
             <li>
-              <NvEmptyState
-                icon={null}
+              <NvMemoryEmptyState
+                iconPath="assets/icons/scientific/memory-session/recent-activity.svg"
                 title="No recent references"
                 subtitle="Opened references will appear here for short-term recall."
-                className="nv-empty-state--compact"
               />
             </li>
           ) : (
@@ -302,24 +327,27 @@ export function NvMemoryLayer({ data = {}, callbacks = {} }) {
           )}
         </ul>
       </NvMemoryColumn>
+      </div>
 
       {/* Column 3: Saved Queries */}
-      <NvMemoryColumn title="Saved Queries">
+      <div className="nv-memory-dashboard__row nv-memory-dashboard__row--secondary">
+      <NvMemoryColumn title="Saved Queries" className="nv-memory-section--queries">
         <ul className="memory-list" aria-label="Saved queries">
           {savedQueries.length === 0 ? (
             <li>
-              <NvEmptyState
-                icon={null}
+              <NvMemoryEmptyState
+                iconPath="assets/icons/scientific/collections/saved-queries.svg"
                 title="No saved queries"
-                subtitle="Save useful searches to resume recurring investigations."
-                className="nv-empty-state--compact"
+                subtitle="Save recurring investigations to resume them later."
+                actionLabel="Run Search"
+                onAction={onRunSearchFocus}
               />
             </li>
           ) : (
-            savedQueries.map((query) => (
+            savedQueries.map((item) => (
               <NvSavedQueryItem
-                key={query}
-                query={query}
+                key={typeof item === 'string' ? item : item.query}
+                item={item}
                 onRerun={onRerunQuery}
                 onDelete={onDeleteQuery}
               />
@@ -331,43 +359,25 @@ export function NvMemoryLayer({ data = {}, callbacks = {} }) {
       {/* Column 4: Knowledge Trail */}
       <NvMemoryColumn
         title="Knowledge Trail"
+        className="nv-memory-section--trail"
         trailing={
-          typeof onClearTrail === 'function'
-            ? (
-              <NvButton
-                variant="secondary"
-                ariaLabel="Clear knowledge trail logs"
-                onClick={onClearTrail}
-              >
-                Clear
-              </NvButton>
-            )
-            : null
+          trailSummaryHtml ? <NvMicroViz html={trailSummaryHtml} className="nv-memory-trail-summary" ariaLabel="Session progress and trail sparkline" /> : null
         }
       >
         <ul
-          className="memory-list"
-          style={{ maxHeight: '180px', overflowY: 'auto' }}
+          className="memory-list nv-memory-timeline"
           aria-label="Knowledge trail activity log"
         >
           {trail.length === 0 ? (
             <li>
-              <NvEmptyState
-                icon={null}
+              <NvMemoryEmptyState
+                iconPath="assets/icons/scientific/memory-session/knowledge-trail.svg"
                 title="No research trail yet"
                 subtitle="Your exploration path will appear here as you search, inspect, and compile evidence."
-                className="nv-empty-state--compact"
               />
             </li>
           ) : (
             <>
-              {trailSummaryHtml && (
-                <li
-                  className="memory-microvisualization-summary"
-                  dangerouslySetInnerHTML={{ __html: trailSummaryHtml }}
-                  aria-hidden="true"
-                />
-              )}
               {trail.map((event) => (
                 <NvKnowledgeTrailItem
                   key={event.id}
@@ -379,7 +389,8 @@ export function NvMemoryLayer({ data = {}, callbacks = {} }) {
           )}
         </ul>
       </NvMemoryColumn>
+      </div>
 
-    </>
+    </div>
   )
 }

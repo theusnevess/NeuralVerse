@@ -1827,6 +1827,13 @@
     }
   }
 
+  function toggleMemoryPanelCollapsed() {
+    memoryPanelCollapsed = !memoryPanelCollapsed;
+    applyMemoryCollapseStyles();
+    saveWorkspaceState();
+    renderMemoryLayer();
+  }
+
   function applyDensityStyles() {
     const mainWorkspace = document.querySelector(".nv-main-workspace");
     const densitySelect = document.getElementById("pref-density");
@@ -4527,7 +4534,10 @@
       const memoryPayload = {
         pinned: pinnedReferences.map(buildMemoryItem),
         recent: visibleRecent.map(buildMemoryItem),
-        savedQueries: [...savedQueries],
+        savedQueries: savedQueries.map(query => ({
+          query,
+          matchCount: adapter.searchReferences(retrievalState, query).length,
+        })),
         trail: knowledgeTrail.map(event => ({
           id: event.id,
           type: event.type,
@@ -4559,8 +4569,17 @@
         },
         onRestoreTrail: (event) => restoreTrailContext(event),
         onClearTrail: () => {
-          const clearTrailBtn = document.getElementById('playground-clear-trail-button');
-          if (clearTrailBtn) clearTrailBtn.click();
+          knowledgeTrail = [];
+          saveWorkspaceState();
+          renderMemoryLayer();
+        },
+        onToggleCollapse: () => {
+          toggleMemoryPanelCollapsed();
+        },
+        onRunSearchFocus: () => {
+          switchExplorationMode("search");
+          const searchInput = document.getElementById('playground-search-input');
+          if (searchInput) searchInput.focus();
         },
       };
 
@@ -5111,6 +5130,7 @@
       const searchFeedback = document.getElementById("playground-search-feedback");
       const clearSessionBtn = document.getElementById("playground-clear-session-button");
       const clearTrailBtn = document.getElementById("playground-clear-trail-button");
+      const memoryCollapseBtn = document.getElementById("memory-toggle-collapse-button");
       const graphResetButton = document.getElementById("graph-reset-view-button");
       const graphZoomInButton = document.getElementById("graph-zoom-in-button");
       const graphZoomOutButton = document.getElementById("graph-zoom-out-button");
@@ -5411,6 +5431,13 @@
           knowledgeTrail = [];
           saveWorkspaceState();
           renderMemoryLayer();
+        };
+      }
+
+      if (memoryCollapseBtn) {
+        memoryCollapseBtn.onclick = (e) => {
+          e.stopPropagation();
+          toggleMemoryPanelCollapsed();
         };
       }
     } catch (err) {
