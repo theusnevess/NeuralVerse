@@ -31,6 +31,7 @@ import {
   NvRelationshipInspectorPanel,
 } from './NvInspectorPanel.jsx'
 import { NvMemoryLayer, NvMemoryColumn, NvPinnedReferenceItem, NvRecentReferenceItem, NvSavedQueryItem, NvKnowledgeTrailItem } from './NvMemoryLayer.jsx'
+import { NvWorkspaceSnapshot, NvSessionStatus, NvResearchStats, NvKnowledgePulse, NvActivityTimelineMini } from './NvWorkspaceSnapshot.jsx'
 
 // Shared component exports (available for future host-page usage)
 export {
@@ -70,6 +71,9 @@ export {
 // Memory island exports
 export { NvMemoryLayer, NvMemoryColumn, NvPinnedReferenceItem, NvRecentReferenceItem, NvSavedQueryItem, NvKnowledgeTrailItem }
 
+// Workspace snapshot island exports
+export { NvWorkspaceSnapshot, NvSessionStatus, NvResearchStats, NvKnowledgePulse, NvActivityTimelineMini }
+
 // Legacy island exports
 export { NvHoverPreview, NvContextMenu, NvDiscoveryCard }
 
@@ -86,6 +90,7 @@ window.NeuralVerse.react = {
     NvDiscoveryCard,
     NvInspectorPanel,
     NvMemoryLayer,
+    NvWorkspaceSnapshot,
   },
 }
 

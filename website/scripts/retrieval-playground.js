@@ -1913,14 +1913,82 @@
 
     const progressHtml = renderSessionProgress();
     const sparklineHtml = renderTrailSparkline(knowledgeTrail);
+    const selectedRef = selectedReferenceId ? adapter.getReferenceById(retrievalState, selectedReferenceId) : null;
+    const selectedRelCount = selectedRef ? adapter.getRelationshipsForReference(retrievalState, selectedRef.id).length : 0;
+    const lastActivity = knowledgeTrail[0] || null;
+    const artifactCount = pinnedReferences.length + recentReferences.length + savedQueries.length + evidenceTimeline.length + knowledgeTrail.length;
+    const hasResearchContext = Boolean(currentSearchQuery || selectedRef || artifactCount > 0);
+    const focusCluster = selectedRef ? getClusterLabel(selectedRef) : activeExplorationMode ? `${activeExplorationMode} mode` : "";
+    const evidenceCount = evidenceTimeline.length || (currentCompiledEvidence ? 1 : 0);
+    const compactTrailLabel = (event) => {
+      if (!event) return "";
+      const type = String(event.type || "activity").replace(/_/g, " ");
+      return type.charAt(0).toUpperCase() + type.slice(1);
+    };
 
+    getNvReactBridge()?.unmount?.(container);
     container.innerHTML = `
-      <span class="nv-muted" style="font-weight: var(--ref-font-weight-medium);">Research Snapshot:</span>
-      <div class="nv-cluster nv-cluster--gap-sm" style="align-items: center;">
-        ${progressHtml}
-        ${sparklineHtml}
+      <div class="nv-workspace-dashboard-fallback">
+        <span class="nv-muted">Research Snapshot</span>
+        <strong>${currentSearchQuery ? escapeHtml(currentSearchQuery) : selectedRef ? escapeHtml(selectedRef.title) : "Workspace Ready"}</strong>
+        <span>${artifactCount} session artifact${artifactCount === 1 ? "" : "s"}</span>
       </div>
     `;
+
+    const dashboardPayload = {
+      snapshot: {
+        currentQuery: currentSearchQuery || "",
+        selectedReference: selectedRef ? selectedRef.title : "",
+        focusedCluster: focusCluster,
+        lastActivity: lastActivity ? `${compactTrailLabel(lastActivity)} · ${lastActivity.timestamp}` : "",
+        resumeContext: hasResearchContext
+          ? "Resume the current investigation from the active query, selected reference, or recent trail."
+          : "Workspace ready. Start a search to begin your investigation.",
+      },
+      session: {
+        isActive: hasResearchContext,
+        lastUpdate: lastActiveTimestamp ? new Date(lastActiveTimestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "",
+        progressHtml,
+      },
+      stats: [
+        { id: "pinned", label: "Pinned", value: pinnedReferences.length },
+        { id: "recent", label: "Recent", value: recentReferences.length },
+        { id: "saved", label: "Saved", value: savedQueries.length },
+        { id: "evidence", label: "Evidence", value: evidenceCount },
+        { id: "trail", label: "Trail", value: knowledgeTrail.length },
+      ],
+      pulse: {
+        summary: selectedRef
+          ? `${getConnectivityScoreLabel(selectedRelCount)} in ${getClusterLabel(selectedRef)}.`
+          : currentCompiledEvidence
+            ? `${getEvidenceCoverageLabel((currentCompiledEvidence.matchedReferences?.length || 0) + (currentCompiledEvidence.relatedReferences?.length || 0))} evidence synthesis available.`
+            : currentSearchQuery
+              ? `${currentSearchResults.length} result${currentSearchResults.length === 1 ? "" : "s"} in the active query.`
+              : "No active research signals yet.",
+        microvisuals: [
+          selectedRef ? renderRelationshipDensityMeter(selectedRelCount) : "",
+          selectedRef ? renderConnectivityScore(selectedRelCount) : "",
+          currentCompiledEvidence ? renderConfidenceGauge(currentCompiledEvidence.confidence) : "",
+          sparklineHtml,
+        ].filter(Boolean),
+      },
+      timeline: knowledgeTrail.slice(0, 4).map(event => ({
+        id: event.id,
+        type: compactTrailLabel(event),
+        label: String(event.label || "").replace(/^Searched /, "Search ").replace(/^Opened /, "Opened "),
+        timestamp: event.timestamp,
+      })),
+      isEmpty: !hasResearchContext,
+    };
+
+    const dashboardCallbacks = {
+      onRunSearch: () => {
+        switchExplorationMode("search");
+        document.getElementById("playground-search-input")?.focus();
+      },
+    };
+
+    tryMountReactIsland(container, "NvWorkspaceSnapshot", dashboardPayload, dashboardCallbacks);
   }
 
   // Smart Empty State
