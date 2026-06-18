@@ -632,6 +632,12 @@ class ViewController {
     const viewId = route.id === 'not-found' ? 'not-found' : (route.isImplemented ? route.id : 'not-found');
     if (window.NV_DEBUG) console.log(`Rendering view: ${viewId}`);
 
+    // Route transition — exit current content (skip if reduced motion)
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!prefersReducedMotion) {
+      this.container.style.opacity = '0';
+    }
+
     let rendered = false;
     // Attempt to load from static files
     try {
@@ -661,6 +667,21 @@ class ViewController {
     if (!rendered) {
       const template = this.templates[viewId] || this.templates['not-found'];
       this.container.innerHTML = template;
+    }
+
+    // Route transition — enter new content
+    if (!prefersReducedMotion) {
+      this.container.classList.add('nv-route-enter');
+      this.container.offsetHeight;
+      this.container.style.opacity = '1';
+
+      const onEnterEnd = () => {
+        this.container.classList.remove('nv-route-enter');
+        this.container.removeEventListener('animationend', onEnterEnd);
+      };
+      this.container.addEventListener('animationend', onEnterEnd);
+    } else {
+      this.container.style.opacity = '1';
     }
 
     // Dispatch custom event to notify all components that page content has been rendered
