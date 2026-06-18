@@ -59,6 +59,19 @@ import {
   NvExportReadyEvidenceBlock,
 } from './NvCompareWorkspace.jsx'
 import {
+  NvResearchPresentation,
+  NvPresentationExecutiveSummary,
+  NvPresentationNarrative,
+  NvPresentationTimeline,
+  NvPresentationEvidenceGallery,
+  NvPresentationReferenceList,
+  NvPresentationComparisonSummary,
+  NvPresentationConvergenceMap,
+  NvPresentationSessionState,
+  NvPresentationSnapshotBlock,
+  NvPresentationActions,
+} from './NvResearchPresentation.jsx'
+import {
   NvWorkspaceSnapshot,
   NvActiveInvestigation,
   NvResearchHealth,
@@ -157,6 +170,21 @@ export {
 // Legacy island exports
 export { NvHoverPreview, NvContextMenu, NvDiscoveryCard }
 
+// Presentation island exports
+export {
+  NvResearchPresentation,
+  NvPresentationExecutiveSummary,
+  NvPresentationNarrative,
+  NvPresentationTimeline,
+  NvPresentationEvidenceGallery,
+  NvPresentationReferenceList,
+  NvPresentationComparisonSummary,
+  NvPresentationConvergenceMap,
+  NvPresentationSessionState,
+  NvPresentationSnapshotBlock,
+  NvPresentationActions,
+}
+
 // Bridge exports
 export { mount, update, unmount }
 
@@ -172,6 +200,7 @@ window.NeuralVerse.react = {
     NvMemoryLayer,
     NvWorkspaceSnapshot,
     NvCompareWorkspace,
+    NvResearchPresentation,
   },
 }
 

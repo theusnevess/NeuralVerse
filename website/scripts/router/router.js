@@ -370,6 +370,7 @@ class ViewController {
                 <button class="workspace-tab" data-mode="graph" role="tab" aria-selected="false" id="tab-graph">Graph Mode</button>
                 <button class="workspace-tab" data-mode="discovery" role="tab" aria-selected="false" id="tab-discovery">Discovery Mode</button>
                 <button class="workspace-tab" data-mode="compare" role="tab" aria-selected="false" id="tab-compare">Compare Mode</button>
+                <button class="workspace-tab" data-mode="presentation" role="tab" aria-selected="false" id="tab-presentation">Presentation</button>
               </div>
 
               <!-- Mode 1: Search Mode -->
@@ -481,6 +482,11 @@ class ViewController {
               <!-- Mode 4: Compare Mode -->
               <section id="mode-compare" class="exploration-mode" aria-labelledby="tab-compare">
                 <div id="compare-workspace-container" class="nv-panel nv-stack nv-stack--gap-sm"></div>
+              </section>
+
+              <!-- Mode 5: Research Presentation Mode -->
+              <section id="mode-presentation" class="exploration-mode" aria-labelledby="tab-presentation">
+                <div id="presentation-container" class="nv-panel nv-stack nv-stack--gap-sm"></div>
               </section>
 
             </main>

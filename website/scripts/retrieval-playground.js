@@ -5034,6 +5034,157 @@
     }
   }
 
+  // DOM Rendering: Research Presentation Mode
+  function buildPresentationPayload() {
+    const now = Date.now();
+    const evidenceCount = evidenceTimeline.length || (currentCompiledEvidence ? 1 : 0);
+    const selectedRef = selectedReferenceId ? adapter.getReferenceById(retrievalState, selectedReferenceId) : null;
+    const confidenceLabel = compareSynthesis?.confidence?.label || currentCompiledEvidence?.confidence
+      ? `${String(currentCompiledEvidence?.confidence || "").charAt(0).toUpperCase()}${String(currentCompiledEvidence?.confidence || "").slice(1)} Support`
+      : "";
+
+    const narrativeTypes = { search: "search", rerun_query: "search", compile_query: "evidence-compiled", compile_ref: "evidence-compiled", compare_add: "comparison", compare_synthesis: "synthesis-created", pin: "pin", open: "reference-opened", select_node: "graph-explored", save_query: "saved-query", explore_neighborhood: "graph-explored", compare_reference: "comparison" };
+
+    const narrative = knowledgeTrail.slice(0, 8).map(event => {
+      const type = narrativeTypes[event.type] || "reference-opened";
+      const titleBase = String(event.label || "").replace(/^Searched "?/i, "").replace(/"$/, "");
+      return {
+        id: event.id,
+        type,
+        title: type === "search" ? `Query: ${titleBase}` : type === "reference-opened" ? `Opened reference` : type === "evidence-compiled" ? `Compiled evidence` : type === "comparison" ? `Comparison` : type === "synthesis-created" ? `Synthesis created` : type === "pin" ? `Pinned reference` : type === "graph-explored" ? `Graph exploration` : titleBase,
+        text: event.label || "",
+        timestamp: event.timestamp,
+        targetId: event.metadata?.referenceId || event.metadata?.query || "",
+      };
+    });
+
+    const roleForRef = (refId) => {
+      if (refId === selectedReferenceId) return "Primary";
+      if (compareSelection.includes(refId)) return "Compared";
+      if (pinnedReferences.includes(refId)) return "Pinned";
+      if (compareSynthesis?.sharedSupport?.some(s => s.referenceId === refId)) return "Supporting";
+      if (currentCompiledEvidence?.matchedReferences?.some(r => r.id === refId)) return "Supporting";
+      if (currentCompiledEvidence?.relatedReferences?.some(r => r.id === refId)) return "Context";
+      return "Context";
+    };
+
+    const allRefIds = new Set([
+      ...recentReferences,
+      ...pinnedReferences,
+      ...compareSelection,
+      selectedReferenceId,
+      ...(currentCompiledEvidence?.matchedReferences || []).map(r => r.id),
+      ...(currentCompiledEvidence?.relatedReferences || []).map(r => r.id),
+      ...(compareSynthesis?.sharedSupport || []).map(s => s.referenceId),
+    ].filter(Boolean));
+
+    const references = [...allRefIds].map(id => {
+      const ref = adapter.getReferenceById(retrievalState, id);
+      if (!ref) return null;
+      const rels = adapter.getRelationshipsForReference(retrievalState, ref.id);
+      return {
+        id: ref.id,
+        title: ref.title,
+        type: ref.type,
+        source: ref.source,
+        role: roleForRef(ref.id),
+        relationshipCount: rels.length,
+        clusterLabel: getClusterLabel(ref),
+      };
+    }).filter(Boolean);
+
+    const evidence = [];
+    if (currentCompiledEvidence) {
+      evidence.push({
+        id: currentCompiledEvidence.id || "current-evidence",
+        title: `Evidence: ${(currentCompiledEvidence.input || "").slice(0, 40)}`,
+        summary: currentCompiledEvidence.summary || "",
+        confidenceLabel: `${String(currentCompiledEvidence.confidence || "low").charAt(0).toUpperCase()}${String(currentCompiledEvidence.confidence || "low").slice(1)} Support`,
+        supportingReferenceIds: [...(currentCompiledEvidence.matchedReferences || []).map(r => r.id), ...(currentCompiledEvidence.relatedReferences || []).map(r => r.id)],
+        createdAt: currentCompiledEvidence.createdAt,
+      });
+    }
+
+    const comparisons = compareSelection.length >= 2 ? {
+      comparedReferences: compareSelection.slice(0, 4),
+      sharedConcepts: compareSynthesis?.provenance?.sharedConceptCount ? [] : [],
+      uniqueConceptsByReference: compareSelection.map(id => {
+        const ref = adapter.getReferenceById(retrievalState, id);
+        return { referenceId: id, uniqueConcepts: ref?.keywords?.slice(0, 4) || [] };
+      }),
+      convergenceSummary: compareSynthesis ? `The compared set shares ${compareSynthesis.provenance?.sharedConceptCount || 0} concepts and ${compareSynthesis.provenance?.relationshipOverlapCount || 0} relationship patterns.` : "",
+      divergenceSummary: compareSynthesis?.divergentNotes?.length ? `${compareSynthesis.divergentNotes.length} divergent evidence notes found.` : "",
+    } : null;
+
+    const synthesis = compareSynthesis ? {
+      summary: compareSynthesis.summary?.text || "",
+      sharedSupportCount: compareSynthesis.sharedSupport?.length || 0,
+      divergentNoteCount: compareSynthesis.divergentNotes?.length || 0,
+      confidenceLabel: compareSynthesis.confidence?.label,
+      provenance: compareSynthesis.provenance?.generatedFrom || "compare-set",
+    } : null;
+
+    const trailConceptCount = new Set(knowledgeTrail.flatMap(e => {
+      if (!e.metadata?.referenceId) return [];
+      const ref = adapter.getReferenceById(retrievalState, e.metadata.referenceId);
+      return ref?.keywords || [];
+    })).size;
+
+    const summaryText = currentSearchQuery
+      ? `Research investigation "${currentSearchQuery}" — ${references.length} references, ${evidenceCount} evidence compilation${evidenceCount === 1 ? "" : "s"}, ${compareSelection.length} compared, ${pinnedReferences.length} pinned.`
+      : `Research investigation — ${references.length} references reviewed, ${evidenceCount} evidence compilation${evidenceCount === 1 ? "" : "s"}, ${compareSelection.length} compared, ${pinnedReferences.length} pinned.`;
+
+    return {
+      id: `presentation-${now}`,
+      createdAt: new Date().toISOString(),
+      executiveSummary: {
+        title: currentSearchQuery ? `Investigation: ${currentSearchQuery}` : "Research Investigation",
+        text: summaryText,
+        confidenceLabel: confidenceLabel || undefined,
+      },
+      investigation: {
+        activeQuery: currentSearchQuery || "",
+        selectedReferenceId: selectedReferenceId || "",
+        selectedReferenceTitle: selectedRef?.title || "",
+        focusedCluster: selectedRef ? getClusterLabel(selectedRef) : "",
+        evidenceCount,
+        comparedReferenceCount: compareSelection.length,
+        pinnedCount: pinnedReferences.length,
+        trailEventCount: knowledgeTrail.length,
+        trailConceptCount,
+      },
+      narrative,
+      references,
+      evidence,
+      comparisons,
+      synthesis,
+      actions: {
+        canCopySnapshot: true,
+        canReturnToWorkspace: true,
+        canOpenEvidence: evidence.length > 0,
+        canOpenCompare: compareSelection.length >= 2,
+      },
+    };
+  }
+
+  function renderPresentationMode() {
+    const container = document.getElementById("presentation-container");
+    if (!container) return;
+
+    const payload = buildPresentationPayload();
+    tryUnmountReactIsland(container);
+
+    container.innerHTML = `
+      <div class="nv-presentation-fallback">
+        <h3>Research Presentation</h3>
+        <p class="nv-muted">${payload.executiveSummary.text}</p>
+        ${payload.references.length > 0 ? `<p class="nv-muted">${payload.references.length} references · ${payload.investigation.evidenceCount} evidence · ${payload.narrative.length} events</p>` : ""}
+      </div>
+    `;
+
+    if (tryMountReactIsland(container, "NvResearchPresentation", payload, {})) return;
+  }
+
   // DOM Rendering: Memory Layer (Recent, Pinned, Queries, Trail)
   function renderMemoryLayer() {
     const recentList = document.getElementById("memory-recent-list");
@@ -5569,7 +5720,7 @@
       });
 
       // Toggle mode panel visibility
-      const modes = ["search", "graph", "discovery", "compare"];
+      const modes = ["search", "graph", "discovery", "compare", "presentation"];
       modes.forEach(m => {
         const el = document.getElementById(`mode-${m}`);
         if (el) {
@@ -5588,6 +5739,8 @@
         renderDiscoveryMode();
       } else if (mode === "compare") {
         renderCompareMode();
+      } else if (mode === "presentation") {
+        renderPresentationMode();
       }
       renderResearchSnapshot();
     } catch (err) {
