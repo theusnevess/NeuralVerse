@@ -55,6 +55,14 @@ All shared React island presentation primitives live in `react-build/src/compone
 | `NvCompareGraphSyncStatus` | `react-build/src/NvCompareWorkspace.jsx` | ✅ v1 | Graph sync information display |
 | `NvCompareSetManager` | `react-build/src/NvCompareWorkspace.jsx` | ✅ v1 | Saved compare sets manager (deferred) |
 | `NvCompareEmptyState` | `react-build/src/NvCompareWorkspace.jsx` | ✅ v1 | Compare empty state component |
+| `NvCompareSynthesisPanel` | `react-build/src/NvCompareWorkspace.jsx` | ✅ v1 | Comparative evidence synthesis panel |
+| `NvCompareSynthesisSummary` | `react-build/src/NvCompareWorkspace.jsx` | ✅ v1 | Templated synthesis summary |
+| `NvCompareSynthesisActions` | `react-build/src/NvCompareWorkspace.jsx` | ✅ v1 | Synthesis action buttons |
+| `NvSharedSupportReferences` | `react-build/src/NvCompareWorkspace.jsx` | ✅ v1 | Shared support reference cards |
+| `NvDivergentEvidenceNotes` | `react-build/src/NvCompareWorkspace.jsx` | ✅ v1 | Per-reference divergent evidence notes |
+| `NvSourceContributionMap` | `react-build/src/NvCompareWorkspace.jsx` | ✅ v1 | Contribution level visualization per source |
+| `NvSynthesisConfidenceSummary` | `react-build/src/NvCompareWorkspace.jsx` | ✅ v1 | Qualitative confidence display |
+| `NvExportReadyEvidenceBlock` | `react-build/src/NvCompareWorkspace.jsx` | ✅ v1 | Copy-ready export evidence block |
 
 ---
 

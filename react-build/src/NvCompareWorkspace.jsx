@@ -652,6 +652,246 @@ export function NvCompareGraphPosition({ graphContext = [] }) {
   );
 }
 
+export function NvCompareSynthesisSummary({ summary = {} }) {
+  if (!summary.title) return null;
+  return (
+    <div className="nv-synthesis-summary">
+      <h3>{summary.title}</h3>
+      <p>{summary.text}</p>
+      {summary.basis && (
+        <span className="nv-synthesis-summary__basis">
+          Based on: {summary.basis.replace(/-/g, " ")}
+        </span>
+      )}
+    </div>
+  );
+}
+
+export function NvSharedSupportReferences({ sharedSupport = [], callbacks = {} }) {
+  if (sharedSupport.length === 0) return null;
+  return (
+    <NvCompareSection title="Shared Support" iconPath={ICONS.evidence}>
+      <div className="nv-synthesis-shared-grid">
+        {sharedSupport.map((item) => (
+          <article key={item.referenceId} className="nv-synthesis-shared-card">
+            <div className="nv-synthesis-shared-card__header">
+              <h4>{item.title}</h4>
+              <NvBadge variant="info">{item.type || "reference"}</NvBadge>
+            </div>
+            {item.sharedConcepts?.length > 0 && (
+              <div className="nv-compare-chip-row">
+                {item.sharedConcepts.map((concept) => (
+                  <NvChip key={concept} variant="accent">{concept}</NvChip>
+                ))}
+              </div>
+            )}
+            {item.relationshipTypes?.length > 0 && (
+              <p className="nv-compare-muted">
+                Overlapping: {item.relationshipTypes.join(", ")}
+              </p>
+            )}
+            <NvContributionBar
+              label={item.contributionLabel || "Context"}
+              level={
+                item.contributionLabel === "Primary" ? 4
+                  : item.contributionLabel === "Supporting" ? 3
+                  : item.contributionLabel === "Minor" ? 2
+                  : 1
+              }
+              max={4}
+            />
+            <div className="nv-compare-column__actions">
+              <NvButton variant="primary" onClick={() => callbacks.onOpenReference?.(item.referenceId)}>
+                Open Reference
+              </NvButton>
+              <NvButton variant="secondary" onClick={() => callbacks.onTogglePin?.(item.referenceId)}>
+                {item.isPinned ? "Unpin" : "Pin"}
+              </NvButton>
+            </div>
+          </article>
+        ))}
+      </div>
+    </NvCompareSection>
+  );
+}
+
+export function NvDivergentEvidenceNotes({ divergentNotes = [] }) {
+  if (divergentNotes.length === 0) return null;
+  return (
+    <NvCompareSection title="Divergent Evidence Notes" iconPath={ICONS.diff}>
+      <div className="nv-synthesis-divergent-grid">
+        {divergentNotes.map((item) => (
+          <article key={item.referenceId} className="nv-synthesis-divergent-card">
+            <h4>{item.title}</h4>
+            {item.uniqueConcepts?.length > 0 && (
+              <div className="nv-compare-chip-row">
+                {item.uniqueConcepts.map((concept) => (
+                  <NvChip key={concept} variant="neutral">{concept}</NvChip>
+                ))}
+              </div>
+            )}
+            {item.uniqueRelationships?.length > 0 && (
+              <ul className="nv-synthesis-divergent-rels">
+                {item.uniqueRelationships.map((rel) => (
+                  <li key={rel}>{rel}</li>
+                ))}
+              </ul>
+            )}
+            <p className="nv-compare-muted">{item.note}</p>
+          </article>
+        ))}
+      </div>
+    </NvCompareSection>
+  );
+}
+
+export function NvSourceContributionMap({ contributionMap = [] }) {
+  if (contributionMap.length === 0) return null;
+  return (
+    <NvCompareSection title="Source Contribution Map" iconPath={ICONS.graph}>
+      <div className="nv-synthesis-contribution-grid">
+        {contributionMap.map((item) => (
+          <article key={item.referenceId} className="nv-synthesis-contribution-row">
+            <div className="nv-synthesis-contribution-row__label">
+              <strong>{item.title}</strong>
+            </div>
+            <NvContributionBar
+              label={item.contributionLabel}
+              level={item.contributionLevel || 1}
+              max={4}
+            />
+            <span className="nv-compare-muted">{item.basis}</span>
+          </article>
+        ))}
+      </div>
+    </NvCompareSection>
+  );
+}
+
+export function NvSynthesisConfidenceSummary({ confidence = {} }) {
+  if (!confidence.label) return null;
+  return (
+    <NvCompareSection title="Synthesis Confidence" iconPath={ICONS.evidence}>
+      <div className="nv-synthesis-confidence">
+        <NvBadge
+          variant={
+            confidence.label === "High Support" ? "success"
+              : confidence.label === "Moderate Support" ? "warning"
+              : "error"
+          }
+        >
+          {confidence.label}
+        </NvBadge>
+        <p className="nv-compare-muted">{confidence.rationale}</p>
+      </div>
+    </NvCompareSection>
+  );
+}
+
+export function NvExportReadyEvidenceBlock({ synthesis = {}, callbacks = {} }) {
+  if (!synthesis.id) return null;
+  const block = synthesis.compareSet
+    ? `Comparative Evidence Synthesis\n${synthesis.summary?.title || ""}\n${synthesis.summary?.text || ""}\n\nConfidence: ${synthesis.confidence?.label || "Limited Support"}\n\nCompared References: ${synthesis.compareSet.map(r => r.title).join("; ")}\n\nGenerated: ${synthesis.createdAt || ""}`
+    : "";
+
+  return (
+    <NvCompareSection title="Export-Ready Evidence Block" iconPath={ICONS.evidence}>
+      <pre className="nv-synthesis-export-block">{block}</pre>
+      <div className="nv-synthesis-export-actions">
+        <NvButton variant="secondary" onClick={() => callbacks.onCopySynthesisBlock?.()}>
+          Copy Block
+        </NvButton>
+        <NvButton variant="ghost" disabled={true} ariaLabel="Export Snapshot — Future">
+          Export Snapshot
+        </NvButton>
+      </div>
+    </NvCompareSection>
+  );
+}
+
+export function NvCompareSynthesisActions({ synthesis = {}, callbacks = {} }) {
+  const hasSynthesis = Boolean(synthesis?.id);
+  return (
+    <div className="nv-synthesis-actions" aria-label="Synthesis actions">
+      {!hasSynthesis && (
+        <NvButton variant="primary" onClick={() => callbacks.onCompileSynthesis?.()}>
+          Compile Evidence from Compare Set
+        </NvButton>
+      )}
+      {hasSynthesis && (
+        <div className="nv-compare-actions-inline">
+          <NvButton variant="primary" onClick={() => callbacks.onCompileSynthesis?.()}>
+            Recompile Synthesis
+          </NvButton>
+          <NvButton variant="ghost" onClick={() => callbacks.onClearSynthesis?.()}>
+            Clear Synthesis
+          </NvButton>
+        </div>
+      )}
+      <NvButton variant="ghost" onClick={() => callbacks.onOpenCompare?.()}>
+        Return to Compare
+      </NvButton>
+    </div>
+  );
+}
+
+export function NvCompareSynthesisPanel({ data = {}, callbacks = {} }) {
+  const { compareSynthesis } = data;
+  if (!compareSynthesis?.id) {
+    return (
+      <section className="nv-compare-synthesis-panel" aria-label="Evidence synthesis">
+        <NvCompareSynthesisActions synthesis={null} callbacks={callbacks} />
+        <NvCompareEmptyState
+          title="No comparative synthesis compiled"
+          message="Add 2-4 references to the compare set and compile evidence from the set to generate a comparative synthesis."
+          iconPath={ICONS.evidence}
+        />
+      </section>
+    );
+  }
+
+  const {
+    summary = {},
+    sharedSupport = [],
+    divergentNotes = [],
+    contributionMap = [],
+    confidence = {},
+    provenance = {},
+    actions = {},
+  } = compareSynthesis;
+
+  return (
+    <section className="nv-compare-synthesis-panel" aria-labelledby="nv-synthesis-panel-title">
+      <header className="nv-compare-synthesis-panel__header">
+        <div className="nv-compare-synthesis-panel__heading">
+          <NvScientificIcon iconPath={ICONS.evidence} size="md" />
+          <h2 id="nv-synthesis-panel-title">Evidence Synthesis</h2>
+        </div>
+        <div className="nv-compare-synthesis-panel__badges">
+          {provenance.comparedReferences > 0 && (
+            <NvBadge variant="info">{provenance.comparedReferences} references</NvBadge>
+          )}
+          {provenance.sharedConceptCount > 0 && (
+            <NvBadge variant="info">{provenance.sharedConceptCount} shared concepts</NvBadge>
+          )}
+        </div>
+      </header>
+
+      <NvCompareSynthesisActions synthesis={compareSynthesis} callbacks={callbacks} />
+      <NvCompareSynthesisSummary summary={summary} />
+
+      <div className="nv-compare-analysis-grid">
+        <NvSharedSupportReferences sharedSupport={sharedSupport} callbacks={callbacks} />
+        <NvDivergentEvidenceNotes divergentNotes={divergentNotes} />
+        <NvSourceContributionMap contributionMap={contributionMap} />
+        <NvSynthesisConfidenceSummary confidence={confidence} />
+      </div>
+
+      <NvExportReadyEvidenceBlock synthesis={compareSynthesis} callbacks={callbacks} />
+    </section>
+  );
+}
+
 export function NvCompareWorkspace({ data = {}, callbacks = {} }) {
   const {
     items = [],
@@ -666,6 +906,7 @@ export function NvCompareWorkspace({ data = {}, callbacks = {} }) {
     feedback = "",
     limit = 4,
     actions = {},
+    compareSynthesis = null,
   } = data;
 
   const hasItems = items.length >= 2;
@@ -718,6 +959,10 @@ export function NvCompareWorkspace({ data = {}, callbacks = {} }) {
           convergence={convergence}
           callbacks={callbacks}
         />
+      )}
+
+      {hasItems && (
+        <NvCompareSynthesisPanel data={{ compareSynthesis }} callbacks={callbacks} />
       )}
 
       <NvCompareMatrix items={items} callbacks={callbacks} />

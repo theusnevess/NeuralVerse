@@ -39,6 +39,7 @@
   let evidenceTimeline = [];
   let compareSelection = [];
   let compareFeedback = "";
+  let compareSynthesis = null;
   let preferencesEscapeHandlerBound = false;
   let inspectorResizeHandlerBound = false;
 
@@ -1591,6 +1592,210 @@
     };
   }
 
+  function deriveSynthesisConfidence(sharedConcepts, overlappingRels, evidenceRefs) {
+    const conceptCount = sharedConcepts.length;
+    const relOverlap = overlappingRels.length;
+    const evidenceCount = evidenceRefs.length;
+    if (conceptCount >= 2 && (relOverlap >= 2 || evidenceCount >= 1)) return "High Support";
+    if (conceptCount >= 1 || relOverlap >= 1 || evidenceCount >= 1) return "Moderate Support";
+    return "Limited Support";
+  }
+
+  function buildCompareSynthesisPayload() {
+    const refs = compareSelection
+      .map(id => adapter.getReferenceById(retrievalState, id))
+      .filter(Boolean)
+      .slice(0, 4);
+
+    if (refs.length === 0) return null;
+
+    const keywordSets = refs.map(ref => new Set((ref.keywords || []).map(keyword => String(keyword).toLowerCase())));
+    const sharedConcepts = keywordSets.length >= 2
+      ? [...keywordSets[0]].filter(keyword => keywordSets.every(set => set.has(keyword)))
+      : [];
+
+    const relationshipTypeSets = refs.map(ref =>
+      new Set(adapter.getRelationshipsForReference(retrievalState, ref.id).map(rel => rel.type)));
+    const overlappingRelationships = relationshipTypeSets.length >= 2
+      ? [...relationshipTypeSets[0]].filter(type => relationshipTypeSets.every(set => set.has(type))).map(type => String(type).replace(/_/g, " "))
+      : [];
+
+    const evidenceRefs = currentCompiledEvidence
+      ? [...(currentCompiledEvidence.matchedReferences || []), ...(currentCompiledEvidence.relatedReferences || [])].filter(mr => refs.some(r => r.id === mr.id))
+      : [];
+
+    const sharedSupport = refs.filter(ref => {
+      if (refs.length < 2) return false;
+      const rels = adapter.getRelationshipsForReference(retrievalState, ref.id);
+      const connectedIds = new Set();
+      rels.forEach(rel => { connectedIds.add(rel.sourceReferenceId); connectedIds.add(rel.targetReferenceId); });
+      connectedIds.delete(ref.id);
+      const shareConcepts = (ref.keywords || []).some(keyword => sharedConcepts.includes(String(keyword).toLowerCase()));
+      const shareRels = overlappingRelationships.length > 0 && relationshipTypeSets.find(rs => rs.has(ref.type));
+      const inEvidence = evidenceRefs.some(er => er.id === ref.id);
+      return shareConcepts || shareRels || inEvidence;
+    }).map(ref => {
+      const rels = adapter.getRelationshipsForReference(retrievalState, ref.id);
+      const relTypes = [...new Set(rels.map(rel => String(rel.type || "related").replace(/_/g, " ")))];
+      const sharedRels = relTypes.filter(rt => overlappingRelationships.includes(rt));
+      const inEvidence = evidenceRefs.some(er => er.id === ref.id);
+      const shareConcepts = (ref.keywords || []).filter(keyword => sharedConcepts.includes(String(keyword).toLowerCase())).length;
+      let contributionLabel = "Context";
+      if (inEvidence && shareConcepts >= 2) contributionLabel = "Primary";
+      else if (inEvidence) contributionLabel = "Supporting";
+      else if (shareConcepts >= 1 || sharedRels.length >= 1) contributionLabel = "Supporting";
+      else contributionLabel = "Minor";
+      return {
+        referenceId: ref.id,
+        title: ref.title,
+        type: ref.type,
+        sharedConcepts: (ref.keywords || []).filter(keyword => sharedConcepts.includes(String(keyword).toLowerCase())).slice(0, 6),
+        relationshipTypes: sharedRels.slice(0, 4),
+        contributionLabel,
+      };
+    });
+
+    const divergenceThreshold = refs.length > 2 ? 2 : 0;
+    const divergentNotes = refs.map(ref => {
+      const uniqueConcepts = (ref.keywords || []).filter(keyword => !sharedConcepts.includes(String(keyword).toLowerCase())).slice(0, 4);
+      const rels = adapter.getRelationshipsForReference(retrievalState, ref.id);
+      const connectedIds = new Set();
+      rels.forEach(rel => { connectedIds.add(rel.sourceReferenceId); connectedIds.add(rel.targetReferenceId); });
+      connectedIds.delete(ref.id);
+      const uniqueRelationships = [...connectedIds].filter(cid => !refs.some(other => other.id === cid)).slice(0, 3);
+      if (uniqueConcepts.length <= divergenceThreshold && uniqueRelationships.length === 0) return null;
+      const note = uniqueConcepts.length > 2
+        ? "This reference adds unique context not shared across the whole compare set."
+        : "Limited unique context from this reference.";
+      return {
+        referenceId: ref.id,
+        title: ref.title,
+        uniqueConcepts,
+        uniqueRelationships: uniqueRelationships.map(id => {
+          const target = adapter.getReferenceById(retrievalState, id);
+          return target ? target.title : id;
+        }),
+        note,
+      };
+    }).filter(Boolean);
+
+    const contributionMap = refs.map(ref => {
+      const inEvidence = evidenceRefs.some(er => er.id === ref.id);
+      const shareConcepts = (ref.keywords || []).filter(keyword => sharedConcepts.includes(String(keyword).toLowerCase())).length;
+      const rels = adapter.getRelationshipsForReference(retrievalState, ref.id);
+      const allRels = [...new Set(rels.map(rel => String(rel.type).replace(/_/g, " ")))];
+      const sharedRels = allRels.filter(rt => overlappingRelationships.includes(rt));
+      let contributionLabel = "Context";
+      let contributionLevel = 1;
+      if (inEvidence && shareConcepts >= 2) { contributionLabel = "Primary"; contributionLevel = 4; }
+      else if (inEvidence) { contributionLabel = "Supporting"; contributionLevel = 3; }
+      else if (shareConcepts >= 1 || sharedRels.length >= 1) { contributionLabel = "Supporting"; contributionLevel = 2; }
+      return {
+        referenceId: ref.id,
+        title: ref.title,
+        contributionLabel,
+        contributionLevel,
+        basis: inEvidence ? "In active evidence" : shareConcepts >= 1 ? `Shared ${shareConcepts} concept${shareConcepts === 1 ? "" : "s"}` : "Graph context only",
+      };
+    });
+
+    const confidence = deriveSynthesisConfidence(sharedConcepts, overlappingRelationships, evidenceRefs);
+    const summaryText = refs.length >= 2
+      ? `This comparative synthesis is based on ${refs.length} selected references. The set shares ${sharedConcepts.length} concept${sharedConcepts.length === 1 ? "" : "s"} and ${overlappingRelationships.length} relationship pattern${overlappingRelationships.length === 1 ? "" : "s"}. Evidence support is strongest where references overlap through shared concepts and direct graph relationships.`
+      : `Comparative synthesis requires at least two references in the compare set. Add more references to generate richer synthesis.`;
+
+    const id = `comp-synth-${Date.now()}`;
+    const createdAt = new Date().toISOString();
+
+    return {
+      id,
+      createdAt,
+      compareSet: refs.map(ref => ({
+        id: ref.id,
+        title: ref.title,
+        type: ref.type,
+        source: ref.source || "",
+        keywords: Array.isArray(ref.keywords) ? ref.keywords.slice(0, 6) : [],
+        relationshipCount: adapter.getRelationshipsForReference(retrievalState, ref.id).length,
+        clusterLabel: getClusterLabel(ref),
+      })),
+      summary: {
+        title: `Comparative Synthesis: ${refs.length} references`,
+        text: summaryText,
+        basis: "compare-set",
+      },
+      sharedSupport,
+      divergentNotes,
+      contributionMap,
+      confidence: {
+        label: confidence,
+        rationale: confidence === "High Support"
+          ? "At least 2 shared concepts and overlapping relationships or active evidence overlap."
+          : confidence === "Moderate Support"
+            ? "At least 1 shared concept or relationship overlap detected."
+            : "Limited overlap in available metadata. Use as exploratory context.",
+      },
+      provenance: {
+        comparedReferences: refs.length,
+        sharedConceptCount: sharedConcepts.length,
+        relationshipOverlapCount: overlappingRelationships.length,
+        evidenceSourceCount: evidenceRefs.length,
+        generatedFrom: "compare-set",
+      },
+      actions: {
+        canOpenReferences: true,
+        canReturnToCompare: true,
+        canCopyBlock: true,
+        canExport: false,
+      },
+    };
+  }
+
+  function compileCompareSynthesis() {
+    const payload = buildCompareSynthesisPayload();
+    if (!payload) return;
+    compareSynthesis = payload;
+    addTrailEvent("compare_synthesis", `Compiled comparative evidence from ${payload.provenance.comparedReferences} references`, {});
+    saveWorkspaceState();
+    renderCompareMode();
+  }
+
+  function clearCompareSynthesis() {
+    compareSynthesis = null;
+    saveWorkspaceState();
+    renderCompareMode();
+  }
+
+  function buildSynthesisTextBlock() {
+    const syn = compareSynthesis;
+    if (!syn) return "";
+    const lines = [
+      `=== Comparative Evidence Synthesis ===`,
+      syn.summary.title,
+      syn.summary.text,
+      ``,
+      `Confidence: ${syn.confidence.label}`,
+      `${syn.confidence.rationale}`,
+      ``,
+      `=== Compared References ===`,
+      ...syn.compareSet.map((r, i) => `${i + 1}. ${r.title} (${r.type || "reference"}) — ${r.relationshipCount} relationships`),
+      ``,
+      `Shared concepts: ${syn.shared.concepts?.join(", ") || "none"}`,
+      `Shared relationship patterns: ${syn.shared.relationships?.join(", ") || "none"}`,
+      ``,
+      `=== Shared Support ===`,
+      ...syn.sharedSupport.map(s => `- ${s.title}: ${s.contributionLabel} — concepts: ${s.sharedConcepts.join(", ") || "none"}`),
+      ``,
+      `=== Divergent Notes ===`,
+      ...syn.divergentNotes.map(d => `- ${d.title}: ${d.note}`),
+      ``,
+      `=== Provenance ===`,
+      `References: ${syn.provenance.comparedReferences}`,
+      `Generated: ${syn.createdAt}`,
+    ];
+    return lines.join("\n");
+  }
+
   function compareReference(refId) {
     if (!refId) return;
     addToCompare(refId, { open: true });
@@ -1918,6 +2123,7 @@
         evidenceTimeline = state.evidenceTimeline || [];
         compareSelection = state.compareSelection || [];
         compareFeedback = state.compareFeedback || "";
+        compareSynthesis = state.compareSynthesis || null;
 
         // Stage 6 State
         focusModeEnabled = state.focusModeEnabled || false;
@@ -1975,6 +2181,7 @@
     evidenceTimeline = [];
     compareSelection = [];
     compareFeedback = "";
+    compareSynthesis = null;
 
     // Stage 6
     focusModeEnabled = false;
@@ -2020,6 +2227,7 @@
         evidenceTimeline,
         compareSelection,
         compareFeedback,
+        compareSynthesis,
         // Stage 6
         focusModeEnabled,
         memoryPanelCollapsed,
@@ -4811,7 +5019,15 @@
           }
         }
       },
+      onCompileSynthesis: () => compileCompareSynthesis(),
+      onClearSynthesis: () => clearCompareSynthesis(),
+      onCopySynthesisBlock: () => {
+        const block = buildSynthesisTextBlock();
+        if (block) copyContextValue(block);
+      },
     };
+
+    payload.compareSynthesis = compareSynthesis || null;
 
     if (tryMountReactIsland(container, "NvCompareWorkspace", payload, callbacks)) {
       return;

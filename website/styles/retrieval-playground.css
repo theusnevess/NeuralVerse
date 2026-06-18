@@ -4060,6 +4060,190 @@ button.nv-timeline-event-compact:focus-visible {
   }
 }
 
+/* Comparative Evidence Synthesis — React Island */
+.nv-compare-synthesis-panel {
+  display: grid;
+  gap: var(--sys-space-stack-sm);
+  min-inline-size: 0;
+}
+
+.nv-compare-synthesis-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sys-space-inline-md);
+  padding: var(--sys-space-stack-sm) var(--sys-space-inline-md);
+  border: var(--sys-border-subtle) solid color-mix(in srgb, var(--sys-color-accent-primary) 14%, transparent);
+  border-radius: var(--ref-radius-soft);
+  background-color: color-mix(in srgb, var(--sys-color-surface-container-low) 72%, transparent);
+}
+
+.nv-compare-synthesis-panel__heading {
+  display: flex;
+  align-items: center;
+  gap: var(--sys-space-inline-sm);
+  min-inline-size: 0;
+}
+
+.nv-compare-synthesis-panel__heading h2 {
+  margin: 0;
+  color: var(--sys-color-text-primary);
+  font-size: var(--ref-font-size-400);
+  font-weight: var(--ref-font-weight-semibold);
+  line-height: 1.2;
+}
+
+.nv-compare-synthesis-panel__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sys-space-inline-xs);
+}
+
+.nv-synthesis-summary {
+  padding: var(--sys-space-stack-sm) var(--sys-space-inline-md);
+}
+
+.nv-synthesis-summary h3 {
+  margin: 0 0 var(--sys-space-stack-xs) 0;
+  color: var(--sys-color-text-primary);
+  font-size: var(--ref-font-size-300);
+  font-weight: var(--ref-font-weight-semibold);
+}
+
+.nv-synthesis-summary p {
+  margin: 0;
+  color: var(--sys-color-text-secondary);
+  font-size: var(--sys-font-caption-size);
+  line-height: 1.45;
+}
+
+.nv-synthesis-summary__basis {
+  display: inline-block;
+  margin-block-start: var(--sys-space-stack-xs);
+  color: var(--sys-color-text-secondary);
+  font-size: var(--sys-font-caption-size);
+}
+
+.nv-synthesis-shared-grid,
+.nv-synthesis-divergent-grid {
+  display: grid;
+  gap: var(--sys-space-stack-xs);
+}
+
+.nv-synthesis-shared-card,
+.nv-synthesis-divergent-card {
+  display: grid;
+  gap: var(--sys-space-stack-xs);
+  min-inline-size: 0;
+  padding: var(--sys-space-stack-sm) var(--sys-space-inline-sm);
+  border: var(--sys-border-subtle) solid color-mix(in srgb, var(--sys-color-text-primary) 8%, transparent);
+  border-radius: var(--ref-radius-soft);
+  background-color: color-mix(in srgb, var(--sys-color-surface-container-low) 72%, transparent);
+}
+
+.nv-synthesis-shared-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sys-space-inline-sm);
+}
+
+.nv-synthesis-shared-card__header h4,
+.nv-synthesis-divergent-card h4 {
+  margin: 0;
+  overflow: hidden;
+  color: var(--sys-color-text-primary);
+  font-size: var(--sys-font-caption-size);
+  font-weight: var(--ref-font-weight-semibold);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nv-synthesis-contribution-grid {
+  display: grid;
+  gap: var(--sys-space-stack-xs);
+}
+
+.nv-synthesis-contribution-row {
+  display: grid;
+  grid-template-columns: minmax(10rem, 1fr) minmax(8rem, 0.7fr) minmax(6rem, 0.5fr);
+  align-items: center;
+  gap: var(--sys-space-inline-sm);
+  min-inline-size: 0;
+  padding: var(--sys-space-stack-xs) var(--sys-space-inline-sm);
+  border: var(--sys-border-subtle) solid color-mix(in srgb, var(--sys-color-text-primary) 6%, transparent);
+  border-radius: var(--ref-radius-soft);
+}
+
+.nv-synthesis-contribution-row__label strong {
+  overflow: hidden;
+  color: var(--sys-color-text-primary);
+  font-size: var(--sys-font-caption-size);
+  font-weight: var(--ref-font-weight-semibold);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nv-synthesis-confidence {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sys-space-inline-sm);
+}
+
+.nv-synthesis-confidence p {
+  margin: 0;
+  color: var(--sys-color-text-secondary);
+  font-size: var(--sys-font-caption-size);
+  line-height: 1.35;
+}
+
+.nv-synthesis-export-block {
+  margin: 0;
+  padding: var(--sys-space-stack-sm) var(--sys-space-inline-sm);
+  border: var(--sys-border-subtle) solid color-mix(in srgb, var(--sys-color-text-primary) 8%, transparent);
+  border-radius: var(--ref-radius-soft);
+  background-color: var(--sys-color-surface-container-lowest);
+  color: var(--sys-color-text-primary);
+  font-family: var(--sys-font-code-family);
+  font-size: var(--sys-font-caption-size);
+  white-space: pre-wrap;
+  word-break: break-all;
+  max-block-size: 16rem;
+  overflow: auto;
+}
+
+.nv-synthesis-export-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sys-space-inline-xs);
+  margin-block-start: var(--sys-space-stack-xs);
+}
+
+.nv-synthesis-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sys-space-inline-xs);
+  padding: var(--sys-space-stack-xs) var(--sys-space-inline-md);
+}
+
+.nv-synthesis-divergent-rels {
+  margin: 0;
+  padding-inline-start: var(--sys-space-inline-md);
+  color: var(--sys-color-text-primary);
+  font-size: var(--sys-font-caption-size);
+}
+
+@media (max-width: 640px) {
+  .nv-synthesis-contribution-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .nv-compare-synthesis-panel__header {
+    display: grid;
+  }
+}
+
 /* Research Continuity Dashboard — React Memory Island */
 .nv-memory-dashboard .memory-panel-item {
   list-style: none;

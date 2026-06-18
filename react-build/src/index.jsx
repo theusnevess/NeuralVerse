@@ -49,6 +49,14 @@ import {
   NvCompareGraphSyncStatus,
   NvCompareSetManager,
   NvCompareEmptyState,
+  NvCompareSynthesisPanel,
+  NvCompareSynthesisSummary,
+  NvCompareSynthesisActions,
+  NvSharedSupportReferences,
+  NvDivergentEvidenceNotes,
+  NvSourceContributionMap,
+  NvSynthesisConfidenceSummary,
+  NvExportReadyEvidenceBlock,
 } from './NvCompareWorkspace.jsx'
 import {
   NvWorkspaceSnapshot,
@@ -136,6 +144,14 @@ export {
   NvCompareGraphSyncStatus,
   NvCompareSetManager,
   NvCompareEmptyState,
+  NvCompareSynthesisPanel,
+  NvCompareSynthesisSummary,
+  NvCompareSynthesisActions,
+  NvSharedSupportReferences,
+  NvDivergentEvidenceNotes,
+  NvSourceContributionMap,
+  NvSynthesisConfidenceSummary,
+  NvExportReadyEvidenceBlock,
 }
 
 // Legacy island exports

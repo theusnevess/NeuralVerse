@@ -150,3 +150,13 @@ Allowed E.5 callbacks:
 - Saved compare sets are deferred; `NvCompareSetManager` returns null until future phase.
 - Convergence line, semantic diff, and evidence overlap use only existing reference metadata, relationships, evidence state, and graph state.
 - No fake semantic scores, embeddings, or AI summaries.
+
+## E.11 Multi-Reference Synthesis Rules
+
+- Evidence Compiler contract unchanged; synthesis payload built solely from existing metadata, relationships, evidence state, and compare set.
+- No multi-reference compiler method added.
+- Confidence derived qualitatively (High/Moderate/Limited Support) using deterministic rules.
+- Synthesis summary text is templated and grounded in visible metadata; no AI/LLM generation.
+- `compareSynthesis` persists as optional key in existing `neuralverse.retrievalWorkspace.v1` storage; defaults to null.
+- React renders synthesis presentation only; JS owns payload aggregation, compiler invocations, callbacks, and persistence.
+- Copy Block action is available; Export Snapshot is visible but disabled (future).
