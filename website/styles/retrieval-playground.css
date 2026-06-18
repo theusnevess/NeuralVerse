@@ -2033,12 +2033,19 @@
   justify-content: center;
   margin-bottom: var(--sys-space-stack-sm);
   color: var(--sys-color-accent-primary);
-  opacity: 0.8;
+  opacity: 0.72;
 }
 
 .nv-empty-state__visual svg {
   max-width: 96px;
   height: auto;
+}
+
+.nv-empty-state__visual .nv-scientific-icon,
+.nv-empty-illustration.nv-scientific-icon {
+  background-color: currentColor;
+  -webkit-mask: var(--nv-scientific-icon-url) center / contain no-repeat;
+  mask: var(--nv-scientific-icon-url) center / contain no-repeat;
 }
 
 .nv-empty-state__title {
@@ -2082,6 +2089,10 @@
   max-width: 56px;
 }
 
+.nv-empty-state--compact .nv-empty-state__visual .nv-scientific-icon {
+  --nv-scientific-icon-size: 2rem;
+}
+
 .nv-empty-state--compact .nv-empty-state__title {
   font-size: 0.75rem;
   margin-bottom: 2px;
@@ -2116,6 +2127,20 @@
 .nv-empty-state-icon {
   font-size: 1.5rem;
   margin-bottom: var(--sys-space-stack-xs);
+}
+
+.nv-empty-state-shell {
+  display: grid;
+  gap: var(--sys-space-stack-sm);
+}
+
+.nv-empty-state__continuations {
+  display: grid;
+  gap: var(--sys-space-stack-xs);
+}
+
+.nv-empty-state__action {
+  min-inline-size: max-content;
 }
 
 .graph-empty-state-overlay {

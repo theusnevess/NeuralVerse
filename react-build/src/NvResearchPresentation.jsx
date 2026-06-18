@@ -348,9 +348,15 @@ export function NvResearchPresentation({ data = {}, callbacks = {} }) {
     return (
       <NvFadeIn as="section" className="nv-research-presentation" aria-label="Research Presentation">
         <NvEmptyState
-          title="No research session active"
-          subtitle="Begin a search, compile evidence, and create comparisons to build a research presentation."
-          icon={<NvScientificIcon iconPath={ICONS.presentation} size="lg" />}
+          title="No research narrative available"
+          subtitle="No presentation is available until the current investigation has enough research context."
+          iconPath={ICONS.presentation}
+          actions={(
+            <NvButton variant="secondary" className="nv-empty-state__action" onClick={() => callbacks.onReturnToWorkspace?.() || window.switchExplorationMode?.('search')}>
+              Open workspace
+            </NvButton>
+          )}
+          className="nv-empty-state--panel"
         />
       </NvFadeIn>
     )

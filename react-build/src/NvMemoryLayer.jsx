@@ -230,11 +230,11 @@ export function NvKnowledgeTrailItem({ event, onRestore }) {
 function NvMemoryEmptyState({ iconPath, title, subtitle, actionLabel, onAction }) {
   return (
     <NvEmptyState
-      icon={<NvScientificIcon iconPath={iconPath} size="lg" />}
+      iconPath={iconPath}
       title={title}
       subtitle={subtitle}
       className="nv-empty-state--compact nv-memory-empty-state"
-      actions={actionLabel && typeof onAction === 'function' ? <NvButton variant="ghost" className="nv-memory-action" onClick={onAction}>{actionLabel}</NvButton> : null}
+      actions={actionLabel && typeof onAction === 'function' ? <NvButton variant="secondary" className="nv-memory-action nv-empty-state__action" onClick={onAction}>{actionLabel}</NvButton> : null}
     />
   )
 }
@@ -249,6 +249,8 @@ export function NvMemoryLayer({ data = {}, callbacks = {} }) {
     savedQueries = [],
     trail = [],
     trailSummaryHtml = '',
+    selectedReferenceId = '',
+    currentQuery = '',
   } = data
 
   const {
@@ -262,6 +264,8 @@ export function NvMemoryLayer({ data = {}, callbacks = {} }) {
     onToggleCollapse,
     onRunSearchFocus,
     onAddToCompare,
+    onPinCurrentReference,
+    onSaveCurrentQuery,
   } = callbacks
 
   return (
@@ -290,9 +294,11 @@ export function NvMemoryLayer({ data = {}, callbacks = {} }) {
           {pinned.length === 0 ? (
             <li>
               <NvMemoryEmptyState
-                iconPath="assets/icons/scientific/memory-session/research-archive.svg"
-                title="No pinned references"
-                subtitle="Pin important references to preserve your research anchors."
+                iconPath="assets/icons/scientific/collections/pinned-references.svg"
+                title="No pinned references yet"
+                subtitle="Pin important references to resume them quickly."
+                actionLabel={selectedReferenceId ? "Pin current reference" : "Explore references"}
+                onAction={selectedReferenceId ? onPinCurrentReference : onRunSearchFocus}
               />
             </li>
           ) : (
@@ -318,6 +324,8 @@ export function NvMemoryLayer({ data = {}, callbacks = {} }) {
                 iconPath="assets/icons/scientific/memory-session/recent-activity.svg"
                 title="No recent references"
                 subtitle="Opened references will appear here for short-term recall."
+                actionLabel="Begin investigation"
+                onAction={onRunSearchFocus}
               />
             </li>
           ) : (
@@ -345,8 +353,8 @@ export function NvMemoryLayer({ data = {}, callbacks = {} }) {
                 iconPath="assets/icons/scientific/collections/saved-queries.svg"
                 title="No saved queries"
                 subtitle="Save recurring investigations to resume them later."
-                actionLabel="Run Search"
-                onAction={onRunSearchFocus}
+                actionLabel={currentQuery ? "Save search" : "Focus search input"}
+                onAction={currentQuery ? onSaveCurrentQuery : onRunSearchFocus}
               />
             </li>
           ) : (
@@ -378,9 +386,11 @@ export function NvMemoryLayer({ data = {}, callbacks = {} }) {
           {trail.length === 0 ? (
             <li>
               <NvMemoryEmptyState
-                iconPath="assets/icons/scientific/memory-session/knowledge-trail.svg"
-                title="No research trail yet"
-                subtitle="Your exploration path will appear here as you search, inspect, and compile evidence."
+                iconPath="assets/icons/scientific/memory-session/session-timeline.svg"
+                title="No knowledge trail yet"
+                subtitle="Your trail will build as you explore references."
+                actionLabel="Explore references"
+                onAction={onRunSearchFocus}
               />
             </li>
           ) : (

@@ -11,6 +11,7 @@ import React from 'react'
 import {
   NvBadge,
   NvButton,
+  NvEmptyState,
   NvMicroViz,
   NvScientificIcon,
 } from './components.jsx'
@@ -79,9 +80,17 @@ export function NvActiveInvestigation({ investigation = {}, isEmpty = false }) {
         <h3 id="nv-active-investigation-title">Active Investigation</h3>
       </div>
       {isEmpty || visibleFields.length === 0 ? (
-        <p className="nv-active-investigation__empty">
-          No active investigation yet. Start with a search or open a pinned reference.
-        </p>
+        <NvEmptyState
+          iconPath={ICONS.snapshot}
+          title="No active session"
+          subtitle="No active research session is available yet."
+          actions={(
+            <NvButton variant="secondary" className="nv-empty-state__action" onClick={() => window.switchExplorationMode?.('search')}>
+              Create session
+            </NvButton>
+          )}
+          className="nv-empty-state--compact nv-workspace-snapshot-empty"
+        />
       ) : (
         <div className="nv-workspace-snapshot">
           {visibleFields.map(([label, value]) => (

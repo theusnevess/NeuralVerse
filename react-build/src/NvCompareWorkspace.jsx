@@ -4,6 +4,7 @@ import {
   NvButton,
   NvChip,
   NvContributionBar,
+  NvEmptyState,
   NvInspectorSection,
   NvMetric,
   NvMicroViz,
@@ -194,11 +195,7 @@ export function NvCompareColumn({ item, index = 0, callbacks = {} }) {
 
 export function NvCompareMatrix({ items = [], callbacks = {} }) {
   if (items.length < 2) {
-    return (
-      <p className="nv-compare-empty">
-        Select at least two references to compare metadata side by side.
-      </p>
-    );
+    return null;
   }
   return (
     <section
@@ -228,15 +225,15 @@ export function NvCompareSection({ title, iconPath, children, className = "" }) 
   );
 }
 
-export function NvCompareEmptyState({ title, message, iconPath }) {
+export function NvCompareEmptyState({ title, message, iconPath, actions }) {
   return (
-    <div className="nv-compare-empty-state" role="status">
-      {iconPath && (
-        <NvScientificIcon iconPath={iconPath} size="md" aria-hidden="true" />
-      )}
-      <p className="nv-compare-empty-state__title">{title}</p>
-      {message && <p className="nv-compare-empty-state__message">{message}</p>}
-    </div>
+    <NvEmptyState
+      iconPath={iconPath || ICONS.compare}
+      title={title}
+      subtitle={message}
+      actions={actions}
+      className="nv-empty-state--compact nv-compare-empty-state"
+    />
   );
 }
 
@@ -844,8 +841,13 @@ export function NvCompareSynthesisPanel({ data = {}, callbacks = {} }) {
         <NvCompareSynthesisActions synthesis={null} callbacks={callbacks} />
         <NvCompareEmptyState
           title="No comparative synthesis compiled"
-          message="Add 2-4 references to the compare set and compile evidence from the set to generate a comparative synthesis."
+          message="Select multiple references and compile evidence to create a comparative synthesis."
           iconPath={ICONS.evidence}
+          actions={(
+            <NvButton variant="secondary" className="nv-empty-state__action" onClick={() => callbacks.onRunSearchFocus?.()}>
+              Add reference
+            </NvButton>
+          )}
         />
       </section>
     );
@@ -968,6 +970,19 @@ export function NvCompareWorkspace({ data = {}, callbacks = {} }) {
       )}
 
       <NvCompareMatrix items={items} callbacks={callbacks} />
+
+      {items.length === 0 && (
+        <NvCompareEmptyState
+          title="No references selected for comparison"
+          message="Select multiple references to compare their evidence, concepts, and graph position."
+          iconPath={ICONS.compare}
+          actions={(
+            <NvButton variant="secondary" className="nv-empty-state__action" onClick={() => callbacks.onRunSearchFocus?.()}>
+              Add reference
+            </NvButton>
+          )}
+        />
+      )}
 
       {hasItems && (
         <div className="nv-compare-analysis-grid">

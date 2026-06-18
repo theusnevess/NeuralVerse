@@ -158,6 +158,10 @@ export function createLearningController(options = {}) {
       console.error("Failed to load metrics data for learning paths", error);
     }
 
+    if (!elements.pathList || !elements.pathList.isConnected) {
+      return;
+    }
+
     paths.forEach((path) => {
       const card = createElement("article", "nv-learning-path-card");
       card.setAttribute("aria-labelledby", `learning-path-${path.id}`);
@@ -297,7 +301,9 @@ export function createLearningController(options = {}) {
       });
 
       card.append(title, description, meta, status, progressOverview, metricsBlock, action);
-      elements.pathList.append(card);
+      if (elements.pathList && elements.pathList.isConnected) {
+        elements.pathList.append(card);
+      }
     });
 
     if (elements.learningEmpty) {
@@ -331,6 +337,10 @@ export function createLearningController(options = {}) {
       contentItems = await learningService.getContentItems();
     } catch (error) {
       console.error("Failed to load content items for modules overview", error);
+    }
+
+    if (!elements.moduleList || !elements.moduleList.isConnected) {
+      return;
     }
 
     const progressRecords =
@@ -427,7 +437,9 @@ export function createLearningController(options = {}) {
         overviewBlock,
         action
       );
-      elements.moduleList.append(card);
+      if (elements.moduleList && elements.moduleList.isConnected) {
+        elements.moduleList.append(card);
+      }
     });
 
     // Trigger progress update for newly created DOM nodes

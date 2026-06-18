@@ -2590,32 +2590,29 @@
       }
 
       resultsContainer.innerHTML = `
-        <div class="nv-panel nv-stack nv-stack--gap-md" style="background-color: var(--sys-color-surface-container-lowest); border: 1px dashed var(--sys-color-border-subtle); padding: var(--sys-space-inset-md); text-align: center; border-radius: var(--ref-radius-soft); width: 100%;">
-          <h3 style="margin: 0; font-size: var(--sys-font-body-size); color: var(--sys-color-text-primary); font-weight: var(--ref-font-weight-semibold);">Start with a search</h3>
-          <p class="nv-muted" style="font-size: var(--sys-font-caption-size); margin: 0 0 var(--sys-space-stack-sm) 0;">
-            Type a concept or reopen a saved research context.
-          </p>
-          <div class="nv-cluster nv-cluster--gap-md" style="justify-content: center; align-items: start; width: 100%; text-align: left; flex-wrap: wrap;">
-            ${pinnedSection || recentQuerySection || recentRefSection ? `
-              ${pinnedSection}
-              ${recentQuerySection}
-              ${recentRefSection}
-            ` : createRichEmptyState({
-                 icon: "search",
-                 title: "Start a knowledge search",
-                 explanation: "Search references, models, papers, or research notes to begin exploration.",
-                 primaryAction: {
-                   id: "smart-empty-focus-search",
-                   label: "Focus Search",
-                   onclick: ""
-                 },
-                 secondaryAction: savedQueries.length > 0 ? {
-                   id: "smart-empty-run-saved-query",
-                   label: "Run Saved Query",
-                   onclick: ""
-                 } : null
-               })}
+        <div class="nv-empty-state-shell">
+          ${createRichEmptyState({
+            icon: "search",
+            title: "Start a new investigation",
+            explanation: "Search references, models, papers, or research notes to begin exploration.",
+            primaryAction: {
+              id: "smart-empty-focus-search",
+              label: "Focus search input",
+              onclick: ""
+            },
+            secondaryAction: (pinnedReferences.length || recentReferences.length || savedQueries.length) ? {
+              id: "smart-empty-run-saved-query",
+              label: "Open recent research",
+              onclick: ""
+            } : null
+          })}
+          ${pinnedSection || recentQuerySection || recentRefSection ? `
+          <div class="nv-empty-state__continuations">
+            ${pinnedSection}
+            ${recentQuerySection}
+            ${recentRefSection}
           </div>
+          ` : ""}
         </div>
       `;
 
@@ -2637,10 +2634,20 @@
       const runSavedQueryButton = document.getElementById("smart-empty-run-saved-query");
       if (runSavedQueryButton) {
         runSavedQueryButton.onclick = () => {
-          const query = savedQueries[0];
-          const searchInput = document.getElementById("playground-search-input");
-          if (searchInput) searchInput.value = query;
-          runSearch(query, true);
+          if (savedQueries.length > 0) {
+            const query = savedQueries[0];
+            const searchInput = document.getElementById("playground-search-input");
+            if (searchInput) searchInput.value = query;
+            runSearch(query, true);
+            return;
+          }
+          if (pinnedReferences.length > 0) {
+            selectReference(pinnedReferences[0]);
+            return;
+          }
+          if (recentReferences.length > 0) {
+            selectReference(recentReferences[0]);
+          }
         };
       }
     }
@@ -2720,113 +2727,34 @@
     `;
   }
 
-  // Reusable scientific SVG motifs for empty states
+  // Reusable official scientific icons for empty states
   function getSvgMotif(name) {
-    const color = "var(--sys-color-accent-primary)";
-    const colorMuted = "rgba(138, 180, 248, 0.25)";
-
-    switch (name) {
-      case 'search':
-        return `
-          <svg viewBox="0 0 100 100" width="80" height="80" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display: block; margin: 0 auto;" aria-hidden="true">
-            <circle cx="50" cy="50" r="40" stroke-dasharray="3 3" stroke-opacity="0.3" stroke="${color}"/>
-            <circle cx="45" cy="45" r="20" fill="currentColor" fill-opacity="0.05" stroke="${color}" stroke-width="1.75"/>
-            <line x1="59" y1="59" x2="85" y2="85" stroke="${color}" stroke-width="1.75"/>
-            <line x1="45" y1="15" x2="45" y2="25" stroke="${colorMuted}" stroke-width="1.5" stroke-dasharray="2 2"/>
-            <line x1="15" y1="45" x2="25" y2="45" stroke="${colorMuted}" stroke-width="1.5" stroke-dasharray="2 2"/>
-            <circle cx="75" cy="25" r="3" fill="currentColor"/>
-          </svg>
-        `;
-      case 'no_results':
-        return `
-          <svg viewBox="0 0 100 100" width="80" height="80" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display: block; margin: 0 auto;" aria-hidden="true">
-            <circle cx="50" cy="50" r="35" stroke-dasharray="4 4" stroke-opacity="0.3" stroke="${color}"/>
-            <line x1="35" y1="35" x2="65" y2="65" stroke="var(--sys-color-semantic-error, #f28b82)" stroke-width="1.75"/>
-            <line x1="65" y1="35" x2="35" y2="65" stroke="var(--sys-color-semantic-error, #f28b82)" stroke-width="1.75"/>
-            <circle cx="50" cy="50" r="25" stroke="${colorMuted}" stroke-width="1.5" stroke-opacity="0.4"/>
-          </svg>
-        `;
-      case 'graph':
-        return `
-          <svg viewBox="0 0 100 100" width="80" height="80" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display: block; margin: 0 auto;" aria-hidden="true">
-            <path d="M 0 50 H 100 M 50 0 V 100" stroke="${colorMuted}" stroke-width="0.5" stroke-opacity="0.1"/>
-            <circle cx="50" cy="50" r="30" stroke-dasharray="4 4" stroke-opacity="0.2" stroke="${color}"/>
-            <circle cx="30" cy="30" r="4" fill="currentColor" fill-opacity="0.5"/>
-            <circle cx="70" cy="30" r="4" fill="currentColor" fill-opacity="0.5"/>
-            <circle cx="35" cy="70" r="4" fill="currentColor" fill-opacity="0.5"/>
-            <circle cx="65" cy="70" r="4" fill="currentColor" fill-opacity="0.5"/>
-          </svg>
-        `;
-      case 'evidence':
-        return `
-          <svg viewBox="0 0 100 100" width="80" height="80" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display: block; margin: 0 auto;" aria-hidden="true">
-            <rect x="30" y="30" width="40" height="40" rx="4" stroke-dasharray="3 3" stroke-opacity="0.5" stroke="${color}"/>
-            <circle cx="50" cy="50" r="4" fill="currentColor"/>
-            <line x1="15" y1="50" x2="30" y2="50" stroke="${colorMuted}" stroke-width="1.5" stroke-opacity="0.3"/>
-            <line x1="85" y1="50" x2="70" y2="50" stroke="${colorMuted}" stroke-width="1.5" stroke-opacity="0.3"/>
-            <line x1="50" y1="15" x2="50" y2="30" stroke="${colorMuted}" stroke-width="1.5" stroke-opacity="0.3"/>
-            <line x1="50" y1="85" x2="50" y2="70" stroke="${colorMuted}" stroke-width="1.5" stroke-opacity="0.3"/>
-          </svg>
-        `;
-      case 'discovery':
-        return `
-          <svg viewBox="0 0 100 100" width="80" height="80" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display: block; margin: 0 auto;" aria-hidden="true">
-            <circle cx="50" cy="50" r="10" stroke-opacity="0.3" stroke="${color}"/>
-            <circle cx="50" cy="50" r="30" stroke-dasharray="3 3" stroke-opacity="0.3" stroke="${colorMuted}"/>
-            <line x1="50" y1="50" x2="80" y2="20" stroke="${colorMuted}" stroke-width="1.5" stroke-opacity="0.3"/>
-            <circle cx="80" cy="20" r="3" fill="currentColor" fill-opacity="0.3"/>
-          </svg>
-        `;
-      case 'relationship':
-        return `
-          <svg viewBox="0 0 100 100" width="80" height="80" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display: block; margin: 0 auto;" aria-hidden="true">
-            <line x1="10" y1="50" x2="90" y2="50" stroke="${colorMuted}" stroke-width="1.5" stroke-opacity="0.2"/>
-            <line x1="50" y1="10" x2="50" y2="90" stroke="${colorMuted}" stroke-width="1.5" stroke-opacity="0.2"/>
-            <circle cx="50" cy="50" r="5" fill="currentColor"/>
-            <circle cx="20" cy="30" r="4" fill="currentColor" fill-opacity="0.2"/>
-            <circle cx="80" cy="70" r="4" fill="currentColor" fill-opacity="0.2"/>
-          </svg>
-        `;
-      case 'pinned':
-        return `
-          <svg viewBox="0 0 100 100" width="40" height="40" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display: block; margin: 0 auto;" aria-hidden="true">
-            <circle cx="50" cy="50" r="18" stroke="${colorMuted}" stroke-width="1.2" stroke-dasharray="3,3" />
-            <circle cx="50" cy="50" r="6" fill="${color}" stroke="${color}" stroke-width="1" />
-            <path d="M 50,18 L 50,30 M 50,70 L 50,82 M 18,50 L 30,50 M 70,50 L 82,50" stroke="${color}" stroke-width="1.2" />
-          </svg>
-        `;
-      case 'recent':
-        return `
-          <svg viewBox="0 0 100 100" width="40" height="40" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display: block; margin: 0 auto;" aria-hidden="true">
-            <circle cx="50" cy="50" r="15" stroke="${color}" stroke-width="1.5" />
-            <polyline points="50,42 50,50 58,50" stroke="${color}" stroke-width="1.5" />
-            <path d="M 22,22 A 38,38 0 0 1 78,22" stroke="${colorMuted}" stroke-width="1" stroke-dasharray="3,3" />
-          </svg>
-        `;
-      case 'queries':
-        return `
-          <svg viewBox="0 0 100 100" width="40" height="40" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display: block; margin: 0 auto;" aria-hidden="true">
-            <rect x="35" y="24" width="30" height="42" rx="3" stroke="${color}" stroke-width="1.5" />
-            <line x1="42" y1="34" x2="58" y2="34" stroke="${colorMuted}" stroke-width="1.5" />
-            <line x1="42" y1="44" x2="58" y2="44" stroke="${colorMuted}" stroke-width="1.5" />
-            <circle cx="68" cy="62" r="8" stroke="${color}" stroke-width="1.5" fill="var(--sys-color-surface-container-lowest)" />
-            <line x1="74" y1="68" x2="82" y2="76" stroke="${color}" stroke-width="1.5" />
-          </svg>
-        `;
-      case 'trail':
-        return `
-          <svg viewBox="0 0 100 100" width="40" height="40" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display: block; margin: 0 auto;" aria-hidden="true">
-            <line x1="50" y1="85" x2="50" y2="50" stroke="${color}" stroke-width="1.5"/>
-            <line x1="50" y1="50" x2="25" y2="25" stroke="${color}" stroke-width="1.5"/>
-            <line x1="50" y1="50" x2="75" y2="25" stroke="${color}" stroke-width="1.5"/>
-            <circle cx="50" cy="85" r="4" fill="currentColor"/>
-            <circle cx="25" cy="25" r="4" fill="${color}" fill-opacity="0.1"/>
-            <circle cx="75" cy="25" r="4" fill="${color}" fill-opacity="0.1"/>
-          </svg>
-        `;
-      default:
-        return '';
-    }
+    const icons = {
+      search: "assets/icons/scientific/search-discovery/search-constellation.svg",
+      no_results: "assets/icons/scientific/search-discovery/research-lens.svg",
+      graph: "assets/icons/scientific/knowledge-graph/knowledge-cluster.svg",
+      discovery: "assets/icons/scientific/search-discovery/discovery-beacon.svg",
+      evidence: "assets/icons/scientific/evidence/evidence-convergence.svg",
+      relationship: "assets/icons/scientific/knowledge-graph/citation-bridge.svg",
+      compare: "assets/icons/scientific/knowledge-graph/semantic-path.svg",
+      memory: "assets/icons/scientific/memory-session/research-archive.svg",
+      pinned: "assets/icons/scientific/collections/pinned-references.svg",
+      recent: "assets/icons/scientific/memory-session/recent-activity.svg",
+      queries: "assets/icons/scientific/collections/saved-queries.svg",
+      trail: "assets/icons/scientific/memory-session/session-timeline.svg",
+      presentation: "assets/icons/scientific/inspector/reference-details.svg",
+      snapshot: "assets/icons/scientific/memory-session/workspace-snapshot.svg",
+      settings: "assets/icons/scientific/inspector/metadata-panel.svg",
+    };
+    const iconPath = icons[name] || icons.search;
+    const resolvedIconPath = iconPath.startsWith('/') ? iconPath : `/${iconPath}`;
+    return `
+      <span
+        class="nv-empty-illustration nv-scientific-icon nv-scientific-icon--xl"
+        style="--nv-scientific-icon-url: url('${resolvedIconPath}')"
+        aria-hidden="true"
+      ></span>
+    `;
   }
 
   // Reusable empty-state visual system helper
@@ -2842,13 +2770,13 @@
       actionsHtml = `
         <div class="nv-empty-state__actions">
           ${config.primaryAction ? `
-            <button class="nv-button" id="${config.primaryAction.id || ''}" data-variant="primary" style="font-size: 0.65rem; padding: 4px 10px; min-block-size: unset;" ${typeof config.primaryAction.onclick === 'string' && config.primaryAction.onclick ? `onclick="${config.primaryAction.onclick}"` : ''}>
-              ${config.primaryAction.label}
+            <button class="nv-button nv-empty-state__action" id="${config.primaryAction.id || ''}" data-variant="primary" ${typeof config.primaryAction.onclick === 'string' && config.primaryAction.onclick ? `onclick="${config.primaryAction.onclick}"` : ''}>
+              ${escapeHtml(config.primaryAction.label || '')}
             </button>
           ` : ''}
           ${config.secondaryAction ? `
-            <button class="nv-button" id="${config.secondaryAction.id || ''}" data-variant="secondary" style="font-size: 0.65rem; padding: 4px 10px; min-block-size: unset;" ${typeof config.secondaryAction.onclick === 'string' && config.secondaryAction.onclick ? `onclick="${config.secondaryAction.onclick}"` : ''}>
-              ${config.secondaryAction.label}
+            <button class="nv-button nv-empty-state__action" id="${config.secondaryAction.id || ''}" data-variant="secondary" ${typeof config.secondaryAction.onclick === 'string' && config.secondaryAction.onclick ? `onclick="${config.secondaryAction.onclick}"` : ''}>
+              ${escapeHtml(config.secondaryAction.label || '')}
             </button>
           ` : ''}
         </div>
@@ -2856,10 +2784,10 @@
     }
 
     return `
-      <div class="nv-empty-state ${variantClass} ${compactClass} ${panelClass} nv-animate-fade">
+      <div class="nv-empty-state ${variantClass} ${compactClass} ${panelClass} nv-motion nv-motion-slide-reveal" role="status" aria-label="${escapeHtml(config.title || 'Empty state')}">
         ${svgMotif ? `<div class="nv-empty-state__visual" aria-hidden="true">${svgMotif}</div>` : ''}
-        <h4 class="nv-empty-state__title">${config.title}</h4>
-        <p class="nv-empty-state__message">${config.explanation || config.message || ''}</p>
+        <h4 class="nv-empty-state__title">${escapeHtml(config.title || '')}</h4>
+        <p class="nv-empty-state__message">${escapeHtml(config.explanation || config.message || '')}</p>
         ${actionsHtml}
       </div>
     `;
@@ -2935,14 +2863,16 @@
     if (currentSearchResults.length === 0) {
       container.innerHTML = createRichEmptyState({
         icon: "no_results",
-        title: "No matching references found",
-        explanation: "Try a broader concept or inspect saved queries and pinned references.",
+        title: "No references found",
+        explanation: "No references match the current search. Try broader terms or reopen a saved query.",
         primaryAction: {
-          label: "Clear Search",
+          id: "search-empty-clear-button",
+          label: "Clear search",
           onclick: "document.getElementById('playground-search-input').value = ''; window.runSearch('');"
         },
         secondaryAction: savedQueries.length > 0 ? {
-          label: "Open Saved Queries",
+          id: "search-empty-saved-query-button",
+          label: "Open saved queries",
           onclick: "const qEl = document.getElementById('memory-queries-list'); if (qEl) qEl.scrollIntoView({ behavior: 'smooth' });"
         } : null
       });
@@ -3360,14 +3290,14 @@
     if (cards.length === 0) {
       container.innerHTML = createRichEmptyState({
         icon: "discovery",
-        title: "No discovery path available",
-        explanation: "Try a broader search or inspect a related reference to open new research paths.",
+        title: "No discovery paths yet",
+        explanation: "There are no suggested paths for the current context yet. Start exploration from a search or reference.",
         primaryAction: {
-          label: "Return to Search",
+          label: "Start exploration",
           onclick: "window.switchExplorationMode('search'); document.getElementById('playground-search-input').focus();"
         },
         secondaryAction: pinnedReferences.length > 0 ? {
-          label: "Open Pinned Reference",
+          label: "Open pinned reference",
           onclick: `window.selectReference('${pinnedReferences[0]}');`
         } : null
       });
@@ -3597,15 +3527,15 @@
         ${createRichEmptyState({
           icon: "evidence",
           title: "No evidence compiled yet",
-          explanation: "Compile from a query or selected reference to create an explainable synthesis.",
+          explanation: "Compile evidence from the current search or selected reference to create an explainable synthesis.",
           primaryAction: currentSearchQuery ? {
             id: "evidence-empty-compile-query",
-            label: "Compile Current Query",
+            label: "Compile Evidence",
             onclick: ""
           } : null,
           secondaryAction: selectedReferenceId ? {
             id: "evidence-empty-compile-ref",
-            label: "Compile Selected Reference",
+            label: "Compile selected reference",
             onclick: ""
           } : null
         })}
@@ -4101,57 +4031,51 @@
       if (type === 'no-focus') {
         config = {
           icon: 'graph',
-          title: 'No relationship focus yet',
-          explanation: 'Select a reference or switch to Full Graph to reveal the knowledge map.',
+          title: 'No relationships available',
+          explanation: 'No graph relationships are available yet. Start a search or select a reference to reveal the knowledge map.',
           primaryAction: {
-            id: 'graph-empty-full-button',
-            label: 'Open Full Graph'
+            id: 'graph-empty-discovery-button',
+            label: 'Open Discovery'
           },
           secondaryAction: {
             id: 'graph-empty-search-button',
-            label: 'Return to Search'
+            label: 'Return to search'
           }
         };
       } else if (type === 'no-filter') {
         config = {
           icon: 'relationship',
           title: 'No relationships match this filter',
-          explanation: 'Try another relationship type or return to All connections.',
+          explanation: 'No relationships match this filter. Try All connections or continue exploring similar references.',
           primaryAction: {
             id: 'graph-empty-all-button',
-            label: 'All Connections'
+            label: 'All connections'
           }
         };
       } else {
         config = {
           icon: 'graph',
-          title: 'No relationship focus yet',
-          explanation: 'Select a reference or switch to Full Graph to reveal the knowledge map.',
+          title: 'No relationships available',
+          explanation: 'No graph relationships are available yet. Start a search or select a reference to reveal the knowledge map.',
           primaryAction: {
-            id: 'graph-empty-full-button',
-            label: 'Open Full Graph'
+            id: 'graph-empty-discovery-button',
+            label: 'Open Discovery'
           },
           secondaryAction: {
             id: 'graph-empty-search-button',
-            label: 'Return to Search'
+            label: 'Return to search'
           }
         };
       }
 
       overlay.innerHTML = createRichEmptyState(config);
 
-      const fullBtn = overlay.querySelector('#graph-empty-full-button');
-      if (fullBtn) {
-        fullBtn.onclick = () => {
-          neighborhoodDepth = "full";
-          relationshipFilter = "all";
-          const filterSelect = document.getElementById("graph-filter-select");
-          const depthSelect = document.getElementById("graph-hop-select");
-          if (filterSelect) filterSelect.value = relationshipFilter;
-          if (depthSelect) depthSelect.value = neighborhoodDepth;
-          addTrailEvent("Graph empty state resolved", "Opened full graph from empty graph state", { depth: neighborhoodDepth, filter: relationshipFilter });
+      const discoveryBtn = overlay.querySelector('#graph-empty-discovery-button');
+      if (discoveryBtn) {
+        discoveryBtn.onclick = () => {
+          switchExplorationMode("discovery");
+          addTrailEvent("Graph empty state resolved", "Opened Discovery from empty graph state", { depth: neighborhoodDepth, filter: relationshipFilter });
           saveWorkspaceState();
-          renderVisualGraph();
         };
       }
 
@@ -5006,6 +4930,10 @@
       onRemove: (id) => removeFromCompare(id),
       onClear: () => clearCompare(),
       onOpenCompare: () => switchExplorationMode("compare"),
+      onRunSearchFocus: () => {
+        switchExplorationMode("search");
+        document.getElementById("playground-search-input")?.focus();
+      },
       onFocusInGraph: (id) => focusCompareInGraph(id),
       onFocusItem: (id) => {
         if (id) {
@@ -5042,6 +4970,24 @@
     const confidenceLabel = compareSynthesis?.confidence?.label || currentCompiledEvidence?.confidence
       ? `${String(currentCompiledEvidence?.confidence || "").charAt(0).toUpperCase()}${String(currentCompiledEvidence?.confidence || "").slice(1)} Support`
       : "";
+    const hasPresentationContext = Boolean(
+      currentSearchQuery ||
+      selectedReferenceId ||
+      evidenceCount ||
+      compareSelection.length ||
+      pinnedReferences.length ||
+      recentReferences.length ||
+      knowledgeTrail.length ||
+      compareSynthesis
+    );
+
+    if (!hasPresentationContext) {
+      return {
+        actions: {
+          canReturnToWorkspace: true,
+        },
+      };
+    }
 
     const narrativeTypes = { search: "search", rerun_query: "search", compile_query: "evidence-compiled", compile_ref: "evidence-compiled", compare_add: "comparison", compare_synthesis: "synthesis-created", pin: "pin", open: "reference-opened", select_node: "graph-explored", save_query: "saved-query", explore_neighborhood: "graph-explored", compare_reference: "comparison" };
 
@@ -5174,13 +5120,24 @@
     const payload = buildPresentationPayload();
     tryUnmountReactIsland(container);
 
-    container.innerHTML = `
+    container.innerHTML = payload.id ? `
       <div class="nv-presentation-fallback">
         <h3>Research Presentation</h3>
-        <p class="nv-muted">${payload.executiveSummary.text}</p>
-        ${payload.references.length > 0 ? `<p class="nv-muted">${payload.references.length} references · ${payload.investigation.evidenceCount} evidence · ${payload.narrative.length} events</p>` : ""}
+        <p class="nv-muted">${escapeHtml(payload.executiveSummary?.text || "")}</p>
+        ${payload.references?.length > 0 ? `<p class="nv-muted">${payload.references.length} references · ${payload.investigation.evidenceCount} evidence · ${payload.narrative.length} events</p>` : ""}
       </div>
-    `;
+    ` : createRichEmptyState({
+      icon: "presentation",
+      title: "No research narrative available",
+      explanation: "No presentation is available until the current investigation has enough research context.",
+      panel: true,
+      primaryAction: { id: "presentation-empty-open-workspace", label: "Open workspace" }
+    });
+
+    document.getElementById("presentation-empty-open-workspace")?.addEventListener("click", () => {
+      switchExplorationMode("search");
+      document.getElementById("playground-search-input")?.focus();
+    });
 
     if (tryMountReactIsland(container, "NvResearchPresentation", payload, {})) return;
   }
@@ -5199,7 +5156,8 @@
           icon: "recent",
           title: "No recent references",
           explanation: "Opened references will appear here for short-term recall.",
-          compact: true
+          compact: true,
+          primaryAction: { id: "memory-empty-recent-action", label: "Begin investigation" }
         });
       } else {
         recentList.innerHTML = visibleRecent.map(id => {
@@ -5244,9 +5202,13 @@
       if (pinnedReferences.length === 0) {
         pinnedList.innerHTML = createRichEmptyState({
           icon: "pinned",
-          title: "No pinned references",
-          explanation: "Pin important references to preserve your research anchors.",
-          compact: true
+          title: "No pinned references yet",
+          explanation: "Pin important references to resume them quickly.",
+          compact: true,
+          primaryAction: {
+            id: "memory-empty-pinned-action",
+            label: selectedReferenceId ? "Pin current reference" : "Explore references"
+          }
         });
       } else {
         pinnedList.innerHTML = pinnedReferences.map(id => {
@@ -5302,8 +5264,12 @@
         queriesList.innerHTML = createRichEmptyState({
           icon: "queries",
           title: "No saved queries",
-          explanation: "Save useful searches to resume recurring investigations.",
-          compact: true
+          explanation: "Save recurring investigations to resume them later.",
+          compact: true,
+          primaryAction: {
+            id: "memory-empty-query-action",
+            label: currentSearchQuery ? "Save search" : "Focus search input"
+          }
         });
       } else {
         queriesList.innerHTML = savedQueries.map(q => `
@@ -5349,9 +5315,10 @@
       if (knowledgeTrail.length === 0) {
         trailList.innerHTML = createRichEmptyState({
           icon: "trail",
-          title: "No research trail yet",
-          explanation: "Your exploration path will appear here as you search, inspect, and compile evidence.",
-          compact: true
+          title: "No knowledge trail yet",
+          explanation: "Your trail will build as you explore references.",
+          compact: true,
+          primaryAction: { id: "memory-empty-trail-action", label: "Explore references" }
         });
       } else {
         const trailSummary = `
@@ -5392,6 +5359,21 @@
       }
     }
 
+    const focusSearchFromMemory = () => {
+      switchExplorationMode("search");
+      document.getElementById("playground-search-input")?.focus();
+    };
+    document.getElementById("memory-empty-recent-action")?.addEventListener("click", focusSearchFromMemory);
+    document.getElementById("memory-empty-trail-action")?.addEventListener("click", focusSearchFromMemory);
+    document.getElementById("memory-empty-pinned-action")?.addEventListener("click", () => {
+      if (selectedReferenceId) pinReference(selectedReferenceId);
+      else focusSearchFromMemory();
+    });
+    document.getElementById("memory-empty-query-action")?.addEventListener("click", () => {
+      if (currentSearchQuery) document.getElementById("playground-save-query-button")?.click();
+      else focusSearchFromMemory();
+    });
+
     // ── React Island Enhancement ──────────────────────────────────────────
     // Mount the NvMemoryLayer island over the memory-layer-grid container.
     // Fallback HTML rendered above persists if React is unavailable.
@@ -5418,6 +5400,8 @@
           query,
           matchCount: adapter.searchReferences(retrievalState, query).length,
         })),
+        selectedReferenceId: selectedReferenceId || '',
+        currentQuery: currentSearchQuery || '',
         trail: knowledgeTrail.map(event => ({
           id: event.id,
           type: event.type,
@@ -5460,6 +5444,12 @@
           switchExplorationMode("search");
           const searchInput = document.getElementById('playground-search-input');
           if (searchInput) searchInput.focus();
+        },
+        onPinCurrentReference: () => {
+          if (selectedReferenceId) pinReference(selectedReferenceId);
+        },
+        onSaveCurrentQuery: () => {
+          document.getElementById('playground-save-query-button')?.click();
         },
         onAddToCompare: (id) => addToCompare(id),
       };

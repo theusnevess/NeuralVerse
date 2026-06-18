@@ -121,29 +121,64 @@ export function NvCardShell({ selected = false, onClick, className = '', childre
   )
 }
 
+const EMPTY_ICON_MAP = {
+  search: 'assets/icons/scientific/search-discovery/search-constellation.svg',
+  noResults: 'assets/icons/scientific/search-discovery/research-lens.svg',
+  graph: 'assets/icons/scientific/knowledge-graph/knowledge-cluster.svg',
+  discovery: 'assets/icons/scientific/search-discovery/discovery-beacon.svg',
+  evidence: 'assets/icons/scientific/evidence/evidence-convergence.svg',
+  compare: 'assets/icons/scientific/knowledge-graph/semantic-path.svg',
+  memory: 'assets/icons/scientific/memory-session/research-archive.svg',
+  pinned: 'assets/icons/scientific/collections/pinned-references.svg',
+  savedQuery: 'assets/icons/scientific/collections/saved-queries.svg',
+  trail: 'assets/icons/scientific/memory-session/session-timeline.svg',
+  presentation: 'assets/icons/scientific/inspector/reference-details.svg',
+  snapshot: 'assets/icons/scientific/memory-session/workspace-snapshot.svg',
+  settings: 'assets/icons/scientific/inspector/metadata-panel.svg',
+}
+
+// ---------------------------------------------------------------------------
+// Premium Empty State primitives
+// ---------------------------------------------------------------------------
+export function NvEmptyIllustration({ icon, iconPath, className = '' }) {
+  const resolvedIconPath = iconPath || EMPTY_ICON_MAP[icon] || icon
+  if (!resolvedIconPath) return null
+
+  return (
+    <div className={`nv-empty-state__visual ${className}`.trim()} aria-hidden="true">
+      <NvScientificIcon iconPath={resolvedIconPath} size="lg" />
+    </div>
+  )
+}
+
+export function NvEmptyTitle({ children, className = '' }) {
+  if (!children) return null
+  return <p className={`nv-empty-state__title ${className}`.trim()}>{children}</p>
+}
+
+export function NvEmptyDescription({ children, className = '' }) {
+  if (!children) return null
+  return <p className={`nv-empty-state__subtitle ${className}`.trim()}>{children}</p>
+}
+
+export function NvEmptyActions({ children, className = '' }) {
+  if (!children) return null
+  return <div className={`nv-empty-state__actions ${className}`.trim()}>{children}</div>
+}
+
 // ---------------------------------------------------------------------------
 // NvEmptyState
 // Maps to: .nv-empty-state (components.css)
 // ---------------------------------------------------------------------------
-export function NvEmptyState({ icon, title, subtitle, actions, className = '' }) {
+export function NvEmptyState({ icon, iconPath, title, subtitle, actions, className = '', ariaLabel }) {
   return (
-    <div className={`nv-empty-state ${className}`.trim()}>
-      {icon && <div className="nv-empty-state-icon" aria-hidden="true">{icon}</div>}
-      {title && (
-        <p className="nv-empty-state__title">
-          {title}
-        </p>
-      )}
-      {subtitle && (
-        <p className="nv-empty-state__subtitle">
-          {subtitle}
-        </p>
-      )}
-      {actions && (
-        <div className="graph-empty-actions nv-empty-state__actions">
-          {actions}
-        </div>
-      )}
+    <div className={`nv-empty-state ${className}`.trim()} role="status" aria-label={ariaLabel || title}>
+      {React.isValidElement(icon)
+        ? <div className="nv-empty-state__visual" aria-hidden="true">{icon}</div>
+        : <NvEmptyIllustration icon={icon} iconPath={iconPath} />}
+      <NvEmptyTitle>{title}</NvEmptyTitle>
+      <NvEmptyDescription>{subtitle}</NvEmptyDescription>
+      <NvEmptyActions>{actions}</NvEmptyActions>
     </div>
   )
 }
