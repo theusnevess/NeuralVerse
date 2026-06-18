@@ -30,9 +30,9 @@
 
 :root {
   /* Graphite scale */
-  --ref-color-graphite-950: #0a0f16;
-  --ref-color-graphite-900: #101824;
-  --ref-color-graphite-850: #162030;
+  --ref-color-graphite-950: #080b11;
+  --ref-color-graphite-900: #111a26;
+  --ref-color-graphite-850: #1a2635;
   --ref-color-graphite-800: #1e2c3e;
 
   /* Cyan accent scale */
@@ -534,7 +534,7 @@
    ========================================================= */
 
 :root {
-  --ctx-shell-header-surface: var(--sys-color-background-base);
+  --ctx-shell-header-surface: #0a0f16;
   --ctx-shell-header-border:  var(--sys-color-border-subtle);
   --ctx-shell-padding:        var(--sys-space-inset-md);
   --ctx-shell-z:              var(--sys-z-sticky);

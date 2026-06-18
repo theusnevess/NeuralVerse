@@ -23,29 +23,10 @@
   isolation: isolate;
 }
 
-.nv-nav-active-indicator {
-  position: absolute;
-  z-index: 0;
-  border: var(--sys-border-subtle) solid color-mix(in srgb, var(--sys-color-accent-primary) 24%, transparent);
-  border-radius: var(--sys-radius-control);
-  background: color-mix(in srgb, var(--sys-color-accent-primary) 8%, transparent);
-  opacity: 0;
-  pointer-events: none;
-  transform: translate3d(var(--nv-nav-indicator-x, 0), var(--nv-nav-indicator-y, 0), 0);
-  transition:
-    opacity var(--motion-duration-state) var(--motion-easing-standard),
-    inline-size var(--motion-duration-state) var(--motion-easing-standard),
-    block-size var(--motion-duration-state) var(--motion-easing-standard),
-    transform var(--motion-duration-state) var(--motion-easing-standard);
-}
-
-.nv-nav-active-indicator[data-visible="true"] {
-  opacity: 1;
-}
-
 .nv-nav-item {
   position: relative;
   z-index: 1;
+  isolation: isolate;
   border: var(--sys-border-subtle) solid transparent;
   background-color: transparent;
   transition:
@@ -53,6 +34,22 @@
     border-color var(--motion-duration-hover) var(--motion-easing-standard),
     color var(--motion-duration-hover) var(--motion-easing-standard),
     opacity var(--motion-duration-hover) var(--motion-easing-standard);
+}
+
+.nv-nav-item::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border: var(--sys-border-subtle) solid transparent;
+  border-radius: inherit;
+  background: transparent;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    background-color var(--motion-duration-state) var(--motion-easing-standard),
+    border-color var(--motion-duration-state) var(--motion-easing-standard),
+    opacity var(--motion-duration-state) var(--motion-easing-standard);
 }
 
 .nv-nav-brand,
@@ -67,7 +64,25 @@
 
 .nv-nav-item[aria-current="page"] {
   background-color: transparent;
+  border-color: transparent;
+}
+
+.nv-nav-item[aria-current="page"]::before {
   border-color: color-mix(in srgb, var(--sys-color-accent-primary) 24%, transparent);
+  background: color-mix(in srgb, var(--sys-color-accent-primary) 8%, transparent);
+  opacity: 1;
+}
+
+.nv-nav-item:focus,
+.nv-nav-item:active {
+  outline: none;
+  box-shadow: none;
+}
+
+.nv-nav-item:focus-visible {
+  outline: var(--sys-a11y-focus-ring);
+  outline-offset: var(--sys-a11y-focus-offset);
+  box-shadow: none;
 }
 
 .nv-nav-item[aria-current="page"] .nv-nav-label,
