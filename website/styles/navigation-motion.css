@@ -26,9 +26,9 @@
 .nv-nav-active-indicator {
   position: absolute;
   z-index: 0;
-  border: var(--sys-border-subtle) solid color-mix(in srgb, var(--sys-color-accent-primary) 42%, transparent);
+  border: var(--sys-border-subtle) solid color-mix(in srgb, var(--sys-color-accent-primary) 24%, transparent);
   border-radius: var(--sys-radius-control);
-  background: var(--ctx-nav-item-surface-active);
+  background: color-mix(in srgb, var(--sys-color-accent-primary) 8%, transparent);
   opacity: 0;
   pointer-events: none;
   transform: translate3d(var(--nv-nav-indicator-x, 0), var(--nv-nav-indicator-y, 0), 0);
@@ -67,12 +67,45 @@
 
 .nv-nav-item[aria-current="page"] {
   background-color: transparent;
-  border-color: color-mix(in srgb, var(--sys-color-accent-primary) 34%, transparent);
+  border-color: color-mix(in srgb, var(--sys-color-accent-primary) 24%, transparent);
 }
 
 .nv-nav-item[aria-current="page"] .nv-nav-label,
 .nv-nav-item[aria-current="page"] .nv-nav-icon {
   opacity: 1;
+}
+
+.nv-nav-icon {
+  -webkit-mask: var(--nv-nav-icon-url) center / contain no-repeat;
+  mask: var(--nv-nav-icon-url) center / contain no-repeat;
+}
+
+.nv-nav-icon--home {
+  --nv-nav-icon-url: url("../assets/icons/scientific/knowledge-graph/connected-nodes.svg");
+}
+
+.nv-nav-icon--learning {
+  --nv-nav-icon-url: url("../assets/icons/scientific/collections/reading-queue.svg");
+}
+
+.nv-nav-icon--modules {
+  --nv-nav-icon-url: url("../assets/icons/scientific/collections/collection-folder.svg");
+}
+
+.nv-nav-icon--workspace {
+  --nv-nav-icon-url: url("../assets/icons/scientific/memory-session/workspace-snapshot.svg");
+}
+
+.nv-nav-icon--content {
+  --nv-nav-icon-url: url("../assets/icons/scientific/inspector/document-review.svg");
+}
+
+.nv-nav-icon--retrieval {
+  --nv-nav-icon-url: url("../assets/icons/scientific/search-discovery/research-lens.svg");
+}
+
+.nv-nav-icon--settings {
+  --nv-nav-icon-url: url("../assets/icons/scientific/inspector/metadata-panel.svg");
 }
 
 .nv-breadcrumbs__list {
@@ -174,7 +207,7 @@
 }
 
 .memory-grid.nv-motion-collapse {
-  max-block-size: 40rem;
+  max-block-size: 80rem;
   opacity: 1;
 }
 

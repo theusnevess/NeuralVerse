@@ -104,8 +104,8 @@
 
 .nv-nav-logo {
   display: block;
-  inline-size: 2.25rem;
-  block-size: 2.25rem;
+  inline-size: 1.75rem;
+  block-size: 1.75rem;
   object-fit: cover;
   object-position: center;
   border-radius: var(--sys-radius-control);
@@ -174,6 +174,7 @@
   align-items: center;
   justify-content: center;
   gap: var(--sys-space-inline-xs);
+  min-block-size: 2.75rem;
   padding: var(--sys-space-inset-xs) var(--sys-space-inline-sm);
   min-inline-size: 0;
   border-radius: var(--sys-radius-control);
@@ -203,8 +204,12 @@
 }
 
 .nv-nav-icon {
-  font-size: 1.25rem;
-  line-height: 1;
+  display: block;
+  inline-size: 1.125rem;
+  block-size: 1.125rem;
+  flex: 0 0 auto;
+  background-color: currentColor;
+  opacity: 0.84;
 }
 
 .nv-nav-label {
@@ -249,7 +254,7 @@
     min-block-size: 0;
     border-bottom: none;
     border-right: var(--sys-border-default) solid var(--ctx-nav-rail-border);
-    padding: var(--ctx-nav-rail-padding);
+    padding: var(--sys-space-inset-xs);
     overflow: visible;
   }
 
@@ -258,14 +263,15 @@
     align-items: center;
     justify-content: center;
     inline-size: 100%;
-    block-size: 3rem;
-    margin-bottom: var(--sys-space-stack-md);
+    block-size: 2.25rem;
+    margin-bottom: var(--sys-space-stack-sm);
+    opacity: 0.74;
   }
 
   .nv-nav-group {
     flex-direction: column;
     inline-size: 100%;
-    gap: var(--sys-space-stack-sm);
+    gap: var(--sys-space-stack-xs);
     flex-wrap: nowrap;
   }
 
@@ -276,7 +282,7 @@
   .nv-nav-item {
     flex-direction: column;
     inline-size: 100%;
-    aspect-ratio: 1;
+    min-block-size: 3.75rem;
     padding: var(--sys-space-inset-xs);
   }
 
@@ -655,7 +661,6 @@
     padding: var(--sys-spacing-inset-md, var(--sys-space-inset-md));
   }
 }
-
 
 
 

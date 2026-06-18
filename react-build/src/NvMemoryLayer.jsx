@@ -71,10 +71,17 @@ function compactTrailLabel(label = '') {
 function MemoryStatusChip({ icon, label, value }) {
   return (
     <span className="nv-memory-status-chip" aria-label={`${label}: ${value}`}>
-      <span aria-hidden="true">{icon}</span>
+      <NvScientificIcon iconPath={icon} size="sm" />
       <strong>{value}</strong>
     </span>
   )
+}
+
+const MEMORY_SUMMARY_ICONS = {
+  pinned: 'assets/icons/scientific/collections/pinned-references.svg',
+  recent: 'assets/icons/scientific/memory-session/recent-activity.svg',
+  saved: 'assets/icons/scientific/collections/saved-queries.svg',
+  trail: 'assets/icons/scientific/memory-session/knowledge-trail.svg',
 }
 
 const TRAIL_ICON_PATH = {
@@ -276,10 +283,10 @@ export function NvMemoryLayer({ data = {}, callbacks = {} }) {
           <h3>Continue your investigation.</h3>
         </div>
         <div className="nv-memory-dashboard__summary" aria-label="Research memory summary">
-          <MemoryStatusChip icon="⌖" label="Pinned" value={pinned.length} />
-          <MemoryStatusChip icon="◷" label="Recent" value={recent.length} />
-          <MemoryStatusChip icon="▱" label="Saved queries" value={savedQueries.length} />
-          <MemoryStatusChip icon="◇" label="Knowledge trail" value={trail.length} />
+          <MemoryStatusChip icon={MEMORY_SUMMARY_ICONS.pinned} label="Pinned" value={pinned.length} />
+          <MemoryStatusChip icon={MEMORY_SUMMARY_ICONS.recent} label="Recent" value={recent.length} />
+          <MemoryStatusChip icon={MEMORY_SUMMARY_ICONS.saved} label="Saved queries" value={savedQueries.length} />
+          <MemoryStatusChip icon={MEMORY_SUMMARY_ICONS.trail} label="Knowledge trail" value={trail.length} />
         </div>
         <div className="nv-memory-dashboard__toolbar">
           {typeof onToggleCollapse === 'function' && <NvButton variant="ghost" className="nv-memory-action" ariaLabel="Collapse research memory" onClick={onToggleCollapse}>Collapse</NvButton>}
