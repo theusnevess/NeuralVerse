@@ -23,8 +23,10 @@
 .nv-shell-body,
 .nv-main-workspace,
 .nv-workspace {
-  background-color: transparent;
+  background: transparent !important;
+  background-color: transparent !important;
 }
+
 
 .nv-shell {
   position: relative;
