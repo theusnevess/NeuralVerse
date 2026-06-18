@@ -38,7 +38,7 @@ Instrument-focused. Grid and signal cues are slightly stronger while remaining s
 
 ## Retrieval
 
-Knowledge constellation emphasis. Signals are a little more present to support graph and research workflows without competing with nodes or labels.
+Knowledge constellation emphasis remains nearly invisible. The graph, inspector, discovery panels, and labels must dominate; the neural field is only a dark-background atmosphere behind work surfaces.
 
 ## Presentation
 
@@ -70,6 +70,8 @@ Profiles control:
 ```
 
 Routes can inherit profiles through existing workspace state attributes. React surfaces can opt in through `data-background-profile` via `NvBackgroundProvider`, `NvBackgroundSurface`, or `NvBackgroundProfile`.
+
+The neural constellation layer must remain behind application surfaces. Profiles may reduce cluster visibility, but they must not move the layer above cards, panels, controls, previews, or text.
 
 ## Forbidden Variants
 

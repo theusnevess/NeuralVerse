@@ -2,7 +2,7 @@
 
 ## Purpose
 
-NV-600.8 adds a subtle animated environmental layer to the global background system. The layer suggests neural activity, semantic relationships, and a living knowledge field while remaining subordinate to content.
+NV-600.8 adds a subtle animated environmental layer to the global background system. NV-600.8-R1 corrects the rejected long-curve implementation and replaces it with a deterministic field of small local neural neighborhoods. The layer suggests neural activity, semantic relationships, and a living knowledge field while remaining subordinate to content.
 
 ## Technical Approach
 
@@ -18,12 +18,27 @@ Canvas, WebGL, shaders, particle libraries, and JavaScript animation loops are n
 
 The layer contains:
 
-- small low-opacity neural nodes;
-- thin semantic connection curves;
+- many tiny low-opacity neural nodes;
+- short local semantic connections only;
+- deterministic local clusters of 3-8 nodes;
 - rare low-contrast signal pulses along selected connections;
 - very slow field drift controlled by Motion Foundation tokens.
 
-It must never look like a starfield, screensaver, game map, or neon particle effect.
+It must never contain long viewport-spanning curves, sine-wave ribbons, decorative wires, visible cluster containers, starfields, screensaver motion, game-map particles, or neon effects.
+
+## Local Cluster Field
+
+The canonical field is authored as inline SVG clusters. Each cluster is a small semantic neighborhood with local edges capped well below the visual maximum of `160px`.
+
+| Profile | Visible field | Intended feel |
+|---|---:|---|
+| `landing` | 14 clusters / 81 nodes / 70 local edges | identity-rich |
+| `home` | 14 clusters / 81 nodes / 70 local edges | living research environment |
+| `learning` / `modules` | 11 clusters / 63 nodes / 55 local edges | low reading noise |
+| `workspace` | 8 clusters / 45 nodes / 40 local edges | instrument-like |
+| `retrieval` | 5 clusters / 28 nodes / 25 local edges | nearly invisible |
+| `presentation` | 8 clusters / 45 nodes / 40 local edges, no pulses | clean briefing surface |
+| `settings` | 5 clusters / 28 nodes / 25 local edges, no pulses | static/off-like |
 
 ## Profile Intensity
 

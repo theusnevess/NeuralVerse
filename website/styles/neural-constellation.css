@@ -1,10 +1,9 @@
 /**
- * NeuralVerse Neural Constellation Background — NV-600.8
- * ======================================================
- * CSS/SVG environmental layer integrated with the global background profiles.
- *
- * Decorative only: no pointer events, no screen-reader output, no domain data,
- * no canvas, no JavaScript loops.
+ * NeuralVerse Neural Constellation Background — NV-600.8-R1
+ * =========================================================
+ * Deterministic local-cluster field integrated with the global background
+ * profiles. Decorative only: no pointer events, no screen-reader output,
+ * no domain data, no canvas, no JavaScript loops.
  */
 
 .nv-neural-constellation-layer {
@@ -13,15 +12,21 @@
   z-index: 0;
   overflow: hidden;
   pointer-events: none;
+  user-select: none;
   color: var(--sys-background-signal-color);
   opacity: var(--nv-neural-constellation-opacity);
-  mix-blend-mode: screen;
+  mix-blend-mode: normal;
   contain: layout paint style;
 }
 
 .nv-shell,
 .nv-shell-body {
   background-color: transparent;
+}
+
+.nv-shell {
+  position: relative;
+  z-index: 1;
 }
 
 .nv-neural-constellation-layer::before {
@@ -39,7 +44,7 @@
       color-mix(in srgb, var(--sys-background-depth) 4%, transparent),
       transparent 42%
     );
-  opacity: 0.4;
+  opacity: 0.12;
   transform: translate3d(0, 0, 0);
   animation: nv-neural-constellation-field-drift
     var(--sys-background-neural-drift-duration)
@@ -49,9 +54,9 @@
 
 .nv-neural-constellation-svg {
   position: absolute;
-  inset: -5%;
-  inline-size: 110%;
-  block-size: 110%;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
   overflow: visible;
   color: currentColor;
   transform: translate3d(0, 0, 0);
@@ -65,13 +70,17 @@
     infinite alternate;
 }
 
+.nv-neural-cluster {
+  opacity: 1;
+}
+
 .nv-neural-constellation__connections {
   fill: none;
   stroke: currentColor;
   stroke-linecap: round;
   stroke-linejoin: round;
   stroke-opacity: var(--nv-neural-constellation-connection-opacity);
-  stroke-width: 0.55;
+  stroke-width: 0.62;
   vector-effect: non-scaling-stroke;
 }
 
@@ -81,11 +90,11 @@
 }
 
 .nv-neural-constellation__nodes circle:nth-child(3n) {
-  fill-opacity: calc(var(--nv-neural-constellation-node-opacity) * 0.68);
+  fill-opacity: calc(var(--nv-neural-constellation-node-opacity) * 0.72);
 }
 
 .nv-neural-constellation__nodes circle:nth-child(4n) {
-  fill-opacity: calc(var(--nv-neural-constellation-node-opacity) * 0.48);
+  fill-opacity: calc(var(--nv-neural-constellation-node-opacity) * 0.52);
 }
 
 .nv-neural-constellation__pulse {
@@ -93,25 +102,61 @@
   stroke: currentColor;
   stroke-linecap: round;
   stroke-opacity: 0;
-  stroke-width: 0.85;
+  stroke-width: 0.75;
   vector-effect: non-scaling-stroke;
-  stroke-dasharray: 8 130;
+  stroke-dasharray: 5 90;
   animation: nv-neural-constellation-pulse
     var(--sys-background-neural-pulse-duration)
     var(--motion-easing-standard)
     infinite;
 }
 
-.nv-neural-constellation__pulse:nth-of-type(2) {
+.nv-neural-cluster:nth-of-type(3n) .nv-neural-constellation__pulse {
   animation-delay: calc(var(--sys-background-neural-pulse-duration) * -0.34);
 }
 
-.nv-neural-constellation__pulse:nth-of-type(3) {
+.nv-neural-cluster:nth-of-type(5n) .nv-neural-constellation__pulse {
   animation-delay: calc(var(--sys-background-neural-pulse-duration) * -0.68);
 }
 
-body:has(.nv-main-workspace[data-workspace-active-view="settings"]) .nv-neural-constellation__pulse {
+body:has(.nv-main-workspace[data-workspace-active-view="retrieval-playground"]) .nv-neural-cluster--reading,
+body:has(.nv-main-workspace[data-workspace-active-view="retrieval-playground"]) .nv-neural-cluster--work,
+body:has(.nv-main-workspace[data-workspace-active-view="retrieval-playground"]) .nv-neural-cluster--home,
+[data-background-profile="retrieval"] .nv-neural-cluster--reading,
+[data-background-profile="retrieval"] .nv-neural-cluster--work,
+[data-background-profile="retrieval"] .nv-neural-cluster--home {
+  opacity: 0;
+}
+
+body:has(.nv-main-workspace[data-workspace-active-view="workspace"]) .nv-neural-cluster--home,
+[data-background-profile="workspace"] .nv-neural-cluster--home {
+  opacity: 0;
+}
+
+body:has(.nv-main-workspace[data-workspace-active-view="learning"]) .nv-neural-cluster--home,
+body:has(.nv-main-workspace[data-workspace-active-view="modules"]) .nv-neural-cluster--home,
+body:has(.nv-main-workspace[data-workspace-active-view="content"]) .nv-neural-cluster--home,
+[data-background-profile="learning"] .nv-neural-cluster--home,
+[data-background-profile="modules"] .nv-neural-cluster--home {
+  opacity: 0;
+}
+
+body:has(.nv-main-workspace[data-workspace-active-view="settings"]) .nv-neural-cluster--work,
+body:has(.nv-main-workspace[data-workspace-active-view="settings"]) .nv-neural-cluster--reading,
+body:has(.nv-main-workspace[data-workspace-active-view="settings"]) .nv-neural-cluster--home,
+[data-background-profile="settings"] .nv-neural-cluster--work,
+[data-background-profile="settings"] .nv-neural-cluster--reading,
+[data-background-profile="settings"] .nv-neural-cluster--home,
+[data-background-profile="presentation"] .nv-neural-cluster--reading,
+[data-background-profile="presentation"] .nv-neural-cluster--home {
+  opacity: 0;
+}
+
+body:has(.nv-main-workspace[data-workspace-active-view="settings"]) .nv-neural-constellation__pulse,
+[data-background-profile="settings"] .nv-neural-constellation__pulse,
+[data-background-profile="presentation"] .nv-neural-constellation__pulse {
   animation: none;
+  opacity: 0;
 }
 
 @keyframes nv-neural-constellation-field-drift {
@@ -121,8 +166,8 @@ body:has(.nv-main-workspace[data-workspace-active-view="settings"]) .nv-neural-c
 
   to {
     transform: translate3d(
-      calc(var(--nv-neural-constellation-drift-distance) * -0.55),
-      calc(var(--nv-neural-constellation-drift-distance) * 0.35),
+      calc(var(--nv-neural-constellation-drift-distance) * -0.45),
+      calc(var(--nv-neural-constellation-drift-distance) * 0.32),
       0
     );
   }
@@ -136,26 +181,26 @@ body:has(.nv-main-workspace[data-workspace-active-view="settings"]) .nv-neural-c
   to {
     transform: translate3d(
       var(--nv-neural-constellation-drift-distance),
-      calc(var(--nv-neural-constellation-drift-distance) * -0.45),
+      calc(var(--nv-neural-constellation-drift-distance) * -0.38),
       0
-    ) scale(1.012);
+    ) scale(1.006);
   }
 }
 
 @keyframes nv-neural-constellation-pulse {
   0%,
-  72%,
+  76%,
   100% {
-    stroke-dashoffset: 80;
+    stroke-dashoffset: 58;
     stroke-opacity: 0;
   }
 
-  78% {
+  82% {
     stroke-opacity: var(--nv-neural-constellation-pulse-opacity);
   }
 
-  86% {
-    stroke-dashoffset: -40;
+  90% {
+    stroke-dashoffset: -26;
     stroke-opacity: calc(var(--nv-neural-constellation-pulse-opacity) * 0.5);
   }
 }
@@ -170,4 +215,5 @@ body:has(.nv-main-workspace[data-workspace-active-view="settings"]) .nv-neural-c
   .nv-neural-constellation__pulse {
     opacity: 0;
   }
+
 }
