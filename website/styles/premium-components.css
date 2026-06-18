@@ -1,0 +1,475 @@
+/**
+ * NeuralVerse Premium Component Polish — NV-600.3
+ * =================================================
+ * Shared visual refinement layer for reusable components.
+ *
+ * Presentation only. No domain behavior, routing, retrieval, graph, or
+ * persistence ownership lives here.
+ */
+
+.nv-card,
+.nv-panel,
+.nv-workspace__surface,
+.retrieval-header,
+.search-console,
+.results-panel,
+.inspector-space,
+.memory-layer,
+.workspace-tabs,
+.inspector-tabs,
+.nv-discovery-panel,
+.nv-memory-card,
+.memory-column,
+.nv-hover-preview,
+.nv-context-menu,
+.nv-workspace-snapshot,
+.nv-inspector-panel,
+.nv-compare-workspace,
+.nv-research-presentation {
+  border-color: var(--sys-premium-border);
+  border-radius: var(--sys-premium-radius-card);
+  box-shadow: var(--sys-premium-shadow-card);
+}
+
+.nv-card,
+.nv-panel,
+.nv-workspace__surface,
+.results-panel,
+.memory-layer {
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--sys-color-text-primary) 3%, transparent),
+      transparent 42%
+    ),
+    var(--sys-premium-surface);
+}
+
+.nv-card,
+.nv-panel {
+  padding: var(--sys-premium-inset-card);
+  gap: var(--sys-premium-gap-card);
+}
+
+.nv-card:hover,
+.nv-memory-card[role="button"]:hover,
+.nv-discovery-panel:hover,
+.memory-item:hover,
+.neighborhood-card:hover,
+.discovery-card:hover {
+  border-color: var(--sys-premium-border-strong);
+  background-color: var(--sys-premium-surface-hover);
+  transform: translateY(calc(var(--ref-space-100) * -0.25));
+}
+
+.nv-card,
+.nv-button,
+.nv-chip,
+.continuation-chip,
+.nv-discovery-panel,
+.nv-memory-card,
+.memory-item,
+.neighborhood-card,
+.discovery-card,
+.nv-context-menu__item,
+.workspace-tab,
+.inspector-tab {
+  transition:
+    background-color var(--motion-duration-hover) var(--motion-easing-standard),
+    border-color var(--motion-duration-hover) var(--motion-easing-standard),
+    color var(--motion-duration-hover) var(--motion-easing-standard),
+    opacity var(--motion-duration-hover) var(--motion-easing-standard),
+    transform var(--motion-duration-hover) var(--motion-easing-standard),
+    box-shadow var(--motion-duration-hover) var(--motion-easing-standard);
+}
+
+.nv-button {
+  border-radius: var(--sys-radius-control);
+  font-weight: var(--ref-font-weight-medium);
+  line-height: var(--ref-font-line-height-tight);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--sys-color-text-primary) 6%, transparent);
+}
+
+.nv-button[data-variant="primary"] {
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--sys-color-text-primary) 10%, transparent),
+    var(--ref-shadow-subtle);
+}
+
+.nv-button[data-variant="secondary"] {
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--sys-color-text-primary) 4%, transparent),
+      transparent
+    ),
+    var(--sys-premium-surface);
+  border-color: var(--sys-premium-border);
+}
+
+.nv-button[data-variant="ghost"] {
+  color: var(--sys-color-text-secondary);
+}
+
+.nv-button[data-variant="ghost"]:hover,
+.nv-button[data-variant="secondary"]:hover {
+  border-color: var(--sys-premium-border-strong);
+}
+
+.nv-button:focus-visible,
+.nv-chip:focus-visible,
+.continuation-chip:focus-visible,
+.nv-card:focus-visible,
+.nv-discovery-panel:focus-visible,
+.nv-memory-card:focus-visible,
+.workspace-tab:focus-visible,
+.inspector-tab:focus-visible,
+.nv-context-menu__item:focus-visible {
+  outline: var(--sys-a11y-focus-ring);
+  outline-offset: var(--sys-a11y-focus-offset);
+}
+
+.nv-badge,
+.nv-chip,
+.continuation-chip,
+.nv-status-pill,
+.nv-connectivity-indicator,
+.nv-discovery-panel__reason,
+.nv-context-menu__metadata span,
+.nv-hover-preview__metrics span {
+  min-block-size: var(--ref-space-600);
+  padding-block: var(--ref-space-100);
+  padding-inline: var(--ref-space-200);
+  border: var(--sys-border-subtle) solid var(--sys-premium-border);
+  border-radius: var(--sys-radius-badge);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--sys-color-text-primary) 4%, transparent),
+      transparent
+    ),
+    var(--sys-premium-surface-quiet);
+  color: var(--sys-color-text-secondary);
+  font-family: var(--sys-font-body-family);
+  font-size: var(--sys-font-caption-size);
+  font-weight: var(--ref-font-weight-medium);
+  line-height: var(--ref-font-line-height-tight);
+  letter-spacing: var(--ref-font-tracking-normal);
+  box-shadow: none;
+}
+
+.nv-badge[data-variant="primary"],
+.nv-badge[data-variant="info"] {
+  color: var(--sys-color-accent-primary);
+  border-color: color-mix(in srgb, var(--sys-color-accent-primary) 32%, transparent);
+  background: color-mix(in srgb, var(--sys-color-accent-primary) 12%, transparent);
+}
+
+.nv-badge[data-variant="success"] {
+  color: var(--sys-color-semantic-success);
+  border-color: color-mix(in srgb, var(--sys-color-semantic-success) 34%, transparent);
+  background: color-mix(in srgb, var(--sys-color-semantic-success) 11%, transparent);
+}
+
+.nv-badge[data-variant="warning"] {
+  color: var(--sys-color-semantic-warning);
+  border-color: color-mix(in srgb, var(--sys-color-semantic-warning) 34%, transparent);
+  background: color-mix(in srgb, var(--sys-color-semantic-warning) 11%, transparent);
+}
+
+.nv-badge[data-variant="error"] {
+  color: var(--sys-color-semantic-error);
+  border-color: color-mix(in srgb, var(--sys-color-semantic-error) 34%, transparent);
+  background: color-mix(in srgb, var(--sys-color-semantic-error) 11%, transparent);
+}
+
+.nv-badge[data-variant="neutral"] {
+  color: var(--sys-color-text-secondary);
+  border-color: var(--sys-premium-border);
+  background: var(--sys-premium-surface-quiet);
+}
+
+.continuation-chip {
+  color: var(--sys-color-accent-primary);
+  background: color-mix(in srgb, var(--sys-color-accent-primary) 9%, transparent);
+  border-color: color-mix(in srgb, var(--sys-color-accent-primary) 26%, transparent);
+}
+
+.continuation-chip:hover {
+  color: var(--sys-color-text-primary);
+  background: color-mix(in srgb, var(--sys-color-accent-primary) 16%, transparent);
+  border-color: var(--sys-premium-border-strong);
+}
+
+.nv-metric,
+.nv-inspector-metric-list__row,
+.nv-compare-metric-row,
+.nv-workspace-snapshot__field,
+.nv-presentation-session-metric {
+  align-items: baseline;
+  gap: var(--sys-space-inline-sm);
+}
+
+.nv-metric,
+.nv-inspector-metric-list__row dt,
+.nv-compare-muted,
+.nv-workspace-snapshot__field span,
+.nv-memory-card__subtitle,
+.nv-memory-card__meta,
+.nv-hover-preview__eyebrow,
+.nv-context-menu__subtitle {
+  color: var(--sys-color-text-secondary);
+  font-size: var(--sys-font-caption-size);
+  line-height: var(--ref-font-line-height-tight);
+}
+
+.nv-inspector-metric-list__row dd,
+.nv-workspace-snapshot__field strong,
+.nv-presentation-session-metric strong {
+  color: var(--sys-color-text-primary);
+  font-weight: var(--ref-font-weight-semibold);
+}
+
+.nv-contribution-bar,
+.nv-density-meter,
+.nv-coverage-strip,
+.nv-confidence-gauge,
+.nv-connectivity-score,
+.nv-trail-sparkline,
+.nv-cluster-indicator,
+.nv-session-progress,
+.nv-relevance-meter {
+  gap: var(--ref-space-200);
+  color: var(--sys-color-text-secondary);
+  font-size: var(--sys-font-caption-size);
+  line-height: var(--ref-font-line-height-tight);
+}
+
+.nv-contribution-bar__track,
+.nv-density-meter__track,
+.nv-coverage-strip__track,
+.nv-confidence-gauge__track,
+.nv-connectivity-score__track,
+.nv-session-progress__track,
+.nv-relevance-meter__track {
+  gap: var(--ref-space-100);
+}
+
+.nv-contribution-bar__segment,
+.nv-density-meter__segment,
+.nv-coverage-strip__segment,
+.nv-confidence-gauge__segment,
+.nv-connectivity-score__segment,
+.nv-session-progress__segment,
+.nv-relevance-meter__segment,
+.nv-trail-sparkline__dot {
+  background-color: color-mix(in srgb, var(--sys-color-text-primary) 12%, transparent);
+}
+
+.nv-contribution-bar__segment.is-active,
+.nv-density-meter__segment.is-active,
+.nv-coverage-strip__segment.is-active,
+.nv-confidence-gauge__segment.is-active,
+.nv-connectivity-score__segment.is-active,
+.nv-session-progress__segment.is-active,
+.nv-relevance-meter__segment.is-active,
+.nv-trail-sparkline__dot {
+  background-color: var(--sys-color-accent-primary);
+}
+
+.nv-hover-preview,
+.nv-context-menu {
+  padding: var(--sys-premium-inset-card-compact);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--sys-color-accent-primary) 4%, transparent),
+      transparent 48%
+    ),
+    var(--sys-color-surface-overlay);
+  border-color: var(--sys-premium-border-strong);
+  box-shadow: var(--sys-premium-shadow-panel);
+}
+
+.nv-hover-preview__header,
+.nv-context-menu__header,
+.nv-inspector-header,
+.nv-memory-section-header {
+  gap: var(--sys-space-inline-sm);
+}
+
+.nv-hover-preview__title,
+.nv-context-menu__title,
+.nv-inspector-header__title,
+.nv-inspector-section__title,
+.nv-discovery-panel__title,
+.nv-memory-card__title,
+.memory-column h4,
+.nv-workspace-snapshot h3,
+.nv-compare-section h3,
+.nv-presentation-section h3 {
+  color: var(--sys-color-text-primary);
+  font-weight: var(--ref-font-weight-semibold);
+  letter-spacing: var(--ref-font-tracking-normal);
+  line-height: var(--ref-font-line-height-tight);
+}
+
+.nv-inspector-section,
+.nv-compare-section,
+.nv-presentation-section {
+  gap: var(--sys-premium-gap-card);
+  padding-block: var(--sys-space-stack-sm);
+  border-block-end-color: var(--sys-premium-border);
+}
+
+.nv-inspector-section__header,
+.nv-memory-dashboard__header,
+.nv-compare-section__header,
+.nv-research-presentation__header {
+  border-color: var(--sys-premium-border);
+}
+
+.nv-discovery-panel {
+  padding: var(--sys-premium-inset-card-compact);
+  gap: var(--sys-space-inline-sm);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--sys-color-text-primary) 3%, transparent),
+      transparent
+    ),
+    var(--sys-premium-surface-quiet);
+}
+
+.nv-discovery-panel__icon,
+.nv-hover-preview__icon,
+.nv-context-menu__icon,
+.nv-memory-card__icon,
+.nv-inspector-header__icon {
+  color: var(--sys-color-accent-primary);
+  background: color-mix(in srgb, var(--sys-color-accent-primary) 9%, transparent);
+  border: var(--sys-border-subtle) solid color-mix(in srgb, var(--sys-color-accent-primary) 22%, transparent);
+  border-radius: var(--sys-radius-control);
+}
+
+.nv-discovery-panel__body,
+.nv-memory-card__body,
+.nv-inspector-section__body,
+.nv-workspace-snapshot__body {
+  gap: var(--sys-premium-gap-tight);
+}
+
+.nv-discovery-panel__metrics,
+.nv-discovery-panel__actions,
+.nv-hover-preview__actions,
+.nv-memory-card__actions,
+.nv-inspector-action-bar,
+.nv-action-group {
+  gap: var(--sys-space-inline-xs);
+}
+
+.nv-discovery-panel__action,
+.nv-memory-action,
+.nv-hover-preview__action,
+.nv-inspector-action {
+  min-block-size: var(--ref-space-700);
+  padding-block: var(--ref-space-100);
+  padding-inline: var(--ref-space-300);
+  font-size: var(--sys-font-caption-size);
+}
+
+.nv-memory-dashboard {
+  gap: var(--sys-space-stack-md) var(--sys-space-inline-lg);
+}
+
+.memory-column {
+  padding: var(--sys-premium-inset-card-compact);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--sys-color-accent-primary) 2%, transparent),
+      transparent
+    ),
+    var(--sys-premium-surface-quiet);
+}
+
+.nv-memory-card,
+.memory-item,
+.trail-event {
+  background: var(--sys-premium-surface-quiet);
+  border-color: var(--sys-premium-border);
+}
+
+.nv-memory-trail-event__marker {
+  color: var(--sys-color-accent-primary);
+}
+
+.nv-empty-state {
+  gap: var(--sys-premium-gap-card);
+  padding: var(--sys-space-inset-lg);
+  border-radius: var(--sys-premium-radius-card);
+}
+
+.nv-empty-state__title,
+.nv-empty-state-title {
+  color: var(--sys-color-text-primary);
+  font-size: var(--sys-font-body-size);
+  font-weight: var(--ref-font-weight-semibold);
+  line-height: var(--ref-font-line-height-tight);
+}
+
+.nv-empty-state__subtitle,
+.nv-empty-state__message,
+.nv-empty-state-description {
+  color: var(--sys-color-text-secondary);
+  font-size: var(--sys-font-caption-size);
+  line-height: var(--ref-font-line-height-normal);
+}
+
+.workspace-tab,
+.inspector-tab {
+  border-radius: var(--sys-radius-control);
+  color: var(--sys-color-text-secondary);
+  font-weight: var(--ref-font-weight-medium);
+}
+
+.workspace-tab[aria-selected="true"],
+.inspector-tab[aria-selected="true"] {
+  color: var(--sys-color-text-primary);
+  background: color-mix(in srgb, var(--sys-color-accent-primary) 12%, var(--sys-premium-surface));
+  border-color: var(--sys-premium-border-strong);
+}
+
+.pipeline-step,
+.research-assistant-box,
+.evidence-confidence-card,
+.memory-microvisualization-summary,
+.nv-discovery-panel__preview {
+  border-color: var(--sys-premium-border);
+  border-radius: var(--sys-premium-radius-card);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--sys-color-text-primary) 3%, transparent),
+      transparent
+    ),
+    var(--sys-premium-surface-quiet);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nv-card,
+  .nv-button,
+  .nv-chip,
+  .continuation-chip,
+  .nv-discovery-panel,
+  .nv-memory-card,
+  .memory-item,
+  .neighborhood-card,
+  .discovery-card,
+  .nv-context-menu__item,
+  .workspace-tab,
+  .inspector-tab {
+    transition: none;
+    transform: none;
+  }
+}

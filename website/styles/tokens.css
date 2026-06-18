@@ -207,6 +207,12 @@
   --sys-color-surface-base:    var(--ref-color-graphite-900);
   --sys-color-surface-raised:  var(--ref-color-graphite-850);
   --sys-color-surface-overlay: var(--ref-color-graphite-800);
+  --sys-color-surface-container-lowest: color-mix(in srgb, var(--sys-color-surface-base) 86%, var(--sys-color-background-base));
+  --sys-color-surface-container-low: color-mix(in srgb, var(--sys-color-surface-raised) 88%, var(--sys-color-background-base));
+  --sys-color-surface-container-high: color-mix(in srgb, var(--sys-color-surface-overlay) 82%, var(--sys-color-background-base));
+  --sys-color-surface-subtle: var(--sys-color-surface-container-lowest);
+  --sys-color-surface-card: var(--sys-color-surface-container-low);
+  --sys-color-surface-muted: var(--sys-color-surface-container-lowest);
 
   /* Border */
   --sys-color-border-subtle:  var(--ref-color-graphite-800);
@@ -247,6 +253,11 @@
   --sys-color-semantic-warning: var(--ref-color-amber-500);
   --sys-color-semantic-error:   var(--ref-color-red-500);
   --sys-color-semantic-info:    var(--ref-color-blue-500);
+  --sys-color-success: var(--sys-color-semantic-success);
+  --sys-color-warning: var(--sys-color-semantic-warning);
+  --sys-color-status-success: var(--sys-color-semantic-success);
+  --sys-color-status-warning: var(--sys-color-semantic-warning);
+  --sys-color-status-error: var(--sys-color-semantic-error);
 
   /* State overlays
    * C-001 state overlays: GOVERNED DEFERRED DECISION (NV-023-TASK-007B).
@@ -362,6 +373,37 @@
   --sys-radius-control: var(--ref-radius-soft);
   --sys-radius-overlay: var(--ref-radius-moderate);
   --sys-radius-badge:   var(--ref-radius-round);
+  --sys-radius-container: var(--ref-radius-soft);
+}
+
+/* =========================================================
+   Semantic Tokens — Premium Component Polish
+   Source: NV-600.3 Premium Component Polish
+   ========================================================= */
+
+:root {
+  --sys-line-height-tight: var(--ref-font-line-height-tight);
+  --sys-font-caption-tracking: var(--ref-font-tracking-wide);
+
+  --sys-focus-ring-width: var(--sys-a11y-focus-width);
+  --sys-focus-ring-offset: var(--sys-a11y-focus-offset);
+  --sys-color-focus-ring: var(--sys-a11y-focus-color);
+  --sys-border-focus: var(--sys-a11y-focus-width);
+
+  --sys-premium-surface: color-mix(in srgb, var(--sys-color-surface-container-low) 92%, transparent);
+  --sys-premium-surface-quiet: color-mix(in srgb, var(--sys-color-surface-container-lowest) 88%, transparent);
+  --sys-premium-surface-hover: color-mix(in srgb, var(--sys-color-surface-container-high) 92%, transparent);
+  --sys-premium-border: color-mix(in srgb, var(--sys-color-text-primary) 8%, transparent);
+  --sys-premium-border-strong: color-mix(in srgb, var(--sys-color-accent-primary) 30%, var(--sys-premium-border));
+  --sys-premium-accent-quiet: color-mix(in srgb, var(--sys-color-accent-primary) 10%, transparent);
+  --sys-premium-radius-card: var(--sys-radius-container);
+  --sys-premium-radius-panel: var(--sys-radius-overlay);
+  --sys-premium-inset-card: var(--sys-space-inset-md);
+  --sys-premium-inset-card-compact: var(--sys-space-inset-sm);
+  --sys-premium-gap-card: var(--sys-space-stack-sm);
+  --sys-premium-gap-tight: var(--sys-space-stack-xs);
+  --sys-premium-shadow-card: var(--ref-shadow-subtle);
+  --sys-premium-shadow-panel: var(--ref-shadow-soft);
 }
 
 /* =========================================================
