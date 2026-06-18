@@ -1,0 +1,217 @@
+/*
+ * NeuralVerse Navigation Motion — NV-600.5
+ * Reuses NV-600.1 motion primitives through token-driven classes only.
+ */
+
+.nv-global-header {
+  contain: layout paint;
+}
+
+.nv-header-orientation {
+  min-inline-size: 0;
+}
+
+.nv-header-section-title,
+.nv-header-section-description {
+  transition:
+    color var(--motion-duration-hover) var(--motion-easing-standard),
+    opacity var(--motion-duration-hover) var(--motion-easing-standard);
+}
+
+.nv-navigation-rail {
+  position: relative;
+  isolation: isolate;
+}
+
+.nv-nav-active-indicator {
+  position: absolute;
+  z-index: 0;
+  border: var(--sys-border-subtle) solid color-mix(in srgb, var(--sys-color-accent-primary) 42%, transparent);
+  border-radius: var(--sys-radius-control);
+  background: var(--ctx-nav-item-surface-active);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate3d(var(--nv-nav-indicator-x, 0), var(--nv-nav-indicator-y, 0), 0);
+  transition:
+    opacity var(--motion-duration-state) var(--motion-easing-standard),
+    inline-size var(--motion-duration-state) var(--motion-easing-standard),
+    block-size var(--motion-duration-state) var(--motion-easing-standard),
+    transform var(--motion-duration-state) var(--motion-easing-standard);
+}
+
+.nv-nav-active-indicator[data-visible="true"] {
+  opacity: 1;
+}
+
+.nv-nav-item {
+  position: relative;
+  z-index: 1;
+  border: var(--sys-border-subtle) solid transparent;
+  background-color: transparent;
+  transition:
+    background-color var(--motion-duration-hover) var(--motion-easing-standard),
+    border-color var(--motion-duration-hover) var(--motion-easing-standard),
+    color var(--motion-duration-hover) var(--motion-easing-standard),
+    opacity var(--motion-duration-hover) var(--motion-easing-standard);
+}
+
+.nv-nav-brand,
+.nv-nav-group {
+  position: relative;
+  z-index: 1;
+}
+
+.nv-nav-item:hover {
+  border-color: color-mix(in srgb, var(--sys-color-text-primary) 10%, transparent);
+}
+
+.nv-nav-item[aria-current="page"] {
+  background-color: transparent;
+  border-color: color-mix(in srgb, var(--sys-color-accent-primary) 34%, transparent);
+}
+
+.nv-nav-item[aria-current="page"] .nv-nav-label,
+.nv-nav-item[aria-current="page"] .nv-nav-icon {
+  opacity: 1;
+}
+
+.nv-breadcrumbs__list {
+  --nv-motion-duration: var(--motion-duration-state);
+  --nv-motion-x: calc(var(--sys-space-inline-xs) * -1 * var(--sys-motion-intensity-low));
+  --nv-motion-y: 0;
+  animation: nv-motion-slide-reveal var(--motion-duration-state) var(--motion-easing-decelerate) both;
+}
+
+.nv-breadcrumbs a {
+  transition:
+    color var(--motion-duration-hover) var(--motion-easing-standard),
+    opacity var(--motion-duration-hover) var(--motion-easing-standard);
+}
+
+.workspace-tabs,
+.inspector-tabs {
+  position: relative;
+  overflow: hidden;
+}
+
+.workspace-tab,
+.inspector-tab {
+  position: relative;
+  isolation: isolate;
+  transition:
+    background-color var(--motion-duration-state) var(--motion-easing-standard),
+    border-color var(--motion-duration-state) var(--motion-easing-standard),
+    color var(--motion-duration-state) var(--motion-easing-standard),
+    opacity var(--motion-duration-state) var(--motion-easing-standard);
+}
+
+.workspace-tab::after,
+.inspector-tab::after {
+  content: "";
+  position: absolute;
+  inset-inline: var(--sys-space-inline-sm);
+  inset-block-end: 2px;
+  block-size: var(--sys-border-subtle);
+  border-radius: var(--ref-radius-round);
+  background-color: currentColor;
+  opacity: 0;
+  transform: scaleX(0.35);
+  transform-origin: center;
+  transition:
+    opacity var(--motion-duration-state) var(--motion-easing-standard),
+    transform var(--motion-duration-state) var(--motion-easing-standard);
+}
+
+.workspace-tab[aria-selected="true"]::after,
+.inspector-tab[aria-selected="true"]::after,
+.workspace-tab.active::after,
+.inspector-tab.active::after {
+  opacity: 0.88;
+  transform: scaleX(1);
+}
+
+.exploration-mode.active,
+.inspector-panel.active {
+  --nv-motion-duration: var(--motion-duration-state);
+  animation: nv-motion-fade-in var(--motion-duration-state) var(--motion-easing-decelerate) both;
+}
+
+.inspector-panel.active {
+  animation-name: nv-motion-slide-reveal;
+}
+
+.nv-context-panel {
+  --nv-motion-duration: var(--motion-duration-enter);
+  --nv-motion-y: calc(var(--sys-space-stack-sm) * var(--sys-motion-intensity-low));
+  transition:
+    opacity var(--motion-duration-exit) var(--motion-easing-standard),
+    transform var(--motion-duration-enter) var(--motion-easing-decelerate),
+    border-color var(--motion-duration-state) var(--motion-easing-standard);
+}
+
+.nv-context-hierarchy-item,
+.nv-context-hierarchy-dot,
+.nv-context-meta-value,
+.nv-context-description {
+  transition:
+    background-color var(--motion-duration-state) var(--motion-easing-standard),
+    color var(--motion-duration-state) var(--motion-easing-standard),
+    opacity var(--motion-duration-state) var(--motion-easing-standard),
+    border-color var(--motion-duration-state) var(--motion-easing-standard);
+}
+
+.nv-context-hierarchy-item--active {
+  border-inline-start: var(--sys-border-subtle) solid var(--sys-color-accent-primary);
+  padding-inline-start: var(--sys-space-inline-xs);
+}
+
+.memory-list,
+.nv-memory-dashboard .memory-list {
+  overflow: hidden;
+  transition:
+    max-block-size var(--motion-duration-state) var(--motion-easing-standard),
+    opacity var(--motion-duration-state) var(--motion-easing-standard);
+}
+
+.memory-grid.nv-motion-collapse {
+  max-block-size: 40rem;
+  opacity: 1;
+}
+
+.memory-layer.collapsed .memory-grid.nv-motion-collapse {
+  display: grid !important;
+  max-block-size: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nv-nav-active-indicator,
+  .nv-nav-item,
+  .nv-header-section-title,
+  .nv-header-section-description,
+  .nv-breadcrumbs a,
+  .workspace-tab,
+  .inspector-tab,
+  .workspace-tab::after,
+  .inspector-tab::after,
+  .nv-context-panel,
+  .nv-context-hierarchy-item,
+  .nv-context-hierarchy-dot,
+  .nv-context-meta-value,
+  .nv-context-description,
+  .memory-list,
+  .memory-grid.nv-motion-collapse,
+  .nv-memory-dashboard .memory-list {
+    animation-duration: 0ms;
+    transition-duration: 0ms;
+    transform: none;
+  }
+
+  .nv-breadcrumbs__list,
+  .exploration-mode.active,
+  .inspector-panel.active {
+    animation-duration: 0ms;
+    transform: none;
+  }
+}

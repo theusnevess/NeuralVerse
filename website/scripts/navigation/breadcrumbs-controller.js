@@ -55,7 +55,7 @@ export function createBreadcrumbsController(options = {}) {
     breadcrumbsTarget.innerHTML = "";
 
     const list = document.createElement("ol");
-    list.className = "nv-breadcrumbs__list";
+    list.className = "nv-breadcrumbs__list nv-motion nv-motion-slide-reveal";
 
     crumbs.forEach((crumb) => {
       const item = document.createElement("li");

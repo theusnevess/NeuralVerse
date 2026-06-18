@@ -2278,14 +2278,26 @@
 
   function applyMemoryCollapseStyles() {
     const memorySection = document.getElementById("memory-layer-section");
+    const memoryGrid = document.getElementById("memory-layer-grid");
     const collapseBtn = document.getElementById("memory-toggle-collapse-button");
+    if (memoryGrid) {
+      memoryGrid.classList.add("nv-motion", "nv-motion-collapse");
+      memoryGrid.setAttribute("data-expanded", String(!memoryPanelCollapsed));
+      memoryGrid.setAttribute("aria-hidden", String(memoryPanelCollapsed));
+    }
     if (memorySection) {
       if (memoryPanelCollapsed) {
         memorySection.classList.add("collapsed");
-        if (collapseBtn) collapseBtn.textContent = "Expand Layer";
+        if (collapseBtn) {
+          collapseBtn.textContent = "Expand Layer";
+          collapseBtn.setAttribute("aria-expanded", "false");
+        }
       } else {
         memorySection.classList.remove("collapsed");
-        if (collapseBtn) collapseBtn.textContent = "Collapse Layer";
+        if (collapseBtn) {
+          collapseBtn.textContent = "Collapse Layer";
+          collapseBtn.setAttribute("aria-expanded", "true");
+        }
       }
     }
   }
@@ -5715,7 +5727,7 @@
         const el = document.getElementById(`mode-${m}`);
         if (el) {
           if (m === mode) {
-            el.classList.add("active");
+            el.classList.add("active", "nv-motion", "nv-motion-fade-in");
           } else {
             el.classList.remove("active");
           }
@@ -5766,7 +5778,7 @@
       const el = document.getElementById(`inspector-panel-${p}`);
       if (el) {
         if (p === tabId) {
-          el.classList.add("active");
+          el.classList.add("active", "nv-motion", "nv-motion-slide-reveal");
         } else {
           el.classList.remove("active");
         }

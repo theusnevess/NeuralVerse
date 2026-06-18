@@ -4,11 +4,52 @@
 class NavigationController {
   constructor(stateManager) {
     this.stateManager = stateManager;
+    this.activeIndicator = null;
     this.init();
   }
 
   init() {
+    this.ensureActiveIndicator();
     this.stateManager.subscribe((state) => this.syncUI(state));
+    window.addEventListener('resize', () => this.updateActiveIndicator());
+  }
+
+  ensureActiveIndicator() {
+    const rail = document.querySelector('.nv-navigation-rail');
+    if (!rail) return null;
+
+    let indicator = rail.querySelector('.nv-nav-active-indicator');
+    if (!indicator) {
+      indicator = document.createElement('span');
+      indicator.className = 'nv-nav-active-indicator nv-motion nv-motion-shared-transition';
+      indicator.setAttribute('aria-hidden', 'true');
+      rail.append(indicator);
+    }
+
+    this.activeIndicator = indicator;
+    return indicator;
+  }
+
+  updateActiveIndicator() {
+    const indicator = this.activeIndicator || this.ensureActiveIndicator();
+    const rail = document.querySelector('.nv-navigation-rail');
+    const activeItem = rail?.querySelector('.nv-nav-item[aria-current="page"]');
+
+    if (!indicator || !rail || !activeItem) {
+      indicator?.setAttribute('data-visible', 'false');
+      return;
+    }
+
+    const railRect = rail.getBoundingClientRect();
+    const itemRect = activeItem.getBoundingClientRect();
+    const x = itemRect.left - railRect.left;
+    const y = itemRect.top - railRect.top;
+
+    indicator.style.inlineSize = `${itemRect.width}px`;
+    indicator.style.blockSize = `${itemRect.height}px`;
+    indicator.style.setProperty('--nv-nav-indicator-x', `${x}px`);
+    indicator.style.setProperty('--nv-nav-indicator-y', `${y}px`);
+    indicator.setAttribute('data-visible', 'true');
   }
 
   syncUI(state) {
@@ -29,6 +70,7 @@ class NavigationController {
         item.removeAttribute('aria-current');
       }
     });
+    this.updateActiveIndicator();
 
     // 2. Sync Global Header Title and Description
     const headerTitle = document.querySelector('.nv-header-section-title');
