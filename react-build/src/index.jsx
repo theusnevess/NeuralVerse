@@ -43,6 +43,12 @@ import {
   NvCompareEvidenceContribution,
   NvCompareGraphPosition,
   NvCompareActions,
+  NvCompareConvergenceLine,
+  NvCompareSemanticDiff,
+  NvCompareEvidenceOverlap,
+  NvCompareGraphSyncStatus,
+  NvCompareSetManager,
+  NvCompareEmptyState,
 } from './NvCompareWorkspace.jsx'
 import {
   NvWorkspaceSnapshot,
@@ -124,6 +130,12 @@ export {
   NvCompareEvidenceContribution,
   NvCompareGraphPosition,
   NvCompareActions,
+  NvCompareConvergenceLine,
+  NvCompareSemanticDiff,
+  NvCompareEvidenceOverlap,
+  NvCompareGraphSyncStatus,
+  NvCompareSetManager,
+  NvCompareEmptyState,
 }
 
 // Legacy island exports

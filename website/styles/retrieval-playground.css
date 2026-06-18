@@ -3853,6 +3853,213 @@ button.nv-timeline-event-compact:focus-visible {
   }
 }
 
+/* Convergence Line --------------------------------------------------------- */
+.nv-compare-convergence-line {
+  display: grid;
+  gap: var(--sys-space-stack-xs);
+  padding: var(--sys-space-stack-sm) var(--sys-space-inline-md);
+  border: var(--sys-border-subtle) solid color-mix(in srgb, var(--sys-color-accent-primary) 22%, transparent);
+  border-radius: var(--ref-radius-soft);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--sys-color-accent-primary) 4%, transparent), color-mix(in srgb, var(--sys-color-success) 2%, transparent) 58%, transparent),
+    var(--sys-color-surface-container-low);
+}
+
+.nv-compare-convergence-line__header {
+  display: flex;
+  align-items: center;
+  gap: var(--sys-space-inline-sm);
+}
+
+.nv-compare-convergence-line__header h3 {
+  margin: 0;
+  color: var(--sys-color-accent-primary);
+  font-size: var(--ref-font-size-300);
+  font-weight: var(--ref-font-weight-semibold);
+}
+
+.nv-compare-convergence-line__badge {
+  display: inline-flex;
+  padding: 1px var(--sys-space-inline-xs);
+  border-radius: var(--ref-radius-pill);
+  background-color: color-mix(in srgb, var(--sys-color-accent-primary) 10%, transparent);
+  color: var(--sys-color-accent-primary);
+  font-size: var(--sys-font-caption-size);
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+.nv-compare-convergence-line__body {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sys-space-inline-md);
+  align-items: center;
+}
+
+.nv-compare-convergence-line__block {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sys-space-inline-xs);
+}
+
+.nv-compare-convergence-line__label {
+  color: var(--sys-color-text-secondary);
+  font-size: var(--sys-font-caption-size);
+  font-weight: var(--ref-font-weight-medium);
+  white-space: nowrap;
+}
+
+/* Semantic Diff ------------------------------------------------------------ */
+.nv-compare-semantic-diff {
+  display: grid;
+  gap: var(--sys-space-stack-xs);
+  min-inline-size: 0;
+}
+
+.nv-compare-semantic-diff__header {
+  display: flex;
+  align-items: center;
+  gap: var(--sys-space-inline-sm);
+}
+
+.nv-compare-semantic-diff__header h3 {
+  margin: 0;
+  color: var(--sys-color-text-primary);
+  font-size: var(--ref-font-size-300);
+  font-weight: var(--ref-font-weight-semibold);
+}
+
+.nv-compare-semantic-diff__body {
+  display: grid;
+  gap: var(--sys-space-stack-xs);
+}
+
+.nv-compare-diff-card {
+  display: grid;
+  gap: var(--sys-space-stack-xs);
+  padding: var(--sys-space-stack-sm) var(--sys-space-inline-sm);
+  border: var(--sys-border-subtle) solid color-mix(in srgb, var(--sys-color-text-primary) 8%, transparent);
+  border-radius: var(--ref-radius-soft);
+  background-color: color-mix(in srgb, var(--sys-color-surface-container-low) 72%, transparent);
+}
+
+.nv-compare-diff-card h4 {
+  margin: 0;
+  color: var(--sys-color-text-primary);
+  font-size: var(--ref-font-size-300);
+  font-weight: var(--ref-font-weight-semibold);
+}
+
+.nv-compare-diff-card__block {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sys-space-inline-xs);
+}
+
+.nv-compare-diff-card__label {
+  color: var(--sys-color-text-secondary);
+  font-size: var(--sys-font-caption-size);
+  font-weight: var(--ref-font-weight-medium);
+  white-space: nowrap;
+}
+
+/* Evidence Overlap -------------------------------------------------------- */
+.nv-compare-evidence-overlap {
+  min-inline-size: 0;
+}
+
+.nv-compare-evidence-overlap__grid {
+  display: grid;
+  gap: var(--sys-space-stack-xs);
+}
+
+.nv-compare-evidence-overlap__card {
+  display: grid;
+  gap: var(--sys-space-stack-2xs, 0.25rem);
+  padding: var(--sys-space-stack-xs) var(--sys-space-inline-sm);
+  border: var(--sys-border-subtle) solid color-mix(in srgb, var(--sys-color-text-primary) 8%, transparent);
+  border-radius: var(--ref-radius-soft);
+  background-color: var(--sys-color-surface-container-lowest);
+}
+
+.nv-compare-evidence-overlap__card h4 {
+  margin: 0;
+  overflow: hidden;
+  color: var(--sys-color-text-primary);
+  font-size: var(--ref-font-size-300);
+  font-weight: var(--ref-font-weight-semibold);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Graph Sync Status ------------------------------------------------------- */
+.nv-compare-graph-sync {
+  min-inline-size: 0;
+}
+
+.nv-compare-graph-sync__info {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sys-space-inline-sm);
+}
+
+/* Compare Workspace Toolbar ------------------------------------------------ */
+.nv-compare-workspace__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sys-space-inline-sm);
+}
+
+/* Compare Empty State ------------------------------------------------------ */
+.nv-compare-empty-state {
+  display: grid;
+  place-items: center;
+  gap: var(--sys-space-stack-xs);
+  padding: var(--sys-space-stack-lg) var(--sys-space-inline-md);
+  text-align: center;
+}
+
+.nv-compare-empty-state__title {
+  margin: 0;
+  color: var(--sys-color-text-primary);
+  font-size: var(--ref-font-size-300);
+  font-weight: var(--ref-font-weight-semibold);
+}
+
+.nv-compare-empty-state__message {
+  margin: 0;
+  color: var(--sys-color-text-secondary);
+  font-size: var(--sys-font-caption-size);
+  line-height: 1.35;
+}
+
+/* Responsive convergence line */
+@media (max-width: 1024px) {
+  .nv-compare-convergence-line__body {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 640px) {
+  .nv-compare-convergence-line {
+    padding: var(--sys-space-stack-sm) var(--sys-space-inline-sm);
+  }
+
+  .nv-compare-convergence-line__body {
+    gap: var(--sys-space-stack-xs);
+  }
+
+  .nv-compare-workspace__toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
 /* Research Continuity Dashboard — React Memory Island */
 .nv-memory-dashboard .memory-panel-item {
   list-style: none;

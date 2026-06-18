@@ -138,3 +138,15 @@ Allowed E.5 callbacks:
 - Unique concepts and shared concepts must come from existing reference metadata only.
 - Relationship comparisons must come from existing relationship records only.
 - Graph position is descriptive only and must not alter graph layout or rendering.
+
+## E.10 Comparative Research Mode Rules
+
+- Compare selection persists via existing `neuralverse.retrievalWorkspace.v1` key (safe optional fields, no schema change).
+- React must not read or write localStorage directly.
+- Bidirectional graph sync via JS callbacks only; React never touches graph layout.
+- Graph layout algorithm and rendering remain unchanged.
+- Evidence Compiler contract remains unchanged.
+- `Compile from Set` triggers compile from current query; multi-reference compiler input is not introduced.
+- Saved compare sets are deferred; `NvCompareSetManager` returns null until future phase.
+- Convergence line, semantic diff, and evidence overlap use only existing reference metadata, relationships, evidence state, and graph state.
+- No fake semantic scores, embeddings, or AI summaries.

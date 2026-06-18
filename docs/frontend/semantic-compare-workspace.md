@@ -11,7 +11,7 @@ It helps compare 2-4 references by metadata, shared concepts, unique relationshi
 - Minimum: 2 references for full comparison.
 - Maximum: 4 references.
 - A fifth reference is blocked with non-modal feedback.
-- Compare selection is session-only and is not persisted to avoid changing the workspace persistence schema.
+- Compare selection is persisted via `neuralverse.retrievalWorkspace.v1` localStorage key (see comparative-research-mode.md for persistence details).
 
 ## Entry Points
 

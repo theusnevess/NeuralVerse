@@ -1391,6 +1391,19 @@
     updateProgressiveFeatures();
   }
 
+  function focusCompareInGraph(refId) {
+    if (!refId) return;
+    selectedReferenceId = refId;
+    addToRecentlyViewed(refId);
+    shouldFitGraphViewport = true;
+    switchExplorationMode("graph");
+    switchInspectorTab("reference");
+    addTrailEvent("compare_focus_graph", `Focused "${refId}" in graph from compare`, { referenceId: refId });
+    saveWorkspaceState();
+    renderReferenceInspector();
+    renderVisualGraph();
+  }
+
   function clearCompare() {
     compareSelection = [];
     compareFeedback = "";
@@ -1420,6 +1433,17 @@
     return `${String(rel.type || "related").replace(/_/g, " ")} · ${other ? other.title : otherId}`;
   }
 
+  function getConnectedReferenceIds(refId) {
+    const rels = adapter.getRelationshipsForReference(retrievalState, refId);
+    const connected = new Set();
+    rels.forEach(rel => {
+      connected.add(rel.sourceReferenceId);
+      connected.add(rel.targetReferenceId);
+    });
+    connected.delete(refId);
+    return [...connected];
+  }
+
   function buildComparePayload() {
     const refs = compareSelection
       .map(id => adapter.getReferenceById(retrievalState, id))
@@ -1437,6 +1461,8 @@
     const sharedRelationships = relationshipTypeSets.length >= 2
       ? [...relationshipTypeSets[0]].filter(type => relationshipTypeSets.every(set => set.has(type))).map(type => String(type).replace(/_/g, " "))
       : [];
+
+    const sharedRelationshipTypes = sharedRelationships;
 
     const items = refs.map(ref => {
       const rels = adapter.getRelationshipsForReference(retrievalState, ref.id);
@@ -1456,6 +1482,7 @@
         relatedRelationshipIds: rels.map(rel => rel.id),
         isPinned: pinnedReferences.includes(ref.id),
         canCompile: true,
+        connectedReferenceIds: getConnectedReferenceIds(ref.id),
       };
     });
 
@@ -1468,6 +1495,12 @@
         referenceId: ref.id,
         title: ref.title,
         uniqueConcepts: (ref.keywords || []).filter(keyword => !sharedConcepts.includes(String(keyword).toLowerCase())).slice(0, 6),
+        uniqueRelationshipTypes: rels
+          .map(rel => String(rel.type || "related").replace(/_/g, " "))
+          .filter(type => !sharedRelationshipTypes.includes(type))
+          .filter((type, i, arr) => arr.indexOf(type) === i)
+          .slice(0, 6),
+        uniqueConnectedReferences: getConnectedReferenceIds(ref.id).filter(cid => !refs.some(r => r.id === cid)).slice(0, 5),
         uniqueRelationships: rels.map(rel => getCompareRelationshipLabel(rel, ref.id)).filter(label => !otherRelLabels.has(label)).slice(0, 5),
       };
     });
@@ -1488,6 +1521,25 @@
       ? refs.map(ref => ({ referenceId: ref.id, title: ref.title, ...getEvidenceContribution(ref.id) }))
       : [];
 
+    const allConnectedIds = new Set();
+    refs.forEach(ref => {
+      getConnectedReferenceIds(ref.id).forEach(cid => allConnectedIds.add(cid));
+    });
+    const sharedConnectedIds = [...allConnectedIds].filter(cid =>
+      refs.every(ref => getConnectedReferenceIds(ref.id).includes(cid))
+    );
+    const commonNeighborhoodLabels = sharedConnectedIds
+      .map(id => adapter.getReferenceById(retrievalState, id))
+      .filter(Boolean)
+      .map(r => r.title)
+      .slice(0, 5);
+
+    const sharedEvidenceReferenceIds = currentCompiledEvidence
+      ? (currentCompiledEvidence.matchedReferences || []).filter(mr =>
+          refs.some(ref => ref.id === mr.id)
+        ).map(mr => mr.id)
+      : [];
+
     return {
       items,
       shared: {
@@ -1495,11 +1547,47 @@
         types: Object.entries(typeCounts).filter(([, count]) => count > 1).map(([type]) => type),
         relationships: sharedRelationships,
       },
+      convergence: {
+        sharedConcepts,
+        sharedRelationshipTypes: sharedRelationships,
+        sharedEvidenceReferenceIds,
+        commonNeighborhoodLabels,
+      },
+      semanticDiff: {
+        uniqueByReference: refs.map(ref => {
+          const diff = differences.find(d => d.referenceId === ref.id);
+          return {
+            referenceId: ref.id,
+            title: ref.title,
+            uniqueConcepts: diff?.uniqueConcepts || [],
+            uniqueRelationshipTypes: diff?.uniqueRelationshipTypes || [],
+            uniqueConnectedReferences: diff?.uniqueConnectedReferences || [],
+          };
+        }),
+      },
+      evidenceOverlap: {
+        hasActiveEvidence: Boolean(currentCompiledEvidence),
+        contributors: refs.map(ref => ({
+          referenceId: ref.id,
+          title: ref.title,
+          ...getEvidenceContribution(ref.id),
+        })),
+      },
+      graphSync: {
+        activeCompareReferenceId: "",
+        graphModeActive: activeExplorationMode === "graph",
+        visibleInGraphReferenceIds: refs.map(ref => ref.id),
+      },
       differences,
       graphContext,
       evidenceContext,
       feedback: compareFeedback,
       limit: 4,
+      actions: {
+        canSaveCompareSet: false,
+        canCompileFromSet: refs.length >= 1,
+        canFocusGraph: refs.length >= 1,
+      },
     };
   }
 
@@ -1828,6 +1916,8 @@
         graphFocusMode = state.graphFocusMode || "follow";
         graphViewport = state.graphViewport || { x: 0, y: 0, scale: 1 };
         evidenceTimeline = state.evidenceTimeline || [];
+        compareSelection = state.compareSelection || [];
+        compareFeedback = state.compareFeedback || "";
 
         // Stage 6 State
         focusModeEnabled = state.focusModeEnabled || false;
@@ -1928,6 +2018,8 @@
         graphFocusMode,
         graphViewport,
         evidenceTimeline,
+        compareSelection,
+        compareFeedback,
         // Stage 6
         focusModeEnabled,
         memoryPanelCollapsed,
@@ -4698,9 +4790,27 @@
         compileEvidenceFromReference(id);
         renderCompareMode();
       },
+      onCompileFromQuery: () => {
+        if (currentSearchQuery) {
+          document.getElementById("playground-compile-query-button")?.click();
+        }
+      },
       onRemove: (id) => removeFromCompare(id),
       onClear: () => clearCompare(),
       onOpenCompare: () => switchExplorationMode("compare"),
+      onFocusInGraph: (id) => focusCompareInGraph(id),
+      onFocusItem: (id) => {
+        if (id) {
+          payload.graphSync.activeCompareReferenceId = id;
+          payload.graphSync.graphModeActive = activeExplorationMode === "graph";
+          if (activeExplorationMode === "graph") {
+            const node = document.querySelector(`.graph-node[data-id="${id}"]`);
+            if (node) {
+              node.dispatchEvent(new Event("click"));
+            }
+          }
+        }
+      },
     };
 
     if (tryMountReactIsland(container, "NvCompareWorkspace", payload, callbacks)) {

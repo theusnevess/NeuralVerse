@@ -49,6 +49,12 @@ All shared React island presentation primitives live in `react-build/src/compone
 | `NvCompareEvidenceContribution` | `react-build/src/NvCompareWorkspace.jsx` | ✅ v1 | Current evidence contribution display |
 | `NvCompareGraphPosition` | `react-build/src/NvCompareWorkspace.jsx` | ✅ v1 | Graph position and connectivity display |
 | `NvCompareActions` | `react-build/src/NvCompareWorkspace.jsx` | ✅ v1 | Per-reference compare actions |
+| `NvCompareConvergenceLine` | `react-build/src/NvCompareWorkspace.jsx` | ✅ v1 | Shared analytical context display |
+| `NvCompareSemanticDiff` | `react-build/src/NvCompareWorkspace.jsx` | ✅ v1 | Unique concepts/relationships per reference |
+| `NvCompareEvidenceOverlap` | `react-build/src/NvCompareWorkspace.jsx` | ✅ v1 | Per-reference evidence contribution overlap |
+| `NvCompareGraphSyncStatus` | `react-build/src/NvCompareWorkspace.jsx` | ✅ v1 | Graph sync information display |
+| `NvCompareSetManager` | `react-build/src/NvCompareWorkspace.jsx` | ✅ v1 | Saved compare sets manager (deferred) |
+| `NvCompareEmptyState` | `react-build/src/NvCompareWorkspace.jsx` | ✅ v1 | Compare empty state component |
 
 ---
 
