@@ -1,0 +1,259 @@
+/**
+ * NeuralVerse Global Background System — NV-600.2
+ * =================================================
+ * Shared, token-driven Research Observatory atmosphere.
+ *
+ * The background is decorative context only. It must stay behind content,
+ * never encode information, and never intercept interaction.
+ */
+
+:root {
+  --nv-background-profile-accent: 7%;
+  --nv-background-profile-depth: 10%;
+  --nv-background-profile-bloom: var(--sys-background-bloom-opacity);
+  --nv-background-profile-grid: var(--sys-background-grid-opacity);
+  --nv-background-profile-signals: var(--sys-background-signal-opacity);
+  --nv-background-profile-noise: var(--sys-background-noise-opacity);
+}
+
+body:has(.nv-main-workspace[data-workspace-active-view="home"]) {
+  --nv-background-profile-accent: 9%;
+  --nv-background-profile-depth: 12%;
+  --nv-background-profile-bloom: 0.34;
+  --nv-background-profile-grid: 0.13;
+  --nv-background-profile-signals: 0.16;
+}
+
+[data-background-profile="landing"] {
+  --nv-background-profile-accent: 9%;
+  --nv-background-profile-depth: 12%;
+  --nv-background-profile-bloom: 0.34;
+  --nv-background-profile-grid: 0.13;
+  --nv-background-profile-signals: 0.16;
+}
+
+body:has(.nv-main-workspace[data-workspace-active-view="learning"]),
+body:has(.nv-main-workspace[data-workspace-active-view="modules"]),
+body:has(.nv-main-workspace[data-workspace-active-view="content"]) {
+  --nv-background-profile-accent: 5%;
+  --nv-background-profile-depth: 8%;
+  --nv-background-profile-bloom: 0.24;
+  --nv-background-profile-grid: 0.1;
+  --nv-background-profile-signals: 0.1;
+}
+
+[data-background-profile="learning"] {
+  --nv-background-profile-accent: 5%;
+  --nv-background-profile-depth: 8%;
+  --nv-background-profile-bloom: 0.24;
+  --nv-background-profile-grid: 0.1;
+  --nv-background-profile-signals: 0.1;
+}
+
+body:has(.nv-main-workspace[data-workspace-active-view="workspace"]) {
+  --nv-background-profile-accent: 7%;
+  --nv-background-profile-depth: 11%;
+  --nv-background-profile-bloom: 0.28;
+  --nv-background-profile-grid: 0.16;
+  --nv-background-profile-signals: 0.2;
+}
+
+[data-background-profile="workspace"] {
+  --nv-background-profile-accent: 7%;
+  --nv-background-profile-depth: 11%;
+  --nv-background-profile-bloom: 0.28;
+  --nv-background-profile-grid: 0.16;
+  --nv-background-profile-signals: 0.2;
+}
+
+body:has(.nv-main-workspace[data-workspace-active-view="retrieval-playground"]) {
+  --nv-background-profile-accent: 8%;
+  --nv-background-profile-depth: 12%;
+  --nv-background-profile-bloom: 0.3;
+  --nv-background-profile-grid: 0.12;
+  --nv-background-profile-signals: 0.22;
+}
+
+[data-background-profile="retrieval"] {
+  --nv-background-profile-accent: 8%;
+  --nv-background-profile-depth: 12%;
+  --nv-background-profile-bloom: 0.3;
+  --nv-background-profile-grid: 0.12;
+  --nv-background-profile-signals: 0.22;
+}
+
+body:has(.nv-main-workspace[data-workspace-active-view="settings"]) {
+  --nv-background-profile-accent: 4%;
+  --nv-background-profile-depth: 7%;
+  --nv-background-profile-bloom: 0.18;
+  --nv-background-profile-grid: 0.08;
+  --nv-background-profile-signals: 0.08;
+}
+
+body:has(.nv-research-presentation) {
+  --nv-background-profile-accent: 4%;
+  --nv-background-profile-depth: 7%;
+  --nv-background-profile-bloom: 0.16;
+  --nv-background-profile-grid: 0.06;
+  --nv-background-profile-signals: 0.06;
+}
+
+[data-background-profile="presentation"] {
+  --nv-background-profile-accent: 4%;
+  --nv-background-profile-depth: 7%;
+  --nv-background-profile-bloom: 0.16;
+  --nv-background-profile-grid: 0.06;
+  --nv-background-profile-signals: 0.06;
+}
+
+body {
+  position: relative;
+  background:
+    radial-gradient(
+      ellipse at 54% 28%,
+      color-mix(in srgb, var(--sys-background-accent) var(--nv-background-profile-accent), transparent) 0%,
+      transparent 58%
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--sys-background-depth) var(--nv-background-profile-depth), var(--sys-background-base)) 0%,
+      var(--sys-background-base) 100%
+    );
+  isolation: isolate;
+}
+
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+body::before {
+  background-image:
+    radial-gradient(
+      circle,
+      color-mix(in srgb, var(--sys-background-grid-color) 22%, transparent) 0 1px,
+      transparent 1.35px
+    ),
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--sys-background-grid-color) 10%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--sys-background-grid-color) 8%, transparent) 1px,
+      transparent 1px
+    ),
+    radial-gradient(
+      ellipse at 78% 18%,
+      color-mix(in srgb, var(--sys-background-accent) 10%, transparent) 0%,
+      transparent 42%
+    ),
+    radial-gradient(
+      ellipse at 18% 88%,
+      color-mix(in srgb, var(--sys-background-depth) 22%, transparent) 0%,
+      transparent 44%
+    );
+  background-size:
+    var(--sys-background-grid-spacing) var(--sys-background-grid-spacing),
+    calc(var(--sys-background-grid-spacing) * 2) calc(var(--sys-background-grid-spacing) * 2),
+    calc(var(--sys-background-grid-spacing) * 2) calc(var(--sys-background-grid-spacing) * 2),
+    100% 100%,
+    100% 100%;
+  opacity: var(--nv-background-profile-grid);
+}
+
+body::after {
+  background-image:
+    radial-gradient(
+      circle at 24% 32%,
+      color-mix(in srgb, var(--sys-background-signal-color) 24%, transparent) 0 1px,
+      transparent 1.5px
+    ),
+    radial-gradient(
+      ellipse at 82% 22%,
+      transparent 0 55%,
+      color-mix(in srgb, var(--sys-background-signal-color) 14%, transparent) 55.4% 55.8%,
+      transparent 56.4%
+    ),
+    radial-gradient(
+      ellipse at 16% 78%,
+      transparent 0 59%,
+      color-mix(in srgb, var(--sys-background-signal-color) 12%, transparent) 59.4% 59.8%,
+      transparent 60.3%
+    ),
+    radial-gradient(
+      circle,
+      color-mix(in srgb, var(--sys-background-noise-color) 8%, transparent) 0 0.7px,
+      transparent 1.1px
+    );
+  background-size:
+    calc(var(--sys-background-grid-spacing) * 3) calc(var(--sys-background-grid-spacing) * 3),
+    100% 100%,
+    100% 100%,
+    17px 19px;
+  mask-image:
+    linear-gradient(90deg, transparent 0%, var(--ref-color-black) 18%, var(--ref-color-black) 82%, transparent 100%),
+    linear-gradient(180deg, transparent 0%, var(--ref-color-black) 12%, var(--ref-color-black) 88%, transparent 100%);
+  opacity: calc(var(--nv-background-profile-signals) + var(--nv-background-profile-noise));
+  animation: nv-background-ambient-drift var(--sys-background-ambient-motion) var(--motion-easing-standard) infinite alternate;
+}
+
+.nv-shell,
+.nv-hover-preview-layer,
+.nv-context-menu-layer {
+  position: relative;
+  z-index: 1;
+}
+
+.nv-background-surface {
+  position: relative;
+  isolation: isolate;
+}
+
+.nv-background-provider,
+.nv-background-profile {
+  position: relative;
+  isolation: isolate;
+}
+
+.nv-background-surface::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: inherit;
+  background:
+    radial-gradient(
+      ellipse at 50% 18%,
+      color-mix(in srgb, var(--sys-background-accent) 6%, transparent),
+      transparent 58%
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--sys-background-depth) 10%, transparent),
+      transparent
+    );
+  opacity: var(--nv-background-profile-bloom);
+}
+
+@keyframes nv-background-ambient-drift {
+  from {
+    opacity: calc(var(--nv-background-profile-signals) + var(--nv-background-profile-noise));
+  }
+
+  to {
+    opacity: calc((var(--nv-background-profile-signals) + var(--nv-background-profile-noise)) * 0.72);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::after {
+    animation: none;
+  }
+}

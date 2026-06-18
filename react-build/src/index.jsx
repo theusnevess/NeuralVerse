@@ -11,6 +11,7 @@
  *   - Zero CDN or external runtime dependencies
  *
  * NV-600.1 — Motion Foundation
+ * NV-600.2 — Global Background System
  */
 
 import { mount, update, unmount } from './bridge.js'
@@ -98,6 +99,11 @@ import {
   NvStaggerGroup,
   useNvMotion,
 } from './motion/NvMotion.jsx'
+import {
+  NvBackgroundProvider,
+  NvBackgroundSurface,
+  NvBackgroundProfile,
+} from './background/NvBackground.jsx'
 
 function withMotionProvider(Component) {
   return function NvMotionIsland(props) {
@@ -186,6 +192,13 @@ export {
   useNvMotion,
 }
 
+// Background foundation exports
+export {
+  NvBackgroundProvider,
+  NvBackgroundSurface,
+  NvBackgroundProfile,
+}
+
 // Semantic compare island exports
 export {
   NvCompareWorkspace,
@@ -262,12 +275,17 @@ window.NeuralVerse.react = {
     NvSharedTransition,
     NvStaggerGroup,
   },
+  background: {
+    NvBackgroundProvider,
+    NvBackgroundSurface,
+    NvBackgroundProfile,
+  },
 }
 
 if (window.NV_DEBUG) {
   console.log('[NeuralVerse React] Island layer initialized.', {
     islands: Object.keys(window.NeuralVerse.react.islands),
     version: 'local-bundle',
-    phase: 'NV-600.1',
+    phase: 'NV-600.2',
   })
 }

@@ -7,7 +7,7 @@
   display: flex;
   flex-direction: column;
   min-block-size: 100vh;
-  background-color: var(--ctx-workspace-background);
+  background-color: transparent;
   overflow-x: clip;
 }
 
@@ -219,7 +219,7 @@
   flex: 1;
   min-inline-size: 0;
   padding: var(--ctx-workspace-padding);
-  background-color: var(--ctx-workspace-background);
+  background-color: transparent;
   border-radius: var(--ctx-workspace-radius);
 }
 
@@ -655,7 +655,6 @@
     padding: var(--sys-spacing-inset-md, var(--sys-space-inset-md));
   }
 }
-
 
 
 

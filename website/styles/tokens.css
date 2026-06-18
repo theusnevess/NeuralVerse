@@ -270,6 +270,27 @@
 }
 
 /* =========================================================
+   Semantic Tokens — Global Background System
+   Source: NV-600.2 Global Background System
+   ========================================================= */
+
+:root {
+  --sys-background-base: var(--sys-color-background-base);
+  --sys-background-depth: var(--sys-color-background-subtle);
+  --sys-background-accent: var(--sys-color-accent-primary);
+  --sys-background-grid-color: var(--sys-color-accent-primary);
+  --sys-background-signal-color: var(--sys-color-accent-primary);
+  --sys-background-noise-color: var(--sys-color-text-primary);
+
+  --sys-background-grid-spacing: var(--ref-space-1000);
+  --sys-background-grid-opacity: 0.15;
+  --sys-background-signal-opacity: 0.18;
+  --sys-background-noise-opacity: 0.05;
+  --sys-background-bloom-opacity: 0.3;
+  --sys-background-ambient-motion: 72s;
+}
+
+/* =========================================================
    Semantic Tokens — Typography
    Source: T3_SEMANTIC_TOKEN_CATALOG.md / NV-011
    ========================================================= */
@@ -620,5 +641,6 @@
     --ctx-panel-motion:    var(--ref-motion-duration-instant);
     --ctx-overlay-motion:  var(--ref-motion-duration-instant);
     --ctx-feedback-motion: var(--ref-motion-duration-instant);
+    --sys-background-ambient-motion: var(--ref-motion-duration-instant);
   }
 }
