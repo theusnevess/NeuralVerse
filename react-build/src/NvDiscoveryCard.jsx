@@ -118,6 +118,11 @@ export function NvDiscoveryCard({ data = {}, callbacks = {} }) {
               {isPinned ? 'Unpin' : 'Pin'}
             </NvButton>
           )}
+          {actionSet.has('compare') && (
+            <NvButton variant="secondary" className="nv-discovery-panel__action" onClick={(event) => emit('compare', event)}>
+              Compare
+            </NvButton>
+          )}
           <button
             className="nv-button nv-discovery-panel__action nv-context-menu-trigger"
             data-variant="ghost"

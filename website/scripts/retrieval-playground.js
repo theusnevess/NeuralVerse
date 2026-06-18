@@ -37,6 +37,8 @@
   let activeExplorationMode = "search";
   let activeInspectorTab = "reference";
   let evidenceTimeline = [];
+  let compareSelection = [];
+  let compareFeedback = "";
   let preferencesEscapeHandlerBound = false;
   let inspectorResizeHandlerBound = false;
 
@@ -624,6 +626,7 @@
             ${actionSet.has("preview") ? `<button class="nv-button nv-discovery-panel__action" data-action="preview-discovery" data-id="${escapeHtml(reference.id)}" data-preview-id="${previewId}" data-variant="ghost" aria-expanded="false">Preview</button>` : ""}
             ${actionSet.has("open") ? `<button class="nv-button nv-discovery-panel__action" data-action="open-discovery" data-id="${escapeHtml(reference.id)}" data-variant="primary">Open</button>` : ""}
             ${actionSet.has("pin") ? `<button class="nv-button nv-discovery-panel__action" data-action="pin-discovery" data-id="${escapeHtml(reference.id)}" data-variant="secondary">${isPinned ? "Unpin" : "Pin"}</button>` : ""}
+            ${actionSet.has("compare") ? `<button class="nv-button nv-discovery-panel__action" data-action="compare-discovery" data-id="${escapeHtml(reference.id)}" data-variant="secondary">Compare</button>` : ""}
             <button class="nv-button nv-discovery-panel__action nv-context-menu-trigger" data-context-menu-trigger data-ref-id="${escapeHtml(reference.id)}" data-variant="ghost" aria-label="More actions for ${escapeHtml(reference.title)}">More</button>
           </div>
         </div>
@@ -660,6 +663,8 @@
                 pinReference(id);
               }
               if (typeof options.onPinChange === "function") options.onPinChange(id);
+            } else if (action === "compare") {
+              addToCompare(id);
             }
           }
         }
@@ -717,6 +722,13 @@
         if (typeof options.onPinChange === "function") options.onPinChange(id);
       };
     });
+
+    container.querySelectorAll("button[data-action='compare-discovery']").forEach(btn => {
+      btn.onclick = (event) => {
+        event.stopPropagation();
+        addToCompare(btn.getAttribute("data-id"));
+      };
+    });
   }
 
   function getRelationshipById(relId) {
@@ -751,7 +763,8 @@
       ].join(""),
       actions: [
         { action: "open-reference", label: "Open", id: ref.id, variant: "primary" },
-        { action: "pin-reference", label: pinnedReferences.includes(ref.id) ? "Unpin" : "Pin", id: ref.id, variant: "secondary" }
+        { action: "pin-reference", label: pinnedReferences.includes(ref.id) ? "Unpin" : "Pin", id: ref.id, variant: "secondary" },
+        { action: "add-to-compare", label: "Add to Compare", id: ref.id, variant: "secondary" }
       ]
     };
   }
@@ -970,6 +983,8 @@
                     } else {
                       pinReference(id);
                     }
+                  } else if (action === "add-to-compare") {
+                    addToCompare(id);
                   } else if (action === "open-relationship") {
                     const rel = getRelationshipById(id);
                     if (rel) {
@@ -1144,9 +1159,7 @@
       contextAction(isPinned ? "unpin" : "pin", isPinned ? "Unpin" : "Pin")
     ];
 
-    if (targetType !== "recent-reference") {
-      actions.push(contextAction("compare", "Compare"));
-    }
+    actions.push(contextAction("compare", compareSelection.includes(refId) ? "Already in Compare" : "Add to Compare", { disabled: compareSelection.includes(refId) }));
 
     actions.push(contextAction("compile-evidence", "Compile Evidence"));
 
@@ -1335,16 +1348,164 @@
     renderVisualGraph();
   }
 
-  function compareReference(refId) {
-    if (!refId) return;
-    selectedReferenceId = refId;
-    addToRecentlyViewed(refId);
-    switchExplorationMode("compare");
-    switchInspectorTab("reference");
-    addTrailEvent("compare_reference", `Opened compare view from "${refId}"`, { referenceId: refId });
-    saveWorkspaceState();
+  function showCompareFeedback(message) {
+    compareFeedback = message || "";
+    const indicator = document.getElementById("session-restored-indicator");
+    if (indicator && compareFeedback) {
+      indicator.textContent = compareFeedback;
+      indicator.style.opacity = "1";
+      setTimeout(() => {
+        if (indicator.textContent === compareFeedback) indicator.style.opacity = "0";
+      }, 2200);
+    }
+    renderCompareMode();
+  }
+
+  function addToCompare(refId, { open = false } = {}) {
+    if (!refId || !adapter.getReferenceById(retrievalState, refId)) return;
+    if (compareSelection.includes(refId)) {
+      showCompareFeedback("Reference already in compare tray.");
+      if (open || compareSelection.length >= 2) switchExplorationMode("compare");
+      return;
+    }
+    if (compareSelection.length >= 4) {
+      showCompareFeedback("Compare supports up to 4 references. Remove one before adding another.");
+      return;
+    }
+    compareSelection.push(refId);
+    addTrailEvent("compare_add", `Added "${refId}" to compare`, { referenceId: refId });
+    renderMemoryLayer();
     renderReferenceInspector();
     renderCompareMode();
+    updateProgressiveFeatures();
+    if (open || compareSelection.length >= 2) switchExplorationMode("compare");
+    else showCompareFeedback("Added to compare. Add one more reference to open the workspace.");
+  }
+
+  function removeFromCompare(refId) {
+    compareSelection = compareSelection.filter(id => id !== refId);
+    addTrailEvent("compare_remove", `Removed "${refId}" from compare`, { referenceId: refId });
+    renderCompareMode();
+    renderMemoryLayer();
+    renderReferenceInspector();
+    updateProgressiveFeatures();
+  }
+
+  function clearCompare() {
+    compareSelection = [];
+    compareFeedback = "";
+    addTrailEvent("compare_clear", "Cleared compare tray", {});
+    renderCompareMode();
+    renderMemoryLayer();
+    renderReferenceInspector();
+    updateProgressiveFeatures();
+  }
+
+  function getEvidenceContribution(refId) {
+    if (!currentCompiledEvidence) return null;
+    const matched = currentCompiledEvidence.matchedReferences || [];
+    const related = currentCompiledEvidence.relatedReferences || [];
+    if (matched.some(ref => ref.id === refId)) {
+      return { usedInCurrentEvidence: true, contributionLabel: "Primary contribution", contributionLevel: 4 };
+    }
+    if (related.some(ref => ref.id === refId)) {
+      return { usedInCurrentEvidence: true, contributionLabel: "Supporting contribution", contributionLevel: 2 };
+    }
+    return { usedInCurrentEvidence: false, contributionLabel: "Not used in current evidence", contributionLevel: 1 };
+  }
+
+  function getCompareRelationshipLabel(rel, refId) {
+    const otherId = rel.sourceReferenceId === refId ? rel.targetReferenceId : rel.sourceReferenceId;
+    const other = adapter.getReferenceById(retrievalState, otherId);
+    return `${String(rel.type || "related").replace(/_/g, " ")} · ${other ? other.title : otherId}`;
+  }
+
+  function buildComparePayload() {
+    const refs = compareSelection
+      .map(id => adapter.getReferenceById(retrievalState, id))
+      .filter(Boolean)
+      .slice(0, 4);
+    const keywordSets = refs.map(ref => new Set((ref.keywords || []).map(keyword => String(keyword).toLowerCase())));
+    const sharedConcepts = keywordSets.length >= 2
+      ? [...keywordSets[0]].filter(keyword => keywordSets.every(set => set.has(keyword)))
+      : [];
+    const typeCounts = refs.reduce((acc, ref) => {
+      acc[ref.type] = (acc[ref.type] || 0) + 1;
+      return acc;
+    }, {});
+    const relationshipTypeSets = refs.map(ref => new Set(adapter.getRelationshipsForReference(retrievalState, ref.id).map(rel => rel.type)));
+    const sharedRelationships = relationshipTypeSets.length >= 2
+      ? [...relationshipTypeSets[0]].filter(type => relationshipTypeSets.every(set => set.has(type))).map(type => String(type).replace(/_/g, " "))
+      : [];
+
+    const items = refs.map(ref => {
+      const rels = adapter.getRelationshipsForReference(retrievalState, ref.id);
+      const contribution = getEvidenceContribution(ref.id);
+      return {
+        id: ref.id,
+        title: ref.title,
+        type: ref.type,
+        status: ref.status || "active",
+        source: ref.source || "",
+        summary: getReferenceDescription(ref),
+        keywords: Array.isArray(ref.keywords) ? ref.keywords : [],
+        relationshipCount: rels.length,
+        clusterLabel: getClusterLabel(ref),
+        evidenceContributionLabel: contribution?.contributionLabel || "",
+        connectivityLabel: getConnectivityScoreLabel(rels.length),
+        relatedRelationshipIds: rels.map(rel => rel.id),
+        isPinned: pinnedReferences.includes(ref.id),
+        canCompile: true,
+      };
+    });
+
+    const differences = refs.map(ref => {
+      const rels = adapter.getRelationshipsForReference(retrievalState, ref.id);
+      const otherRelLabels = new Set(refs
+        .filter(other => other.id !== ref.id)
+        .flatMap(other => adapter.getRelationshipsForReference(retrievalState, other.id).map(rel => getCompareRelationshipLabel(rel, other.id))));
+      return {
+        referenceId: ref.id,
+        title: ref.title,
+        uniqueConcepts: (ref.keywords || []).filter(keyword => !sharedConcepts.includes(String(keyword).toLowerCase())).slice(0, 6),
+        uniqueRelationships: rels.map(rel => getCompareRelationshipLabel(rel, ref.id)).filter(label => !otherRelLabels.has(label)).slice(0, 5),
+      };
+    });
+
+    const graphContext = refs.map(ref => {
+      const rels = adapter.getRelationshipsForReference(retrievalState, ref.id);
+      return {
+        referenceId: ref.id,
+        title: ref.title,
+        relationshipCount: rels.length,
+        connectivityLabel: getConnectivityScoreLabel(rels.length),
+        clusterLabel: getClusterLabel(ref),
+        microvisualizationHtml: renderRelationshipDensityMeter(rels.length) + renderConnectivityScore(rels.length),
+      };
+    });
+
+    const evidenceContext = currentCompiledEvidence
+      ? refs.map(ref => ({ referenceId: ref.id, title: ref.title, ...getEvidenceContribution(ref.id) }))
+      : [];
+
+    return {
+      items,
+      shared: {
+        concepts: sharedConcepts,
+        types: Object.entries(typeCounts).filter(([, count]) => count > 1).map(([type]) => type),
+        relationships: sharedRelationships,
+      },
+      differences,
+      graphContext,
+      evidenceContext,
+      feedback: compareFeedback,
+      limit: 4,
+    };
+  }
+
+  function compareReference(refId) {
+    if (!refId) return;
+    addToCompare(refId, { open: true });
   }
 
   function restoreTrailContextById(eventId) {
@@ -1722,6 +1883,8 @@
     graphFocusMode = "follow";
     graphViewport = { x: 0, y: 0, scale: 1 };
     evidenceTimeline = [];
+    compareSelection = [];
+    compareFeedback = "";
 
     // Stage 6
     focusModeEnabled = false;
@@ -2211,7 +2374,7 @@
 
     const compareTab = document.getElementById("tab-compare");
     if (compareTab) {
-      if (pinnedReferences && pinnedReferences.length >= 2) {
+      if ((pinnedReferences && pinnedReferences.length >= 2) || compareSelection.length > 0) {
         compareTab.style.display = "flex";
         compareTab.style.pointerEvents = "auto";
       } else {
@@ -2504,9 +2667,14 @@
               <span>${escapeHtml(res.matchedKeywords.slice(0, 3).join(", "))}</span>
             </div>
           </div>
-          <button class="nv-button search-card-compile-btn" data-id="${res.reference.id}" data-variant="primary" style="padding: 4px 10px; font-size: 0.7rem; min-block-size: unset;" aria-label="Compile evidence for ${escapeHtml(res.reference.title)}">
-            Compile
-          </button>
+          <div class="nv-cluster nv-cluster--gap-xs" style="justify-content: flex-end;">
+            <button class="nv-button search-card-compare-btn" data-id="${res.reference.id}" data-variant="secondary" style="padding: 4px 10px; font-size: 0.7rem; min-block-size: unset;" aria-label="Add ${escapeHtml(res.reference.title)} to compare">
+              Compare
+            </button>
+            <button class="nv-button search-card-compile-btn" data-id="${res.reference.id}" data-variant="primary" style="padding: 4px 10px; font-size: 0.7rem; min-block-size: unset;" aria-label="Compile evidence for ${escapeHtml(res.reference.title)}">
+              Compile
+            </button>
+          </div>
         </div>
       `;
     }).join("");
@@ -2682,6 +2850,12 @@
           ${renderClusterIndicator(ref)}
         </div>
 
+        <div class="nv-cluster nv-cluster--gap-xs">
+          <button id="reference-add-compare-button" class="nv-button" data-variant="secondary" style="font-size: var(--sys-font-caption-size); padding: 4px 8px; min-block-size: unset;">
+            ${compareSelection.includes(ref.id) ? "In Compare" : "Add to Compare"}
+          </button>
+        </div>
+
         ${renderLocalConstellationMinimap(ref, rels)}
 
         <details>
@@ -2747,6 +2921,12 @@
           pinReference(ref.id);
         }
       };
+    }
+
+    const addCompareBtn = document.getElementById("reference-add-compare-button");
+    if (addCompareBtn) {
+      addCompareBtn.disabled = compareSelection.includes(ref.id);
+      addCompareBtn.onclick = () => addToCompare(ref.id);
     }
 
     if (compileRefBtn) {
@@ -2911,7 +3091,7 @@
               relationshipCount: relCount,
               relevanceLabel: getRelevanceLabel({ strength: item.strength, rank: index, reason: reasonLabel }),
               connectivityLabel: getConnectivityLabel(relCount),
-              actions: ["preview", "open", "pin"]
+              actions: ["preview", "open", "pin", "compare"]
             });
           }).join("")}
         </div>
@@ -2995,7 +3175,7 @@
           connectivityLabel: getConnectivityLabel(relCount),
           iconPath: "assets/icons/scientific/knowledge-graph/active-neighborhood.svg",
           showDescription: false,
-          actions: ["open", "pin"]
+          actions: ["open", "pin", "compare"]
         })}
       `;
     }
@@ -3253,7 +3433,7 @@
                 connectivityLabel: getConnectivityLabel(relCount),
                 iconPath: "assets/icons/scientific/evidence/evidence-convergence.svg",
                 microvisualization: renderContributionBar(contributionLabel, contributionLevel),
-                actions: ["preview", "open", "pin"]
+                actions: ["preview", "open", "pin", "compare"]
               });
             }).join("")}
           </div>
@@ -4450,45 +4630,82 @@
         relevanceLabel: index === 0 ? "High relevance" : "Moderate relevance",
         connectivityLabel: getConnectivityLabel(counts[ref.id]),
         iconPath: "assets/icons/scientific/knowledge-graph/knowledge-cluster.svg",
-        actions: ["preview", "open", "pin"]
+        actions: ["preview", "open", "pin", "compare"]
       })).join("");
       bindDiscoveryPanelActions(anchorsContainer, { onPinChange: renderDiscoveryMode });
     }
   }
 
-  // DOM Rendering: Compare Mode Table
+  // DOM Rendering: Semantic Compare Workspace
   function renderCompareMode() {
-    const tbody = document.getElementById("compare-table-body");
-    if (!tbody) return;
+    const container = document.getElementById("compare-workspace-container");
+    if (!container) return;
 
-    const activeRefs = retrievalState.references.filter(r => r.status === "active");
-
-    if (activeRefs.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="6" class="nv-muted" style="text-align: center;">No active references available.</td></tr>`;
-      return;
+    if (compareSelection.length === 0 && pinnedReferences.length >= 2) {
+      compareSelection = pinnedReferences.slice(0, 4);
     }
 
-    tbody.innerHTML = activeRefs.map(ref => {
-      const rels = adapter.getRelationshipsForReference(retrievalState, ref.id);
-      const isSelected = ref.id === selectedReferenceId;
-      return `
-        <tr style="cursor: pointer; background-color: ${isSelected ? 'var(--sys-color-surface-overlay)' : 'transparent'};" data-ref-id="${ref.id}">
-          <td style="font-family: var(--sys-font-code-family); font-weight: ${isSelected ? 'bold' : 'normal'};">${ref.id}</td>
-          <td>${ref.title}</td>
-          <td><span class="nv-badge" data-variant="info">${ref.type}</span></td>
-          <td><span class="nv-badge" data-variant="success">${ref.status}</span></td>
-          <td><a href="${ref.source}" target="_blank" style="color: var(--sys-color-accent-primary); text-decoration: none;">${ref.source.length > 25 ? ref.source.substring(0, 25) + '...' : ref.source}</a></td>
-          <td>${rels.length} relationships</td>
-        </tr>
-      `;
-    }).join("");
+    const payload = buildComparePayload();
+    tryUnmountReactIsland(container);
+    const fallbackRows = payload.items.map(item => `
+      <tr data-ref-id="${escapeHtml(item.id)}">
+        <td>${escapeHtml(item.id)}</td>
+        <td>${escapeHtml(item.title)}</td>
+        <td>${escapeHtml(item.type || "reference")}</td>
+        <td>${escapeHtml(item.status || "active")}</td>
+        <td>${escapeHtml(item.source || "")}</td>
+        <td>${item.relationshipCount} relationships</td>
+      </tr>
+    `).join("");
 
-    tbody.querySelectorAll("tr").forEach(row => {
-      row.onclick = () => {
-        const refId = row.getAttribute("data-ref-id");
-        selectReference(refId);
-      };
+    container.innerHTML = `
+      <div class="nv-compare-fallback">
+        <div class="nv-cluster nv-cluster--gap-sm" style="justify-content: space-between; align-items: center;">
+          <div>
+            <h3 style="margin: 0; font-size: var(--sys-font-body-size);">Semantic Compare Workspace</h3>
+            <p class="nv-muted" style="font-size: var(--sys-font-caption-size); margin: 0;">Select 2-4 references to compare metadata, concepts, evidence contribution, and graph position.</p>
+          </div>
+          ${payload.items.length > 0 ? `<button id="compare-fallback-clear" class="nv-button" data-variant="ghost">Clear Compare</button>` : ""}
+        </div>
+        ${compareFeedback ? `<p class="nv-compare-feedback" role="status" aria-live="polite">${escapeHtml(compareFeedback)}</p>` : ""}
+        ${payload.items.length < 2 ? `<p class="nv-compare-empty">Add at least two references from discovery panels, memory, inspector, hover previews, evidence, or graph context menus.</p>` : `
+          <div style="overflow-x: auto;">
+            <table class="compare-table">
+              <thead>
+                <tr><th>ID</th><th>Title</th><th>Type</th><th>Status</th><th>Source</th><th>Direct Relations</th></tr>
+              </thead>
+              <tbody>${fallbackRows}</tbody>
+            </table>
+          </div>
+        `}
+      </div>
+    `;
+
+    document.getElementById("compare-fallback-clear")?.addEventListener("click", clearCompare);
+    container.querySelectorAll("tr[data-ref-id]").forEach(row => {
+      row.onclick = () => selectReference(row.getAttribute("data-ref-id"));
+      bindKeyboardActivation(row, row.onclick);
     });
+
+    const callbacks = {
+      onOpenReference: (id) => selectReference(id),
+      onTogglePin: (id) => {
+        if (pinnedReferences.includes(id)) unpinReference(id);
+        else pinReference(id);
+        renderCompareMode();
+      },
+      onCompile: (id) => {
+        compileEvidenceFromReference(id);
+        renderCompareMode();
+      },
+      onRemove: (id) => removeFromCompare(id),
+      onClear: () => clearCompare(),
+      onOpenCompare: () => switchExplorationMode("compare"),
+    };
+
+    if (tryMountReactIsland(container, "NvCompareWorkspace", payload, callbacks)) {
+      return;
+    }
   }
 
   // DOM Rendering: Memory Layer (Recent, Pinned, Queries, Trail)
@@ -4529,7 +4746,7 @@
                 connectivityLabel: getConnectivityLabel(getDiscoveryRelationshipCount(ref.id)),
                 iconPath: "assets/icons/scientific/memory-session/recent-activity.svg",
                 showDescription: false,
-                actions: ["open", "pin"]
+                actions: ["open", "pin", "compare"]
               })}
             </li>
           `;
@@ -4577,7 +4794,7 @@
                 connectivityLabel: getConnectivityLabel(getDiscoveryRelationshipCount(ref.id)),
                 iconPath: "assets/icons/scientific/collections/pinned-references.svg",
                 showDescription: false,
-                actions: ["open", "pin"]
+                actions: ["open", "pin", "compare"]
               })}
             </li>
           `;
@@ -4767,6 +4984,7 @@
           const searchInput = document.getElementById('playground-search-input');
           if (searchInput) searchInput.focus();
         },
+        onAddToCompare: (id) => addToCompare(id),
       };
 
       tryMountReactIsland(memoryGridContainer, 'NvMemoryLayer', memoryPayload, memoryCallbacks);
@@ -4821,6 +5039,14 @@
           syncSelectionHighlighting();
           renderReferenceInspector();
           renderMemoryLayer();
+        };
+      }
+
+      const compareBtn = card.querySelector(".search-card-compare-btn");
+      if (compareBtn) {
+        compareBtn.onclick = (e) => {
+          e.stopPropagation();
+          addToCompare(compareBtn.getAttribute("data-id"));
         };
       }
     });

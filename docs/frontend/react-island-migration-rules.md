@@ -74,6 +74,8 @@ Every migrated surface must validate:
 | `NvDiscoveryCard` | `.nv-react-discovery-card-root[data-discovery-card-id]` | ✅ Active |
 | `NvInspectorPanel` | `#selected-reference-container` / `#evidence-compilation-container` / `#selected-relationship-container` | ✅ Active (E.5) |
 | `NvMemoryLayer` | `#memory-layer-grid` | ✅ Active (E.5) |
+| `NvWorkspaceSnapshot` | `#research-snapshot-container` | ✅ Active (E.8) |
+| `NvCompareWorkspace` | `#compare-workspace-container` | ✅ Active (E.9) |
 
 ## QA Parity Checklist — E.5
 
@@ -126,3 +128,13 @@ Allowed E.5 callbacks:
 - Discovery recommendation logic
 - Reference Registry domain logic
 - Relationship Graph domain logic
+
+## E.9 Compare Island Rules
+
+- Compare selection lives in existing JavaScript state.
+- React receives only plain serializable compare payloads.
+- React must not read `localStorage` or persist compare selection.
+- No multi-reference Evidence Compiler contract is introduced.
+- Unique concepts and shared concepts must come from existing reference metadata only.
+- Relationship comparisons must come from existing relationship records only.
+- Graph position is descriptive only and must not alter graph layout or rendering.

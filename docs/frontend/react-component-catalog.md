@@ -38,6 +38,17 @@ All shared React island presentation primitives live in `react-build/src/compone
 | `NvRecentReferenceItem` | `react-build/src/NvMemoryLayer.jsx` | ✅ v1 | Recently viewed reference card |
 | `NvSavedQueryItem` | `react-build/src/NvMemoryLayer.jsx` | ✅ v1 | Saved query row with rerun + delete |
 | `NvKnowledgeTrailItem` | `react-build/src/NvMemoryLayer.jsx` | ✅ v1 | Knowledge trail event row |
+| `NvCompareWorkspace` | `react-build/src/NvCompareWorkspace.jsx` | ✅ v1 | Semantic compare workspace island |
+| `NvCompareTray` | `react-build/src/NvCompareWorkspace.jsx` | ✅ v1 | Selected compare reference tray |
+| `NvCompareColumn` | `react-build/src/NvCompareWorkspace.jsx` | ✅ v1 | Single compared reference column |
+| `NvCompareMatrix` | `react-build/src/NvCompareWorkspace.jsx` | ✅ v1 | Responsive metadata comparison grid |
+| `NvCompareSection` | `react-build/src/NvCompareWorkspace.jsx` | ✅ v1 | Compare section wrapper |
+| `NvCompareMetricRow` | `react-build/src/NvCompareWorkspace.jsx` | ✅ v1 | Label/value row for compare metrics |
+| `NvCompareSharedConcepts` | `react-build/src/NvCompareWorkspace.jsx` | ✅ v1 | Shared concepts/types/relationship patterns |
+| `NvCompareUniqueRelationships` | `react-build/src/NvCompareWorkspace.jsx` | ✅ v1 | Per-reference unique concepts and relationships |
+| `NvCompareEvidenceContribution` | `react-build/src/NvCompareWorkspace.jsx` | ✅ v1 | Current evidence contribution display |
+| `NvCompareGraphPosition` | `react-build/src/NvCompareWorkspace.jsx` | ✅ v1 | Graph position and connectivity display |
+| `NvCompareActions` | `react-build/src/NvCompareWorkspace.jsx` | ✅ v1 | Per-reference compare actions |
 
 ---
 
@@ -184,7 +195,7 @@ bridge.mount(root, NvDiscoveryCard, {
     densityHtml,
     connectivityHtml,
     clusterHtml,
-    actions: ["preview", "open", "pin"],
+    actions: ["preview", "open", "pin", "compare"],
   },
   callbacks: {
     onAction(action, referenceId) {},
@@ -194,6 +205,35 @@ bridge.mount(root, NvDiscoveryCard, {
 
 React owns card layout and local preview disclosure. The JS layer owns opening,
 pinning, context menus, hover previews, persistence, and Retrieval state.
+
+---
+
+## NvCompareWorkspace
+
+Production island for Semantic Compare inside Retrieval Workspace Compare mode.
+
+```javascript
+bridge.mount(root, NvCompareWorkspace, {
+  data: {
+    items,
+    shared,
+    differences,
+    graphContext,
+    evidenceContext,
+    feedback,
+    limit: 4,
+  },
+  callbacks: {
+    onOpenReference(id) {},
+    onTogglePin(id) {},
+    onCompile(id) {},
+    onRemove(id) {},
+    onClear() {},
+  },
+})
+```
+
+React owns only rendering. JavaScript owns compare selection, payload derivation, retrieval data, evidence data, graph context, and callbacks.
 
 ---
 

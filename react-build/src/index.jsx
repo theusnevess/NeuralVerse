@@ -32,6 +32,19 @@ import {
 } from './NvInspectorPanel.jsx'
 import { NvMemoryLayer, NvMemoryColumn, NvPinnedReferenceItem, NvRecentReferenceItem, NvSavedQueryItem, NvKnowledgeTrailItem } from './NvMemoryLayer.jsx'
 import {
+  NvCompareWorkspace,
+  NvCompareTray,
+  NvCompareColumn,
+  NvCompareMatrix,
+  NvCompareSection,
+  NvCompareMetricRow,
+  NvCompareSharedConcepts,
+  NvCompareUniqueRelationships,
+  NvCompareEvidenceContribution,
+  NvCompareGraphPosition,
+  NvCompareActions,
+} from './NvCompareWorkspace.jsx'
+import {
   NvWorkspaceSnapshot,
   NvActiveInvestigation,
   NvResearchHealth,
@@ -98,6 +111,21 @@ export {
   NvActivityTimelineMini,
 }
 
+// Semantic compare island exports
+export {
+  NvCompareWorkspace,
+  NvCompareTray,
+  NvCompareColumn,
+  NvCompareMatrix,
+  NvCompareSection,
+  NvCompareMetricRow,
+  NvCompareSharedConcepts,
+  NvCompareUniqueRelationships,
+  NvCompareEvidenceContribution,
+  NvCompareGraphPosition,
+  NvCompareActions,
+}
+
 // Legacy island exports
 export { NvHoverPreview, NvContextMenu, NvDiscoveryCard }
 
@@ -115,6 +143,7 @@ window.NeuralVerse.react = {
     NvInspectorPanel,
     NvMemoryLayer,
     NvWorkspaceSnapshot,
+    NvCompareWorkspace,
   },
 }
 

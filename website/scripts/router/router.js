@@ -480,27 +480,7 @@ class ViewController {
 
               <!-- Mode 4: Compare Mode -->
               <section id="mode-compare" class="exploration-mode" aria-labelledby="tab-compare">
-                <div class="nv-panel nv-stack nv-stack--gap-sm">
-                  <h3 style="margin: 0; font-size: var(--sys-font-body-size);">Cross-Reference Comparison</h3>
-                  <p class="nv-muted" style="font-size: var(--sys-font-caption-size); margin: 0;">Compare type, status, citations, and metadata details side-by-side.</p>
-                  <div style="overflow-x: auto;">
-                    <table class="compare-table" id="compare-workspace-table">
-                      <thead>
-                        <tr>
-                          <th>ID</th>
-                          <th>Title</th>
-                          <th>Type</th>
-                          <th>Status</th>
-                          <th>Source</th>
-                          <th>Direct Relations</th>
-                        </tr>
-                      </thead>
-                      <tbody id="compare-table-body">
-                        <!-- Dynamically populated reference rows -->
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
+                <div id="compare-workspace-container" class="nv-panel nv-stack nv-stack--gap-sm"></div>
               </section>
 
             </main>

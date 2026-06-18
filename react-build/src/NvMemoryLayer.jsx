@@ -90,7 +90,7 @@ const TRAIL_ICON_PATH = {
 // ---------------------------------------------------------------------------
 // NvPinnedReferenceItem
 // ---------------------------------------------------------------------------
-export function NvPinnedReferenceItem({ item, onOpen, onUnpin }) {
+export function NvPinnedReferenceItem({ item, onOpen, onUnpin, onAddToCompare }) {
   if (!item) return null
   const { id, title, type, relationshipCount = 0 } = item
 
@@ -106,6 +106,7 @@ export function NvPinnedReferenceItem({ item, onOpen, onUnpin }) {
         actions={(
           <>
             <NvButton variant="ghost" className="nv-memory-action" ariaLabel={`Open pinned reference: ${title}`} onClick={() => typeof onOpen === 'function' && onOpen(id)}>Open</NvButton>
+            <NvButton variant="ghost" className="nv-memory-action" ariaLabel={`Add pinned reference to compare: ${title}`} onClick={() => typeof onAddToCompare === 'function' && onAddToCompare(id)}>Compare</NvButton>
             <NvButton variant="ghost" className="nv-memory-action" ariaLabel={`Unpin reference: ${title}`} onClick={() => typeof onUnpin === 'function' && onUnpin(id)}>Unpin</NvButton>
           </>
         )}
@@ -117,7 +118,7 @@ export function NvPinnedReferenceItem({ item, onOpen, onUnpin }) {
 // ---------------------------------------------------------------------------
 // NvRecentReferenceItem
 // ---------------------------------------------------------------------------
-export function NvRecentReferenceItem({ item, onOpen, onPin }) {
+export function NvRecentReferenceItem({ item, onOpen, onPin, onAddToCompare }) {
   if (!item) return null
   const { id, title, type, relationshipCount = 0 } = item
   const densityLabel = relationshipDensityLabel(relationshipCount)
@@ -135,6 +136,7 @@ export function NvRecentReferenceItem({ item, onOpen, onPin }) {
           <>
             <NvContributionBar label={`${densityLabel}: ${relationshipCount} link${relationshipCount === 1 ? '' : 's'}`} level={relationshipDensityLevel(relationshipCount)} max={4} className="nv-memory-density" />
             <NvButton variant="ghost" className="nv-memory-action" ariaLabel={`Open recently viewed: ${title}`} onClick={() => typeof onOpen === 'function' && onOpen(id)}>Open</NvButton>
+            <NvButton variant="ghost" className="nv-memory-action" ariaLabel={`Add recently viewed reference to compare: ${title}`} onClick={() => typeof onAddToCompare === 'function' && onAddToCompare(id)}>Compare</NvButton>
             <NvButton variant="ghost" className="nv-memory-action" ariaLabel={`Pin reference: ${title}`} onClick={() => typeof onPin === 'function' && onPin(id)}>Pin</NvButton>
           </>
         )}
@@ -258,6 +260,7 @@ export function NvMemoryLayer({ data = {}, callbacks = {} }) {
     onClearTrail,
     onToggleCollapse,
     onRunSearchFocus,
+    onAddToCompare,
   } = callbacks
 
   return (
@@ -298,6 +301,7 @@ export function NvMemoryLayer({ data = {}, callbacks = {} }) {
                 item={item}
                 onOpen={onOpenReference}
                 onUnpin={onUnpinReference}
+                onAddToCompare={onAddToCompare}
               />
             ))
           )}
@@ -322,6 +326,7 @@ export function NvMemoryLayer({ data = {}, callbacks = {} }) {
                 item={item}
                 onOpen={onOpenReference}
                 onPin={onPinReference}
+                onAddToCompare={onAddToCompare}
               />
             ))
           )}
