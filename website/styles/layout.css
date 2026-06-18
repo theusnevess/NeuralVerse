@@ -114,10 +114,10 @@
 .nv-brand-home-visual {
   inline-size: min(44rem, 100%);
   margin-inline: auto;
-  overflow: hidden;
-  border: var(--sys-border-subtle) solid var(--sys-color-border-subtle);
-  border-radius: var(--sys-radius-overlay);
-  background: var(--sys-color-surface-base);
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
 }
 
 .nv-brand-home-visual img {
@@ -132,10 +132,10 @@
 .nv-workspace-brand-visual {
   inline-size: min(28rem, 100%);
   max-block-size: 7rem;
-  overflow: hidden;
-  border: var(--sys-border-subtle) solid var(--sys-color-border-subtle);
-  border-radius: var(--sys-radius-overlay);
-  background: var(--sys-color-surface-base);
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
 }
 
 .nv-workspace-brand-visual img {
@@ -655,7 +655,6 @@
     padding: var(--sys-spacing-inset-md, var(--sys-space-inset-md));
   }
 }
-
 
 
 
