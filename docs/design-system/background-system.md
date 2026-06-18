@@ -10,20 +10,25 @@ The background defines atmosphere. Content defines attention.
 
 The global background is implemented in `website/styles/background.css` and is shared by every route.
 
-1. **Base Gradient**  
+1. **Base Gradient**
    A near-black foundation with a desaturated scientific navy influence.
 
-2. **Instrument Grid**  
+2. **Instrument Grid**
    A low-opacity micro grid and dot field that provides subconscious spatial structure.
 
-3. **Observatory Signals**  
+3. **Observatory Signals**
    Sparse arcs, convergence points, and alignment hints rendered through CSS gradients.
 
-4. **Ambient Bloom**  
+4. **Ambient Bloom**
    Very soft static illumination that prevents flatness without creating a spotlight.
 
-5. **Procedural Noise**  
+5. **Procedural Noise**
    A nearly invisible static texture that breaks perfectly flat color regions.
+
+6. **Neural Constellation**
+   A CSS/SVG living knowledge field with subtle nodes, semantic connections,
+   and rare low-opacity signal pulses. It is controlled by the same background
+   profile variables and remains decorative.
 
 ## Implementation Rules
 

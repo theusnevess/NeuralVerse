@@ -7,19 +7,30 @@ Profiles vary background intensity while preserving the same NeuralVerse visual 
 Supported profiles:
 
 - `default`
+- `home`
 - `learning`
+- `modules`
 - `workspace`
 - `retrieval`
 - `presentation`
+- `settings`
 - `landing`
 
 ## Default
 
 Balanced and neutral. Used as the fallback for all surfaces.
 
+## Home
+
+Medium density. Establishes NeuralVerse identity without turning the workspace into a landing page.
+
 ## Learning
 
 Slightly quieter and brighter for reading-oriented routes. Grid and signal layers are reduced.
+
+## Modules
+
+Low density. Matches Learning so module scanning remains content-first.
 
 ## Workspace
 
@@ -32,6 +43,10 @@ Knowledge constellation emphasis. Signals are a little more present to support g
 ## Presentation
 
 Cleaner and less textured. Intended for briefing and presentation surfaces where content should feel calm and direct.
+
+## Settings
+
+Static/off-like. Motion is effectively removed and the constellation remains barely present.
 
 ## Landing
 
@@ -48,6 +63,10 @@ Profiles control:
 --nv-background-profile-grid
 --nv-background-profile-signals
 --nv-background-profile-noise
+--nv-neural-constellation-opacity
+--nv-neural-constellation-node-opacity
+--nv-neural-constellation-connection-opacity
+--nv-neural-constellation-pulse-opacity
 ```
 
 Routes can inherit profiles through existing workspace state attributes. React surfaces can opt in through `data-background-profile` via `NvBackgroundProvider`, `NvBackgroundSurface`, or `NvBackgroundProfile`.

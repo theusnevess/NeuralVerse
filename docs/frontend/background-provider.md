@@ -41,10 +41,13 @@ Allowed profile values:
 
 ```text
 default
+home
 learning
+modules
 workspace
 retrieval
 presentation
+settings
 landing
 ```
 

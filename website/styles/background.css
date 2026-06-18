@@ -25,6 +25,11 @@
   --nv-background-profile-observatory-constellation: 0.5;
   --nv-background-profile-observatory-rings: 0.45;
   --nv-background-profile-observatory-markers: 0.5;
+  --nv-neural-constellation-opacity: 0.16;
+  --nv-neural-constellation-node-opacity: 0.54;
+  --nv-neural-constellation-connection-opacity: 0.32;
+  --nv-neural-constellation-pulse-opacity: 0.26;
+  --nv-neural-constellation-drift-distance: 0.75rem;
 }
 
 body:has(.nv-main-workspace[data-workspace-active-view="home"]) {
@@ -38,6 +43,27 @@ body:has(.nv-main-workspace[data-workspace-active-view="home"]) {
   --nv-background-profile-observatory-constellation: 0.6;
   --nv-background-profile-observatory-rings: 0.55;
   --nv-background-profile-observatory-markers: 0.6;
+  --nv-neural-constellation-opacity: 0.2;
+  --nv-neural-constellation-node-opacity: 0.58;
+  --nv-neural-constellation-connection-opacity: 0.36;
+  --nv-neural-constellation-pulse-opacity: 0.3;
+}
+
+[data-background-profile="home"] {
+  --nv-background-profile-accent: 4%;
+  --nv-background-profile-depth: 4%;
+  --nv-background-profile-bloom: 0.12;
+  --nv-background-profile-grid: 0.035;
+  --nv-background-profile-signals: 0.04;
+  --nv-background-profile-observatory-arcs: 0.7;
+  --nv-background-profile-observatory-scan: 0.65;
+  --nv-background-profile-observatory-constellation: 0.6;
+  --nv-background-profile-observatory-rings: 0.55;
+  --nv-background-profile-observatory-markers: 0.6;
+  --nv-neural-constellation-opacity: 0.2;
+  --nv-neural-constellation-node-opacity: 0.58;
+  --nv-neural-constellation-connection-opacity: 0.36;
+  --nv-neural-constellation-pulse-opacity: 0.3;
 }
 
 [data-background-profile="landing"] {
@@ -51,6 +77,10 @@ body:has(.nv-main-workspace[data-workspace-active-view="home"]) {
   --nv-background-profile-observatory-constellation: 0.6;
   --nv-background-profile-observatory-rings: 0.55;
   --nv-background-profile-observatory-markers: 0.6;
+  --nv-neural-constellation-opacity: 0.28;
+  --nv-neural-constellation-node-opacity: 0.64;
+  --nv-neural-constellation-connection-opacity: 0.42;
+  --nv-neural-constellation-pulse-opacity: 0.36;
 }
 
 body:has(.nv-main-workspace[data-workspace-active-view="learning"]),
@@ -66,6 +96,10 @@ body:has(.nv-main-workspace[data-workspace-active-view="content"]) {
   --nv-background-profile-observatory-constellation: 0.38;
   --nv-background-profile-observatory-rings: 0.35;
   --nv-background-profile-observatory-markers: 0.4;
+  --nv-neural-constellation-opacity: 0.1;
+  --nv-neural-constellation-node-opacity: 0.44;
+  --nv-neural-constellation-connection-opacity: 0.24;
+  --nv-neural-constellation-pulse-opacity: 0.16;
 }
 
 [data-background-profile="learning"] {
@@ -79,6 +113,27 @@ body:has(.nv-main-workspace[data-workspace-active-view="content"]) {
   --nv-background-profile-observatory-constellation: 0.38;
   --nv-background-profile-observatory-rings: 0.35;
   --nv-background-profile-observatory-markers: 0.4;
+  --nv-neural-constellation-opacity: 0.1;
+  --nv-neural-constellation-node-opacity: 0.44;
+  --nv-neural-constellation-connection-opacity: 0.24;
+  --nv-neural-constellation-pulse-opacity: 0.16;
+}
+
+[data-background-profile="modules"] {
+  --nv-background-profile-accent: 2%;
+  --nv-background-profile-depth: 2.5%;
+  --nv-background-profile-bloom: 0.08;
+  --nv-background-profile-grid: 0.025;
+  --nv-background-profile-signals: 0.025;
+  --nv-background-profile-observatory-arcs: 0.45;
+  --nv-background-profile-observatory-scan: 0.4;
+  --nv-background-profile-observatory-constellation: 0.38;
+  --nv-background-profile-observatory-rings: 0.35;
+  --nv-background-profile-observatory-markers: 0.4;
+  --nv-neural-constellation-opacity: 0.1;
+  --nv-neural-constellation-node-opacity: 0.44;
+  --nv-neural-constellation-connection-opacity: 0.24;
+  --nv-neural-constellation-pulse-opacity: 0.16;
 }
 
 body:has(.nv-main-workspace[data-workspace-active-view="workspace"]) {
@@ -92,6 +147,10 @@ body:has(.nv-main-workspace[data-workspace-active-view="workspace"]) {
   --nv-background-profile-observatory-constellation: 0.42;
   --nv-background-profile-observatory-rings: 0.38;
   --nv-background-profile-observatory-markers: 0.45;
+  --nv-neural-constellation-opacity: 0.07;
+  --nv-neural-constellation-node-opacity: 0.36;
+  --nv-neural-constellation-connection-opacity: 0.18;
+  --nv-neural-constellation-pulse-opacity: 0.12;
 }
 
 [data-background-profile="workspace"] {
@@ -105,6 +164,10 @@ body:has(.nv-main-workspace[data-workspace-active-view="workspace"]) {
   --nv-background-profile-observatory-constellation: 0.42;
   --nv-background-profile-observatory-rings: 0.38;
   --nv-background-profile-observatory-markers: 0.45;
+  --nv-neural-constellation-opacity: 0.07;
+  --nv-neural-constellation-node-opacity: 0.36;
+  --nv-neural-constellation-connection-opacity: 0.18;
+  --nv-neural-constellation-pulse-opacity: 0.12;
 }
 
 body:has(.nv-main-workspace[data-workspace-active-view="retrieval-playground"]) {
@@ -118,6 +181,10 @@ body:has(.nv-main-workspace[data-workspace-active-view="retrieval-playground"]) 
   --nv-background-profile-observatory-constellation: 0.4;
   --nv-background-profile-observatory-rings: 0.42;
   --nv-background-profile-observatory-markers: 0.45;
+  --nv-neural-constellation-opacity: 0.045;
+  --nv-neural-constellation-node-opacity: 0.3;
+  --nv-neural-constellation-connection-opacity: 0.14;
+  --nv-neural-constellation-pulse-opacity: 0.08;
 }
 
 [data-background-profile="retrieval"] {
@@ -131,6 +198,10 @@ body:has(.nv-main-workspace[data-workspace-active-view="retrieval-playground"]) 
   --nv-background-profile-observatory-constellation: 0.4;
   --nv-background-profile-observatory-rings: 0.42;
   --nv-background-profile-observatory-markers: 0.45;
+  --nv-neural-constellation-opacity: 0.045;
+  --nv-neural-constellation-node-opacity: 0.3;
+  --nv-neural-constellation-connection-opacity: 0.14;
+  --nv-neural-constellation-pulse-opacity: 0.08;
 }
 
 body:has(.nv-main-workspace[data-workspace-active-view="settings"]) {
@@ -144,6 +215,27 @@ body:has(.nv-main-workspace[data-workspace-active-view="settings"]) {
   --nv-background-profile-observatory-constellation: 0.28;
   --nv-background-profile-observatory-rings: 0.25;
   --nv-background-profile-observatory-markers: 0.3;
+  --nv-neural-constellation-opacity: 0.02;
+  --nv-neural-constellation-node-opacity: 0.2;
+  --nv-neural-constellation-connection-opacity: 0.08;
+  --nv-neural-constellation-pulse-opacity: 0;
+}
+
+[data-background-profile="settings"] {
+  --nv-background-profile-accent: 1.5%;
+  --nv-background-profile-depth: 2%;
+  --nv-background-profile-bloom: 0.065;
+  --nv-background-profile-grid: 0.02;
+  --nv-background-profile-signals: 0.02;
+  --nv-background-profile-observatory-arcs: 0.35;
+  --nv-background-profile-observatory-scan: 0.3;
+  --nv-background-profile-observatory-constellation: 0.28;
+  --nv-background-profile-observatory-rings: 0.25;
+  --nv-background-profile-observatory-markers: 0.3;
+  --nv-neural-constellation-opacity: 0.02;
+  --nv-neural-constellation-node-opacity: 0.2;
+  --nv-neural-constellation-connection-opacity: 0.08;
+  --nv-neural-constellation-pulse-opacity: 0;
 }
 
 body:has(.nv-research-presentation) {
@@ -157,6 +249,10 @@ body:has(.nv-research-presentation) {
   --nv-background-profile-observatory-constellation: 0.22;
   --nv-background-profile-observatory-rings: 0.2;
   --nv-background-profile-observatory-markers: 0.25;
+  --nv-neural-constellation-opacity: 0.025;
+  --nv-neural-constellation-node-opacity: 0.22;
+  --nv-neural-constellation-connection-opacity: 0.1;
+  --nv-neural-constellation-pulse-opacity: 0.04;
 }
 
 [data-background-profile="presentation"] {
@@ -170,6 +266,10 @@ body:has(.nv-research-presentation) {
   --nv-background-profile-observatory-constellation: 0.22;
   --nv-background-profile-observatory-rings: 0.2;
   --nv-background-profile-observatory-markers: 0.25;
+  --nv-neural-constellation-opacity: 0.025;
+  --nv-neural-constellation-node-opacity: 0.22;
+  --nv-neural-constellation-connection-opacity: 0.1;
+  --nv-neural-constellation-pulse-opacity: 0.04;
 }
 
 body {

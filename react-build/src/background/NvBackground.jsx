@@ -10,10 +10,13 @@ import React from 'react'
 
 const ALLOWED_PROFILES = new Set([
   'default',
+  'home',
   'learning',
+  'modules',
   'workspace',
   'retrieval',
   'presentation',
+  'settings',
   'landing',
 ])
 

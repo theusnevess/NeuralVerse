@@ -299,6 +299,8 @@
   --sys-background-noise-opacity: 0.05;
   --sys-background-bloom-opacity: 0.3;
   --sys-background-ambient-motion: 72s;
+  --sys-background-neural-drift-duration: 72s;
+  --sys-background-neural-pulse-duration: 16s;
 
   /* NV-600.7 Observatory Signal Opacity */
   --sys-observatory-arcs-opacity: 0.14;
@@ -691,5 +693,7 @@
     --ctx-overlay-motion:  var(--ref-motion-duration-instant);
     --ctx-feedback-motion: var(--ref-motion-duration-instant);
     --sys-background-ambient-motion: var(--ref-motion-duration-instant);
+    --sys-background-neural-drift-duration: var(--ref-motion-duration-instant);
+    --sys-background-neural-pulse-duration: var(--ref-motion-duration-instant);
   }
 }

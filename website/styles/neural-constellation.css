@@ -1,0 +1,173 @@
+/**
+ * NeuralVerse Neural Constellation Background — NV-600.8
+ * ======================================================
+ * CSS/SVG environmental layer integrated with the global background profiles.
+ *
+ * Decorative only: no pointer events, no screen-reader output, no domain data,
+ * no canvas, no JavaScript loops.
+ */
+
+.nv-neural-constellation-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  color: var(--sys-background-signal-color);
+  opacity: var(--nv-neural-constellation-opacity);
+  mix-blend-mode: screen;
+  contain: layout paint style;
+}
+
+.nv-shell,
+.nv-shell-body {
+  background-color: transparent;
+}
+
+.nv-neural-constellation-layer::before {
+  content: "";
+  position: absolute;
+  inset: -8%;
+  background:
+    radial-gradient(
+      ellipse at 18% 26%,
+      color-mix(in srgb, var(--sys-background-accent) 5%, transparent),
+      transparent 38%
+    ),
+    radial-gradient(
+      ellipse at 76% 62%,
+      color-mix(in srgb, var(--sys-background-depth) 4%, transparent),
+      transparent 42%
+    );
+  opacity: 0.4;
+  transform: translate3d(0, 0, 0);
+  animation: nv-neural-constellation-field-drift
+    var(--sys-background-neural-drift-duration)
+    var(--motion-easing-standard)
+    infinite alternate;
+}
+
+.nv-neural-constellation-svg {
+  position: absolute;
+  inset: -5%;
+  inline-size: 110%;
+  block-size: 110%;
+  overflow: visible;
+  color: currentColor;
+  transform: translate3d(0, 0, 0);
+}
+
+.nv-neural-constellation__field {
+  transform-origin: center;
+  animation: nv-neural-constellation-drift
+    var(--sys-background-neural-drift-duration)
+    var(--motion-easing-standard)
+    infinite alternate;
+}
+
+.nv-neural-constellation__connections {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-opacity: var(--nv-neural-constellation-connection-opacity);
+  stroke-width: 0.55;
+  vector-effect: non-scaling-stroke;
+}
+
+.nv-neural-constellation__nodes {
+  fill: currentColor;
+  fill-opacity: var(--nv-neural-constellation-node-opacity);
+}
+
+.nv-neural-constellation__nodes circle:nth-child(3n) {
+  fill-opacity: calc(var(--nv-neural-constellation-node-opacity) * 0.68);
+}
+
+.nv-neural-constellation__nodes circle:nth-child(4n) {
+  fill-opacity: calc(var(--nv-neural-constellation-node-opacity) * 0.48);
+}
+
+.nv-neural-constellation__pulse {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-opacity: 0;
+  stroke-width: 0.85;
+  vector-effect: non-scaling-stroke;
+  stroke-dasharray: 8 130;
+  animation: nv-neural-constellation-pulse
+    var(--sys-background-neural-pulse-duration)
+    var(--motion-easing-standard)
+    infinite;
+}
+
+.nv-neural-constellation__pulse:nth-of-type(2) {
+  animation-delay: calc(var(--sys-background-neural-pulse-duration) * -0.34);
+}
+
+.nv-neural-constellation__pulse:nth-of-type(3) {
+  animation-delay: calc(var(--sys-background-neural-pulse-duration) * -0.68);
+}
+
+body:has(.nv-main-workspace[data-workspace-active-view="settings"]) .nv-neural-constellation__pulse {
+  animation: none;
+}
+
+@keyframes nv-neural-constellation-field-drift {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: translate3d(
+      calc(var(--nv-neural-constellation-drift-distance) * -0.55),
+      calc(var(--nv-neural-constellation-drift-distance) * 0.35),
+      0
+    );
+  }
+}
+
+@keyframes nv-neural-constellation-drift {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  to {
+    transform: translate3d(
+      var(--nv-neural-constellation-drift-distance),
+      calc(var(--nv-neural-constellation-drift-distance) * -0.45),
+      0
+    ) scale(1.012);
+  }
+}
+
+@keyframes nv-neural-constellation-pulse {
+  0%,
+  72%,
+  100% {
+    stroke-dashoffset: 80;
+    stroke-opacity: 0;
+  }
+
+  78% {
+    stroke-opacity: var(--nv-neural-constellation-pulse-opacity);
+  }
+
+  86% {
+    stroke-dashoffset: -40;
+    stroke-opacity: calc(var(--nv-neural-constellation-pulse-opacity) * 0.5);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nv-neural-constellation-layer::before,
+  .nv-neural-constellation__field,
+  .nv-neural-constellation__pulse {
+    animation: none;
+  }
+
+  .nv-neural-constellation__pulse {
+    opacity: 0;
+  }
+}

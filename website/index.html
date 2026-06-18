@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="styles/base.css?v=10">
   <link rel="stylesheet" href="styles/background.css?v=1">
   <link rel="stylesheet" href="styles/layout.css?v=11">
+  <link rel="stylesheet" href="styles/neural-constellation.css?v=1">
   <link rel="stylesheet" href="styles/components.css?v=10">
   <link rel="stylesheet" href="styles/utilities.css?v=10">
   <link rel="stylesheet" href="styles/motion.css?v=1">
@@ -24,6 +25,49 @@
 <body>
   <!-- Skip Link for Accessibility -->
   <a class="nv-skip-link" href="#main-workspace">Skip to main workspace</a>
+
+  <div class="nv-neural-constellation-layer" aria-hidden="true">
+    <svg class="nv-neural-constellation-svg" viewBox="0 0 1440 900" preserveAspectRatio="none" focusable="false">
+      <g class="nv-neural-constellation__field">
+        <g class="nv-neural-constellation__connections">
+          <path d="M112 172 C 248 118, 318 214, 430 188 S 658 118, 770 188" />
+          <path d="M430 188 C 492 276, 612 304, 708 260 S 896 198, 1026 248" />
+          <path d="M202 616 C 348 552, 428 650, 558 586 S 792 492, 932 558" />
+          <path d="M708 260 C 794 356, 828 442, 932 558 S 1138 624, 1284 558" />
+          <path d="M288 396 C 438 320, 516 420, 642 388 S 840 294, 1004 348" />
+          <path d="M642 388 C 606 472, 634 538, 558 586" />
+          <path d="M1004 348 C 1088 396, 1184 358, 1320 428" />
+          <path d="M770 188 C 846 170, 926 118, 1058 148" />
+          <path d="M118 760 C 250 688, 392 744, 526 706 S 760 626, 928 692" />
+          <path d="M928 692 C 1028 734, 1154 742, 1328 684" />
+        </g>
+
+        <g class="nv-neural-constellation__nodes">
+          <circle cx="112" cy="172" r="2.4" />
+          <circle cx="430" cy="188" r="2.8" />
+          <circle cx="770" cy="188" r="2.2" />
+          <circle cx="1026" cy="248" r="2.6" />
+          <circle cx="202" cy="616" r="2.4" />
+          <circle cx="558" cy="586" r="3" />
+          <circle cx="932" cy="558" r="2.4" />
+          <circle cx="1284" cy="558" r="2.2" />
+          <circle cx="288" cy="396" r="2.1" />
+          <circle cx="642" cy="388" r="2.7" />
+          <circle cx="1004" cy="348" r="2.3" />
+          <circle cx="1320" cy="428" r="2" />
+          <circle cx="1058" cy="148" r="2.4" />
+          <circle cx="118" cy="760" r="2" />
+          <circle cx="526" cy="706" r="2.5" />
+          <circle cx="928" cy="692" r="2.1" />
+          <circle cx="1328" cy="684" r="2.3" />
+        </g>
+
+        <path class="nv-neural-constellation__pulse" d="M430 188 C 492 276, 612 304, 708 260 S 896 198, 1026 248" />
+        <path class="nv-neural-constellation__pulse" d="M202 616 C 348 552, 428 650, 558 586 S 792 492, 932 558" />
+        <path class="nv-neural-constellation__pulse" d="M928 692 C 1028 734, 1154 742, 1328 684" />
+      </g>
+    </svg>
+  </div>
 
   <div class="nv-shell">
     <!-- Global Header -->
