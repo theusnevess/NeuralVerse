@@ -18,6 +18,7 @@ import {
   NvScientificIcon,
   NvEmptyState,
 } from './components.jsx'
+import { NvFadeIn, NvStaggerGroup } from './motion/NvMotion.jsx'
 
 const ICONS = {
   presentation: 'assets/icons/scientific/inspector/reference-details.svg',
@@ -345,18 +346,18 @@ export function NvResearchPresentation({ data = {}, callbacks = {} }) {
 
   if (!id) {
     return (
-      <section className="nv-research-presentation" aria-label="Research Presentation">
+      <NvFadeIn as="section" className="nv-research-presentation" aria-label="Research Presentation">
         <NvEmptyState
           title="No research session active"
           subtitle="Begin a search, compile evidence, and create comparisons to build a research presentation."
           icon={<NvScientificIcon iconPath={ICONS.presentation} size="lg" />}
         />
-      </section>
+      </NvFadeIn>
     )
   }
 
   return (
-    <section className="nv-research-presentation" aria-labelledby="nv-presentation-title">
+    <NvFadeIn as="section" className="nv-research-presentation" aria-labelledby="nv-presentation-title">
       <header className="nv-research-presentation__header">
         <div className="nv-research-presentation__heading">
           <NvScientificIcon iconPath={ICONS.presentation} size="md" />
@@ -368,7 +369,7 @@ export function NvResearchPresentation({ data = {}, callbacks = {} }) {
         <NvPresentationActions actions={actions} callbacks={callbacks} />
       </header>
 
-      <div className="nv-research-presentation__body">
+      <NvStaggerGroup className="nv-research-presentation__body">
         <NvPresentationExecutiveSummary executiveSummary={executiveSummary} investigation={investigation} />
         <NvPresentationSessionState investigation={investigation} />
         <NvPresentationTimeline narrative={narrative} />
@@ -378,7 +379,7 @@ export function NvResearchPresentation({ data = {}, callbacks = {} }) {
         <NvPresentationComparisonSummary comparisons={comparisons} />
         <NvPresentationConvergenceMap synthesis={synthesis} />
         <NvPresentationSnapshotBlock data={data} callbacks={callbacks} />
-      </div>
-    </section>
+      </NvStaggerGroup>
+    </NvFadeIn>
   )
 }

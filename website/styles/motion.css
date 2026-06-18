@@ -1,0 +1,103 @@
+/*
+ * NeuralVerse Motion Foundation — NV-600.1
+ * ========================================
+ * Canonical, token-driven motion utilities.
+ * Motion communicates state and never competes with content.
+ */
+
+.nv-motion {
+  --nv-motion-duration: var(--motion-duration-state);
+  --nv-motion-easing: var(--motion-easing-standard);
+  --nv-motion-y: calc(var(--sys-space-stack-xs) * var(--sys-motion-intensity-low));
+  --nv-motion-scale: 0.98;
+}
+
+.nv-motion-fade-in {
+  animation: nv-motion-fade-in var(--nv-motion-duration, var(--motion-duration-enter)) var(--nv-motion-easing, var(--motion-easing-decelerate)) both;
+}
+
+.nv-motion-fade-out {
+  animation: nv-motion-fade-out var(--nv-motion-duration, var(--motion-duration-exit)) var(--nv-motion-easing, var(--motion-easing-accelerate)) both;
+}
+
+.nv-motion-slide-reveal {
+  animation: nv-motion-slide-reveal var(--nv-motion-duration, var(--motion-duration-enter)) var(--nv-motion-easing, var(--motion-easing-decelerate)) both;
+}
+
+.nv-motion-scale-in {
+  animation: nv-motion-scale-in var(--nv-motion-duration, var(--motion-duration-enter)) var(--nv-motion-easing, var(--motion-easing-decelerate)) both;
+}
+
+.nv-motion-collapse {
+  overflow: hidden;
+  transition:
+    max-block-size var(--motion-duration-state) var(--motion-easing-standard),
+    opacity var(--motion-duration-state) var(--motion-easing-standard);
+}
+
+.nv-motion-presence {
+  transition:
+    opacity var(--motion-duration-state) var(--motion-easing-standard),
+    transform var(--motion-duration-state) var(--motion-easing-standard);
+}
+
+.nv-motion-shared-transition {
+  transition:
+    opacity var(--motion-duration-page) var(--motion-easing-standard),
+    transform var(--motion-duration-page) var(--motion-easing-standard),
+    border-color var(--motion-duration-state) var(--motion-easing-standard),
+    background-color var(--motion-duration-state) var(--motion-easing-standard);
+}
+
+.nv-motion-stagger-group > * {
+  animation-delay: calc(var(--nv-motion-stagger-index, 0) * var(--nv-motion-stagger-step, var(--motion-duration-stagger-step)));
+}
+
+@keyframes nv-motion-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes nv-motion-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes nv-motion-slide-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(var(--nv-motion-y));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes nv-motion-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(var(--nv-motion-scale));
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nv-motion,
+  .nv-motion-fade-in,
+  .nv-motion-fade-out,
+  .nv-motion-slide-reveal,
+  .nv-motion-scale-in,
+  .nv-motion-collapse,
+  .nv-motion-presence,
+  .nv-motion-shared-transition,
+  .nv-motion-stagger-group > * {
+    animation-delay: 0ms !important;
+    animation-duration: 0ms !important;
+    transition-duration: 0ms !important;
+    transform: none !important;
+  }
+}

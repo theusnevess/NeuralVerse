@@ -160,6 +160,13 @@
   --ref-motion-duration-normal:  220ms;
   --ref-motion-duration-slow:    380ms;
 
+  /* NV-600.1 Canonical motion durations */
+  --ref-motion-duration-hover: 100ms;
+  --ref-motion-duration-state: 140ms;
+  --ref-motion-duration-enter: 160ms;
+  --ref-motion-duration-exit: 120ms;
+  --ref-motion-duration-page: 180ms;
+
   /* Easing curves */
   --ref-motion-ease-standard:  cubic-bezier(0.4, 0, 0.2, 1);
   --ref-motion-ease-enter:     cubic-bezier(0.0, 0, 0.2, 1);
@@ -379,10 +386,24 @@
   --sys-motion-duration-transition: var(--ref-motion-duration-normal);
   --sys-motion-duration-overlay:    var(--ref-motion-duration-slow);
 
+  /* NV-600.1 canonical duration roles */
+  --motion-duration-hover: var(--ref-motion-duration-hover);
+  --motion-duration-state: var(--ref-motion-duration-state);
+  --motion-duration-enter: var(--ref-motion-duration-enter);
+  --motion-duration-exit: var(--ref-motion-duration-exit);
+  --motion-duration-page: var(--ref-motion-duration-page);
+  --motion-duration-stagger-step: 24ms;
+
   /* Easing roles */
   --sys-motion-ease-interface: var(--ref-motion-ease-standard);
   --sys-motion-ease-panel:     var(--ref-motion-ease-enter);
   --sys-motion-ease-overlay:   var(--ref-motion-ease-enter);
+
+  /* NV-600.1 canonical easing roles */
+  --motion-easing-standard: var(--ref-motion-ease-standard);
+  --motion-easing-emphasized: var(--ref-motion-ease-emphasized);
+  --motion-easing-decelerate: var(--ref-motion-ease-enter);
+  --motion-easing-accelerate: var(--ref-motion-ease-exit);
 
   /* Intensity scale (approved levels only) */
   --sys-motion-intensity-none:    0;
@@ -580,6 +601,13 @@
     --sys-motion-duration-feedback:   var(--ref-motion-duration-instant);
     --sys-motion-duration-transition: var(--ref-motion-duration-instant);
     --sys-motion-duration-overlay:    var(--ref-motion-duration-instant);
+
+    --motion-duration-hover: var(--ref-motion-duration-instant);
+    --motion-duration-state: var(--ref-motion-duration-instant);
+    --motion-duration-enter: var(--ref-motion-duration-instant);
+    --motion-duration-exit: var(--ref-motion-duration-instant);
+    --motion-duration-page: var(--ref-motion-duration-instant);
+    --motion-duration-stagger-step: var(--ref-motion-duration-instant);
 
     /* Remap intensity to reduced level */
     --sys-motion-intensity-none:    0;

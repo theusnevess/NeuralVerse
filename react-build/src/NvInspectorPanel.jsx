@@ -21,6 +21,7 @@ import {
   NvEmptyState,
   NvScientificIcon,
 } from './components.jsx'
+import { NvSlideReveal } from './motion/NvMotion.jsx'
 
 const ICONS = {
   reference: 'assets/icons/scientific/inspector/reference-details.svg',
@@ -210,7 +211,7 @@ export function NvReferenceInspectorPanel({ reference = {}, metrics = [], keywor
   ]
 
   return (
-    <div className="nv-inspector-panel nv-inspector-panel--reference">
+    <NvSlideReveal className="nv-inspector-panel nv-inspector-panel--reference">
       <NvInspectorSection className="nv-inspector-section--hero">
         <NvInspectorHeader
           title={title}
@@ -270,7 +271,7 @@ export function NvReferenceInspectorPanel({ reference = {}, metrics = [], keywor
           </div>
         )}
       </NvInspectorSection>
-    </div>
+    </NvSlideReveal>
   )
 }
 
@@ -297,7 +298,7 @@ export function NvEvidenceInspectorPanel({ evidence = {}, callbacks = {} }) {
   const { onOpenReference, onOpenRelationship, onExploreNeighborhood, onReturnToSearch } = callbacks
 
   return (
-    <div className="nv-inspector-panel nv-inspector-panel--evidence" role="region" aria-label="Evidence compilation details">
+    <NvSlideReveal className="nv-inspector-panel nv-inspector-panel--evidence" role="region" aria-label="Evidence compilation details">
       <NvInspectorSection className="nv-inspector-section--hero">
         <NvInspectorHeader
           title="Evidence Synthesis"
@@ -395,7 +396,7 @@ export function NvEvidenceInspectorPanel({ evidence = {}, callbacks = {} }) {
           ]}
         />
       </NvInspectorSection>
-    </div>
+    </NvSlideReveal>
   )
 }
 
@@ -462,7 +463,7 @@ export function NvRelationshipInspectorPanel({ relationship = {}, callbacks = {}
   const strengthVariant = Number(strength) >= 0.9 ? 'success' : 'neutral'
 
   return (
-    <div className="nv-inspector-panel nv-inspector-panel--relationship">
+    <NvSlideReveal className="nv-inspector-panel nv-inspector-panel--relationship">
       <NvInspectorSection className="nv-inspector-section--hero">
         <NvInspectorHeader
           title={id}
@@ -520,7 +521,7 @@ export function NvRelationshipInspectorPanel({ relationship = {}, callbacks = {}
           ]}
         />
       </NvInspectorSection>
-    </div>
+    </NvSlideReveal>
   )
 }
 

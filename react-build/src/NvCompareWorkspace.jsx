@@ -9,6 +9,7 @@ import {
   NvMicroViz,
   NvScientificIcon,
 } from "./components.jsx";
+import { NvSlideReveal } from "./motion/NvMotion.jsx";
 
 const ICONS = {
   compare: "assets/icons/scientific/knowledge-graph/semantic-path.svg",
@@ -913,7 +914,8 @@ export function NvCompareWorkspace({ data = {}, callbacks = {} }) {
   const hasSingleItem = items.length === 1;
 
   return (
-    <section
+    <NvSlideReveal
+      as="section"
       className="nv-compare-workspace"
       aria-labelledby="nv-compare-workspace-title"
     >
@@ -993,6 +995,6 @@ export function NvCompareWorkspace({ data = {}, callbacks = {} }) {
           Add one more reference to see convergence analysis, semantic differences, and graph sync.
         </p>
       )}
-    </section>
+    </NvSlideReveal>
   );
 }

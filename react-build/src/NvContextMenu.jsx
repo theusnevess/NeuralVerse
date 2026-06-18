@@ -18,6 +18,7 @@
 
 import React, { useEffect, useRef } from 'react'
 import { NvScientificIcon, NvMenuGroup, NvMenuItem } from './components.jsx'
+import { NvScaleIn } from './motion/NvMotion.jsx'
 
 const DEFAULT_ICON = 'assets/icons/scientific/inspector/reference-details.svg'
 
@@ -91,7 +92,8 @@ export function NvContextMenu({ data = {}, callbacks = {} }) {
   }
 
   return (
-    <section
+    <NvScaleIn
+      as="section"
       className={`nv-context-menu nv-context-menu--${targetType}`}
       role="menu"
       aria-label={`Actions for ${title}`}
@@ -122,6 +124,6 @@ export function NvContextMenu({ data = {}, callbacks = {} }) {
           <NvMenuItem key={action.id} action={action} onAction={dispatchAction} />
         ))}
       </NvMenuGroup>
-    </section>
+    </NvScaleIn>
   )
 }

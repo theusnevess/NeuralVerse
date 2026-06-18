@@ -10,10 +10,11 @@
  *   - ReactDOM bundled in
  *   - Zero CDN or external runtime dependencies
  *
- * NV-500-UX-007E.6 — Inspector React Modernization
+ * NV-600.1 — Motion Foundation
  */
 
 import { mount, update, unmount } from './bridge.js'
+import React from 'react'
 import { NvHoverPreview } from './NvHoverPreview.jsx'
 import { NvContextMenu } from './NvContextMenu.jsx'
 import { NvDiscoveryCard } from './NvDiscoveryCard.jsx'
@@ -84,6 +85,38 @@ import {
   NvResearchStats,
   NvActivityTimelineMini,
 } from './NvWorkspaceSnapshot.jsx'
+import {
+  NvMotionProvider,
+  NvMotionConfig,
+  NvFadeIn,
+  NvFadeOut,
+  NvSlideReveal,
+  NvScaleIn,
+  NvCollapse,
+  NvPresence,
+  NvSharedTransition,
+  NvStaggerGroup,
+  useNvMotion,
+} from './motion/NvMotion.jsx'
+
+function withMotionProvider(Component) {
+  return function NvMotionIsland(props) {
+    return (
+      <NvMotionProvider>
+        <Component {...props} />
+      </NvMotionProvider>
+    )
+  }
+}
+
+const MotionHoverPreview = withMotionProvider(NvHoverPreview)
+const MotionContextMenu = withMotionProvider(NvContextMenu)
+const MotionDiscoveryCard = withMotionProvider(NvDiscoveryCard)
+const MotionInspectorPanel = withMotionProvider(NvInspectorPanel)
+const MotionMemoryLayer = withMotionProvider(NvMemoryLayer)
+const MotionWorkspaceSnapshot = withMotionProvider(NvWorkspaceSnapshot)
+const MotionCompareWorkspace = withMotionProvider(NvCompareWorkspace)
+const MotionResearchPresentation = withMotionProvider(NvResearchPresentation)
 
 // Shared component exports (available for future host-page usage)
 export {
@@ -136,6 +169,21 @@ export {
   NvSessionStatus,
   NvResearchStats,
   NvActivityTimelineMini,
+}
+
+// Motion foundation exports
+export {
+  NvMotionProvider,
+  NvMotionConfig,
+  NvFadeIn,
+  NvFadeOut,
+  NvSlideReveal,
+  NvScaleIn,
+  NvCollapse,
+  NvPresence,
+  NvSharedTransition,
+  NvStaggerGroup,
+  useNvMotion,
 }
 
 // Semantic compare island exports
@@ -193,14 +241,26 @@ window.NeuralVerse = window.NeuralVerse || {}
 window.NeuralVerse.react = {
   bridge: { mount, update, unmount },
   islands: {
-    NvHoverPreview,
-    NvContextMenu,
-    NvDiscoveryCard,
-    NvInspectorPanel,
-    NvMemoryLayer,
-    NvWorkspaceSnapshot,
-    NvCompareWorkspace,
-    NvResearchPresentation,
+    NvHoverPreview: MotionHoverPreview,
+    NvContextMenu: MotionContextMenu,
+    NvDiscoveryCard: MotionDiscoveryCard,
+    NvInspectorPanel: MotionInspectorPanel,
+    NvMemoryLayer: MotionMemoryLayer,
+    NvWorkspaceSnapshot: MotionWorkspaceSnapshot,
+    NvCompareWorkspace: MotionCompareWorkspace,
+    NvResearchPresentation: MotionResearchPresentation,
+  },
+  motion: {
+    NvMotionProvider,
+    NvMotionConfig,
+    NvFadeIn,
+    NvFadeOut,
+    NvSlideReveal,
+    NvScaleIn,
+    NvCollapse,
+    NvPresence,
+    NvSharedTransition,
+    NvStaggerGroup,
   },
 }
 
@@ -208,6 +268,6 @@ if (window.NV_DEBUG) {
   console.log('[NeuralVerse React] Island layer initialized.', {
     islands: Object.keys(window.NeuralVerse.react.islands),
     version: 'local-bundle',
-    phase: 'NV-500-UX-007E.6',
+    phase: 'NV-600.1',
   })
 }

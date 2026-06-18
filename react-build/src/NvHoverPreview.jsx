@@ -31,6 +31,7 @@
 
 import React from 'react'
 import { NvScientificIcon, NvMicroViz, NvButton } from './components.jsx'
+import { NvScaleIn } from './motion/NvMotion.jsx'
 
 const DEFAULT_ICON = 'assets/icons/scientific/inspector/reference-details.svg'
 
@@ -53,7 +54,8 @@ export function NvHoverPreview({ data = {}, callbacks = {} }) {
   }
 
   return (
-    <section
+    <NvScaleIn
+      as="section"
       className={`nv-hover-preview nv-hover-preview--${type}`}
       role="region"
       aria-label={title}
@@ -103,6 +105,6 @@ export function NvHoverPreview({ data = {}, callbacks = {} }) {
           ))}
         </div>
       )}
-    </section>
+    </NvScaleIn>
   )
 }

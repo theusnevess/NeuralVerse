@@ -14,6 +14,7 @@ import {
   NvMicroViz,
   NvScientificIcon,
 } from './components.jsx'
+import { NvSlideReveal, NvStaggerGroup } from './motion/NvMotion.jsx'
 
 const ICONS = {
   snapshot: 'assets/icons/scientific/memory-session/workspace-snapshot.svg',
@@ -258,7 +259,7 @@ export function NvWorkspaceSnapshot({ data = {}, callbacks = {} }) {
   } = data
 
   return (
-    <section className="nv-workspace-dashboard" aria-labelledby="nv-workspace-dashboard-title">
+    <NvSlideReveal as="section" className="nv-workspace-dashboard" aria-labelledby="nv-workspace-dashboard-title">
       <div className="nv-workspace-dashboard__header">
         <div className="nv-workspace-dashboard__heading">
             <NvScientificIcon iconPath={ICONS.snapshot} size="md" />
@@ -270,12 +271,12 @@ export function NvWorkspaceSnapshot({ data = {}, callbacks = {} }) {
         <NvSnapshotActions actions={actions} callbacks={callbacks} />
       </div>
 
-      <div className="nv-workspace-dashboard__grid">
+      <NvStaggerGroup className="nv-workspace-dashboard__grid">
         <NvActiveInvestigation investigation={activeInvestigation} isEmpty={isEmpty} />
         <NvResearchHealth health={researchHealth} />
         <NvKnowledgePulse pulse={pulse} />
         <NvSessionTimeline events={timeline} onOpenTimelineEvent={callbacks.onOpenTimelineEvent} />
-      </div>
-    </section>
+      </NvStaggerGroup>
+    </NvSlideReveal>
   )
 }

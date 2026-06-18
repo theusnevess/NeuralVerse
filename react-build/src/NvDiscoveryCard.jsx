@@ -10,6 +10,7 @@
 
 import React, { useState } from 'react'
 import { NvBadge, NvButton, NvScientificIcon } from './components.jsx'
+import { NvSlideReveal, NvPresence } from './motion/NvMotion.jsx'
 
 export function NvDiscoveryCard({ data = {}, callbacks = {} }) {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false)
@@ -56,7 +57,8 @@ export function NvDiscoveryCard({ data = {}, callbacks = {} }) {
   }
 
   return (
-    <article
+    <NvSlideReveal
+      as="article"
       className={`nv-discovery-panel nv-discovery-panel--${variant}`}
       data-ref-id={refId}
       data-preview-ref={refId}
@@ -90,10 +92,14 @@ export function NvDiscoveryCard({ data = {}, callbacks = {} }) {
         {microvisualization && (
           <div className="nv-discovery-panel__microvisualization" dangerouslySetInnerHTML={{ __html: microvisualization }} />
         )}
-        <div className="nv-discovery-panel__preview" id={previewId} hidden={!isPreviewOpen}>
+        <NvPresence
+          present={isPreviewOpen}
+          className="nv-discovery-panel__preview"
+          id={previewId}
+        >
           <strong>{title}</strong>
           <span>{description || 'No additional preview available.'}</span>
-        </div>
+        </NvPresence>
         <div className="nv-discovery-panel__actions">
           {actionSet.has('preview') && (
             <NvButton
@@ -138,6 +144,6 @@ export function NvDiscoveryCard({ data = {}, callbacks = {} }) {
           </button>
         </div>
       </div>
-    </article>
+    </NvSlideReveal>
   )
 }

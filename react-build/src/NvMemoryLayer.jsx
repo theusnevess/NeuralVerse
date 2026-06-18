@@ -24,6 +24,7 @@ import {
   NvMicroViz,
   NvScientificIcon,
 } from './components.jsx'
+import { NvSlideReveal, NvStaggerGroup } from './motion/NvMotion.jsx'
 
 // ---------------------------------------------------------------------------
 // NvMemoryColumn — single column wrapper
@@ -264,7 +265,7 @@ export function NvMemoryLayer({ data = {}, callbacks = {} }) {
   } = callbacks
 
   return (
-    <div className="nv-memory-dashboard">
+    <NvSlideReveal className="nv-memory-dashboard">
       <header className="nv-memory-dashboard__header">
         <div className="nv-memory-dashboard__title-group">
           <p className="nv-memory-dashboard__eyebrow">Research Memory</p>
@@ -285,7 +286,7 @@ export function NvMemoryLayer({ data = {}, callbacks = {} }) {
       {/* Column 1: Pinned References */}
       <div className="nv-memory-dashboard__row nv-memory-dashboard__row--primary">
       <NvMemoryColumn title="Pinned References" className="nv-memory-section--pinned">
-        <ul className="memory-list" aria-label="Pinned references">
+        <NvStaggerGroup as="ul" className="memory-list" aria-label="Pinned references">
           {pinned.length === 0 ? (
             <li>
               <NvMemoryEmptyState
@@ -305,12 +306,12 @@ export function NvMemoryLayer({ data = {}, callbacks = {} }) {
               />
             ))
           )}
-        </ul>
+        </NvStaggerGroup>
       </NvMemoryColumn>
 
       {/* Column 2: Recently Viewed */}
       <NvMemoryColumn title="Recent Activity" className="nv-memory-section--recent">
-        <ul className="memory-list" aria-label="Recently viewed references">
+        <NvStaggerGroup as="ul" className="memory-list" aria-label="Recently viewed references">
           {recent.length === 0 ? (
             <li>
               <NvMemoryEmptyState
@@ -330,14 +331,14 @@ export function NvMemoryLayer({ data = {}, callbacks = {} }) {
               />
             ))
           )}
-        </ul>
+        </NvStaggerGroup>
       </NvMemoryColumn>
       </div>
 
       {/* Column 3: Saved Queries */}
       <div className="nv-memory-dashboard__row nv-memory-dashboard__row--secondary">
       <NvMemoryColumn title="Saved Queries" className="nv-memory-section--queries">
-        <ul className="memory-list" aria-label="Saved queries">
+        <NvStaggerGroup as="ul" className="memory-list" aria-label="Saved queries">
           {savedQueries.length === 0 ? (
             <li>
               <NvMemoryEmptyState
@@ -358,7 +359,7 @@ export function NvMemoryLayer({ data = {}, callbacks = {} }) {
               />
             ))
           )}
-        </ul>
+        </NvStaggerGroup>
       </NvMemoryColumn>
 
       {/* Column 4: Knowledge Trail */}
@@ -369,7 +370,8 @@ export function NvMemoryLayer({ data = {}, callbacks = {} }) {
           trailSummaryHtml ? <NvMicroViz html={trailSummaryHtml} className="nv-memory-trail-summary" ariaLabel="Session progress and trail sparkline" /> : null
         }
       >
-        <ul
+        <NvStaggerGroup
+          as="ul"
           className="memory-list nv-memory-timeline"
           aria-label="Knowledge trail activity log"
         >
@@ -392,10 +394,10 @@ export function NvMemoryLayer({ data = {}, callbacks = {} }) {
               ))}
             </>
           )}
-        </ul>
+        </NvStaggerGroup>
       </NvMemoryColumn>
       </div>
 
-    </div>
+    </NvSlideReveal>
   )
 }
