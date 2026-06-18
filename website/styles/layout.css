@@ -7,7 +7,7 @@
   display: flex;
   flex-direction: column;
   min-block-size: 100vh;
-  background-color: transparent;
+  background-color: var(--nv-canvas-base, var(--sys-color-background-base));
   overflow-x: clip;
 }
 
@@ -80,6 +80,7 @@
   flex: 1;
   inline-size: 100%;
   min-inline-size: 0;
+  background-color: var(--nv-canvas-base, var(--sys-color-background-base));
   overflow-x: clip;
 }
 
@@ -224,8 +225,24 @@
   flex: 1;
   min-inline-size: 0;
   padding: var(--ctx-workspace-padding);
-  background-color: transparent;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--nv-canvas-depth, var(--sys-color-background-subtle)) 7%, transparent),
+      transparent 18rem
+    ),
+    var(--nv-canvas-base, var(--sys-color-background-base));
   border-radius: var(--ctx-workspace-radius);
+}
+
+.nv-learning-page,
+.nv-modules-page,
+.nv-content-page,
+.nv-topology-bg,
+.nv-compare-workspace,
+.nv-research-presentation,
+.nv-settings-page {
+  background-color: transparent;
 }
 
 .nv-context-panel {
@@ -661,7 +678,4 @@
     padding: var(--sys-spacing-inset-md, var(--sys-space-inset-md));
   }
 }
-
-
-
 

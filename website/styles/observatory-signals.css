@@ -1,0 +1,122 @@
+/**
+ * NeuralVerse Observatory Signals — NV-600.7
+ * ===========================================
+ * Scientific instrument overlay elements that reinforce
+ * the Research Observatory identity without competing with content.
+ *
+ * All elements: low opacity, low frequency, zero distraction.
+ * Decorative only — pointer-events: none, no encoded information.
+ */
+
+.nv-hero-observatory {
+  position: relative;
+  isolation: isolate;
+}
+
+.nv-hero-observatory::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    radial-gradient(
+      ellipse at 50% 32%,
+      color-mix(in srgb, var(--sys-background-accent) 4%, transparent) 0%,
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse at 50% 82%,
+      color-mix(in srgb, var(--sys-background-depth) 3%, transparent) 0%,
+      transparent 48%
+    );
+  opacity: 0.5;
+}
+
+.nv-hero-observatory::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    radial-gradient(
+      circle at 22% 38%,
+      transparent 0 10%,
+      color-mix(in srgb, var(--sys-background-signal-color) 5%, transparent) 10.1% 10.2%,
+      transparent 10.5%
+    ),
+    radial-gradient(
+      circle at 78% 28%,
+      transparent 0 8%,
+      color-mix(in srgb, var(--sys-background-signal-color) 4%, transparent) 8.1% 8.2%,
+      transparent 8.5%
+    ),
+    radial-gradient(
+      circle at 50% 42%,
+      transparent 0 22%,
+      color-mix(in srgb, var(--sys-background-signal-color) 5%, transparent) 22.1% 22.2%,
+      transparent 22.6%,
+      transparent 22.6% 26%,
+      color-mix(in srgb, var(--sys-background-signal-color) 4%, transparent) 26.1% 26.2%,
+      transparent 26.6%
+    );
+  background-size: 100% 100%;
+  opacity: 0.45;
+  mask-image:
+    radial-gradient(ellipse at 50% 38%, var(--ref-color-black) 42%, transparent 72%);
+}
+
+.nv-observatory-surface {
+  position: relative;
+  isolation: isolate;
+}
+
+.nv-observatory-surface::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: inherit;
+  background-image:
+    repeating-linear-gradient(
+      180deg,
+      transparent 0px,
+      transparent calc(var(--sys-background-grid-spacing) * 2 - 0.5px),
+      color-mix(in srgb, var(--sys-background-signal-color) 4%, transparent) calc(var(--sys-background-grid-spacing) * 2 - 0.5px),
+      color-mix(in srgb, var(--sys-background-signal-color) 4%, transparent) calc(var(--sys-background-grid-spacing) * 2 + 0.5px),
+      transparent calc(var(--sys-background-grid-spacing) * 2 + 0.5px),
+      transparent calc(var(--sys-background-grid-spacing) * 12)
+    );
+  opacity: 0.12;
+}
+
+.nv-hero-brand-lockup {
+  position: relative;
+  isolation: isolate;
+}
+
+.nv-hero-brand-lockup::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    radial-gradient(
+      ellipse at 50% 50%,
+      color-mix(in srgb, var(--sys-background-accent) 6%, transparent) 0%,
+      transparent 62%
+    );
+  opacity: 0.4;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nv-hero-observatory::before,
+  .nv-hero-observatory::after,
+  .nv-observatory-surface::after,
+  .nv-hero-brand-lockup::before {
+    opacity: 0.25;
+  }
+}

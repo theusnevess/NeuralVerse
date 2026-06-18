@@ -4,10 +4,14 @@
  * Scope:
  * Reusable sizing and state classes for the official scientific icon library.
  * SVG assets inherit currentColor and must not define state-specific variants.
+ *
+ * NV-600.7: Microinteractions — fade-in, opacity transition, stroke reveal,
+ *           gentle emphasis on hover. No rotation, no pulsing, no flashy effects.
  */
 
 .nv-scientific-icon {
   --nv-scientific-icon-size: 1.5rem;
+  --nv-scientific-icon-stroke-reveal-duration: var(--motion-duration-enter);
 
   display: inline-block;
   inline-size: var(--nv-scientific-icon-size);
@@ -60,8 +64,61 @@
   pointer-events: none;
 }
 
+.nv-scientific-icon--fade-in {
+  animation: nv-sci-fade-in var(--motion-duration-enter) var(--motion-easing-decelerate) both;
+}
+
+.nv-scientific-icon--stroke-reveal {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: nv-sci-stroke-reveal var(--nv-scientific-icon-stroke-reveal-duration) var(--motion-easing-decelerate) both;
+}
+
+.nv-scientific-icon--emphasis {
+  transition:
+    color var(--motion-duration-hover) var(--motion-easing-standard),
+    opacity var(--motion-duration-hover) var(--motion-easing-standard),
+    transform var(--motion-duration-hover) var(--motion-easing-standard),
+    filter var(--motion-duration-hover) var(--motion-easing-standard);
+}
+
+.nv-scientific-icon--emphasis:hover {
+  transform: scale(1.06);
+  filter: brightness(1.2);
+}
+
+.nv-scientific-icon-container:hover .nv-scientific-icon {
+  color: var(--sys-color-accent-primary);
+  opacity: 0.92;
+}
+
+@keyframes nv-sci-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes nv-sci-stroke-reveal {
+  from { stroke-dashoffset: 100; }
+  to { stroke-dashoffset: 0; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .nv-scientific-icon {
     transition: none;
+  }
+
+  .nv-scientific-icon--fade-in {
+    animation: none;
+    opacity: 1;
+  }
+
+  .nv-scientific-icon--stroke-reveal {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+
+  .nv-scientific-icon--emphasis:hover {
+    transform: none;
+    filter: none;
   }
 }

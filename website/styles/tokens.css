@@ -299,6 +299,13 @@
   --sys-background-noise-opacity: 0.05;
   --sys-background-bloom-opacity: 0.3;
   --sys-background-ambient-motion: 72s;
+
+  /* NV-600.7 Observatory Signal Opacity */
+  --sys-observatory-arcs-opacity: 0.14;
+  --sys-observatory-scan-opacity: 0.10;
+  --sys-observatory-constellation-opacity: 0.12;
+  --sys-observatory-rings-opacity: 0.10;
+  --sys-observatory-markers-opacity: 0.10;
 }
 
 /* =========================================================
@@ -534,7 +541,7 @@
    ========================================================= */
 
 :root {
-  --ctx-shell-header-surface: #0a0f16;
+  --ctx-shell-header-surface: var(--sys-color-surface-base);
   --ctx-shell-header-border:  var(--sys-color-border-subtle);
   --ctx-shell-padding:        var(--sys-space-inset-md);
   --ctx-shell-z:              var(--sys-z-sticky);
