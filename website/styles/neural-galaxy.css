@@ -1,0 +1,86 @@
+/**
+ * NeuralVerse Canvas Neural Galaxy Background — NV-600.8-R4
+ * ==========================================================
+ * Global Canvas 2D living neural field. Presentation only.
+ */
+
+:root {
+  --sys-background-neural-base: #05080d;
+  --sys-background-neural-deep: #070d15;
+  --sys-background-neural-navy: #08111a;
+}
+
+html,
+body {
+  background:
+    radial-gradient(
+      ellipse at 52% 22%,
+      color-mix(in srgb, var(--sys-background-neural-navy) 58%, transparent) 0%,
+      transparent 64%
+    ),
+    linear-gradient(
+      180deg,
+      var(--sys-background-neural-deep) 0%,
+      var(--sys-background-neural-base) 100%
+    ) !important;
+}
+
+.nv-neural-galaxy-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  user-select: none;
+  contain: layout paint size style;
+}
+
+.nv-neural-galaxy-canvas {
+  position: fixed;
+  inset: 0;
+  inline-size: 100vw;
+  block-size: 100vh;
+  display: block;
+  pointer-events: none;
+  user-select: none;
+}
+
+.nv-shell,
+.nv-shell-body,
+.nv-main-workspace,
+.nv-workspace {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+.nv-shell {
+  position: relative;
+  z-index: 1;
+}
+
+.nv-workspace__surface,
+.nv-card,
+.nv-panel,
+.retrieval-header,
+.search-console,
+.results-panel,
+.inspector-space,
+.memory-layer,
+.workspace-tabs,
+.inspector-tabs,
+.nv-discovery-panel,
+.nv-memory-card,
+.memory-column,
+.nv-workspace-snapshot,
+.nv-inspector-panel,
+.nv-compare-workspace,
+.nv-research-presentation,
+.nv-context-panel {
+  background-color: color-mix(in srgb, var(--sys-color-surface-base) 86%, transparent) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nv-neural-galaxy-layer {
+    opacity: 0.92;
+  }
+}
