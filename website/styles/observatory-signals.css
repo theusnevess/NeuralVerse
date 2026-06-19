@@ -89,7 +89,7 @@
       transparent calc(var(--sys-background-grid-spacing) * 2 + 0.5px),
       transparent calc(var(--sys-background-grid-spacing) * 12)
     );
-  opacity: 0.12;
+  opacity: 0.18;
 }
 
 .nv-hero-brand-lockup {
@@ -122,7 +122,7 @@
 }
 
 
-/* Home Research Observatory Instrument Panel — NV-600.9-R3 */
+/* Home Hero Reference-Driven Observatory Illustration — NV-600.9-R4 */
 .nv-home-observatory-illustration {
   display: none;
 }
@@ -140,19 +140,20 @@
 
 .nv-main-workspace[data-workspace-active-view="home"] .nv-home-observatory-illustration {
   position: absolute;
-  inset-block-start: clamp(var(--sys-space-inset-xs), 3vw, var(--sys-space-inset-md));
-  inset-inline-end: clamp(var(--sys-space-inline-xs), 2vw, var(--sys-space-inline-md));
+  inset-block-start: clamp(var(--sys-space-inset-xs), 2vw, var(--sys-space-inset-md));
+  inset-inline-end: 0;
   z-index: 0;
   display: block;
-  inline-size: min(66%, 52rem);
-  color: color-mix(in srgb, var(--sys-color-accent-primary) 54%, var(--sys-color-text-muted));
-  opacity: 0.48;
+  inline-size: min(78%, 64rem);
+  color: color-mix(in srgb, var(--sys-color-accent-primary) 88%, var(--sys-color-text-muted));
+  --nv-home-observatory-opacity: 1;
+  opacity: var(--nv-home-observatory-opacity);
   pointer-events: none;
   user-select: none;
   transform: translate3d(0, 0, 0);
   mask-image:
-    linear-gradient(90deg, transparent 0%, var(--ref-color-black) 18%, var(--ref-color-black) 88%, transparent 100%),
-    linear-gradient(180deg, transparent 0%, var(--ref-color-black) 8%, var(--ref-color-black) 88%, transparent 100%);
+    linear-gradient(90deg, transparent 0%, transparent 8%, var(--ref-color-black) 26%, var(--ref-color-black) 94%, transparent 100%),
+    linear-gradient(180deg, transparent 0%, var(--ref-color-black) 9%, var(--ref-color-black) 88%, transparent 100%);
   mask-composite: intersect;
 }
 
@@ -169,130 +170,138 @@
   vector-effect: non-scaling-stroke;
 }
 
-.nv-home-observatory-illustration__ambient {
+.nv-home-observatory-illustration__atmosphere {
   fill: currentColor;
-  opacity: 0.032;
-  animation: nv-home-instrument-ambient 24s var(--motion-easing-standard) infinite alternate;
+  opacity: 0.06;
 }
 
-.nv-home-observatory-illustration__construction path,
-.nv-home-observatory-illustration__arcs path,
-.nv-home-observatory-illustration__guides path,
-.nv-home-observatory-illustration__ticks path,
-.nv-home-observatory-illustration__crosses path,
-.nv-home-observatory-illustration__local-group path,
-.nv-home-observatory-illustration__calibration-pulse,
-.nv-home-observatory-illustration__scan-indicator {
+.nv-home-observatory-illustration__grid path,
+.nv-home-observatory-illustration__bridges path,
+.nv-home-observatory-illustration__edges path,
+.nv-home-observatory-illustration__marks path,
+.nv-home-observatory-illustration__signal {
   fill: none;
   stroke: currentColor;
   stroke-linecap: round;
 }
 
-.nv-home-observatory-illustration__construction path {
+.nv-home-observatory-illustration__grid path {
   stroke-width: 0.55;
-  opacity: 0.04;
-  stroke-dasharray: 6 16;
+  opacity: 0.11;
 }
 
-.nv-home-observatory-illustration__arcs path {
-  stroke-width: 0.72;
-  opacity: 0.055;
-  stroke-dasharray: 92 36 18 58;
+.nv-home-observatory-illustration__bridges path {
+  stroke-width: 0.65;
+  opacity: 0.22;
 }
 
-.nv-home-observatory-illustration__guides path {
-  stroke-width: 0.52;
-  opacity: 0.044;
+.nv-home-observatory-illustration__edges path {
+  stroke-width: 0.7;
+  opacity: 0.28;
 }
 
-.nv-home-observatory-illustration__ticks path,
-.nv-home-observatory-illustration__crosses path {
-  stroke-width: 0.66;
-  opacity: 0.07;
+.nv-home-observatory-illustration__marks path {
+  stroke-width: 0.6;
+  opacity: 0.05;
 }
 
-.nv-home-observatory-illustration__anchors,
-.nv-home-observatory-illustration__local-group {
+.nv-home-observatory-illustration__particles,
+.nv-home-observatory-illustration__nodes {
   fill: currentColor;
 }
 
-.nv-home-observatory-illustration__anchors circle {
-  opacity: 0.085;
+.nv-home-observatory-illustration__particle {
+  opacity: 0.2;
 }
 
-.nv-home-observatory-illustration__local-group path {
-  stroke-width: 0.62;
-  opacity: 0.06;
+.nv-home-observatory-illustration__particle--aqua {
+  fill: color-mix(in srgb, var(--sys-color-accent-primary) 58%, var(--sys-color-text-muted));
+  opacity: 0.32;
 }
 
-.nv-home-observatory-illustration__local-group circle {
-  opacity: 0.095;
+.nv-home-observatory-illustration__particle--amber {
+  fill: color-mix(in srgb, var(--sys-color-warning) 44%, var(--sys-color-text-muted));
+  opacity: 0.16;
 }
 
-.nv-home-observatory-illustration__arcs,
-.nv-home-observatory-illustration__guides,
-.nv-home-observatory-illustration__anchors,
-.nv-home-observatory-illustration__local-group {
-  animation: nv-home-instrument-breathe 18s var(--motion-easing-standard) infinite alternate;
+.nv-home-observatory-illustration__particle--violet {
+  fill: color-mix(in srgb, var(--sys-color-accent-hover) 42%, var(--sys-color-text-muted));
+  opacity: 0.18;
 }
 
-.nv-home-observatory-illustration__calibration-pulse {
-  stroke-width: 0.9;
-  stroke-dasharray: 24 230;
-  stroke-dashoffset: 230;
-  opacity: 0;
-  animation: nv-home-instrument-pulse 13.5s var(--motion-easing-decelerate) infinite;
+.nv-home-observatory-illustration__particle--green {
+  fill: color-mix(in srgb, var(--sys-color-success) 38%, var(--sys-color-text-muted));
+  opacity: 0.18;
 }
 
-.nv-home-observatory-illustration__scan-indicator {
-  stroke-width: 0.7;
+.nv-home-observatory-illustration__node {
+  opacity: 0.46;
+}
+
+.nv-home-observatory-illustration__node--core {
+  opacity: 0.52;
+  animation: nv-home-reference-node-breathe 11s var(--motion-easing-standard) infinite alternate;
+}
+
+.nv-home-observatory-illustration__node--accent-aqua {
+  fill: color-mix(in srgb, var(--sys-color-accent-primary) 70%, var(--sys-color-text-muted));
+  opacity: 0.5;
+}
+
+.nv-home-observatory-illustration__node--accent-amber {
+  fill: color-mix(in srgb, var(--sys-color-warning) 52%, var(--sys-color-text-muted));
+  opacity: 0.26;
+}
+
+.nv-home-observatory-illustration__node--accent-violet {
+  fill: color-mix(in srgb, var(--sys-color-accent-hover) 48%, var(--sys-color-text-muted));
+  opacity: 0.24;
+}
+
+.nv-home-observatory-illustration__node--accent-green {
+  fill: color-mix(in srgb, var(--sys-color-success) 44%, var(--sys-color-text-muted));
+  opacity: 0.18;
+}
+
+.nv-home-observatory-illustration__signal {
+  stroke-width: 0.78;
   stroke-dasharray: 18 160;
   stroke-dashoffset: 160;
   opacity: 0;
-  animation: nv-home-instrument-scan 15s var(--motion-easing-standard) infinite;
+  animation: nv-home-reference-signal 12.8s var(--motion-easing-decelerate) infinite;
 }
 
-@keyframes nv-home-instrument-ambient {
+.nv-home-observatory-illustration {
+  animation: nv-home-reference-enter var(--motion-duration-page) var(--motion-easing-decelerate) both;
+}
+
+@keyframes nv-home-reference-enter {
   from {
-    opacity: 0.02;
+    opacity: 0;
   }
   to {
-    opacity: 0.04;
+    opacity: var(--nv-home-observatory-opacity);
   }
 }
 
-@keyframes nv-home-instrument-breathe {
+@keyframes nv-home-reference-node-breathe {
   from {
-    opacity: 0.82;
+    opacity: 0.36;
   }
   to {
-    opacity: 1;
+    opacity: 0.26;
   }
 }
 
-@keyframes nv-home-instrument-pulse {
-  0%, 76% {
-    opacity: 0;
-    stroke-dashoffset: 230;
-  }
-  84% {
-    opacity: 0.14;
-  }
-  96%, 100% {
-    opacity: 0;
-    stroke-dashoffset: -38;
-  }
-}
-
-@keyframes nv-home-instrument-scan {
-  0%, 80% {
+@keyframes nv-home-reference-signal {
+  0%, 78% {
     opacity: 0;
     stroke-dashoffset: 160;
   }
-  88% {
-    opacity: 0.105;
+  86% {
+    opacity: 0.36;
   }
-  98%, 100% {
+  96%, 100% {
     opacity: 0;
     stroke-dashoffset: -28;
   }
@@ -300,13 +309,13 @@
 
 @media (max-width: 1023px) {
   .nv-main-workspace[data-workspace-active-view="home"] .nv-home-observatory-illustration {
-    inline-size: min(50%, 28rem);
-    opacity: 0.34;
+    inline-size: min(58%, 34rem);
+    --nv-home-observatory-opacity: 0.64;
   }
 
-  .nv-home-observatory-illustration__construction path:nth-child(2n),
-  .nv-home-observatory-illustration__ticks path:nth-child(2n),
-  .nv-home-observatory-illustration__guides path:nth-child(2n) {
+  .nv-home-observatory-illustration__particles circle:nth-child(2n),
+  .nv-home-observatory-illustration__grid path:nth-child(2n),
+  .nv-home-observatory-illustration__edges path:nth-child(3n) {
     display: none;
   }
 }
@@ -318,18 +327,13 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .nv-home-observatory-illustration__ambient,
-  .nv-home-observatory-illustration__arcs,
-  .nv-home-observatory-illustration__guides,
-  .nv-home-observatory-illustration__anchors,
-  .nv-home-observatory-illustration__local-group,
-  .nv-home-observatory-illustration__calibration-pulse,
-  .nv-home-observatory-illustration__scan-indicator {
+  .nv-home-observatory-illustration,
+  .nv-home-observatory-illustration__node--core,
+  .nv-home-observatory-illustration__signal {
     animation: none;
   }
 
-  .nv-home-observatory-illustration__calibration-pulse,
-  .nv-home-observatory-illustration__scan-indicator {
+  .nv-home-observatory-illustration__signal {
     opacity: 0;
   }
 }
