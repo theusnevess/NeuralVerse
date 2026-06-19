@@ -2,9 +2,9 @@
   {
     "id": "home",
     "path": "#/",
-    "label": "Home",
-    "title": "Welcome to NeuralVerse",
-    "description": "Scientific Research & AI Agent Environment.",
+    "label": "",
+    "title": "NeuralVerse",
+    "description": "",
     "region": "R3 Workspace",
     "navigationGroup": "primary",
     "isImplemented": true
@@ -13,8 +13,8 @@
     "id": "learning",
     "path": "#/learning",
     "label": "Learning Paths",
-    "title": "Advanced Learning Paths",
-    "description": "Explore agentic models and neural architecture courses.",
+    "title": "Learning Paths",
+    "description": "Choose a learning path and continue through structured modules.",
     "region": "R3 Workspace",
     "navigationGroup": "primary",
     "isImplemented": true
@@ -23,8 +23,8 @@
     "id": "modules",
     "path": "#/modules",
     "label": "Modules",
-    "title": "Core Study Modules",
-    "description": "Dive deep into specialized neural and cognitive science units.",
+    "title": "Modules",
+    "description": "Browse the modules in your current learning path.",
     "region": "R3 Workspace",
     "navigationGroup": "primary",
     "isImplemented": true
@@ -33,8 +33,8 @@
     "id": "workspace",
     "path": "#/workspace",
     "label": "Workspace",
-    "title": "Agent Workspace",
-    "description": "Deploy, configure, and monitor live AI agents in real-time.",
+    "title": "Workspace",
+    "description": "Organize your current research and learning materials.",
     "region": "R3 Workspace",
     "navigationGroup": "primary",
     "isImplemented": true
@@ -43,8 +43,8 @@
     "id": "content",
     "path": "#/content",
     "label": "Content Viewer",
-    "title": "Documentation & Papers",
-    "description": "Access scientific publications, references, and guidebooks.",
+    "title": "Content Viewer",
+    "description": "Read and organize scientific learning materials.",
     "region": "R3 Workspace",
     "navigationGroup": "primary",
     "isImplemented": true
@@ -53,8 +53,8 @@
     "id": "settings",
     "path": "#/settings",
     "label": "Settings",
-    "title": "Environment Settings",
-    "description": "Configure nodes, API endpoints, and visualization options.",
+    "title": "Settings",
+    "description": "Adjust your workspace preferences.",
     "region": "R3 Workspace",
     "navigationGroup": "secondary",
     "isImplemented": false

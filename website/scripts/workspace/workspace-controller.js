@@ -426,36 +426,15 @@ export function createWorkspaceController(options = {}) {
     // Sync text nodes and attributes
     const titleEl = root.querySelector('[data-workspace-title]');
     const descEl = root.querySelector('[data-workspace-description]');
-    const statusEl = root.querySelector('[data-workspace-status]');
     const viewEl = root.querySelector('[data-workspace-active-view]');
-    const routeEl = root.querySelector('[data-workspace-route]');
-    const updatedEl = root.querySelector('[data-workspace-updated]');
     const liveEl = root.querySelector('[data-workspace-live]');
     const emptyStateEl = root.querySelector('[data-workspace-empty-state]');
 
     if (titleEl) titleEl.textContent = state.routeTitle;
     if (descEl) descEl.textContent = state.routeDescription;
-    
-    if (statusEl) {
-      statusEl.textContent = state.status.toUpperCase();
-      statusEl.setAttribute('data-status', state.status);
-      statusEl.className = 'nv-badge nv-workspace__status';
-      if (state.status === 'active') {
-        statusEl.setAttribute('data-variant', 'success');
-      } else if (state.status === 'idle') {
-        statusEl.setAttribute('data-variant', 'info');
-      } else {
-        statusEl.setAttribute('data-variant', 'neutral');
-      }
-    }
-
     if (viewEl) viewEl.setAttribute('data-workspace-active-view', state.activeView);
-    if (routeEl) routeEl.textContent = `Route: ${state.routeId}`;
-    if (updatedEl) {
-      updatedEl.textContent = `Updated: ${new Date(state.lastUpdated).toLocaleTimeString()}`;
-    }
     if (liveEl) {
-      liveEl.textContent = `Workspace updated. Active node: ${state.routeTitle}. Status: ${state.status}.`;
+      liveEl.textContent = `Current view: ${state.routeTitle}.`;
     }
 
     // Sync empty state visibility

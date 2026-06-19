@@ -417,6 +417,39 @@
   color: var(--sys-color-text-primary);
 }
 
+.nv-context-meta-list {
+  display: grid;
+  gap: var(--sys-space-stack-xs);
+  margin: 0;
+  padding: 0;
+}
+
+.nv-context-meta-list > div {
+  display: grid;
+  gap: calc(var(--sys-space-stack-xs) / 2);
+}
+
+.nv-context-meta-list dt {
+  color: var(--sys-color-text-muted);
+  font-family: var(--sys-font-code-family);
+  font-size: var(--sys-font-caption-size);
+  letter-spacing: var(--ref-font-tracking-wide);
+  text-transform: uppercase;
+}
+
+.nv-context-meta-list dd {
+  margin: 0;
+  color: var(--sys-color-text-primary);
+  font-family: var(--sys-font-body-family);
+  font-size: var(--sys-font-body-size);
+  line-height: var(--sys-font-body-line-height);
+}
+
+.nv-context-meta-list--compact {
+  gap: var(--sys-space-stack-sm);
+  padding-block-start: var(--sys-space-stack-xs);
+}
+
 .nv-context-description {
   font-family: var(--sys-font-body-family);
   font-size: var(--sys-font-caption-size);
@@ -565,7 +598,9 @@
    ========================================================= */
 
 .nv-breadcrumbs {
+  display: none !important;
   max-inline-size: var(--sys-a11y-reading-width-standard);
+  margin: 0 !important;
 }
 
 /* =========================================================
@@ -669,6 +704,17 @@
   gap: var(--sys-spacing-stack-lg, var(--sys-space-stack-lg));
 }
 
+/* Remove hero surface on non-home routes — NV-UI-R1 */
+.nv-main-workspace:not([data-workspace-active-view="home"]) .nv-workspace__surface,
+.nv-main-workspace:not([data-workspace-active-view="home"]) .nv-workspace__surface ~ .nv-divider {
+  display: none;
+}
+
+/* Tighten breadcrumbs → content gap on non-home routes */
+.nv-main-workspace:not([data-workspace-active-view="home"]) .nv-breadcrumbs {
+  margin-block-end: 0;
+}
+
 @media (max-width: 48rem) {
   .nv-orientation-grid {
     grid-template-columns: 1fr;
@@ -678,4 +724,3 @@
     padding: var(--sys-spacing-inset-md, var(--sys-space-inset-md));
   }
 }
-

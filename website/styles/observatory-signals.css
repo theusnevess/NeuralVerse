@@ -1,339 +1,100 @@
 /**
- * NeuralVerse Observatory Signals — NV-600.7
- * ===========================================
- * Scientific instrument overlay elements that reinforce
- * the Research Observatory identity without competing with content.
+ * NeuralVerse Semantic Field — NV-600.9-R7
+ * ==========================================
+ * Living Semantic Atmosphere — Home Hero Background
  *
- * All elements: low opacity, low frequency, zero distraction.
- * Decorative only — pointer-events: none, no encoded information.
+ * Replaces the old "Semantic Observatory" illustration with
+ * a distributed field of micro nodes, tiny clusters, and
+ * barely-visible edges. The field should feel like a quiet
+ * research network — not like an illustration.
+ *
+ * Core principle: Less artwork. More atmosphere.
  */
 
-.nv-hero-observatory {
-  position: relative;
-  isolation: isolate;
+/* Root-level CSS custom properties for the semantic field */
+:root {
+  --nv-semantic-node-color: #1e2c3e;
+  --nv-semantic-edge-color: #0e7490;
+  --nv-semantic-signal-color: #06b6d4;
+  --nv-semantic-field-opacity: 0.48;
+  --nv-semantic-field-bg-darken: 0.04;
 }
 
-.nv-hero-observatory::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background-image:
-    radial-gradient(
-      ellipse at 50% 32%,
-      color-mix(in srgb, var(--sys-background-accent) 4%, transparent) 0%,
-      transparent 55%
-    ),
-    radial-gradient(
-      ellipse at 50% 82%,
-      color-mix(in srgb, var(--sys-background-depth) 3%, transparent) 0%,
-      transparent 48%
-    );
-  opacity: 0.5;
-}
-
-.nv-hero-observatory::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background-image:
-    radial-gradient(
-      circle at 22% 38%,
-      transparent 0 10%,
-      color-mix(in srgb, var(--sys-background-signal-color) 5%, transparent) 10.1% 10.2%,
-      transparent 10.5%
-    ),
-    radial-gradient(
-      circle at 78% 28%,
-      transparent 0 8%,
-      color-mix(in srgb, var(--sys-background-signal-color) 4%, transparent) 8.1% 8.2%,
-      transparent 8.5%
-    ),
-    radial-gradient(
-      circle at 50% 42%,
-      transparent 0 22%,
-      color-mix(in srgb, var(--sys-background-signal-color) 5%, transparent) 22.1% 22.2%,
-      transparent 22.6%,
-      transparent 22.6% 26%,
-      color-mix(in srgb, var(--sys-background-signal-color) 4%, transparent) 26.1% 26.2%,
-      transparent 26.6%
-    );
-  background-size: 100% 100%;
-  opacity: 0.45;
-  mask-image:
-    radial-gradient(ellipse at 50% 38%, var(--ref-color-black) 42%, transparent 72%);
-}
-
-.nv-observatory-surface {
-  position: relative;
-  isolation: isolate;
-}
-
-.nv-observatory-surface::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  border-radius: inherit;
-  background-image:
-    repeating-linear-gradient(
-      180deg,
-      transparent 0px,
-      transparent calc(var(--sys-background-grid-spacing) * 2 - 0.5px),
-      color-mix(in srgb, var(--sys-background-signal-color) 4%, transparent) calc(var(--sys-background-grid-spacing) * 2 - 0.5px),
-      color-mix(in srgb, var(--sys-background-signal-color) 4%, transparent) calc(var(--sys-background-grid-spacing) * 2 + 0.5px),
-      transparent calc(var(--sys-background-grid-spacing) * 2 + 0.5px),
-      transparent calc(var(--sys-background-grid-spacing) * 12)
-    );
-  opacity: 0.18;
-}
-
-.nv-hero-brand-lockup {
-  position: relative;
-  isolation: isolate;
-}
-
-.nv-hero-brand-lockup::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background-image:
-    radial-gradient(
-      ellipse at 50% 50%,
-      color-mix(in srgb, var(--sys-background-accent) 6%, transparent) 0%,
-      transparent 62%
-    );
-  opacity: 0.4;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .nv-hero-observatory::before,
-  .nv-hero-observatory::after,
-  .nv-observatory-surface::after,
-  .nv-hero-brand-lockup::before {
-    opacity: 0.25;
-  }
-}
-
-
-/* Home Hero Editorial SVG Artwork — NV-600.9-R5 */
-.nv-home-observatory-illustration {
-  display: none;
-}
-
+/* Darken the home workspace surface slightly for "deep research lab" feel */
 .nv-main-workspace[data-workspace-active-view="home"] .nv-workspace__surface {
   position: relative;
   overflow: hidden;
   isolation: isolate;
+  background-color: color-mix(
+    in srgb,
+    var(--nv-canvas-base) calc(var(--nv-semantic-field-bg-darken) * 100%),
+    transparent
+  ) !important;
 }
 
+/* All content above the semantic field must be on z-index 1 */
 .nv-main-workspace[data-workspace-active-view="home"] .nv-workspace__surface > :not(.nv-home-observatory-illustration) {
   position: relative;
   z-index: 1;
 }
 
+/* The semantic field container — absolutely positioned over the workspace surface */
 .nv-main-workspace[data-workspace-active-view="home"] .nv-home-observatory-illustration {
   position: absolute;
-  inset-block-start: clamp(var(--sys-space-inset-xs), 2vw, var(--sys-space-inset-md));
+  inset-block-start: 0;
   inset-inline-end: 0;
   z-index: 0;
   display: block;
-  inline-size: min(78%, 64rem);
-  color: color-mix(in srgb, var(--sys-color-accent-primary) 88%, var(--sys-color-text-muted));
-  --nv-home-observatory-opacity: 1;
-  opacity: var(--nv-home-observatory-opacity);
+  inline-size: min(78%, 68rem);
+  block-size: 100%;
+  opacity: var(--nv-semantic-field-opacity);
   pointer-events: none;
   user-select: none;
   transform: translate3d(0, 0, 0);
+
+  /* Edge fade: the field blends into the left content area naturally */
   mask-image:
-    linear-gradient(90deg, transparent 0%, transparent 8%, var(--ref-color-black) 26%, var(--ref-color-black) 94%, transparent 100%),
-    linear-gradient(180deg, transparent 0%, var(--ref-color-black) 9%, var(--ref-color-black) 88%, transparent 100%);
+    linear-gradient(90deg, transparent 0%, transparent 12%, black 28%, black 94%, transparent 100%),
+    linear-gradient(180deg, transparent 0%, black 4%, black 94%, transparent 100%);
   mask-composite: intersect;
 }
 
+/* SVG fills the container */
 .nv-home-observatory-illustration svg {
   display: block;
   inline-size: 100%;
-  block-size: auto;
+  block-size: 100%;
   overflow: visible;
 }
 
-.nv-home-observatory-illustration path,
-.nv-home-observatory-illustration circle,
-.nv-home-observatory-illustration ellipse {
-  vector-effect: non-scaling-stroke;
-}
+/* No large radial glows or blobs — only the semantic field */
 
-.nv-home-observatory-illustration__atmosphere {
-  fill: currentColor;
-  opacity: 0.06;
-}
-
-.nv-home-observatory-illustration__grid path,
-.nv-home-observatory-illustration__bridges path,
-.nv-home-observatory-illustration__edges path,
-.nv-home-observatory-illustration__marks path,
-.nv-home-observatory-illustration__signal {
-  fill: none;
-  stroke: currentColor;
-  stroke-linecap: round;
-}
-
-.nv-home-observatory-illustration__grid path {
-  stroke-width: 0.55;
-  opacity: 0.11;
-}
-
-.nv-home-observatory-illustration__bridges path {
-  stroke-width: 0.65;
-  opacity: 0.22;
-}
-
-.nv-home-observatory-illustration__edges path {
-  stroke-width: 0.7;
-  opacity: 0.28;
-}
-
-.nv-home-observatory-illustration__marks path {
-  stroke-width: 0.6;
-  opacity: 0.05;
-}
-
-.nv-home-observatory-illustration__particles,
-.nv-home-observatory-illustration__nodes {
-  fill: currentColor;
-}
-
-.nv-home-observatory-illustration__particle {
-  opacity: 0.2;
-}
-
-.nv-home-observatory-illustration__particle--aqua {
-  fill: color-mix(in srgb, var(--sys-color-accent-primary) 58%, var(--sys-color-text-muted));
-  opacity: 0.32;
-}
-
-.nv-home-observatory-illustration__particle--amber {
-  fill: color-mix(in srgb, var(--sys-color-warning) 44%, var(--sys-color-text-muted));
-  opacity: 0.16;
-}
-
-.nv-home-observatory-illustration__particle--violet {
-  fill: color-mix(in srgb, var(--sys-color-accent-hover) 42%, var(--sys-color-text-muted));
-  opacity: 0.18;
-}
-
-.nv-home-observatory-illustration__particle--green {
-  fill: color-mix(in srgb, var(--sys-color-success) 38%, var(--sys-color-text-muted));
-  opacity: 0.18;
-}
-
-.nv-home-observatory-illustration__node {
-  opacity: 0.46;
-}
-
-.nv-home-observatory-illustration__node--core {
-  opacity: 0.52;
-  animation: nv-home-reference-node-breathe 11s var(--motion-easing-standard) infinite alternate;
-}
-
-.nv-home-observatory-illustration__node--accent-aqua {
-  fill: color-mix(in srgb, var(--sys-color-accent-primary) 70%, var(--sys-color-text-muted));
-  opacity: 0.5;
-}
-
-.nv-home-observatory-illustration__node--accent-amber {
-  fill: color-mix(in srgb, var(--sys-color-warning) 52%, var(--sys-color-text-muted));
-  opacity: 0.26;
-}
-
-.nv-home-observatory-illustration__node--accent-violet {
-  fill: color-mix(in srgb, var(--sys-color-accent-hover) 48%, var(--sys-color-text-muted));
-  opacity: 0.24;
-}
-
-.nv-home-observatory-illustration__node--accent-green {
-  fill: color-mix(in srgb, var(--sys-color-success) 44%, var(--sys-color-text-muted));
-  opacity: 0.18;
-}
-
-.nv-home-observatory-illustration__signal {
-  stroke-width: 0.78;
-  stroke-dasharray: 18 160;
-  stroke-dashoffset: 160;
-  opacity: 0;
-  animation: nv-home-reference-signal 12.8s var(--motion-easing-decelerate) infinite;
-}
-
-.nv-home-observatory-illustration {
-  animation: nv-home-reference-enter var(--motion-duration-page) var(--motion-easing-decelerate) both;
-}
-
-@keyframes nv-home-reference-enter {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: var(--nv-home-observatory-opacity);
-  }
-}
-
-@keyframes nv-home-reference-node-breathe {
-  from {
-    opacity: 0.42;
-  }
-  to {
-    opacity: 0.58;
-  }
-}
-
-@keyframes nv-home-reference-signal {
-  0%, 78% {
-    opacity: 0;
-    stroke-dashoffset: 160;
-  }
-  86% {
-    opacity: 0.36;
-  }
-  96%, 100% {
-    opacity: 0;
-    stroke-dashoffset: -28;
-  }
-}
-
+/* Tablet: reduce density mask and opacity */
 @media (max-width: 1023px) {
   .nv-main-workspace[data-workspace-active-view="home"] .nv-home-observatory-illustration {
-    inline-size: min(58%, 34rem);
-    --nv-home-observatory-opacity: 0.64;
+    inline-size: min(52%, 32rem);
+    opacity: calc(var(--nv-semantic-field-opacity) * 0.7);
+    mask-image:
+      linear-gradient(90deg, transparent 0%, transparent 8%, black 22%, black 96%, transparent 100%),
+      linear-gradient(180deg, transparent 0%, black 6%, black 92%, transparent 100%);
+    mask-composite: intersect;
   }
 
-  .nv-home-observatory-illustration__particles circle:nth-child(2n),
-  .nv-home-observatory-illustration__grid path:nth-child(2n),
-  .nv-home-observatory-illustration__edges path:nth-child(3n) {
-    display: none;
+  :root {
+    --nv-semantic-field-opacity: 0.34;
   }
 }
 
+/* Mobile: hide most structures, keep only subtle hint */
 @media (max-width: 767px) {
   .nv-main-workspace[data-workspace-active-view="home"] .nv-home-observatory-illustration {
     display: none;
   }
 }
 
+/* Reduced motion — SVG handles its own animation via embedded prefers-reduced-motion */
 @media (prefers-reduced-motion: reduce) {
-  .nv-home-observatory-illustration,
-  .nv-home-observatory-illustration__node--core,
-  .nv-home-observatory-illustration__signal {
-    animation: none;
-  }
-
-  .nv-home-observatory-illustration__signal {
-    opacity: 0;
+  .nv-home-observatory-illustration {
+    opacity: 0.3;
   }
 }

@@ -122,7 +122,6 @@ export function renderContentViewer(target, content) {
   target.innerHTML = `
     <article class="nv-content-viewer" aria-labelledby="content-viewer-title">
       <header class="nv-content-viewer__header">
-        <p class="nv-content-viewer__eyebrow">Content Viewer</p>
         <h1 id="content-viewer-title">${escapeHtml(metadata.title)}</h1>
 
         <dl class="nv-content-meta" aria-label="Content metadata">

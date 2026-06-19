@@ -299,7 +299,8 @@
   border: var(--sys-border-subtle) solid var(--sys-color-border-subtle);
   border-radius: var(--ref-radius-soft);
   overflow: hidden;
-  height: 480px;
+  min-height: 65vh;
+  height: 65vh;
   width: 100%;
 }
 
@@ -2377,7 +2378,8 @@
     grid-template-columns: 1fr;
   }
   .graph-container {
-    height: 380px;
+    height: 50vh;
+    min-height: 300px;
   }
   .retrieval-pipeline {
     flex-direction: column;
@@ -2620,7 +2622,8 @@ body.nv-focus-mode .nv-main-workspace {
 }
 
 .density-compact .graph-container {
-  height: 380px !important;
+  height: 50vh !important;
+  min-height: 300px !important;
 }
 
 /* ============================================================

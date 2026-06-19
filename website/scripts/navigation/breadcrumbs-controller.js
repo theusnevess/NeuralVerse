@@ -126,7 +126,7 @@ export function createBreadcrumbsController(options = {}) {
       path = paths[0] || null;
     }
 
-    const crumbs = [createCrumb("Home", "#/", routeType === "home")];
+    const crumbs = [];
 
     if (path) {
       crumbs.push(createCrumb(path.title, `#/learning`, !module && !content));

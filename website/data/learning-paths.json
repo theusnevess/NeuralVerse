@@ -2,7 +2,7 @@
   {
     "id": "ai-engineering",
     "title": "AI Engineering",
-    "description": "End-to-end AI engineering roadmap for NeuralVerse MVP v0.1.",
+    "description": "A structured roadmap for building practical AI engineering foundations.",
     "moduleIds": [
       "foundations",
       "classical-machine-learning",

@@ -30,26 +30,6 @@ class NavigationController {
       }
     });
 
-    // 2. Sync Global Header Title and Description
-    const headerTitle = document.querySelector('.nv-header-section-title');
-    const headerDesc = document.querySelector('.nv-header-section-description');
-    if (headerTitle && headerTitle.textContent !== route.label) {
-      headerTitle.style.opacity = '0';
-      headerTitle.addEventListener('transitionend', function handler() {
-        headerTitle.textContent = route.label;
-        headerTitle.style.opacity = '1';
-        headerTitle.removeEventListener('transitionend', handler);
-      }, { once: true });
-    }
-    if (headerDesc && headerDesc.textContent !== route.description) {
-      headerDesc.style.opacity = '0';
-      headerDesc.addEventListener('transitionend', function handler() {
-        headerDesc.textContent = route.description;
-        headerDesc.style.opacity = '1';
-        headerDesc.removeEventListener('transitionend', handler);
-      }, { once: true });
-    }
-
     // 3. Sync Context Panel orientation details
     const activeRegion = document.querySelector('.nv-context-meta-item:nth-child(1) .nv-context-meta-value');
     const primaryTarget = document.querySelector('.nv-context-meta-item:nth-child(2) .nv-context-meta-value');

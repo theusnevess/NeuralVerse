@@ -1,0 +1,708 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" aria-hidden="true" focusable="false">
+  <defs>
+    <style>
+      /* =============================================================
+         NeuralVerse — Home Semantic Observatory
+         NV-600.9-R6
+         Hand-authored editorial illustration
+         ============================================================= */
+
+      /* Layer A — Deep Observatory Grid */
+      .obs-grid-line {
+        fill: none;
+        stroke: #1e2c3e;
+        stroke-width: 0.5;
+        opacity: 0.035;
+        vector-effect: non-scaling-stroke;
+      }
+      .obs-grid-guide {
+        fill: none;
+        stroke: #1e2c3e;
+        stroke-width: 0.4;
+        opacity: 0.025;
+        stroke-dasharray: 2 6;
+        vector-effect: non-scaling-stroke;
+      }
+      .obs-grid-lshape {
+        fill: none;
+        stroke: #1e2c3e;
+        stroke-width: 0.55;
+        opacity: 0.03;
+        vector-effect: non-scaling-stroke;
+      }
+
+      /* Layer B — Micro Semantic Noise */
+      .obs-micro-dot {
+        fill: #1e2c3e;
+        opacity: 0.06;
+      }
+      .obs-micro-dot--bridge {
+        fill: #0e7490;
+        opacity: 0.07;
+      }
+      .obs-micro-pair {
+        fill: none;
+        stroke: #1e2c3e;
+        stroke-width: 0.35;
+        opacity: 0.05;
+        vector-effect: non-scaling-stroke;
+      }
+      .obs-micro-triangle {
+        fill: none;
+        stroke: #1e2c3e;
+        stroke-width: 0.3;
+        opacity: 0.04;
+        vector-effect: non-scaling-stroke;
+      }
+
+      /* Layer C — Main Knowledge Structure */
+      .obs-edge {
+        fill: none;
+        stroke: #0e7490;
+        stroke-width: 0.5;
+        opacity: 0.09;
+        vector-effect: non-scaling-stroke;
+      }
+      .obs-edge--long {
+        stroke: #0891b2;
+        stroke-width: 0.4;
+        opacity: 0.06;
+        stroke-dasharray: 1 3;
+      }
+      .obs-edge--bridge {
+        stroke: #06b6d4;
+        stroke-width: 0.55;
+        opacity: 0.07;
+      }
+      .obs-edge--community {
+        stroke: #1e2c3e;
+        stroke-width: 0.6;
+        opacity: 0.08;
+      }
+
+      .obs-node--tiny {
+        fill: #1e2c3e;
+        opacity: 0.12;
+      }
+      .obs-node--small {
+        fill: #0e7490;
+        opacity: 0.15;
+      }
+      .obs-node--medium {
+        fill: #0891b2;
+        opacity: 0.18;
+      }
+      .obs-node--anchor {
+        fill: #06b6d4;
+        opacity: 0.22;
+      }
+      .obs-node--anchor-amber {
+        fill: #f59e0b;
+        opacity: 0.14;
+      }
+      .obs-node--anchor-violet {
+        fill: #8b5cf6;
+        opacity: 0.12;
+      }
+
+      /* Layer D — Scientific Instrumentation */
+      .obs-instr-arc {
+        fill: none;
+        stroke: #0e7490;
+        stroke-width: 0.35;
+        opacity: 0.035;
+        vector-effect: non-scaling-stroke;
+      }
+      .obs-instr-tick {
+        fill: none;
+        stroke: #0891b2;
+        stroke-width: 0.4;
+        opacity: 0.04;
+        vector-effect: non-scaling-stroke;
+      }
+      .obs-instr-cross {
+        fill: none;
+        stroke: #1e2c3e;
+        stroke-width: 0.45;
+        opacity: 0.04;
+        vector-effect: non-scaling-stroke;
+      }
+      .obs-instr-mark {
+        fill: none;
+        stroke: #0e7490;
+        stroke-width: 0.5;
+        opacity: 0.045;
+        vector-effect: non-scaling-stroke;
+      }
+      .obs-instr-axis {
+        fill: none;
+        stroke: #1e2c3e;
+        stroke-width: 0.3;
+        opacity: 0.02;
+        stroke-dasharray: 4 8;
+        vector-effect: non-scaling-stroke;
+      }
+
+      /* Animations — extremely restrained */
+      @keyframes obs-signal-pulse {
+        0%, 82% { opacity: 0; stroke-dashoffset: 240; }
+        88% { opacity: 0.12; }
+        94% { opacity: 0.14; }
+        100% { opacity: 0; stroke-dashoffset: -40; }
+      }
+      @keyframes obs-anchor-breathe {
+        0% { opacity: 0.18; }
+        50% { opacity: 0.28; }
+        100% { opacity: 0.18; }
+      }
+      @keyframes obs-drift {
+        0% { transform: translate(0, 0); }
+        50% { transform: translate(1.5, -0.8); }
+        100% { transform: translate(0, 0); }
+      }
+      @keyframes obs-fade-in {
+        0% { opacity: 0; }
+        100% { opacity: var(--obs-final-opacity, 0.62); }
+      }
+
+      .obs-signal-path {
+        stroke-dasharray: 24 280;
+        stroke-dashoffset: 280;
+        animation: obs-signal-pulse 16s ease-in-out infinite;
+      }
+      .obs-anchor-breathe {
+        animation: obs-anchor-breathe 14s ease-in-out infinite alternate;
+      }
+      .obs-drift-group {
+        animation: obs-drift 32s ease-in-out infinite;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .obs-signal-path {
+          animation: none;
+          opacity: 0;
+        }
+        .obs-anchor-breathe {
+          animation: none;
+          opacity: 0.18;
+        }
+        .obs-drift-group {
+          animation: none;
+        }
+        .obs-fade-in {
+          animation: none;
+          opacity: 0.62;
+        }
+      }
+    </style>
+  </defs>
+
+  <!-- =============================================================
+       Layer A — Deep Observatory Grid
+       Very subtle drafting surface with coordinate guides
+       ============================================================= -->
+  <g class="obs-layer-a">
+    <!-- Horizontal guides -->
+    <path class="obs-grid-line" d="M540 100 H1150"/>
+    <path class="obs-grid-line" d="M540 180 H1150"/>
+    <path class="obs-grid-line" d="M540 260 H1150"/>
+    <path class="obs-grid-line" d="M540 340 H1150"/>
+    <path class="obs-grid-line" d="M540 420 H1150"/>
+    <path class="obs-grid-line" d="M540 500 H1150"/>
+
+    <!-- Vertical guides -->
+    <path class="obs-grid-line" d="M620 60 V540"/>
+    <path class="obs-grid-line" d="M740 60 V540"/>
+    <path class="obs-grid-line" d="M860 60 V540"/>
+    <path class="obs-grid-line" d="M980 60 V540"/>
+    <path class="obs-grid-line" d="M1100 60 V540"/>
+
+    <!-- Dashed guide fragments -->
+    <path class="obs-grid-guide" d="M540 140 H1150"/>
+    <path class="obs-grid-guide" d="M540 220 H1150"/>
+    <path class="obs-grid-guide" d="M540 300 H1150"/>
+    <path class="obs-grid-guide" d="M540 380 H1150"/>
+    <path class="obs-grid-guide" d="M540 460 H1150"/>
+    <path class="obs-grid-guide" d="M680 60 V540"/>
+    <path class="obs-grid-guide" d="M800 60 V540"/>
+    <path class="obs-grid-guide" d="M920 60 V540"/>
+    <path class="obs-grid-guide" d="M1040 60 V540"/>
+
+    <!-- L-shaped path fragments (calibration corners) -->
+    <path class="obs-grid-lshape" d="M620 340 h48 v-36 h64"/>
+    <path class="obs-grid-lshape" d="M890 140 h28 v-20 h36"/>
+    <path class="obs-grid-lshape" d="M1040 380 h36 v-28 h44"/>
+    <path class="obs-grid-lshape" d="M740 460 h24 v-16 h32"/>
+    <path class="obs-grid-lshape" d="M580 240 h20 v-12 h28"/>
+    <path class="obs-grid-lshape" d="M920 280 h32 v-18 h24"/>
+    <path class="obs-grid-lshape" d="M1080 200 h18 v-14 h20"/>
+  </g>
+
+  <!-- =============================================================
+       Layer B — Micro Semantic Noise
+       Tiny elements that create richness when zooming in
+       ============================================================= -->
+  <g class="obs-layer-b">
+    <!-- Isolated dots -->
+    <circle class="obs-micro-dot" cx="565" cy="420" r="0.5"/>
+    <circle class="obs-micro-dot" cx="590" cy="380" r="0.55"/>
+    <circle class="obs-micro-dot" cx="615" cy="160" r="0.5"/>
+    <circle class="obs-micro-dot" cx="645" cy="480" r="0.6"/>
+    <circle class="obs-micro-dot" cx="670" cy="120" r="0.5"/>
+    <circle class="obs-micro-dot" cx="700" cy="450" r="0.55"/>
+    <circle class="obs-micro-dot" cx="730" cy="100" r="0.5"/>
+    <circle class="obs-micro-dot" cx="755" cy="160" r="0.6"/>
+    <circle class="obs-micro-dot" cx="780" cy="480" r="0.5"/>
+    <circle class="obs-micro-dot" cx="810" cy="110" r="0.55"/>
+    <circle class="obs-micro-dot" cx="835" cy="400" r="0.5"/>
+    <circle class="obs-micro-dot" cx="860" cy="480" r="0.6"/>
+    <circle class="obs-micro-dot" cx="885" cy="110" r="0.5"/>
+    <circle class="obs-micro-dot" cx="910" cy="480" r="0.55"/>
+    <circle class="obs-micro-dot" cx="940" cy="130" r="0.5"/>
+    <circle class="obs-micro-dot" cx="960" cy="460" r="0.6"/>
+    <circle class="obs-micro-dot" cx="990" cy="140" r="0.5"/>
+    <circle class="obs-micro-dot" cx="1020" cy="470" r="0.55"/>
+    <circle class="obs-micro-dot" cx="1045" cy="160" r="0.5"/>
+    <circle class="obs-micro-dot" cx="1070" cy="450" r="0.6"/>
+    <circle class="obs-micro-dot" cx="1100" cy="180" r="0.5"/>
+    <circle class="obs-micro-dot" cx="1125" cy="420" r="0.55"/>
+    <circle class="obs-micro-dot" cx="580" cy="280" r="0.5"/>
+    <circle class="obs-micro-dot" cx="605" cy="320" r="0.55"/>
+    <circle class="obs-micro-dot" cx="630" cy="440" r="0.6"/>
+    <circle class="obs-micro-dot" cx="655" cy="140" r="0.5"/>
+    <circle class="obs-micro-dot" cx="685" cy="490" r="0.55"/>
+    <circle class="obs-micro-dot" cx="715" cy="130" r="0.5"/>
+    <circle class="obs-micro-dot" cx="740" cy="480" r="0.6"/>
+    <circle class="obs-micro-dot" cx="770" cy="140" r="0.5"/>
+    <circle class="obs-micro-dot" cx="795" cy="470" r="0.55"/>
+    <circle class="obs-micro-dot" cx="820" cy="120" r="0.5"/>
+    <circle class="obs-micro-dot" cx="850" cy="440" r="0.6"/>
+    <circle class="obs-micro-dot" cx="875" cy="130" r="0.5"/>
+    <circle class="obs-micro-dot" cx="900" cy="450" r="0.55"/>
+    <circle class="obs-micro-dot" cx="930" cy="460" r="0.5"/>
+    <circle class="obs-micro-dot" cx="955" cy="140" r="0.6"/>
+    <circle class="obs-micro-dot" cx="980" cy="470" r="0.5"/>
+    <circle class="obs-micro-dot" cx="1010" cy="160" r="0.55"/>
+    <circle class="obs-micro-dot" cx="1035" cy="450" r="0.5"/>
+    <circle class="obs-micro-dot" cx="1060" cy="170" r="0.6"/>
+    <circle class="obs-micro-dot" cx="1090" cy="460" r="0.5"/>
+    <circle class="obs-micro-dot" cx="1130" cy="240" r="0.5"/>
+    <circle class="obs-micro-dot" cx="1145" cy="360" r="0.55"/>
+    <circle class="obs-micro-dot" cx="1140" cy="480" r="0.5"/>
+    <circle class="obs-micro-dot--bridge" cx="555" cy="340" r="0.5"/>
+    <circle class="obs-micro-dot--bridge" cx="575" cy="240" r="0.55"/>
+    <circle class="obs-micro-dot--bridge" cx="605" cy="200" r="0.5"/>
+    <circle class="obs-micro-dot--bridge" cx="635" cy="360" r="0.6"/>
+    <circle class="obs-micro-dot--bridge" cx="660" cy="180" r="0.5"/>
+
+    <!-- Disconnected pairs (pairs of close dots that aren't connected to the main graph) -->
+    <path class="obs-micro-pair" d="M550 200 L558 208"/>
+    <path class="obs-micro-pair" d="M595 420 L604 414"/>
+    <path class="obs-micro-pair" d="M650 480 L658 485"/>
+    <path class="obs-micro-pair" d="M705 110 L712 116"/>
+    <path class="obs-micro-pair" d="M760 460 L768 454"/>
+    <path class="obs-micro-pair" d="M820 460 L828 466"/>
+    <path class="obs-micro-pair" d="M870 100 L878 106"/>
+    <path class="obs-micro-pair" d="M920 440 L928 446"/>
+    <path class="obs-micro-pair" d="M970 130 L978 124"/>
+    <path class="obs-micro-pair" d="M1030 420 L1038 428"/>
+    <path class="obs-micro-pair" d="M1080 140 L1088 146"/>
+    <path class="obs-micro-pair" d="M1120 380 L1128 374"/>
+    <circle class="obs-micro-dot" cx="550" cy="200" r="0.4"/>
+    <circle class="obs-micro-dot" cx="558" cy="208" r="0.4"/>
+    <circle class="obs-micro-dot" cx="595" cy="420" r="0.4"/>
+    <circle class="obs-micro-dot" cx="604" cy="414" r="0.4"/>
+    <circle class="obs-micro-dot" cx="650" cy="480" r="0.4"/>
+    <circle class="obs-micro-dot" cx="658" cy="485" r="0.4"/>
+    <circle class="obs-micro-dot" cx="705" cy="110" r="0.4"/>
+    <circle class="obs-micro-dot" cx="712" cy="116" r="0.4"/>
+    <circle class="obs-micro-dot" cx="760" cy="460" r="0.4"/>
+    <circle class="obs-micro-dot" cx="768" cy="454" r="0.4"/>
+    <circle class="obs-micro-dot" cx="820" cy="460" r="0.4"/>
+    <circle class="obs-micro-dot" cx="828" cy="466" r="0.4"/>
+    <circle class="obs-micro-dot" cx="870" cy="100" r="0.4"/>
+    <circle class="obs-micro-dot" cx="878" cy="106" r="0.4"/>
+    <circle class="obs-micro-dot" cx="920" cy="440" r="0.4"/>
+    <circle class="obs-micro-dot" cx="928" cy="446" r="0.4"/>
+    <circle class="obs-micro-dot" cx="970" cy="130" r="0.4"/>
+    <circle class="obs-micro-dot" cx="978" cy="124" r="0.4"/>
+    <circle class="obs-micro-dot" cx="1030" cy="420" r="0.4"/>
+    <circle class="obs-micro-dot" cx="1038" cy="428" r="0.4"/>
+    <circle class="obs-micro-dot" cx="1080" cy="140" r="0.4"/>
+    <circle class="obs-micro-dot" cx="1088" cy="146" r="0.4"/>
+    <circle class="obs-micro-dot" cx="1120" cy="380" r="0.4"/>
+    <circle class="obs-micro-dot" cx="1128" cy="374" r="0.4"/>
+
+    <!-- Mini triangles -->
+    <path class="obs-micro-triangle" d="M685 170 L692 176 L688 184 Z"/>
+    <path class="obs-micro-triangle" d="M745 410 L752 404 L756 414 Z"/>
+    <path class="obs-micro-triangle" d="M815 495 L822 490 L826 498 Z"/>
+    <path class="obs-micro-triangle" d="M895 170 L902 166 L906 174 Z"/>
+    <path class="obs-micro-triangle" d="M965 430 L972 426 L976 434 Z"/>
+    <path class="obs-micro-triangle" d="M1050 490 L1056 484 L1062 492 Z"/>
+    <path class="obs-micro-triangle" d="M1010 110 L1016 106 L1022 112 Z"/>
+
+    <!-- Tiny chains (3+ dots in a line) -->
+    <path class="obs-micro-pair" d="M560 160 L568 155 L576 162"/>
+    <circle class="obs-micro-dot" cx="560" cy="160" r="0.35"/>
+    <circle class="obs-micro-dot" cx="568" cy="155" r="0.35"/>
+    <circle class="obs-micro-dot" cx="576" cy="162" r="0.35"/>
+    <path class="obs-micro-pair" d="M640 120 L648 126 L656 118"/>
+    <circle class="obs-micro-dot" cx="640" cy="120" r="0.35"/>
+    <circle class="obs-micro-dot" cx="648" cy="126" r="0.35"/>
+    <circle class="obs-micro-dot" cx="656" cy="118" r="0.35"/>
+    <path class="obs-micro-pair" d="M790 490 L798 496 L806 488"/>
+    <circle class="obs-micro-dot" cx="790" cy="490" r="0.35"/>
+    <circle class="obs-micro-dot" cx="798" cy="496" r="0.35"/>
+    <circle class="obs-micro-dot" cx="806" cy="488" r="0.35"/>
+    <path class="obs-micro-pair" d="M910 140 L918 134 L926 142 L934 136"/>
+    <circle class="obs-micro-dot" cx="910" cy="140" r="0.35"/>
+    <circle class="obs-micro-dot" cx="918" cy="134" r="0.35"/>
+    <circle class="obs-micro-dot" cx="926" cy="142" r="0.35"/>
+    <circle class="obs-micro-dot" cx="934" cy="136" r="0.35"/>
+    <path class="obs-micro-pair" d="M1040 200 L1048 194 L1056 204"/>
+    <circle class="obs-micro-dot" cx="1040" cy="200" r="0.35"/>
+    <circle class="obs-micro-dot" cx="1048" cy="194" r="0.35"/>
+    <circle class="obs-micro-dot" cx="1056" cy="204" r="0.35"/>
+  </g>
+
+  <!-- =============================================================
+       Layer D — Scientific Instrumentation
+       Partial circles, measurement arcs, axis hints, calibration ticks
+       ============================================================= -->
+  <g class="obs-layer-d">
+    <!-- Concentric measurement arcs (top-right area) -->
+    <path class="obs-instr-arc" d="M900 80 A100 100 0 0 1 1020 200"/>
+    <path class="obs-instr-arc" d="M880 60 A130 130 0 0 1 1040 240"/>
+    <path class="obs-instr-arc" d="M860 40 A160 160 0 0 1 1060 280"/>
+
+    <!-- Measurement arc (bottom area) -->
+    <path class="obs-instr-arc" d="M850 480 A140 140 0 0 1 1060 420"/>
+    <path class="obs-instr-arc" d="M830 500 A170 170 0 0 1 1080 400"/>
+
+    <!-- Small arc near center -->
+    <path class="obs-instr-arc" d="M720 260 A60 60 0 0 1 780 320"/>
+
+    <!-- Calibration ticks on arcs -->
+    <path class="obs-instr-tick" d="M940 90 L945 84"/>
+    <path class="obs-instr-tick" d="M980 112 L984 105"/>
+    <path class="obs-instr-tick" d="M1010 150 L1018 146"/>
+    <path class="obs-instr-tick" d="M920 72 L924 64"/>
+    <path class="obs-instr-tick" d="M960 86 L966 80"/>
+    <path class="obs-instr-tick" d="M1000 112 L1007 106"/>
+    <path class="obs-instr-tick" d="M880 490 L884 482"/>
+    <path class="obs-instr-tick" d="M920 496 L925 488"/>
+    <path class="obs-instr-tick" d="M970 490 L975 481"/>
+    <path class="obs-instr-tick" d="M1020 468 L1026 460"/>
+
+    <!-- Axis hints (very faint reference lines) -->
+    <path class="obs-instr-axis" d="M620 300 H1150"/>
+    <path class="obs-instr-axis" d="M860 60 V540"/>
+    <path class="obs-instr-axis" d="M980 60 V540"/>
+
+    <!-- Cross-reference marks -->
+    <path class="obs-instr-cross" d="M657 247 h14 M664 240 v14"/>
+    <path class="obs-instr-cross" d="M832 271 h14 M839 264 v14"/>
+    <path class="obs-instr-cross" d="M756 362 h14 M763 355 v14"/>
+    <path class="obs-instr-cross" d="M942 205 h14 M949 198 v14"/>
+    <path class="obs-instr-cross" d="M878 390 h14 M885 383 v14"/>
+    <path class="obs-instr-cross" d="M1025 326 h14 M1032 319 v14"/>
+
+    <!-- Calibration ruler marks -->
+    <path class="obs-instr-mark" d="M620 60 v8"/>
+    <path class="obs-instr-mark" d="M740 60 v8"/>
+    <path class="obs-instr-mark" d="M860 60 v8"/>
+    <path class="obs-instr-mark" d="M980 60 v8"/>
+    <path class="obs-instr-mark" d="M1100 60 v8"/>
+    <path class="obs-instr-mark" d="M620 532 v8"/>
+    <path class="obs-instr-mark" d="M740 532 v8"/>
+    <path class="obs-instr-mark" d="M860 532 v8"/>
+    <path class="obs-instr-mark" d="M980 532 v8"/>
+    <path class="obs-instr-mark" d="M1100 532 v8"/>
+
+    <!-- Small reference markers (tiny crosshairs at key positions) -->
+    <path class="obs-instr-mark" d="M638 296 h8 M642 292 v8"/>
+    <path class="obs-instr-mark" d="M914 248 h8 M918 244 v8"/>
+    <path class="obs-instr-mark" d="M788 180 h8 M792 176 v8"/>
+    <path class="obs-instr-mark" d="M952 350 h8 M956 346 v8"/>
+    <path class="obs-instr-mark" d="M698 416 h8 M702 412 v8"/>
+  </g>
+
+  <!-- =============================================================
+       Layer C — Main Knowledge Structure
+       Multiple communities with variable density, irregular topology
+       ~55 nodes, ~80 edges
+       ============================================================= -->
+  <g class="obs-layer-c obs-fade-in" style="--obs-final-opacity: 1; animation: obs-fade-in 1.2s ease-out both;">
+
+    <!-- === EDGES (drawn before nodes so they appear behind) === -->
+
+    <!-- Community 4 — Left Bridge (6 nodes, connecting to content area) -->
+    <path class="obs-edge--bridge" d="M576 272 L606 248"/>
+    <path class="obs-edge--bridge" d="M606 248 L630 272"/>
+    <path class="obs-edge--bridge" d="M576 272 L606 300"/>
+    <path class="obs-edge--bridge" d="M606 300 L630 272"/>
+    <path class="obs-edge--bridge" d="M630 272 L658 246"/>
+    <path class="obs-edge--bridge" d="M630 272 L652 306"/>
+    <path class="obs-edge--long" d="M576 272 L540 280"/>
+    <path class="obs-edge--long" d="M658 246 L694 224"/>
+
+    <!-- Community 1 — Top Right (14 nodes, dense cluster) -->
+    <path class="obs-edge--community" d="M844 126 L870 108"/>
+    <path class="obs-edge--community" d="M844 126 L858 148"/>
+    <path class="obs-edge--community" d="M844 126 L826 108"/>
+    <path class="obs-edge--community" d="M870 108 L900 112"/>
+    <path class="obs-edge--community" d="M870 108 L858 148"/>
+    <path class="obs-edge--community" d="M826 108 L800 120"/>
+    <path class="obs-edge--community" d="M826 108 L858 148"/>
+    <path class="obs-edge--community" d="M800 120 L780 144"/>
+    <path class="obs-edge--community" d="M800 120 L808 96"/>
+    <path class="obs-edge--community" d="M858 148 L874 170"/>
+    <path class="obs-edge--community" d="M858 148 L844 176"/>
+    <path class="obs-edge--community" d="M858 148 L900 112"/>
+    <path class="obs-edge--community" d="M900 112 L920 128"/>
+    <path class="obs-edge--community" d="M900 112 L912 94"/>
+    <path class="obs-edge--community" d="M920 128 L932 148"/>
+    <path class="obs-edge--community" d="M920 128 L912 94"/>
+    <path class="obs-edge--community" d="M874 170 L900 180"/>
+    <path class="obs-edge--community" d="M874 170 L844 176"/>
+    <path class="obs-edge--community" d="M844 176 L814 170"/>
+    <path class="obs-edge--community" d="M844 176 L858 148"/>
+    <path class="obs-edge--community" d="M814 170 L780 144"/>
+    <path class="obs-edge--community" d="M814 170 L800 120"/>
+    <path class="obs-edge--community" d="M900 180 L932 148"/>
+    <path class="obs-edge--community" d="M900 180 L924 192"/>
+    <path class="obs-edge--community" d="M932 148 L954 170"/>
+    <path class="obs-edge--community" d="M932 148 L924 192"/>
+    <path class="obs-edge--community" d="M954 170 L978 186"/>
+    <path class="obs-edge--community" d="M954 170 L932 148"/>
+    <path class="obs-edge--community" d="M924 192 L950 210"/>
+    <path class="obs-edge--community" d="M978 186 L1000 200"/>
+    <path class="obs-edge--community" d="M978 186 L954 170"/>
+    <path class="obs-edge--community" d="M912 94 L900 112"/>
+    <path class="obs-edge--community" d="M912 94 L890 82"/>
+    <path class="obs-edge--community" d="M808 96 L800 120"/>
+    <path class="obs-edge--community" d="M808 96 L826 108"/>
+    <path class="obs-edge--community" d="M890 82 L870 108"/>
+
+    <!-- Community 2 — Central Main (20 nodes, densest area) -->
+    <path class="obs-edge" d="M694 224 L720 250"/>
+    <path class="obs-edge" d="M694 224 L672 248"/>
+    <path class="obs-edge" d="M720 250 L742 238"/>
+    <path class="obs-edge" d="M720 250 L728 280"/>
+    <path class="obs-edge" d="M720 250 L696 278"/>
+    <path class="obs-edge" d="M672 248 L652 268"/>
+    <path class="obs-edge" d="M672 248 L696 278"/>
+    <path class="obs-edge" d="M652 268 L638 294"/>
+    <path class="obs-edge" d="M652 268 L672 248"/>
+    <path class="obs-edge" d="M638 294 L656 318"/>
+    <path class="obs-edge" d="M638 294 L616 282"/>
+    <path class="obs-edge" d="M638 294 L652 268"/>
+    <path class="obs-edge" d="M616 282 L606 300"/>
+    <path class="obs-edge" d="M616 282 L638 294"/>
+    <path class="obs-edge" d="M656 318 L676 342"/>
+    <path class="obs-edge" d="M656 318 L638 294"/>
+    <path class="obs-edge" d="M676 342 L660 368"/>
+    <path class="obs-edge" d="M676 342 L696 326"/>
+    <path class="obs-edge" d="M696 326 L728 280"/>
+    <path class="obs-edge" d="M696 326 L712 350"/>
+    <path class="obs-edge" d="M696 326 L676 342"/>
+    <path class="obs-edge" d="M728 280 L742 238"/>
+    <path class="obs-edge" d="M728 280 L756 284"/>
+    <path class="obs-edge" d="M728 280 L720 250"/>
+    <path class="obs-edge" d="M742 238 L770 246"/>
+    <path class="obs-edge" d="M742 238 L720 250"/>
+    <path class="obs-edge" d="M770 246 L790 226"/>
+    <path class="obs-edge" d="M770 246 L756 284"/>
+    <path class="obs-edge" d="M770 246 L742 238"/>
+    <path class="obs-edge" d="M790 226 L780 144"/>
+    <path class="obs-edge" d="M790 226 L814 170"/>
+    <path class="obs-edge" d="M790 226 L770 246"/>
+    <path class="obs-edge" d="M790 226 L810 252"/>
+    <path class="obs-edge" d="M756 284 L776 310"/>
+    <path class="obs-edge" d="M756 284 L770 246"/>
+    <path class="obs-edge" d="M756 284 L728 280"/>
+    <path class="obs-edge" d="M776 310 L756 284"/>
+    <path class="obs-edge" d="M776 310 L800 290"/>
+    <path class="obs-edge" d="M776 310 L774 338"/>
+    <path class="obs-edge" d="M800 290 L810 252"/>
+    <path class="obs-edge" d="M800 290 L830 300"/>
+    <path class="obs-edge" d="M800 290 L776 310"/>
+    <path class="obs-edge" d="M810 252 L830 300"/>
+    <path class="obs-edge" d="M810 252 L790 226"/>
+    <path class="obs-edge" d="M830 300 L800 290"/>
+    <path class="obs-edge" d="M830 300 L854 286"/>
+    <path class="obs-edge" d="M830 300 L856 324"/>
+    <path class="obs-edge" d="M774 338 L756 354"/>
+    <path class="obs-edge" d="M774 338 L776 310"/>
+    <path class="obs-edge" d="M756 354 L736 366"/>
+    <path class="obs-edge" d="M756 354 L774 338"/>
+    <path class="obs-edge" d="M736 366 L712 350"/>
+    <path class="obs-edge" d="M736 366 L756 354"/>
+    <path class="obs-edge" d="M712 350 L696 326"/>
+    <path class="obs-edge" d="M712 350 L736 366"/>
+    <path class="obs-edge" d="M660 368 L682 388"/>
+    <path class="obs-edge" d="M660 368 L676 342"/>
+    <path class="obs-edge" d="M682 388 L660 368"/>
+    <path class="obs-edge" d="M682 388 L710 394"/>
+    <path class="obs-edge" d="M682 388 L696 326"/>
+    <path class="obs-edge" d="M710 394 L736 366"/>
+
+    <!-- Community 3 — Bottom Right (12 nodes, loosely connected) -->
+    <path class="obs-edge--community" d="M854 286 L870 264"/>
+    <path class="obs-edge--community" d="M854 286 L856 324"/>
+    <path class="obs-edge--community" d="M854 286 L830 300"/>
+    <path class="obs-edge--community" d="M856 324 L882 340"/>
+    <path class="obs-edge--community" d="M856 324 L854 286"/>
+    <path class="obs-edge--community" d="M856 324 L830 300"/>
+    <path class="obs-edge--community" d="M882 340 L902 362"/>
+    <path class="obs-edge--community" d="M882 340 L856 324"/>
+    <path class="obs-edge--community" d="M882 340 L866 380"/>
+    <path class="obs-edge--community" d="M902 362 L924 354"/>
+    <path class="obs-edge--community" d="M902 362 L882 340"/>
+    <path class="obs-edge--community" d="M902 362 L914 390"/>
+    <path class="obs-edge--community" d="M866 380 L882 340"/>
+    <path class="obs-edge--community" d="M866 380 L854 410"/>
+    <path class="obs-edge--community" d="M866 380 L902 362"/>
+    <path class="obs-edge--community" d="M924 354 L950 366"/>
+    <path class="obs-edge--community" d="M924 354 L902 362"/>
+    <path class="obs-edge--community" d="M924 354 L940 336"/>
+    <path class="obs-edge--community" d="M854 410 L866 380"/>
+    <path class="obs-edge--community" d="M854 410 L838 438"/>
+    <path class="obs-edge--community" d="M854 410 L880 424"/>
+    <path class="obs-edge--community" d="M838 438 L820 450"/>
+    <path class="obs-edge--community" d="M838 438 L854 410"/>
+    <path class="obs-edge--community" d="M820 450 L838 438"/>
+    <path class="obs-edge--community" d="M880 424 L904 440"/>
+    <path class="obs-edge--community" d="M880 424 L854 410"/>
+    <path class="obs-edge--community" d="M904 440 L924 420"/>
+    <path class="obs-edge--community" d="M904 440 L880 424"/>
+    <path class="obs-edge--community" d="M924 420 L950 366"/>
+    <path class="obs-edge--community" d="M924 420 L914 390"/>
+    <path class="obs-edge--community" d="M950 366 L924 354"/>
+    <path class="obs-edge--community" d="M950 366 L924 420"/>
+    <path class="obs-edge--community" d="M914 390 L902 362"/>
+    <path class="obs-edge--community" d="M914 390 L924 420"/>
+
+    <!-- Cross-community connections -->
+    <path class="obs-edge--long" d="M770 246 L810 252"/>
+    <path class="obs-edge--long" d="M810 252 L870 264"/>
+    <path class="obs-edge--long" d="M790 226 L844 126"/>
+    <path class="obs-edge--long" d="M870 264 L900 112"/>
+    <path class="obs-edge--long" d="M830 300 L882 340"/>
+    <path class="obs-edge--long" d="M800 290 L870 264"/>
+    <path class="obs-edge--long" d="M940 336 L924 354"/>
+    <path class="obs-edge--long" d="M870 108 L912 94"/>
+    <path class="obs-edge--long" d="M780 144 L800 120"/>
+
+    <!-- === NODES === -->
+
+    <!-- Community 4 — Left Bridge (6 nodes) -->
+    <!-- 2 tiny, 2 small, 1 medium, 1 anchor -->
+    <circle class="obs-node--anchor" cx="576" cy="272" r="2.2"/>
+    <circle class="obs-node--small" cx="606" cy="248" r="1.1"/>
+    <circle class="obs-node--medium" cx="630" cy="272" r="1.6"/>
+    <circle class="obs-node--small" cx="606" cy="300" r="1.0"/>
+    <circle class="obs-node--tiny" cx="658" cy="246" r="0.7"/>
+    <circle class="obs-node--tiny" cx="652" cy="306" r="0.7"/>
+
+    <!-- Community 1 — Top Right (14 nodes) -->
+    <!-- 10 tiny, 2 small, 1 medium, 1 anchor -->
+    <circle class="obs-node--anchor obs-anchor-breathe" cx="844" cy="126" r="2.0"/>
+    <circle class="obs-node--small" cx="870" cy="108" r="1.0"/>
+    <circle class="obs-node--medium" cx="858" cy="148" r="1.5"/>
+    <circle class="obs-node--small" cx="826" cy="108" r="1.0"/>
+    <circle class="obs-node--tiny" cx="800" cy="120" r="0.7"/>
+    <circle class="obs-node--tiny" cx="780" cy="144" r="0.7"/>
+    <circle class="obs-node--tiny" cx="874" cy="170" r="0.7"/>
+    <circle class="obs-node--tiny" cx="844" cy="176" r="0.7"/>
+    <circle class="obs-node--tiny" cx="814" cy="170" r="0.7"/>
+    <circle class="obs-node--tiny" cx="900" cy="112" r="0.7"/>
+    <circle class="obs-node--tiny" cx="920" cy="128" r="0.7"/>
+    <circle class="obs-node--tiny" cx="932" cy="148" r="0.7"/>
+    <circle class="obs-node--tiny" cx="900" cy="180" r="0.7"/>
+    <circle class="obs-node--tiny" cx="954" cy="170" r="0.7"/>
+    <circle class="obs-node--tiny" cx="924" cy="192" r="0.7"/>
+    <circle class="obs-node--tiny" cx="978" cy="186" r="0.7"/>
+    <circle class="obs-node--tiny" cx="1000" cy="200" r="0.7"/>
+    <circle class="obs-node--tiny" cx="912" cy="94" r="0.7"/>
+    <circle class="obs-node--tiny" cx="890" cy="82" r="0.7"/>
+    <circle class="obs-node--tiny" cx="808" cy="96" r="0.7"/>
+
+    <!-- Community 2 — Central Main (24 nodes) -->
+    <!-- 16 tiny, 5 small, 2 medium, 1 anchor -->
+    <circle class="obs-node--anchor obs-anchor-breathe" cx="728" cy="280" r="2.2"/>
+    <circle class="obs-node--small" cx="694" cy="224" r="1.1"/>
+    <circle class="obs-node--small" cx="720" cy="250" r="1.2"/>
+    <circle class="obs-node--small" cx="672" cy="248" r="1.0"/>
+    <circle class="obs-node--medium" cx="652" cy="268" r="1.5"/>
+    <circle class="obs-node--medium" cx="638" cy="294" r="1.5"/>
+    <circle class="obs-node--small" cx="616" cy="282" r="1.0"/>
+    <circle class="obs-node--tiny" cx="656" cy="318" r="0.7"/>
+    <circle class="obs-node--tiny" cx="676" cy="342" r="0.7"/>
+    <circle class="obs-node--tiny" cx="660" cy="368" r="0.7"/>
+    <circle class="obs-node--tiny" cx="696" cy="326" r="0.7"/>
+    <circle class="obs-node--tiny" cx="712" cy="350" r="0.7"/>
+    <circle class="obs-node--tiny" cx="742" cy="238" r="0.7"/>
+    <circle class="obs-node--tiny" cx="770" cy="246" r="0.7"/>
+    <circle class="obs-node--tiny" cx="790" cy="226" r="0.7"/>
+    <circle class="obs-node--tiny" cx="756" cy="284" r="0.7"/>
+    <circle class="obs-node--tiny" cx="776" cy="310" r="0.7"/>
+    <circle class="obs-node--tiny" cx="800" cy="290" r="0.7"/>
+    <circle class="obs-node--tiny" cx="810" cy="252" r="0.7"/>
+    <circle class="obs-node--tiny" cx="830" cy="300" r="0.7"/>
+    <circle class="obs-node--tiny" cx="774" cy="338" r="0.7"/>
+    <circle class="obs-node--tiny" cx="756" cy="354" r="0.7"/>
+    <circle class="obs-node--tiny" cx="736" cy="366" r="0.7"/>
+    <circle class="obs-node--tiny" cx="682" cy="388" r="0.7"/>
+    <circle class="obs-node--tiny" cx="710" cy="394" r="0.7"/>
+
+    <!-- Community 3 — Bottom Right (15 nodes) -->
+    <!-- 10 tiny, 3 small, 1 medium, 1 anchor -->
+    <circle class="obs-node--anchor-amber obs-anchor-breathe" cx="854" cy="286" r="2.0"/>
+    <circle class="obs-node--small" cx="856" cy="324" r="1.0"/>
+    <circle class="obs-node--medium" cx="882" cy="340" r="1.5"/>
+    <circle class="obs-node--small" cx="902" cy="362" r="1.0"/>
+    <circle class="obs-node--small" cx="866" cy="380" r="1.0"/>
+    <circle class="obs-node--tiny" cx="924" cy="354" r="0.7"/>
+    <circle class="obs-node--tiny" cx="854" cy="410" r="0.7"/>
+    <circle class="obs-node--tiny" cx="838" cy="438" r="0.7"/>
+    <circle class="obs-node--tiny" cx="820" cy="450" r="0.7"/>
+    <circle class="obs-node--tiny" cx="880" cy="424" r="0.7"/>
+    <circle class="obs-node--tiny" cx="904" cy="440" r="0.7"/>
+    <circle class="obs-node--tiny" cx="924" cy="420" r="0.7"/>
+    <circle class="obs-node--tiny" cx="950" cy="366" r="0.7"/>
+    <circle class="obs-node--tiny" cx="914" cy="390" r="0.7"/>
+    <circle class="obs-node--tiny" cx="940" cy="336" r="0.7"/>
+    <circle class="obs-node--tiny" cx="870" cy="264" r="0.7"/>
+
+    <!-- Additional nodes filling gaps (leftover distribution) -->
+    <circle class="obs-node--tiny" cx="870" cy="264" r="0.7"/>
+    <circle class="obs-node--tiny" cx="750" cy="172" r="0.65"/>
+    <circle class="obs-node--tiny" cx="710" cy="194" r="0.65"/>
+    <circle class="obs-node--tiny" cx="602" cy="336" r="0.65"/>
+    <circle class="obs-node--tiny" cx="686" cy="164" r="0.65"/>
+    <circle class="obs-node--tiny" cx="766" cy="408" r="0.65"/>
+    <circle class="obs-node--tiny" cx="798" cy="380" r="0.65"/>
+    <circle class="obs-node--tiny" cx="964" cy="280" r="0.65"/>
+    <circle class="obs-node--tiny" cx="996" cy="320" r="0.65"/>
+    <circle class="obs-node--tiny" cx="1020" cy="280" r="0.65"/>
+    <circle class="obs-node--tiny" cx="1040" cy="340" r="0.65"/>
+    <circle class="obs-node--tiny" cx="1060" cy="380" r="0.65"/>
+    <circle class="obs-node--tiny" cx="1000" cy="370" r="0.65"/>
+    <circle class="obs-node--tiny" cx="1030" cy="400" r="0.65"/>
+    <circle class="obs-node--tiny" cx="1080" cy="320" r="0.65"/>
+    <circle class="obs-node--tiny" cx="1100" cy="360" r="0.65"/>
+
+    <!-- Anchor node (violet accent, very rare) -->
+    <circle class="obs-node--anchor-violet" cx="694" cy="224" r="1.8"/>
+
+    <!-- =============================================================
+         Signal Path — One traveling pulse along an edge
+         Extremely restrained, visible only briefly every 16s
+         ============================================================= -->
+    <path class="obs-edge obs-signal-path" d="M630 272 Q680 260 728 280"/>
+    <path class="obs-edge obs-signal-path" d="M844 126 Q820 200 790 226" style="animation-delay: -8s;"/>
+  </g>
+
+</svg>

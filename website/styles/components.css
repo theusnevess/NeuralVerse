@@ -779,14 +779,6 @@
   gap: var(--sys-space-stack-sm);
 }
 
-.nv-workspace__eyebrow {
-  font-family: var(--sys-font-monospace-family);
-  font-size: var(--sys-font-caption-size);
-  color: var(--sys-color-accent-primary);
-  text-transform: uppercase;
-  letter-spacing: var(--ref-font-tracking-wide);
-}
-
 .nv-workspace__title {
   font-family: var(--sys-font-display-family);
   font-size: var(--sys-font-heading-size);
@@ -801,12 +793,6 @@
   color: var(--sys-color-text-muted);
   margin: 0;
   max-width: var(--sys-a11y-reading-width-enhanced);
-}
-
-.nv-workspace__status {
-  font-family: var(--sys-font-monospace-family);
-  font-size: var(--sys-font-caption-size);
-  text-transform: uppercase;
 }
 
 .nv-workspace__actions {
@@ -832,15 +818,15 @@
 }
 
 .nv-sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
 }
 
 /* =========================================================
@@ -1460,7 +1446,6 @@
   font-size: var(--sys-font-size-heading-xs, var(--sys-font-caption-size));
   line-height: var(--sys-line-height-heading, var(--sys-font-body-line-height));
 }
-
 
 
 

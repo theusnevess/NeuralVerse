@@ -22,16 +22,16 @@
   var PULSE_DURATION_MAX_MS = 1100;
 
   var PROFILE = {
-    landing: { density: 1.15, opacity: 1.0, motion: 1.0, maxDistance: 110 },
-    home: { density: 1.0, opacity: 0.9, motion: 0.9, maxDistance: 104 },
-    learning: { density: 0.85, opacity: 0.8, motion: 0.8, maxDistance: 96 },
-    modules: { density: 0.8, opacity: 0.75, motion: 0.75, maxDistance: 92 },
-    content: { density: 0.8, opacity: 0.75, motion: 0.75, maxDistance: 92 },
-    workspace: { density: 0.55, opacity: 0.55, motion: 0.5, maxDistance: 84 },
-    retrieval: { density: 0.35, opacity: 0.4, motion: 0.35, maxDistance: 78 },
-    presentation: { density: 0.25, opacity: 0.3, motion: 0.2, maxDistance: 74 },
-    settings: { density: 0.15, opacity: 0.2, motion: 0, maxDistance: 70 },
-    default: { density: 0.82, opacity: 0.78, motion: 0.78, maxDistance: 94 }
+    landing: { density: 0.95, opacity: 1.15, motion: 0.55, maxDistance: 96 },
+    home: { density: 0.95, opacity: 1.15, motion: 0.55, maxDistance: 96 },
+    learning: { density: 0.95, opacity: 1.15, motion: 0.55, maxDistance: 96 },
+    modules: { density: 0.95, opacity: 1.15, motion: 0.55, maxDistance: 96 },
+    content: { density: 0.95, opacity: 1.15, motion: 0.55, maxDistance: 96 },
+    workspace: { density: 0.95, opacity: 1.15, motion: 0.55, maxDistance: 96 },
+    retrieval: { density: 0.95, opacity: 1.15, motion: 0.55, maxDistance: 96 },
+    presentation: { density: 0.95, opacity: 1.15, motion: 0.55, maxDistance: 96 },
+    settings: { density: 0.95, opacity: 1.15, motion: 0.55, maxDistance: 96 },
+    default: { density: 0.95, opacity: 1.15, motion: 0.55, maxDistance: 96 }
   };
 
   var MIN_BY_WIDTH = [

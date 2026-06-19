@@ -75,17 +75,14 @@ class ViewController {
     this.container = document.querySelector('.nv-main-workspace');
     this.templates = {
       home: `
-        <div class="nv-stack nv-stack--gap-md">
+        <div class="nv-stack nv-stack--gap-md nv-hero-observatory">
           <header class="nv-stack nv-stack--gap-xs">
-            <h1 class="nv-context-title">Home Dashboard</h1>
-            <p class="nv-muted">Select an operation node or access specialized educational sandboxes.</p>
           </header>
           <div class="nv-panel">
-            <div class="nv-empty-state">
+            <div class="nv-empty-state nv-hero-brand-lockup">
               <div class="nv-empty-state__visual nv-brand-home-visual" aria-hidden="true">
                 <img src="assets/brand/neuralverse-lockup.png" alt="">
               </div>
-              <h4 class="nv-empty-state__title">Welcome to NeuralVerse</h4>
               <p class="nv-empty-state__message">
                 NeuralVerse is an advanced agentic scientific platform designed to orchestrate reinforcement learning pipelines, cognitive modeling tasks, and specialized deep learning paths.
               </p>
@@ -98,10 +95,7 @@ class ViewController {
       `,
       learning: `
         <div class="nv-stack nv-stack--gap-md">
-          <header class="nv-stack nv-stack--gap-xs">
-            <h1 class="nv-context-title">Learning Paths</h1>
-            <p class="nv-muted">Select an academic track to begin scientific and agentic training.</p>
-          </header>
+          <h1 class="nv-sr-only">Learning Paths</h1>
           <div class="nv-grid nv-grid--cols-2">
             <div class="nv-card">
               <span class="nv-badge" data-variant="info" style="align-self: flex-start;">Path 01</span>
@@ -124,10 +118,7 @@ class ViewController {
       `,
       modules: `
         <div class="nv-stack nv-stack--gap-md">
-          <header class="nv-stack nv-stack--gap-xs">
-            <h1 class="nv-context-title">Course Modules</h1>
-            <p class="nv-muted">Core study units and cognitive science guides.</p>
-          </header>
+          <h1 class="nv-sr-only">Modules</h1>
           <div class="nv-stack nv-stack--gap-sm">
             <div class="nv-card">
               <div class="nv-cluster nv-cluster--gap-sm" style="justify-content: space-between;">
@@ -158,10 +149,7 @@ class ViewController {
       `,
       workspace: `
         <div class="nv-stack nv-stack--gap-md">
-          <header class="nv-stack nv-stack--gap-xs">
-            <h1 class="nv-context-title">Agent Workspace</h1>
-            <p class="nv-muted">Deploy, configure, and monitor live AI agents in real-time.</p>
-          </header>
+          <h1 class="nv-sr-only">Workspace</h1>
           <div class="nv-grid nv-grid--cols-3">
             <div class="nv-card">
               <span class="nv-badge" data-variant="success" style="align-self: flex-start;">Active</span>
@@ -204,10 +192,7 @@ class ViewController {
       `,
       content: `
         <div class="nv-stack nv-stack--gap-md">
-          <header class="nv-stack nv-stack--gap-xs">
-            <h1 class="nv-context-title">Content Viewer</h1>
-            <p class="nv-muted">Access scientific publications, references, and guidebooks.</p>
-          </header>
+          <h1 class="nv-sr-only">Content Viewer</h1>
           <div class="nv-panel">
             <div style="max-width: var(--sys-a11y-reading-width-enhanced); margin-inline: auto; display: flex; flex-direction: column; gap: var(--sys-space-stack-md);">
               <div class="nv-cluster nv-cluster--gap-sm">
@@ -237,11 +222,9 @@ class ViewController {
           <!-- Hero Header -->
           <header class="nv-cluster nv-cluster--gap-md" style="justify-content: space-between; align-items: center; width: 100%;">
             <div class="nv-stack nv-stack--gap-xs">
-              <h1 class="nv-context-title" style="margin: 0;">Retrieval Workspace</h1>
-              <p class="nv-muted" style="margin: 0;">Advanced Knowledge Exploration and Evidence Synthesis Environment.</p>
+              <h1 class="nv-sr-only">Retrieval Workspace</h1>
             </div>
             <div class="nv-cluster nv-cluster--gap-sm" style="align-items: center;">
-              <span id="nv-diagnostics-badge" class="nv-badge" data-variant="info" style="font-size: 0.65rem;">JS Ready</span>
               <span id="session-restored-indicator" class="nv-badge" data-variant="success" style="opacity: 0; transition: opacity 0.5s ease; font-size: 0.65rem;">Session Restored</span>
               <button id="playground-focus-button" class="nv-button" data-variant="secondary" style="font-size: 0.75rem; padding: 4px 10px; min-block-size: unset;" aria-label="Toggle focus mode">Focus Mode</button>
               <button id="playground-preferences-button" class="nv-button" data-variant="secondary" style="font-size: 0.75rem; padding: 4px 10px; min-block-size: unset;" aria-label="Toggle workspace preferences">⚙ Prefs</button>
@@ -324,35 +307,35 @@ class ViewController {
           <!-- Knowledge Synthesis Pipeline (Compact & Collapsible) -->
           <details class="nv-panel" style="background-color: var(--sys-color-surface-container-low); border: var(--sys-border-subtle) solid var(--sys-color-border-subtle);">
             <summary style="font-size: var(--sys-font-body-size); font-weight: var(--ref-font-weight-semibold); color: var(--sys-color-text-primary); cursor: pointer; user-select: none;">
-              View Pipeline Infrastructure (NV-500 Core)
+              Research Pipeline
             </summary>
             <div style="margin-top: var(--sys-space-stack-sm);">
               <p style="font-size: var(--sys-font-caption-size); color: var(--sys-color-text-secondary); margin-bottom: var(--sys-space-stack-sm);">
-                The NV-500 Retrieval Foundation isolates data registries and citation topology from LLMs, ensuring verifiable, deterministic research compilation.
+                Your investigation connects sources, explores relationships, finds relevant context, and synthesizes evidence into research-ready insight.
               </p>
               <div class="retrieval-pipeline">
                 <div class="pipeline-step">
                   <div class="pipeline-step-badge">1</div>
-                  <h4>Reference Registry</h4>
-                  <p>Stores papers, repositories, and local study notes.</p>
+                  <h4>Collect Sources</h4>
+                  <p>Gather papers, notes, documentation, and research materials.</p>
                 </div>
                 <div class="pipeline-arrow" aria-hidden="true">➔</div>
                 <div class="pipeline-step">
                   <div class="pipeline-step-badge">2</div>
-                  <h4>Relationship Graph</h4>
-                  <p>Maps cross-document links, strength, and citation context.</p>
+                  <h4>Explore Connections</h4>
+                  <p>Identify semantic links, citations, and related concepts.</p>
                 </div>
                 <div class="pipeline-arrow" aria-hidden="true">➔</div>
                 <div class="pipeline-step">
                   <div class="pipeline-step-badge">3</div>
-                  <h4>Retrieval Index</h4>
-                  <p>Tokenizes and scores queries to identify key context matches.</p>
+                  <h4>Find Relevant Context</h4>
+                  <p>Surface the information most relevant to your query.</p>
                 </div>
                 <div class="pipeline-arrow" aria-hidden="true">➔</div>
                 <div class="pipeline-step">
                   <div class="pipeline-step-badge">4</div>
-                  <h4>Evidence Compiler</h4>
-                  <p>Consolidates paths into a final research assistant insight.</p>
+                  <h4>Synthesize Evidence</h4>
+                  <p>Combine findings into a coherent research summary.</p>
                 </div>
               </div>
             </div>
@@ -399,7 +382,7 @@ class ViewController {
 
                 <!-- Seeded Reference List inside Search Mode for easy browsing -->
                 <div class="nv-panel">
-                  <h3 style="margin: 0 0 var(--sys-space-stack-xs) 0; font-size: var(--sys-font-body-size);">Reference Registry Database</h3>
+                  <h3 style="margin: 0 0 var(--sys-space-stack-xs) 0; font-size: var(--sys-font-body-size);">Reference Library</h3>
                   <div id="seeded-references-list" class="nv-grid nv-grid--cols-2">
                     <!-- Dynamic seeded list of references -->
                   </div>
@@ -590,10 +573,7 @@ class ViewController {
       `,
       'not-found': `
         <div class="nv-stack nv-stack--gap-md">
-          <header class="nv-stack nv-stack--gap-xs">
-            <h1 class="nv-context-title">Route Resolution Fallback</h1>
-            <p class="nv-muted">Platform node or view is currently unavailable.</p>
-          </header>
+          <h1 class="nv-sr-only">Page not found</h1>
           <div class="nv-panel">
             <div class="nv-empty-state">
               <div class="nv-empty-state__visual" aria-hidden="true">
@@ -603,9 +583,9 @@ class ViewController {
                   <circle cx="50" cy="73" r="3" fill="var(--sys-color-semantic-error, #f28b82)"/>
                 </svg>
               </div>
-              <h4 class="nv-empty-state__title">Node Not Found</h4>
+              <h4 class="nv-empty-state__title">Page not found</h4>
               <p class="nv-empty-state__message">
-                The workspace or route path you selected does not exist or has not been fully implemented in this MVP v0.1 release.
+                The destination you selected is not available.
               </p>
               <div class="nv-empty-state__actions">
                 <a href="#/" class="nv-button" data-variant="primary">Return Home</a>

@@ -5,11 +5,9 @@
   <!-- Hero Header -->
   <header class="nv-cluster nv-cluster--gap-md" style="justify-content: space-between; align-items: center; width: 100%;">
     <div class="nv-stack nv-stack--gap-xs">
-      <h1 class="nv-context-title" style="margin: 0;">Retrieval Workspace</h1>
-      <p class="nv-muted" style="margin: 0;">Advanced Knowledge Exploration and Evidence Synthesis Environment.</p>
+      <h1 class="nv-sr-only">Retrieval Workspace</h1>
     </div>
     <div class="nv-cluster nv-cluster--gap-sm" style="align-items: center;">
-      <span id="nv-diagnostics-badge" class="nv-badge" data-variant="info" style="font-size: 0.65rem;">JS Ready</span>
       <span id="session-restored-indicator" class="nv-badge" data-variant="success" style="opacity: 0; transition: opacity 0.5s ease; font-size: 0.65rem;">Session Restored</span>
       <button id="playground-focus-button" class="nv-button" data-variant="secondary" style="font-size: 0.75rem; padding: 4px 10px; min-block-size: unset;" aria-label="Toggle focus mode" aria-pressed="false">Focus Mode</button>
       <button id="playground-preferences-button" class="nv-button" data-variant="secondary" style="font-size: 0.75rem; padding: 4px 10px; min-block-size: unset;" aria-label="Toggle workspace preferences" aria-controls="preferences-panel" aria-expanded="false">⚙ Prefs</button>
@@ -92,35 +90,35 @@
   <!-- Knowledge Synthesis Pipeline (Compact & Collapsible) -->
   <details class="nv-panel" style="background-color: var(--sys-color-surface-container-low); border: var(--sys-border-subtle) solid var(--sys-color-border-subtle);">
     <summary style="font-size: var(--sys-font-body-size); font-weight: var(--ref-font-weight-semibold); color: var(--sys-color-text-primary); cursor: pointer; user-select: none;">
-      View Pipeline Infrastructure (NV-500 Core)
+      Research Pipeline
     </summary>
     <div style="margin-top: var(--sys-space-stack-sm);">
       <p style="font-size: var(--sys-font-caption-size); color: var(--sys-color-text-secondary); margin-bottom: var(--sys-space-stack-sm);">
-        The NV-500 Retrieval Foundation isolates data registries and citation topology from LLMs, ensuring verifiable, deterministic research compilation.
+        Your investigation moves through a structured process that connects references, explores relationships, and synthesizes evidence into actionable insights.
       </p>
       <div class="retrieval-pipeline">
         <div class="pipeline-step">
           <div class="pipeline-step-badge">1</div>
-          <h4>Reference Registry</h4>
-          <p>Stores papers, repositories, and local study notes.</p>
+          <h4>Collect Sources</h4>
+          <p>Gather papers, notes, documentation, and research materials relevant to your investigation.</p>
         </div>
         <div class="pipeline-arrow" aria-hidden="true">➔</div>
         <div class="pipeline-step">
           <div class="pipeline-step-badge">2</div>
-          <h4>Relationship Graph</h4>
-          <p>Maps cross-document links, strength, and citation context.</p>
+          <h4>Explore Connections</h4>
+          <p>Identify semantic links, citations, and related concepts across the collected sources.</p>
         </div>
         <div class="pipeline-arrow" aria-hidden="true">➔</div>
         <div class="pipeline-step">
           <div class="pipeline-step-badge">3</div>
-          <h4>Retrieval Index</h4>
-          <p>Tokenizes and scores queries to identify key context matches.</p>
+          <h4>Find Relevant Context</h4>
+          <p>Search the knowledge network to surface the information most relevant to your query.</p>
         </div>
         <div class="pipeline-arrow" aria-hidden="true">➔</div>
         <div class="pipeline-step">
           <div class="pipeline-step-badge">4</div>
-          <h4>Evidence Compiler</h4>
-          <p>Consolidates paths into a final research assistant insight.</p>
+          <h4>Synthesize Evidence</h4>
+          <p>Combine findings from multiple sources into a coherent research summary.</p>
         </div>
       </div>
     </div>
@@ -145,7 +143,7 @@
       <section id="mode-search" class="exploration-mode active" aria-labelledby="tab-search">
         <!-- Search and Compile Controls Console -->
         <div class="nv-panel nv-stack nv-stack--gap-sm">
-          <h3 style="margin: 0; font-size: var(--sys-font-body-size);">Search Console</h3>
+          <h3 style="margin: 0; font-size: var(--sys-font-body-size);">Search</h3>
           <div class="nv-cluster nv-cluster--gap-sm" style="align-items: center; width: 100%;">
             <input type="text" id="playground-search-input" class="nv-input" placeholder="Search references..." style="flex: 1; min-width: 200px;" aria-label="Search query" />
             <button id="playground-search-button" class="nv-button" data-variant="primary" aria-label="Search Registry">Search Registry</button>
@@ -167,7 +165,7 @@
 
         <!-- Seeded Reference List inside Search Mode for easy browsing -->
         <div class="nv-panel">
-          <h3 style="margin: 0 0 var(--sys-space-stack-xs) 0; font-size: var(--sys-font-body-size);">Reference Registry Database</h3>
+          <h3 style="margin: 0 0 var(--sys-space-stack-xs) 0; font-size: var(--sys-font-body-size);">References</h3>
           <div id="seeded-references-list" class="nv-grid nv-grid--cols-2">
             <!-- Dynamic seeded list of references -->
           </div>
@@ -178,10 +176,8 @@
       <section id="mode-graph" class="exploration-mode" aria-labelledby="tab-graph">
         <div class="nv-panel nv-stack nv-stack--gap-xs" style="position: relative;">
           <div class="nv-cluster nv-cluster--gap-sm" style="justify-content: space-between; align-items: center; flex-wrap: wrap; width: 100%;">
-            <h3 style="margin: 0; font-size: var(--sys-font-body-size);">Interactive Topology Graph</h3>
-            <!-- Graph Controls: Filters & Hop selector -->
+            <h3 style="margin: 0; font-size: var(--sys-font-body-size);">Graph</h3>
             <div class="nv-cluster nv-cluster--gap-xs" style="align-items: center;">
-              <!-- Filter Select -->
               <label for="graph-filter-select" style="font-size: 0.65rem; color: var(--sys-color-text-secondary);">Filter:</label>
               <select id="graph-filter-select" class="nv-input" style="padding: 2px 6px; font-size: 0.65rem; min-block-size: unset; width: auto;" aria-label="Filter relationships by type">
                 <option value="all">All Relationships</option>
@@ -193,26 +189,32 @@
                 <option value="related">Related</option>
               </select>
 
-              <!-- Hop Depth Select -->
-              <label for="graph-hop-select" style="font-size: 0.65rem; color: var(--sys-color-text-secondary); margin-left: var(--sys-space-inline-xs);">Depth:</label>
+              <label for="graph-hop-select" style="font-size: 0.65rem; color: var(--sys-color-text-secondary);">Depth:</label>
               <select id="graph-hop-select" class="nv-input" style="padding: 2px 6px; font-size: 0.65rem; min-block-size: unset; width: auto;" aria-label="Graph neighborhood expansion depth">
                 <option value="full">Full Graph</option>
                 <option value="1-hop">1-Hop Neighbors</option>
                 <option value="2-hop">2-Hop Neighbors</option>
               </select>
 
-              <label for="graph-label-mode-select" style="font-size: 0.65rem; color: var(--sys-color-text-secondary); margin-left: var(--sys-space-inline-xs);">Labels:</label>
-              <select id="graph-label-mode-select" class="nv-input" style="padding: 2px 6px; font-size: 0.65rem; min-block-size: unset; width: auto;" aria-label="Graph label disclosure mode">
-                <option value="minimal">Minimal</option>
-                <option value="context">Context</option>
-                <option value="expanded">Expanded</option>
-              </select>
+              <span style="flex: 1;"></span>
 
-              <label for="graph-focus-mode-select" style="font-size: 0.65rem; color: var(--sys-color-text-secondary); margin-left: var(--sys-space-inline-xs);">Focus:</label>
-              <select id="graph-focus-mode-select" class="nv-input" style="padding: 2px 6px; font-size: 0.65rem; min-block-size: unset; width: auto;" aria-label="Graph focus behavior">
-                <option value="follow">Follow Connections</option>
-                <option value="map">Static Map</option>
-              </select>
+              <details style="position: relative; display: inline-block;">
+                <summary style="font-size: 0.65rem; cursor: pointer; color: var(--sys-color-text-secondary); padding: 2px 6px; border: var(--sys-border-subtle) solid var(--sys-color-border-subtle); border-radius: var(--ref-radius-soft); user-select: none;">Advanced</summary>
+                <div style="position: absolute; top: 100%; right: 0; z-index: 10; background: var(--sys-color-surface-container-high); border: var(--sys-border-subtle) solid var(--sys-color-border-subtle); border-radius: var(--ref-radius-soft); padding: 8px; margin-top: 4px; display: flex; gap: 8px; flex-wrap: nowrap; box-shadow: var(--sys-elevation-3);">
+                  <label for="graph-label-mode-select" style="font-size: 0.65rem; color: var(--sys-color-text-secondary);">Labels:</label>
+                  <select id="graph-label-mode-select" class="nv-input" style="padding: 2px 6px; font-size: 0.65rem; min-block-size: unset; width: auto;" aria-label="Graph label disclosure mode">
+                    <option value="minimal">Minimal</option>
+                    <option value="context">Context</option>
+                    <option value="expanded">Expanded</option>
+                  </select>
+
+                  <label for="graph-focus-mode-select" style="font-size: 0.65rem; color: var(--sys-color-text-secondary);">Focus:</label>
+                  <select id="graph-focus-mode-select" class="nv-input" style="padding: 2px 6px; font-size: 0.65rem; min-block-size: unset; width: auto;" aria-label="Graph focus behavior">
+                    <option value="follow">Follow Connections</option>
+                    <option value="map">Static Map</option>
+                  </select>
+                </div>
+              </details>
 
               <button id="graph-zoom-out-button" class="nv-button" data-variant="secondary" style="padding: 2px 8px; font-size: 0.65rem; min-block-size: unset;" aria-label="Zoom graph out">−</button>
               <button id="graph-zoom-in-button" class="nv-button" data-variant="secondary" style="padding: 2px 8px; font-size: 0.65rem; min-block-size: unset;" aria-label="Zoom graph in">+</button>
@@ -221,7 +223,7 @@
           </div>
           <!-- Progressive Filter Chips Container -->
           <div id="graph-filter-chips-container" class="nv-cluster nv-cluster--gap-xs" style="display: none; align-items: center; padding: 2px 0; margin-bottom: var(--sys-space-stack-xs);"></div>
-          <div class="graph-container nv-scientific-panel" style="position: relative; overflow: hidden; min-height: 480px;">
+          <div class="graph-container nv-scientific-panel" style="position: relative; overflow: hidden;">
             <svg id="visual-graph-svg" class="graph-svg" aria-label="Reference network topology graph" style="display: block; width: 100%; height: 100%;">
               <!-- Graph links and nodes will be dynamically injected here -->
             </svg>
@@ -239,27 +241,10 @@
       <!-- Mode 3: Discovery Mode -->
       <section id="mode-discovery" class="exploration-mode" aria-labelledby="tab-discovery">
         <div class="nv-panel nv-stack nv-stack--gap-sm">
-          <h3 style="margin: 0; font-size: var(--sys-font-body-size);">Research Discovery Dashboard</h3>
-          <p class="nv-muted" style="font-size: var(--sys-font-caption-size); margin: 0;">Automated topological telemetry and quick recommendations.</p>
-          <div class="nv-grid nv-grid--cols-3" style="gap: var(--sys-space-stack-sm); margin-top: var(--sys-space-stack-xs);">
-            <div class="nv-card" style="cursor: default;">
-              <h5 style="margin: 0 0 4px 0; font-size: 0.65rem;">Registry Size</h5>
-              <p style="margin: 0; font-size: 1.25rem; font-weight: var(--ref-font-weight-bold); color: var(--sys-color-accent-primary);" id="discovery-stat-size">0</p>
-            </div>
-            <div class="nv-card" style="cursor: default;">
-              <h5 style="margin: 0 0 4px 0; font-size: 0.65rem;">Relation Count</h5>
-              <p style="margin: 0; font-size: 1.25rem; font-weight: var(--ref-font-weight-bold); color: var(--sys-color-accent-primary);" id="discovery-stat-relations">0</p>
-            </div>
-            <div class="nv-card" style="cursor: default;">
-              <h5 style="margin: 0 0 4px 0; font-size: 0.65rem;">Graph Density</h5>
-              <p style="margin: 0; font-size: 1.25rem; font-weight: var(--ref-font-weight-bold); color: var(--sys-color-accent-primary);" id="discovery-stat-density">0.00</p>
-            </div>
-          </div>
-          <div class="nv-divider" aria-hidden="true" style="margin-block: var(--sys-space-stack-xs);"></div>
+          <h3 style="margin: 0; font-size: var(--sys-font-body-size);">Discovery</h3>
           <div>
             <h4 style="font-size: var(--sys-font-caption-size); text-transform: uppercase; color: var(--sys-color-text-secondary); margin-bottom: var(--sys-space-stack-xs);">Key Research Anchors</h4>
             <div id="discovery-anchors-container" class="nv-stack nv-stack--gap-xs">
-              <!-- Recommended read files dynamic list -->
             </div>
           </div>
         </div>
@@ -331,7 +316,7 @@
   <!-- Region 4: Research Memory Layer -->
   <footer class="memory-layer" aria-label="Research Memory Layer" id="memory-layer-section">
     <div class="memory-layer__legacy-header nv-cluster nv-cluster--gap-sm" style="justify-content: space-between; align-items: center; margin-bottom: var(--sys-space-stack-xs); border-bottom: var(--sys-border-subtle) solid var(--sys-color-border-subtle); padding-bottom: 4px;">
-      <h3 style="margin: 0; font-size: var(--sys-font-body-size); color: var(--sys-color-text-primary);">Research Memory Layer</h3>
+      <h3 style="margin: 0; font-size: var(--sys-font-body-size); color: var(--sys-color-text-primary);">Memory</h3>
       <button id="memory-toggle-collapse-button" class="nv-button" data-variant="ghost" style="padding: 2px 6px; font-size: 0.65rem; min-block-size: unset;" aria-label="Toggle memory layer visibility">Collapse Layer</button>
     </div>
     <div class="memory-grid" id="memory-layer-grid">

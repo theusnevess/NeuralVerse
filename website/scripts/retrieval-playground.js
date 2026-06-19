@@ -570,11 +570,6 @@
     const previewId = `discovery-preview-${String(reference.id).replace(/[^a-zA-Z0-9_-]/g, "-")}`;
     const actionSet = new Set(actions);
     const panelId = `discovery-card-${String(reference.id).replace(/[^a-zA-Z0-9_-]/g, "-")}-${variant}-${discoveryPanelPayloads.size}`;
-    const relevanceHtml = renderRelevanceMeter(relevance);
-    const densityHtml = renderRelationshipDensityMeter(relCount);
-    const connectivityHtml = renderConnectivityScore(relCount);
-    const clusterHtml = renderClusterIndicator(reference);
-
     discoveryPanelPayloads.set(panelId, {
       variant,
       reference: {
@@ -587,10 +582,6 @@
       reasonLabel,
       description,
       relationshipCount: relCount,
-      relevanceHtml,
-      densityHtml,
-      connectivityHtml,
-      clusterHtml,
       microvisualization,
       iconPath: panelIcon,
       isPinned,
@@ -612,11 +603,7 @@
           <h4 class="nv-discovery-panel__title" id="discovery-title-${escapeHtml(reference.id)}">${escapeHtml(reference.title)}</h4>
           ${showDescription && variant !== "compact" && description ? `<p class="nv-discovery-panel__description">${escapeHtml(description)}</p>` : ""}
           <div class="nv-discovery-panel__metrics" aria-label="Recommendation metrics">
-            <span>${relCount} relationships</span>
-            ${relevanceHtml}
-            ${densityHtml}
-            ${connectivityHtml}
-            ${clusterHtml}
+            <span>${relCount} relationship${relCount === 1 ? "" : "s"}</span>
           </div>
           ${microvisualization ? `<div class="nv-discovery-panel__microvisualization">${microvisualization}</div>` : ""}
           <div class="nv-discovery-panel__preview" id="${previewId}" hidden>
@@ -757,11 +744,7 @@
         getConnectivityLabel(relationshipCount),
         evidenceCount > 0 ? `${evidenceCount} evidence input${evidenceCount === 1 ? "" : "s"}` : ""
       ].filter(Boolean),
-      microvisualizations: [
-        renderRelationshipDensityMeter(relationshipCount),
-        renderConnectivityScore(relationshipCount),
-        renderClusterIndicator(ref)
-      ].join(""),
+      microvisualizations: "",
       actions: [
         { action: "open-reference", label: "Open", id: ref.id, variant: "primary" },
         { action: "pin-reference", label: pinnedReferences.includes(ref.id) ? "Unpin" : "Pin", id: ref.id, variant: "secondary" },
@@ -1514,7 +1497,7 @@
         relationshipCount: rels.length,
         connectivityLabel: getConnectivityScoreLabel(rels.length),
         clusterLabel: getClusterLabel(ref),
-        microvisualizationHtml: renderRelationshipDensityMeter(rels.length) + renderConnectivityScore(rels.length),
+        microvisualizationHtml: "",
       };
     });
 
@@ -2350,9 +2333,8 @@
         <div class="nv-panel nv-cluster nv-cluster--gap-md" style="background-color: var(--sys-color-surface-container-high); border: 1px solid var(--sys-color-accent-primary); padding: var(--sys-space-stack-sm) var(--sys-space-inline-md); justify-content: space-between; align-items: center; border-radius: var(--ref-radius-soft); margin-bottom: var(--sys-space-stack-sm);" role="status" aria-live="polite">
           <div class="nv-stack nv-stack--gap-xs" style="flex: 1;">
             <strong style="color: var(--sys-color-accent-primary); font-size: 0.75rem;">Previous research session</strong>
-            <span style="font-size: 0.65rem; color: var(--sys-color-text-secondary); display: flex; align-items: center; gap: 8px;">
-              <span>Last active ${lastDate}${currentSearchQuery ? ` · query "${escapeHtml(currentSearchQuery)}"` : ""}${selectedReferenceId ? ` · ${getReferenceLabel(selectedReferenceId)}` : ""}</span>
-              ${renderSessionProgress()}
+            <span style="font-size: 0.65rem; color: var(--sys-color-text-secondary);">
+              Last active ${lastDate}${currentSearchQuery ? ` · query "${escapeHtml(currentSearchQuery)}"` : ""}${selectedReferenceId ? ` · ${getReferenceLabel(selectedReferenceId)}` : ""}
             </span>
           </div>
           <div class="nv-cluster nv-cluster--gap-sm">
@@ -2381,164 +2363,28 @@
     }
   }
 
-  // Live Research Snapshot
+  // Live Research Snapshot — simplified to Current Investigation summary
   function renderResearchSnapshot() {
     const container = document.getElementById("research-snapshot-container");
     if (!container) return;
 
-    const sparklineHtml = renderTrailSparkline(knowledgeTrail);
     const selectedRef = selectedReferenceId ? adapter.getReferenceById(retrievalState, selectedReferenceId) : null;
-    const selectedRelCount = selectedRef ? adapter.getRelationshipsForReference(retrievalState, selectedRef.id).length : 0;
-    const lastActivity = knowledgeTrail[0] || null;
-    const artifactCount = pinnedReferences.length + recentReferences.length + savedQueries.length + evidenceTimeline.length + knowledgeTrail.length;
-    const hasResearchContext = Boolean(currentSearchQuery || selectedRef || artifactCount > 0);
-    const focusCluster = selectedRef ? getClusterLabel(selectedRef) : "";
-    const evidenceCount = evidenceTimeline.length || (currentCompiledEvidence ? 1 : 0);
-    const uniqueVisitedCount = new Set(recentReferences.concat(selectedReferenceId ? [selectedReferenceId] : [])).size;
-    const compactTrailLabel = (event) => {
-      if (!event) return "";
-      const type = String(event.type || "activity").replace(/_/g, " ");
-      return type.charAt(0).toUpperCase() + type.slice(1);
-    };
-    const compactEventLabel = (event) => String(event?.label || "")
-      .replace(/^Searched /, "Search: ")
-      .replace(/^Opened /, "Opened: ")
-      .replace(/^Pinned /, "Pinned: ")
-      .replace(/^Compiled evidence from /, "Compiled: ");
-    const compactTimeline = [];
-    knowledgeTrail.slice(0, 10).forEach(event => {
-      if (compactTimeline.length >= 5) return;
-      const previous = compactTimeline[compactTimeline.length - 1];
-      const label = compactEventLabel(event);
-      const type = compactTrailLabel(event);
-      if (previous && previous.type === type && previous.label === label) {
-        previous.repeatCount = (previous.repeatCount || 1) + 1;
-        previous.label = `${label} (${previous.repeatCount})`;
-        return;
-      }
-      compactTimeline.push({
-        id: event.id,
-        type,
-        label,
-        timestamp: event.timestamp,
-        targetId: event.metadata?.referenceId || event.metadata?.query || "",
-      });
-    });
-    const sessionProgressSegments = [
-      pinnedReferences.length > 0,
-      uniqueVisitedCount > 0,
-      savedQueries.length > 0,
-      evidenceCount > 0,
-      knowledgeTrail.length > 0,
-    ];
-    const subgraphDensityLabel = selectedRef ? getDensityLabel(selectedRelCount) : "";
-    const confidenceLabel = currentCompiledEvidence?.confidence
-      ? `${String(currentCompiledEvidence.confidence).charAt(0).toUpperCase()}${String(currentCompiledEvidence.confidence).slice(1)} support`
-      : "";
-    const connectivityLabel = selectedRef ? getConnectivityScoreLabel(selectedRelCount) : "";
+    const hasContext = Boolean(currentSearchQuery || selectedRef || currentCompiledEvidence);
 
-    if (container.dataset.nvReactMounted !== "true") {
-      container.innerHTML = `
-        <div class="nv-workspace-dashboard-fallback">
-          <span class="nv-muted">Research Snapshot</span>
-          <strong>${currentSearchQuery ? escapeHtml(currentSearchQuery) : selectedRef ? escapeHtml(selectedRef.title) : "Workspace Ready"}</strong>
-          <span>${artifactCount} session artifact${artifactCount === 1 ? "" : "s"}</span>
+    container.innerHTML = `
+      <div class="nv-workspace-dashboard-fallback" style="padding: var(--sys-space-stack-sm) 0;">
+        <div class="nv-stack nv-stack--gap-xs">
+          <span class="nv-muted" style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em;">Current Investigation</span>
+          <div style="font-size: var(--sys-font-body-size); color: var(--sys-color-text-primary);">
+            ${currentSearchQuery ? `<div><strong>Query:</strong> ${escapeHtml(currentSearchQuery)}</div>` : ""}
+            ${selectedRef ? `<div><strong>Reference:</strong> ${escapeHtml(selectedRef.title)}</div>` : ""}
+            ${currentCompiledEvidence ? `<div><strong>Evidence:</strong> ${currentCompiledEvidence.matchedReferences?.length || 0} sources</div>` : ""}
+            ${!hasContext ? '<div class="nv-muted" style="font-size: 0.7rem;">No active investigation. Search or select a reference to begin.</div>' : ""}
+          </div>
+          <span class="nv-muted" style="font-size: 0.65rem;">Mode: ${activeExplorationMode || "search"}</span>
         </div>
-      `;
-    }
-
-    const dashboardPayload = {
-      activeInvestigation: {
-        currentQuery: currentSearchQuery || "",
-        selectedReferenceTitle: selectedRef ? selectedRef.title : "",
-        selectedReferenceId: selectedRef ? selectedRef.id : "",
-        focusedCluster: focusCluster,
-        explorationDepth: selectedRef && neighborhoodDepth !== "full" ? neighborhoodDepth : "",
-        activeMode: activeExplorationMode || "",
-        lastEventLabel: lastActivity ? `${compactTrailLabel(lastActivity)} · ${lastActivity.timestamp || "session"}` : "",
-      },
-      researchHealth: {
-        evidenceCount,
-        uniqueVisitedCount,
-        pinnedCount: pinnedReferences.length,
-        savedQueryCount: savedQueries.length,
-        trailEventCount: knowledgeTrail.length,
-        subgraphDensityLabel,
-      },
-      timeline: compactTimeline,
-      pulse: {
-        summary: selectedRef
-          ? `${getConnectivityScoreLabel(selectedRelCount)} in ${getClusterLabel(selectedRef)}.`
-          : currentCompiledEvidence
-            ? `${getEvidenceCoverageLabel((currentCompiledEvidence.matchedReferences?.length || 0) + (currentCompiledEvidence.relatedReferences?.length || 0))} evidence synthesis available.`
-            : currentSearchQuery
-              ? `${currentSearchResults.length} result${currentSearchResults.length === 1 ? "" : "s"} in the active query.`
-              : "No active research signals yet.",
-        trailShape: knowledgeTrail.slice(0, 8).map((_, index) => index + 1),
-        sessionProgressSegments,
-        confidenceLabel,
-        connectivityLabel,
-        microvisuals: [
-          selectedRef ? { id: "density", html: renderRelationshipDensityMeter(selectedRelCount), ariaLabel: `Subgraph density: ${subgraphDensityLabel}` } : null,
-          selectedRef ? { id: "connectivity", html: renderConnectivityScore(selectedRelCount), ariaLabel: `Connectivity summary: ${connectivityLabel}` } : null,
-          currentCompiledEvidence ? { id: "confidence", html: renderConfidenceGauge(currentCompiledEvidence.confidence), ariaLabel: `Confidence summary: ${confidenceLabel}` } : null,
-          { id: "progress", html: renderSessionProgress(), ariaLabel: `${artifactCount} session artifacts` },
-          sparklineHtml ? { id: "trail", html: sparklineHtml, ariaLabel: `${knowledgeTrail.length} knowledge trail events` } : null,
-        ].filter(Boolean),
-      },
-      actions: {
-        canResume: hasResearchContext,
-        canCompileCurrentEvidence: Boolean(currentSearchQuery || selectedReferenceId),
-        canSaveQuery: Boolean(currentSearchQuery && !savedQueries.includes(currentSearchQuery.trim())),
-        canOpenPinned: pinnedReferences.length > 0,
-        canClearSession: hasResearchContext,
-      },
-      isEmpty: !hasResearchContext,
-    };
-
-    const dashboardCallbacks = {
-      onResumeInvestigation: () => {
-        if (selectedReferenceId) {
-          selectReference(selectedReferenceId);
-          return;
-        }
-        if (currentSearchQuery) {
-          const searchInput = document.getElementById("playground-search-input");
-          if (searchInput) searchInput.value = currentSearchQuery;
-          runSearch(currentSearchQuery, true);
-          return;
-        }
-        if (pinnedReferences[0]) selectReference(pinnedReferences[0]);
-      },
-      onCompileCurrentEvidence: () => {
-        if (selectedReferenceId) {
-          compileEvidenceFromReference(selectedReferenceId);
-          return;
-        }
-        document.getElementById("playground-compile-query-button")?.click();
-      },
-      onSaveQuery: () => {
-        document.getElementById("playground-save-query-button")?.click();
-        renderResearchSnapshot();
-      },
-      onOpenPinned: () => {
-        if (pinnedReferences[0]) selectReference(pinnedReferences[0]);
-      },
-      onClearSession: () => {
-        document.getElementById("playground-clear-session-button")?.click();
-        renderResearchSnapshot();
-      },
-      onOpenTimelineEvent: (event) => {
-        if (event?.id) restoreTrailContextById(event.id);
-      },
-      onRunSearch: () => {
-        switchExplorationMode("search");
-        document.getElementById("playground-search-input")?.focus();
-      },
-    };
-
-    const mounted = tryUpdateReactIsland(container, "NvWorkspaceSnapshot", dashboardPayload, dashboardCallbacks);
-    if (mounted) container.dataset.nvReactMounted = "true";
+      </div>
+    `;
   }
 
   // Smart Empty State
@@ -3086,19 +2932,11 @@
           ${topKeywords.length ? `Useful for ${escapeHtml(topKeywords.join(", "))}.` : "No keywords available."}
         </p>
 
-        <div class="nv-microvisualization-row" aria-label="Reference microvisualizations">
-          ${renderRelationshipDensityMeter(rels.length)}
-          ${renderConnectivityScore(rels.length)}
-          ${renderClusterIndicator(ref)}
-        </div>
-
         <div class="nv-cluster nv-cluster--gap-xs">
           <button id="reference-add-compare-button" class="nv-button" data-variant="secondary" style="font-size: var(--sys-font-caption-size); padding: 4px 8px; min-block-size: unset;">
             ${compareSelection.includes(ref.id) ? "In Compare" : "Add to Compare"}
           </button>
         </div>
-
-        ${renderLocalConstellationMinimap(ref, rels)}
 
         <details>
           <summary style="font-size: 0.7rem; font-weight: bold; cursor: pointer; color: var(--sys-color-text-secondary);">Keywords</summary>
@@ -3219,12 +3057,7 @@
             targetTitle: targetRef ? targetRef.title : targetId,
           };
         }),
-        metrics: [
-          renderRelationshipDensityMeter(rels.length),
-          renderConnectivityScore(rels.length),
-          renderClusterIndicator(ref),
-        ],
-        minimapHtml: renderLocalConstellationMinimap(ref, rels),
+        metrics: [],
       },
     };
 
@@ -3450,19 +3283,15 @@
     const rel = selectedRelationship;
     container.innerHTML = `
       <div class="nv-card nv-card--selected" style="margin: 0; border: none; background-color: var(--sys-color-surface-container-low) !important; cursor: default;">
-        <h4 style="margin: 0; font-size: var(--sys-font-body-size); color: var(--sys-color-text-primary); font-weight: var(--ref-font-weight-semibold);">${rel.id}</h4>
-        <div class="nv-divider" aria-hidden="true" style="margin-block: var(--sys-space-stack-xs); opacity: 0.4;"></div>
         <p class="nv-muted" style="font-size: var(--sys-font-caption-size); line-height: 1.6; margin: 0;">
-          <strong>Type:</strong> <span class="nv-badge" data-variant="info">${rel.type}</span><br>
-          <strong>Strength:</strong> <span class="nv-badge" data-variant="${rel.strength >= 0.9 ? 'success' : 'neutral'}">${rel.strength}</span><br>
-          <strong>Source Node:</strong> <span style="font-family: var(--sys-font-code-family);">${rel.sourceReferenceId}</span><br>
-          <strong>Target Node:</strong> <span style="font-family: var(--sys-font-code-family);">${rel.targetReferenceId}</span>
+          <span class="nv-badge" data-variant="info">${rel.type}</span><br>
+          <strong>Source:</strong> <span style="font-family: var(--sys-font-code-family);">${rel.sourceReferenceId}</span><br>
+          <strong>Target:</strong> <span style="font-family: var(--sys-font-code-family);">${rel.targetReferenceId}</span>
         </p>
         <div class="nv-divider" aria-hidden="true" style="margin-block: var(--sys-space-stack-xs); opacity: 0.4;"></div>
         <p class="nv-muted" style="font-size: var(--sys-font-body-size); line-height: 1.5; margin: 0; font-style: italic;">
           "${rel.context || 'No citation context details available.'}"
         </p>
-        <div class="nv-divider" aria-hidden="true" style="margin-block: var(--sys-space-stack-xs); opacity: 0.4;"></div>
         <div class="nv-cluster nv-cluster--gap-sm" style="margin-top: 8px;">
           <button id="playground-follow-source-btn" class="nv-button" data-variant="secondary" style="flex: 1; padding: 4px 8px; font-size: 0.65rem; min-block-size: unset;">Follow Source</button>
           <button id="playground-follow-target-btn" class="nv-button" data-variant="primary" style="flex: 1; padding: 4px 8px; font-size: 0.65rem; min-block-size: unset;">Follow Target</button>
@@ -3640,10 +3469,6 @@
           <div class="nv-cluster nv-cluster--gap-xs" style="align-items: center; justify-content: space-between;">
             <span style="font-size: 0.68rem; color: var(--sys-color-text-secondary);">${comp.mode === "query" ? "Query evidence" : "Reference evidence"}</span>
             <span class="nv-badge" data-variant="${confVariant}" style="font-weight: var(--ref-font-weight-semibold);">${confLabel}</span>
-          </div>
-          <div class="nv-microvisualization-row">
-            ${renderConfidenceGauge(comp.confidence)}
-            ${renderEvidenceCoverageStrip(allContributing.length)}
           </div>
           <p class="nv-muted" style="font-size: var(--sys-font-caption-size); margin: 0; line-height: 1.3;">${escapeHtml(confExplanation)}</p>
         </div>
@@ -3868,8 +3693,8 @@
         confidenceExplanation: confExplanation,
         confidenceVariant: confVariant,
         summary: comp.summary || '',
-        confidenceGaugeHtml: renderConfidenceGauge(comp.confidence),
-        coverageStripHtml: renderEvidenceCoverageStrip(allContributing.length),
+        confidenceGaugeHtml: "",
+        coverageStripHtml: "",
         primaryReferenceId: comp.matchedReferences[0]?.id || '',
         lineage: [
           ...comp.matchedReferences.map(r => ({ id: r.id, title: r.title, role: 'Primary' })),
@@ -4741,11 +4566,7 @@
             <span style="font-size: 0.65rem; color: var(--sys-color-text-secondary); display: block; margin-bottom: 4px;">
               ${escapeHtml(ref.type || "reference")} · ${escapeHtml(adapter.inferReferenceCluster ? adapter.inferReferenceCluster(ref) : "Research")} · ${escapeHtml(tier)}
             </span>
-            <div class="nv-cluster nv-cluster--gap-xs" style="display: flex; align-items: center; gap: 4px; margin-block: 2px;">
-              ${renderRelationshipDensityMeter ? renderRelationshipDensityMeter(relCount) : ""}
-              ${renderConnectivityScore ? renderConnectivityScore(relCount) : ""}
-              ${renderClusterIndicator ? renderClusterIndicator(ref) : ""}
-            </div>
+
             <small style="font-size: 0.6rem; color: var(--sys-color-text-muted); display: block; margin-top: 4px; line-height: 1.3;">
               ${relCount} relationships · ${getEvidenceCountForReference(ref.id)} evidence · ${neighborhoodSize} neighbors
             </small>
@@ -5333,12 +5154,7 @@
           primaryAction: { id: "memory-empty-trail-action", label: "Explore references" }
         });
       } else {
-        const trailSummary = `
-          <li class="memory-microvisualization-summary">
-            ${renderSessionProgress()}
-            ${renderTrailSparkline(knowledgeTrail)}
-          </li>
-        `;
+        const trailSummary = "";
         trailList.innerHTML = trailSummary + knowledgeTrail.map(event => {
           let badgeVariant = "neutral";
           if (event.type === "search" || event.type === "rerun_query") badgeVariant = "info";
@@ -5420,9 +5236,7 @@
           label: event.label,
           timestamp: event.timestamp,
         })),
-        trailSummaryHtml: knowledgeTrail.length > 0
-          ? renderSessionProgress() + renderTrailSparkline(knowledgeTrail)
-          : '',
+        trailSummaryHtml: "",
       };
 
       const memoryCallbacks = {
@@ -5702,12 +5516,7 @@
       }
       saveWorkspaceState();
 
-      // Update developer diagnostics badge if present
-      const diagBadge = document.getElementById("nv-diagnostics-badge");
-      if (diagBadge) {
-        diagBadge.textContent = `JS Active: ${mode}`;
-        diagBadge.setAttribute("data-variant", "success");
-      }
+
 
       // Toggle tab selection
       const tabs = document.querySelectorAll(".workspace-tab");
@@ -5747,11 +5556,7 @@
       renderResearchSnapshot();
     } catch (err) {
       console.error(`Error in switchExplorationMode(${mode}):`, err);
-      const diagBadge = document.getElementById("nv-diagnostics-badge");
-      if (diagBadge) {
-        diagBadge.textContent = `Error: ${err.message}`;
-        diagBadge.setAttribute("data-variant", "error");
-      }
+
     }
   }
 
@@ -6338,11 +6143,7 @@
       }
     } catch (err) {
       console.error("Error in initPlayground():", err);
-      const diagBadge = document.getElementById("nv-diagnostics-badge");
-      if (diagBadge) {
-        diagBadge.textContent = `Init Error: ${err.message}`;
-        diagBadge.setAttribute("data-variant", "error");
-      }
+
     }
   }
 

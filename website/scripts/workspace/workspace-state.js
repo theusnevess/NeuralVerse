@@ -10,8 +10,8 @@
       this.state = {
         activeView: 'home',
         routeId: 'home',
-        routeTitle: 'Welcome to NeuralVerse',
-        routeDescription: 'Scientific Research & AI Agent Environment.',
+        routeTitle: 'NeuralVerse',
+        routeDescription: '',
         lastUpdated: new Date().toISOString(),
         status: 'idle'
       };

@@ -9,7 +9,7 @@
   <!-- CSS files in correct dependency order -->
   <link rel="stylesheet" href="styles/tokens.css?v=11">
   <link rel="stylesheet" href="styles/base.css?v=10">
-  <link rel="stylesheet" href="styles/background.css?v=10">
+  <link rel="stylesheet" href="styles/background.css?v=11">
   <link rel="stylesheet" href="styles/layout.css?v=11">
   <link rel="stylesheet" href="styles/neural-galaxy.css?v=2">
   <link rel="stylesheet" href="styles/components.css?v=10">
@@ -20,7 +20,7 @@
   <link rel="stylesheet" href="styles/premium-components.css?v=1">
   <link rel="stylesheet" href="styles/navigation-motion.css?v=2">
   <link rel="stylesheet" href="styles/route-transitions.css?v=1">
-  <link rel="stylesheet" href="styles/observatory-signals.css?v=4">
+  <link rel="stylesheet" href="styles/observatory-signals.css?v=5">
 </head>
 <body>
   <!-- Skip Link for Accessibility -->
@@ -36,11 +36,7 @@
       <div class="nv-header-brand">
         <img class="nv-header-brand-mark" src="assets/brand/neuralverse-wordmark.png" alt="NeuralVerse">
       </div>
-      <div class="nv-header-separator" aria-hidden="true">/</div>
-      <div class="nv-header-orientation nv-motion nv-motion-shared-transition">
-        <span class="nv-header-section-title">Home</span>
-        <span class="nv-header-section-description">Scientific AI Environment</span>
-      </div>
+
     </header>
 
     <div class="nv-shell-body">
@@ -50,7 +46,7 @@
           <img class="nv-nav-logo" src="assets/brand/neuralverse-symbol.png" alt="">
         </div>
         <div class="nv-nav-group">
-          <a href="#/" class="nv-nav-item" aria-current="page">
+          <a href="#/" class="nv-nav-item" aria-current="page" aria-label="Home">
             <span class="nv-nav-icon nv-nav-icon--home" aria-hidden="true"></span>
             <span class="nv-nav-label">Home</span>
           </a>
@@ -87,257 +83,552 @@
       <main class="nv-main-workspace nv-workspace" id="main-workspace" tabindex="-1" data-workspace-active-view="home">
         <nav class="nv-breadcrumbs" aria-label="Current location" data-breadcrumbs></nav>
 
-        <!-- R3 Workspace Surface -->
-        <div class="nv-workspace__surface nv-stack nv-stack--gap-md">
-          <div class="nv-home-observatory-illustration nv-home-observatory-illustration--editorial" aria-hidden="true" data-artwork-phase="NV-600.9-R5">
-            <svg viewBox="0 0 960 520" aria-hidden="true" focusable="false">
-              <g class="nv-home-observatory-illustration__atmosphere">
-                <ellipse cx="710" cy="274" rx="308" ry="190" />
-                <ellipse cx="890" cy="210" rx="150" ry="130" />
-              </g>
-              <g class="nv-home-observatory-illustration__grid">
-                <path d="M392 62 V460" />
-                <path d="M520 62 V460" />
-                <path d="M648 62 V460" />
-                <path d="M776 62 V460" />
-                <path d="M904 62 V460" />
-                <path d="M332 120 H930" />
-                <path d="M332 210 H930" />
-                <path d="M332 300 H930" />
-                <path d="M332 390 H930" />
-                <path d="M348 302 h92 v-92 h124" />
-                <path d="M680 118 h148 v88 h86" />
-              </g>
-              <g class="nv-home-observatory-illustration__particles">
-                <circle class="nv-home-observatory-illustration__particle" cx="665.0" cy="243.7" r="0.65" />
-                <circle class="nv-home-observatory-illustration__particle" cx="839.9" cy="320.5" r="0.45" />
-                <circle class="nv-home-observatory-illustration__particle" cx="556.5" cy="326.2" r="0.45" />
-                <circle class="nv-home-observatory-illustration__particle" cx="660.1" cy="239.9" r="0.45" />
-                <circle class="nv-home-observatory-illustration__particle" cx="460.9" cy="398.6" r="0.65" />
-                <circle class="nv-home-observatory-illustration__particle--violet" cx="708.2" cy="305.1" r="0.45" />
-                <circle class="nv-home-observatory-illustration__particle" cx="602.1" cy="281.7" r="0.55" />
-                <circle class="nv-home-observatory-illustration__particle" cx="781.9" cy="382.0" r="0.65" />
-                <circle class="nv-home-observatory-illustration__particle" cx="541.7" cy="219.5" r="0.65" />
-                <circle class="nv-home-observatory-illustration__particle--amber" cx="645.0" cy="262.9" r="0.75" />
-                <circle class="nv-home-observatory-illustration__particle" cx="727.8" cy="166.0" r="0.85" />
-                <circle class="nv-home-observatory-illustration__particle" cx="494.9" cy="202.5" r="0.85" />
-                <circle class="nv-home-observatory-illustration__particle" cx="312.2" cy="247.5" r="0.85" />
-                <circle class="nv-home-observatory-illustration__particle--violet" cx="412.3" cy="307.8" r="0.85" />
-                <circle class="nv-home-observatory-illustration__particle" cx="405.0" cy="248.3" r="0.75" />
-                <circle class="nv-home-observatory-illustration__particle" cx="538.7" cy="177.7" r="0.55" />
-                <circle class="nv-home-observatory-illustration__particle" cx="518.0" cy="405.3" r="0.65" />
-                <circle class="nv-home-observatory-illustration__particle" cx="699.1" cy="257.7" r="0.65" />
-                <circle class="nv-home-observatory-illustration__particle" cx="772.7" cy="295.2" r="0.55" />
-                <circle class="nv-home-observatory-illustration__particle" cx="650.6" cy="271.4" r="0.45" />
-                <circle class="nv-home-observatory-illustration__particle" cx="644.2" cy="289.4" r="0.75" />
-                <circle class="nv-home-observatory-illustration__particle" cx="620.8" cy="421.6" r="0.45" />
-                <circle class="nv-home-observatory-illustration__particle" cx="534.0" cy="179.6" r="0.85" />
-                <circle class="nv-home-observatory-illustration__particle" cx="749.4" cy="372.5" r="0.85" />
-                <circle class="nv-home-observatory-illustration__particle" cx="497.1" cy="365.3" r="0.65" />
-                <circle class="nv-home-observatory-illustration__particle" cx="404.1" cy="150.1" r="0.55" />
-                <circle class="nv-home-observatory-illustration__particle" cx="686.4" cy="271.0" r="0.85" />
-                <circle class="nv-home-observatory-illustration__particle" cx="570.9" cy="257.1" r="0.65" />
-                <circle class="nv-home-observatory-illustration__particle" cx="701.7" cy="235.4" r="0.75" />
-                <circle class="nv-home-observatory-illustration__particle" cx="499.8" cy="199.9" r="0.85" />
-                <circle class="nv-home-observatory-illustration__particle" cx="695.0" cy="306.7" r="0.65" />
-                <circle class="nv-home-observatory-illustration__particle" cx="393.0" cy="348.8" r="0.65" />
-                <circle class="nv-home-observatory-illustration__particle--aqua" cx="672.4" cy="158.5" r="0.85" />
-                <circle class="nv-home-observatory-illustration__particle" cx="745.8" cy="201.5" r="0.65" />
-                <circle class="nv-home-observatory-illustration__particle" cx="672.6" cy="225.6" r="0.45" />
-                <circle class="nv-home-observatory-illustration__particle" cx="502.6" cy="106.4" r="0.75" />
-                <circle class="nv-home-observatory-illustration__particle" cx="274.3" cy="335.4" r="0.55" />
-                <circle class="nv-home-observatory-illustration__particle" cx="811.1" cy="116.1" r="0.45" />
-                <circle class="nv-home-observatory-illustration__particle" cx="685.2" cy="169.8" r="0.75" />
-                <circle class="nv-home-observatory-illustration__particle" cx="610.5" cy="169.4" r="0.65" />
-                <circle class="nv-home-observatory-illustration__particle--aqua" cx="663.6" cy="214.5" r="0.75" />
-                <circle class="nv-home-observatory-illustration__particle" cx="666.7" cy="342.0" r="0.65" />
-                <circle class="nv-home-observatory-illustration__particle" cx="465.5" cy="436.3" r="0.45" />
-                <circle class="nv-home-observatory-illustration__particle" cx="735.0" cy="298.4" r="0.65" />
-                <circle class="nv-home-observatory-illustration__particle" cx="536.8" cy="226.0" r="0.45" />
-                <circle class="nv-home-observatory-illustration__particle" cx="591.1" cy="240.3" r="0.55" />
-                <circle class="nv-home-observatory-illustration__particle" cx="461.2" cy="209.1" r="0.85" />
-                <circle class="nv-home-observatory-illustration__particle" cx="769.0" cy="267.0" r="0.55" />
-                <circle class="nv-home-observatory-illustration__particle" cx="773.7" cy="132.3" r="0.85" />
-                <circle class="nv-home-observatory-illustration__particle--amber" cx="732.5" cy="340.3" r="0.55" />
-                <circle class="nv-home-observatory-illustration__particle" cx="644.0" cy="271.6" r="0.85" />
-                <circle class="nv-home-observatory-illustration__particle" cx="741.6" cy="241.1" r="0.45" />
-                <circle class="nv-home-observatory-illustration__particle" cx="658.0" cy="371.3" r="0.75" />
-                <circle class="nv-home-observatory-illustration__particle" cx="758.3" cy="438.8" r="0.65" />
-                <circle class="nv-home-observatory-illustration__particle" cx="368.0" cy="194.5" r="0.55" />
-                <circle class="nv-home-observatory-illustration__particle" cx="632.6" cy="308.4" r="0.65" />
-                <circle class="nv-home-observatory-illustration__particle" cx="727.2" cy="342.2" r="0.55" />
-                <circle class="nv-home-observatory-illustration__particle" cx="412.0" cy="302.0" r="0.55" />
-                <circle class="nv-home-observatory-illustration__particle" cx="670.6" cy="253.7" r="0.75" />
-                <circle class="nv-home-observatory-illustration__particle" cx="756.7" cy="286.2" r="0.85" />
-                <circle class="nv-home-observatory-illustration__particle" cx="717.7" cy="207.8" r="0.45" />
-                <circle class="nv-home-observatory-illustration__particle" cx="579.1" cy="372.2" r="0.75" />
-                <circle class="nv-home-observatory-illustration__particle" cx="605.7" cy="222.0" r="0.55" />
-                <circle class="nv-home-observatory-illustration__particle" cx="329.8" cy="242.9" r="0.85" />
-                <circle class="nv-home-observatory-illustration__particle" cx="575.4" cy="254.2" r="0.45" />
-                <circle class="nv-home-observatory-illustration__particle" cx="528.9" cy="262.0" r="0.85" />
-                <circle class="nv-home-observatory-illustration__particle" cx="837.8" cy="165.8" r="0.45" />
-                <circle class="nv-home-observatory-illustration__particle" cx="675.7" cy="188.8" r="0.75" />
-                <circle class="nv-home-observatory-illustration__particle" cx="445.2" cy="223.8" r="0.85" />
-                <circle class="nv-home-observatory-illustration__particle" cx="818.6" cy="243.1" r="0.75" />
-                <circle class="nv-home-observatory-illustration__particle" cx="603.2" cy="182.7" r="0.85" />
-                <circle class="nv-home-observatory-illustration__particle" cx="443.3" cy="260.7" r="0.85" />
-                <circle class="nv-home-observatory-illustration__particle" cx="676.0" cy="328.2" r="0.55" />
-                <circle class="nv-home-observatory-illustration__particle--amber" cx="717.9" cy="456.7" r="0.65" />
-                <circle class="nv-home-observatory-illustration__particle" cx="715.3" cy="392.3" r="0.45" />
-                <circle class="nv-home-observatory-illustration__particle" cx="385.2" cy="447.5" r="0.75" />
-                <circle class="nv-home-observatory-illustration__particle" cx="668.2" cy="403.3" r="0.65" />
-                <circle class="nv-home-observatory-illustration__particle" cx="727.1" cy="214.4" r="0.65" />
-                <circle class="nv-home-observatory-illustration__particle" cx="716.8" cy="291.2" r="0.45" />
-                <circle class="nv-home-observatory-illustration__particle" cx="720.6" cy="351.4" r="0.55" />
-                <circle class="nv-home-observatory-illustration__particle--green" cx="609.0" cy="104.1" r="0.65" />
-                <circle class="nv-home-observatory-illustration__particle" cx="822.4" cy="173.6" r="0.75" />
-                <circle class="nv-home-observatory-illustration__particle" cx="653.2" cy="83.6" r="0.65" />
-                <circle class="nv-home-observatory-illustration__particle" cx="819.7" cy="237.9" r="0.85" />
-                <circle class="nv-home-observatory-illustration__particle" cx="649.6" cy="205.9" r="0.75" />
-                <circle class="nv-home-observatory-illustration__particle" cx="580.1" cy="416.9" r="0.55" />
-                <circle class="nv-home-observatory-illustration__particle" cx="600.0" cy="270.4" r="0.75" />
-                <circle class="nv-home-observatory-illustration__particle--amber" cx="776.1" cy="236.7" r="0.45" />
-                <circle class="nv-home-observatory-illustration__particle" cx="901.0" cy="340.9" r="0.45" />
-                <circle class="nv-home-observatory-illustration__particle" cx="559.2" cy="79.3" r="0.75" />
-                <circle class="nv-home-observatory-illustration__particle" cx="474.5" cy="378.3" r="0.55" />
-                <circle class="nv-home-observatory-illustration__particle" cx="750.6" cy="314.0" r="0.65" />
-                <circle class="nv-home-observatory-illustration__particle" cx="684.2" cy="121.7" r="0.75" />
-                <circle class="nv-home-observatory-illustration__particle--amber" cx="618.8" cy="269.6" r="0.55" />
-                <circle class="nv-home-observatory-illustration__particle" cx="819.8" cy="177.3" r="0.65" />
-                <circle class="nv-home-observatory-illustration__particle" cx="512.4" cy="211.2" r="0.75" />
-                <circle class="nv-home-observatory-illustration__particle" cx="931.2" cy="324.8" r="0.65" />
-                <circle class="nv-home-observatory-illustration__particle" cx="639.3" cy="153.1" r="0.55" />
-                <circle class="nv-home-observatory-illustration__particle" cx="707.3" cy="313.8" r="0.65" />
-                <circle class="nv-home-observatory-illustration__particle" cx="648.3" cy="137.9" r="0.65" />
-                <circle class="nv-home-observatory-illustration__particle" cx="617.6" cy="419.8" r="0.85" />
-                <circle class="nv-home-observatory-illustration__particle--green" cx="684.4" cy="294.9" r="0.55" />
-                <circle class="nv-home-observatory-illustration__particle" cx="672.3" cy="283.1" r="0.75" />
-                <circle class="nv-home-observatory-illustration__particle" cx="327.8" cy="354.7" r="0.65" />
-                <circle class="nv-home-observatory-illustration__particle" cx="695.9" cy="344.2" r="0.45" />
-                <circle class="nv-home-observatory-illustration__particle" cx="721.4" cy="358.2" r="0.65" />
-                <circle class="nv-home-observatory-illustration__particle" cx="800.7" cy="112.4" r="0.85" />
-                <circle class="nv-home-observatory-illustration__particle" cx="869.7" cy="98.7" r="0.75" />
-                <circle class="nv-home-observatory-illustration__particle" cx="735.4" cy="184.6" r="0.55" />
-                <circle class="nv-home-observatory-illustration__particle" cx="698.1" cy="303.6" r="0.65" />
-                <circle class="nv-home-observatory-illustration__particle" cx="634.9" cy="429.8" r="0.85" />
-                <circle class="nv-home-observatory-illustration__particle" cx="747.5" cy="185.7" r="0.65" />
-                <circle class="nv-home-observatory-illustration__particle" cx="749.9" cy="353.9" r="0.75" />
-                <circle class="nv-home-observatory-illustration__particle" cx="553.9" cy="409.5" r="0.65" />
-                <circle class="nv-home-observatory-illustration__particle" cx="472.4" cy="185.7" r="0.85" />
-                <circle class="nv-home-observatory-illustration__particle" cx="667.1" cy="354.1" r="0.55" />
-                <circle class="nv-home-observatory-illustration__particle" cx="791.6" cy="223.6" r="0.85" />
-                <circle class="nv-home-observatory-illustration__particle" cx="868.9" cy="307.9" r="0.65" />
-              </g>
-              <g class="nv-home-observatory-illustration__bridges">
-                <path d="M418 306 Q470 270 515 292" />
-                <path d="M492 206 Q548 220 604 248" />
-                <path d="M350 252 Q404 238 462 276" />
-                <path d="M610 374 Q668 392 724 350" />
-              </g>
-              <g class="nv-home-observatory-illustration__edges">
-                <path d="M790.6 264.5 L796.6 260.6" />
-                <path d="M611.2 254.7 L605.5 259.7" />
-                <path d="M602.6 252.3 L605.5 259.7" />
-                <path d="M602.6 252.3 L611.2 254.7" />
-                <path d="M632.2 278.0 L623.1 271.7" />
-                <path d="M642.4 270.5 L654 268" />
-                <path d="M632.2 278.0 L642.4 270.5" />
-                <path d="M541.8 285.7 L529.8 281.4" />
-                <path d="M529.8 281.4 L511.4 282.9" />
-                <path d="M642.4 270.5 L623.1 271.7" />
-                <path d="M826.0 312.5 L814.2 296.4" />
-                <path d="M605.3 281.1 L623.1 271.7" />
-                <path d="M611.2 254.7 L623.1 271.7" />
-                <path d="M605.3 281.1 L605.5 259.7" />
-                <path d="M542.4 328.0 L565 330" />
-                <path d="M748.0 243.4 L724.1 243.6" />
-                <path d="M632.2 278.0 L654 268" />
-                <path d="M605.3 281.1 L611.2 254.7" />
-                <path d="M605.3 281.1 L632.2 278.0" />
-                <path d="M697.3 374.4 L699.7 401.7" />
-                <path d="M663.7 240.4 L654 268" />
-                <path d="M741.2 185.9 L770.7 178.5" />
-                <path d="M541.8 285.7 L511.4 282.9" />
-                <path d="M697.3 374.4 L693.1 341.5" />
-                <path d="M724.1 326.5 L693.1 341.5" />
-                <path d="M642.4 270.5 L663.7 240.4" />
-                <path d="M833.3 248.5 L796.6 260.6" />
-                <path d="M790.6 264.5 L814.2 296.4" />
-                <path d="M770.7 178.5 L792 212" />
-                <path d="M814.2 296.4 L796.6 260.6" />
-                <path d="M541.8 285.7 L542.4 328.0" />
-                <path d="M790.6 264.5 L833.3 248.5" />
-                <path d="M826.0 312.5 L872 308" />
-                <path d="M748.0 243.4 L790.6 264.5" />
-                <path d="M529.8 281.4 L542.4 328.0" />
-                <path d="M796.6 260.6 L792 212" />
-                <path d="M605.5 259.7 L654 268" />
-                <path d="M942 188.0 L942 138.7" />
-                <path d="M541.8 285.7 L565 330" />
-                <path d="M814.2 296.4 L833.3 248.5" />
-                <path d="M693.1 165.1 L741.2 185.9" />
-                <path d="M748.0 243.4 L792 212" />
-              </g>
-              <g class="nv-home-observatory-illustration__nodes">
-                <circle class="nv-home-observatory-illustration__node" cx="605.3" cy="281.1" r="2.8" />
-                <circle class="nv-home-observatory-illustration__node" cx="602.6" cy="252.3" r="1.7" />
-                <circle class="nv-home-observatory-illustration__node" cx="632.2" cy="278.0" r="1.9" />
-                <circle class="nv-home-observatory-illustration__node" cx="642.4" cy="270.5" r="1.5" />
-                <circle class="nv-home-observatory-illustration__node" cx="611.2" cy="254.7" r="2.4" />
-                <circle class="nv-home-observatory-illustration__node" cx="605.5" cy="259.7" r="2.1" />
-                <circle class="nv-home-observatory-illustration__node" cx="541.8" cy="285.7" r="1.9" />
-                <circle class="nv-home-observatory-illustration__node--accent-aqua" cx="623.1" cy="271.7" r="1.9" />
-                <circle class="nv-home-observatory-illustration__node" cx="693.1" cy="165.1" r="2.4" />
-                <circle class="nv-home-observatory-illustration__node" cx="663.7" cy="240.4" r="1.7" />
-                <circle class="nv-home-observatory-illustration__node" cx="741.2" cy="185.9" r="2.4" />
-                <circle class="nv-home-observatory-illustration__node--accent-aqua" cx="770.7" cy="178.5" r="1.5" />
-                <circle class="nv-home-observatory-illustration__node" cx="748.0" cy="243.4" r="2.8" />
-                <circle class="nv-home-observatory-illustration__node" cx="724.1" cy="243.6" r="2.1" />
-                <circle class="nv-home-observatory-illustration__node" cx="826.0" cy="312.5" r="1.7" />
-                <circle class="nv-home-observatory-illustration__node" cx="790.6" cy="264.5" r="1.9" />
-                <circle class="nv-home-observatory-illustration__node--accent-amber" cx="814.2" cy="296.4" r="1.7" />
-                <circle class="nv-home-observatory-illustration__node" cx="833.3" cy="248.5" r="2.1" />
-                <circle class="nv-home-observatory-illustration__node" cx="796.6" cy="260.6" r="2.8" />
-                <circle class="nv-home-observatory-illustration__node" cx="942" cy="188.0" r="2.1" />
-                <circle class="nv-home-observatory-illustration__node" cx="942" cy="138.7" r="2.4" />
-                <circle class="nv-home-observatory-illustration__node" cx="872.2" cy="191.9" r="2.4" />
-                <circle class="nv-home-observatory-illustration__node--accent-aqua" cx="872.9" cy="134.6" r="1.5" />
-                <circle class="nv-home-observatory-illustration__node" cx="724.1" cy="326.5" r="1.9" />
-                <circle class="nv-home-observatory-illustration__node" cx="697.3" cy="374.4" r="2.8" />
-                <circle class="nv-home-observatory-illustration__node--accent-aqua" cx="699.7" cy="401.7" r="1.5" />
-                <circle class="nv-home-observatory-illustration__node" cx="693.1" cy="341.5" r="1.5" />
-                <circle class="nv-home-observatory-illustration__node" cx="529.8" cy="281.4" r="1.7" />
-                <circle class="nv-home-observatory-illustration__node" cx="511.4" cy="282.9" r="1.9" />
-                <circle class="nv-home-observatory-illustration__node" cx="542.4" cy="328.0" r="1.9" />
-                <circle class="nv-home-observatory-illustration__node--core" cx="654" cy="268" r="3.6" />
-                <circle class="nv-home-observatory-illustration__node--core" cx="792" cy="212" r="3.0" />
-                <circle class="nv-home-observatory-illustration__node--core" cx="872" cy="308" r="2.8" />
-                <circle class="nv-home-observatory-illustration__node--accent-aqua" cx="565" cy="330" r="2.4" />
-              </g>
-              <g class="nv-home-observatory-illustration__marks">
-                <path d="M512 210 h16" />
-                <path d="M520 202 v16" />
-                <path d="M734 118 h16" />
-                <path d="M742 110 v16" />
-                <path d="M900 250 h16" />
-                <path d="M908 242 v16" />
-                <path d="M602 408 h16" />
-                <path d="M610 400 v16" />
-              </g>
-              <path class="nv-home-observatory-illustration__signal" d="M654 268 Q722 226 792 212" />
-            </svg>
-          </div>
-          <div class="nv-cluster nv-cluster--gap-sm" style="justify-content: space-between; align-items: center;">
-            <div class="nv-workspace__eyebrow" data-workspace-route>Route: home</div>
-            <span class="nv-badge nv-workspace__status" data-workspace-status data-status="idle" data-variant="info">IDLE</span>
-          </div>
+          <!-- R3 Workspace Surface -->
+          <div class="nv-workspace__surface nv-stack nv-stack--gap-md">
+                        <div class="nv-home-observatory-illustration" aria-hidden="true" data-artwork-phase="NV-600.9-R7-LIVING-SEMANTIC-FIELD">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" aria-hidden="true" focusable="false">
+                <defs>
+                  <style>
+                    .sf-micro-dot{fill:var(--nv-semantic-node-color, #1e2c3e)}
+                    .sf-cluster-node{fill:var(--nv-semantic-node-color, #1e2c3e)}
+                    .sf-cluster-edge{fill:none;stroke:var(--nv-semantic-edge-color, #0e7490);vector-effect:non-scaling-stroke}
+                    .sf-inter-edge{fill:none;stroke:var(--nv-semantic-edge-color, #0e7490);vector-effect:non-scaling-stroke}
+                    .sf-particle{fill:var(--nv-semantic-node-color, #1e2c3e)}
+                    .sf-draft-tick{fill:none;stroke:var(--nv-semantic-edge-color, #0e7490);vector-effect:non-scaling-stroke}
+                    .sf-draft-guide{fill:none;stroke:var(--nv-semantic-edge-color, #0e7490);vector-effect:non-scaling-stroke}
+                    .sf-signal-path{fill:none;stroke:var(--nv-semantic-signal-color, #06b6d4);vector-effect:non-scaling-stroke}
 
+                    @keyframes sf-signal-pulse{
+                      0%,82%{opacity:0;stroke-dashoffset:280}
+                      88%{opacity:0.08}
+                      94%{opacity:0.1}
+                      100%{opacity:0;stroke-dashoffset:-40}
+                    }
+                    @keyframes sf-node-breathe{
+                      0%,100%{opacity:var(--sf-breathe-from,0.08)}
+                      50%{opacity:var(--sf-breathe-to,0.14)}
+                    }
+                    @keyframes sf-micro-breathe{
+                      0%,100%{opacity:var(--sf-micro-from,0.04)}
+                      50%{opacity:var(--sf-micro-to,0.07)}
+                    }
+                    @keyframes sf-cluster-activate{
+                      0%,100%{opacity:1}
+                      5%,15%{opacity:1.06}
+                    }
+                    @keyframes sf-drift{
+                      0%,100%{transform:translate(0,0)}
+                      50%{transform:translate(1.2,-0.8)}
+                    }
+                    @keyframes sf-drift-b{
+                      0%,100%{transform:translate(0,0)}
+                      50%{transform:translate(-0.7,1.0)}
+                    }
+                    @keyframes sf-drift-c{
+                      0%,100%{transform:translate(0,0)}
+                      50%{transform:translate(0.9,0.6)}
+                    }
+
+                    .sf-signal{stroke-dasharray:10 300;stroke-dashoffset:300;animation:sf-signal-pulse 8s ease-in-out infinite;animation-delay:-2s}
+                    .sf-node-breathe{animation-duration:16s}
+                    .sf-micro-breathe{animation-duration:14s}
+                    .sf-cluster-activate{animation-duration:90s}
+                    .sf-drift,.sf-drift-b,.sf-drift-c{animation-duration:45s}
+
+                    @media(prefers-reduced-motion:reduce){
+                      .sf-signal{animation:none;opacity:0}
+                      [class*="sf-breathe"]{animation:none}
+                      [class*="sf-drift"]{animation:none}
+                      [class*="sf-cluster-activate"]{animation:none}
+                    }
+                  </style>
+                </defs>
+                <g>
+                  <circle cx="840.4" cy="218.3" r="0.5" class="sf-micro-dot" style="opacity:0.0372;--sf-micro-from:0.0372;--sf-micro-to:0.0672"/>
+                  <circle cx="650.9" cy="561.6" r="0.5" class="sf-micro-dot" style="opacity:0.0650;--sf-micro-from:0.0650;--sf-micro-to:0.0950"/>
+                  <circle cx="1123.7" cy="189.0" r="0.5" class="sf-micro-dot sf-micro-breathe" style="opacity:0.0550;--sf-micro-from:0.0550;--sf-micro-to:0.0850"/>
+                  <circle cx="937.1" cy="408.4" r="0.5" class="sf-micro-dot" style="opacity:0.0372;--sf-micro-from:0.0372;--sf-micro-to:0.0672"/>
+                  <circle cx="759.6" cy="133.8" r="0.5" class="sf-micro-dot" style="opacity:0.0764;--sf-micro-from:0.0764;--sf-micro-to:0.1064"/>
+                  <circle cx="910.9" cy="90.4" r="0.5" class="sf-micro-dot" style="opacity:0.0708;--sf-micro-from:0.0708;--sf-micro-to:0.1008"/>
+                  <circle cx="739.1" cy="419.4" r="1" class="sf-micro-dot" style="opacity:0.0354;--sf-micro-from:0.0354;--sf-micro-to:0.0654"/>
+                  <circle cx="1054.9" cy="77.6" r="0.5" class="sf-micro-dot sf-micro-breathe" style="opacity:0.0586;--sf-micro-from:0.0586;--sf-micro-to:0.0886"/>
+                  <circle cx="988.8" cy="310.4" r="0.5" class="sf-micro-dot" style="opacity:0.0885;--sf-micro-from:0.0885;--sf-micro-to:0.1185"/>
+                  <circle cx="1064.1" cy="269.7" r="1" class="sf-micro-dot" style="opacity:0.0434;--sf-micro-from:0.0434;--sf-micro-to:0.0734"/>
+                  <circle cx="1114.8" cy="566.7" r="1" class="sf-micro-dot sf-micro-breathe" style="opacity:0.0644;--sf-micro-from:0.0644;--sf-micro-to:0.0944"/>
+                  <circle cx="1015.0" cy="570.2" r="0.5" class="sf-micro-dot" style="opacity:0.0667;--sf-micro-from:0.0667;--sf-micro-to:0.0967"/>
+                  <circle cx="701.5" cy="162.5" r="0.5" class="sf-micro-dot" style="opacity:0.0503;--sf-micro-from:0.0503;--sf-micro-to:0.0803"/>
+                  <circle cx="773.1" cy="44.6" r="0.5" class="sf-micro-dot" style="opacity:0.0835;--sf-micro-from:0.0835;--sf-micro-to:0.1135"/>
+                  <circle cx="1108.1" cy="278.4" r="0.5" class="sf-micro-dot" style="opacity:0.0395;--sf-micro-from:0.0395;--sf-micro-to:0.0695"/>
+                  <circle cx="911.2" cy="460.8" r="0.5" class="sf-micro-dot" style="opacity:0.0623;--sf-micro-from:0.0623;--sf-micro-to:0.0923"/>
+                  <circle cx="631.5" cy="62.7" r="0.5" class="sf-micro-dot" style="opacity:0.0743;--sf-micro-from:0.0743;--sf-micro-to:0.1043"/>
+                  <circle cx="1003.7" cy="424.7" r="1" class="sf-micro-dot sf-micro-breathe" style="opacity:0.0799;--sf-micro-from:0.0799;--sf-micro-to:0.1099"/>
+                  <circle cx="1181.0" cy="45.9" r="0.5" class="sf-micro-dot" style="opacity:0.0874;--sf-micro-from:0.0874;--sf-micro-to:0.1174"/>
+                  <circle cx="1115.3" cy="64.5" r="0.5" class="sf-micro-dot sf-micro-breathe" style="opacity:0.0615;--sf-micro-from:0.0615;--sf-micro-to:0.0915"/>
+                  <circle cx="574.4" cy="489.1" r="0.5" class="sf-micro-dot" style="opacity:0.0511;--sf-micro-from:0.0511;--sf-micro-to:0.0811"/>
+                  <circle cx="935.0" cy="392.0" r="0.5" class="sf-micro-dot" style="opacity:0.0583;--sf-micro-from:0.0583;--sf-micro-to:0.0883"/>
+                  <circle cx="767.1" cy="188.9" r="0.5" class="sf-micro-dot sf-micro-breathe" style="opacity:0.0392;--sf-micro-from:0.0392;--sf-micro-to:0.0692"/>
+                  <circle cx="642.5" cy="46.3" r="1" class="sf-micro-dot" style="opacity:0.0498;--sf-micro-from:0.0498;--sf-micro-to:0.0798"/>
+                  <circle cx="1066.9" cy="488.5" r="1" class="sf-micro-dot" style="opacity:0.0387;--sf-micro-from:0.0387;--sf-micro-to:0.0687"/>
+                  <circle cx="757.3" cy="33.8" r="0.5" class="sf-micro-dot" style="opacity:0.0751;--sf-micro-from:0.0751;--sf-micro-to:0.1051"/>
+                  <circle cx="662.8" cy="366.7" r="0.5" class="sf-micro-dot" style="opacity:0.0458;--sf-micro-from:0.0458;--sf-micro-to:0.0758"/>
+                  <circle cx="1051.6" cy="119.9" r="0.5" class="sf-micro-dot" style="opacity:0.0728;--sf-micro-from:0.0728;--sf-micro-to:0.1028"/>
+                  <circle cx="1058.4" cy="134.5" r="0.5" class="sf-micro-dot" style="opacity:0.0463;--sf-micro-from:0.0463;--sf-micro-to:0.0763"/>
+                  <circle cx="826.0" cy="355.8" r="0.5" class="sf-micro-dot" style="opacity:0.0638;--sf-micro-from:0.0638;--sf-micro-to:0.0938"/>
+                  <circle cx="1043.9" cy="482.3" r="0.5" class="sf-micro-dot" style="opacity:0.0587;--sf-micro-from:0.0587;--sf-micro-to:0.0887"/>
+                  <circle cx="926.4" cy="575.8" r="1" class="sf-micro-dot" style="opacity:0.0357;--sf-micro-from:0.0357;--sf-micro-to:0.0657"/>
+                  <circle cx="665.1" cy="130.3" r="1" class="sf-micro-dot sf-micro-breathe" style="opacity:0.0410;--sf-micro-from:0.0410;--sf-micro-to:0.0710"/>
+                  <circle cx="934.7" cy="559.4" r="0.5" class="sf-micro-dot" style="opacity:0.0640;--sf-micro-from:0.0640;--sf-micro-to:0.0940"/>
+                  <circle cx="937.8" cy="295.0" r="1" class="sf-micro-dot" style="opacity:0.0518;--sf-micro-from:0.0518;--sf-micro-to:0.0818"/>
+                  <circle cx="789.8" cy="248.7" r="1" class="sf-micro-dot" style="opacity:0.0605;--sf-micro-from:0.0605;--sf-micro-to:0.0905"/>
+                  <circle cx="696.5" cy="44.7" r="1" class="sf-micro-dot" style="opacity:0.0694;--sf-micro-from:0.0694;--sf-micro-to:0.0994"/>
+                  <circle cx="1092.9" cy="394.1" r="0.5" class="sf-micro-dot" style="opacity:0.0681;--sf-micro-from:0.0681;--sf-micro-to:0.0981"/>
+                  <circle cx="741.2" cy="219.4" r="0.5" class="sf-micro-dot" style="opacity:0.0619;--sf-micro-from:0.0619;--sf-micro-to:0.0919"/>
+                  <circle cx="659.6" cy="575.2" r="0.5" class="sf-micro-dot" style="opacity:0.0628;--sf-micro-from:0.0628;--sf-micro-to:0.0928"/>
+                  <circle cx="578.7" cy="95.8" r="0.5" class="sf-micro-dot" style="opacity:0.0698;--sf-micro-from:0.0698;--sf-micro-to:0.0998"/>
+                  <circle cx="1052.3" cy="75.6" r="0.5" class="sf-micro-dot" style="opacity:0.0538;--sf-micro-from:0.0538;--sf-micro-to:0.0838"/>
+                  <circle cx="995.9" cy="522.6" r="0.5" class="sf-micro-dot" style="opacity:0.0362;--sf-micro-from:0.0362;--sf-micro-to:0.0662"/>
+                  <circle cx="1147.7" cy="303.7" r="1" class="sf-micro-dot sf-micro-breathe" style="opacity:0.0874;--sf-micro-from:0.0874;--sf-micro-to:0.1174"/>
+                  <circle cx="970.6" cy="309.3" r="0.5" class="sf-micro-dot" style="opacity:0.0725;--sf-micro-from:0.0725;--sf-micro-to:0.1025"/>
+                  <circle cx="621.0" cy="19.1" r="0.5" class="sf-micro-dot" style="opacity:0.0420;--sf-micro-from:0.0420;--sf-micro-to:0.0720"/>
+                  <circle cx="1010.2" cy="36.7" r="0.5" class="sf-micro-dot" style="opacity:0.0418;--sf-micro-from:0.0418;--sf-micro-to:0.0718"/>
+                  <circle cx="702.1" cy="370.7" r="0.5" class="sf-micro-dot" style="opacity:0.0575;--sf-micro-from:0.0575;--sf-micro-to:0.0875"/>
+                  <circle cx="906.6" cy="534.8" r="0.5" class="sf-micro-dot" style="opacity:0.0684;--sf-micro-from:0.0684;--sf-micro-to:0.0984"/>
+                  <circle cx="1069.7" cy="64.9" r="0.5" class="sf-micro-dot" style="opacity:0.0480;--sf-micro-from:0.0480;--sf-micro-to:0.0780"/>
+                  <circle cx="643.4" cy="246.8" r="0.5" class="sf-micro-dot" style="opacity:0.0694;--sf-micro-from:0.0694;--sf-micro-to:0.0994"/>
+                  <circle cx="737.8" cy="71.7" r="1" class="sf-micro-dot" style="opacity:0.0454;--sf-micro-from:0.0454;--sf-micro-to:0.0754"/>
+                  <circle cx="738.9" cy="312.7" r="1" class="sf-micro-dot" style="opacity:0.0540;--sf-micro-from:0.0540;--sf-micro-to:0.0840"/>
+                  <circle cx="914.3" cy="316.6" r="0.5" class="sf-micro-dot" style="opacity:0.0497;--sf-micro-from:0.0497;--sf-micro-to:0.0797"/>
+                  <circle cx="692.1" cy="298.6" r="0.5" class="sf-micro-dot" style="opacity:0.0687;--sf-micro-from:0.0687;--sf-micro-to:0.0987"/>
+                  <circle cx="605.9" cy="560.9" r="0.5" class="sf-micro-dot" style="opacity:0.0389;--sf-micro-from:0.0389;--sf-micro-to:0.0689"/>
+                  <circle cx="588.1" cy="439.4" r="0.5" class="sf-micro-dot" style="opacity:0.0417;--sf-micro-from:0.0417;--sf-micro-to:0.0717"/>
+                  <circle cx="554.9" cy="262.7" r="0.5" class="sf-micro-dot" style="opacity:0.0669;--sf-micro-from:0.0669;--sf-micro-to:0.0969"/>
+                  <circle cx="615.2" cy="262.9" r="0.5" class="sf-micro-dot" style="opacity:0.0857;--sf-micro-from:0.0857;--sf-micro-to:0.1157"/>
+                  <circle cx="590.0" cy="226.1" r="1" class="sf-micro-dot" style="opacity:0.0826;--sf-micro-from:0.0826;--sf-micro-to:0.1126"/>
+                  <circle cx="726.2" cy="304.3" r="0.5" class="sf-micro-dot sf-micro-breathe" style="opacity:0.0594;--sf-micro-from:0.0594;--sf-micro-to:0.0894"/>
+                  <circle cx="838.2" cy="179.2" r="1.5" class="sf-micro-dot" style="opacity:0.0845;--sf-micro-from:0.0845;--sf-micro-to:0.1145"/>
+                  <circle cx="1126.5" cy="45.5" r="0.5" class="sf-micro-dot" style="opacity:0.0889;--sf-micro-from:0.0889;--sf-micro-to:0.1189"/>
+                  <circle cx="1108.1" cy="578.0" r="0.5" class="sf-micro-dot" style="opacity:0.0851;--sf-micro-from:0.0851;--sf-micro-to:0.1151"/>
+                  <circle cx="1155.0" cy="269.0" r="0.5" class="sf-micro-dot" style="opacity:0.0614;--sf-micro-from:0.0614;--sf-micro-to:0.0914"/>
+                  <circle cx="845.0" cy="482.8" r="0.5" class="sf-micro-dot" style="opacity:0.0505;--sf-micro-from:0.0505;--sf-micro-to:0.0805"/>
+                  <circle cx="708.5" cy="511.9" r="0.5" class="sf-micro-dot" style="opacity:0.0390;--sf-micro-from:0.0390;--sf-micro-to:0.0690"/>
+                  <circle cx="1042.6" cy="495.9" r="1" class="sf-micro-dot" style="opacity:0.0755;--sf-micro-from:0.0755;--sf-micro-to:0.1055"/>
+                  <circle cx="766.3" cy="50.2" r="0.5" class="sf-micro-dot" style="opacity:0.0555;--sf-micro-from:0.0555;--sf-micro-to:0.0855"/>
+                  <circle cx="879.7" cy="387.5" r="0.5" class="sf-micro-dot" style="opacity:0.0546;--sf-micro-from:0.0546;--sf-micro-to:0.0846"/>
+                  <circle cx="1088.8" cy="310.2" r="0.5" class="sf-micro-dot" style="opacity:0.0677;--sf-micro-from:0.0677;--sf-micro-to:0.0977"/>
+                  <circle cx="787.3" cy="500.4" r="0.5" class="sf-micro-dot" style="opacity:0.0513;--sf-micro-from:0.0513;--sf-micro-to:0.0813"/>
+                  <circle cx="685.1" cy="425.2" r="0.5" class="sf-micro-dot" style="opacity:0.0789;--sf-micro-from:0.0789;--sf-micro-to:0.1089"/>
+                  <circle cx="733.7" cy="407.7" r="1" class="sf-micro-dot" style="opacity:0.0563;--sf-micro-from:0.0563;--sf-micro-to:0.0863"/>
+                  <circle cx="784.8" cy="439.2" r="0.5" class="sf-micro-dot" style="opacity:0.0822;--sf-micro-from:0.0822;--sf-micro-to:0.1122"/>
+                  <circle cx="1147.4" cy="240.9" r="0.5" class="sf-micro-dot" style="opacity:0.0431;--sf-micro-from:0.0431;--sf-micro-to:0.0731"/>
+                  <circle cx="837.9" cy="75.2" r="0.5" class="sf-micro-dot" style="opacity:0.0786;--sf-micro-from:0.0786;--sf-micro-to:0.1086"/>
+                  <circle cx="870.8" cy="157.5" r="0.5" class="sf-micro-dot sf-micro-breathe" style="opacity:0.0537;--sf-micro-from:0.0537;--sf-micro-to:0.0837"/>
+                  <circle cx="1185.4" cy="80.1" r="0.5" class="sf-micro-dot" style="opacity:0.0787;--sf-micro-from:0.0787;--sf-micro-to:0.1087"/>
+                  <circle cx="663.8" cy="63.3" r="1" class="sf-micro-dot" style="opacity:0.0691;--sf-micro-from:0.0691;--sf-micro-to:0.0991"/>
+                  <circle cx="644.8" cy="487.9" r="1" class="sf-micro-dot" style="opacity:0.0580;--sf-micro-from:0.0580;--sf-micro-to:0.0880"/>
+                  <circle cx="988.4" cy="275.5" r="0.5" class="sf-micro-dot" style="opacity:0.0740;--sf-micro-from:0.0740;--sf-micro-to:0.1040"/>
+                  <circle cx="731.8" cy="225.6" r="0.5" class="sf-micro-dot" style="opacity:0.0649;--sf-micro-from:0.0649;--sf-micro-to:0.0949"/>
+                  <circle cx="1153.7" cy="442.9" r="1" class="sf-micro-dot" style="opacity:0.0498;--sf-micro-from:0.0498;--sf-micro-to:0.0798"/>
+                  <circle cx="941.2" cy="309.4" r="1" class="sf-micro-dot sf-micro-breathe" style="opacity:0.0753;--sf-micro-from:0.0753;--sf-micro-to:0.1053"/>
+                  <circle cx="658.2" cy="305.9" r="1" class="sf-micro-dot" style="opacity:0.0512;--sf-micro-from:0.0512;--sf-micro-to:0.0812"/>
+                  <circle cx="654.1" cy="344.0" r="1" class="sf-micro-dot" style="opacity:0.0586;--sf-micro-from:0.0586;--sf-micro-to:0.0886"/>
+                  <circle cx="794.5" cy="97.3" r="0.5" class="sf-micro-dot" style="opacity:0.0839;--sf-micro-from:0.0839;--sf-micro-to:0.1139"/>
+                  <circle cx="767.3" cy="396.9" r="0.5" class="sf-micro-dot sf-micro-breathe" style="opacity:0.0861;--sf-micro-from:0.0861;--sf-micro-to:0.1161"/>
+                  <circle cx="1178.4" cy="448.0" r="0.5" class="sf-micro-dot" style="opacity:0.0786;--sf-micro-from:0.0786;--sf-micro-to:0.1086"/>
+                  <circle cx="1092.3" cy="534.9" r="1" class="sf-micro-dot" style="opacity:0.0879;--sf-micro-from:0.0879;--sf-micro-to:0.1179"/>
+                  <circle cx="596.6" cy="194.9" r="0.5" class="sf-micro-dot" style="opacity:0.0838;--sf-micro-from:0.0838;--sf-micro-to:0.1138"/>
+                  <circle cx="948.0" cy="150.2" r="0.5" class="sf-micro-dot" style="opacity:0.0404;--sf-micro-from:0.0404;--sf-micro-to:0.0704"/>
+                  <circle cx="1178.7" cy="503.0" r="0.5" class="sf-micro-dot sf-micro-breathe" style="opacity:0.0704;--sf-micro-from:0.0704;--sf-micro-to:0.1004"/>
+                  <circle cx="617.3" cy="476.5" r="1.5" class="sf-micro-dot" style="opacity:0.0559;--sf-micro-from:0.0559;--sf-micro-to:0.0859"/>
+                  <circle cx="753.5" cy="59.6" r="0.5" class="sf-micro-dot" style="opacity:0.0503;--sf-micro-from:0.0503;--sf-micro-to:0.0803"/>
+                  <circle cx="944.4" cy="220.2" r="0.5" class="sf-micro-dot" style="opacity:0.0761;--sf-micro-from:0.0761;--sf-micro-to:0.1061"/>
+                  <circle cx="1113.7" cy="565.7" r="1" class="sf-micro-dot" style="opacity:0.0526;--sf-micro-from:0.0526;--sf-micro-to:0.0826"/>
+                  <circle cx="1024.9" cy="271.5" r="0.5" class="sf-micro-dot sf-micro-breathe" style="opacity:0.0364;--sf-micro-from:0.0364;--sf-micro-to:0.0664"/>
+                  <circle cx="1035.8" cy="199.5" r="0.5" class="sf-micro-dot sf-micro-breathe" style="opacity:0.0691;--sf-micro-from:0.0691;--sf-micro-to:0.0991"/>
+                  <circle cx="857.1" cy="557.8" r="0.5" class="sf-micro-dot" style="opacity:0.0703;--sf-micro-from:0.0703;--sf-micro-to:0.1003"/>
+                  <circle cx="1098.8" cy="559.0" r="0.5" class="sf-micro-dot" style="opacity:0.0858;--sf-micro-from:0.0858;--sf-micro-to:0.1158"/>
+                  <circle cx="1154.2" cy="545.3" r="0.5" class="sf-micro-dot" style="opacity:0.0836;--sf-micro-from:0.0836;--sf-micro-to:0.1136"/>
+                  <circle cx="981.7" cy="477.5" r="0.5" class="sf-micro-dot" style="opacity:0.0631;--sf-micro-from:0.0631;--sf-micro-to:0.0931"/>
+                  <circle cx="826.1" cy="489.0" r="0.5" class="sf-micro-dot" style="opacity:0.0569;--sf-micro-from:0.0569;--sf-micro-to:0.0869"/>
+                  <circle cx="1003.9" cy="221.6" r="0.5" class="sf-micro-dot sf-micro-breathe" style="opacity:0.0695;--sf-micro-from:0.0695;--sf-micro-to:0.0995"/>
+                  <circle cx="1096.3" cy="478.9" r="0.5" class="sf-micro-dot" style="opacity:0.0700;--sf-micro-from:0.0700;--sf-micro-to:0.1000"/>
+                  <circle cx="638.2" cy="506.7" r="0.5" class="sf-micro-dot" style="opacity:0.0421;--sf-micro-from:0.0421;--sf-micro-to:0.0721"/>
+                  <circle cx="1169.9" cy="295.3" r="1.5" class="sf-micro-dot sf-micro-breathe" style="opacity:0.0663;--sf-micro-from:0.0663;--sf-micro-to:0.0963"/>
+                  <circle cx="1183.3" cy="587.5" r="0.5" class="sf-micro-dot" style="opacity:0.0798;--sf-micro-from:0.0798;--sf-micro-to:0.1098"/>
+                  <circle cx="842.1" cy="287.0" r="0.5" class="sf-micro-dot" style="opacity:0.0753;--sf-micro-from:0.0753;--sf-micro-to:0.1053"/>
+                  <circle cx="558.1" cy="263.3" r="1" class="sf-micro-dot" style="opacity:0.0789;--sf-micro-from:0.0789;--sf-micro-to:0.1089"/>
+                  <circle cx="702.2" cy="495.7" r="0.5" class="sf-micro-dot" style="opacity:0.0465;--sf-micro-from:0.0465;--sf-micro-to:0.0765"/>
+                  <circle cx="851.6" cy="342.6" r="0.5" class="sf-micro-dot" style="opacity:0.0726;--sf-micro-from:0.0726;--sf-micro-to:0.1026"/>
+                  <circle cx="618.9" cy="536.4" r="0.5" class="sf-micro-dot" style="opacity:0.0725;--sf-micro-from:0.0725;--sf-micro-to:0.1025"/>
+                  <circle cx="859.1" cy="353.7" r="0.5" class="sf-micro-dot" style="opacity:0.0821;--sf-micro-from:0.0821;--sf-micro-to:0.1121"/>
+                  <circle cx="662.4" cy="268.9" r="0.5" class="sf-micro-dot" style="opacity:0.0760;--sf-micro-from:0.0760;--sf-micro-to:0.1060"/>
+                  <circle cx="1174.2" cy="158.2" r="0.5" class="sf-micro-dot" style="opacity:0.0778;--sf-micro-from:0.0778;--sf-micro-to:0.1078"/>
+                  <circle cx="838.8" cy="170.5" r="0.5" class="sf-micro-dot sf-micro-breathe" style="opacity:0.0685;--sf-micro-from:0.0685;--sf-micro-to:0.0985"/>
+                  <circle cx="1054.1" cy="534.1" r="1.5" class="sf-micro-dot" style="opacity:0.0732;--sf-micro-from:0.0732;--sf-micro-to:0.1032"/>
+                  <circle cx="669.0" cy="402.8" r="0.5" class="sf-micro-dot" style="opacity:0.0352;--sf-micro-from:0.0352;--sf-micro-to:0.0652"/>
+                  <circle cx="1090.7" cy="454.2" r="0.5" class="sf-micro-dot sf-micro-breathe" style="opacity:0.0351;--sf-micro-from:0.0351;--sf-micro-to:0.0651"/>
+                  <circle cx="1087.7" cy="360.6" r="0.5" class="sf-micro-dot" style="opacity:0.0861;--sf-micro-from:0.0861;--sf-micro-to:0.1161"/>
+                  <circle cx="610.8" cy="509.9" r="0.5" class="sf-micro-dot" style="opacity:0.0527;--sf-micro-from:0.0527;--sf-micro-to:0.0827"/>
+                  <circle cx="978.5" cy="292.1" r="0.5" class="sf-micro-dot sf-micro-breathe" style="opacity:0.0581;--sf-micro-from:0.0581;--sf-micro-to:0.0881"/>
+                  <circle cx="1034.0" cy="81.3" r="0.5" class="sf-micro-dot" style="opacity:0.0750;--sf-micro-from:0.0750;--sf-micro-to:0.1050"/>
+                  <circle cx="1123.4" cy="77.5" r="0.5" class="sf-micro-dot" style="opacity:0.0446;--sf-micro-from:0.0446;--sf-micro-to:0.0746"/>
+                  <circle cx="1016.6" cy="384.8" r="0.5" class="sf-micro-dot" style="opacity:0.0800;--sf-micro-from:0.0800;--sf-micro-to:0.1100"/>
+                  <circle cx="870.9" cy="444.4" r="1" class="sf-micro-dot" style="opacity:0.0350;--sf-micro-from:0.0350;--sf-micro-to:0.0650"/>
+                  <circle cx="564.5" cy="584.0" r="0.5" class="sf-micro-dot sf-micro-breathe" style="opacity:0.0509;--sf-micro-from:0.0509;--sf-micro-to:0.0809"/>
+                  <circle cx="907.5" cy="529.2" r="1" class="sf-micro-dot" style="opacity:0.0355;--sf-micro-from:0.0355;--sf-micro-to:0.0655"/>
+                  <circle cx="560.2" cy="468.1" r="0.5" class="sf-micro-dot" style="opacity:0.0862;--sf-micro-from:0.0862;--sf-micro-to:0.1162"/>
+                  <circle cx="1108.9" cy="239.9" r="0.5" class="sf-micro-dot" style="opacity:0.0833;--sf-micro-from:0.0833;--sf-micro-to:0.1133"/>
+                </g>
+                <g>
+                  <path class="sf-cluster-edge" d="M1116.6 467.7 L1133.7 502.1" style="opacity:0.0254;stroke-width:0.27"/>
+                  <path class="sf-cluster-edge" d="M1116.6 467.7 L1128.3 469.1" style="opacity:0.0443;stroke-width:0.45"/>
+                  <path class="sf-cluster-edge" d="M1133.7 502.1 L1128.3 469.1" style="opacity:0.0344;stroke-width:0.40"/>
+                  <path class="sf-cluster-edge" d="M665.5 148.4 L665.8 141.6" style="opacity:0.0387;stroke-width:0.44"/>
+                  <path class="sf-cluster-edge" d="M665.5 148.4 L676.3 145.3" style="opacity:0.0434;stroke-width:0.40"/>
+                  <path class="sf-cluster-edge" d="M665.8 141.6 L680.7 116.7" style="opacity:0.0214;stroke-width:0.42"/>
+                  <path class="sf-cluster-edge" d="M676.3 145.3 L680.7 116.7" style="opacity:0.0118;stroke-width:0.39"/>
+                  <path class="sf-cluster-edge" d="M1121.2 519.6 L1139.2 519.2" style="opacity:0.0257;stroke-width:0.35"/>
+                  <path class="sf-cluster-edge" d="M1121.2 519.6 L1132.5 520.3" style="opacity:0.0225;stroke-width:0.44"/>
+                  <path class="sf-cluster-edge" d="M1139.2 519.2 L1132.5 520.3" style="opacity:0.0238;stroke-width:0.28"/>
+                  <path class="sf-cluster-edge" d="M1088.2 311.8 L1090.3 305.4" style="opacity:0.0331;stroke-width:0.33"/>
+                  <path class="sf-cluster-edge" d="M1088.2 311.8 L1064.3 311.8" style="opacity:0.0348;stroke-width:0.41"/>
+                  <path class="sf-cluster-edge" d="M1088.2 311.8 L1083.4 296.5" style="opacity:0.0380;stroke-width:0.35"/>
+                  <path class="sf-cluster-edge" d="M1088.2 311.8 L1074.0 297.4" style="opacity:0.0182;stroke-width:0.34"/>
+                  <path class="sf-cluster-edge" d="M1098.0 306.5 L1090.3 305.4" style="opacity:0.0452;stroke-width:0.36"/>
+                  <path class="sf-cluster-edge" d="M1098.0 306.5 L1064.3 311.8" style="opacity:0.0277;stroke-width:0.39"/>
+                  <path class="sf-cluster-edge" d="M1098.0 306.5 L1074.0 297.4" style="opacity:0.0223;stroke-width:0.27"/>
+                  <path class="sf-cluster-edge" d="M1090.3 305.4 L1064.3 311.8" style="opacity:0.0366;stroke-width:0.36"/>
+                  <path class="sf-cluster-edge" d="M1090.3 305.4 L1074.0 297.4" style="opacity:0.0407;stroke-width:0.40"/>
+                  <path class="sf-cluster-edge" d="M1064.3 311.8 L1083.4 296.5" style="opacity:0.0136;stroke-width:0.42"/>
+                  <path class="sf-cluster-edge" d="M1064.3 311.8 L1074.0 297.4" style="opacity:0.0323;stroke-width:0.34"/>
+                  <path class="sf-cluster-edge" d="M1083.4 296.5 L1074.0 297.4" style="opacity:0.0199;stroke-width:0.35"/>
+                  <path class="sf-cluster-edge" d="M969.0 8.8 L952.9 -10.9" style="opacity:0.0257;stroke-width:0.43"/>
+                  <path class="sf-cluster-edge" d="M969.0 8.8 L973.8 48.9" style="opacity:0.0123;stroke-width:0.35"/>
+                  <path class="sf-cluster-edge" d="M969.0 8.8 L967.5 49.1" style="opacity:0.0102;stroke-width:0.42"/>
+                  <path class="sf-cluster-edge" d="M705.8 329.0 L714.5 286.7" style="opacity:0.0149;stroke-width:0.37"/>
+                  <path class="sf-cluster-edge" d="M705.8 329.0 L714.7 282.6" style="opacity:0.0230;stroke-width:0.32"/>
+                  <path class="sf-cluster-edge" d="M714.5 286.7 L714.7 282.6" style="opacity:0.0391;stroke-width:0.40"/>
+                  <path class="sf-cluster-edge" d="M714.7 282.6 L673.4 288.3" style="opacity:0.0109;stroke-width:0.44"/>
+                  <path class="sf-cluster-edge" d="M993.0 487.3 L1004.3 458.2" style="opacity:0.0301;stroke-width:0.35"/>
+                  <path class="sf-cluster-edge" d="M993.0 487.3 L992.3 469.6" style="opacity:0.0408;stroke-width:0.40"/>
+                  <path class="sf-cluster-edge" d="M993.0 487.3 L1019.9 483.7" style="opacity:0.0156;stroke-width:0.31"/>
+                  <path class="sf-cluster-edge" d="M993.0 487.3 L1014.1 449.9" style="opacity:0.0148;stroke-width:0.33"/>
+                  <path class="sf-cluster-edge" d="M1004.3 458.2 L992.3 469.6" style="opacity:0.0457;stroke-width:0.44"/>
+                  <path class="sf-cluster-edge" d="M1004.3 458.2 L1019.9 483.7" style="opacity:0.0332;stroke-width:0.39"/>
+                  <path class="sf-cluster-edge" d="M1004.3 458.2 L1005.6 436.9" style="opacity:0.0178;stroke-width:0.33"/>
+                  <path class="sf-cluster-edge" d="M1004.3 458.2 L1014.1 449.9" style="opacity:0.0380;stroke-width:0.41"/>
+                  <path class="sf-cluster-edge" d="M992.3 469.6 L1019.9 483.7" style="opacity:0.0141;stroke-width:0.33"/>
+                  <path class="sf-cluster-edge" d="M992.3 469.6 L1005.6 436.9" style="opacity:0.0317;stroke-width:0.45"/>
+                  <path class="sf-cluster-edge" d="M1019.9 483.7 L1005.6 436.9" style="opacity:0.0209;stroke-width:0.36"/>
+                  <path class="sf-cluster-edge" d="M1019.9 483.7 L1014.1 449.9" style="opacity:0.0199;stroke-width:0.31"/>
+                  <path class="sf-cluster-edge" d="M1095.4 565.5 L1104.2 570.5" style="opacity:0.0352;stroke-width:0.37"/>
+                  <path class="sf-cluster-edge" d="M1104.2 570.5 L1084.6 561.7" style="opacity:0.0330;stroke-width:0.36"/>
+                  <path class="sf-cluster-edge" d="M1188.2 165.0 L1191.6 169.4" style="opacity:0.0395;stroke-width:0.34"/>
+                  <path class="sf-cluster-edge" d="M1188.2 165.0 L1154.8 165.5" style="opacity:0.0198;stroke-width:0.45"/>
+                  <path class="sf-cluster-edge" d="M1188.2 165.0 L1172.8 142.3" style="opacity:0.0273;stroke-width:0.26"/>
+                  <path class="sf-cluster-edge" d="M1180.9 163.0 L1191.6 169.4" style="opacity:0.0464;stroke-width:0.35"/>
+                  <path class="sf-cluster-edge" d="M1180.9 163.0 L1154.8 165.5" style="opacity:0.0349;stroke-width:0.36"/>
+                  <path class="sf-cluster-edge" d="M1180.9 163.0 L1172.8 142.3" style="opacity:0.0317;stroke-width:0.27"/>
+                  <path class="sf-cluster-edge" d="M1191.6 169.4 L1154.8 165.5" style="opacity:0.0149;stroke-width:0.34"/>
+                  <path class="sf-cluster-edge" d="M1191.6 169.4 L1172.8 142.3" style="opacity:0.0305;stroke-width:0.32"/>
+                  <path class="sf-cluster-edge" d="M1154.8 165.5 L1172.8 142.3" style="opacity:0.0289;stroke-width:0.34"/>
+                  <path class="sf-cluster-edge" d="M1118.0 440.8 L1124.7 445.1" style="opacity:0.0293;stroke-width:0.26"/>
+                  <path class="sf-cluster-edge" d="M1150.9 432.0 L1143.9 454.0" style="opacity:0.0122;stroke-width:0.44"/>
+                  <path class="sf-cluster-edge" d="M1124.7 445.1 L1143.9 454.0" style="opacity:0.0311;stroke-width:0.31"/>
+                  <path class="sf-cluster-edge" d="M834.6 190.0 L848.0 198.1" style="opacity:0.0213;stroke-width:0.29"/>
+                  <path class="sf-cluster-edge" d="M869.3 190.2 L848.0 198.1" style="opacity:0.0290;stroke-width:0.31"/>
+                  <path class="sf-cluster-edge" d="M782.3 123.1 L763.5 122.3" style="opacity:0.0199;stroke-width:0.42"/>
+                  <path class="sf-cluster-edge" d="M782.3 123.1 L768.5 124.4" style="opacity:0.0367;stroke-width:0.34"/>
+                  <path class="sf-cluster-edge" d="M763.5 122.3 L768.5 124.4" style="opacity:0.0473;stroke-width:0.45"/>
+                  <path class="sf-cluster-edge" d="M783.4 100.1 L755.8 81.1" style="opacity:0.0155;stroke-width:0.27"/>
+                  <path class="sf-cluster-edge" d="M783.4 100.1 L787.4 68.9" style="opacity:0.0323;stroke-width:0.31"/>
+                  <path class="sf-cluster-edge" d="M783.4 100.1 L775.9 77.0" style="opacity:0.0340;stroke-width:0.26"/>
+                  <path class="sf-cluster-edge" d="M783.4 100.1 L775.1 96.7" style="opacity:0.0211;stroke-width:0.25"/>
+                  <path class="sf-cluster-edge" d="M765.9 53.5 L775.9 77.0" style="opacity:0.0156;stroke-width:0.36"/>
+                  <path class="sf-cluster-edge" d="M765.9 53.5 L775.1 96.7" style="opacity:0.0174;stroke-width:0.37"/>
+                  <path class="sf-cluster-edge" d="M755.8 81.1 L787.4 68.9" style="opacity:0.0258;stroke-width:0.40"/>
+                  <path class="sf-cluster-edge" d="M778.7 83.6 L787.4 68.9" style="opacity:0.0415;stroke-width:0.38"/>
+                  <path class="sf-cluster-edge" d="M778.7 83.6 L775.1 96.7" style="opacity:0.0368;stroke-width:0.33"/>
+                  <path class="sf-cluster-edge" d="M775.9 77.0 L775.1 96.7" style="opacity:0.0196;stroke-width:0.32"/>
+                  <path class="sf-cluster-edge" d="M819.7 281.7 L807.3 316.4" style="opacity:0.0193;stroke-width:0.44"/>
+                  <path class="sf-cluster-edge" d="M819.7 281.7 L790.1 282.2" style="opacity:0.0265;stroke-width:0.39"/>
+                  <path class="sf-cluster-edge" d="M819.7 281.7 L811.6 315.1" style="opacity:0.0144;stroke-width:0.28"/>
+                  <path class="sf-cluster-edge" d="M810.3 319.2 L807.3 316.4" style="opacity:0.0210;stroke-width:0.26"/>
+                  <path class="sf-cluster-edge" d="M810.3 319.2 L814.0 322.4" style="opacity:0.0386;stroke-width:0.44"/>
+                  <path class="sf-cluster-edge" d="M810.3 319.2 L790.1 282.2" style="opacity:0.0262;stroke-width:0.39"/>
+                  <path class="sf-cluster-edge" d="M810.3 319.2 L856.6 330.7" style="opacity:0.0113;stroke-width:0.38"/>
+                  <path class="sf-cluster-edge" d="M810.3 319.2 L811.6 315.1" style="opacity:0.0281;stroke-width:0.43"/>
+                  <path class="sf-cluster-edge" d="M807.3 316.4 L790.1 282.2" style="opacity:0.0117;stroke-width:0.39"/>
+                  <path class="sf-cluster-edge" d="M807.3 316.4 L811.6 315.1" style="opacity:0.0220;stroke-width:0.41"/>
+                  <path class="sf-cluster-edge" d="M814.0 322.4 L790.1 282.2" style="opacity:0.0259;stroke-width:0.43"/>
+                  <path class="sf-cluster-edge" d="M814.0 322.4 L856.6 330.7" style="opacity:0.0215;stroke-width:0.42"/>
+                  <path class="sf-cluster-edge" d="M814.0 322.4 L811.6 315.1" style="opacity:0.0238;stroke-width:0.41"/>
+                  <path class="sf-cluster-edge" d="M790.1 282.2 L811.6 315.1" style="opacity:0.0230;stroke-width:0.33"/>
+                  <path class="sf-cluster-edge" d="M897.4 462.2 L912.8 463.9" style="opacity:0.0146;stroke-width:0.37"/>
+                  <path class="sf-cluster-edge" d="M566.9 19.2 L582.9 12.1" style="opacity:0.0153;stroke-width:0.45"/>
+                  <path class="sf-cluster-edge" d="M582.9 12.1 L562.2 13.1" style="opacity:0.0216;stroke-width:0.28"/>
+                  <path class="sf-cluster-edge" d="M1138.0 364.4 L1147.4 378.6" style="opacity:0.0314;stroke-width:0.42"/>
+                  <path class="sf-cluster-edge" d="M1138.0 364.4 L1146.5 377.2" style="opacity:0.0381;stroke-width:0.35"/>
+                  <path class="sf-cluster-edge" d="M1155.0 390.1 L1146.5 377.2" style="opacity:0.0174;stroke-width:0.35"/>
+                  <path class="sf-cluster-edge" d="M1155.0 390.1 L1117.7 381.1" style="opacity:0.0273;stroke-width:0.41"/>
+                  <path class="sf-cluster-edge" d="M1147.4 378.6 L1146.5 377.2" style="opacity:0.0344;stroke-width:0.26"/>
+                  <path class="sf-cluster-edge" d="M1148.9 347.0 L1146.5 377.2" style="opacity:0.0358;stroke-width:0.43"/>
+                  <path class="sf-cluster-edge" d="M1148.9 347.0 L1117.7 381.1" style="opacity:0.0244;stroke-width:0.25"/>
+                  <path class="sf-cluster-edge" d="M1146.5 377.2 L1117.7 381.1" style="opacity:0.0345;stroke-width:0.42"/>
+                  <path class="sf-cluster-edge" d="M1023.6 532.6 L1009.8 508.6" style="opacity:0.0234;stroke-width:0.26"/>
+                  <path class="sf-cluster-edge" d="M1023.6 532.6 L1034.7 503.2" style="opacity:0.0138;stroke-width:0.28"/>
+                  <path class="sf-cluster-edge" d="M1023.6 532.6 L1033.5 535.9" style="opacity:0.0481;stroke-width:0.40"/>
+                  <path class="sf-cluster-edge" d="M1023.6 532.6 L1018.4 508.4" style="opacity:0.0171;stroke-width:0.32"/>
+                  <path class="sf-cluster-edge" d="M1009.8 508.6 L1034.7 503.2" style="opacity:0.0205;stroke-width:0.34"/>
+                  <path class="sf-cluster-edge" d="M1009.8 508.6 L1033.5 535.9" style="opacity:0.0169;stroke-width:0.32"/>
+                  <path class="sf-cluster-edge" d="M1034.7 503.2 L1033.5 535.9" style="opacity:0.0182;stroke-width:0.29"/>
+                  <path class="sf-cluster-edge" d="M1034.7 503.2 L1018.4 508.4" style="opacity:0.0257;stroke-width:0.38"/>
+                </g>
+                <g>
+                  <path class="sf-inter-edge" d="M1128.3 469.1 L1139.2 519.2" style="opacity:0.0210;stroke-width:0.30"/>
+                  <path class="sf-inter-edge" d="M1133.7 502.1 L1064.3 311.8" style="opacity:0.0249;stroke-width:0.30"/>
+                  <path class="sf-inter-edge" d="M1133.7 502.1 L897.4 462.2" style="opacity:0.0094;stroke-width:0.30"/>
+                  <path class="sf-inter-edge" d="M1139.2 519.2 L1083.4 296.5" style="opacity:0.0122;stroke-width:0.34"/>
+                  <path class="sf-inter-edge" d="M1121.2 519.6 L993.0 487.3" style="opacity:0.0126;stroke-width:0.32"/>
+                  <path class="sf-inter-edge" d="M1147.1 540.8 L1104.2 570.5" style="opacity:0.0151;stroke-width:0.32"/>
+                  <path class="sf-inter-edge" d="M1083.4 296.5 L1095.4 565.5" style="opacity:0.0220;stroke-width:0.24"/>
+                  <path class="sf-inter-edge" d="M1090.3 305.4 L1188.2 165.0" style="opacity:0.0195;stroke-width:0.27"/>
+                  <path class="sf-inter-edge" d="M1088.2 311.8 L1124.7 445.1" style="opacity:0.0161;stroke-width:0.24"/>
+                  <path class="sf-inter-edge" d="M1064.3 311.8 L844.8 196.7" stroke-dasharray="1 4" style="opacity:0.0250;stroke-width:0.29"/>
+                  <path class="sf-inter-edge" d="M967.5 49.1 L782.3 123.1" stroke-dasharray="1 4" style="opacity:0.0213;stroke-width:0.24"/>
+                  <path class="sf-inter-edge" d="M969.0 8.8 L755.8 81.1" style="opacity:0.0132;stroke-width:0.28"/>
+                  <path class="sf-inter-edge" d="M705.8 329.0 L912.8 463.9" style="opacity:0.0138;stroke-width:0.24"/>
+                  <path class="sf-inter-edge" d="M1064.7 450.7 L1104.2 570.5" stroke-dasharray="1 4" style="opacity:0.0124;stroke-width:0.23"/>
+                  <path class="sf-inter-edge" d="M1064.7 450.7 L814.0 322.4" style="opacity:0.0144;stroke-width:0.33"/>
+                  <path class="sf-inter-edge" d="M1072.8 451.2 L1138.0 364.4" stroke-dasharray="1 4" style="opacity:0.0160;stroke-width:0.34"/>
+                  <path class="sf-inter-edge" d="M1014.1 449.9 L1104.2 570.5" stroke-dasharray="1 4" style="opacity:0.0095;stroke-width:0.30"/>
+                  <path class="sf-inter-edge" d="M1014.1 449.9 L1117.7 381.1" stroke-dasharray="1 4" style="opacity:0.0091;stroke-width:0.31"/>
+                  <path class="sf-inter-edge" d="M1114.6 532.2 L1124.7 445.1" style="opacity:0.0101;stroke-width:0.23"/>
+                  <path class="sf-inter-edge" d="M1095.4 565.5 L912.8 463.9" style="opacity:0.0136;stroke-width:0.29"/>
+                  <path class="sf-inter-edge" d="M1095.4 565.5 L1033.5 535.9" style="opacity:0.0085;stroke-width:0.35"/>
+                  <path class="sf-inter-edge" d="M1118.0 440.8 L912.8 463.9" style="opacity:0.0145;stroke-width:0.26"/>
+                  <path class="sf-inter-edge" d="M839.9 156.3 L819.7 281.7" style="opacity:0.0156;stroke-width:0.34"/>
+                  <path class="sf-inter-edge" d="M763.5 122.3 L856.6 330.7" style="opacity:0.0217;stroke-width:0.21"/>
+                  <path class="sf-inter-edge" d="M763.5 122.3 L566.9 19.2" style="opacity:0.0173;stroke-width:0.26"/>
+                  <path class="sf-inter-edge" d="M1138.0 364.4 L1033.5 535.9" style="opacity:0.0164;stroke-width:0.34"/>
+                </g>
+                <g>
+                  <path class="sf-cluster-edge" d="M650.9 561.6 L659.6 575.2" style="opacity:0.0064;stroke-width:0.29"/>
+                  <path class="sf-cluster-edge" d="M838.2 179.2 L870.8 157.5" style="opacity:0.0034;stroke-width:0.18"/>
+                  <path class="sf-cluster-edge" d="M1108.1 578.0 L1113.7 565.7" style="opacity:0.0088;stroke-width:0.20"/>
+                  <path class="sf-cluster-edge" d="M1035.8 199.5 L1003.9 221.6" style="opacity:0.0027;stroke-width:0.15"/>
+                </g>
+                <g>
+                  <g class="sf-drift-b">
+                    <circle cx="1116.6" cy="467.7" r="0.66" class="sf-cluster-node" style="opacity:0.1058;--sf-breathe-from:0.1058;--sf-breathe-to:0.1458"/>
+                    <circle cx="1133.7" cy="502.1" r="0.60" class="sf-cluster-node" style="opacity:0.0690;--sf-breathe-from:0.0690;--sf-breathe-to:0.1090"/>
+                    <circle cx="1128.3" cy="469.1" r="0.51" class="sf-cluster-node" style="opacity:0.1144;--sf-breathe-from:0.1144;--sf-breathe-to:0.1544"/>
+                  </g>
+                  <g>
+                    <circle cx="665.5" cy="148.4" r="0.86" class="sf-cluster-node" style="opacity:0.1048;--sf-breathe-from:0.1048;--sf-breathe-to:0.1448"/>
+                    <circle cx="665.8" cy="141.6" r="0.51" class="sf-cluster-node" style="opacity:0.0773;--sf-breathe-from:0.0773;--sf-breathe-to:0.1173"/>
+                    <circle cx="676.3" cy="145.3" r="0.70" class="sf-cluster-node" style="opacity:0.1242;--sf-breathe-from:0.1242;--sf-breathe-to:0.1642"/>
+                    <circle cx="680.7" cy="116.7" r="0.66" class="sf-cluster-node" style="opacity:0.1296;--sf-breathe-from:0.1296;--sf-breathe-to:0.1696"/>
+                  </g>
+                  <g>
+                    <circle cx="1156.5" cy="540.0" r="0.62" class="sf-cluster-node" style="opacity:0.1018;--sf-breathe-from:0.1018;--sf-breathe-to:0.1418"/>
+                    <circle cx="1147.1" cy="540.8" r="0.70" class="sf-cluster-node" style="opacity:0.0980;--sf-breathe-from:0.0980;--sf-breathe-to:0.1380"/>
+                    <circle cx="1121.2" cy="519.6" r="1.02" class="sf-cluster-node sf-node-breathe" style="opacity:0.1357;--sf-breathe-from:0.1357;--sf-breathe-to:0.1757"/>
+                    <circle cx="1139.2" cy="519.2" r="0.91" class="sf-cluster-node" style="opacity:0.1226;--sf-breathe-from:0.1226;--sf-breathe-to:0.1626"/>
+                    <circle cx="1132.5" cy="520.3" r="1.17" class="sf-cluster-node" style="opacity:0.1077;--sf-breathe-from:0.1077;--sf-breathe-to:0.1477"/>
+                  </g>
+                  <g>
+                    <circle cx="1088.2" cy="311.8" r="0.79" class="sf-cluster-node" style="opacity:0.0889;--sf-breathe-from:0.0889;--sf-breathe-to:0.1289"/>
+                    <circle cx="1098.0" cy="306.5" r="1.07" class="sf-cluster-node" style="opacity:0.0766;--sf-breathe-from:0.0766;--sf-breathe-to:0.1166"/>
+                    <circle cx="1090.3" cy="305.4" r="1.07" class="sf-cluster-node" style="opacity:0.1195;--sf-breathe-from:0.1195;--sf-breathe-to:0.1595"/>
+                    <circle cx="1064.3" cy="311.8" r="1.18" class="sf-cluster-node" style="opacity:0.1322;--sf-breathe-from:0.1322;--sf-breathe-to:0.1722"/>
+                    <circle cx="1083.4" cy="296.5" r="1.00" class="sf-cluster-node" style="opacity:0.0972;--sf-breathe-from:0.0972;--sf-breathe-to:0.1372"/>
+                    <circle cx="1074.0" cy="297.4" r="0.81" class="sf-cluster-node" style="opacity:0.0954;--sf-breathe-from:0.0954;--sf-breathe-to:0.1354"/>
+                  </g>
+                  <g>
+                    <circle cx="969.0" cy="8.8" r="1.15" class="sf-cluster-node" style="opacity:0.1293;--sf-breathe-from:0.1293;--sf-breathe-to:0.1693"/>
+                    <circle cx="952.9" cy="-10.9" r="1.04" class="sf-cluster-node" style="opacity:0.1299;--sf-breathe-from:0.1299;--sf-breathe-to:0.1699"/>
+                    <circle cx="973.8" cy="48.9" r="0.68" class="sf-cluster-node" style="opacity:0.0951;--sf-breathe-from:0.0951;--sf-breathe-to:0.1351"/>
+                    <circle cx="967.5" cy="49.1" r="1.00" class="sf-cluster-node sf-node-breathe" style="opacity:0.0964;--sf-breathe-from:0.0964;--sf-breathe-to:0.1364"/>
+                  </g>
+                  <g class="sf-cluster-activate">
+                    <circle cx="705.8" cy="329.0" r="0.87" class="sf-cluster-node sf-node-breathe" style="opacity:0.1254;--sf-breathe-from:0.1254;--sf-breathe-to:0.1654"/>
+                    <circle cx="714.5" cy="286.7" r="1.19" class="sf-cluster-node" style="opacity:0.0739;--sf-breathe-from:0.0739;--sf-breathe-to:0.1139"/>
+                    <circle cx="714.7" cy="282.6" r="0.59" class="sf-cluster-node" style="opacity:0.0656;--sf-breathe-from:0.0656;--sf-breathe-to:0.1056"/>
+                    <circle cx="673.4" cy="288.3" r="0.69" class="sf-cluster-node" style="opacity:0.0666;--sf-breathe-from:0.0666;--sf-breathe-to:0.1066"/>
+                    <circle cx="736.1" cy="282.9" r="1.03" class="sf-cluster-node" style="opacity:0.1126;--sf-breathe-from:0.1126;--sf-breathe-to:0.1526"/>
+                  </g>
+                  <g>
+                    <circle cx="1064.7" cy="450.7" r="0.65" class="sf-cluster-node" style="opacity:0.0657;--sf-breathe-from:0.0657;--sf-breathe-to:0.1057"/>
+                    <circle cx="1050.9" cy="460.5" r="1.06" class="sf-cluster-node" style="opacity:0.0696;--sf-breathe-from:0.0696;--sf-breathe-to:0.1096"/>
+                    <circle cx="1072.8" cy="451.2" r="1.08" class="sf-cluster-node" style="opacity:0.1120;--sf-breathe-from:0.1120;--sf-breathe-to:0.1520"/>
+                  </g>
+                  <g>
+                    <circle cx="993.0" cy="487.3" r="1.10" class="sf-cluster-node" style="opacity:0.0678;--sf-breathe-from:0.0678;--sf-breathe-to:0.1078"/>
+                    <circle cx="1004.3" cy="458.2" r="1.19" class="sf-cluster-node" style="opacity:0.0823;--sf-breathe-from:0.0823;--sf-breathe-to:0.1223"/>
+                    <circle cx="992.3" cy="469.6" r="0.92" class="sf-cluster-node" style="opacity:0.0860;--sf-breathe-from:0.0860;--sf-breathe-to:0.1260"/>
+                    <circle cx="1019.9" cy="483.7" r="1.17" class="sf-cluster-node" style="opacity:0.0702;--sf-breathe-from:0.0702;--sf-breathe-to:0.1102"/>
+                    <circle cx="1005.6" cy="436.9" r="0.71" class="sf-cluster-node" style="opacity:0.0672;--sf-breathe-from:0.0672;--sf-breathe-to:0.1072"/>
+                    <circle cx="1014.1" cy="449.9" r="0.63" class="sf-cluster-node" style="opacity:0.0924;--sf-breathe-from:0.0924;--sf-breathe-to:0.1324"/>
+                  </g>
+                  <g>
+                    <circle cx="1095.4" cy="565.5" r="0.78" class="sf-cluster-node sf-node-breathe" style="opacity:0.0611;--sf-breathe-from:0.0611;--sf-breathe-to:0.1011"/>
+                    <circle cx="1114.6" cy="532.2" r="1.10" class="sf-cluster-node" style="opacity:0.1372;--sf-breathe-from:0.1372;--sf-breathe-to:0.1772"/>
+                    <circle cx="1104.2" cy="570.5" r="0.71" class="sf-cluster-node" style="opacity:0.0699;--sf-breathe-from:0.0699;--sf-breathe-to:0.1099"/>
+                    <circle cx="1084.6" cy="561.7" r="0.82" class="sf-cluster-node" style="opacity:0.1244;--sf-breathe-from:0.1244;--sf-breathe-to:0.1644"/>
+                  </g>
+                  <g>
+                    <circle cx="1188.2" cy="165.0" r="1.10" class="sf-cluster-node" style="opacity:0.1138;--sf-breathe-from:0.1138;--sf-breathe-to:0.1538"/>
+                    <circle cx="1180.9" cy="163.0" r="0.65" class="sf-cluster-node" style="opacity:0.0606;--sf-breathe-from:0.0606;--sf-breathe-to:0.1006"/>
+                    <circle cx="1191.6" cy="169.4" r="0.83" class="sf-cluster-node" style="opacity:0.0777;--sf-breathe-from:0.0777;--sf-breathe-to:0.1177"/>
+                    <circle cx="1154.8" cy="165.5" r="0.62" class="sf-cluster-node" style="opacity:0.1070;--sf-breathe-from:0.1070;--sf-breathe-to:0.1470"/>
+                    <circle cx="1172.8" cy="142.3" r="0.92" class="sf-cluster-node" style="opacity:0.0922;--sf-breathe-from:0.0922;--sf-breathe-to:0.1322"/>
+                  </g>
+                  <g>
+                    <circle cx="1118.0" cy="440.8" r="0.78" class="sf-cluster-node sf-node-breathe" style="opacity:0.0788;--sf-breathe-from:0.0788;--sf-breathe-to:0.1188"/>
+                    <circle cx="1150.9" cy="432.0" r="1.18" class="sf-cluster-node sf-node-breathe" style="opacity:0.1348;--sf-breathe-from:0.1348;--sf-breathe-to:0.1748"/>
+                    <circle cx="1124.7" cy="445.1" r="0.98" class="sf-cluster-node" style="opacity:0.0863;--sf-breathe-from:0.0863;--sf-breathe-to:0.1263"/>
+                    <circle cx="1143.9" cy="454.0" r="0.84" class="sf-cluster-node" style="opacity:0.1033;--sf-breathe-from:0.1033;--sf-breathe-to:0.1433"/>
+                  </g>
+                  <g>
+                    <circle cx="839.9" cy="156.3" r="0.74" class="sf-cluster-node" style="opacity:0.0723;--sf-breathe-from:0.0723;--sf-breathe-to:0.1123"/>
+                    <circle cx="834.6" cy="190.0" r="0.76" class="sf-cluster-node" style="opacity:0.0906;--sf-breathe-from:0.0906;--sf-breathe-to:0.1306"/>
+                    <circle cx="869.3" cy="190.2" r="1.18" class="sf-cluster-node" style="opacity:0.1329;--sf-breathe-from:0.1329;--sf-breathe-to:0.1729"/>
+                    <circle cx="844.8" cy="196.7" r="1.20" class="sf-cluster-node sf-node-breathe" style="opacity:0.0714;--sf-breathe-from:0.0714;--sf-breathe-to:0.1114"/>
+                    <circle cx="848.0" cy="198.1" r="0.83" class="sf-cluster-node" style="opacity:0.1322;--sf-breathe-from:0.1322;--sf-breathe-to:0.1722"/>
+                  </g>
+                  <g>
+                    <circle cx="782.3" cy="123.1" r="1.19" class="sf-cluster-node" style="opacity:0.0688;--sf-breathe-from:0.0688;--sf-breathe-to:0.1088"/>
+                    <circle cx="763.5" cy="122.3" r="0.87" class="sf-cluster-node" style="opacity:0.1270;--sf-breathe-from:0.1270;--sf-breathe-to:0.1670"/>
+                    <circle cx="768.5" cy="124.4" r="1.20" class="sf-cluster-node" style="opacity:0.0607;--sf-breathe-from:0.0607;--sf-breathe-to:0.1007"/>
+                  </g>
+                  <g>
+                    <circle cx="783.4" cy="100.1" r="0.83" class="sf-cluster-node" style="opacity:0.1286;--sf-breathe-from:0.1286;--sf-breathe-to:0.1686"/>
+                    <circle cx="765.9" cy="53.5" r="1.19" class="sf-cluster-node sf-node-breathe" style="opacity:0.1229;--sf-breathe-from:0.1229;--sf-breathe-to:0.1629"/>
+                    <circle cx="755.8" cy="81.1" r="0.81" class="sf-cluster-node" style="opacity:0.0767;--sf-breathe-from:0.0767;--sf-breathe-to:0.1167"/>
+                    <circle cx="778.7" cy="83.6" r="0.75" class="sf-cluster-node" style="opacity:0.0804;--sf-breathe-from:0.0804;--sf-breathe-to:0.1204"/>
+                    <circle cx="787.4" cy="68.9" r="1.14" class="sf-cluster-node" style="opacity:0.0658;--sf-breathe-from:0.0658;--sf-breathe-to:0.1058"/>
+                    <circle cx="775.9" cy="77.0" r="0.63" class="sf-cluster-node" style="opacity:0.0912;--sf-breathe-from:0.0912;--sf-breathe-to:0.1312"/>
+                    <circle cx="775.1" cy="96.7" r="0.83" class="sf-cluster-node" style="opacity:0.0690;--sf-breathe-from:0.0690;--sf-breathe-to:0.1090"/>
+                  </g>
+                  <g>
+                    <circle cx="819.7" cy="281.7" r="0.65" class="sf-cluster-node" style="opacity:0.1245;--sf-breathe-from:0.1245;--sf-breathe-to:0.1645"/>
+                    <circle cx="810.3" cy="319.2" r="0.72" class="sf-cluster-node" style="opacity:0.1348;--sf-breathe-from:0.1348;--sf-breathe-to:0.1748"/>
+                    <circle cx="807.3" cy="316.4" r="0.89" class="sf-cluster-node" style="opacity:0.1040;--sf-breathe-from:0.1040;--sf-breathe-to:0.1440"/>
+                    <circle cx="814.0" cy="322.4" r="0.62" class="sf-cluster-node sf-node-breathe" style="opacity:0.1098;--sf-breathe-from:0.1098;--sf-breathe-to:0.1498"/>
+                    <circle cx="790.1" cy="282.2" r="0.86" class="sf-cluster-node" style="opacity:0.0882;--sf-breathe-from:0.0882;--sf-breathe-to:0.1282"/>
+                    <circle cx="856.6" cy="330.7" r="0.91" class="sf-cluster-node" style="opacity:0.1108;--sf-breathe-from:0.1108;--sf-breathe-to:0.1508"/>
+                    <circle cx="811.6" cy="315.1" r="0.79" class="sf-cluster-node" style="opacity:0.0817;--sf-breathe-from:0.0817;--sf-breathe-to:0.1217"/>
+                  </g>
+                  <g>
+                    <circle cx="889.7" cy="469.8" r="1.18" class="sf-cluster-node" style="opacity:0.0830;--sf-breathe-from:0.0830;--sf-breathe-to:0.1230"/>
+                    <circle cx="897.4" cy="462.2" r="0.98" class="sf-cluster-node" style="opacity:0.0918;--sf-breathe-from:0.0918;--sf-breathe-to:0.1318"/>
+                    <circle cx="912.8" cy="463.9" r="0.51" class="sf-cluster-node" style="opacity:0.1328;--sf-breathe-from:0.1328;--sf-breathe-to:0.1728"/>
+                  </g>
+                  <g>
+                    <circle cx="566.9" cy="19.2" r="0.90" class="sf-cluster-node" style="opacity:0.1130;--sf-breathe-from:0.1130;--sf-breathe-to:0.1530"/>
+                    <circle cx="582.9" cy="12.1" r="0.75" class="sf-cluster-node sf-node-breathe" style="opacity:0.1342;--sf-breathe-from:0.1342;--sf-breathe-to:0.1742"/>
+                    <circle cx="562.2" cy="13.1" r="0.51" class="sf-cluster-node" style="opacity:0.0737;--sf-breathe-from:0.0737;--sf-breathe-to:0.1137"/>
+                  </g>
+                  <g>
+                    <circle cx="1138.0" cy="364.4" r="1.16" class="sf-cluster-node" style="opacity:0.1048;--sf-breathe-from:0.1048;--sf-breathe-to:0.1448"/>
+                    <circle cx="1155.0" cy="390.1" r="0.78" class="sf-cluster-node" style="opacity:0.1292;--sf-breathe-from:0.1292;--sf-breathe-to:0.1692"/>
+                    <circle cx="1147.4" cy="378.6" r="1.17" class="sf-cluster-node" style="opacity:0.0878;--sf-breathe-from:0.0878;--sf-breathe-to:0.1278"/>
+                    <circle cx="1148.9" cy="347.0" r="0.84" class="sf-cluster-node" style="opacity:0.0629;--sf-breathe-from:0.0629;--sf-breathe-to:0.1029"/>
+                    <circle cx="1146.5" cy="377.2" r="1.11" class="sf-cluster-node" style="opacity:0.1282;--sf-breathe-from:0.1282;--sf-breathe-to:0.1682"/>
+                    <circle cx="1117.7" cy="381.1" r="0.64" class="sf-cluster-node" style="opacity:0.1163;--sf-breathe-from:0.1163;--sf-breathe-to:0.1563"/>
+                  </g>
+                  <g class="sf-cluster-activate">
+                    <circle cx="1023.6" cy="532.6" r="1.00" class="sf-cluster-node" style="opacity:0.1113;--sf-breathe-from:0.1113;--sf-breathe-to:0.1513"/>
+                    <circle cx="1009.8" cy="508.6" r="0.70" class="sf-cluster-node" style="opacity:0.1181;--sf-breathe-from:0.1181;--sf-breathe-to:0.1581"/>
+                    <circle cx="1034.7" cy="503.2" r="0.61" class="sf-cluster-node" style="opacity:0.0677;--sf-breathe-from:0.0677;--sf-breathe-to:0.1077"/>
+                    <circle cx="1033.5" cy="535.9" r="1.02" class="sf-cluster-node" style="opacity:0.0628;--sf-breathe-from:0.0628;--sf-breathe-to:0.1028"/>
+                    <circle cx="1018.4" cy="508.4" r="1.19" class="sf-cluster-node" style="opacity:0.1106;--sf-breathe-from:0.1106;--sf-breathe-to:0.1506"/>
+                  </g>
+                </g>
+                <g>
+                  <circle cx="910.3" cy="579.4" r="0.56" class="sf-particle" style="opacity:0.0354"/>
+                  <circle cx="853.5" cy="573.7" r="0.36" class="sf-particle" style="opacity:0.0220"/>
+                  <circle cx="772.9" cy="135.9" r="0.66" class="sf-particle" style="opacity:0.0272"/>
+                  <circle cx="1083.6" cy="24.2" r="0.55" class="sf-particle" style="opacity:0.0362"/>
+                  <circle cx="654.8" cy="571.4" r="0.60" class="sf-particle" style="opacity:0.0384"/>
+                  <circle cx="1166.2" cy="458.2" r="0.66" class="sf-particle" style="opacity:0.0317"/>
+                  <circle cx="1170.3" cy="427.2" r="0.68" class="sf-particle" style="opacity:0.0187"/>
+                  <circle cx="987.2" cy="444.3" r="0.33" class="sf-particle" style="opacity:0.0173"/>
+                  <circle cx="990.5" cy="77.7" r="0.59" class="sf-particle" style="opacity:0.0300"/>
+                  <circle cx="1043.2" cy="163.7" r="0.52" class="sf-particle" style="opacity:0.0165"/>
+                  <circle cx="614.0" cy="462.3" r="0.44" class="sf-particle" style="opacity:0.0208"/>
+                  <circle cx="1180.9" cy="513.7" r="0.50" class="sf-particle" style="opacity:0.0272"/>
+                  <circle cx="565.1" cy="75.8" r="0.59" class="sf-particle" style="opacity:0.0276"/>
+                  <circle cx="1175.0" cy="413.1" r="0.30" class="sf-particle" style="opacity:0.0264"/>
+                  <circle cx="749.2" cy="300.3" r="0.67" class="sf-particle" style="opacity:0.0273"/>
+                  <circle cx="1127.3" cy="480.6" r="0.53" class="sf-particle" style="opacity:0.0342"/>
+                  <circle cx="794.2" cy="259.4" r="0.40" class="sf-particle" style="opacity:0.0252"/>
+                  <circle cx="640.5" cy="509.8" r="0.39" class="sf-particle" style="opacity:0.0342"/>
+                  <circle cx="962.3" cy="272.2" r="0.43" class="sf-particle" style="opacity:0.0256"/>
+                  <circle cx="1012.2" cy="239.5" r="0.51" class="sf-particle" style="opacity:0.0274"/>
+                  <circle cx="893.4" cy="341.3" r="0.65" class="sf-particle" style="opacity:0.0216"/>
+                  <circle cx="732.0" cy="432.5" r="0.53" class="sf-particle" style="opacity:0.0281"/>
+                  <circle cx="1103.1" cy="355.3" r="0.37" class="sf-particle" style="opacity:0.0339"/>
+                  <circle cx="775.2" cy="129.5" r="0.37" class="sf-particle" style="opacity:0.0398"/>
+                  <circle cx="978.0" cy="228.0" r="0.65" class="sf-particle" style="opacity:0.0196"/>
+                  <circle cx="936.7" cy="585.6" r="0.60" class="sf-particle" style="opacity:0.0159"/>
+                  <circle cx="970.1" cy="581.8" r="0.33" class="sf-particle" style="opacity:0.0361"/>
+                  <circle cx="938.1" cy="334.3" r="0.34" class="sf-particle" style="opacity:0.0352"/>
+                  <circle cx="967.8" cy="572.7" r="0.67" class="sf-particle" style="opacity:0.0287"/>
+                  <circle cx="962.7" cy="451.2" r="0.63" class="sf-particle" style="opacity:0.0231"/>
+                  <circle cx="969.8" cy="29.6" r="0.41" class="sf-particle" style="opacity:0.0270"/>
+                  <circle cx="714.8" cy="138.4" r="0.45" class="sf-particle" style="opacity:0.0450"/>
+                  <circle cx="924.9" cy="173.9" r="0.50" class="sf-particle" style="opacity:0.0352"/>
+                  <circle cx="952.3" cy="91.7" r="0.43" class="sf-particle" style="opacity:0.0209"/>
+                  <circle cx="749.6" cy="134.9" r="0.45" class="sf-particle" style="opacity:0.0209"/>
+                  <circle cx="675.6" cy="290.1" r="0.42" class="sf-particle" style="opacity:0.0307"/>
+                  <circle cx="943.3" cy="51.2" r="0.53" class="sf-particle" style="opacity:0.0356"/>
+                  <circle cx="685.6" cy="367.3" r="0.34" class="sf-particle" style="opacity:0.0254"/>
+                  <circle cx="816.9" cy="280.6" r="0.66" class="sf-particle" style="opacity:0.0280"/>
+                  <circle cx="1118.0" cy="361.2" r="0.58" class="sf-particle" style="opacity:0.0199"/>
+                  <circle cx="628.5" cy="522.4" r="0.37" class="sf-particle" style="opacity:0.0242"/>
+                  <circle cx="756.7" cy="43.2" r="0.33" class="sf-particle" style="opacity:0.0365"/>
+                  <circle cx="1137.0" cy="71.0" r="0.47" class="sf-particle" style="opacity:0.0238"/>
+                  <circle cx="1023.0" cy="362.9" r="0.69" class="sf-particle" style="opacity:0.0270"/>
+                  <circle cx="720.6" cy="587.2" r="0.53" class="sf-particle" style="opacity:0.0221"/>
+                  <circle cx="1053.3" cy="314.4" r="0.49" class="sf-particle" style="opacity:0.0256"/>
+                  <circle cx="928.2" cy="463.4" r="0.64" class="sf-particle" style="opacity:0.0421"/>
+                  <circle cx="1112.1" cy="176.0" r="0.53" class="sf-particle" style="opacity:0.0151"/>
+                  <circle cx="1188.8" cy="157.0" r="0.36" class="sf-particle" style="opacity:0.0218"/>
+                  <circle cx="796.6" cy="92.8" r="0.42" class="sf-particle" style="opacity:0.0272"/>
+                  <circle cx="705.9" cy="370.8" r="0.68" class="sf-particle" style="opacity:0.0396"/>
+                  <circle cx="757.4" cy="262.4" r="0.40" class="sf-particle" style="opacity:0.0388"/>
+                  <circle cx="1144.6" cy="507.0" r="0.54" class="sf-particle" style="opacity:0.0364"/>
+                  <circle cx="828.4" cy="65.4" r="0.41" class="sf-particle" style="opacity:0.0188"/>
+                  <circle cx="848.8" cy="338.7" r="0.47" class="sf-particle" style="opacity:0.0182"/>
+                </g>
+                <g>
+                  <path class="sf-draft-tick" d="M1120.4 449.7 L1128.2 449.7" style="opacity:0.0165;stroke-width:0.29"/>
+                  <path class="sf-draft-tick" d="M1120.4 449.7 L1120.4 459.0" style="opacity:0.0234;stroke-width:0.25"/>
+                  <path class="sf-draft-tick" d="M993.7 521.1 L1001.8 521.1" style="opacity:0.0180;stroke-width:0.36"/>
+                  <path class="sf-draft-tick" d="M993.7 521.1 L993.7 531.9" style="opacity:0.0151;stroke-width:0.30"/>
+                  <path class="sf-draft-tick" d="M1132.1 80.9 L1139.1 80.9" style="opacity:0.0144;stroke-width:0.25"/>
+                  <path class="sf-draft-tick" d="M1132.1 80.9 L1132.1 90.3" style="opacity:0.0179;stroke-width:0.36"/>
+                  <path class="sf-draft-tick" d="M921.8 485.3 L932.9 485.3" style="opacity:0.0298;stroke-width:0.36"/>
+                  <path class="sf-draft-tick" d="M921.8 485.3 L921.8 492.0" style="opacity:0.0203;stroke-width:0.39"/>
+                  <path class="sf-draft-tick" d="M1133.5 478.7 L1145.4 478.7" style="opacity:0.0192;stroke-width:0.38"/>
+                  <path class="sf-draft-tick" d="M1133.5 478.7 L1133.5 486.2" style="opacity:0.0174;stroke-width:0.38"/>
+                  <path class="sf-draft-tick" d="M1086.1 198.8 L1094.1 198.8" style="opacity:0.0224;stroke-width:0.36"/>
+                  <path class="sf-draft-tick" d="M1086.1 198.8 L1086.1 206.6" style="opacity:0.0182;stroke-width:0.39"/>
+                  <path class="sf-draft-guide" d="M550.0 485.9 L1190.0 485.9" style="opacity:0.0060;stroke-width:0.24;stroke-dasharray:3 10"/>
+                  <path class="sf-draft-guide" d="M550.0 338.6 L1190.0 338.6" style="opacity:0.0123;stroke-width:0.24;stroke-dasharray:3 10"/>
+                  <path class="sf-draft-guide" d="M550.0 193.6 L1190.0 193.6" style="opacity:0.0099;stroke-width:0.23;stroke-dasharray:3 10"/>
+                  <path class="sf-draft-guide" d="M550.0 305.3 L1190.0 305.3" style="opacity:0.0132;stroke-width:0.27;stroke-dasharray:3 10"/>
+                </g>
+                <g>
+                  <path class="sf-cluster-edge sf-signal" d="M1121.2 519.6 L1132.5 520.3" style="stroke-width:0.5"/>
+                </g>
+              </svg>
+            </div>
           <div class="nv-stack nv-stack--gap-xs">
             <div class="nv-workspace-brand-visual" aria-hidden="true">
               <img src="assets/brand/neuralverse-lockup.png" alt="">
             </div>
-            <h1 class="nv-workspace__title" data-workspace-title>Welcome to NeuralVerse</h1>
-            <p class="nv-workspace__description" data-workspace-description>Scientific Research & AI Agent Environment.</p>
           </div>
 
           <div class="nv-cluster nv-cluster--gap-sm nv-workspace__actions" style="justify-content: space-between; align-items: center; border-top: var(--sys-border-subtle) solid var(--sys-color-border-subtle); padding-top: var(--sys-space-stack-sm);">
@@ -347,7 +638,6 @@
               <button class="nv-button" data-variant="secondary" data-workspace-action="browse-modules">Browse Modules</button>
               <button class="nv-button" data-variant="secondary" data-workspace-action="open-content">Open Content</button>
             </div>
-            <span class="nv-muted" style="font-size: var(--sys-font-caption-size);" data-workspace-updated>Updated: --:--:--</span>
           </div>
 
           <section class="nv-continuity-grid" aria-label="Learning continuity">
@@ -496,186 +786,45 @@
       <aside class="nv-context-panel nv-motion nv-motion-slide-reveal" aria-label="Context Information">
         <div class="nv-context-header">
           <h2 class="nv-context-title">Context</h2>
-          <span class="nv-badge" data-variant="info">Active</span>
         </div>
 
-        <div class="nv-divider" aria-hidden="true"></div>
-
-        <section class="nv-context-section" aria-labelledby="nv-section-orientation-title">
-          <h3 id="nv-section-orientation-title" class="nv-context-section-title">Orientation</h3>
-          <div class="nv-context-meta-group">
-            <div class="nv-context-meta-item">
-              <span class="nv-context-meta-label">Active Region</span>
-              <span class="nv-context-meta-value">R3 Workspace</span>
-            </div>
-            <div class="nv-context-meta-item">
-              <span class="nv-context-meta-label">Primary Target</span>
-              <span class="nv-context-meta-value">Home</span>
-            </div>
-          </div>
-          <p class="nv-context-description">
-            Scientific Research & AI Agent Environment.
-          </p>
-        </section>
-
-        <div class="nv-divider" aria-hidden="true"></div>
-
         <section class="nv-context-section nv-workspace-context" aria-labelledby="workspace-context-title">
-          <h2 id="workspace-context-title" class="nv-context-section-title">Workspace Context</h2>
-
-          <h3>Learning Focus</h3>
-          <dl class="nv-context-meta-list" style="display: grid; gap: var(--sys-space-stack-xs); margin: 0; padding: 0;">
-            <div style="display: grid; gap: 2px;">
-              <dt style="color: var(--sys-color-text-secondary); font-family: var(--sys-font-code-family); font-size: var(--sys-font-caption-size); text-transform: uppercase; letter-spacing: var(--ref-font-tracking-wide);">Current learning path</dt>
-              <dd data-workspace-context-path style="margin: 0; color: var(--sys-color-text-primary); font-family: var(--sys-font-body-family); font-size: var(--sys-font-body-size);">None</dd>
+          <h3 id="workspace-context-title" class="nv-context-section-title">Current View</h3>
+          <dl class="nv-context-meta-list nv-context-meta-list--compact">
+            <div>
+              <dt>View</dt>
+              <dd data-workspace-context-route-type>home</dd>
             </div>
-            <div style="display: grid; gap: 2px; margin-block-start: var(--sys-space-stack-xs);">
-              <dt style="color: var(--sys-color-text-secondary); font-family: var(--sys-font-code-family); font-size: var(--sys-font-caption-size); text-transform: uppercase; letter-spacing: var(--ref-font-tracking-wide);">Current module</dt>
-              <dd data-workspace-context-module style="margin: 0; color: var(--sys-color-text-primary); font-family: var(--sys-font-body-family); font-size: var(--sys-font-body-size);">None</dd>
+            <div>
+              <dt>Focus</dt>
+              <dd data-workspace-context-path>None</dd>
             </div>
-            <div style="display: grid; gap: 2px; margin-block-start: var(--sys-space-stack-xs);">
-              <dt style="color: var(--sys-color-text-secondary); font-family: var(--sys-font-code-family); font-size: var(--sys-font-caption-size); text-transform: uppercase; letter-spacing: var(--ref-font-tracking-wide);">Current content</dt>
-              <dd data-workspace-context-content style="margin: 0; color: var(--sys-color-text-primary); font-family: var(--sys-font-body-family); font-size: var(--sys-font-body-size);">None</dd>
-            </div>
-            <div style="display: grid; gap: 2px; margin-block-start: var(--sys-space-stack-xs);">
-              <dt style="color: var(--sys-color-text-secondary); font-family: var(--sys-font-code-family); font-size: var(--sys-font-caption-size); text-transform: uppercase; letter-spacing: var(--ref-font-tracking-wide);">Last opened content</dt>
-              <dd data-workspace-context-last-opened style="margin: 0; color: var(--sys-color-text-primary); font-family: var(--sys-font-body-family); font-size: var(--sys-font-body-size);">None</dd>
+            <div>
+              <dt>Content</dt>
+              <dd data-workspace-context-content>None</dd>
             </div>
           </dl>
-
-          <h3>Current Progress</h3>
-          <dl class="nv-context-meta-list" style="display: grid; gap: var(--sys-space-stack-xs); margin: 0; padding: 0;">
-            <div style="display: grid; gap: 2px;">
-              <dt style="color: var(--sys-color-text-secondary); font-family: var(--sys-font-code-family); font-size: var(--sys-font-caption-size); text-transform: uppercase; letter-spacing: var(--ref-font-tracking-wide);">Progress summary</dt>
-              <dd data-workspace-context-progress style="margin: 0; color: var(--sys-color-text-primary); font-family: var(--sys-font-body-family); font-size: var(--sys-font-body-size);">No progress yet</dd>
-            </div>
-            <div style="display: grid; gap: 2px; margin-block-start: var(--sys-space-stack-xs);">
-              <dt style="color: var(--sys-color-text-secondary); font-family: var(--sys-font-code-family); font-size: var(--sys-font-caption-size); text-transform: uppercase; letter-spacing: var(--ref-font-tracking-wide);">Path progress</dt>
-              <dd data-workspace-progress-path style="margin: 0; color: var(--sys-color-text-primary); font-family: var(--sys-font-body-family); font-size: var(--sys-font-body-size);">No progress yet</dd>
-            </div>
-            <div style="display: grid; gap: 2px; margin-block-start: var(--sys-space-stack-xs);">
-              <dt style="color: var(--sys-color-text-secondary); font-family: var(--sys-font-code-family); font-size: var(--sys-font-caption-size); text-transform: uppercase; letter-spacing: var(--ref-font-tracking-wide);">Module progress</dt>
-              <dd data-workspace-progress-module style="margin: 0; color: var(--sys-color-text-primary); font-family: var(--sys-font-body-family); font-size: var(--sys-font-body-size);">No progress yet</dd>
-            </div>
-            <div style="display: grid; gap: 2px; margin-block-start: var(--sys-space-stack-xs);">
-              <dt style="color: var(--sys-color-text-secondary); font-family: var(--sys-font-code-family); font-size: var(--sys-font-caption-size); text-transform: uppercase; letter-spacing: var(--ref-font-tracking-wide);">Content status</dt>
-              <dd data-workspace-progress-content-status style="margin: 0; color: var(--sys-color-text-primary); font-family: var(--sys-font-body-family); font-size: var(--sys-font-body-size);">Not started</dd>
-            </div>
-            <div style="display: grid; gap: 2px; margin-block-start: var(--sys-space-stack-xs);">
-              <dt style="color: var(--sys-color-text-secondary); font-family: var(--sys-font-code-family); font-size: var(--sys-font-caption-size); text-transform: uppercase; letter-spacing: var(--ref-font-tracking-wide);">Completed content</dt>
-              <dd data-workspace-progress-count style="margin: 0; color: var(--sys-color-text-primary); font-family: var(--sys-font-body-family); font-size: var(--sys-font-body-size);">No progress yet</dd>
-            </div>
-          </dl>
-
-          <h3>Current Position</h3>
-          <dl class="nv-context-meta-list" style="display: grid; gap: var(--sys-space-stack-xs); margin: 0; padding: 0;">
-            <div style="display: grid; gap: 2px;">
-              <dt style="color: var(--sys-color-text-secondary); font-family: var(--sys-font-code-family); font-size: var(--sys-font-caption-size); text-transform: uppercase; letter-spacing: var(--ref-font-tracking-wide);">Route type</dt>
-              <dd data-workspace-context-route-type style="margin: 0; color: var(--sys-color-text-primary); font-family: var(--sys-font-body-family); font-size: var(--sys-font-body-size);">home</dd>
-            </div>
-            <div style="display: grid; gap: 2px; margin-block-start: var(--sys-space-stack-xs);">
-              <dt style="color: var(--sys-color-text-secondary); font-family: var(--sys-font-code-family); font-size: var(--sys-font-caption-size); text-transform: uppercase; letter-spacing: var(--ref-font-tracking-wide);">Hierarchy depth</dt>
-              <dd data-workspace-context-depth style="margin: 0; color: var(--sys-color-text-primary); font-family: var(--sys-font-body-family); font-size: var(--sys-font-body-size);">1</dd>
-            </div>
-          </dl>
-
-          <h3>Remaining Work</h3>
-          <dl class="nv-context-meta-list" style="display: grid; gap: var(--sys-space-stack-xs); margin: 0; padding: 0;">
-            <div style="display: grid; gap: 2px;">
-              <dt style="color: var(--sys-color-text-secondary); font-family: var(--sys-font-code-family); font-size: var(--sys-font-caption-size); text-transform: uppercase; letter-spacing: var(--ref-font-tracking-wide);">Next Ordered Content</dt>
-              <dd data-workspace-next-content style="margin: 0; color: var(--sys-color-text-primary); font-family: var(--sys-font-body-family); font-size: var(--sys-font-body-size);">None</dd>
-            </div>
-            <div style="display: grid; gap: 2px; margin-block-start: var(--sys-space-stack-xs);">
-              <dt style="color: var(--sys-color-text-secondary); font-family: var(--sys-font-code-family); font-size: var(--sys-font-caption-size); text-transform: uppercase; letter-spacing: var(--ref-font-tracking-wide);">Remaining Items</dt>
-              <dd data-workspace-remaining-items style="margin: 0; color: var(--sys-color-text-primary); font-family: var(--sys-font-body-family); font-size: var(--sys-font-body-size);">0 remaining</dd>
-            </div>
-            <div style="display: grid; gap: 2px; margin-block-start: var(--sys-space-stack-xs);">
-              <dt style="color: var(--sys-color-text-secondary); font-family: var(--sys-font-code-family); font-size: var(--sys-font-caption-size); text-transform: uppercase; letter-spacing: var(--ref-font-tracking-wide);">Remaining Reading Time</dt>
-              <dd data-workspace-remaining-reading-time aria-label="0 minutes" style="margin: 0; color: var(--sys-color-text-primary); font-family: var(--sys-font-body-family); font-size: var(--sys-font-body-size);">0m</dd>
-            </div>
-          </dl>
-        </section>
-
-        <div class="nv-divider" aria-hidden="true"></div>
-
-        <section class="nv-context-section" aria-labelledby="nv-nav-context-title">
-          <h3 id="nv-nav-context-title" class="nv-context-section-title">Navigation Context</h3>
-          <ul class="nv-context-hierarchy">
-            <li class="nv-context-hierarchy-item nv-context-hierarchy-item--active">
-              <span class="nv-context-hierarchy-dot nv-context-hierarchy-dot--active"></span>
-              <span class="nv-context-hierarchy-text">Home</span>
-            </li>
-            <li class="nv-context-hierarchy-item">
-              <span class="nv-context-hierarchy-dot"></span>
-              <span class="nv-context-hierarchy-text">Learning Paths</span>
-            </li>
-            <li class="nv-context-hierarchy-item">
-              <span class="nv-context-hierarchy-dot"></span>
-              <span class="nv-context-hierarchy-text">Modules</span>
-            </li>
-            <li class="nv-context-hierarchy-item">
-              <span class="nv-context-hierarchy-dot"></span>
-              <span class="nv-context-hierarchy-text">Workspace</span>
-            </li>
-            <li class="nv-context-hierarchy-item">
-              <span class="nv-context-hierarchy-dot"></span>
-              <span class="nv-context-hierarchy-text">Content Viewer</span>
-            </li>
-          </ul>
-        </section>
-
-        <div class="nv-divider" aria-hidden="true"></div>
-
-        <section class="nv-context-section" aria-labelledby="nv-cross-region-title">
-          <h3 id="nv-cross-region-title" class="nv-context-section-title">Cross-Region Status</h3>
-          <div class="nv-context-status-list">
-            <div class="nv-context-status-row">
-              <span class="nv-context-status-label">Global Header (R1)</span>
-              <span class="nv-badge" data-variant="neutral">Sticky</span>
-            </div>
-            <div class="nv-context-status-row">
-              <span class="nv-context-status-label">Navigation Rail (R2)</span>
-              <span class="nv-badge" data-variant="success">Connected</span>
-            </div>
-            <div class="nv-context-status-row">
-              <span class="nv-context-status-label">Main Workspace (R3)</span>
-              <span class="nv-badge" data-variant="info">Active</span>
-            </div>
-          </div>
-        </section>
-
-        <div class="nv-divider" aria-hidden="true"></div>
-
-        <section class="nv-context-section" aria-labelledby="nv-context-awareness-title">
-          <h3 id="nv-context-awareness-title" class="nv-context-section-title">Context Awareness</h3>
-          <p class="nv-context-description">
-            This secondary panel renders contextual info relative to your current workspace node to minimize cognitive load.
-          </p>
         </section>
       </aside>
     </div>
 
     <!-- Status Footer -->
     <footer class="nv-status-footer">
-      <div class="nv-status-indicator">
-        <span class="nv-status-dot" aria-hidden="true"></span>
-        <span>SYSTEM STATUS: CONNECTED</span>
-      </div>
       <div>
-        <span>NEURALVERSE MVP v0.1 &copy; <span class="nv-footer-year"></span></span>
+        <span>NeuralVerse &copy; <span class="nv-footer-year"></span></span>
       </div>
     </footer>
   </div>
 
   <!-- Script Initialization -->
-  <script src="scripts/router/routes.js?v=10"></script>
+  <script src="scripts/router/routes.js?v=12"></script>
   <script src="scripts/state/navigation-state.js?v=10"></script>
-  <script src="scripts/router/router.js?v=11"></script>
+  <script src="scripts/router/router.js?v=12"></script>
   <script src="scripts/navigation/navigation.js?v=11"></script>
   <script src="scripts/workspace/workspace-state.js?v=10"></script>
   <script src="scripts/retrieval/retrieval-playground-adapter.js?v=10"></script>
   <script src="scripts/retrieval-playground.js?v=10"></script>
-  <script src="scripts/background/neural-galaxy.js?v=8" defer></script>
+  <script src="scripts/background/neural-galaxy.js?v=11" defer></script>
   <script type="module" src="scripts/app.js?v=10"></script>
   <!-- NeuralVerse React Island Layer (NV-500-UX-007E.2)
        Self-contained local IIFE bundle — zero CDN runtime dependency.
