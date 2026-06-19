@@ -686,6 +686,10 @@ class ViewController {
 
     // Dispatch custom event to notify all components that page content has been rendered
     window.dispatchEvent(new CustomEvent('nv:routerendered', { detail: { routeId: viewId } }));
+    window.NeuralVerseBackground?.neuralGalaxy?.refresh?.({
+      route: window.location.hash || '#/',
+      routeId: viewId
+    });
   }
 }
 

@@ -60,7 +60,10 @@
   var rafId = 0;
   var seed = 1;
   var frameCount = 0;
+  var initialized = false;
+  var observer = null;
   var state = {
+    initialized: false,
     profile: 'default',
     width: 0,
     height: 0,
@@ -70,7 +73,9 @@
     reducedMotion: false,
     pulseCount: 0,
     frameCount: 0,
-    dpr: 1
+    dpr: 1,
+    route: '',
+    canvasExists: false
   };
 
   function clamp(value, min, max) {
@@ -95,9 +100,24 @@
     };
   }
 
-  function detectProfile() {
-    var explicit = document.querySelector('[data-background-profile]');
-    var value = explicit && explicit.getAttribute('data-background-profile');
+  function profileFromRoute(route) {
+    var hash = route || window.location.hash || '#/';
+    if (hash.indexOf('retrieval-playground') >= 0) return 'retrieval';
+    if (hash.indexOf('learning') >= 0) return 'learning';
+    if (hash.indexOf('modules') >= 0) return 'modules';
+    if (hash.indexOf('content') >= 0) return 'content';
+    if (hash.indexOf('workspace') >= 0) return 'workspace';
+    if (hash.indexOf('settings') >= 0) return 'settings';
+    if (hash === '#/' || hash === '' || hash === '#') return 'home';
+    return 'default';
+  }
+
+  function detectProfile(route) {
+    var value = profileFromRoute(route);
+    if (!value || value === 'default') {
+      var explicit = document.querySelector('[data-background-profile]');
+      value = explicit && explicit.getAttribute('data-background-profile');
+    }
     if (!value && document.body) value = document.body.getAttribute('data-background-profile');
     if (!value) {
       var workspace = document.querySelector('.nv-main-workspace');
@@ -105,16 +125,7 @@
       if (view === 'retrieval-playground') value = 'retrieval';
       else if (view) value = view;
     }
-    if (!value && location.hash) {
-      if (location.hash.indexOf('retrieval-playground') >= 0) value = 'retrieval';
-      else if (location.hash.indexOf('learning') >= 0) value = 'learning';
-      else if (location.hash.indexOf('modules') >= 0) value = 'modules';
-      else if (location.hash.indexOf('content') >= 0) value = 'content';
-      else if (location.hash.indexOf('workspace') >= 0) value = 'workspace';
-      else if (location.hash.indexOf('settings') >= 0) value = 'settings';
-      else value = 'home';
-    }
-    if (!value) value = 'home';
+    if (!value) value = profileFromRoute(route);
     if (!PROFILE[value]) value = 'default';
     return value;
   }
@@ -216,6 +227,7 @@
 
   function updateState() {
     state = {
+      initialized: initialized,
       profile: profile,
       width: width,
       height: height,
@@ -226,7 +238,11 @@
       pulseCount: pulses.length,
       frameCount: frameCount,
       dpr: dpr,
-      maxDistance: profileConfig.maxDistance
+      maxDistance: profileConfig ? profileConfig.maxDistance : 0,
+      route: window.location.hash || '',
+      canvasExists: !!canvas,
+      running: !!rafId && visible && !reducedMotion && profileConfig && profileConfig.motion > 0,
+      documentHidden: document.visibilityState === 'hidden'
     };
   }
 
@@ -386,11 +402,14 @@
   function loop(time) {
     if (!ctx) return;
     if (!visible) {
-      rafId = requestAnimationFrame(loop);
+      rafId = 0;
+      updateState();
       return;
     }
     if (reducedMotion || profileConfig.motion === 0) {
       drawFrame(time, FRAME_INTERVAL);
+      rafId = 0;
+      updateState();
       return;
     }
     var elapsed = time - lastFrame;
@@ -405,19 +424,28 @@
   }
 
   function startLoop() {
-    if (rafId) cancelAnimationFrame(rafId);
+    if (rafId) return;
     if (!reducedMotion && profileConfig.motion > 0 && visible) {
       lastFrame = performance.now();
       rafId = requestAnimationFrame(loop);
+    } else if (ctx) {
+      drawFrame(performance.now(), FRAME_INTERVAL);
+      updateState();
     }
   }
 
-  function handleProfileMaybeChanged() {
-    var next = detectProfile();
+  function handleProfileMaybeChanged(options) {
+    var route = options && options.route;
+    var next = detectProfile(route);
     if (next !== profile) {
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+        rafId = 0;
+      }
       rebuild();
-      startLoop();
     }
+    startLoop();
+    updateState();
   }
 
   function handleResize() {
@@ -432,6 +460,7 @@
   }
 
   function init() {
+    if (initialized) return;
     canvas = document.getElementById(CANVAS_ID);
     if (!canvas) return;
     ctx = canvas.getContext('2d', { alpha: true });
@@ -443,25 +472,57 @@
       motionQuery.addEventListener('change', function () { rebuild(); startLoop(); });
     }
 
+    var workspaceEl = document.querySelector('.nv-main-workspace');
+    if (workspaceEl) {
+      observer = new MutationObserver(function () { handleProfileMaybeChanged(); });
+      observer.observe(workspaceEl, { attributes: true, attributeFilter: ['data-workspace-active-view'] });
+    }
+
+    window.addEventListener('hashchange', function () {
+      handleProfileMaybeChanged({ route: window.location.hash || '#/' });
+    }, { passive: true });
+    window.addEventListener('nv:routerendered', function (event) {
+      handleProfileMaybeChanged({ route: window.location.hash || '#/', routeId: event.detail && event.detail.routeId });
+    }, { passive: true });
     window.addEventListener('resize', handleResize, { passive: true });
-    window.addEventListener('hashchange', function () { setTimeout(handleProfileMaybeChanged, 80); }, { passive: true });
     document.addEventListener('visibilitychange', function () {
       visible = document.visibilityState !== 'hidden';
-      if (visible && !reducedMotion && profileConfig.motion > 0) {
-        startLoop();
-      }
+      if (visible) startLoop();
+      updateState();
     });
 
+    initialized = true;
     rebuild();
     startLoop();
+  }
+
+  function setProfile(name) {
+    if (!PROFILE[name]) return false;
+    if (rafId) {
+      cancelAnimationFrame(rafId);
+      rafId = 0;
+    }
+    profile = name;
+    profileConfig = PROFILE[name];
+    rebuild();
+    startLoop();
+    return true;
+  }
+
+  function refresh(options) {
+    if (!initialized) init();
+    handleProfileMaybeChanged(options || { route: window.location.hash || '#/' });
   }
 
   window.NeuralVerseBackground = window.NeuralVerseBackground || {};
   window.NeuralVerseBackground.neuralGalaxy = {
     getState: function () { updateState(); return Object.assign({}, state); },
     rebuild: rebuild,
+    refresh: refresh,
+    setProfile: setProfile,
     destroy: function () {
       if (rafId) cancelAnimationFrame(rafId);
+      if (observer) observer.disconnect();
       nodes = [];
       edges = [];
       pulses = [];
