@@ -122,7 +122,7 @@
 }
 
 
-/* Home Hero Reference-Driven Observatory Illustration — NV-600.9-R4 */
+/* Home Hero Editorial SVG Artwork — NV-600.9-R5 */
 .nv-home-observatory-illustration {
   display: none;
 }
@@ -286,10 +286,10 @@
 
 @keyframes nv-home-reference-node-breathe {
   from {
-    opacity: 0.36;
+    opacity: 0.42;
   }
   to {
-    opacity: 0.26;
+    opacity: 0.58;
   }
 }
 
