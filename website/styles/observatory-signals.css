@@ -122,7 +122,7 @@
 }
 
 
-/* Home Neural Observatory Illustration — NV-600.9-R2 */
+/* Home Research Observatory Instrument Panel — NV-600.9-R3 */
 .nv-home-observatory-illustration {
   display: none;
 }
@@ -140,19 +140,19 @@
 
 .nv-main-workspace[data-workspace-active-view="home"] .nv-home-observatory-illustration {
   position: absolute;
-  inset-block-start: clamp(var(--sys-space-inset-xs), 3.5vw, var(--sys-space-inset-md));
-  inset-inline-end: 0;
+  inset-block-start: clamp(var(--sys-space-inset-xs), 3vw, var(--sys-space-inset-md));
+  inset-inline-end: clamp(var(--sys-space-inline-xs), 2vw, var(--sys-space-inline-md));
   z-index: 0;
   display: block;
-  inline-size: min(82%, 64rem);
-  color: color-mix(in srgb, var(--sys-color-accent-primary) 62%, var(--sys-color-text-muted));
-  opacity: 0.56;
+  inline-size: min(66%, 52rem);
+  color: color-mix(in srgb, var(--sys-color-accent-primary) 54%, var(--sys-color-text-muted));
+  opacity: 0.48;
   pointer-events: none;
   user-select: none;
   transform: translate3d(0, 0, 0);
   mask-image:
-    linear-gradient(90deg, transparent 0%, var(--ref-color-black) 14%, var(--ref-color-black) 90%, transparent 100%),
-    linear-gradient(180deg, transparent 0%, var(--ref-color-black) 10%, var(--ref-color-black) 88%, transparent 100%);
+    linear-gradient(90deg, transparent 0%, var(--ref-color-black) 18%, var(--ref-color-black) 88%, transparent 100%),
+    linear-gradient(180deg, transparent 0%, var(--ref-color-black) 8%, var(--ref-color-black) 88%, transparent 100%);
   mask-composite: intersect;
 }
 
@@ -169,142 +169,144 @@
   vector-effect: non-scaling-stroke;
 }
 
-.nv-home-observatory-illustration__regions {
+.nv-home-observatory-illustration__ambient {
   fill: currentColor;
   opacity: 0.032;
-  animation: nv-home-semantic-regions 28s var(--motion-easing-standard) infinite alternate;
+  animation: nv-home-instrument-ambient 24s var(--motion-easing-standard) infinite alternate;
 }
 
-.nv-home-observatory-illustration__dust {
-  fill: currentColor;
-  opacity: 0.045;
-  animation: nv-home-semantic-dust 36s var(--motion-easing-standard) infinite alternate;
-}
-
-.nv-home-observatory-illustration__semantic-edges path,
-.nv-home-observatory-illustration__micro-edges path,
-.nv-home-observatory-illustration__pulse {
+.nv-home-observatory-illustration__construction path,
+.nv-home-observatory-illustration__arcs path,
+.nv-home-observatory-illustration__guides path,
+.nv-home-observatory-illustration__ticks path,
+.nv-home-observatory-illustration__crosses path,
+.nv-home-observatory-illustration__local-group path,
+.nv-home-observatory-illustration__calibration-pulse,
+.nv-home-observatory-illustration__scan-indicator {
   fill: none;
   stroke: currentColor;
   stroke-linecap: round;
 }
 
-.nv-home-observatory-illustration__semantic-edges path {
-  stroke-width: 0.48;
-  opacity: 0.046;
+.nv-home-observatory-illustration__construction path {
+  stroke-width: 0.55;
+  opacity: 0.04;
+  stroke-dasharray: 6 16;
 }
 
-.nv-home-observatory-illustration__micro-edges path {
+.nv-home-observatory-illustration__arcs path {
+  stroke-width: 0.72;
+  opacity: 0.055;
+  stroke-dasharray: 92 36 18 58;
+}
+
+.nv-home-observatory-illustration__guides path {
   stroke-width: 0.52;
-  opacity: 0.067;
+  opacity: 0.044;
 }
 
-.nv-home-observatory-illustration__nodes {
+.nv-home-observatory-illustration__ticks path,
+.nv-home-observatory-illustration__crosses path {
+  stroke-width: 0.66;
+  opacity: 0.07;
+}
+
+.nv-home-observatory-illustration__anchors,
+.nv-home-observatory-illustration__local-group {
   fill: currentColor;
 }
 
-.nv-home-observatory-illustration__node--far {
-  opacity: 0.08;
+.nv-home-observatory-illustration__anchors circle {
+  opacity: 0.085;
 }
 
-.nv-home-observatory-illustration__node--mid {
-  opacity: 0.105;
+.nv-home-observatory-illustration__local-group path {
+  stroke-width: 0.62;
+  opacity: 0.06;
 }
 
-.nv-home-observatory-illustration__node--near {
-  opacity: 0.13;
+.nv-home-observatory-illustration__local-group circle {
+  opacity: 0.095;
 }
 
-.nv-home-observatory-illustration__field {
-  transform-box: fill-box;
-  transform-origin: center;
+.nv-home-observatory-illustration__arcs,
+.nv-home-observatory-illustration__guides,
+.nv-home-observatory-illustration__anchors,
+.nv-home-observatory-illustration__local-group {
+  animation: nv-home-instrument-breathe 18s var(--motion-easing-standard) infinite alternate;
 }
 
-.nv-home-observatory-illustration__field--back {
-  animation: nv-home-semantic-field-back 34s var(--motion-easing-standard) infinite alternate;
-}
-
-.nv-home-observatory-illustration__field--front {
-  animation: nv-home-semantic-field-front 27s var(--motion-easing-standard) infinite alternate;
-}
-
-.nv-home-observatory-illustration__pulse {
-  stroke-width: 0.86;
-  stroke-dasharray: 20 180;
-  stroke-dashoffset: 180;
+.nv-home-observatory-illustration__calibration-pulse {
+  stroke-width: 0.9;
+  stroke-dasharray: 24 230;
+  stroke-dashoffset: 230;
   opacity: 0;
-  animation: nv-home-semantic-pulse 13s var(--motion-easing-decelerate) infinite;
+  animation: nv-home-instrument-pulse 13.5s var(--motion-easing-decelerate) infinite;
 }
 
-.nv-home-observatory-illustration__pulse--2 {
-  animation-delay: -6.4s;
+.nv-home-observatory-illustration__scan-indicator {
+  stroke-width: 0.7;
+  stroke-dasharray: 18 160;
+  stroke-dashoffset: 160;
+  opacity: 0;
+  animation: nv-home-instrument-scan 15s var(--motion-easing-standard) infinite;
 }
 
-@keyframes nv-home-semantic-field-back {
+@keyframes nv-home-instrument-ambient {
   from {
-    opacity: 0.82;
-    transform: translate3d(-1px, 1px, 0);
-  }
-  to {
-    opacity: 1;
-    transform: translate3d(2px, -1px, 0);
-  }
-}
-
-@keyframes nv-home-semantic-field-front {
-  from {
-    opacity: 0.9;
-    transform: translate3d(1px, -1px, 0);
-  }
-  to {
-    opacity: 1;
-    transform: translate3d(-1px, 2px, 0);
-  }
-}
-
-@keyframes nv-home-semantic-dust {
-  from {
-    opacity: 0.026;
-    transform: translate3d(0, 0, 0);
-  }
-  to {
-    opacity: 0.052;
-    transform: translate3d(1px, -1px, 0);
-  }
-}
-
-@keyframes nv-home-semantic-regions {
-  from {
-    opacity: 0.022;
+    opacity: 0.02;
   }
   to {
     opacity: 0.04;
   }
 }
 
-@keyframes nv-home-semantic-pulse {
-  0%, 74% {
-    opacity: 0;
-    stroke-dashoffset: 180;
+@keyframes nv-home-instrument-breathe {
+  from {
+    opacity: 0.82;
   }
-  82% {
-    opacity: 0.16;
+  to {
+    opacity: 1;
   }
-  94%, 100% {
+}
+
+@keyframes nv-home-instrument-pulse {
+  0%, 76% {
     opacity: 0;
-    stroke-dashoffset: -32;
+    stroke-dashoffset: 230;
+  }
+  84% {
+    opacity: 0.14;
+  }
+  96%, 100% {
+    opacity: 0;
+    stroke-dashoffset: -38;
+  }
+}
+
+@keyframes nv-home-instrument-scan {
+  0%, 80% {
+    opacity: 0;
+    stroke-dashoffset: 160;
+  }
+  88% {
+    opacity: 0.105;
+  }
+  98%, 100% {
+    opacity: 0;
+    stroke-dashoffset: -28;
   }
 }
 
 @media (max-width: 1023px) {
   .nv-main-workspace[data-workspace-active-view="home"] .nv-home-observatory-illustration {
-    inline-size: min(62%, 34rem);
-    opacity: 0.38;
+    inline-size: min(50%, 28rem);
+    opacity: 0.34;
   }
 
-  .nv-home-observatory-illustration__dust circle:nth-child(2n),
-  .nv-home-observatory-illustration__semantic-edges path:nth-child(2n),
-  .nv-home-observatory-illustration__micro-edges path:nth-child(3n) {
+  .nv-home-observatory-illustration__construction path:nth-child(2n),
+  .nv-home-observatory-illustration__ticks path:nth-child(2n),
+  .nv-home-observatory-illustration__guides path:nth-child(2n) {
     display: none;
   }
 }
@@ -316,15 +318,18 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .nv-home-observatory-illustration__regions,
-  .nv-home-observatory-illustration__dust,
-  .nv-home-observatory-illustration__field--back,
-  .nv-home-observatory-illustration__field--front,
-  .nv-home-observatory-illustration__pulse {
+  .nv-home-observatory-illustration__ambient,
+  .nv-home-observatory-illustration__arcs,
+  .nv-home-observatory-illustration__guides,
+  .nv-home-observatory-illustration__anchors,
+  .nv-home-observatory-illustration__local-group,
+  .nv-home-observatory-illustration__calibration-pulse,
+  .nv-home-observatory-illustration__scan-indicator {
     animation: none;
   }
 
-  .nv-home-observatory-illustration__pulse {
+  .nv-home-observatory-illustration__calibration-pulse,
+  .nv-home-observatory-illustration__scan-indicator {
     opacity: 0;
   }
 }
