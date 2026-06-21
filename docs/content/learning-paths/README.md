@@ -22,3 +22,4 @@ Learning Paths organize Modules into coherent curriculum-level progressions. The
 *   [Object Detection Foundations](object-detection-foundations/)
 *   [Segmentation Foundations](segmentation-foundations/)
 *   [Transformer Foundations](transformer-foundations/)
+*   [Large Language Model Foundations](llm-foundations/)

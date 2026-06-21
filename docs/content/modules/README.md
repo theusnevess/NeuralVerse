@@ -34,3 +34,5 @@ Modules organize Lessons into coherent instructional units. They represent highe
 *   [Segmentation Architectures](segmentation-architectures/)
 *   [Transformer Fundamentals](transformer-fundamentals/)
 *   [Sequence Representation](sequence-representation/)
+*   [LLM Core Concepts](llm-core/)
+*   [LLM Context & Behavior](llm-context-behavior/)
