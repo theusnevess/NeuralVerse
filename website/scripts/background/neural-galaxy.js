@@ -164,15 +164,15 @@
     var sizeScale;
     if (layer === 'far') {
       speedBase = 0.015 + random() * 0.02;
-      alpha = 0.05 + random() * 0.04;
+      alpha = 0.12 + random() * 0.08;
       sizeScale = 0.9;
     } else if (layer === 'mid') {
       speedBase = 0.025 + random() * 0.03;
-      alpha = 0.08 + random() * 0.06;
+      alpha = 0.22 + random() * 0.12;
       sizeScale = 1;
     } else {
       speedBase = 0.04 + random() * 0.04;
-      alpha = 0.12 + random() * 0.08;
+      alpha = 0.38 + random() * 0.18;
       sizeScale = 1.08;
     }
 
@@ -296,7 +296,7 @@
       edge.from.degree++;
       edge.to.degree++;
       var fade = 1 - edge.distance / maxDistance;
-      edge.alpha = (0.025 + fade * 0.05) * profileConfig.opacity;
+      edge.alpha = (0.06 + fade * 0.10) * profileConfig.opacity;
       edge.width = 0.35 + fade * 0.3;
       edges.push(edge);
     }
@@ -324,8 +324,8 @@
 
   function drawBase() {
     var gradient = ctx.createRadialGradient(width * 0.52, height * 0.32, 0, width * 0.52, height * 0.32, Math.max(width, height) * 0.9);
-    gradient.addColorStop(0, 'rgba(8, 35, 52, 0.34)');
-    gradient.addColorStop(0.52, 'rgba(5, 12, 20, 0.16)');
+    gradient.addColorStop(0, 'rgba(8, 35, 52, 0.08)');
+    gradient.addColorStop(0.52, 'rgba(5, 12, 20, 0.03)');
     gradient.addColorStop(1, 'rgba(5, 8, 13, 0)');
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, width, height);
@@ -359,7 +359,7 @@
       var e = p.edge;
       var x = e.from.x + (e.to.x - e.from.x) * progress;
       var y = e.from.y + (e.to.y - e.from.y) * progress;
-      var alpha = Math.sin(progress * Math.PI) * 0.18 * profileConfig.opacity;
+      var alpha = Math.sin(progress * Math.PI) * 0.36 * profileConfig.opacity;
       ctx.beginPath();
       ctx.arc(x, y, 1.7, 0, Math.PI * 2);
       ctx.fillStyle = 'rgba(116, 216, 238, ' + alpha.toFixed(4) + ')';

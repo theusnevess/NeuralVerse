@@ -3393,7 +3393,7 @@
       if (emptyCompileQuery) {
         emptyCompileQuery.disabled = !currentSearchQuery;
         if (currentSearchQuery) {
-          emptyCompileQuery.innerHTML = `Compile Query: <span style="font-family: var(--sys-font-code-family); font-size: 0.55rem; opacity: 0.8;">"${currentSearchQuery}"</span>`;
+          emptyCompileQuery.innerHTML = `Compile Query: <span style="font-family: var(--sys-font-code-family); font-size: 0.55rem; opacity: 0.8;">"${escapeHtml(currentSearchQuery)}"</span>`;
         } else {
           emptyCompileQuery.innerHTML = `Compile Query <span style="font-size: 0.55rem; opacity: 0.8;">(No Active Query)</span>`;
         }
@@ -3419,7 +3419,7 @@
       if (emptyCompileRef) {
         emptyCompileRef.disabled = !selectedReferenceId;
         if (selectedReferenceId) {
-          emptyCompileRef.innerHTML = `Compile Ref: <span style="font-family: var(--sys-font-code-family); font-size: 0.55rem; opacity: 0.8;">"${selectedReferenceId}"</span>`;
+          emptyCompileRef.innerHTML = `Compile Ref: <span style="font-family: var(--sys-font-code-family); font-size: 0.55rem; opacity: 0.8;">"${escapeHtml(selectedReferenceId)}"</span>`;
         } else {
           emptyCompileRef.innerHTML = `Compile Ref <span style="font-size: 0.55rem; opacity: 0.8;">(No Selected Ref)</span>`;
         }

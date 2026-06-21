@@ -9,6 +9,9 @@ class NavigationController {
 
   init() {
     this.stateManager.subscribe((state) => this.syncUI(state));
+    if (this.stateManager.state && this.stateManager.state.currentRoute) {
+      this.syncUI(this.stateManager.state);
+    }
   }
 
   syncUI(state) {
