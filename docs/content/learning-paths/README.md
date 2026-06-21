@@ -13,3 +13,4 @@ Learning Paths organize Modules into coherent curriculum-level progressions. The
 ## Current Draft Learning Paths
 
 *   [AI Representation Foundations](ai-representation-foundations/)
+*   [Mathematical Foundations for AI](mathematical-foundations-ai/)
