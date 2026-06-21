@@ -116,6 +116,12 @@ artifact-registry/
 
 The `artifacts/` directory is reserved for future registry entries.
 
+## Example Registry Entries
+
+The `artifacts/` directory includes seed entries that demonstrate registry conventions for each canonical artifact family.
+
+These entries are illustrative governance examples. They are not Learning Artifact content, assessments, Competency Evidence, mastery records, runtime metadata, or approval decisions.
+
 ## Evidence Boundary
 
 The Artifact Registry indexes Learning Artifacts.
