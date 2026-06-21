@@ -30,3 +30,5 @@ Modules organize Lessons into coherent instructional units. They represent highe
 *   [Representation Learning in CNNs](representation-learning-cnns/)
 *   [Detection Fundamentals](detection-fundamentals/)
 *   [Detection Architectures](detection-architectures/)
+*   [Segmentation Fundamentals](segmentation-fundamentals/)
+*   [Segmentation Architectures](segmentation-architectures/)
