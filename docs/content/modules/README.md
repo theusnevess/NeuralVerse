@@ -36,3 +36,5 @@ Modules organize Lessons into coherent instructional units. They represent highe
 *   [Sequence Representation](sequence-representation/)
 *   [LLM Core Concepts](llm-core/)
 *   [LLM Context & Behavior](llm-context-behavior/)
+*   [Model Adaptation Fundamentals](model-adaptation/)
+*   [Alignment & Specialization](alignment-specialization/)
