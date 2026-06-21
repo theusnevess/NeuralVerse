@@ -25,11 +25,11 @@ lesson_scope:
   - lesson-context-window-management
 
 artifact_scope:
-  - artifact-embeddings-explanatory-text
-  - artifact-embeddings-visual-intuition
-  - artifact-embeddings-interactive-visualization
-  - artifact-embeddings-exercise
-  - artifact-embeddings-comparison-table
+  - artifact-embeddings-semantic-similarity-explanatory-text
+  - artifact-embeddings-semantic-similarity-visual-intuition
+  - artifact-embeddings-semantic-similarity-interactive-visualization
+  - artifact-embeddings-semantic-similarity-exercise
+  - artifact-embeddings-semantic-similarity-comparison-table
   - artifact-vector-spaces-explanatory-text
   - artifact-vector-spaces-visual-intuition
   - artifact-vector-spaces-interactive-visualization
@@ -171,11 +171,11 @@ The Learning Path references these lessons through the module compositions. It d
 
 The Learning Path includes the following Learning Artifacts indirectly through the composed modules and lessons:
 
-*   `artifact-embeddings-explanatory-text` (Explanatory Text)
-*   `artifact-embeddings-visual-intuition` (Visual Intuition)
-*   `artifact-embeddings-interactive-visualization` (Interactive Visualization)
-*   `artifact-embeddings-exercise` (Exercise)
-*   `artifact-embeddings-comparison-table` (Comparison Table)
+*   `artifact-embeddings-semantic-similarity-explanatory-text` (Explanatory Text)
+*   `artifact-embeddings-semantic-similarity-visual-intuition` (Visual Intuition)
+*   `artifact-embeddings-semantic-similarity-interactive-visualization` (Interactive Visualization)
+*   `artifact-embeddings-semantic-similarity-exercise` (Exercise)
+*   `artifact-embeddings-semantic-similarity-comparison-table` (Comparison Table)
 *   `artifact-vector-spaces-explanatory-text` (Explanatory Text)
 *   `artifact-vector-spaces-visual-intuition` (Visual Intuition)
 *   `artifact-vector-spaces-interactive-visualization` (Interactive Visualization)

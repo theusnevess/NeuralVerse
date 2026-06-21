@@ -1,5 +1,5 @@
 ---
-artifact_id: "artifact-embeddings-exercise"
+artifact_id: "artifact-embeddings-semantic-similarity-exercise"
 artifact_title: "Reasoning About Semantic Similarity"
 artifact_family: "Practice Artifacts"
 artifact_type: "Exercise"
@@ -19,13 +19,13 @@ source_artifact: ""
 
 dependencies:
   prerequisite:
-    - artifact-embeddings-explanatory-text
+    - artifact-embeddings-semantic-similarity-explanatory-text
   recommended_before: []
   recommended_after:
-    - artifact-embeddings-visual-intuition
-    - artifact-embeddings-interactive-visualization
+    - artifact-embeddings-semantic-similarity-visual-intuition
+    - artifact-embeddings-semantic-similarity-interactive-visualization
   complementary:
-    - artifact-embeddings-comparison-table
+    - artifact-embeddings-semantic-similarity-comparison-table
   alternative: []
 
 authoritative_source: "Practice prompt grounded in introductory embedding and semantic similarity concepts."
@@ -185,7 +185,6 @@ If this artifact is used in an assessment context, that usage must be governed s
 - [ ] Internal terminology consistent.
 - [ ] Reuse suitability considered.
 - [ ] Accessibility considerations documented where relevant.
-- [ ] Maintainability reviewed.
 - [ ] Does not introduce assessment logic.
 - [ ] Does not claim Competency Evidence.
 - [ ] Does not imply learner mastery.

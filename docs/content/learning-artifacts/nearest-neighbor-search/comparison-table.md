@@ -1,5 +1,5 @@
 ---
-artifact_id: "artifact-nearest-neighbors-comparison-table"
+artifact_id: "artifact-nearest-neighbor-search-comparison-table"
 artifact_title: "Vector Index Types Comparison"
 artifact_family: "Reference Artifacts"
 artifact_type: "Comparison Table"
@@ -102,7 +102,6 @@ If this artifact is used in an assessment context, that usage must be governed s
 - [ ] Internal terminology consistent.
 - [ ] Reuse suitability considered.
 - [ ] Accessibility considerations documented where relevant.
-- [ ] Maintainability reviewed.
 - [ ] Does not introduce assessment logic.
 - [ ] Does not claim Competency Evidence.
 - [ ] Does not imply learner mastery.

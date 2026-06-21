@@ -1,5 +1,5 @@
 ---
-artifact_id: "artifact-embeddings-comparison-table"
+artifact_id: "artifact-embeddings-semantic-similarity-comparison-table"
 artifact_title: "Exact Matching, Embeddings, and Semantic Similarity"
 artifact_family: "Reference Artifacts"
 artifact_type: "Comparison Table"
@@ -22,9 +22,9 @@ dependencies:
   prerequisite: []
   recommended_before: []
   recommended_after:
-    - artifact-embeddings-explanatory-text
+    - artifact-embeddings-semantic-similarity-explanatory-text
   complementary:
-    - artifact-embeddings-exercise
+    - artifact-embeddings-semantic-similarity-exercise
   alternative: []
 
 authoritative_source: "Introductory retrieval, embedding, and semantic search concepts."
@@ -133,7 +133,6 @@ If this artifact is used in an assessment context, that usage must be governed s
 - [ ] Internal terminology consistent.
 - [ ] Reuse suitability considered.
 - [ ] Accessibility considerations documented where relevant.
-- [ ] Maintainability reviewed.
 - [ ] Does not introduce assessment logic.
 - [ ] Does not claim Competency Evidence.
 - [ ] Does not imply learner mastery.

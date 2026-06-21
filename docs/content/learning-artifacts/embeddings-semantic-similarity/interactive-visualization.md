@@ -1,5 +1,5 @@
 ---
-artifact_id: "artifact-embeddings-interactive-visualization"
+artifact_id: "artifact-embeddings-semantic-similarity-interactive-visualization"
 artifact_title: "Manipulating Semantic Distance"
 artifact_family: "Interactive Artifacts"
 artifact_type: "Interactive Visualization"
@@ -21,10 +21,10 @@ source_artifact: ""
 
 dependencies:
   prerequisite:
-    - artifact-embeddings-explanatory-text
-    - artifact-embeddings-visual-intuition
+    - artifact-embeddings-semantic-similarity-explanatory-text
+    - artifact-embeddings-semantic-similarity-visual-intuition
   recommended_before:
-    - artifact-embeddings-exercise
+    - artifact-embeddings-semantic-similarity-exercise
   recommended_after: []
   complementary: []
   alternative: []
@@ -140,7 +140,6 @@ If this artifact is used in an assessment context, that usage must be governed s
 - [ ] Internal terminology consistent.
 - [ ] Reuse suitability considered.
 - [ ] Accessibility considerations documented where relevant.
-- [ ] Maintainability reviewed.
 - [ ] Does not introduce assessment logic.
 - [ ] Does not claim Competency Evidence.
 - [ ] Does not imply learner mastery.

@@ -4,11 +4,11 @@ lesson_title: "Embeddings and Semantic Similarity"
 canonical_status: "Draft"
 topic: "Embeddings and Semantic Similarity"
 artifact_ids:
-  - artifact-embeddings-explanatory-text
-  - artifact-embeddings-visual-intuition
-  - artifact-embeddings-interactive-visualization
-  - artifact-embeddings-exercise
-  - artifact-embeddings-comparison-table
+  - artifact-embeddings-semantic-similarity-explanatory-text
+  - artifact-embeddings-semantic-similarity-visual-intuition
+  - artifact-embeddings-semantic-similarity-interactive-visualization
+  - artifact-embeddings-semantic-similarity-exercise
+  - artifact-embeddings-semantic-similarity-comparison-table
 ---
 
 # Embeddings and Semantic Similarity — Lesson Composition
@@ -43,7 +43,7 @@ This lesson covers the following high-level concepts without duplicating the ref
 Artifact:
 
 ```text
-artifact-embeddings-explanatory-text
+artifact-embeddings-semantic-similarity-explanatory-text
 ```
 
 Location:
@@ -61,7 +61,7 @@ Introduces the core vocabulary and conceptual foundation: embeddings, vectors, s
 Artifact:
 
 ```text
-artifact-embeddings-visual-intuition
+artifact-embeddings-semantic-similarity-visual-intuition
 ```
 
 Location:
@@ -79,7 +79,7 @@ Turns the abstract idea of vector similarity into a spatial mental model using n
 Artifact:
 
 ```text
-artifact-embeddings-interactive-visualization
+artifact-embeddings-semantic-similarity-interactive-visualization
 ```
 
 Location:
@@ -97,7 +97,7 @@ Defines a future exploratory interaction where learners manipulate points or obs
 Artifact:
 
 ```text
-artifact-embeddings-exercise
+artifact-embeddings-semantic-similarity-exercise
 ```
 
 Location:
@@ -115,7 +115,7 @@ Provides practice in identifying semantic relatedness and explaining why meaning
 Artifact:
 
 ```text
-artifact-embeddings-comparison-table
+artifact-embeddings-semantic-similarity-comparison-table
 ```
 
 Location:

@@ -1,5 +1,5 @@
 ---
-artifact_id: "artifact-nearest-neighbors-exercise"
+artifact_id: "artifact-nearest-neighbor-search-exercise"
 artifact_title: "Reasoning About Search Algorithms"
 artifact_family: "Practice Artifacts"
 artifact_type: "Exercise"
@@ -103,7 +103,6 @@ If this artifact is used in an assessment context, that usage must be governed s
 - [ ] Internal terminology consistent.
 - [ ] Reuse suitability considered.
 - [ ] Accessibility considerations documented where relevant.
-- [ ] Maintainability reviewed.
 - [ ] Does not introduce assessment logic.
 - [ ] Does not claim Competency Evidence.
 - [ ] Does not imply learner mastery.

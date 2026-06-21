@@ -1,5 +1,5 @@
 ---
-artifact_id: "artifact-embeddings-visual-intuition"
+artifact_id: "artifact-embeddings-semantic-similarity-visual-intuition"
 artifact_title: "Semantic Space Visual Intuition"
 artifact_family: "Instruction Artifacts"
 artifact_type: "Visual Intuition"
@@ -19,12 +19,12 @@ source_artifact: ""
 
 dependencies:
   prerequisite:
-    - artifact-embeddings-explanatory-text
+    - artifact-embeddings-semantic-similarity-explanatory-text
   recommended_before:
-    - artifact-embeddings-interactive-visualization
+    - artifact-embeddings-semantic-similarity-interactive-visualization
   recommended_after: []
   complementary:
-    - artifact-embeddings-comparison-table
+    - artifact-embeddings-semantic-similarity-comparison-table
   alternative: []
 
 authoritative_source: "Foundational embedding and vector-space explanation sources."
@@ -151,7 +151,6 @@ If this artifact is used in an assessment context, that usage must be governed s
 - [ ] Internal terminology consistent.
 - [ ] Reuse suitability considered.
 - [ ] Accessibility considerations documented where relevant.
-- [ ] Maintainability reviewed.
 - [ ] Does not introduce assessment logic.
 - [ ] Does not claim Competency Evidence.
 - [ ] Does not imply learner mastery.

@@ -1,5 +1,5 @@
 ---
-artifact_id: "artifact-embeddings-explanatory-text"
+artifact_id: "artifact-embeddings-semantic-similarity-explanatory-text"
 artifact_title: "Embeddings and Semantic Similarity"
 artifact_family: "Instruction Artifacts"
 artifact_type: "Explanatory Text"
@@ -21,11 +21,11 @@ source_artifact: ""
 dependencies:
   prerequisite: []
   recommended_before:
-    - artifact-embeddings-visual-intuition
-    - artifact-embeddings-interactive-visualization
+    - artifact-embeddings-semantic-similarity-visual-intuition
+    - artifact-embeddings-semantic-similarity-interactive-visualization
   recommended_after: []
   complementary:
-    - artifact-embeddings-comparison-table
+    - artifact-embeddings-semantic-similarity-comparison-table
   alternative: []
 
 authoritative_source: "Foundational vector representation and distributional semantics literature; modern embedding model documentation."
@@ -109,7 +109,7 @@ Embeddings are not guaranteed representations of objective meaning. They encode 
 
 ### supporting visual
 
-Pair with `artifact-embeddings-visual-intuition` to show nearby and distant points in a semantic space.
+Pair with `artifact-embeddings-semantic-similarity-visual-intuition` to show nearby and distant points in a semantic space.
 
 ### references
 
@@ -146,7 +146,6 @@ If this artifact is used in an assessment context, that usage must be governed s
 - [ ] Internal terminology consistent.
 - [ ] Reuse suitability considered.
 - [ ] Accessibility considerations documented where relevant.
-- [ ] Maintainability reviewed.
 - [ ] Does not introduce assessment logic.
 - [ ] Does not claim Competency Evidence.
 - [ ] Does not imply learner mastery.

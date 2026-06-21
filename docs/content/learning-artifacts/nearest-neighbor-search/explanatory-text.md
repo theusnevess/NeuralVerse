@@ -1,5 +1,5 @@
 ---
-artifact_id: "artifact-nearest-neighbors-explanatory-text"
+artifact_id: "artifact-nearest-neighbor-search-explanatory-text"
 artifact_title: "Nearest Neighbor Search and Indexing"
 artifact_family: "Instruction Artifacts"
 artifact_type: "Explanatory Text"
@@ -97,7 +97,6 @@ If this artifact is used in an assessment context, that usage must be governed s
 - [ ] Internal terminology consistent.
 - [ ] Reuse suitability considered.
 - [ ] Accessibility considerations documented where relevant.
-- [ ] Maintainability reviewed.
 - [ ] Does not introduce assessment logic.
 - [ ] Does not claim Competency Evidence.
 - [ ] Does not imply learner mastery.
