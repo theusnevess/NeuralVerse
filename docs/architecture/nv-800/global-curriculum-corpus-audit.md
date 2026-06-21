@@ -136,13 +136,16 @@ Search performed for: `certifies mastery`, `generates Competency Evidence`, `sco
 
 Four registry entries (`instruction-explanatory-text.md`, `interactive-visualization.md`, `practice-exercise.md`, `reference-comparison-table.md`) point to `docs/content/sample/*.md`. These are seed/template entries demonstrating the registry format. Not a defect.
 
-### 6.2 Missing Registry Entries (DEFERRED)
+### 6.2 Registry Alignment Resolution (NV-800-QA2)
 
-13 artifact directories have no corresponding registry entries:
-- 12 directories from C24 and C25 (new content — registry not yet generated)
-- `embeddings-semantic-similarity/` (previously existed but was missed)
+In the subsequent NV-800-QA2 pass, registry alignment was completed:
 
-This is expected for recently created content. Registry generation is deferred to a future administrative pass.
+| Action | Count |
+|---|---|
+| Missing registry entries created | 65 (13 directories × 5 types) |
+| Stale `embeddings-*` entries removed | 5 (renamed to `embeddings-semantic-similarity-*`) |
+| Seed template entries removed | 4 (no corresponding artifacts) |
+| **Final registry ↔ artifact match** | **600 ↔ 600 (1:1)** |
 
 ## 7. Issues Corrected
 
@@ -152,14 +155,14 @@ This is expected for recently created content. Registry generation is deferred t
 | B — Mismatched artifact_id | 10 | Updated to match directory slug |
 | C — Broken lesson refs | 1 | Updated to corrected artifact IDs |
 | D — Broken learning path refs | 1 | Updated to corrected artifact IDs |
-| **Total corrections** | **77 files** | |
+| E — Missing registry entries (QA2) | 65 | Created from source artifact metadata |
+| F — Stale registry entries (QA2) | 9 | Removed (5 embeddings + 4 templates) |
+| **Total corrections** | **151 files** | |
 
 ## 8. Issues Deferred
 
 | Issue | Description | Reason |
 |---|---|---|
-| Missing registry entries | 13 directories without registry entries | New content; registry creation outside correction scope |
-| Seed template entries | 4 entries pointing to `sample/` paths | By design — illustrative examples |
 | Architectural Foundations variance | 108/120 lessons have <10 references | Different waves used different conventions; no broken references exist |
 
 ## 9. Final Corpus Status
@@ -173,14 +176,14 @@ This is expected for recently created content. Registry generation is deferred t
 | ID uniqueness | ✅ PASS |
 | Forbidden claims | ✅ PASS |
 | Dependency categories | ✅ PASS |
-| Registry alignment | ⚠️ DEFERRED (missing entries for C24/C25) |
+| Registry alignment | ✅ PASS (600 ↔ 600, 1:1) |
 | Duplicate references | ✅ PASS |
 | Broken references | ✅ PASS (after corrections) |
 
 ---
 
 **NV-800-QA1 — Global Curriculum Corpus Consistency Audit**
-**Status: READY**
+**Status: READY** (updated by NV-800-QA2)
 
 **Report generated:** $(date +%Y-%m-%d)
-**Auditor:** Automated corpus audit (NV-800-QA1)
+**Auditor:** Automated corpus audit (NV-800-QA1 / NV-800-QA2)

@@ -1,11 +1,9 @@
 ---
-artifact_id: "artifact-embeddings-explanatory-text"
+artifact_id: "artifact-embeddings-semantic-similarity-explanatory-text"
 artifact_title: "Embeddings and Semantic Similarity"
 artifact_family: "Instruction Artifacts"
 artifact_type: "Explanatory Text"
-
 canonical_status: "Draft"
-
 instructional_objectives:
   - Introduce
   - Explain
@@ -14,46 +12,40 @@ learning_depths:
   - Level 2 — Foundations
 supported_learning_levels:
   - Beginner
-
 estimated_duration: "5-8 minutes"
-
 reuse_mode: ""
-
 dependencies:
-  prerequisite: []
+  prerequisite:
   recommended_before:
-    - artifact-embeddings-visual-intuition
-    - artifact-embeddings-interactive-visualization
-  recommended_after: []
+    - artifact-embeddings-semantic-similarity-visual-intuition
+    - artifact-embeddings-semantic-similarity-interactive-visualization
+  recommended_after:
   complementary:
-    - artifact-embeddings-comparison-table
-  alternative: []
-
-registry_created: "YYYY-MM-DD"
-registry_updated: "YYYY-MM-DD"
-
+    - artifact-embeddings-semantic-similarity-comparison-table
+  alternative:
+registry_created: "2026-06-21"
+registry_updated: "2026-06-21"
 artifact_location: "docs/content/learning-artifacts/embeddings-semantic-similarity/explanatory-text.md"
-
-notes: "Draft registry entry for the introductory Explanatory Text artifact in the Embeddings and Semantic Similarity seed set."
+notes: "Registry entry for Embeddings and Semantic Similarity (Explanatory Text)."
 ---
 
 # Embeddings and Semantic Similarity — Registry Entry
 
 ## Summary
 
-Indexes the draft Explanatory Text artifact for the Embeddings and Semantic Similarity seed set.
+Indexes the draft Embeddings and Semantic Similarity artifact.
 
 ## Objectives
 
-Records `Introduce` and `Explain` for editorial discoverability.
+Records the objectives for editorial discoverability.
 
 ## Learning Depths
 
-Records `Level 1 — Intuition` and `Level 2 — Foundations`.
+Records the learning depths for editorial discoverability.
 
 ## Dependencies
 
-Recommends the explanatory artifact before the visual and interactive artifacts and marks the comparison table as complementary.
+No strict runtime dependencies.
 
 ## Reuse
 
