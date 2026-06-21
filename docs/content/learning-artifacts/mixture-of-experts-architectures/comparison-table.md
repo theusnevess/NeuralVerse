@@ -3,7 +3,7 @@ artifact_id: "artifact-mixture-of-experts-architectures-comparison-table"
 artifact_title: "MoE Architecture Variants Comparison"
 artifact_family: "Reference Artifacts"
 artifact_type: "Comparison Table"
-canonical_status: "Draft"
+canonical_status: "Reviewed"
 instructional_objectives:
   - Comparison
 learning_depths:

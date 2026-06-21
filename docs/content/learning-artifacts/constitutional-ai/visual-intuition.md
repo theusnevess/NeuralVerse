@@ -3,7 +3,7 @@ artifact_id: "artifact-constitutional-ai-visual-intuition"
 artifact_title: "The Editor with a Style Guide"
 artifact_family: "Instruction Artifacts"
 artifact_type: "Visual Intuition"
-canonical_status: "Draft"
+canonical_status: "Reviewed"
 instructional_objectives:
   - Visual
 learning_depths:

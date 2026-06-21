@@ -3,7 +3,7 @@ artifact_id: "artifact-ai-for-scientific-discovery-comparison-table"
 artifact_title: "AI Approaches in Scientific Discovery"
 artifact_family: "Reference Artifacts"
 artifact_type: "Comparison Table"
-canonical_status: "Draft"
+canonical_status: "Reviewed"
 instructional_objectives:
   - Reference
   - Explain

@@ -1,7 +1,7 @@
 ---
 lesson_id: "lesson-reasoning-models-and-test-time-compute"
 lesson_title: "Reasoning Models and Test-Time Compute"
-canonical_status: "Draft"
+canonical_status: "Reviewed"
 topic: "Reasoning Models and Test-Time Compute"
 artifact_ids:
   - artifact-reasoning-models-and-test-time-compute-explanatory-text

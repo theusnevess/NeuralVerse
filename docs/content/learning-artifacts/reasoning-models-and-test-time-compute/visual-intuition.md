@@ -3,7 +3,7 @@ artifact_id: "artifact-reasoning-models-and-test-time-compute-visual-intuition"
 artifact_title: "The Detective Investigation"
 artifact_family: "Instruction Artifacts"
 artifact_type: "Visual Intuition"
-canonical_status: "Draft"
+canonical_status: "Reviewed"
 instructional_objectives:
   - Visual
 learning_depths:

@@ -3,7 +3,7 @@ artifact_id: "artifact-model-monitoring-observability-interactive-visualization"
 artifact_title: "Production Monitoring Dashboard Spec"
 artifact_family: "Instruction Artifacts"
 artifact_type: "Interactive Visualization"
-canonical_status: "Draft"
+canonical_status: "Reviewed"
 instructional_objectives:
   - Interactive
 learning_depths:

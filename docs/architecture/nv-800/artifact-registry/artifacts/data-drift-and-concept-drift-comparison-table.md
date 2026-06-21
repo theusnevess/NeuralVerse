@@ -3,7 +3,7 @@ artifact_id: "artifact-data-drift-and-concept-drift-comparison-table"
 artifact_title: "Drift Types and Detection Methods"
 artifact_family: "Reference Artifacts"
 artifact_type: "Comparison Table"
-canonical_status: "Draft"
+canonical_status: "Reviewed"
 instructional_objectives:
   - Comparison
 learning_depths:

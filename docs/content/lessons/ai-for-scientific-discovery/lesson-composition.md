@@ -1,7 +1,7 @@
 ---
 lesson_id: "lesson-ai-for-scientific-discovery"
 lesson_title: "AI for Scientific Discovery"
-canonical_status: "Draft"
+canonical_status: "Reviewed"
 topic: "AI for Scientific Discovery"
 artifact_ids:
   - artifact-ai-for-scientific-discovery-explanatory-text

@@ -1,7 +1,7 @@
 ---
 lesson_id: "lesson-ml-pipelines-and-orchestration"
 lesson_title: "ML Pipelines and Orchestration"
-canonical_status: "Draft"
+canonical_status: "Reviewed"
 topic: "ML Pipelines and Orchestration"
 artifact_ids:
   - artifact-ml-pipelines-and-orchestration-explanatory-text

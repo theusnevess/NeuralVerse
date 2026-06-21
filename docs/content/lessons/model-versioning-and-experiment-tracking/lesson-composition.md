@@ -1,7 +1,7 @@
 ---
 lesson_id: "lesson-model-versioning-and-experiment-tracking"
 lesson_title: "Model Versioning and Experiment Tracking"
-canonical_status: "Draft"
+canonical_status: "Reviewed"
 topic: "Model Versioning and Experiment Tracking"
 artifact_ids:
   - artifact-model-versioning-and-experiment-tracking-explanatory-text

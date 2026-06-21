@@ -3,7 +3,7 @@ artifact_id: "artifact-mixture-of-experts-architectures-interactive-visualizatio
 artifact_title: "MoE Routing Visualizer"
 artifact_family: "Instruction Artifacts"
 artifact_type: "Interactive Visualization"
-canonical_status: "Draft"
+canonical_status: "Reviewed"
 instructional_objectives:
   - Interactive
 learning_depths:

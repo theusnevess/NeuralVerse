@@ -1,7 +1,7 @@
 ---
 lesson_id: "lesson-deployment-strategies-and-rollbacks"
 lesson_title: "Deployment Strategies and Rollbacks"
-canonical_status: "Draft"
+canonical_status: "Reviewed"
 topic: "Deployment Strategies and Rollbacks"
 artifact_ids:
   - artifact-deployment-strategies-and-rollbacks-explanatory-text

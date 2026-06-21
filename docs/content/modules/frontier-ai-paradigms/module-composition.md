@@ -1,7 +1,7 @@
 ---
 module_id: "module-frontier-ai-paradigms"
 module_title: "Frontier AI Paradigms"
-canonical_status: "Draft"
+canonical_status: "Reviewed"
 module_type: "Core Module"
 
 lesson_ids:

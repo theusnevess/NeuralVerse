@@ -3,7 +3,7 @@ artifact_id: "artifact-data-drift-and-concept-drift-exercise"
 artifact_title: "Diagnosing Drift in Production"
 artifact_family: "Practice Artifacts"
 artifact_type: "Exercise"
-canonical_status: "Draft"
+canonical_status: "Reviewed"
 instructional_objectives:
   - Exercise
 learning_depths:

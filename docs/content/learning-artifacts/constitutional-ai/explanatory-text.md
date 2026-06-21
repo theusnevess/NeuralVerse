@@ -3,7 +3,7 @@ artifact_id: "artifact-constitutional-ai-explanatory-text"
 artifact_title: "Constitutional AI Principles and Mechanisms"
 artifact_family: "Instruction Artifacts"
 artifact_type: "Explanatory Text"
-canonical_status: "Draft"
+canonical_status: "Reviewed"
 instructional_objectives:
   - Explanatory
 learning_depths:

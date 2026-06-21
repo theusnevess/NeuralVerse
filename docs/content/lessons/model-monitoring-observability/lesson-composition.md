@@ -1,7 +1,7 @@
 ---
 lesson_id: "lesson-model-monitoring-observability"
 lesson_title: "Model Monitoring and Observability"
-canonical_status: "Draft"
+canonical_status: "Reviewed"
 topic: "Model Monitoring and Observability"
 artifact_ids:
   - artifact-model-monitoring-observability-explanatory-text

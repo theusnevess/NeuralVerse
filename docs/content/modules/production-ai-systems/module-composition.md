@@ -1,7 +1,7 @@
 ---
 module_id: "module-production-ai-systems"
 module_title: "Production AI Systems"
-canonical_status: "Draft"
+canonical_status: "Reviewed"
 module_type: "Core Module"
 
 lesson_ids:

@@ -3,7 +3,7 @@ artifact_id: "artifact-reasoning-models-and-test-time-compute-interactive-visual
 artifact_title: "Reasoning Path Explorer"
 artifact_family: "Instruction Artifacts"
 artifact_type: "Interactive Visualization"
-canonical_status: "Draft"
+canonical_status: "Reviewed"
 instructional_objectives:
   - Interactive
 learning_depths:

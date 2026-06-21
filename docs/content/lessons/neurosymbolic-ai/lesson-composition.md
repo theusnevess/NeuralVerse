@@ -1,7 +1,7 @@
 ---
 lesson_id: "lesson-neurosymbolic-ai"
 lesson_title: "Neurosymbolic AI"
-canonical_status: "Draft"
+canonical_status: "Reviewed"
 topic: "Neurosymbolic AI"
 artifact_ids:
   - artifact-neurosymbolic-ai-explanatory-text

@@ -3,7 +3,7 @@ artifact_id: "artifact-neurosymbolic-ai-interactive-visualization"
 artifact_title: "Neurosymbolic Integration Explorer"
 artifact_family: "Instruction Artifacts"
 artifact_type: "Interactive Visualization"
-canonical_status: "Draft"
+canonical_status: "Reviewed"
 instructional_objectives:
   - Interactive
 learning_depths:

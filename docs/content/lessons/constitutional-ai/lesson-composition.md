@@ -1,7 +1,7 @@
 ---
 lesson_id: "lesson-constitutional-ai"
 lesson_title: "Constitutional AI"
-canonical_status: "Draft"
+canonical_status: "Reviewed"
 topic: "Constitutional AI"
 artifact_ids:
   - artifact-constitutional-ai-explanatory-text

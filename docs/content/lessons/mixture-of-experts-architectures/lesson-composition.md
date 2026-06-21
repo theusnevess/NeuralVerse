@@ -1,7 +1,7 @@
 ---
 lesson_id: "lesson-mixture-of-experts-architectures"
 lesson_title: "Mixture of Experts (MoE) Architectures"
-canonical_status: "Draft"
+canonical_status: "Reviewed"
 topic: "Mixture of Experts (MoE) Architectures"
 artifact_ids:
   - artifact-mixture-of-experts-architectures-explanatory-text

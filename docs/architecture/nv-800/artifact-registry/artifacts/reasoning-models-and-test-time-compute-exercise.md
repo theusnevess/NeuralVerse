@@ -3,7 +3,7 @@ artifact_id: "artifact-reasoning-models-and-test-time-compute-exercise"
 artifact_title: "Designing a Reasoning Strategy"
 artifact_family: "Practice Artifacts"
 artifact_type: "Exercise"
-canonical_status: "Draft"
+canonical_status: "Reviewed"
 instructional_objectives:
   - Exercise
 learning_depths:

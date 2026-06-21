@@ -3,7 +3,7 @@ artifact_id: "artifact-model-versioning-and-experiment-tracking-interactive-visu
 artifact_title: "Model Registry Explorer Spec"
 artifact_family: "Instruction Artifacts"
 artifact_type: "Interactive Visualization"
-canonical_status: "Draft"
+canonical_status: "Reviewed"
 instructional_objectives:
   - Interactive
 learning_depths:

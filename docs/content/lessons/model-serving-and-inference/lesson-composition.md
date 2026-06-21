@@ -1,7 +1,7 @@
 ---
 lesson_id: "lesson-model-serving-and-inference"
 lesson_title: "Model Serving and Inference"
-canonical_status: "Draft"
+canonical_status: "Reviewed"
 topic: "Model Serving and Inference"
 artifact_ids:
   - artifact-model-serving-and-inference-explanatory-text

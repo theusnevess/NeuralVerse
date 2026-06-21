@@ -3,7 +3,7 @@ artifact_id: "artifact-ai-for-scientific-discovery-visual-intuition"
 artifact_title: "The Telescope and the Microscope"
 artifact_family: "Instruction Artifacts"
 artifact_type: "Visual Intuition"
-canonical_status: "Draft"
+canonical_status: "Reviewed"
 instructional_objectives:
   - Visualize
   - Explain

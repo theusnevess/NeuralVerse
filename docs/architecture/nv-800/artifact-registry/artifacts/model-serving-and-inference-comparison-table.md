@@ -3,7 +3,7 @@ artifact_id: "artifact-model-serving-and-inference-comparison-table"
 artifact_title: "Inference Serving Approaches"
 artifact_family: "Reference Artifacts"
 artifact_type: "Comparison Table"
-canonical_status: "Draft"
+canonical_status: "Reviewed"
 instructional_objectives:
   - Comparison
 learning_depths:

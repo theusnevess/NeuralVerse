@@ -3,7 +3,7 @@ artifact_id: "artifact-ai-for-scientific-discovery-interactive-visualization"
 artifact_title: "AI-Driven Discovery Workbench"
 artifact_family: "Interactive Artifacts"
 artifact_type: "Interactive Visualization"
-canonical_status: "Draft"
+canonical_status: "Reviewed"
 
 instructional_objectives:
   - Visualize

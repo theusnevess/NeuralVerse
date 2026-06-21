@@ -3,7 +3,7 @@ artifact_id: "artifact-world-models-and-latent-simulation-visual-intuition"
 artifact_title: "The Chess Grandmaster's Mental Board"
 artifact_family: "Instruction Artifacts"
 artifact_type: "Visual Intuition"
-canonical_status: "Draft"
+canonical_status: "Reviewed"
 instructional_objectives:
   - Visual
 learning_depths:

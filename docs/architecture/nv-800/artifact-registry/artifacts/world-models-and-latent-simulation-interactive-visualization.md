@@ -3,7 +3,7 @@ artifact_id: "artifact-world-models-and-latent-simulation-interactive-visualizat
 artifact_title: "Latent Simulation Playground"
 artifact_family: "Instruction Artifacts"
 artifact_type: "Interactive Visualization"
-canonical_status: "Draft"
+canonical_status: "Reviewed"
 instructional_objectives:
   - Interactive
 learning_depths:

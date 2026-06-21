@@ -3,7 +3,7 @@ artifact_id: "artifact-scaling-laws-and-emergent-behavior-comparison-table"
 artifact_title: "Scaling Law Paradigms"
 artifact_family: "Reference Artifacts"
 artifact_type: "Comparison Table"
-canonical_status: "Draft"
+canonical_status: "Reviewed"
 instructional_objectives:
   - Comparison
 learning_depths:

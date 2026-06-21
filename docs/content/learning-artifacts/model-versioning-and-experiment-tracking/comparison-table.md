@@ -3,7 +3,7 @@ artifact_id: "artifact-model-versioning-and-experiment-tracking-comparison-table
 artifact_title: "Experiment Tracking and Versioning Tools"
 artifact_family: "Reference Artifacts"
 artifact_type: "Comparison Table"
-canonical_status: "Draft"
+canonical_status: "Reviewed"
 instructional_objectives:
   - Comparison
 learning_depths:

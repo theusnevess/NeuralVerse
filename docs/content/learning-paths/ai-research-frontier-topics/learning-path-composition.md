@@ -1,7 +1,7 @@
 ---
 learning_path_id: "path-ai-research-frontier-topics"
 learning_path_title: "AI Research and Frontier Topics"
-canonical_status: "Draft"
+canonical_status: "Reviewed"
 path_type: "Foundational Learning Path"
 
 module_ids:

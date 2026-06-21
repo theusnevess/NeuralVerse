@@ -1,7 +1,7 @@
 ---
 module_id: "module-frontier-model-scaling"
 module_title: "Frontier Model Scaling"
-canonical_status: "Draft"
+canonical_status: "Reviewed"
 module_type: "Core Module"
 
 lesson_ids:

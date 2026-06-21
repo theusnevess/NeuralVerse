@@ -3,7 +3,7 @@ artifact_id: "artifact-constitutional-ai-exercise"
 artifact_title: "Writing Constitutional Principles"
 artifact_family: "Practice Artifacts"
 artifact_type: "Exercise"
-canonical_status: "Draft"
+canonical_status: "Reviewed"
 instructional_objectives:
   - Exercise
 learning_depths:

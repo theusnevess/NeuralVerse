@@ -3,7 +3,7 @@ artifact_id: "artifact-world-models-and-latent-simulation-explanatory-text"
 artifact_title: "World Models and Latent Simulation"
 artifact_family: "Instruction Artifacts"
 artifact_type: "Explanatory Text"
-canonical_status: "Draft"
+canonical_status: "Reviewed"
 instructional_objectives:
   - Explanatory
 learning_depths:

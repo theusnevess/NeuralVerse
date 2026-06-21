@@ -3,7 +3,7 @@ artifact_id: "artifact-world-models-and-latent-simulation-comparison-table"
 artifact_title: "World Model Paradigms Compared"
 artifact_family: "Reference Artifacts"
 artifact_type: "Comparison Table"
-canonical_status: "Draft"
+canonical_status: "Reviewed"
 instructional_objectives:
   - Comparison
 learning_depths:

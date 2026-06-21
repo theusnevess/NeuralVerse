@@ -3,7 +3,7 @@ artifact_id: "artifact-scaling-laws-and-emergent-behavior-exercise"
 artifact_title: "Analyzing Scaling Trade-offs"
 artifact_family: "Practice Artifacts"
 artifact_type: "Exercise"
-canonical_status: "Draft"
+canonical_status: "Reviewed"
 instructional_objectives:
   - Exercise
 learning_depths:

@@ -3,7 +3,7 @@ artifact_id: "artifact-model-serving-and-inference-visual-intuition"
 artifact_title: "The Express Toll Road"
 artifact_family: "Instruction Artifacts"
 artifact_type: "Visual Intuition"
-canonical_status: "Draft"
+canonical_status: "Reviewed"
 instructional_objectives:
   - Visual
 learning_depths:

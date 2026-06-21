@@ -3,7 +3,7 @@ artifact_id: "artifact-ai-for-scientific-discovery-exercise"
 artifact_title: "Designing an AI-for-Science Pipeline"
 artifact_family: "Practice Artifacts"
 artifact_type: "Exercise"
-canonical_status: "Draft"
+canonical_status: "Reviewed"
 instructional_objectives:
   - Practice
   - Analyze

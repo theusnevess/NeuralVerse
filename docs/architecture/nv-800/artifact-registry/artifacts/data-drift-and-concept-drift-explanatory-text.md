@@ -3,7 +3,7 @@ artifact_id: "artifact-data-drift-and-concept-drift-explanatory-text"
 artifact_title: "Data Drift and Concept Drift"
 artifact_family: "Instruction Artifacts"
 artifact_type: "Explanatory Text"
-canonical_status: "Draft"
+canonical_status: "Reviewed"
 instructional_objectives:
   - Explanatory
 learning_depths:

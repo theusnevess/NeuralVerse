@@ -1,7 +1,7 @@
 ---
 lesson_id: "lesson-world-models-and-latent-simulation"
 lesson_title: "World Models and Latent Simulation"
-canonical_status: "Draft"
+canonical_status: "Reviewed"
 topic: "World Models and Latent Simulation"
 artifact_ids:
   - artifact-world-models-and-latent-simulation-explanatory-text

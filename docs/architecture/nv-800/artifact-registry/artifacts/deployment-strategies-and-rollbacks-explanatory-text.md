@@ -3,7 +3,7 @@ artifact_id: "artifact-deployment-strategies-and-rollbacks-explanatory-text"
 artifact_title: "Deployment Strategies and Rollbacks"
 artifact_family: "Instruction Artifacts"
 artifact_type: "Explanatory Text"
-canonical_status: "Draft"
+canonical_status: "Reviewed"
 instructional_objectives:
   - Explanatory
 learning_depths:

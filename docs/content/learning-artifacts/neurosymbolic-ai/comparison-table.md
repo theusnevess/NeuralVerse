@@ -3,7 +3,7 @@ artifact_id: "artifact-neurosymbolic-ai-comparison-table"
 artifact_title: "Neurosymbolic Approaches Reference"
 artifact_family: "Reference Artifacts"
 artifact_type: "Comparison Table"
-canonical_status: "Draft"
+canonical_status: "Reviewed"
 instructional_objectives:
   - Comparison
 learning_depths:

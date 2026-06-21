@@ -1,7 +1,7 @@
 ---
 lesson_id: "lesson-scaling-laws-and-emergent-behavior"
 lesson_title: "Scaling Laws and Emergent Behavior"
-canonical_status: "Draft"
+canonical_status: "Reviewed"
 topic: "Scaling Laws and Emergent Behavior"
 artifact_ids:
   - artifact-scaling-laws-and-emergent-behavior-explanatory-text

@@ -3,7 +3,7 @@ artifact_id: "artifact-model-versioning-and-experiment-tracking-visual-intuition
 artifact_title: "The Library Archives"
 artifact_family: "Instruction Artifacts"
 artifact_type: "Visual Intuition"
-canonical_status: "Draft"
+canonical_status: "Reviewed"
 instructional_objectives:
   - Visual
 learning_depths:

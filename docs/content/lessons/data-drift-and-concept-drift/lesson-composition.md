@@ -1,7 +1,7 @@
 ---
 lesson_id: "lesson-data-drift-and-concept-drift"
 lesson_title: "Data Drift and Concept Drift"
-canonical_status: "Draft"
+canonical_status: "Reviewed"
 topic: "Data Drift and Concept Drift"
 artifact_ids:
   - artifact-data-drift-and-concept-drift-explanatory-text

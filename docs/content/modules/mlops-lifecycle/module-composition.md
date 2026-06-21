@@ -1,7 +1,7 @@
 ---
 module_id: "module-mlops-lifecycle"
 module_title: "MLOps Lifecycle"
-canonical_status: "Draft"
+canonical_status: "Reviewed"
 module_type: "Core Module"
 
 lesson_ids:

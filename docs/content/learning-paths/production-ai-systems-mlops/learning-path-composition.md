@@ -1,7 +1,7 @@
 ---
 learning_path_id: "path-production-ai-systems-mlops"
 learning_path_title: "Production AI Systems and MLOps"
-canonical_status: "Draft"
+canonical_status: "Reviewed"
 path_type: "Foundational Learning Path"
 
 module_ids:

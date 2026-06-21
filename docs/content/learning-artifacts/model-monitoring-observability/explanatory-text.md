@@ -3,7 +3,7 @@ artifact_id: "artifact-model-monitoring-observability-explanatory-text"
 artifact_title: "Model Monitoring and Observability"
 artifact_family: "Instruction Artifacts"
 artifact_type: "Explanatory Text"
-canonical_status: "Draft"
+canonical_status: "Reviewed"
 instructional_objectives:
   - Explanatory
 learning_depths:

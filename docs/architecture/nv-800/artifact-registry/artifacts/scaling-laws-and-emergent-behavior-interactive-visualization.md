@@ -3,7 +3,7 @@ artifact_id: "artifact-scaling-laws-and-emergent-behavior-interactive-visualizat
 artifact_title: "Scaling Law Explorer Spec"
 artifact_family: "Instruction Artifacts"
 artifact_type: "Interactive Visualization"
-canonical_status: "Draft"
+canonical_status: "Reviewed"
 instructional_objectives:
   - Interactive
 learning_depths:

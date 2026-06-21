@@ -3,7 +3,7 @@ artifact_id: "artifact-ml-pipelines-and-orchestration-visual-intuition"
 artifact_title: "The Automated Factory Assembly Line"
 artifact_family: "Instruction Artifacts"
 artifact_type: "Visual Intuition"
-canonical_status: "Draft"
+canonical_status: "Reviewed"
 instructional_objectives:
   - Visual
 learning_depths:
