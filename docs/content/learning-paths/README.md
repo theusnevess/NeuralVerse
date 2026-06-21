@@ -21,3 +21,4 @@ Learning Paths organize Modules into coherent curriculum-level progressions. The
 *   [Convolutional Neural Networks Foundations](convolutional-neural-networks-foundations/)
 *   [Object Detection Foundations](object-detection-foundations/)
 *   [Segmentation Foundations](segmentation-foundations/)
+*   [Transformer Foundations](transformer-foundations/)
