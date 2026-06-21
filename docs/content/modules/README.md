@@ -13,3 +13,4 @@ Modules organize Lessons into coherent instructional units. They represent highe
 ## Current Draft Modules
 
 *   [Semantic Representations Foundations](semantic-representations-foundations/)
+*   [Vector Retrieval Architectures](vector-retrieval-architectures/)

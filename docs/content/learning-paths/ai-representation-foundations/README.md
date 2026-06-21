@@ -11,6 +11,7 @@ Introduce learners to foundational representation concepts used in modern AI sys
 ## Included Modules
 
 *   [Semantic Representations Foundations](../../modules/semantic-representations-foundations/) (`module-semantic-representations-foundations`)
+*   [Vector Retrieval Architectures](../../modules/vector-retrieval-architectures/) (`module-vector-retrieval-architectures`)
 
 ## Evidence Boundary Reminder
 

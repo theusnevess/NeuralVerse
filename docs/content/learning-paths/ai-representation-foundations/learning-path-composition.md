@@ -6,9 +6,15 @@ path_type: "Foundational Learning Path"
 
 module_ids:
   - module-semantic-representations-foundations
+  - module-vector-retrieval-architectures
 
 lesson_scope:
   - lesson-embeddings-semantic-similarity
+  - lesson-vector-spaces
+  - lesson-distance-metrics
+  - lesson-nearest-neighbor-search
+  - lesson-vector-databases
+  - lesson-rag-foundations
 
 artifact_scope:
   - artifact-embeddings-explanatory-text
@@ -16,13 +22,38 @@ artifact_scope:
   - artifact-embeddings-interactive-visualization
   - artifact-embeddings-exercise
   - artifact-embeddings-comparison-table
+  - artifact-vector-spaces-explanatory-text
+  - artifact-vector-spaces-visual-intuition
+  - artifact-vector-spaces-interactive-visualization
+  - artifact-vector-spaces-exercise
+  - artifact-vector-spaces-comparison-table
+  - artifact-distance-metrics-explanatory-text
+  - artifact-distance-metrics-visual-intuition
+  - artifact-distance-metrics-interactive-visualization
+  - artifact-distance-metrics-exercise
+  - artifact-distance-metrics-comparison-table
+  - artifact-nearest-neighbor-search-explanatory-text
+  - artifact-nearest-neighbor-search-visual-intuition
+  - artifact-nearest-neighbor-search-interactive-visualization
+  - artifact-nearest-neighbor-search-exercise
+  - artifact-nearest-neighbor-search-comparison-table
+  - artifact-vector-databases-explanatory-text
+  - artifact-vector-databases-visual-intuition
+  - artifact-vector-databases-interactive-visualization
+  - artifact-vector-databases-exercise
+  - artifact-vector-databases-comparison-table
+  - artifact-rag-foundations-explanatory-text
+  - artifact-rag-foundations-visual-intuition
+  - artifact-rag-foundations-interactive-visualization
+  - artifact-rag-foundations-exercise
+  - artifact-rag-foundations-comparison-table
 ---
 
 # AI Representation Foundations — Learning Path Composition
 
 ## 1. Purpose
 
-This Learning Path organizes one or more Modules into a coherent, high-level curriculum progression.
+This Learning Path organizes multiple Modules into a coherent, high-level curriculum progression.
 
 It serves as an organizational and navigational guide for learners. The Learning Path does not duplicate, embed, or rewrite the content of the referenced modules, lessons, or learning artifacts.
 
@@ -41,13 +72,21 @@ This path focuses on semantic vectors as building blocks for retrieval, recommen
 *   **Pedagogical Role:** Establishes the foundational concepts of vector space, meaning-oriented comparisons, and the distinction between keyword and semantic retrieval.
 *   **Relationship to Learning Path Aim:** Satisfies the initial step of the learning path's aim by exposing the learner to core semantic embeddings concepts.
 
-This learning path does not duplicate any of the instructional content or text from the module composition itself.
+### 3.2 Vector Retrieval Architectures
+
+*   **Module ID:** `module-vector-retrieval-architectures`
+*   **Location:** `docs/content/modules/vector-retrieval-architectures/module-composition.md`
+*   **Pedagogical Role:** Focuses on search index scale challenges (ANN, HNSW, IVF), specialized vector storage, metadata filtering, and downstream retrieval augmentation workflows.
+*   **Relationship to Learning Path Aim:** Satisfies the second step of the learning path's aim by connecting vector search technologies to system-level AI workflows.
+
+This learning path does not duplicate any of the instructional content or text from the module compositions themselves.
 
 ## 4. Learning Path Flow
 
-The learning path currently structures the following module progression:
+The learning path structures the following module progression:
 
 1.  **Semantic Representations Foundations** (`module-semantic-representations-foundations`)
+2.  **Vector Retrieval Architectures** (`module-vector-retrieval-architectures`)
 
 ### Future Expansion
 
@@ -60,8 +99,13 @@ Future modules may extend this path with topics such as vector search, similarit
 The Learning Path includes the following lessons indirectly through its modules:
 
 *   `lesson-embeddings-semantic-similarity` (Embeddings and Semantic Similarity)
+*   `lesson-vector-spaces` (Vector Spaces)
+*   `lesson-distance-metrics` (Distance Metrics)
+*   `lesson-nearest-neighbor-search` (Nearest Neighbor Search)
+*   `lesson-vector-databases` (Vector Databases)
+*   `lesson-rag-foundations` (RAG Foundations)
 
-The Learning Path references this lesson through the module composition. It does not directly own or modify the lesson.
+The Learning Path references these lessons through the module compositions. It does not directly own or modify the lessons.
 
 ## 6. Lesson-to-Artifact Trace
 
@@ -72,17 +116,39 @@ The Learning Path includes the following Learning Artifacts indirectly through t
 *   `artifact-embeddings-interactive-visualization` (Interactive Visualization)
 *   `artifact-embeddings-exercise` (Exercise)
 *   `artifact-embeddings-comparison-table` (Comparison Table)
+*   `artifact-vector-spaces-explanatory-text` (Explanatory Text)
+*   `artifact-vector-spaces-visual-intuition` (Visual Intuition)
+*   `artifact-vector-spaces-interactive-visualization` (Interactive Visualization)
+*   `artifact-vector-spaces-exercise` (Exercise)
+*   `artifact-vector-spaces-comparison-table` (Comparison Table)
+*   `artifact-distance-metrics-explanatory-text` (Explanatory Text)
+*   `artifact-distance-metrics-visual-intuition` (Visual Intuition)
+*   `artifact-distance-metrics-interactive-visualization` (Interactive Visualization)
+*   `artifact-distance-metrics-exercise` (Exercise)
+*   `artifact-distance-metrics-comparison-table` (Comparison Table)
+*   `artifact-nearest-neighbor-search-explanatory-text` (Explanatory Text)
+*   `artifact-nearest-neighbor-search-visual-intuition` (Visual Intuition)
+*   `artifact-nearest-neighbor-search-interactive-visualization` (Interactive Visualization)
+*   `artifact-nearest-neighbor-search-exercise` (Exercise)
+*   `artifact-nearest-neighbor-search-comparison-table` (Comparison Table)
+*   `artifact-vector-databases-explanatory-text` (Explanatory Text)
+*   `artifact-vector-databases-visual-intuition` (Visual Intuition)
+*   `artifact-vector-databases-interactive-visualization` (Interactive Visualization)
+*   `artifact-vector-databases-exercise` (Exercise)
+*   `artifact-vector-databases-comparison-table` (Comparison Table)
+*   `artifact-rag-foundations-explanatory-text` (Explanatory Text)
+*   `artifact-rag-foundations-visual-intuition` (Visual Intuition)
+*   `artifact-rag-foundations-interactive-visualization` (Interactive Visualization)
+*   `artifact-rag-foundations-exercise` (Exercise)
+*   `artifact-rag-foundations-comparison-table` (Comparison Table)
 
 The Learning Path references these artifacts indirectly through the module and lesson compositions. It does not directly own or modify the artifacts.
 
 ## 7. Reuse Notes
 
-The composed module `module-semantic-representations-foundations` may be reused in future learning paths if pedagogically appropriate.
-
-The composed lesson `lesson-embeddings-semantic-similarity` may be reused in future modules.
-
+Composed modules may be reused in future learning paths if pedagogically appropriate.
+Composed lessons may be reused in future modules.
 The underlying Learning Artifacts remain independently reusable across different lessons.
-
 Participation in this Learning Path does not alter the lifecycle, metadata, reuse semantics, dependencies, or governance status of any module, lesson, or learning artifact.
 
 ## Evidence Boundary
@@ -117,7 +183,7 @@ Competencies remain the canonical unit of mastery.
 - [ ] Module content not duplicated.
 - [ ] Lesson content not duplicated.
 - [ ] Artifact content not duplicated.
-- [ ] Learning path aim aligned with included module.
+- [ ] Learning path aim aligned with included modules.
 - [ ] Evidence boundary preserved.
 - [ ] No assessment logic introduced.
 - [ ] No mastery claims introduced.
@@ -132,3 +198,4 @@ Competencies remain the canonical unit of mastery.
 *   NV-800-C1 — Seed Learning Artifacts
 *   NV-800-C2 — First Canonical Lesson Composition
 *   NV-800-C3 — Canonical Module Composition
+*   NV-800-C4 — Canonical Learning Path Composition
