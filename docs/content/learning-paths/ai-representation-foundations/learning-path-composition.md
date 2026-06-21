@@ -7,6 +7,8 @@ path_type: "Foundational Learning Path"
 module_ids:
   - module-semantic-representations-foundations
   - module-vector-retrieval-architectures
+  - module-retrieval-pipeline-foundations
+  - module-retrieval-optimization-techniques
 
 lesson_scope:
   - lesson-embeddings-semantic-similarity
@@ -15,6 +17,12 @@ lesson_scope:
   - lesson-nearest-neighbor-search
   - lesson-vector-databases
   - lesson-rag-foundations
+  - lesson-chunking-strategies
+  - lesson-embedding-models
+  - lesson-query-expansion-reformulation
+  - lesson-hybrid-search
+  - lesson-reranking
+  - lesson-context-window-management
 
 artifact_scope:
   - artifact-embeddings-explanatory-text
@@ -47,6 +55,36 @@ artifact_scope:
   - artifact-rag-foundations-interactive-visualization
   - artifact-rag-foundations-exercise
   - artifact-rag-foundations-comparison-table
+  - artifact-chunking-strategies-explanatory-text
+  - artifact-chunking-strategies-visual-intuition
+  - artifact-chunking-strategies-interactive-visualization
+  - artifact-chunking-strategies-exercise
+  - artifact-chunking-strategies-comparison-table
+  - artifact-embedding-models-explanatory-text
+  - artifact-embedding-models-visual-intuition
+  - artifact-embedding-models-interactive-visualization
+  - artifact-embedding-models-exercise
+  - artifact-embedding-models-comparison-table
+  - artifact-query-expansion-reformulation-explanatory-text
+  - artifact-query-expansion-reformulation-visual-intuition
+  - artifact-query-expansion-reformulation-interactive-visualization
+  - artifact-query-expansion-reformulation-exercise
+  - artifact-query-expansion-reformulation-comparison-table
+  - artifact-hybrid-search-explanatory-text
+  - artifact-hybrid-search-visual-intuition
+  - artifact-hybrid-search-interactive-visualization
+  - artifact-hybrid-search-exercise
+  - artifact-hybrid-search-comparison-table
+  - artifact-reranking-explanatory-text
+  - artifact-reranking-visual-intuition
+  - artifact-reranking-interactive-visualization
+  - artifact-reranking-exercise
+  - artifact-reranking-comparison-table
+  - artifact-context-window-management-explanatory-text
+  - artifact-context-window-management-visual-intuition
+  - artifact-context-window-management-interactive-visualization
+  - artifact-context-window-management-exercise
+  - artifact-context-window-management-comparison-table
 ---
 
 # AI Representation Foundations — Learning Path Composition
@@ -77,7 +115,21 @@ This path focuses on semantic vectors as building blocks for retrieval, recommen
 *   **Module ID:** `module-vector-retrieval-architectures`
 *   **Location:** `docs/content/modules/vector-retrieval-architectures/module-composition.md`
 *   **Pedagogical Role:** Focuses on search index scale challenges (ANN, HNSW, IVF), specialized vector storage, metadata filtering, and downstream retrieval augmentation workflows.
-*   **Relationship to Learning Path Aim:** Satisfies the second step of the learning path's aim by connecting vector search technologies to system-level AI workflows.
+*   **Relationship to Learning Path Aim:** Connects vector search technologies to system-level AI retrieval workflows.
+
+### 3.3 Retrieval Pipeline Foundations
+
+*   **Module ID:** `module-retrieval-pipeline-foundations`
+*   **Location:** `docs/content/modules/retrieval-pipeline-foundations/module-composition.md`
+*   **Pedagogical Role:** Guides the learner through initial processing steps: document chunking, embedding representation choice, and query translation/reformulation.
+*   **Relationship to Learning Path Aim:** Deepens understanding of ingestion and preprocessing stages within semantic retrieval pipelines.
+
+### 3.4 Retrieval Optimization Techniques
+
+*   **Module ID:** `module-retrieval-optimization-techniques`
+*   **Location:** `docs/content/modules/retrieval-optimization-techniques/module-composition.md`
+*   **Pedagogical Role:** Details advanced techniques for optimizing retrieval quality and resource utilization: hybrid rank fusion, Cross-Encoder reranking, and U-shaped prompt layout optimization.
+*   **Relationship to Learning Path Aim:** Focuses on search precision and layout efficiency optimizations.
 
 This learning path does not duplicate any of the instructional content or text from the module compositions themselves.
 
@@ -87,10 +139,12 @@ The learning path structures the following module progression:
 
 1.  **Semantic Representations Foundations** (`module-semantic-representations-foundations`)
 2.  **Vector Retrieval Architectures** (`module-vector-retrieval-architectures`)
+3.  **Retrieval Pipeline Foundations** (`module-retrieval-pipeline-foundations`)
+4.  **Retrieval Optimization Techniques** (`module-retrieval-optimization-techniques`)
 
 ### Future Expansion
 
-Future modules may extend this path with topics such as vector search, similarity metrics, vector databases, retrieval-augmented generation, clustering, recommendation systems, or representation evaluation.
+Future modules may extend this path with topics such as representation evaluation, clustering, recommendation systems, or advanced agentic search.
 
 *Note: These future modules and future module stubs are not created or defined in this phase.*
 
@@ -104,6 +158,12 @@ The Learning Path includes the following lessons indirectly through its modules:
 *   `lesson-nearest-neighbor-search` (Nearest Neighbor Search)
 *   `lesson-vector-databases` (Vector Databases)
 *   `lesson-rag-foundations` (RAG Foundations)
+*   `lesson-chunking-strategies` (Chunking Strategies)
+*   `lesson-embedding-models` (Embedding Models)
+*   `lesson-query-expansion-reformulation` (Query Expansion and Reformulation)
+*   `lesson-hybrid-search` (Hybrid Search)
+*   `lesson-reranking` (Reranking)
+*   `lesson-context-window-management` (Context Window Management)
 
 The Learning Path references these lessons through the module compositions. It does not directly own or modify the lessons.
 
@@ -141,6 +201,36 @@ The Learning Path includes the following Learning Artifacts indirectly through t
 *   `artifact-rag-foundations-interactive-visualization` (Interactive Visualization)
 *   `artifact-rag-foundations-exercise` (Exercise)
 *   `artifact-rag-foundations-comparison-table` (Comparison Table)
+*   `artifact-chunking-strategies-explanatory-text` (Explanatory Text)
+*   `artifact-chunking-strategies-visual-intuition` (Visual Intuition)
+*   `artifact-chunking-strategies-interactive-visualization` (Interactive Visualization)
+*   `artifact-chunking-strategies-exercise` (Exercise)
+*   `artifact-chunking-strategies-comparison-table` (Comparison Table)
+*   `artifact-embedding-models-explanatory-text` (Explanatory Text)
+*   `artifact-embedding-models-visual-intuition` (Visual Intuition)
+*   `artifact-embedding-models-interactive-visualization` (Interactive Visualization)
+*   `artifact-embedding-models-exercise` (Exercise)
+*   `artifact-embedding-models-comparison-table` (Comparison Table)
+*   `artifact-query-expansion-reformulation-explanatory-text` (Explanatory Text)
+*   `artifact-query-expansion-reformulation-visual-intuition` (Visual Intuition)
+*   `artifact-query-expansion-reformulation-interactive-visualization` (Interactive Visualization)
+*   `artifact-query-expansion-reformulation-exercise` (Exercise)
+*   `artifact-query-expansion-reformulation-comparison-table` (Comparison Table)
+*   `artifact-hybrid-search-explanatory-text` (Explanatory Text)
+*   `artifact-hybrid-search-visual-intuition` (Visual Intuition)
+*   `artifact-hybrid-search-interactive-visualization` (Interactive Visualization)
+*   `artifact-hybrid-search-exercise` (Exercise)
+*   `artifact-hybrid-search-comparison-table` (Comparison Table)
+*   `artifact-reranking-explanatory-text` (Explanatory Text)
+*   `artifact-reranking-visual-intuition` (Visual Intuition)
+*   `artifact-reranking-interactive-visualization` (Interactive Visualization)
+*   `artifact-reranking-exercise` (Exercise)
+*   `artifact-reranking-comparison-table` (Comparison Table)
+*   `artifact-context-window-management-explanatory-text` (Explanatory Text)
+*   `artifact-context-window-management-visual-intuition` (Visual Intuition)
+*   `artifact-context-window-management-interactive-visualization` (Interactive Visualization)
+*   `artifact-context-window-management-exercise` (Exercise)
+*   `artifact-context-window-management-comparison-table` (Comparison Table)
 
 The Learning Path references these artifacts indirectly through the module and lesson compositions. It does not directly own or modify the artifacts.
 
@@ -199,3 +289,5 @@ Competencies remain the canonical unit of mastery.
 *   NV-800-C2 — First Canonical Lesson Composition
 *   NV-800-C3 — Canonical Module Composition
 *   NV-800-C4 — Canonical Learning Path Composition
+*   NV-800-C5 — Canonical Foundation Content Pack (Wave 1)
+*   NV-800-C6 — Canonical Content Review & Promotion (Wave 1)

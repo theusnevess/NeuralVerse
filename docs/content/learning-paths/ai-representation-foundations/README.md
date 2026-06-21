@@ -12,6 +12,8 @@ Introduce learners to foundational representation concepts used in modern AI sys
 
 *   [Semantic Representations Foundations](../../modules/semantic-representations-foundations/) (`module-semantic-representations-foundations`)
 *   [Vector Retrieval Architectures](../../modules/vector-retrieval-architectures/) (`module-vector-retrieval-architectures`)
+*   [Retrieval Pipeline Foundations](../../modules/retrieval-pipeline-foundations/) (`module-retrieval-pipeline-foundations`)
+*   [Retrieval Optimization Techniques](../../modules/retrieval-optimization-techniques/) (`module-retrieval-optimization-techniques`)
 
 ## Evidence Boundary Reminder
 
@@ -19,4 +21,4 @@ This Learning Path organizes Modules. It does not generate Competency Evidence a
 
 ## Future Expansion Note
 
-Future modules may extend this path with topics such as vector search, similarity metrics, vector databases, retrieval-augmented generation, clustering, recommendation systems, or representation evaluation.
+Future modules may extend this path with topics such as representation evaluation, clustering, recommendation systems, or advanced agentic search.

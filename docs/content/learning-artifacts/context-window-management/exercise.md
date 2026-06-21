@@ -1,0 +1,110 @@
+---
+artifact_id: "artifact-context-window-management-exercise"
+artifact_title: "Mitigating Lost-in-the-Middle Effects"
+artifact_family: "Practice Artifacts"
+artifact_type: "Exercise"
+canonical_status: "Draft"
+instructional_objectives:
+  - Exercise
+learning_depths:
+  - Level 1 — Intuition
+  - Level 2 — Foundations
+estimated_duration: "5-8 minutes"
+supported_learning_levels:
+  - Beginner
+reuse_mode: ""
+source_artifact: ""
+dependencies:
+  prerequisite:
+  recommended_before:
+  recommended_after:
+  complementary:
+  alternative:
+authoritative_source: "Foundational Context Window Management literature and scientific documentation."
+review_cycle: "Initial editorial review required"
+localization_ready: false
+accessibility_notes: "Use clear text and logical structure."
+keywords:
+  - context window
+  - lost in the middle
+  - prompt compression
+  - context stuffing
+  - token limits
+tags:
+  - learning-artifact
+  - context-management
+  - prompt-engineering
+  - llm
+prerequisite_notes: "Comfortable with basic vector representations."
+related_topics:
+  - chunking-strategies
+  - embedding-models
+  - query-expansion-reformulation
+  - hybrid-search
+  - reranking
+  - context-window-management
+audience_notes: "Intended for AI engineers and computer science students."---
+
+# Mitigating Lost-in-the-Middle Effects
+
+## Artifact Summary
+
+This artifact belongs to the Context Window Management topic and serves as a Exercise.
+
+## Required Contract Fields
+
+### objective
+
+Design optimal ordering for retrieved documents within an LLM context.
+
+### learner task
+
+You have 10 retrieved chunks. Chunk 3 contains the direct answer to the user's query. Design a prompt structure that places this chunk in a high-attention position, and explain your ordering strategy.
+
+### expected learner output
+
+The learner should reorder the chunks so that Chunk 3 sits either at the very beginning (index 0) or at the very end (index 9) of the context block, explaining that placing the most important chunk in these positions maximizes LLM attention.
+
+This practice does not assign a score and does not certify mastery.
+
+## Optional Enrichment Fields
+
+### motivation
+
+Understanding this topic is critical for building stable, industrial-scale retrieval and search systems.
+
+## Dependency Notes
+
+This artifact is part of the Context Window Management content pack.
+
+## Reuse Notes
+
+No reuse mode is asserted. The artifact can participate independently in different instructional contexts.
+
+## Accessibility Notes
+
+Text descriptions are provided for all conceptual spaces.
+
+## Evidence Boundary
+
+This Learning Artifact supports learning.
+
+It does not generate Competency Evidence.
+
+It does not certify mastery.
+
+If this artifact is used in an assessment context, that usage must be governed separately by NV-800-M4 and NV-800-M3.
+
+## Quality Review Checklist
+
+- [ ] Technical accuracy checked.
+- [ ] Pedagogical clarity checked.
+- [ ] Required contract fields complete.
+- [ ] Instructional objectives supported.
+- [ ] Internal terminology consistent.
+- [ ] Reuse suitability considered.
+- [ ] Accessibility considerations documented where relevant.
+- [ ] Maintainability reviewed.
+- [ ] Does not introduce assessment logic.
+- [ ] Does not claim Competency Evidence.
+- [ ] Does not imply learner mastery.

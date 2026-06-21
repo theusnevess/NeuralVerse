@@ -14,3 +14,5 @@ Modules organize Lessons into coherent instructional units. They represent highe
 
 *   [Semantic Representations Foundations](semantic-representations-foundations/)
 *   [Vector Retrieval Architectures](vector-retrieval-architectures/)
+*   [Retrieval Pipeline Foundations](retrieval-pipeline-foundations/)
+*   [Retrieval Optimization Techniques](retrieval-optimization-techniques/)
