@@ -24,3 +24,4 @@ Learning Paths organize Modules into coherent curriculum-level progressions. The
 *   [Transformer Foundations](transformer-foundations/)
 *   [Large Language Model Foundations](llm-foundations/)
 *   [Fine-Tuning & Adaptation Foundations](fine-tuning-foundations/)
+*   [AI Agents & Tool Use Foundations](ai-agents-foundations/)

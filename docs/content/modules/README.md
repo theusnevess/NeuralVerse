@@ -38,3 +38,5 @@ Modules organize Lessons into coherent instructional units. They represent highe
 *   [LLM Context & Behavior](llm-context-behavior/)
 *   [Model Adaptation Fundamentals](model-adaptation/)
 *   [Alignment & Specialization](alignment-specialization/)
+*   [Agent Fundamentals](agent-fundamentals/)
+*   [Agent Memory & Orchestration](agent-memory-orchestration/)
