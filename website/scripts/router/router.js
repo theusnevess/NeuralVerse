@@ -73,6 +73,7 @@ class ViewController {
   constructor(stateManager) {
     this.stateManager = stateManager;
     this.container = document.querySelector('.nv-main-workspace');
+    this.routeTransitionCleanup = null;
     this.templates = {
       home: `
         <div class="nv-stack nv-stack--gap-md nv-hero-observatory">
@@ -612,12 +613,6 @@ class ViewController {
     const viewId = route.id === 'not-found' ? 'not-found' : (route.isImplemented ? route.id : 'not-found');
     if (window.NV_DEBUG) console.log(`Rendering view: ${viewId}`);
 
-    // Route transition — exit current content (skip if reduced motion)
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (!prefersReducedMotion) {
-      this.container.style.opacity = '0';
-    }
-
     let rendered = false;
     // Attempt to load from static files
     try {
@@ -649,20 +644,7 @@ class ViewController {
       this.container.innerHTML = template;
     }
 
-    // Route transition — enter new content
-    if (!prefersReducedMotion) {
-      this.container.classList.add('nv-route-enter');
-      this.container.offsetHeight;
-      this.container.style.opacity = '1';
-
-      const onEnterEnd = () => {
-        this.container.classList.remove('nv-route-enter');
-        this.container.removeEventListener('animationend', onEnterEnd);
-      };
-      this.container.addEventListener('animationend', onEnterEnd);
-    } else {
-      this.container.style.opacity = '1';
-    }
+    this.applyRouteTransition(viewId);
 
     // Dispatch custom event to notify all components that page content has been rendered
     window.dispatchEvent(new CustomEvent('nv:routerendered', { detail: { routeId: viewId } }));
@@ -670,6 +652,40 @@ class ViewController {
       route: window.location.hash || '#/',
       routeId: viewId
     });
+  }
+
+  applyRouteTransition(viewId) {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (this.routeTransitionCleanup) {
+      this.routeTransitionCleanup();
+      this.routeTransitionCleanup = null;
+    }
+
+    this.container.dataset.routeTransitionView = viewId;
+    this.container.classList.remove('nv-route-enter');
+    this.container.style.opacity = '';
+
+    if (prefersReducedMotion) {
+      return;
+    }
+
+    // Restart the lightweight enter animation after content is already rendered.
+    this.container.offsetHeight;
+    this.container.classList.add('nv-route-enter');
+
+    const finish = () => {
+      this.container.classList.remove('nv-route-enter');
+      this.container.removeEventListener('animationend', finish);
+      this.routeTransitionCleanup = null;
+    };
+
+    this.routeTransitionCleanup = () => {
+      this.container.classList.remove('nv-route-enter');
+      this.container.removeEventListener('animationend', finish);
+    };
+
+    this.container.addEventListener('animationend', finish);
   }
 }
 

@@ -47,6 +47,35 @@ export function createBreadcrumbsController(options = {}) {
   const getModuleTarget = () => root.querySelector("[data-workspace-context-module]");
   const getContentTarget = () => root.querySelector("[data-workspace-context-content]");
   const getLiveRegion = () => root.querySelector("[data-workspace-live]");
+  const getContextPanel = () => root.querySelector(".nv-context-panel");
+  let contextPanelTransitionCleanup = null;
+
+  function markContextPanelUpdated() {
+    const panel = getContextPanel();
+    if (!panel) return;
+
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (contextPanelTransitionCleanup) {
+      contextPanelTransitionCleanup();
+      contextPanelTransitionCleanup = null;
+    }
+
+    panel.classList.remove("nv-context-panel-update");
+
+    if (prefersReducedMotion) return;
+
+    panel.offsetHeight;
+    panel.classList.add("nv-context-panel-update");
+
+    const clearUpdate = () => {
+      panel.classList.remove("nv-context-panel-update");
+      panel.removeEventListener("animationend", clearUpdate);
+      contextPanelTransitionCleanup = null;
+    };
+
+    contextPanelTransitionCleanup = clearUpdate;
+    panel.addEventListener("animationend", clearUpdate);
+  }
 
   function renderBreadcrumbs(crumbs) {
     const breadcrumbsTarget = getBreadcrumbsTarget();
@@ -92,6 +121,7 @@ export function createBreadcrumbsController(options = {}) {
     if (pathTarget) pathTarget.textContent = path?.title || "None";
     if (moduleTarget) moduleTarget.textContent = module?.title || "None";
     if (contentTarget) contentTarget.textContent = content?.title || "None";
+    markContextPanelUpdated();
 
     if (liveRegion) {
       const labels = [path?.title, module?.title, content?.title].filter(Boolean);

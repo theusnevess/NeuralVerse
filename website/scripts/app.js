@@ -2,7 +2,7 @@ import { createLearningController } from "./learning/learning-controller.js?v=9"
 import { createContentController } from "./content/content-controller.js?v=9";
 import { createProgressController } from "./progress/progress-controller.js?v=9";
 import { createWorkspaceController } from "./workspace/workspace-controller.js?v=9";
-import { createBreadcrumbsController } from "./navigation/breadcrumbs-controller.js?v=9";
+import { createBreadcrumbsController } from "./navigation/breadcrumbs-controller.js?v=10";
 
 window.NV_DEBUG = window.NV_DEBUG || false;
 

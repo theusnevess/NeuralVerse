@@ -12,15 +12,15 @@
    ────────────────────────────────────────────── */
 
 .nv-route-enter {
-  --nv-motion-x: 0;
-  --nv-motion-y: 4px;
+  --nv-route-transition-offset: 4px;
   animation: nv-route-enter var(--motion-duration-enter) var(--motion-easing-decelerate) both;
+  will-change: opacity, transform;
 }
 
 @keyframes nv-route-enter {
   from {
     opacity: 0;
-    transform: translateY(4px);
+    transform: translateY(var(--nv-route-transition-offset));
   }
   to {
     opacity: 1;
@@ -49,7 +49,7 @@
 .nv-breadcrumbs .nv-motion-slide-reveal {
   --nv-motion-x: 4px;
   --nv-motion-y: 0;
-  --nv-motion-duration: 120ms;
+  --nv-motion-duration: var(--motion-duration-state);
 }
 
 /* ──────────────────────────────────────────────
@@ -67,7 +67,18 @@
 .nv-context-panel-update .nv-context-meta-value,
 .nv-context-panel-update .nv-context-description,
 .nv-context-panel-update .nv-context-hierarchy-item {
-  transform: translateY(0);
+  animation: nv-context-panel-update var(--motion-duration-state) var(--motion-easing-decelerate) both;
+}
+
+@keyframes nv-context-panel-update {
+  from {
+    opacity: 0.72;
+    transform: translateY(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* ──────────────────────────────────────────────
@@ -97,6 +108,7 @@
   .nv-route-enter {
     animation: none;
     opacity: 1;
+    transform: none;
   }
 
   .nv-header-section-title,
@@ -111,7 +123,9 @@
   .nv-context-meta-value,
   .nv-context-description,
   .nv-context-hierarchy-item {
+    animation: none;
     transition: none;
+    transform: none;
   }
 
   .nv-layout-section-reveal {
