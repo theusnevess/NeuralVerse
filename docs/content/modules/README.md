@@ -22,3 +22,5 @@ Modules organize Lessons into coherent instructional units. They represent highe
 *   [Statistical Reasoning for AI](statistical-reasoning-ai/)
 *   [Core Machine Learning Concepts](core-machine-learning-concepts/)
 *   [Model Generalization and Evaluation](model-generalization-evaluation/)
+*   [Neural Network Fundamentals](neural-network-fundamentals/)
+*   [Optimization and Training](optimization-training/)
