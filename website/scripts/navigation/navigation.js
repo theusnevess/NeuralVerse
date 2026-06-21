@@ -24,7 +24,10 @@ class NavigationController {
     const navItems = document.querySelectorAll('.nv-nav-item');
     navItems.forEach(item => {
       const itemHref = item.getAttribute('href');
-      const pathMatches = itemHref === route.path;
+      const currentHash = window.location.hash || '#/';
+      const pathMatches =
+        itemHref === route.path ||
+        (itemHref !== '#/' && currentHash.startsWith(`${itemHref}/`));
 
       if (pathMatches) {
         item.setAttribute('aria-current', 'page');
