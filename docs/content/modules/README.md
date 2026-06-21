@@ -40,3 +40,5 @@ Modules organize Lessons into coherent instructional units. They represent highe
 *   [Alignment & Specialization](alignment-specialization/)
 *   [Agent Fundamentals](agent-fundamentals/)
 *   [Agent Memory & Orchestration](agent-memory-orchestration/)
+*   [Multimodal Representations](multimodal-representations/)
+*   [Multimodal Applications](multimodal-applications/)
