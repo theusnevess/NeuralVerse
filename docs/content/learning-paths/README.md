@@ -14,3 +14,4 @@ Learning Paths organize Modules into coherent curriculum-level progressions. The
 
 *   [AI Representation Foundations](ai-representation-foundations/)
 *   [Mathematical Foundations for AI](mathematical-foundations-ai/)
+*   [Statistics and Probability for AI](statistics-probability-ai/)

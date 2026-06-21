@@ -18,3 +18,5 @@ Modules organize Lessons into coherent instructional units. They represent highe
 *   [Retrieval Optimization Techniques](retrieval-optimization-techniques/)
 *   [Linear Algebra Foundations](linear-algebra-foundations/)
 *   [Mathematical Representations](mathematical-representations/)
+*   [Probability Foundations](probability-foundations/)
+*   [Statistical Reasoning for AI](statistical-reasoning-ai/)
