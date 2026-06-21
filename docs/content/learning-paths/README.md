@@ -26,3 +26,4 @@ Learning Paths organize Modules into coherent curriculum-level progressions. The
 *   [Fine-Tuning & Adaptation Foundations](fine-tuning-foundations/)
 *   [AI Agents & Tool Use Foundations](ai-agents-foundations/)
 *   [Multimodal AI Foundations](multimodal-ai-foundations/)
+*   [Advanced RAG Foundations](advanced-rag-foundations/)

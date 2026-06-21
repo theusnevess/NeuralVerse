@@ -42,3 +42,5 @@ Modules organize Lessons into coherent instructional units. They represent highe
 *   [Agent Memory & Orchestration](agent-memory-orchestration/)
 *   [Multimodal Representations](multimodal-representations/)
 *   [Multimodal Applications](multimodal-applications/)
+*   [Advanced Retrieval Pipelines](advanced-retrieval-pipelines/)
+*   [Agentic Retrieval Systems](agentic-retrieval-systems/)
