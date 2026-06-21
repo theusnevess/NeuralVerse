@@ -25,3 +25,10 @@ This architecture governs future work related to:
 * learning artifact taxonomy and contracts.
 
 NV-800 is a product and didactic architecture layer. It does not authorize implementation changes by itself.
+
+## Authoring Templates
+
+*   NV-800-M7 Learning Artifact templates:
+    [templates/learning-artifacts/](templates/learning-artifacts/)
+
+These templates provide Obsidian/Markdown scaffolds for artifact authorship. They do not create curriculum content, assessments, Competency Evidence, UI, backend logic, or implementation schemas.
