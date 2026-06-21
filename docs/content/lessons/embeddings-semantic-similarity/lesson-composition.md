@@ -130,6 +130,24 @@ Consolidates the lesson by comparing exact keyword matching, embeddings, and sem
 
 ## 5. Composition Rationale
 
+### 5.1 Recommended Learning Flow Map
+
+```text
+Recommended Learning Flow
+
+Explanatory Text
+        ↓
+Visual Intuition
+        ↓
+Interactive Visualization
+        ↓
+Exercise
+        ↓
+Comparison Table
+```
+
+### 5.2 Rationale Details
+
 The sequence begins with explanation because learners need vocabulary before they can interpret spatial or interactive representations.
 
 The visual intuition artifact follows because it gives learners a mental model for semantic space before they explore changes in distance or neighborhood relationships.
@@ -166,6 +184,10 @@ The comparison table may serve as a reusable reference across search, retrieval,
 
 No reuse mode is asserted by this lesson composition.
 
+Participation in this lesson does not alter the lifecycle, metadata, reuse semantics, or governance status of any referenced artifact.
+
+Lesson compositions are not required to include every artifact. Artifacts may participate independently in different instructional contexts.
+
 ## 8. Evidence Boundary
 
 This Lesson orchestrates Learning Artifacts.
@@ -198,3 +220,9 @@ This composition aligns with NV-800-M5 lesson orchestration and NV-800-M7 artifa
 - [ ] No mastery claims introduced
 - [ ] Reuse opportunities documented
 - [ ] Dependency recommendations respected
+
+## 11. Architectural Foundations
+
+- NV-800-M5 — Canonical Lesson Architecture
+- NV-800-M6 — Canonical Module & Learning Path Architecture
+- NV-800-M7 — Canonical Learning Artifact Architecture
