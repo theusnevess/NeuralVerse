@@ -122,6 +122,12 @@ The `artifacts/` directory includes seed entries that demonstrate registry conve
 
 These entries are illustrative governance examples. They are not Learning Artifact content, assessments, Competency Evidence, mastery records, runtime metadata, or approval decisions.
 
+## Draft Content Registry Entries
+
+The `artifacts/` directory may also include draft registry entries for real authored Learning Artifacts.
+
+Draft registry entries point to artifact files and support editorial discoverability. They do not imply review completion, canonical approval, assessment use, Competency Evidence, or mastery certification.
+
 ## Evidence Boundary
 
 The Artifact Registry indexes Learning Artifacts.
