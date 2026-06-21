@@ -20,3 +20,5 @@ Modules organize Lessons into coherent instructional units. They represent highe
 *   [Mathematical Representations](mathematical-representations/)
 *   [Probability Foundations](probability-foundations/)
 *   [Statistical Reasoning for AI](statistical-reasoning-ai/)
+*   [Core Machine Learning Concepts](core-machine-learning-concepts/)
+*   [Model Generalization and Evaluation](model-generalization-evaluation/)
