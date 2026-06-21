@@ -26,3 +26,5 @@ Modules organize Lessons into coherent instructional units. They represent highe
 *   [Optimization and Training](optimization-training/)
 *   [Image Representation Foundations](image-representation-foundations/)
 *   [Visual Feature Extraction Foundations](visual-feature-extraction-foundations/)
+*   [CNN Building Blocks](cnn-building-blocks/)
+*   [Representation Learning in CNNs](representation-learning-cnns/)
