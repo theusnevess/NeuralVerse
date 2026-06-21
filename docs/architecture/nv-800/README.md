@@ -32,3 +32,10 @@ NV-800 is a product and didactic architecture layer. It does not authorize imple
     [templates/learning-artifacts/](templates/learning-artifacts/)
 
 These templates provide Obsidian/Markdown scaffolds for artifact authorship. They do not create curriculum content, assessments, Competency Evidence, UI, backend logic, or implementation schemas.
+
+## Artifact Registry
+
+*   NV-800-M7 Artifact Registry:
+    [artifact-registry/](artifact-registry/)
+
+The registry provides a human-readable index layer for future Learning Artifacts. It does not introduce a database, search engine, API, UI, runtime service, validation engine, or Competency Evidence store.
