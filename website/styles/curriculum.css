@@ -1,0 +1,317 @@
+/* NV-900 Curriculum Experience Polish */
+
+.nv-curriculum-hero {
+  display: grid;
+  gap: var(--sys-space-stack-md);
+  padding: var(--sys-space-inset-lg);
+  border: var(--sys-border-subtle) solid var(--sys-premium-border);
+  border-radius: var(--sys-premium-radius-card);
+  background:
+    radial-gradient(
+      circle at top left,
+      color-mix(in srgb, var(--sys-color-accent-primary) 16%, transparent),
+      transparent 34%
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--sys-color-text-primary) 4%, transparent),
+      transparent 62%
+    ),
+    var(--sys-premium-surface);
+  box-shadow: var(--sys-premium-shadow-card);
+}
+
+.nv-curriculum-hero h1 {
+  margin: 0;
+  max-inline-size: var(--sys-a11y-reading-width-enhanced);
+  font-family: var(--sys-font-display-family);
+  font-size: clamp(var(--ref-font-size-700), 3vw, var(--ref-font-size-900));
+  line-height: var(--ref-font-line-height-tight);
+  letter-spacing: var(--ref-font-tracking-tight);
+  color: var(--sys-color-text-primary);
+}
+
+.nv-curriculum-hero p {
+  max-inline-size: var(--sys-a11y-reading-width-enhanced);
+  margin: 0;
+  line-height: var(--ref-font-line-height-relaxed);
+}
+
+.nv-curriculum-breadcrumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sys-space-inline-xs);
+  color: var(--sys-color-text-muted);
+  font-family: var(--sys-font-code-family);
+  font-size: var(--sys-font-caption-size);
+}
+
+.nv-curriculum-breadcrumbs__item {
+  color: inherit;
+  text-decoration: none;
+}
+
+.nv-curriculum-breadcrumbs__item[href]:hover,
+.nv-curriculum-breadcrumbs__item[href]:focus-visible {
+  color: var(--sys-color-accent-primary);
+  text-decoration: underline;
+  text-underline-offset: var(--ref-space-100);
+}
+
+.nv-curriculum-breadcrumbs__separator {
+  color: var(--sys-color-border-strong);
+}
+
+.nv-curriculum-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+  gap: var(--sys-space-stack-sm);
+  margin: 0;
+}
+
+.nv-curriculum-stat {
+  padding: var(--sys-space-inset-sm);
+  border: var(--sys-border-subtle) solid var(--sys-premium-border);
+  border-radius: var(--sys-radius-surface);
+  background: color-mix(in srgb, var(--sys-color-surface-raised) 72%, transparent);
+}
+
+.nv-curriculum-stat dt {
+  color: var(--sys-color-text-muted);
+  font-family: var(--sys-font-code-family);
+  font-size: var(--sys-font-caption-size);
+}
+
+.nv-curriculum-stat dd {
+  margin: 0;
+  color: var(--sys-color-text-primary);
+  font-size: var(--ref-font-size-700);
+  font-weight: var(--ref-font-weight-semibold);
+}
+
+.nv-curriculum-collection {
+  display: grid;
+  gap: var(--sys-space-stack-md);
+}
+
+.nv-curriculum-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sys-space-inline-xs);
+  align-items: center;
+}
+
+.nv-curriculum-filter__button {
+  min-block-size: var(--ref-space-900);
+}
+
+.nv-curriculum-card {
+  position: relative;
+  overflow: hidden;
+  min-block-size: 100%;
+}
+
+.nv-curriculum-card::before {
+  content: "";
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  inline-size: 100%;
+  block-size: var(--ref-space-100);
+  background: var(--sys-color-border-strong);
+}
+
+.nv-curriculum-card[data-status="Reviewed"]::before {
+  background: var(--sys-color-semantic-success);
+}
+
+.nv-curriculum-card__kicker {
+  color: var(--sys-color-text-muted);
+  font-family: var(--sys-font-code-family);
+  font-size: var(--sys-font-caption-size);
+  text-transform: uppercase;
+  letter-spacing: var(--ref-font-tracking-wide);
+}
+
+.nv-curriculum-card__title {
+  margin: 0;
+  font-size: var(--ref-font-size-600);
+  line-height: var(--ref-font-line-height-tight);
+}
+
+.nv-curriculum-card__title a {
+  color: var(--sys-color-text-primary);
+  text-decoration: none;
+}
+
+.nv-curriculum-card__title a:hover,
+.nv-curriculum-card__title a:focus-visible {
+  color: var(--sys-color-accent-primary);
+  text-decoration: underline;
+  text-underline-offset: var(--ref-space-100);
+}
+
+.nv-curriculum-card__description {
+  margin: 0;
+  color: var(--sys-color-text-secondary);
+  line-height: var(--ref-font-line-height-relaxed);
+}
+
+.nv-curriculum-flow {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: var(--sys-space-stack-sm);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  counter-reset: flow;
+}
+
+.nv-curriculum-flow li {
+  counter-increment: flow;
+  position: relative;
+  padding: var(--sys-space-inset-sm);
+  border: var(--sys-border-subtle) solid var(--sys-premium-border);
+  border-radius: var(--sys-radius-surface);
+  background: var(--sys-color-surface-raised);
+  color: var(--sys-color-text-primary);
+  font-weight: var(--ref-font-weight-medium);
+}
+
+.nv-curriculum-flow li::before {
+  content: counter(flow);
+  display: inline-grid;
+  place-items: center;
+  inline-size: var(--ref-space-600);
+  block-size: var(--ref-space-600);
+  margin-inline-end: var(--sys-space-inline-xs);
+  border-radius: var(--ref-radius-round);
+  background: var(--sys-color-surface-overlay);
+  color: var(--sys-color-text-muted);
+  font-family: var(--sys-font-code-family);
+  font-size: var(--sys-font-caption-size);
+}
+
+.nv-curriculum-reader {
+  max-inline-size: var(--sys-a11y-reading-width-enhanced);
+  margin-inline: auto;
+  padding: clamp(var(--sys-space-inset-md), 4vw, var(--sys-space-inset-lg));
+  line-height: var(--ref-font-line-height-reading);
+}
+
+.nv-curriculum-reader h2,
+.nv-curriculum-reader h3,
+.nv-curriculum-reader h4 {
+  margin-block: var(--sys-space-stack-lg) var(--sys-space-stack-sm);
+  color: var(--sys-color-text-primary);
+  line-height: var(--ref-font-line-height-tight);
+}
+
+.nv-curriculum-reader h2:first-child {
+  margin-block-start: 0;
+}
+
+.nv-curriculum-reader p,
+.nv-curriculum-reader li {
+  color: var(--sys-color-text-secondary);
+  line-height: var(--ref-font-line-height-reading);
+}
+
+.nv-curriculum-reader ul,
+.nv-curriculum-reader ol {
+  display: grid;
+  gap: var(--sys-space-stack-xs);
+  padding-inline-start: var(--sys-space-inset-lg);
+}
+
+.nv-curriculum-reader code {
+  padding: 0 var(--ref-space-100);
+  border-radius: var(--sys-radius-control);
+  background: var(--sys-color-surface-overlay);
+  color: var(--sys-color-text-primary);
+  font-family: var(--sys-font-code-family);
+  font-size: 0.92em;
+}
+
+.nv-curriculum-reader pre {
+  overflow-x: auto;
+  padding: var(--sys-space-inset-md);
+  border: var(--sys-border-subtle) solid var(--sys-premium-border);
+  border-radius: var(--sys-radius-surface);
+  background: var(--sys-color-background-subtle);
+}
+
+.nv-curriculum-reader pre code {
+  padding: 0;
+  background: transparent;
+}
+
+.nv-curriculum-reader blockquote {
+  margin-inline: 0;
+  padding: var(--sys-space-inset-sm) var(--sys-space-inset-md);
+  border-inline-start: var(--ref-border-width-emphasis) solid var(--sys-color-accent-primary);
+  border-radius: var(--sys-radius-control);
+  background: color-mix(in srgb, var(--sys-color-accent-primary) 8%, transparent);
+  color: var(--sys-color-text-primary);
+}
+
+.nv-curriculum-table {
+  display: block;
+  inline-size: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  border: var(--sys-border-subtle) solid var(--sys-premium-border);
+  border-radius: var(--sys-radius-surface);
+}
+
+.nv-curriculum-table th,
+.nv-curriculum-table td {
+  padding: var(--sys-space-inset-sm);
+  border: var(--sys-border-subtle) solid var(--sys-color-border-subtle);
+  text-align: start;
+  vertical-align: top;
+}
+
+.nv-curriculum-table th {
+  background: var(--sys-color-surface-overlay);
+  color: var(--sys-color-text-primary);
+}
+
+.nv-curriculum-callout {
+  max-inline-size: var(--sys-a11y-reading-width-enhanced);
+  margin-inline: auto;
+  border-inline-start: var(--ref-border-width-emphasis) solid var(--sys-color-accent-primary);
+}
+
+.nv-curriculum-loading,
+.nv-curriculum-empty {
+  min-block-size: 16rem;
+}
+
+.nv-curriculum-skeleton {
+  display: block;
+  inline-size: min(18rem, 80%);
+  block-size: var(--ref-space-300);
+  border-radius: var(--ref-radius-round);
+  background: linear-gradient(
+    90deg,
+    var(--sys-color-surface-raised),
+    var(--sys-color-surface-overlay),
+    var(--sys-color-surface-raised)
+  );
+}
+
+@media (max-width: 48rem) {
+  .nv-curriculum-flow,
+  .nv-grid--cols-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nv-curriculum-card,
+  .nv-curriculum-card:hover {
+    transform: none;
+  }
+}
