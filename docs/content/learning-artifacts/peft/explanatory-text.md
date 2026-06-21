@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and model adaptation developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the Parameter-Efficient Fine-Tuning (PEFT) topic and serves as a Explanatory Text.
+Covers Parameter Efficiency and Low-Rank Decomposition within the broader topic of Parameter-Efficient Fine-Tuning (PEFT) — explains the core ideas, their role in AI systems, and what makes them important for practitioners to understand.
 
 ## Required Contract Fields
 
@@ -64,7 +64,7 @@ Full-parameter fine-tuning is computationally expensive and yields massive model
 
 ### motivation
 
-Understanding Fine-Tuning and Adaptation is critical for specializing models for custom tasks, aligning generation safety, deploying LoRA adapters in production, and selecting RAG combinations.
+Adapting pre-trained models to specific tasks is a core practice in modern ML — these techniques enable efficient specialization without full retraining.
 
 ## Dependency Notes
 

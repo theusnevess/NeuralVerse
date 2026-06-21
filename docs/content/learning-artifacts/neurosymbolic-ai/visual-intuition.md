@@ -46,7 +46,7 @@ audience_notes: "Intended for AI engineers, researchers, and computer science st
 
 ## Artifact Summary
 
-This artifact belongs to the Neurosymbolic AI topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about The Architect and the Sculptor — maps familiar concepts to the technical mechanics of Neurosymbolic AI, making abstract ideas concrete.
 
 ## Required Contract Fields
 

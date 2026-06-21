@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer vision developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the Anchor-Based vs Anchor-Free Detection topic and serves as a Exercise.
+Provides practice applying the concepts of Anchor Grid Scale Challenges — guides the learner through reasoning steps that reinforce understanding of Anchor-Based vs Anchor-Free Detection through active problem-solving.
 
 ## Required Contract Fields
 
@@ -62,7 +62,7 @@ Identify two downsides of anchor-based detectors related to hyperparameters and 
 
 ### expected learner output
 
-1. Anchor-based models require manual tuning of anchor sizes and aspect ratios, which are sensitive to dataset distributions; anchor-free designs regress coordinates directly without shapes. 2. Anchor layouts generate thousands of candidate boxes causing severe foreground-background class imbalance; anchor-free designs reduce candidate volume to one set of coordinates per cell.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -70,7 +70,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding this topic is critical for building autonomous vehicles, industrial inspections, robotic manipulators, and multi-object real-time surveillance backbones.
+Object detection pipelines power real-world applications from autonomous driving to medical imaging — understanding these architectural choices is key to building effective perception systems.
 
 ## Dependency Notes
 

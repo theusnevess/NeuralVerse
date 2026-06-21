@@ -50,7 +50,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Train / Validation / Test Split topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about The Study, Practice, and Exam Analogy — maps familiar concepts to the technical mechanics of Train / Validation / Test Split, making abstract ideas concrete.
 
 ## Required Contract Fields
 
@@ -66,7 +66,7 @@ Imagine preparing for a final exam. The training set is the textbook and practic
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale retrieval and search systems.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

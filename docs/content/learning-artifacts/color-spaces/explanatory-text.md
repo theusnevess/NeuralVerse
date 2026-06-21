@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Image Channels and Color Spaces topic and serves as a Explanatory Text.
+Covers Color Tensors and Color Space Formats within the broader topic of Image Channels and Color Spaces — explains the core ideas, their role in AI systems, and what makes them important for practitioners to understand.
 
 ## Required Contract Fields
 
@@ -65,7 +65,7 @@ Color images are represented as 3D tensors of shape H x W x C, where C is the nu
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale computer vision and multimodal retrieval pipelines.
+Multimodal AI systems connect vision, language, and other modalities — these concepts form the bridge between separate representational spaces.
 
 ## Dependency Notes
 

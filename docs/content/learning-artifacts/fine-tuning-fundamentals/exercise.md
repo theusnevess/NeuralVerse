@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and model adaptation developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the Fine-Tuning Fundamentals topic and serves as a Exercise.
+Provides practice applying the concepts of Forgetting Mechanisms and Mitigations — guides the learner through reasoning steps that reinforce understanding of Fine-Tuning Fundamentals through active problem-solving.
 
 ## Required Contract Fields
 
@@ -62,7 +62,7 @@ Explain why catastrophic forgetting occurs during full-parameter fine-tuning, an
 
 ### expected learner output
 
-Catastrophic forgetting occurs because full fine-tuning updates all parameters on the task-specific dataset, overwriting weights that encode general language representations. One mitigation strategy is replay-based training (or multi-task training), where a portion of the general pre-training data is mixed into the fine-tuning dataset to keep representations balanced.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -70,7 +70,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding Fine-Tuning and Adaptation is critical for specializing models for custom tasks, aligning generation safety, deploying LoRA adapters in production, and selecting RAG combinations.
+Adapting pre-trained models to specific tasks is a core practice in modern ML — these techniques enable efficient specialization without full retraining.
 
 ## Dependency Notes
 

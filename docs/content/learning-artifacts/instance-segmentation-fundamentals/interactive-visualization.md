@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer vision developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the Instance Segmentation Fundamentals topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring Overlap Hover Inspector Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Instance Segmentation Fundamentals.
 
 ## Required Contract Fields
 
@@ -64,7 +64,7 @@ This specification describes an instance separation tool. The user hovers over a
 
 ### motivation
 
-Understanding segmentation is critical for building medical scanners, self-driving cars, satellite crop trackers, and human-in-the-loop image editors.
+Segmentation techniques enable pixel-level understanding of visual data — they are fundamental to medical imaging, autonomous navigation, and remote sensing applications.
 
 ## Dependency Notes
 

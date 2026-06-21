@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer vision developers."
 
 ## Artifact Summary
 
-This artifact belongs to the Image Captioning topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring Spatial Attention Heat-map Specification — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Image Captioning.
 
 ## Required Contract Fields
 
@@ -65,7 +65,7 @@ This specification outlines an attention heat-map overlay widget. The user click
 
 ### motivation
 
-Understanding Multimodal AI Foundations is critical for building search engines, image captioners, visual answer systems, and joint textual/visual models.
+Multimodal AI systems connect vision, language, and other modalities — these concepts form the bridge between separate representational spaces.
 
 ## Dependency Notes
 

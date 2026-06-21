@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and agent systems developers."
 
 ## Artifact Summary
 
-This artifact belongs to the Agentic AI Fundamentals topic and serves as a Exercise.
+Provides practice applying the concepts of Static Continuation vs. Agent Loops — guides the learner through reasoning steps that reinforce understanding of Agentic AI Fundamentals through active problem-solving.
 
 ## Required Contract Fields
 
@@ -63,7 +63,7 @@ Explain the difference between a single-turn LLM response and a multi-step agent
 
 ### expected learner output
 
-A single-turn LLM generates text and stops, having no awareness of the success or failure of its output. An agent executes in a multi-turn loop, using tool outputs or error messages (environmental feedback) to re-evaluate its next steps, adapting its subsequent planning tokens dynamically.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -71,7 +71,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding AI Agents and Tool Use is critical for building autonomous software assistants, function callers, memory-backed bots, and self-correcting coders.
+Agentic systems extend language models beyond passive generation — these concepts enable autonomous reasoning, tool use, and multi-step execution.
 
 ## Dependency Notes
 

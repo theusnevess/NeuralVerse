@@ -50,7 +50,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Sampling and Sampling Bias topic and serves as a Explanatory Text.
+Covers Sampling Strategies and Data Bias Risks within the broader topic of Sampling and Sampling Bias — explains the core ideas, their role in AI systems, and what makes them important for practitioners to understand.
 
 ## Required Contract Fields
 
@@ -66,7 +66,7 @@ To train AI models, we collect a sample of data from a target population. For th
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale retrieval and search systems.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

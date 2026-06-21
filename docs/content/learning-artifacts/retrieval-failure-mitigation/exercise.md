@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and retrieval search developers."
 
 ## Artifact Summary
 
-This artifact belongs to the Retrieval Failure Modes and Mitigation topic and serves as a Exercise.
+Provides practice applying the concepts of Mitigating the Lost in the Middle Effect — guides the learner through reasoning steps that reinforce understanding of Retrieval Failure Modes and Mitigation through active problem-solving.
 
 ## Required Contract Fields
 
@@ -63,7 +63,7 @@ Define the 'lost in the middle' phenomenon in LLM context windows, and explain h
 
 ### expected learner output
 
-The 'lost in the middle' effect is the drop in an LLM's retrieval accuracy when relevant facts are positioned in the middle of long input prompts. Arranging chunks such that the highest-scoring contexts sit at the very beginning (index 0) and the end (index $K-1$) aligns the data with the model's natural primacy and recency attention bias.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -71,7 +71,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding Advanced Retrieval & RAG Systems is critical for building production-grade QA engines, hallucination guardrails, hybrid index tools, and agentic routers.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

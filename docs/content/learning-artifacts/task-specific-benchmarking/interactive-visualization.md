@@ -52,7 +52,7 @@ audience_notes: "Intended for AI engineers, researchers, and practitioners evalu
 
 ## Artifact Summary
 
-This artifact belongs to the Task-Specific Benchmarking topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring Benchmark Leaderboard Explorer Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Task-Specific Benchmarking.
 
 ## Required Contract Fields
 
@@ -72,7 +72,7 @@ A model with a large, evenly-shaped polygon across all axes indicates balanced c
 
 ### motivation
 
-Understanding benchmark landscapes is critical for selecting appropriate evaluation tools, interpreting published model comparisons, and designing robust evaluation protocols for real-world deployments.
+Understanding benchmark landscapes is critical for would selecting appropriate evaluation tools, interpreting published model comparisons, and designing robust evaluation protocols for real-world deployments.
 
 ## Dependency Notes
 

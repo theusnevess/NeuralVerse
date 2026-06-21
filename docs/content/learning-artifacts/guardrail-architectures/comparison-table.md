@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers, safety researchers, and LLM applicat
 
 ## Artifact Summary
 
-This artifact belongs to the Guardrail Architectures topic and serves as a Comparison Table.
+Compares key approaches, algorithms, or architectures within Guardrail Architectures — organizes Guardrail Layer Comparison into a structured reference for selecting between alternatives.
 
 ## Required Contract Fields
 

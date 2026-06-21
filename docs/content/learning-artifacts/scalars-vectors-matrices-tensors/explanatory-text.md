@@ -50,7 +50,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Scalars, Vectors, Matrices, and Tensors topic and serves as a Explanatory Text.
+Covers Scalars, Vectors, Matrices, and Tensors in AI within the broader topic of Scalars, Vectors, Matrices, and Tensors — explains the core ideas, their role in AI systems, and what makes them important for practitioners to understand.
 
 ## Required Contract Fields
 
@@ -66,7 +66,7 @@ In machine learning and deep learning, all data is represented as numerical arra
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale retrieval and search systems.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

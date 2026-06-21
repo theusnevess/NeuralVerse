@@ -50,7 +50,7 @@ audience_notes: "Intended for AI engineers and retrieval search developers."
 
 ## Artifact Summary
 
-This artifact belongs to the Query Routing and Intent Detection topic and serves as a Comparison Table.
+Compares key approaches, algorithms, or architectures within Query Routing and Intent Detection — organizes Query Routing Architectures into a structured reference for selecting between alternatives.
 
 ## Required Contract Fields
 
@@ -70,7 +70,7 @@ Contrast execution latencies, intent flexibilities, and resource costs of routin
 
 ### motivation
 
-Understanding Advanced Retrieval & RAG Systems is critical for building production-grade QA engines, hallucination guardrails, hybrid index tools, and agentic routers.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

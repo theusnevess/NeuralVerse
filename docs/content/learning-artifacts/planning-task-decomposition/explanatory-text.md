@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and agent systems developers."
 
 ## Artifact Summary
 
-This artifact belongs to the Planning and Task Decomposition topic and serves as a Explanatory Text.
+Covers ReAct Frameworks and Sub-Goal Generation within the broader topic of Planning and Task Decomposition — explains the core ideas, their role in AI systems, and what makes them important for practitioners to understand.
 
 ## Required Contract Fields
 
@@ -65,7 +65,7 @@ Complex user goals (e.g., 'find all relevant research papers on LoRA, summarize 
 
 ### motivation
 
-Understanding AI Agents and Tool Use is critical for building autonomous software assistants, function callers, memory-backed bots, and self-correcting coders.
+Agentic systems extend language models beyond passive generation — these concepts enable autonomous reasoning, tool use, and multi-step execution.
 
 ## Dependency Notes
 

@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer vision developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the Non-Maximum Suppression (NMS) topic and serves as a Exercise.
+Provides practice applying the concepts of Suppression Threshold Dynamics — guides the learner through reasoning steps that reinforce understanding of Non-Maximum Suppression (NMS) through active problem-solving.
 
 ## Required Contract Fields
 
@@ -62,7 +62,7 @@ Explain the consequence of setting the NMS IoU threshold: 1. Extremely close to 
 
 ### expected learner output
 
-1. IoU threshold at 0.05: Suppresses boxes that overlap even slightly, meaning close objects (like a flock of sheep) are incorrectly merged into a single detection. 2. IoU threshold at 0.99: Suppresses almost nothing, causing the model to output multiple redundant bounding boxes around a single object.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -70,7 +70,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding this topic is critical for building autonomous vehicles, industrial inspections, robotic manipulators, and multi-object real-time surveillance backbones.
+Object detection pipelines power real-world applications from autonomous driving to medical imaging — understanding these architectural choices is key to building effective perception systems.
 
 ## Dependency Notes
 

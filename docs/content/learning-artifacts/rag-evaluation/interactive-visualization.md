@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and evaluation practitioners."
 
 ## Artifact Summary
 
-This artifact belongs to the RAG Evaluation Frameworks topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring RAG Quality Score Breakdown Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand RAG Evaluation Frameworks.
 
 ## Required Contract Fields
 
@@ -76,7 +76,7 @@ When context precision drops below 0.5, an orange highlight appears on the retri
 
 ### motivation
 
-Understanding RAG evaluation frameworks is critical for diagnosing pipeline failures, benchmarking retrieval and generation components, and building trustworthy QA systems.
+Retrieval-augmented workflows depend on evaluation to diagnose failures — mastering these frameworks is key to building trustworthy generation systems.
 
 ## Dependency Notes
 

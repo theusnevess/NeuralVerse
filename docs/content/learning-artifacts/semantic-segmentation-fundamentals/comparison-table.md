@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer vision developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the Semantic Segmentation Fundamentals topic and serves as a Comparison Table.
+Compares key approaches, algorithms, or architectures within Semantic Segmentation Fundamentals — organizes Classification, Detection, and Segmentation into a structured reference for selecting between alternatives.
 
 ## Required Contract Fields
 
@@ -68,7 +68,7 @@ Contrast output resolutions, preservation constraints, and target units.
 
 ### motivation
 
-Understanding segmentation is critical for building medical scanners, self-driving cars, satellite crop trackers, and human-in-the-loop image editors.
+Segmentation techniques enable pixel-level understanding of visual data — they are fundamental to medical imaging, autonomous navigation, and remote sensing applications.
 
 ## Dependency Notes
 

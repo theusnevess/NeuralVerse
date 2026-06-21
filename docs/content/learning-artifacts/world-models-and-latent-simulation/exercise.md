@@ -49,7 +49,7 @@ audience_notes: "Intended for AI researchers and engineers exploring model-based
 
 ## Artifact Summary
 
-This artifact belongs to the World Models and Latent Simulation topic and serves as an Exercise.
+Provides practice applying the concepts of Designing a World Model Architecture — guides the learner through reasoning steps that reinforce understanding of World Models and Latent Simulation through active problem-solving.
 
 ## Required Contract Fields
 
@@ -74,12 +74,7 @@ For each of the three contexts below, provide a written design that covers:
 
 ### expected learner output
 
-A structured design document (1–2 paragraphs per context) addressing all four design dimensions. Example framing for Context A:
-
-- **Components:** Convolutional encoder for RGB → latent state, recurrent transition model for dynamics, decoder for pixel reconstruction (optional if using latent-only planning), reward model for grasp success prediction.
-- **Latent state:** Stochastic latent (e.g., 32-dimensional Gaussian) to capture object pose uncertainty, compressed beyond pixel level but preserving spatial relationships needed for grasp planning.
-- **Prediction horizon:** 10–15 steps. The manipulation sequence must be planned end-to-end to avoid mid-sequence failures, but longer horizons face severe compounding error from visual domain shifts as the arm moves.
-- **Compounding error:** Primary source is visual novelty (object appearance at novel angles). Mitigation: use an ensemble of transition models and plan only until ensemble disagreement exceeds a threshold, then re-encode a real observation to reset the latent state.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 

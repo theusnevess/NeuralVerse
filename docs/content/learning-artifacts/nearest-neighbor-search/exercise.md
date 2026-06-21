@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Nearest Neighbor Search topic and serves as a Exercise.
+Provides practice applying the concepts of Reasoning About Search Algorithms — guides the learner through reasoning steps that reinforce understanding of Nearest Neighbor Search through active problem-solving.
 
 ## Required Contract Fields
 
@@ -62,7 +62,7 @@ A company has 50,000 vectors and needs absolute 100% search accuracy. Another co
 
 ### expected learner output
 
-The learner should select the flat index for 100% accuracy at small scale, and an ANN (HNSW or IVF) for sub-10ms search at massive scale, demonstrating understanding of speed vs. memory vs. recall trade-offs.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -70,7 +70,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale retrieval and search systems.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

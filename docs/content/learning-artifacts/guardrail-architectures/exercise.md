@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers, safety researchers, and LLM applicat
 
 ## Artifact Summary
 
-This artifact belongs to the Guardrail Architectures topic and serves as a Exercise.
+Provides practice applying the concepts of Architecting a Guardrail System — guides the learner through reasoning steps that reinforce understanding of Guardrail Architectures through active problem-solving.
 
 ## Required Contract Fields
 
@@ -72,21 +72,7 @@ For each of the three application profiles below, specify:
 
 ### expected learner output
 
-A structured table or set of three architecture diagrams (one per profile) that specifies:
-
-| Aspect | Customer Support | Code Generation | Medical Bot |
-|---|---|---|---|
-| Layers enabled (in order) | List of 3-6 layers | List of 3-6 layers | List of 3-6 layers |
-| Topology | Sequential / Parallel / Cascading | Sequential / Parallel / Cascading | Sequential / Parallel / Cascading |
-| Input guardrails | Detectors used | Detectors used | Detectors used |
-| Orchestration guardrails | What is validated | What is validated | What is validated |
-| Tool guardrails | Which tools, what checks | Which tools, what checks | Which tools, what checks |
-| Context guardrails | Relevance, source trust | Relevance, source trust | Relevance, source trust |
-| Generation guardrails | Refusal, content policy, factuality | Refusal, content policy, factuality | Refusal, content policy, factuality |
-| Post-processing guardrails | Moderation, format, policy | Moderation, format, policy | Moderation, format, policy |
-| Deterministic vs. model-based | Per-layer breakdown | Per-layer breakdown | Per-layer breakdown |
-| Strictness level | Low / Medium / High | Low / Medium / High | Low / Medium / High |
-| Rationale | Why this configuration | Why this configuration | Why this configuration |
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 

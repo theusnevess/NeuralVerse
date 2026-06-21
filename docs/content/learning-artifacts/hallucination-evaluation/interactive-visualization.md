@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and LLM evaluation practitioners."
 
 ## Artifact Summary
 
-This artifact belongs to the Hallucination Detection and Analysis topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring Hallucination Types Classifier Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Hallucination Detection and Analysis.
 
 ## Required Contract Fields
 
@@ -58,7 +58,7 @@ Specify an interactive tool where users input a generated statement and referenc
 
 ### manipulable variable or observable state
 
-The user provides a generated statement (e.g., "Einstein was born in 1879 in Ulm, Germany, and won the Nobel Prize in Chemistry") and a reference context (e.g., "Albert Einstein was born on 14 March 1879 in Ulm, Germany. He won the Nobel Prize in Physics in 1921."). The tool tokenizes the statement and highlights each segment: grounded text in green ("born in 1879 in Ulm, Germany"), contradictory text in red ("Nobel Prize in Chemistry" contradicts "Nobel Prize in Physics"), and unsupported text in yellow ("—" when no match exists). Users can modify either input and observe how classifications shift.
+The user provides a generated statement (e.g., "Einstein was born in 1879 in Ulm, Germany, and won the Nobel Prize in Chemistry") and a reference context (e.g., "Albert Einstein was born on 14 March 1879 in Ulm, Germany. He won the Nobel Prize in Physics in 1921."). The tool tokenizes the statement and highlights each segment: grounded text in green ("born in 1879 in Ulm, Germany"), contradictory text in red ("Nobel Prize in Chemistry" contradicts "Nobel Prize in Physics"), and unsupported text in yellow ("—" when no match exists). A future version would let users modify either input and observe how classifications shift.
 
 ### interpretation guidance
 

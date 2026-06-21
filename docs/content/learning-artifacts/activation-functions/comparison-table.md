@@ -50,7 +50,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Activation Functions topic and serves as a Comparison Table.
+Compares key approaches, algorithms, or architectures within Activation Functions — organizes Common Activations Comparison into a structured reference for selecting between alternatives.
 
 ## Required Contract Fields
 
@@ -70,7 +70,7 @@ Compare formulas, ranges, uses, and failure risks of standard activations.
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale deep networks and search spaces.
+Deep learning builds on these core mechanisms — understanding them is essential for designing, debugging, and improving neural architectures.
 
 ## Dependency Notes
 

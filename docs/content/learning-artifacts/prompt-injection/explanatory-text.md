@@ -46,7 +46,7 @@ audience_notes: "Intended for AI engineers, security practitioners, and LLM appl
 
 ## Artifact Summary
 
-This artifact belongs to the Prompt Injection topic and serves as a Explanatory Text.
+Covers Prompt Injection Attacks and Defenses within the broader topic of Prompt Injection — explains the core ideas, their role in AI systems, and what makes them important for practitioners to understand.
 
 ## Required Contract Fields
 
@@ -62,7 +62,7 @@ Prompt injection occurs when an LLM's instructions are manipulated through user 
 
 ### motivation
 
-Understanding prompt injection is critical for building secure LLM applications that handle untrusted user input and external data sources.
+Safe and aligned AI deployment requires understanding these failure modes and defense mechanisms — they are essential for trustworthy production systems.
 
 ## Dependency Notes
 

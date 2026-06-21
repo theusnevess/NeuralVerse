@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Pooling Layers topic and serves as a Exercise.
+Provides practice applying the concepts of Downsampling Window Calculations — guides the learner through reasoning steps that reinforce understanding of Pooling Layers through active problem-solving.
 
 ## Required Contract Fields
 
@@ -62,7 +62,7 @@ Given a $2 \times 2$ sub-grid of activations: $\begin{pmatrix} 12 & 8 \\ 4 & 16 
 
 ### expected learner output
 
-1. Max pooling selects the maximum value in the grid: max(12, 8, 4, 16) = 16. 2. Average pooling computes the average: (12 + 8 + 4 + 16) / 4 = 40 / 4 = 10.0.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -70,7 +70,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale Convolutional Neural Networks and transfer learning backbones.
+Computer vision pipelines are built on these perceptual primitives — understanding them enables effective architecture design and troubleshooting.
 
 ## Dependency Notes
 

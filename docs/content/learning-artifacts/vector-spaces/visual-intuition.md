@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Vector Spaces topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about Visualizing Vector Spaces — maps familiar concepts to the technical mechanics of Vector Spaces, making abstract ideas concrete.
 
 ## Required Contract Fields
 
@@ -64,7 +64,7 @@ Imagine a 2D grid where the horizontal axis (X) represents 'Sweetness' and the v
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale retrieval and search systems.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

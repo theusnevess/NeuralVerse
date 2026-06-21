@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and retrieval search developers."
 
 ## Artifact Summary
 
-This artifact belongs to the Agentic Retrieval Systems topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about The Student Writing a Research Paper — maps familiar concepts to the technical mechanics of Agentic Retrieval Systems, making abstract ideas concrete.
 
 ## Required Contract Fields
 
@@ -65,7 +65,7 @@ Imagine a student writing a research paper. Instead of printing five articles fr
 
 ### motivation
 
-Understanding Advanced Retrieval & RAG Systems is critical for building production-grade QA engines, hallucination guardrails, hybrid index tools, and agentic routers.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

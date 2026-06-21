@@ -46,7 +46,7 @@ audience_notes: "Intended for ML engineers, MLOps practitioners, and DevOps engi
 
 ## Artifact Summary
 
-This artifact belongs to the ML Pipelines and Orchestration topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring Pipeline Designer Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand ML Pipelines and Orchestration.
 
 ## Required Contract Fields
 
@@ -56,13 +56,13 @@ Specify an interactive drag-and-drop pipeline designer for composing ML workflow
 
 ### explanation
 
-This specification outlines a Pipeline Designer tool. The user selects pipeline stages from a palette — Data Ingestion, Data Validation, Preprocessing, Training, Evaluation, Deployment — and drags them onto a canvas. Each stage node is connected by directed edges, forming a DAG. Clicking a node opens a configuration panel where the user sets parameters (e.g., retry count, timeout, resource requirements, Docker image). Conditional branching is supported: a diamond-shaped gate node evaluates an expression (e.g., `accuracy > 0.95`) and routes execution along different paths. Data validation gates can be inserted to block execution if schema checks fail. A sidebar shows the execution trace of any completed run, with timing bars per stage, resource usage (CPU/GPU/memory), and status indicators (success, failed, skipped). The user can export the pipeline definition as YAML compatible with Kubeflow, Airflow, or Flyte.
+This specification outlines a Pipeline Designer tool. The user would selects pipeline stages from a palette — Data Ingestion, Data Validation, Preprocessing, Training, Evaluation, Deployment — and drags them onto a canvas. Each stage node is connected by directed edges, forming a DAG. Clicking a node opens a configuration panel where the user sets parameters (e.g., retry count, timeout, resource requirements, Docker image). Conditional branching is supported: a diamond-shaped gate node evaluates an expression (e.g., `accuracy > 0.95`) and routes execution along different paths. Data validation gates can be inserted to block execution if schema checks fail. A sidebar shows the execution trace of any completed run, with timing bars per stage, resource usage (CPU/GPU/memory), and status indicators (success, failed, skipped). The user can export the pipeline definition as YAML compatible with Kubeflow, Airflow, or Flyte.
 
 ## Optional Enrichment Fields
 
 ### motivation
 
-Understanding this topic is critical for building reliable, automated ML systems in production.
+Production ML requires reliable, automated pipelines — understanding orchestration, scheduling, and dependency management is essential for building systems that operate at scale without manual intervention.
 
 ## Dependency Notes
 

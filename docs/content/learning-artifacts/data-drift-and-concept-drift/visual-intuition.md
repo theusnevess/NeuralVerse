@@ -48,7 +48,7 @@ audience_notes: "Intended for ML engineers, data scientists, and MLOps practitio
 
 ## Artifact Summary
 
-This artifact belongs to the Data Drift and Concept Drift topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about The River Delta — maps familiar concepts to the technical mechanics of Data Drift and Concept Drift, making abstract ideas concrete.
 
 ## Required Contract Fields
 

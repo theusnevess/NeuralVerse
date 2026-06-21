@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Convolution Intuition topic and serves as a Exercise.
+Provides practice applying the concepts of Kernel Dot Product — guides the learner through reasoning steps that reinforce understanding of Convolution Intuition through active problem-solving.
 
 ## Required Contract Fields
 
@@ -63,7 +63,7 @@ Given a $3 \times 3$ input sub-matrix $I = \begin{pmatrix} 2 & 0 & 1 \\ 1 & 3 & 
 
 ### expected learner output
 
-Value = (2*1) + (0*0) + (1*-1) + (1*0) + (3*0) + (0*0) + (0*1) + (1*0) + (2*-1) = 2 + 0 - 1 + 0 + 0 + 0 + 0 + 0 - 2 = -1. The convolved output value is -1.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -71,7 +71,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale computer vision and multimodal retrieval pipelines.
+Multimodal AI systems connect vision, language, and other modalities — these concepts form the bridge between separate representational spaces.
 
 ## Dependency Notes
 

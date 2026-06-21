@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer vision developers."
 
 ## Artifact Summary
 
-This artifact belongs to the Cross-Modal Embeddings topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about The Categorized Subject Shelf in the Library — maps familiar concepts to the technical mechanics of Cross-Modal Embeddings, making abstract ideas concrete.
 
 ## Required Contract Fields
 
@@ -65,7 +65,7 @@ Imagine a physical library where books are organized by topic. On the shelf mark
 
 ### motivation
 
-Understanding Multimodal AI Foundations is critical for building search engines, image captioners, visual answer systems, and joint textual/visual models.
+Multimodal AI systems connect vision, language, and other modalities — these concepts form the bridge between separate representational spaces.
 
 ## Dependency Notes
 

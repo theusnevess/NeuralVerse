@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the RAG Foundations topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring RAG Prompt Injection Interactive Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand RAG Foundations.
 
 ## Required Contract Fields
 
@@ -64,7 +64,7 @@ This specification outlines a RAG debugger. The user types a query. The tool dis
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale retrieval and search systems.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

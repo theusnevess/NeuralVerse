@@ -49,7 +49,7 @@ audience_notes: "Intended for ML engineers, data scientists, and MLOps practitio
 
 ## Artifact Summary
 
-This artifact belongs to the Model Versioning and Experiment Tracking topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring Model Registry Explorer Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Model Versioning and Experiment Tracking.
 
 ## Required Contract Fields
 
@@ -61,13 +61,13 @@ Specify an interactive Model Registry Explorer tool for inspecting model version
 
 This specification describes a web-based "Model Registry Explorer" tool. The tool provides four interconnected panels for exploring a simulated model registry:
 
-**Model Card View:** Displays the selected model's metadata: name, description, task type, framework, license, and model signature (input schema with column names and types, output schema). A markdown-rendered model card describes intended use, limitations, and evaluation results.
+**Model Card View:** Displays the would selected model's metadata: name, description, task type, framework, license, and model signature (input schema with column names and types, output schema). A markdown-rendered model card describes intended use, limitations, and evaluation results.
 
-**Version Timeline:** A horizontal timeline showing all registered versions of the selected model. Each version node is color-coded by stage (blue = Staging, green = Production, gray = Archived). Clicking a version loads its details: version ID, creation date, creator, associated run ID, git commit hash, and metrics summary. Tags (canary, stable, staging) appear as badges on the relevant versions.
+**Version Timeline:** A horizontal timeline showing all registered versions of the would selected model. Each version node is color-coded by stage (blue = Staging, green = Production, gray = Archived). Clicking a version loads its details: version ID, creation date, creator, associated run ID, git commit hash, and metrics summary. Tags (canary, stable, staging) appear as badges on the relevant versions.
 
 **Lineage Graph:** A directed acyclic graph rendering the full lineage chain: dataset snapshot → preprocessing pipeline → training run → model version → deployment endpoint. Nodes are clickable to drill into details (dataset row count, training hyperparameters, deployment traffic split). Edges show artifacts passed between stages.
 
-**Experiment Comparison Table:** A sortable table comparing the last N runs for the selected model. Columns include: run ID, hyperparameters (learning_rate, batch_size, optimizer), metrics (accuracy, F1, latency), duration, dataset version, and environment tag. Users can select runs to overlay metric curves in a chart below the table.
+**Experiment Comparison Table:** A sortable table comparing the last N runs for the would selected model. Columns include: run ID, hyperparameters (learning_rate, batch_size, optimizer), metrics (accuracy, F1, latency), duration, dataset version, and environment tag. A future version would let users would select runs to overlay metric curves in a chart below the table.
 
 Stage transitions are animated: promoting a version from Staging to Production triggers a simulated approval gate dialog (requires a reviewer comment). The tool logs each transition to an audit trail panel.
 
@@ -75,7 +75,7 @@ Stage transitions are animated: promoting a version from Staging to Production t
 
 ### motivation
 
-Understanding this topic is critical for building reliable, auditable, and reproducible ML systems that can operate in production at scale.
+Production ML requires more than trained models — these operational practices ensure reliable, observable, and maintainable AI systems.
 
 ## Dependency Notes
 

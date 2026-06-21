@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and agent systems developers."
 
 ## Artifact Summary
 
-This artifact belongs to the Tool Calling and External Actions topic and serves as a Explanatory Text.
+Covers Function Declarations, JSON Schema, and Argument Parsing within the broader topic of Tool Calling and External Actions — explains the core ideas, their role in AI systems, and what makes them important for practitioners to understand.
 
 ## Required Contract Fields
 
@@ -65,7 +65,7 @@ LLMs cannot perform external actions (like fetching a database row or editing a 
 
 ### motivation
 
-Understanding AI Agents and Tool Use is critical for building autonomous software assistants, function callers, memory-backed bots, and self-correcting coders.
+Agentic systems extend language models beyond passive generation — these concepts enable autonomous reasoning, tool use, and multi-step execution.
 
 ## Dependency Notes
 

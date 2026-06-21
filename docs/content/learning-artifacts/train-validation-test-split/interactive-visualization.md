@@ -50,7 +50,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Train / Validation / Test Split topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring Dataset Split Simulator Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Train / Validation / Test Split.
 
 ## Required Contract Fields
 
@@ -66,7 +66,7 @@ This specification describes a data split simulator. The user adjusts sliders fo
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale retrieval and search systems.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and language model developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the Context Windows and Long Context topic and serves as a Explanatory Text.
+Covers Quadratic Context Scaling and KV Caching within the broader topic of Context Windows and Long Context — explains the core ideas, their role in AI systems, and what makes them important for practitioners to understand.
 
 ## Required Contract Fields
 
@@ -64,7 +64,7 @@ The context window is the maximum number of tokens an LLM can process in a singl
 
 ### motivation
 
-Understanding LLM foundations is critical for building generative chatbots, few-shot classifiers, long-context search retrievers, and aligned AI systems.
+Modern language models rely on these mechanisms for generation, reasoning, and alignment — understanding them is essential for building reliable LLM applications.
 
 ## Dependency Notes
 

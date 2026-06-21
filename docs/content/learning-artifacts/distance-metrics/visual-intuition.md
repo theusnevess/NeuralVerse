@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Distance Metrics topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about Visualizing Similarity Metrics — maps familiar concepts to the technical mechanics of Distance Metrics, making abstract ideas concrete.
 
 ## Required Contract Fields
 
@@ -64,7 +64,7 @@ Consider two vectors in a 2D space: Vector A (1, 1) and Vector B (5, 5). They po
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale retrieval and search systems.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

@@ -47,7 +47,7 @@ audience_notes: "Intended for AI engineers and safety researchers deploying alig
 
 ## Artifact Summary
 
-This artifact belongs to the Jailbreak Techniques topic and serves as an Interactive Visualization.
+Specifies an interactive tool for exploring Jailbreak Attack Classifier Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Jailbreak Techniques.
 
 ## Required Contract Fields
 

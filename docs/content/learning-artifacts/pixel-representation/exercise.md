@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Digital Images and Pixel Representation topic and serves as a Exercise.
+Provides practice applying the concepts of Average Block Intensity — guides the learner through reasoning steps that reinforce understanding of Digital Images and Pixel Representation through active problem-solving.
 
 ## Required Contract Fields
 
@@ -62,7 +62,7 @@ An image matrix contains a $3 \times 3$ block of pixels: $\begin{pmatrix} 10 & 2
 
 ### expected learner output
 
-The coordinate (1, 1) represents the center pixel (row 1, col 1) which has intensity 50. The sum of all elements in the block is 10 + 20 + 30 + 40 + 50 + 60 + 70 + 80 + 90 = 450. The average intensity of this 9-pixel block is 450 / 9 = 50.0.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -70,7 +70,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale computer vision and multimodal retrieval pipelines.
+Multimodal AI systems connect vision, language, and other modalities — these concepts form the bridge between separate representational spaces.
 
 ## Dependency Notes
 

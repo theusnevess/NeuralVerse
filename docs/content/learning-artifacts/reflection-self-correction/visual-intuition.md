@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and agent systems developers."
 
 ## Artifact Summary
 
-This artifact belongs to the Reflection and Self-Correction topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about Draft Editing and Typo Checks — maps familiar concepts to the technical mechanics of Reflection and Self-Correction, making abstract ideas concrete.
 
 ## Required Contract Fields
 
@@ -65,7 +65,7 @@ Imagine writing an essay. A static LLM is like typing the essay from top to bott
 
 ### motivation
 
-Understanding AI Agents and Tool Use is critical for building autonomous software assistants, function callers, memory-backed bots, and self-correcting coders.
+Agentic systems extend language models beyond passive generation — these concepts enable autonomous reasoning, tool use, and multi-step execution.
 
 ## Dependency Notes
 

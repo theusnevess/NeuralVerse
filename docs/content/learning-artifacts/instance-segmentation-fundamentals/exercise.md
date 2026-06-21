@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer vision developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the Instance Segmentation Fundamentals topic and serves as a Exercise.
+Provides practice applying the concepts of Instance Mask Computation — guides the learner through reasoning steps that reinforce understanding of Instance Segmentation Fundamentals through active problem-solving.
 
 ## Required Contract Fields
 
@@ -62,7 +62,7 @@ Explain why instance segmentation is computationally more demanding than semanti
 
 ### expected learner output
 
-Instance segmentation requires locating bounding boxes, cropping regional feature maps (via RoIAlign), and running a separate mask prediction branch for every detected object instance. In contrast, semantic segmentation processes the entire image canvas uniformly in a single pass without regional crops or instance tracking loops.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -70,7 +70,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding segmentation is critical for building medical scanners, self-driving cars, satellite crop trackers, and human-in-the-loop image editors.
+Segmentation techniques enable pixel-level understanding of visual data — they are fundamental to medical imaging, autonomous navigation, and remote sensing applications.
 
 ## Dependency Notes
 

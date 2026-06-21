@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Vector Spaces topic and serves as a Exercise.
+Provides practice applying the concepts of Reasoning About Vector Spaces — guides the learner through reasoning steps that reinforce understanding of Vector Spaces through active problem-solving.
 
 ## Required Contract Fields
 
@@ -62,7 +62,7 @@ Given a list of books, identify a 3-dimensional feature set that could represent
 
 ### expected learner output
 
-The learner should define a 3D coordinate space representing Action, Romance, and Page count. Book A (Sci-Fi Action) -> (9, 2, 400). Book B (Romance Novel) -> (1, 9, 300). Book C (Action-Romance crossover) -> (7, 6, 350). The relative coordinates should show logical spatial proximity according to the feature definitions.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -70,7 +70,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale retrieval and search systems.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

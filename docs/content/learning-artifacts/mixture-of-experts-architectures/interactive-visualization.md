@@ -46,7 +46,7 @@ audience_notes: "Intended for AI engineers and researchers exploring efficient s
 
 ## Artifact Summary
 
-This artifact belongs to the Mixture of Experts (MoE) Architectures topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring MoE Routing Visualizer — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Mixture of Experts (MoE) Architectures.
 
 ## Required Contract Fields
 
@@ -67,7 +67,7 @@ The tool exposes the following controls:
 | Parameter | Type | Range | Default | Description |
 |---|---|---|---|---|
 | Number of Experts (E) | Integer slider | 2 — 256 (log scale) | 8 | Total experts in the layer |
-| Top-k | Integer slider | 1 — 8 | 2 | Experts selected per token |
+| Top-k | Integer slider | 1 — 8 | 2 | Experts would selected per token |
 | Capacity Factor (C) | Float slider | 0.5 — 4.0 (step 0.1) | 1.25 | Expert capacity multiplier |
 | Auxiliary Loss Coefficient (α) | Float slider | 0.0 — 1.0 (log scale) | 0.01 | Weight of load-balancing loss |
 | Batch Size | Integer slider | 16 — 1024 (log scale) | 128 | Tokens in the batch |
@@ -79,7 +79,7 @@ The tool exposes the following controls:
 
 ##### 3.1 Token-to-Expert Assignment Matrix
 
-A heatmap grid of size E (experts) × batch size (tokens). Each cell shows the router weight (0.0 to 1.0) for that token-expert pair. Darker colors indicate higher routing probabilities. Active top-k selections are highlighted with a border.
+A heatmap grid of size E (experts) × batch size (tokens). Each cell shows the router weight (0.0 to 1.0) for that token-expert pair. Darker colors indicate higher routing probabilities. Active top-k would selections are highlighted with a border.
 
 - Hovering over a cell displays the exact routing weight.
 - Clicking a token highlights all experts it was routed to.
@@ -155,7 +155,7 @@ The router is a small learned network (2-layer MLP) that is pre-trained on a syn
 - Backend: The router simulation runs in WebAssembly or WebGL for real-time updates at batch sizes up to 1024.
 - Responsive layout: Left sidebar (controls), center (assignment matrix + distribution), right (metrics panel).
 - Dark mode / light mode toggle.
-- Export: Users can export the current configuration as a JSON file and share the visualization state via URL parameters.
+- Export: A future version would let users export the current configuration as a JSON file and share the visualization state via URL parameters.
 
 ## Dependency Notes
 

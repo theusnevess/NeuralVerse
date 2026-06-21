@@ -46,7 +46,7 @@ audience_notes: "Intended for ML engineers, NLP practitioners, and AI evaluators
 
 ## Artifact Summary
 
-This artifact belongs to the Automatic Evaluation Metrics topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about The Exam Grader with a Rubric — maps familiar concepts to the technical mechanics of Automatic Evaluation Metrics, making abstract ideas concrete.
 
 ## Required Contract Fields
 

@@ -49,7 +49,7 @@ audience_notes: "Intended for AI researchers and engineers interested in advance
 
 ## Artifact Summary
 
-This artifact belongs to the Reasoning Models and Test-Time Compute topic and serves as an Exercise.
+Provides practice applying the concepts of Designing a Reasoning Strategy — guides the learner through reasoning steps that reinforce understanding of Reasoning Models and Test-Time Compute through active problem-solving.
 
 ## Required Contract Fields
 
@@ -79,13 +79,7 @@ You are building a customer support chatbot that must answer factual questions a
 
 ### expected learner output
 
-There is no single correct answer. The exercise is designed to build reasoning about trade-offs. A strong response will:
-
-**Context A** — Choose a search-based approach (tree-of-thoughts or MCTS) with high test-time compute allocation, possibly adaptive (more compute for harder problems). Verification should use a process reward model or step-by-step verifier to catch errors early. Self-consistency with many chains provides a backup verification signal. The approach prioritizes correctness over speed.
-
-**Context B** — Choose self-consistency or tree-of-thoughts with moderate compute. Use diversity-promoting decoding (temperature sampling) to explore varied solution spaces. Verification is lightweight: an outcome reward model or heuristic filter checking internal consistency and constraint satisfaction. The approach balances diversity with coherence.
-
-**Context C** — Choose linear CoT or a small distilled model with minimal test-time compute. If CoT adds too much latency, skip it entirely and use direct answering with a verifier that checks factual consistency post-hoc (but runs asynchronously or only on disagreement). Verification is minimal or deferred. The approach prioritizes speed over depth.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 

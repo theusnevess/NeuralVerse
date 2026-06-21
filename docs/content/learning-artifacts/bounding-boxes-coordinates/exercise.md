@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer vision developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the Bounding Boxes and Coordinate Systems topic and serves as a Exercise.
+Provides practice applying the concepts of Relative Coordinate Conversions — guides the learner through reasoning steps that reinforce understanding of Bounding Boxes and Coordinate Systems through active problem-solving.
 
 ## Required Contract Fields
 
@@ -62,7 +62,7 @@ Given an image of size $800 \times 600$ pixels, and an object bounding box with 
 
 ### expected learner output
 
-1. Normalized xyxy: [200/800, 150/600, 400/800, 450/600] = [0.25, 0.25, 0.50, 0.75]. 2. Absolute xywh: Width = 400 - 200 = 200. Height = 450 - 150 = 300. Center X = 200 + (200/2) = 300. Center Y = 150 + (300/2) = 300. Absolute xywh = [300, 300, 200, 300].
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -70,7 +70,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding this topic is critical for building autonomous vehicles, industrial inspections, robotic manipulators, and multi-object real-time surveillance backbones.
+Object detection pipelines power real-world applications from autonomous driving to medical imaging — understanding these architectural choices is key to building effective perception systems.
 
 ## Dependency Notes
 

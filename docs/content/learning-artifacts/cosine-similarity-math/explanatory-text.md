@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Cosine Similarity topic and serves as a Explanatory Text.
+Covers Cosine Similarity Mathematical Formulation within the broader topic of Cosine Similarity — explains the core ideas, their role in AI systems, and what makes them important for practitioners to understand.
 
 ## Required Contract Fields
 
@@ -64,7 +64,7 @@ Cosine Similarity measures the cosine of the angle between two non-zero vectors:
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale retrieval and search systems.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

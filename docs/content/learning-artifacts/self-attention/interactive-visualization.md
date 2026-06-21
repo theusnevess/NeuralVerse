@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and language developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the Self-Attention Mechanism topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring Attention Matrix Simulator Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Self-Attention Mechanism.
 
 ## Required Contract Fields
 
@@ -64,7 +64,7 @@ This specification outlines an attention matrix visualizer. The user types a sim
 
 ### motivation
 
-Understanding Transformers is critical for building modern LLMs (GPT-4, Llama), semantic search retrievers, RAG interfaces, and Vision Transformers.
+Transformers form the backbone of modern LLMs — understanding their attention mechanisms, scaling properties, and architectural variants is essential for working with models like GPT-4, Llama, and their successors.
 
 ## Dependency Notes
 

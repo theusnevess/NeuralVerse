@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Image Channels and Color Spaces topic and serves as a Exercise.
+Provides practice applying the concepts of Calculating Image Tensor Volumes — guides the learner through reasoning steps that reinforce understanding of Image Channels and Color Spaces through active problem-solving.
 
 ## Required Contract Fields
 
@@ -63,7 +63,7 @@ A color image tensor has shape $224 \times 224 \times 3$. Calculate: 1. The tota
 
 ### expected learner output
 
-1. Pixels in a single channel = 224 * 224 = 50,176 pixels. 2. Total intensity values in the entire tensor = 224 * 224 * 3 = 150,528 values.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -71,7 +71,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale computer vision and multimodal retrieval pipelines.
+Multimodal AI systems connect vision, language, and other modalities — these concepts form the bridge between separate representational spaces.
 
 ## Dependency Notes
 

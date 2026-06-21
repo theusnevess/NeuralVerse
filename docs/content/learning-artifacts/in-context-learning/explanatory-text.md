@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and language model developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the In-Context Learning topic and serves as a Explanatory Text.
+Covers Frozen Weights and Meta-Optimization Theories within the broader topic of In-Context Learning — explains the core ideas, their role in AI systems, and what makes them important for practitioners to understand.
 
 ## Required Contract Fields
 
@@ -64,7 +64,7 @@ In-Context Learning (ICL) is the ability of an LLM to learn new tasks at inferen
 
 ### motivation
 
-Understanding LLM foundations is critical for building generative chatbots, few-shot classifiers, long-context search retrievers, and aligned AI systems.
+Modern language models rely on these mechanisms for generation, reasoning, and alignment — understanding them is essential for building reliable LLM applications.
 
 ## Dependency Notes
 

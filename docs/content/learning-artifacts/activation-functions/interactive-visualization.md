@@ -50,7 +50,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Activation Functions topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring Activation Plotter Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Activation Functions.
 
 ## Required Contract Fields
 
@@ -66,7 +66,7 @@ This specification outlines a function plotter. The user selects Sigmoid, Tanh, 
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale deep networks and search spaces.
+Deep learning builds on these core mechanisms — understanding them is essential for designing, debugging, and improving neural architectures.
 
 ## Dependency Notes
 

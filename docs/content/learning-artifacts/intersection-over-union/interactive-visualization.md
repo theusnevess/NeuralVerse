@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer vision developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the Intersection over Union (IoU) topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring Box Overlap Math Simulator Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Intersection over Union (IoU).
 
 ## Required Contract Fields
 
@@ -64,7 +64,7 @@ This specification outlines an IoU slider board. The user drags a predicted box 
 
 ### motivation
 
-Understanding this topic is critical for building autonomous vehicles, industrial inspections, robotic manipulators, and multi-object real-time surveillance backbones.
+Object detection pipelines power real-world applications from autonomous driving to medical imaging — understanding these architectural choices is key to building effective perception systems.
 
 ## Dependency Notes
 

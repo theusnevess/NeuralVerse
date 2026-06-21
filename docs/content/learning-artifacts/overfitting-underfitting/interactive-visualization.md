@@ -50,7 +50,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Overfitting and Underfitting topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring Polynomial Curve Fitting Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Overfitting and Underfitting.
 
 ## Required Contract Fields
 
@@ -66,7 +66,7 @@ This specification describes a polynomial curve fitting explorer. The user adjus
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale retrieval and search systems.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

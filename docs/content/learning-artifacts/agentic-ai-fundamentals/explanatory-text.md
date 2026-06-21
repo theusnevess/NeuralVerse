@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and agent systems developers."
 
 ## Artifact Summary
 
-This artifact belongs to the Agentic AI Fundamentals topic and serves as a Explanatory Text.
+Covers Perception-Action Loops and Agentic Architectures within the broader topic of Agentic AI Fundamentals — explains the core ideas, their role in AI systems, and what makes them important for practitioners to understand.
 
 ## Required Contract Fields
 
@@ -65,7 +65,7 @@ Agentic AI refers to systems where a foundation model is embedded inside a conti
 
 ### motivation
 
-Understanding AI Agents and Tool Use is critical for building autonomous software assistants, function callers, memory-backed bots, and self-correcting coders.
+Agentic systems extend language models beyond passive generation — these concepts enable autonomous reasoning, tool use, and multi-step execution.
 
 ## Dependency Notes
 

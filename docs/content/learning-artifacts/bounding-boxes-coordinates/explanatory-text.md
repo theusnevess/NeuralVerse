@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer vision developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the Bounding Boxes and Coordinate Systems topic and serves as a Explanatory Text.
+Covers Corner, Center, and Normalized Coordinates within the broader topic of Bounding Boxes and Coordinate Systems — explains the core ideas, their role in AI systems, and what makes them important for practitioners to understand.
 
 ## Required Contract Fields
 
@@ -64,7 +64,7 @@ Bounding boxes define the spatial extent of objects in an image. The two most co
 
 ### motivation
 
-Understanding this topic is critical for building autonomous vehicles, industrial inspections, robotic manipulators, and multi-object real-time surveillance backbones.
+Object detection pipelines power real-world applications from autonomous driving to medical imaging — understanding these architectural choices is key to building effective perception systems.
 
 ## Dependency Notes
 

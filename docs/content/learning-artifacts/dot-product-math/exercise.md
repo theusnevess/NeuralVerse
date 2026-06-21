@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Dot Product topic and serves as a Exercise.
+Provides practice applying the concepts of Calculating Vector Dot Products — guides the learner through reasoning steps that reinforce understanding of Dot Product through active problem-solving.
 
 ## Required Contract Fields
 
@@ -62,7 +62,7 @@ You have two vectors: u = [2, 3] and v = [4, -1]. Calculate their dot product. E
 
 ### expected learner output
 
-u . v = (2 * 4) + (3 * -1) = 8 - 3 = 5. Since the dot product is positive, the angle between the two vectors is acute (between 0 and 90 degrees), indicating they point in generally similar directions.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -70,7 +70,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale retrieval and search systems.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

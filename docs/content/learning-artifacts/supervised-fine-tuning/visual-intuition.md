@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and model adaptation developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the Supervised Fine-Tuning (SFT) topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about The Student Boot Camp — maps familiar concepts to the technical mechanics of Supervised Fine-Tuning (SFT), making abstract ideas concrete.
 
 ## Required Contract Fields
 
@@ -64,7 +64,7 @@ SFT is like a student attending a specialized boot camp. Instead of browsing ran
 
 ### motivation
 
-Understanding Fine-Tuning and Adaptation is critical for specializing models for custom tasks, aligning generation safety, deploying LoRA adapters in production, and selecting RAG combinations.
+Adapting pre-trained models to specific tasks is a core practice in modern ML — these techniques enable efficient specialization without full retraining.
 
 ## Dependency Notes
 

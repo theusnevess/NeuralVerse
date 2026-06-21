@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers, researchers, and computer science st
 
 ## Artifact Summary
 
-This artifact belongs to the Neurosymbolic AI topic and serves as an Exercise.
+Provides practice applying the concepts of Designing a Neurosymbolic System — guides the learner through reasoning steps that reinforce understanding of Neurosymbolic AI through active problem-solving.
 
 ## Required Contract Fields
 
@@ -86,19 +86,7 @@ Consider: The system must handle massive, noisy text corpora while producing log
 
 ### expected learner output
 
-For each context, provide approximately 300-500 words addressing the four design elements listed above.
-
-#### Example sketch — Context A (Mathematical Theorem Proving):
-
-**Interface:** A graph neural network encodes mathematical expressions as structured graphs (abstract syntax trees with learned node embeddings). The GNN outputs scored candidate inference rules, which are passed as discrete symbols to a symbolic proof checker. The proof checker verifies each step and returns success/failure signals plus the current proof state.
-
-**Component responsibilities:** The GNN handles pattern matching — recognizing when a subexpression matches a known lemma or when a particular transformation is likely to make progress. The symbolic prover handles rule application, variable substitution, and proof chain verification.
-
-**Grounding strategy:** Mathematical symbols are grounded through their operational semantics in the proof checker. The GNN's embeddings are trained end-to-end on successful proof trajectories, learning to predict useful transformations.
-
-**Limitations:** The approach relies on the GNN generalizing to novel expression structures. If the training distribution lacks certain patterns, the neural component may fail to propose useful rules, leaving the symbolic prover without guidance in deep search spaces.
-
----
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 

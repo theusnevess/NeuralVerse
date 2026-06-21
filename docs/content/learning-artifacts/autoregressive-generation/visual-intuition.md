@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and language model developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the Autoregressive Generation topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about Storytelling Word-Association Game — maps familiar concepts to the technical mechanics of Autoregressive Generation, making abstract ideas concrete.
 
 ## Required Contract Fields
 
@@ -64,7 +64,7 @@ Imagine playing a game of word-association where you must continue a story one w
 
 ### motivation
 
-Understanding LLM foundations is critical for building generative chatbots, few-shot classifiers, long-context search retrievers, and aligned AI systems.
+Modern language models rely on these mechanisms for generation, reasoning, and alignment — understanding them is essential for building reliable LLM applications.
 
 ## Dependency Notes
 

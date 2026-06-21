@@ -49,7 +49,7 @@ audience_notes: "Intended for ML engineers, MLOps practitioners, and backend eng
 
 ## Artifact Summary
 
-This artifact belongs to the Production AI Systems topic and serves as a Exercise.
+Provides practice applying the concepts of Designing a Serving Architecture — guides the learner through reasoning steps that reinforce understanding of Production AI Systems through active problem-solving.
 
 ## Required Contract Fields
 
@@ -69,13 +69,7 @@ Analyze each of the following three deployment contexts. For each context, compl
 
 ### expected learner output
 
-| Decision Area | Context A — Chatbot | Context B — Batch Documents | Context C — Code Completion |
-|---|---|---|---|
-| Serving Approach | Streaming (token-by-token output for interactive chat) | Batch (accumulate requests, process in bulk) | Streaming (token-by-token for real-time display) |
-| Inference Engine | vLLM (strong continuous batching, low tail latency) | TensorRT-LLM (highest throughput for large batches) | TGI (optimized for streaming, low TTFT) |
-| Batching Strategy | Continuous batching (handles variable-length turns efficiently) | Static batching with large batch sizes (maximizes throughput) | Continuous batching with small max batch (prioritizes low latency) |
-| Optimization | FP8 quantization, speculative decoding, PagedAttention | INT8 quantization, large KV-cache allocation, tensor parallelism | KV-cache prefix caching, minimal quantization, fast draft model |
-| Rationale | Streaming matches chat UX; vLLM's continuous batching handles variable turn lengths; speculative decoding reduces perceived latency | Large batches maximize GPU utilization; TensorRT-LLM's kernel fusion drives throughput for dense computation; lower precision reduces memory for large sequences | First-token latency is critical; TGI's streaming architecture minimizes TTFT; prefix caching speeds up repeated completions |
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -83,7 +77,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding model serving and inference optimization is critical for deploying LLMs that meet production latency, throughput, and cost requirements.
+Production ML requires efficient model serving — these optimization techniques ensure deployed models meet latency, throughput, and cost targets.
 
 ## Dependency Notes
 

@@ -48,7 +48,7 @@ audience_notes: "Intended for ML engineers, data scientists, and MLOps practitio
 
 ## Artifact Summary
 
-This artifact belongs to the Data Drift and Concept Drift topic and serves as a Exercise.
+Provides practice applying the concepts of Diagnosing Drift in Production — guides the learner through reasoning steps that reinforce understanding of Data Drift and Concept Drift through active problem-solving.
 
 ## Required Contract Fields
 
@@ -74,20 +74,7 @@ An NLP sentiment analysis model trained on product reviews for electronics now m
 
 ### expected learner output
 
-**Context A — Fraud Detection:**
-1. **Drift Type:** Data drift — covariate shift. The transaction amount distribution P(X) has shifted, but P(Y|X) (fraud given transaction amount) and P(Y) (overall fraud rate) remain unchanged.
-2. **Detection Method:** PSI or KS test on the transaction amount feature. Both can compare the reference distribution (pre-drift) to the current distribution. KS is simpler and interpretable for a continuous feature like transaction amount.
-3. **Retraining Trigger:** Drift-based trigger on the transaction amount feature. Once PSI or KS flags drift, retrain the model on recent data that includes the new transaction amount distribution. Additionally, a performance-based fallback (AUC < 0.90) as backup.
-
-**Context B — Recommendation System:**
-1. **Drift Type:** Concept drift — gradual drift. The relationship P(Y|X) between user features and click behavior is slowly changing as short-form video emerges. The same user demographics (X) produce different click patterns (Y) than before.
-2. **Detection Method:** MMD on the joint distribution of (user features, click labels) or SPC on the click-through rate metric. MMD can detect subtle shifts in high-dimensional embedding spaces. SPC provides a clear control chart with actionable upper/lower limits.
-3. **Retraining Trigger:** Performance-based trigger (CTR drop below threshold) combined with drift-based trigger on the embedding space. Since drift is gradual, periodic retraining (time-based, e.g., bi-weekly) complements the reactive triggers.
-
-**Context C — NLP Sentiment Model:**
-1. **Drift Type:** Concept drift — sudden drift (or more precisely, domain shift). The new product category introduces a new data distribution that the model was never trained on. P(Y|X) effectively changes for this subset of data because the linguistic features that signal sentiment in electronics reviews do not map identically to home appliance reviews.
-2. **Detection Method:** PSI on the feature embedding distributions (e.g., sentence embeddings from the model's penultimate layer) comparing electronics vs. appliance reviews. A chi-square test on categorical feature frequencies can also flag the vocabulary shift.
-3. **Retraining Trigger:** Drift-based trigger that alerts when the proportion of appliance reviews exceeds a threshold, combined with a scheduled retraining cycle that includes the new domain data. If appliance reviews become a permanent category, incorporate domain adaptation (fine-tuning on the new domain) triggered by the drift alert.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 

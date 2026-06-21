@@ -46,7 +46,7 @@ audience_notes: "Intended for AI engineers and evaluation practitioners."
 
 ## Artifact Summary
 
-This artifact belongs to the Human Evaluation of LLMs topic and serves as a Explanatory Text.
+Covers Human Evaluation of LLM Outputs within the broader topic of Human Evaluation of LLMs — explains the core ideas, their role in AI systems, and what makes them important for practitioners to understand.
 
 ## Required Contract Fields
 

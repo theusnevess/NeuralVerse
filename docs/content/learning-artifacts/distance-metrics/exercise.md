@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Distance Metrics topic and serves as a Exercise.
+Provides practice applying the concepts of Reasoning About Distance Metrics — guides the learner through reasoning steps that reinforce understanding of Distance Metrics through active problem-solving.
 
 ## Required Contract Fields
 
@@ -62,7 +62,7 @@ You have Vector X (3, 4) and Vector Y (6, 8). Calculate if they are identical un
 
 ### expected learner output
 
-The learner should show that Vector Y is exactly twice Vector X (6/3 = 8/4 = 2). Because they point in the same direction, the angle is 0, so Cosine Similarity is 1.0. However, the straight line distance between points (3,4) and (6,8) is sqrt((6-3)^2 + (8-4)^2) = 5.0, so they are not identical under Euclidean Distance.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -70,7 +70,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale retrieval and search systems.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

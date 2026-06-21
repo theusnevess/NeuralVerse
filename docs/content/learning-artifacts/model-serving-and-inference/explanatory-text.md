@@ -49,7 +49,7 @@ audience_notes: "Intended for ML engineers, MLOps practitioners, and backend eng
 
 ## Artifact Summary
 
-This artifact belongs to the Production AI Systems topic and serves as a Explanatory Text.
+Covers Model Serving and Inference within the broader topic of Production AI Systems — explains the core ideas, their role in AI systems, and what makes them important for practitioners to understand.
 
 ## Required Contract Fields
 
@@ -81,7 +81,7 @@ Model serving is the infrastructure layer that exposes trained models to consume
 
 ### motivation
 
-Understanding model serving and inference optimization is critical for deploying LLMs that meet production latency, throughput, and cost requirements.
+Production ML requires efficient model serving — these optimization techniques ensure deployed models meet latency, throughput, and cost targets.
 
 ## Dependency Notes
 

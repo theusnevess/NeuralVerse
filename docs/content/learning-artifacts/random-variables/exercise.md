@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Random Variables topic and serves as a Exercise.
+Provides practice applying the concepts of Classifying LLM Metric Variables — guides the learner through reasoning steps that reinforce understanding of Random Variables through active problem-solving.
 
 ## Required Contract Fields
 
@@ -63,7 +63,7 @@ An LLM outputs tokens one by one. The length of the generated summary (in tokens
 
 ### expected learner output
 
-The length of the summary is a discrete random variable because it is a countable integer count (e.g. 50 tokens, 51 tokens). The average confidence score is a continuous random variable because it represents an average of real numbers in the continuous interval [0.0, 1.0].
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -71,7 +71,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale retrieval and search systems.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

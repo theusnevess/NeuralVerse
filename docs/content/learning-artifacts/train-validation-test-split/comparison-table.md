@@ -50,7 +50,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Train / Validation / Test Split topic and serves as a Comparison Table.
+Compares key approaches, algorithms, or architectures within Train / Validation / Test Split — organizes Dataset Partition Properties into a structured reference for selecting between alternatives.
 
 ## Required Contract Fields
 
@@ -70,7 +70,7 @@ Summarize accessibility rules and purposes of dataset partitions.
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale retrieval and search systems.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

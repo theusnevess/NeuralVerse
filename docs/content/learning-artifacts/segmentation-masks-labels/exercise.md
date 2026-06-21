@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer vision developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the Segmentation Masks and Label Maps topic and serves as a Exercise.
+Provides practice applying the concepts of Argmax Index to Colors — guides the learner through reasoning steps that reinforce understanding of Segmentation Masks and Label Maps through active problem-solving.
 
 ## Required Contract Fields
 
@@ -62,7 +62,7 @@ Given a class palette: $\{0: \text{Black}, 1: \text{Red}, 2: \text{Green}\}$. De
 
 ### expected learner output
 
-1. Perform a spatial argmax over the class channel (dimension 2) to reduce the [2, 2, 3] tensor to a [2, 2] index map. 2. Map the resulting integer index at each pixel coordinate to the palette dictionary: index 0 maps to RGB [0,0,0], 1 to [255,0,0], and 2 to [0,255,0]. 3. Assemble the RGB values into a final [2, 2, 3] visual color array.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -70,7 +70,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding segmentation is critical for building medical scanners, self-driving cars, satellite crop trackers, and human-in-the-loop image editors.
+Segmentation techniques enable pixel-level understanding of visual data — they are fundamental to medical imaging, autonomous navigation, and remote sensing applications.
 
 ## Dependency Notes
 

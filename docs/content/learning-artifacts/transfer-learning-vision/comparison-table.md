@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Transfer Learning in Vision topic and serves as a Comparison Table.
+Compares key approaches, algorithms, or architectures within Transfer Learning in Vision — organizes Extraction vs. Fine-Tuning into a structured reference for selecting between alternatives.
 
 ## Required Contract Fields
 
@@ -67,7 +67,7 @@ Compare Feature Extractor and Fine-Tuning strategies across data size, parameter
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale Convolutional Neural Networks and transfer learning backbones.
+Computer vision pipelines are built on these perceptual primitives — understanding them enables effective architecture design and troubleshooting.
 
 ## Dependency Notes
 

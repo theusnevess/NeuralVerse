@@ -50,7 +50,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Loss Functions topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring 3D Loss Surface Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Loss Functions.
 
 ## Required Contract Fields
 
@@ -66,7 +66,7 @@ This specification outlines a loss function landscape visualizer. The user adjus
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale retrieval and search systems.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

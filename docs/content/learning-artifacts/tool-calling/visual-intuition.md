@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and agent systems developers."
 
 ## Artifact Summary
 
-This artifact belongs to the Tool Calling and External Actions topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about The Artisan and the Tool Box — maps familiar concepts to the technical mechanics of Tool Calling and External Actions, making abstract ideas concrete.
 
 ## Required Contract Fields
 
@@ -65,7 +65,7 @@ An agent is like an artisan. The model itself is the artisan's brain, which know
 
 ### motivation
 
-Understanding AI Agents and Tool Use is critical for building autonomous software assistants, function callers, memory-backed bots, and self-correcting coders.
+Agentic systems extend language models beyond passive generation — these concepts enable autonomous reasoning, tool use, and multi-step execution.
 
 ## Dependency Notes
 

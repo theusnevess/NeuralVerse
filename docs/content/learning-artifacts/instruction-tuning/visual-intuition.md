@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and model adaptation developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the Instruction Tuning topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about River Channels and Irrigation Locks — maps familiar concepts to the technical mechanics of Instruction Tuning, making abstract ideas concrete.
 
 ## Required Contract Fields
 
@@ -64,7 +64,7 @@ A base model is like a wild river that flows along the path of least resistance 
 
 ### motivation
 
-Understanding Fine-Tuning and Adaptation is critical for specializing models for custom tasks, aligning generation safety, deploying LoRA adapters in production, and selecting RAG combinations.
+Adapting pre-trained models to specific tasks is a core practice in modern ML — these techniques enable efficient specialization without full retraining.
 
 ## Dependency Notes
 

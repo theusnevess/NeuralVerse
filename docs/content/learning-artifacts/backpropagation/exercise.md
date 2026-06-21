@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Backpropagation topic and serves as a Exercise.
+Provides practice applying the concepts of Chain Rule Derivative Multiplication — guides the learner through reasoning steps that reinforce understanding of Backpropagation through active problem-solving.
 
 ## Required Contract Fields
 
@@ -62,7 +62,7 @@ Using the chain rule, if $y = f(u)$ and $u = g(x)$, given $\frac{\partial y}{\pa
 
 ### expected learner output
 
-According to the Chain Rule: $\frac{\partial y}{\partial x} = \frac{\partial y}{\partial u} * \frac{\partial u}{\partial x} = 3 * (-2) = -6$. The total gradient is -6.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -70,7 +70,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale deep networks and search spaces.
+Deep learning builds on these core mechanisms — understanding them is essential for designing, debugging, and improving neural architectures.
 
 ## Dependency Notes
 

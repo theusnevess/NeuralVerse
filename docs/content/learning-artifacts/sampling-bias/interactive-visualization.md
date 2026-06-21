@@ -27,7 +27,7 @@ accessibility_notes: "Use clear text and logical structure."
 keywords:
   - sampling
   - sampling bias
-  - selection bias
+  - would selection bias
   - overfitting
   - generalization
   - data drift
@@ -50,7 +50,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Sampling and Sampling Bias topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring Sampling Simulator Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Sampling and Sampling Bias.
 
 ## Required Contract Fields
 
@@ -66,7 +66,7 @@ This specification describes a sampling bias simulator. The user draws samples f
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale retrieval and search systems.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

@@ -47,7 +47,7 @@ audience_notes: "Intended for AI engineers and evaluation practitioners."
 
 ## Artifact Summary
 
-This artifact belongs to the Agent Evaluation Methodologies topic and serves as a Explanatory Text.
+Covers Agent Evaluation Methodologies within the broader topic of Agent Evaluation Methodologies — explains the core ideas, their role in AI systems, and what makes them important for practitioners to understand.
 
 ## Required Contract Fields
 

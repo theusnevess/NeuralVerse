@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Stride and Padding topic and serves as a Explanatory Text.
+Covers Output Spatial Calculations within the broader topic of Stride and Padding — explains the core ideas, their role in AI systems, and what makes them important for practitioners to understand.
 
 ## Required Contract Fields
 
@@ -64,7 +64,7 @@ The spatial output dimensions of a convolutional layer depend on the input shape
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale Convolutional Neural Networks and transfer learning backbones.
+Computer vision pipelines are built on these perceptual primitives — understanding them enables effective architecture design and troubleshooting.
 
 ## Dependency Notes
 

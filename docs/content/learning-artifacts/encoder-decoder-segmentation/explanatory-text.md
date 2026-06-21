@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer vision developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the Encoder–Decoder Architectures topic and serves as a Explanatory Text.
+Covers Spatial Compression, Expansion, and Skips within the broader topic of Encoder–Decoder Architectures — explains the core ideas, their role in AI systems, and what makes them important for practitioners to understand.
 
 ## Required Contract Fields
 
@@ -65,7 +65,7 @@ A major challenge in semantic segmentation is that downsampling layers (pooling/
 
 ### motivation
 
-Understanding segmentation is critical for building medical scanners, self-driving cars, satellite crop trackers, and human-in-the-loop image editors.
+Segmentation techniques enable pixel-level understanding of visual data — they are fundamental to medical imaging, autonomous navigation, and remote sensing applications.
 
 ## Dependency Notes
 

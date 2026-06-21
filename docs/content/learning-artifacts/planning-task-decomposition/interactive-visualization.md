@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and agent systems developers."
 
 ## Artifact Summary
 
-This artifact belongs to the Planning and Task Decomposition topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring Sub-Goal Tree Builder Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Planning and Task Decomposition.
 
 ## Required Contract Fields
 
@@ -65,7 +65,7 @@ This specification outlines a sub-goal tree builder. The user inputs a complex t
 
 ### motivation
 
-Understanding AI Agents and Tool Use is critical for building autonomous software assistants, function callers, memory-backed bots, and self-correcting coders.
+Agentic systems extend language models beyond passive generation — these concepts enable autonomous reasoning, tool use, and multi-step execution.
 
 ## Dependency Notes
 

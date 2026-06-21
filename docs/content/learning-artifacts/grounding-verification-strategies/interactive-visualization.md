@@ -50,7 +50,7 @@ audience_notes: "Intended for AI engineers, safety researchers, and developers b
 
 ## Artifact Summary
 
-This artifact belongs to the AI Safety, Alignment & Guardrails topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring Grounding Verification Pipeline Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand AI Safety, Alignment & Guardrails.
 
 ## Required Contract Fields
 
@@ -62,7 +62,7 @@ Specify an interactive pipeline visualization where users toggle verification st
 
 This specification outlines a Grounding Verification Pipeline interactive tool. The pipeline flows: input query → retrieve context → generate response → NLI verification → citation mapping → confidence scoring. Each stage is represented as a toggleable module. When a verification stage is disabled, the pipeline bypasses that check and the final response may include unverified claims. Key metrics (precision, recall, coverage, abstention rate) update in real time.
 
-Users can select among different query types — factual lookup, multi-document synthesis, subjective opinion — to observe how verification stages perform differently across domains. For factual lookups, NLI verification provides high precision. For multi-document synthesis, consistency checking catches contradictions between sources. For subjective opinions, confidence scores remain low, triggering abstention.
+A future version would let users would select among different query types — factual lookup, multi-document synthesis, subjective opinion — to observe how verification stages perform differently across domains. For factual lookups, NLI verification provides high precision. For multi-document synthesis, consistency checking catches contradictions between sources. For subjective opinions, confidence scores remain low, triggering abstention.
 
 ## Optional Enrichment Fields
 

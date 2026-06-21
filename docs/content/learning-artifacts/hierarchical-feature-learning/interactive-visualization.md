@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Hierarchical Feature Learning topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring Weights Gallery Viewer Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Hierarchical Feature Learning.
 
 ## Required Contract Fields
 
@@ -58,13 +58,13 @@ Specify a hierarchical image classifier layer view board.
 
 ### explanation
 
-This specification describes a layer weights gallery. The user selects a category (e.g., 'Face') and toggles through Layer 1, Layer 2, and Layer 3 filters to see visual representations of Gabor edges, facial parts, and full faces.
+This specification describes a layer weights gallery. The user would selects a category (e.g., 'Face') and toggles through Layer 1, Layer 2, and Layer 3 filters to see visual representations of Gabor edges, facial parts, and full faces.
 
 ## Optional Enrichment Fields
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale Convolutional Neural Networks and transfer learning backbones.
+Computer vision pipelines are built on these perceptual primitives — understanding them enables effective architecture design and troubleshooting.
 
 ## Dependency Notes
 

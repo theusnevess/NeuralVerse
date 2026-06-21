@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers, safety researchers, and LLM applicat
 
 ## Artifact Summary
 
-This artifact belongs to the Guardrail Architectures topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about The Fortress with Multiple Walls — maps familiar concepts to the technical mechanics of Guardrail Architectures, making abstract ideas concrete.
 
 ## Required Contract Fields
 

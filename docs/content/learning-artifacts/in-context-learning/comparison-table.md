@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and language model developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the In-Context Learning topic and serves as a Comparison Table.
+Compares key approaches, algorithms, or architectures within In-Context Learning — organizes In-Context Learning vs. Fine-Tuning into a structured reference for selecting between alternatives.
 
 ## Required Contract Fields
 
@@ -68,7 +68,7 @@ Contrast weights, compute targets, and persistence limits.
 
 ### motivation
 
-Understanding LLM foundations is critical for building generative chatbots, few-shot classifiers, long-context search retrievers, and aligned AI systems.
+Modern language models rely on these mechanisms for generation, reasoning, and alignment — understanding them is essential for building reliable LLM applications.
 
 ## Dependency Notes
 

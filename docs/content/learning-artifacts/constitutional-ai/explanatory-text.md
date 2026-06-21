@@ -50,7 +50,7 @@ audience_notes: "Intended for AI safety researchers and LLM alignment engineers.
 
 ## Artifact Summary
 
-This artifact belongs to the Constitutional AI topic and serves as a Explanatory Text.
+Covers Constitutional AI Principles and Mechanisms within the broader topic of Constitutional AI — explains the core ideas, their role in AI systems, and what makes them important for practitioners to understand.
 
 ## Required Contract Fields
 

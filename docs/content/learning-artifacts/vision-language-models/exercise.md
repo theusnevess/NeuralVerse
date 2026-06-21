@@ -50,7 +50,7 @@ audience_notes: "Intended for AI engineers and computer vision developers."
 
 ## Artifact Summary
 
-This artifact belongs to the Vision-Language Models topic and serves as a Exercise.
+Provides practice applying the concepts of Aligning Visual Embeddings — guides the learner through reasoning steps that reinforce understanding of Vision-Language Models through active problem-solving.
 
 ## Required Contract Fields
 
@@ -64,7 +64,7 @@ Describe the function of the projection layer in a Vision-Language Model, and ex
 
 ### expected learner output
 
-The projection layer transforms the vision encoder's output dimensions to match the language model's hidden size ($D_{text}$). Without this projection, the dimensions would mismatch (e.g., $D_{vision} \neq D_{text}$), preventing attention matrices from executing valid dot products and causing text tokens to ignore visual features.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -72,7 +72,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding Multimodal AI Foundations is critical for building search engines, image captioners, visual answer systems, and joint textual/visual models.
+Multimodal AI systems connect vision, language, and other modalities — these concepts form the bridge between separate representational spaces.
 
 ## Dependency Notes
 

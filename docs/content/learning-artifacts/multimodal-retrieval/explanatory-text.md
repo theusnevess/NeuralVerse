@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer vision developers."
 
 ## Artifact Summary
 
-This artifact belongs to the Multimodal Retrieval topic and serves as a Explanatory Text.
+Covers Cross-Modal Search Engines and Vector Index Alignment within the broader topic of Multimodal Retrieval — explains the core ideas, their role in AI systems, and what makes them important for practitioners to understand.
 
 ## Required Contract Fields
 
@@ -65,7 +65,7 @@ Multimodal retrieval extends traditional text search by enabling queries in one 
 
 ### motivation
 
-Understanding Multimodal AI Foundations is critical for building search engines, image captioners, visual answer systems, and joint textual/visual models.
+Multimodal AI systems connect vision, language, and other modalities — these concepts form the bridge between separate representational spaces.
 
 ## Dependency Notes
 

@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and language developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the Self-Attention Mechanism topic and serves as a Exercise.
+Provides practice applying the concepts of Scaled Dot Product Calculation — guides the learner through reasoning steps that reinforce understanding of Self-Attention Mechanism through active problem-solving.
 
 ## Required Contract Fields
 
@@ -62,7 +62,7 @@ Given Queries $Q = [1, 0]$ and Keys $K_1 = [1, 0], K_2 = [0, 1]$ (head dimension
 
 ### expected learner output
 
-Raw dot products: Q · K_1^T = [1,0]·[1,0]^T = 1. Q · K_2^T = [1,0]·[0,1]^T = 0. Scaling by sqrt(d_k) = sqrt(2) ≈ 1.414: Scaled logits = [1/1.414, 0/1.414] ≈ [0.707, 0]. Softmax(0.707, 0): denominator = e^0.707 + e^0 = 2.028 + 1 = 3.028. Probabilities: P1 = 2.028/3.028 ≈ 0.67. P2 = 1/3.028 ≈ 0.33. Attention weights are [0.67, 0.33].
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -70,7 +70,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding Transformers is critical for building modern LLMs (GPT-4, Llama), semantic search retrievers, RAG interfaces, and Vision Transformers.
+Transformers form the backbone of modern LLMs — understanding their attention mechanisms, scaling properties, and architectural variants is essential for working with models like GPT-4, Llama, and their successors.
 
 ## Dependency Notes
 

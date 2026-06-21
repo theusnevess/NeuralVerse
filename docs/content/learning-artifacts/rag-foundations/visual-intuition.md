@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the RAG Foundations topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about Visualizing the RAG Loop — maps familiar concepts to the technical mechanics of RAG Foundations, making abstract ideas concrete.
 
 ## Required Contract Fields
 
@@ -64,7 +64,7 @@ Think of an open-book exam. An LLM without RAG is taking a closed-book exam, rel
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale retrieval and search systems.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

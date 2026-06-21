@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer vision developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the Object Detection Fundamentals topic and serves as a Exercise.
+Provides practice applying the concepts of Classifier Modification Constraints — guides the learner through reasoning steps that reinforce understanding of Object Detection Fundamentals through active problem-solving.
 
 ## Required Contract Fields
 
@@ -62,7 +62,7 @@ Explain why standard ImageNet classification models cannot be directly used for 
 
 ### expected learner output
 
-Standard classifiers have a single output head (Softmax) predicting class probabilities for the entire image. They lack the localization regression heads required to output multiple bounding box coordinate sets ($x, y, w, h$) per image, and their pooling layers discard the necessary spatial coordinates needed for precise tracking.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -70,7 +70,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding this topic is critical for building autonomous vehicles, industrial inspections, robotic manipulators, and multi-object real-time surveillance backbones.
+Object detection pipelines power real-world applications from autonomous driving to medical imaging — understanding these architectural choices is key to building effective perception systems.
 
 ## Dependency Notes
 

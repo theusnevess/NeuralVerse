@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Chunking Strategies topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring Text Chunking Interactive Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Chunking Strategies.
 
 ## Required Contract Fields
 
@@ -59,13 +59,13 @@ Specify an interactive tool showing visual chunk divisions based on user configu
 
 ### explanation
 
-This specification describes an interactive chunking visualizer. The user inputs a sample text and selects a splitter method (Fixed, Recursive, Semantic) and parameters (chunk size, overlap, or semantic threshold). The tool highlights the chunk boundaries in different colors and shows the similarity curve between consecutive sentences, displaying the split points.
+This specification describes an interactive chunking visualizer. The user inputs a sample text and would selects a splitter method (Fixed, Recursive, Semantic) and parameters (chunk size, overlap, or semantic threshold). The tool highlights the chunk boundaries in different colors and shows the similarity curve between consecutive sentences, displaying the split points.
 
 ## Optional Enrichment Fields
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale retrieval and search systems.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

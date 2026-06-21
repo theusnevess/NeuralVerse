@@ -50,7 +50,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Bayes' Theorem topic and serves as a Exercise.
+Provides practice applying the concepts of Spam Filter Bayes Calculation — guides the learner through reasoning steps that reinforce understanding of Bayes' Theorem through active problem-solving.
 
 ## Required Contract Fields
 
@@ -64,7 +64,7 @@ Suppose 2% of emails are spam. A spam filter detects 95% of spam emails, but has
 
 ### expected learner output
 
-Let S = Spam, F = Flagged. P(S) = 0.02, P(Clean) = 0.98. P(F|S) = 0.95 (Likelihood). P(F|Clean) = 0.01 (False Positive). P(F) = P(F|S)P(S) + P(F|Clean)P(Clean) = (0.95 * 0.02) + (0.01 * 0.98) = 0.019 + 0.0098 = 0.0288. P(S|F) = P(F|S)P(S) / P(F) = 0.019 / 0.0288 = 0.6597. Therefore, there is a 66.0% chance the flagged email is actually spam.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -72,7 +72,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale retrieval and search systems.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

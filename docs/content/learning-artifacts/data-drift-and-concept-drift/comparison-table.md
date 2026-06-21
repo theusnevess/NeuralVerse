@@ -48,7 +48,7 @@ audience_notes: "Intended for ML engineers, data scientists, and MLOps practitio
 
 ## Artifact Summary
 
-This artifact belongs to the Data Drift and Concept Drift topic and serves as a Comparison Table.
+Compares key approaches, algorithms, or architectures within Data Drift and Concept Drift — organizes Drift Types and Detection Methods into a structured reference for selecting between alternatives.
 
 ## Required Contract Fields
 

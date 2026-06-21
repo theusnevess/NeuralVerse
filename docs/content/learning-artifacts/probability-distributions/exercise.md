@@ -50,7 +50,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Probability Distributions topic and serves as a Exercise.
+Provides practice applying the concepts of Computing Softmax Class Probabilities — guides the learner through reasoning steps that reinforce understanding of Probability Distributions through active problem-solving.
 
 ## Required Contract Fields
 
@@ -64,7 +64,7 @@ A classification model output layer produces logits [2.0, 1.0, 0.1]. Apply the S
 
 ### expected learner output
 
-exp(2.0) = 7.389. exp(1.0) = 2.718. exp(0.1) = 1.105. Sum of exponentials = 7.389 + 2.718 + 1.105 = 11.212. Class 1 Prob = 7.389 / 11.212 = 0.659. Class 2 Prob = 2.718 / 11.212 = 0.242. Class 3 Prob = 1.105 / 11.212 = 0.099. Resulting categorical distribution = [0.659, 0.242, 0.099].
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -72,7 +72,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale retrieval and search systems.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

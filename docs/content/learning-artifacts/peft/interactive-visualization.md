@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and model adaptation developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the Parameter-Efficient Fine-Tuning (PEFT) topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring Matrix Factorization Grid Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Parameter-Efficient Fine-Tuning (PEFT).
 
 ## Required Contract Fields
 
@@ -64,7 +64,7 @@ This specification describes a matrix decomposition visualizer. The user adjusts
 
 ### motivation
 
-Understanding Fine-Tuning and Adaptation is critical for specializing models for custom tasks, aligning generation safety, deploying LoRA adapters in production, and selecting RAG combinations.
+Adapting pre-trained models to specific tasks is a core practice in modern ML — these techniques enable efficient specialization without full retraining.
 
 ## Dependency Notes
 

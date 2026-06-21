@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Unsupervised Learning topic and serves as a Exercise.
+Provides practice applying the concepts of Grouping Unlabeled Search Queries — guides the learner through reasoning steps that reinforce understanding of Unsupervised Learning through active problem-solving.
 
 ## Required Contract Fields
 
@@ -63,7 +63,7 @@ You have a dataset of 10,000 customer search queries. You want to group them int
 
 ### expected learner output
 
-The unsupervised learning paradigm is appropriate because the dataset does not contain predefined category labels. A suitable algorithm would be K-Means Clustering, which groups the queries' vector embeddings based on spatial distance centroids.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -71,7 +71,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale retrieval and search systems.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

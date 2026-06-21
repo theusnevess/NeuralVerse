@@ -47,7 +47,7 @@ audience_notes: "Intended for AI engineers and safety researchers deploying alig
 
 ## Artifact Summary
 
-This artifact belongs to the Jailbreak Techniques topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about The Lockpicker's Toolkit — maps familiar concepts to the technical mechanics of Jailbreak Techniques, making abstract ideas concrete.
 
 ## Required Contract Fields
 

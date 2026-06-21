@@ -46,7 +46,7 @@ audience_notes: "Intended for ML engineers, NLP practitioners, and AI evaluators
 
 ## Artifact Summary
 
-This artifact belongs to the Automatic Evaluation Metrics topic and serves as a Comparison Table.
+Compares key approaches, algorithms, or architectures within Automatic Evaluation Metrics — organizes BLEU vs. ROUGE vs. METEOR vs. BERTScore into a structured reference for selecting between alternatives.
 
 ## Required Contract Fields
 

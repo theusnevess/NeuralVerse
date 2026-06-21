@@ -48,7 +48,7 @@ audience_notes: "Intended for AI researchers and engineers interested in advance
 
 ## Artifact Summary
 
-This artifact belongs to the Reasoning Models and Test-Time Compute topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about The Detective Investigation — maps familiar concepts to the technical mechanics of Reasoning Models and Test-Time Compute, making abstract ideas concrete.
 
 ## Required Contract Fields
 

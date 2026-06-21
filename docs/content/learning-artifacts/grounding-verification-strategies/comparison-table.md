@@ -50,7 +50,7 @@ audience_notes: "Intended for AI engineers, safety researchers, and developers b
 
 ## Artifact Summary
 
-This artifact belongs to the AI Safety, Alignment & Guardrails topic and serves as a Comparison Table.
+Compares key approaches, algorithms, or architectures within AI Safety, Alignment & Guardrails — organizes Verification Strategy Comparison into a structured reference for selecting between alternatives.
 
 ## Required Contract Fields
 

@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Bias–Variance Tradeoff topic and serves as a Comparison Table.
+Compares key approaches, algorithms, or architectures within Bias–Variance Tradeoff — organizes Bias-Variance Tradeoff Reference into a structured reference for selecting between alternatives.
 
 ## Required Contract Fields
 
@@ -70,7 +70,7 @@ Compare high bias vs. high variance across model parameters, sensitivity, and fa
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale retrieval and search systems.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

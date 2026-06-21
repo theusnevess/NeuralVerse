@@ -49,7 +49,7 @@ audience_notes: "Intended for AI safety researchers and LLM alignment engineers.
 
 ## Artifact Summary
 
-This artifact belongs to the Constitutional AI topic and serves as a Comparison Table.
+Compares key approaches, algorithms, or architectures within Constitutional AI — organizes RLHF vs. Constitutional AI into a structured reference for selecting between alternatives.
 
 ## Required Contract Fields
 

@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Query Expansion and Reformulation topic and serves as a Exercise.
+Provides practice applying the concepts of Reformulating Conversational Queries — guides the learner through reasoning steps that reinforce understanding of Query Expansion and Reformulation through active problem-solving.
 
 ## Required Contract Fields
 
@@ -63,7 +63,7 @@ A user is chatting with an assistant. They ask: 'What did they say?' after a pre
 
 ### expected learner output
 
-The learner should reformulate the query to something like 'Summary of the new security policy'. They must explain that the pronouns ('What did they say?') must be resolved using conversational history context before querying the vector index.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -71,7 +71,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale retrieval and search systems.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

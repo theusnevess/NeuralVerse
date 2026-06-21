@@ -49,7 +49,7 @@ audience_notes: "Intended for ML engineers, data scientists, and MLOps practitio
 
 ## Artifact Summary
 
-This artifact belongs to the Model Versioning and Experiment Tracking topic and serves as a Exercise.
+Provides practice applying the concepts of Designing a Versioning and Tracking Strategy — guides the learner through reasoning steps that reinforce understanding of Model Versioning and Experiment Tracking through active problem-solving.
 
 ## Required Contract Fields
 
@@ -69,23 +69,7 @@ For each context below, design a versioning scheme, select an experiment trackin
 
 ### expected learner output
 
-**Context A — Recommender System:**
-- Versioning: Semantic versioning (v2.1.0) with dataset date suffix for data lineage.
-- Tool: MLflow (self-hosted) — open-source, supports experiment tracking and model registry.
-- Registry workflow: Auto-register candidates as Staging; manual promotion to Production after A/B test.
-- Reproducibility: DVC for dataset snapshots, conda env export per training run, fixed random seed.
-
-**Context B — Regulated Financial LLM:**
-- Versioning: Registry-based auto-increment IDs with git commit hash and signed metadata.
-- Tool: MLflow self-hosted on on-premise Kubernetes with PostgreSQL backend for audit logs.
-- Registry workflow: Staging → validation gate (automated tests + manual code review) → two-person sign-off → Production. Every transition logged with timestamp, reviewer identity, and attestation.
-- Reproducibility: Docker container with pinned base image, locked pip requirements, fixed seed, full training script versioned in git, dataset hash stored in registry.
-
-**Context C — Rapid Prototyping Research:**
-- Versioning: Auto-generated run IDs (timestamp + experiment ID), informal version labels.
-- Tool: Weights & Biases (free tier or W&B Light) — quick setup, rich dashboards, easy sharing.
-- Registry workflow: Track-only — no formal staging/promotion. Best runs marked via W&B tags/star.
-- Reproducibility: Quick — requirements.txt, Docker Hub base image, random seeds noted but not enforced. Focus on speed over rigor.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -93,7 +77,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding this topic is critical for building reliable, auditable, and reproducible ML systems that can operate in production at scale.
+Production ML requires more than trained models — these operational practices ensure reliable, observable, and maintainable AI systems.
 
 ## Dependency Notes
 

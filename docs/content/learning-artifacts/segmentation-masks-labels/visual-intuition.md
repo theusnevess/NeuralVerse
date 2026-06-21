@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer vision developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the Segmentation Masks and Label Maps topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about Painting by Numbers Grids — maps familiar concepts to the technical mechanics of Segmentation Masks and Label Maps, making abstract ideas concrete.
 
 ## Required Contract Fields
 
@@ -64,7 +64,7 @@ Imagine painting by numbers. The computer works with a grid filled with index nu
 
 ### motivation
 
-Understanding segmentation is critical for building medical scanners, self-driving cars, satellite crop trackers, and human-in-the-loop image editors.
+Segmentation techniques enable pixel-level understanding of visual data — they are fundamental to medical imaging, autonomous navigation, and remote sensing applications.
 
 ## Dependency Notes
 

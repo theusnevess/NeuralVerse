@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and LLM evaluation practitioners."
 
 ## Artifact Summary
 
-This artifact belongs to the Hallucination Detection and Analysis topic and serves as a Exercise.
+Provides practice applying the concepts of Identifying Hallucination Types — guides the learner through reasoning steps that reinforce understanding of Hallucination Detection and Analysis through active problem-solving.
 
 ## Required Contract Fields
 
@@ -83,13 +83,7 @@ Statement: "The Amazon rainforest covers approximately 5.5 million square kilome
 
 ### expected learner output
 
-Scenario 1: Faithful. All details match the source exactly with no added or contradictory information.
-
-Scenario 2: Extrinsic hallucination. The orbital period and size claims match, but the discovery year "1781" is not present in the source text and cannot be verified from it.
-
-Scenario 3: Intrinsic hallucination. The source states "up 12% year-over-year" while the statement claims "down 5% year-over-year," directly contradicting the source.
-
-Scenario 4: Extrinsic hallucination. The area claim matches, but the biodiversity statistic "home to 10% of the world's known species" is not present in the source text.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 

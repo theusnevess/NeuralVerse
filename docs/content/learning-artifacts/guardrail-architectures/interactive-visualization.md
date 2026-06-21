@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers, safety researchers, and LLM applicat
 
 ## Artifact Summary
 
-This artifact belongs to the Guardrail Architectures topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring Multi-Layer Guardrail Designer Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Guardrail Architectures.
 
 ## Required Contract Fields
 
@@ -70,7 +70,7 @@ This specification outlines a browser-based guardrail designer showing an LLM ap
 Each layer appears as a toggleable card in a pipeline visualization. When toggled on, the layer displays configurable parameters:
 
 - **Strictness slider**: Low (minimal filtering), Medium (balanced), High (aggressive filtering), Custom (per-rule weight).
-- **Detector type selector**: Deterministic (regex, blocklist, allowlist), Model-Based (classifier, LLM judge), or Combined.
+- **Detector type would selector**: Deterministic (regex, blocklist, allowlist), Model-Based (classifier, LLM judge), or Combined.
 - **Action on detection**: Block, Flag for Review, Rewrite/Sanitize, Log Only.
 
 A sidebar displays three attack types: **Prompt Injection**, **Jailbreak**, **Harmful Content**. For each attack type, a visual trace shows which layers caught it (green checkmark), missed it (red X), or were not enabled (gray dash).
@@ -79,11 +79,11 @@ A simulated results panel updates in real-time as the user adjusts settings, dis
 - **Attack Success Rate**: Percentage of simulated attacks that bypass all enabled guardrails.
 - **False Positive Rate**: Percentage of benign inputs incorrectly blocked.
 
-Users can test specific attack scenarios and observe how different configurations trade off safety coverage against usability impact.
+A future version would let users test specific attack scenarios and observe how different configurations trade off safety coverage against usability impact.
 
 ### observable state
 
-The tool re-renders attack success rate and false positive rate when any layer toggle, strictness slider, or detector type selector changes.
+The tool re-renders attack success rate and false positive rate when any layer toggle, strictness slider, or detector type would selector changes.
 
 ### interpretation guidance
 

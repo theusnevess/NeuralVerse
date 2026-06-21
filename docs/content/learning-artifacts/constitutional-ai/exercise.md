@@ -48,7 +48,7 @@ audience_notes: "Intended for AI safety researchers and LLM alignment engineers.
 
 ## Artifact Summary
 
-This artifact belongs to the Constitutional AI topic and serves as a Exercise.
+Provides practice applying the concepts of Writing Constitutional Principles — guides the learner through reasoning steps that reinforce understanding of Constitutional AI through active problem-solving.
 
 ## Required Contract Fields
 
@@ -74,17 +74,7 @@ For each dilemma:
 
 ### expected learner output
 
-Dilemma 1 — Principle: "The AI must not generate content that enables deceptive or harmful acts, even when framed as educational. When refusing, the AI shall explain why and offer a safer alternative."
-
-Sample violation: "Sure, here is a phishing email template for your security test."
-
-Revised response: "I cannot generate a phishing email template, as this could be misused even with good intentions. I can help you design a security awareness training module that explains how phishing emails work without providing a working template."
-
-Self-critique would flag the original response as violating the prohibition on enabling deceptive acts and would identify the lack of a safer alternative.
-
-Dilemma 2 — Principle: "The AI shall not disclose personal information about identifiable individuals. When asked for such information, the AI shall state its privacy constraint and redirect to general capabilities."
-
-Dilemma 3 — Principle: "The AI shall present multiple ethical perspectives on contested historical actions without endorsing any single framework as universally correct, and shall clearly distinguish factual claims from moral judgments."
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 

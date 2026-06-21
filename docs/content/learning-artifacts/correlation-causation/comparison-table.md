@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Correlation vs. Causation topic and serves as a Comparison Table.
+Compares key approaches, algorithms, or architectures within Correlation vs. Causation — organizes Correlation vs. Causation Comparison into a structured reference for selecting between alternatives.
 
 ## Required Contract Fields
 
@@ -68,7 +68,7 @@ Compare correlation and causation definitions, proofs, and AI contexts.
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale retrieval and search systems.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

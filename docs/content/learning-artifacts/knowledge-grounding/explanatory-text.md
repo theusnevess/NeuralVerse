@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and retrieval search developers."
 
 ## Artifact Summary
 
-This artifact belongs to the Knowledge Grounding and Attribution topic and serves as a Explanatory Text.
+Covers Restricting Parametric Knowledge and Source Attribution within the broader topic of Knowledge Grounding and Attribution — explains the core ideas, their role in AI systems, and what makes them important for practitioners to understand.
 
 ## Required Contract Fields
 
@@ -65,7 +65,7 @@ Knowledge Grounding is the practice of restricting an LLM's generation strictly 
 
 ### motivation
 
-Understanding Advanced Retrieval & RAG Systems is critical for building production-grade QA engines, hallucination guardrails, hybrid index tools, and agentic routers.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

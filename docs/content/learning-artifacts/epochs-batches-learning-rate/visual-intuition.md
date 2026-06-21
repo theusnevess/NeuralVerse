@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Epochs, Batches, and Learning Rate topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about Dictionary Reading Analogy — maps familiar concepts to the technical mechanics of Epochs, Batches, and Learning Rate, making abstract ideas concrete.
 
 ## Required Contract Fields
 
@@ -65,7 +65,7 @@ Imagine reading a massive dictionary. An epoch is reading the entire book from A
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale deep networks and search spaces.
+Deep learning builds on these core mechanisms — understanding them is essential for designing, debugging, and improving neural architectures.
 
 ## Dependency Notes
 

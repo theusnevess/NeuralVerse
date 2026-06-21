@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Convolutional Neural Networks (CNNs) topic and serves as a Exercise.
+Provides practice applying the concepts of Trainable Filter Weights — guides the learner through reasoning steps that reinforce understanding of Convolutional Neural Networks (CNNs) through active problem-solving.
 
 ## Required Contract Fields
 
@@ -62,7 +62,7 @@ An input image has shape $64 \times 64 \times 3$. A convolutional layer applies 
 
 ### expected learner output
 
-Each of the 16 filters has shape 5 * 5 * 3 = 75 parameters. Total trainable weight parameters in the layer = 16 filters * 75 parameters = 1,200 weight parameters.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -70,7 +70,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale Convolutional Neural Networks and transfer learning backbones.
+Computer vision pipelines are built on these perceptual primitives — understanding them enables effective architecture design and troubleshooting.
 
 ## Dependency Notes
 

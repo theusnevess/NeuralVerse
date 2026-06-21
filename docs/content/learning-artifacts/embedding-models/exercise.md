@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Embedding Models topic and serves as a Exercise.
+Provides practice applying the concepts of Evaluating Embedding Model Selection — guides the learner through reasoning steps that reinforce understanding of Embedding Models through active problem-solving.
 
 ## Required Contract Fields
 
@@ -63,7 +63,7 @@ You need to build a search system for medical patents where exact chemical names
 
 ### expected learner output
 
-The learner should propose a hybrid search approach (combining sparse representation for exact matches like chemical names and dense representation for general semantic concepts), explaining how each model meets a specific part of the requirement.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -71,7 +71,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale retrieval and search systems.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and retrieval search developers."
 
 ## Artifact Summary
 
-This artifact belongs to the Agentic Retrieval Systems topic and serves as a Explanatory Text.
+Covers Iterative Retrieval Loops and Critique-Based Corrective RAG within the broader topic of Agentic Retrieval Systems — explains the core ideas, their role in AI systems, and what makes them important for practitioners to understand.
 
 ## Required Contract Fields
 
@@ -65,7 +65,7 @@ Agentic RAG represents a shift from static retrieval pipelines (retrieve once, t
 
 ### motivation
 
-Understanding Advanced Retrieval & RAG Systems is critical for building production-grade QA engines, hallucination guardrails, hybrid index tools, and agentic routers.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

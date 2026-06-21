@@ -50,7 +50,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Train / Validation / Test Split topic and serves as a Exercise.
+Provides practice applying the concepts of Analyzing Pre-Scaling Leakage — guides the learner through reasoning steps that reinforce understanding of Train / Validation / Test Split through active problem-solving.
 
 ## Required Contract Fields
 
@@ -64,7 +64,7 @@ You scale your dataset's features using the mean and standard deviation calculat
 
 ### expected learner output
 
-This constitutes data leakage because statistics (mean and standard deviation) from the test set are used to scale the training set. The model indirectly receives information about the distribution of the unseen test set, resulting in artificially high test performance that will not generalize to actual production data. Features should only be scaled using parameters computed from the training partition.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -72,7 +72,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale retrieval and search systems.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

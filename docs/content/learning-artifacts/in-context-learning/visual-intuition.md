@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and language model developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the In-Context Learning topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about Electric Signal Routing — maps familiar concepts to the technical mechanics of In-Context Learning, making abstract ideas concrete.
 
 ## Required Contract Fields
 
@@ -64,7 +64,7 @@ Imagine a calculator that doesn't change its wiring when you type '5 + 5 = 10'. 
 
 ### motivation
 
-Understanding LLM foundations is critical for building generative chatbots, few-shot classifiers, long-context search retrievers, and aligned AI systems.
+Modern language models rely on these mechanisms for generation, reasoning, and alignment — understanding them is essential for building reliable LLM applications.
 
 ## Dependency Notes
 

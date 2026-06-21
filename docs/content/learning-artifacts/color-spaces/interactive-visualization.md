@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Image Channels and Color Spaces topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring Channel Decomposition Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Image Channels and Color Spaces.
 
 ## Required Contract Fields
 
@@ -65,7 +65,7 @@ This specification outlines a channel decomposition tool. The user uploads a col
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale computer vision and multimodal retrieval pipelines.
+Multimodal AI systems connect vision, language, and other modalities — these concepts form the bridge between separate representational spaces.
 
 ## Dependency Notes
 

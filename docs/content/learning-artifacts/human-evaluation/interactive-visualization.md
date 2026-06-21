@@ -46,7 +46,7 @@ audience_notes: "Intended for AI engineers and evaluation practitioners."
 
 ## Artifact Summary
 
-This artifact belongs to the Human Evaluation of LLMs topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring Annotation Agreement Explorer Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Human Evaluation of LLMs.
 
 ## Required Contract Fields
 
@@ -56,7 +56,7 @@ Specify an interactive tool for exploring how annotator agreement affects inter-
 
 ### manipulable variable or observable state
 
-The tool displays a grid of simulated annotator ratings across three evaluation dimensions (fluency, coherence, factuality) on a 5-point Likert scale. Users can adjust individual annotator scores for each dimension using sliders or dropdown menus. As scores change, Cohen's Kappa and Krippendorff's Alpha values update in real-time. Users can toggle between perfect agreement, moderate agreement, and low agreement presets to observe how disagreement patterns affect reliability metrics.
+The tool displays a grid of simulated annotator ratings across three evaluation dimensions (fluency, coherence, factuality) on a 5-point Likert scale. A future version would let users adjust individual annotator scores for each dimension using sliders or dropdown menus. As scores change, Cohen's Kappa and Krippendorff's Alpha values update in real-time. A future version would let users toggle between perfect agreement, moderate agreement, and low agreement presets to observe how disagreement patterns affect reliability metrics.
 
 ### interpretation guidance
 

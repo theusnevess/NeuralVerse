@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer vision developers."
 
 ## Artifact Summary
 
-This artifact belongs to the Image Captioning topic and serves as a Exercise.
+Provides practice applying the concepts of Visual Cross-Attention Mapping — guides the learner through reasoning steps that reinforce understanding of Image Captioning through active problem-solving.
 
 ## Required Contract Fields
 
@@ -63,7 +63,7 @@ Describe the role of cross-attention in an image captioning decoder, explaining 
 
 ### expected learner output
 
-Cross-attention enables the decoder query vectors (generated from text prefix) to multiply with key/value vectors from the vision encoder's patch embeddings. The resulting attention weight distribution dictates how much visual information from specific image patches is injected into the next-token prediction state.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -71,7 +71,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding Multimodal AI Foundations is critical for building search engines, image captioners, visual answer systems, and joint textual/visual models.
+Multimodal AI systems connect vision, language, and other modalities — these concepts form the bridge between separate representational spaces.
 
 ## Dependency Notes
 

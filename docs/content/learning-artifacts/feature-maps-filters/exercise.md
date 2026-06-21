@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Feature Maps and Filters topic and serves as a Exercise.
+Provides practice applying the concepts of Analyzing Solid Regions — guides the learner through reasoning steps that reinforce understanding of Feature Maps and Filters through active problem-solving.
 
 ## Required Contract Fields
 
@@ -63,7 +63,7 @@ Explain the visual feature that a Sobel vertical filter $K = \begin{pmatrix} -1 
 
 ### expected learner output
 
-The Sobel vertical filter detects vertical edges (horizontal intensity changes). In a uniform solid-color region, all pixels have identical intensity values. When convolved, the negative weights on the left exactly balance the positive weights on the right, canceling each other out and yielding a net dot product of 0 (no gradient/edge detected).
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -71,7 +71,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale computer vision and multimodal retrieval pipelines.
+Multimodal AI systems connect vision, language, and other modalities — these concepts form the bridge between separate representational spaces.
 
 ## Dependency Notes
 

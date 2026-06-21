@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer vision developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the One-Stage vs Two-Stage Detectors topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about Gold Mining Scouts — maps familiar concepts to the technical mechanics of One-Stage vs Two-Stage Detectors, making abstract ideas concrete.
 
 ## Required Contract Fields
 
@@ -64,7 +64,7 @@ Imagine a gold mining team. A two-stage process is first having scouts survey th
 
 ### motivation
 
-Understanding this topic is critical for building autonomous vehicles, industrial inspections, robotic manipulators, and multi-object real-time surveillance backbones.
+Object detection pipelines power real-world applications from autonomous driving to medical imaging — understanding these architectural choices is key to building effective perception systems.
 
 ## Dependency Notes
 

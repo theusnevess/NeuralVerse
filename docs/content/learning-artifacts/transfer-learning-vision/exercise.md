@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Transfer Learning in Vision topic and serves as a Exercise.
+Provides practice applying the concepts of Backbone Overfitting Mitigations — guides the learner through reasoning steps that reinforce understanding of Transfer Learning in Vision through active problem-solving.
 
 ## Required Contract Fields
 
@@ -62,7 +62,7 @@ You need to build a medical scan classifier with only 100 labeled X-ray images. 
 
 ### expected learner output
 
-Training from scratch requires millions of parameters to be learned, leading to immediate overfitting on 100 images. A pretrained ResNet-50 backbone has already learned general edges and texture features. Freezing the backbone and training only the classifier allows high-accuracy classification with zero backbone overfitting.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -70,7 +70,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale Convolutional Neural Networks and transfer learning backbones.
+Computer vision pipelines are built on these perceptual primitives — understanding them enables effective architecture design and troubleshooting.
 
 ## Dependency Notes
 

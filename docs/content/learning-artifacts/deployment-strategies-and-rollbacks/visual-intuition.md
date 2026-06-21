@@ -50,7 +50,7 @@ audience_notes: "Intended for ML engineers, MLOps practitioners, and platform en
 
 ## Artifact Summary
 
-This artifact belongs to the Deployment Strategies and Rollbacks topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about The Bridge Construction Project — maps familiar concepts to the technical mechanics of Deployment Strategies and Rollbacks, making abstract ideas concrete.
 
 ## Required Contract Fields
 

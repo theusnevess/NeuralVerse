@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and model adaptation developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the Fine-Tuning Fundamentals topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring Weight Drift Visualizer Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Fine-Tuning Fundamentals.
 
 ## Required Contract Fields
 
@@ -64,7 +64,7 @@ This specification describes a weight drift visualizer. The user adjusts learnin
 
 ### motivation
 
-Understanding Fine-Tuning and Adaptation is critical for specializing models for custom tasks, aligning generation safety, deploying LoRA adapters in production, and selecting RAG combinations.
+Adapting pre-trained models to specific tasks is a core practice in modern ML — these techniques enable efficient specialization without full retraining.
 
 ## Dependency Notes
 

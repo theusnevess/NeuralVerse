@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer vision developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the Object Detection Fundamentals topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about Highlighting Apple Conveyor Belts — maps familiar concepts to the technical mechanics of Object Detection Fundamentals, making abstract ideas concrete.
 
 ## Required Contract Fields
 
@@ -64,7 +64,7 @@ Imagine an inspector checking a factory belt. If they only count how many apples
 
 ### motivation
 
-Understanding this topic is critical for building autonomous vehicles, industrial inspections, robotic manipulators, and multi-object real-time surveillance backbones.
+Object detection pipelines power real-world applications from autonomous driving to medical imaging — understanding these architectural choices is key to building effective perception systems.
 
 ## Dependency Notes
 

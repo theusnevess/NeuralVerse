@@ -46,7 +46,7 @@ audience_notes: "Intended for AI engineers, security practitioners, and LLM appl
 
 ## Artifact Summary
 
-This artifact belongs to the Prompt Injection topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about The Impersonator at the Gate — maps familiar concepts to the technical mechanics of Prompt Injection, making abstract ideas concrete.
 
 ## Required Contract Fields
 
@@ -66,7 +66,7 @@ Consider a security guard stationed at the entrance of a secure facility. The gu
 
 ### motivation
 
-Understanding prompt injection is critical for building secure LLM applications that handle untrusted user input and external data sources.
+Safe and aligned AI deployment requires understanding these failure modes and defense mechanisms — they are essential for trustworthy production systems.
 
 ## Dependency Notes
 

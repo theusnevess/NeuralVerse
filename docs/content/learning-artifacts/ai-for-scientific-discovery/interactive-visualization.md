@@ -68,11 +68,11 @@ Describe an interaction that lets learners explore how AI assistance accelerates
 
 Future learners would manipulate or observe:
 
-- selection of a scientific domain (materials, drug discovery, biology, mathematics);
+- would selection of a scientific domain (materials, drug discovery, biology, mathematics);
 - configuration of the literature analysis stage (depth of knowledge graph traversal, recency weighting);
 - hypothesis generation parameters (novelty threshold, supporting evidence minimum);
 - experiment design settings (Bayesian optimization acquisition function, exploration-exploitation trade-off);
-- surrogate model selection (neural network architecture, training data fraction);
+- surrogate model would selection (neural network architecture, training data fraction);
 - simulation speed and accuracy trade-off controls;
 - result visualization showing time-to-discovery, number of experiments saved, or confidence intervals;
 - speed controls to observe how the pipeline cycles through iterations.

@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and agent systems developers."
 
 ## Artifact Summary
 
-This artifact belongs to the Tool Calling and External Actions topic and serves as a Exercise.
+Provides practice applying the concepts of Designing a Weather Tool Schema — guides the learner through reasoning steps that reinforce understanding of Tool Calling and External Actions through active problem-solving.
 
 ## Required Contract Fields
 
@@ -63,23 +63,7 @@ A model is given a tool definition `get_weather(location: str, unit: str)`. Writ
 
 ### expected learner output
 
-Schema:
-{
-  'name': 'get_weather',
-  'parameters': {
-    'type': 'object',
-    'properties': {
-      'location': {'type': 'string'},
-      'unit': {'type': 'string', 'enum': ['Celsius', 'Fahrenheit']}
-    },
-    'required': ['location', 'unit']
-  }
-}
-Model Output:
-{
-  'name': 'get_weather',
-  'arguments': {'location': 'Paris', 'unit': 'Celsius'}
-}
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -87,7 +71,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding AI Agents and Tool Use is critical for building autonomous software assistants, function callers, memory-backed bots, and self-correcting coders.
+Agentic systems extend language models beyond passive generation — these concepts enable autonomous reasoning, tool use, and multi-step execution.
 
 ## Dependency Notes
 

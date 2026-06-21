@@ -51,7 +51,7 @@ audience_notes: "Intended for AI researchers, advanced ML engineers, and technic
 
 ## Artifact Summary
 
-This artifact belongs to the AI Research & Frontier Topics content pack and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring Scaling Law Explorer Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand AI Research & Frontier Topics.
 
 ## Required Contract Fields
 
@@ -73,16 +73,16 @@ This specification describes a Scaling Law Explorer tool. The tool visualizes th
 
 **Observable outputs:**
 
-- **Predicted Loss Curve**: A power-law plot showing estimated cross-entropy loss as a function of the selected variables, with the formula L(N, D) = a/N^α + b/D^β + c. Hovering shows the contribution of each term.
+- **Predicted Loss Curve**: A power-law plot showing estimated cross-entropy loss as a function of the would selected variables, with the formula L(N, D) = a/N^α + b/D^β + c. Hovering shows the contribution of each term.
 - **Compute-Optimal Frontier**: An overlaid line showing the optimal parameter/token allocation for each compute budget. A marker indicates where the current configuration sits relative to the frontier.
-- **IsoFLOP Contours**: Toggleable contour lines showing constant-FLOP budgets. The user can see the full U-shaped curve of loss vs. parameter count at their selected compute budget.
+- **IsoFLOP Contours**: Toggleable contour lines showing constant-FLOP budgets. The user can see the full U-shaped curve of loss vs. parameter count at their would selected compute budget.
 - **Loss Decomposition**: A stacked area chart showing irreducible loss (entropy of data), approximation loss (limited by model capacity), and estimation loss (limited by finite data).
 - **Emergent Capability Map**: A series of threshold markers showing estimated minimum compute or parameter counts at which various reported capabilities have emerged. Each marker is annotated with the relevant citation and measurement method.
 - **Diminishing Returns Indicator**: A marginal gain meter showing the expected loss improvement from a 10% increase in each resource, normalized to highlight which lever is most effective at the current scale.
 
 **Regime comparison mode:**
 
-Users can create two configurations side-by-side. For example, a Kaplan-optimal 175B-parameter model trained on 300B tokens compared with a Chinchilla-optimal model of the same compute budget but different parameter/token allocation. The comparison shows loss difference, efficiency ratio, and capability profile.
+A future version would let users create two configurations side-by-side. For example, a Kaplan-optimal 175B-parameter model trained on 300B tokens compared with a Chinchilla-optimal model of the same compute budget but different parameter/token allocation. The comparison shows loss difference, efficiency ratio, and capability profile.
 
 **Data constraints warning:**
 

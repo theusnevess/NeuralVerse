@@ -50,7 +50,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Sampling and Sampling Bias topic and serves as a Exercise.
+Provides practice applying the concepts of Detecting Selection Bias in Reviews — guides the learner through reasoning steps that reinforce understanding of Sampling and Sampling Bias through active problem-solving.
 
 ## Required Contract Fields
 
@@ -64,7 +64,7 @@ You are training a sentiment analysis model for a restaurant review app. You onl
 
 ### expected learner output
 
-This introduces selection/convenience bias. Weekend dinner rush reviews likely represent extreme experiences (very positive or very negative due to crowds and wait times), leaving out calmer weekday lunch behaviors. The model will fail to generalize to typical weekday customer interactions, leading to incorrect sentiment classification in those periods.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -72,7 +72,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale retrieval and search systems.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

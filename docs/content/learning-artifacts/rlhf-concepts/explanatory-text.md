@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and model adaptation developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the Reinforcement Learning from Human Feedback (RLHF) topic and serves as a Explanatory Text.
+Covers Human Preferences, Reward Modeling, and KL Penalties within the broader topic of Reinforcement Learning from Human Feedback (RLHF) — explains the core ideas, their role in AI systems, and what makes them important for practitioners to understand.
 
 ## Required Contract Fields
 
@@ -64,7 +64,7 @@ Reinforcement Learning from Human Feedback (RLHF) aligns LLMs with complex human
 
 ### motivation
 
-Understanding Fine-Tuning and Adaptation is critical for specializing models for custom tasks, aligning generation safety, deploying LoRA adapters in production, and selecting RAG combinations.
+Adapting pre-trained models to specific tasks is a core practice in modern ML — these techniques enable efficient specialization without full retraining.
 
 ## Dependency Notes
 

@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and language model developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the Large Language Models Overview topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring Scaling Law Curve Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Large Language Models Overview.
 
 ## Required Contract Fields
 
@@ -64,7 +64,7 @@ This specification describes a scaling law curve calculator. The user adjusts sl
 
 ### motivation
 
-Understanding LLM foundations is critical for building generative chatbots, few-shot classifiers, long-context search retrievers, and aligned AI systems.
+Modern language models rely on these mechanisms for generation, reasoning, and alignment — understanding them is essential for building reliable LLM applications.
 
 ## Dependency Notes
 

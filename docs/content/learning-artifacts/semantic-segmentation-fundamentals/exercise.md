@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer vision developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the Semantic Segmentation Fundamentals topic and serves as a Exercise.
+Provides practice applying the concepts of Dense Output Resolutions — guides the learner through reasoning steps that reinforce understanding of Semantic Segmentation Fundamentals through active problem-solving.
 
 ## Required Contract Fields
 
@@ -62,7 +62,7 @@ Differentiate between Image Classification, Object Detection, and Semantic Segme
 
 ### expected learner output
 
-Image classification maps an image to a single scalar class index. Object detection maps an image to a list of bounding boxes (4 coordinates each) and class index lists. Semantic segmentation maps an image to a 2D grid of the same dimensions, containing class indices for every single pixel coordinate.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -70,7 +70,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding segmentation is critical for building medical scanners, self-driving cars, satellite crop trackers, and human-in-the-loop image editors.
+Segmentation techniques enable pixel-level understanding of visual data — they are fundamental to medical imaging, autonomous navigation, and remote sensing applications.
 
 ## Dependency Notes
 

@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Image Resolution, Sampling, and Resizing topic and serves as a Explanatory Text.
+Covers Image Resizing and Spatial Interpolation within the broader topic of Image Resolution, Sampling, and Resizing — explains the core ideas, their role in AI systems, and what makes them important for practitioners to understand.
 
 ## Required Contract Fields
 
@@ -65,7 +65,7 @@ Image resolution refers to the dimensions of the pixel grid (e.g., 1920 x 1080).
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale computer vision and multimodal retrieval pipelines.
+Multimodal AI systems connect vision, language, and other modalities — these concepts form the bridge between separate representational spaces.
 
 ## Dependency Notes
 

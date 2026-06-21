@@ -51,7 +51,7 @@ audience_notes: "Intended for ML engineers, MLOps practitioners, and DevOps engi
 
 ## Artifact Summary
 
-This artifact belongs to the Production AI Systems topic and serves as a Explanatory Text.
+Covers ML Pipelines and Orchestration within the broader topic of ML Pipelines and Orchestration — explains the core ideas, their role in AI systems, and what makes them important for practitioners to understand.
 
 ## Required Contract Fields
 

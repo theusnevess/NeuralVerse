@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and LLM evaluation practitioners."
 
 ## Artifact Summary
 
-This artifact belongs to the Hallucination Detection and Analysis topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about The Detective and the Witness — maps familiar concepts to the technical mechanics of Hallucination Detection and Analysis, making abstract ideas concrete.
 
 ## Required Contract Fields
 

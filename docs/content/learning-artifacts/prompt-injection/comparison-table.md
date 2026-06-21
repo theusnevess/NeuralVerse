@@ -46,7 +46,7 @@ audience_notes: "Intended for AI engineers, security practitioners, and LLM appl
 
 ## Artifact Summary
 
-This artifact belongs to the Prompt Injection topic and serves as a Comparison Table.
+Compares key approaches, algorithms, or architectures within Prompt Injection — organizes Direct vs. Indirect Prompt Injection into a structured reference for selecting between alternatives.
 
 ## Required Contract Fields
 
@@ -77,7 +77,7 @@ Attack vector, Entry point, Difficulty, Defense approach, Example, Severity.
 
 ### motivation
 
-Understanding prompt injection is critical for building secure LLM applications that handle untrusted user input and external data sources.
+Safe and aligned AI deployment requires understanding these failure modes and defense mechanisms — they are essential for trustworthy production systems.
 
 ## Dependency Notes
 

@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and agent systems developers."
 
 ## Artifact Summary
 
-This artifact belongs to the Multi-Agent Systems topic and serves as a Exercise.
+Provides practice applying the concepts of Cognitive Load and Persona Confusions — guides the learner through reasoning steps that reinforce understanding of Multi-Agent Systems through active problem-solving.
 
 ## Required Contract Fields
 
@@ -63,7 +63,7 @@ Explain why role-playing with specialized personas in a multi-agent system helps
 
 ### expected learner output
 
-In a single agent, combining developer, tester, and manager prompts into one context causes instruction drift and attention confusion. Multi-agent systems separate these roles into independent model calls. Each model only focuses on its specific prompt schema, reducing prompt length and preventing role-related conflicts in the generation path.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -71,7 +71,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding AI Agents and Tool Use is critical for building autonomous software assistants, function callers, memory-backed bots, and self-correcting coders.
+Agentic systems extend language models beyond passive generation — these concepts enable autonomous reasoning, tool use, and multi-step execution.
 
 ## Dependency Notes
 

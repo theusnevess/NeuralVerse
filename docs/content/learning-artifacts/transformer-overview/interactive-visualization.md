@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and language developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the Transformer Architecture Overview topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring Throughput Timeline Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Transformer Architecture Overview.
 
 ## Required Contract Fields
 
@@ -64,7 +64,7 @@ This specification describes a comparative throughput timeline. The user drags a
 
 ### motivation
 
-Understanding Transformers is critical for building modern LLMs (GPT-4, Llama), semantic search retrievers, RAG interfaces, and Vision Transformers.
+Transformers form the backbone of modern LLMs — understanding their attention mechanisms, scaling properties, and architectural variants is essential for working with models like GPT-4, Llama, and their successors.
 
 ## Dependency Notes
 

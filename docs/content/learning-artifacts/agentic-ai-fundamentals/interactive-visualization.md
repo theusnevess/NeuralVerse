@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and agent systems developers."
 
 ## Artifact Summary
 
-This artifact belongs to the Agentic AI Fundamentals topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring Perception-Action Loop Specification — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Agentic AI Fundamentals.
 
 ## Required Contract Fields
 
@@ -65,7 +65,7 @@ This specification describes a perception-action loop diagram. The user clicks p
 
 ### motivation
 
-Understanding AI Agents and Tool Use is critical for building autonomous software assistants, function callers, memory-backed bots, and self-correcting coders.
+Agentic systems extend language models beyond passive generation — these concepts enable autonomous reasoning, tool use, and multi-step execution.
 
 ## Dependency Notes
 

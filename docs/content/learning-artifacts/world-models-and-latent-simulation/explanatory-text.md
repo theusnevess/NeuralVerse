@@ -54,7 +54,7 @@ audience_notes: "Intended for AI researchers and engineers exploring model-based
 
 ## Artifact Summary
 
-This artifact belongs to the World Models and Latent Simulation topic and serves as an Explanatory Text.
+Covers World Models and Latent Simulation within the broader topic of World Models and Latent Simulation — explains the core ideas, their role in AI systems, and what makes them important for practitioners to understand.
 
 ## Required Contract Fields
 

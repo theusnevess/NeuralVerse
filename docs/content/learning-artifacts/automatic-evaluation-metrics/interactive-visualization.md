@@ -46,7 +46,7 @@ audience_notes: "Intended for ML engineers, NLP practitioners, and AI evaluators
 
 ## Artifact Summary
 
-This artifact belongs to the Automatic Evaluation Metrics topic and serves as an Interactive Visualization.
+Specifies an interactive tool for exploring Metric Score Comparison Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Automatic Evaluation Metrics.
 
 ## Required Contract Fields
 
@@ -70,7 +70,7 @@ The three sliders (n-gram overlap, synonym substitution, word order) are the man
 
 ### interpretation guidance
 
-Users should observe that BLEU drops sharply with word order changes and synonym substitution, while ROUGE remains high as long as content words are present. METEOR handles synonyms well but penalizes scrambled order. BERTScore stays relatively stable across synonym changes and moderate reordering, reflecting its semantic focus. This demonstrates why metric selection depends on the evaluation goal.
+Users should observe that BLEU drops sharply with word order changes and synonym substitution, while ROUGE remains high as long as content words are present. METEOR handles synonyms well but penalizes scrambled order. BERTScore stays relatively stable across synonym changes and moderate reordering, reflecting its semantic focus. This demonstrates why metric would selection depends on the evaluation goal.
 
 ## Optional Enrichment Fields
 

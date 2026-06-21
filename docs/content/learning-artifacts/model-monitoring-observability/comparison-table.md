@@ -50,7 +50,7 @@ audience_notes: "Intended for ML engineers, MLOps practitioners, and SREs managi
 
 ## Artifact Summary
 
-This artifact belongs to the Model Monitoring and Observability topic and serves as a Comparison Table.
+Compares key approaches, algorithms, or architectures within Model Monitoring and Observability — organizes Monitoring and Observability Approaches into a structured reference for selecting between alternatives.
 
 ## Required Contract Fields
 
@@ -80,7 +80,7 @@ Compare Metrics-based monitoring, Logging-based observability, Tracing-based obs
 
 ### motivation
 
-Understanding model monitoring and observability is critical for maintaining reliable, safe, and cost-efficient production AI systems at scale.
+Production ML requires more than deployed models — monitoring and observability ensure ongoing reliability, safety, and cost efficiency at scale.
 
 ## Dependency Notes
 

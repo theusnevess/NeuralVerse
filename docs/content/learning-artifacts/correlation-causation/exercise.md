@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Correlation vs. Causation topic and serves as a Exercise.
+Provides practice applying the concepts of Identifying Recommender Confounders — guides the learner through reasoning steps that reinforce understanding of Correlation vs. Causation through active problem-solving.
 
 ## Required Contract Fields
 
@@ -63,7 +63,7 @@ A developer notices that users who click a new recommender button spend 20% more
 
 ### expected learner output
 
-This is observational correlation, not proven causation. A confounding variable could be 'user intent' or 'power users': highly motivated users are more likely to explore and click new buttons (X) and also spend more time on the app (Y) regardless of the button. An A/B test is required to prove causation.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -71,7 +71,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale retrieval and search systems.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

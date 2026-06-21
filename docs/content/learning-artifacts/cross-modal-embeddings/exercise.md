@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer vision developers."
 
 ## Artifact Summary
 
-This artifact belongs to the Cross-Modal Embeddings topic and serves as a Exercise.
+Provides practice applying the concepts of Calculating Similarity in Joint Latent Space — guides the learner through reasoning steps that reinforce understanding of Cross-Modal Embeddings through active problem-solving.
 
 ## Required Contract Fields
 
@@ -63,9 +63,7 @@ Given a text vector $T$ and an image vector $I$ in a joint embedding space, writ
 
 ### expected learner output
 
-Equation:
-$\text{Similarity}(T, I) = \frac{T \cdot I}{\|T\| \|I\|}$
-If the resulting score is close to 1, the vectors are pointing in nearly the same direction in the joint space, indicating a strong semantic match. Lower or negative values indicate unrelated concepts.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -73,7 +71,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding Multimodal AI Foundations is critical for building search engines, image captioners, visual answer systems, and joint textual/visual models.
+Multimodal AI systems connect vision, language, and other modalities — these concepts form the bridge between separate representational spaces.
 
 ## Dependency Notes
 

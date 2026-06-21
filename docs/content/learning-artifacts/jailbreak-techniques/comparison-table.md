@@ -47,7 +47,7 @@ audience_notes: "Intended for AI engineers and safety researchers deploying alig
 
 ## Artifact Summary
 
-This artifact belongs to the Jailbreak Techniques topic and serves as a Comparison Table.
+Compares key approaches, algorithms, or architectures within Jailbreak Techniques — organizes Jailbreak Technique Categories into a structured reference for selecting between alternatives.
 
 ## Required Contract Fields
 

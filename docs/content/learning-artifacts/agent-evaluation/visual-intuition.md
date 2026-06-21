@@ -47,7 +47,7 @@ audience_notes: "Intended for AI engineers and evaluation practitioners."
 
 ## Artifact Summary
 
-This artifact belongs to the Agent Evaluation Methodologies topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about The Robot Chef Competition — maps familiar concepts to the technical mechanics of Agent Evaluation Methodologies, making abstract ideas concrete.
 
 ## Required Contract Fields
 

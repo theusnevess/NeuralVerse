@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and language developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the Positional Encoding topic and serves as a Comparison Table.
+Compares key approaches, algorithms, or architectures within Positional Encoding — organizes Positional Encoding Methods into a structured reference for selecting between alternatives.
 
 ## Required Contract Fields
 
@@ -67,7 +67,7 @@ Compare sinusoidal waves and learned vectors across features and limits.
 
 ### motivation
 
-Understanding Transformers is critical for building modern LLMs (GPT-4, Llama), semantic search retrievers, RAG interfaces, and Vision Transformers.
+Transformers form the backbone of modern LLMs — understanding their attention mechanisms, scaling properties, and architectural variants is essential for working with models like GPT-4, Llama, and their successors.
 
 ## Dependency Notes
 

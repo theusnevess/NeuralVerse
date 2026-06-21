@@ -49,7 +49,7 @@ audience_notes: "Intended for ML engineers, data scientists, and MLOps practitio
 
 ## Artifact Summary
 
-This artifact belongs to the Model Versioning and Experiment Tracking topic and serves as a Explanatory Text.
+Covers Model Versioning and Experiment Tracking within the broader topic of Model Versioning and Experiment Tracking — explains the core ideas, their role in AI systems, and what makes them important for practitioners to understand.
 
 ## Required Contract Fields
 
@@ -85,7 +85,7 @@ A **model registry** provides a centralized catalog of model versions with lifec
 
 ### motivation
 
-Understanding this topic is critical for building reliable, auditable, and reproducible ML systems that can operate in production at scale.
+Production ML requires more than trained models — these operational practices ensure reliable, observable, and maintainable AI systems.
 
 ## Dependency Notes
 

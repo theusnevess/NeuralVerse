@@ -48,7 +48,7 @@ audience_notes: "Intended for ML engineers, data scientists, and MLOps practitio
 
 ## Artifact Summary
 
-This artifact belongs to the Data Drift and Concept Drift topic and serves as a Explanatory Text.
+Covers Data Drift and Concept Drift within the broader topic of Data Drift and Concept Drift — explains the core ideas, their role in AI systems, and what makes them important for practitioners to understand.
 
 ## Required Contract Fields
 

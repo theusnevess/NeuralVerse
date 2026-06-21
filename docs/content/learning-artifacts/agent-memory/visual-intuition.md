@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and agent systems developers."
 
 ## Artifact Summary
 
-This artifact belongs to the Memory Systems for Agents topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about Desk Notepads vs. Office Filing Cabinets — maps familiar concepts to the technical mechanics of Memory Systems for Agents, making abstract ideas concrete.
 
 ## Required Contract Fields
 
@@ -65,7 +65,7 @@ Short-term memory is like the notepad on your desk where you write down active p
 
 ### motivation
 
-Understanding AI Agents and Tool Use is critical for building autonomous software assistants, function callers, memory-backed bots, and self-correcting coders.
+Agentic systems extend language models beyond passive generation — these concepts enable autonomous reasoning, tool use, and multi-step execution.
 
 ## Dependency Notes
 

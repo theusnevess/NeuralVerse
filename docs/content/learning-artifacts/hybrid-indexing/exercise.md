@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and retrieval search developers."
 
 ## Artifact Summary
 
-This artifact belongs to the Hybrid Indexing Strategies topic and serves as a Exercise.
+Provides practice applying the concepts of Resolving Hybrid Search Strengths — guides the learner through reasoning steps that reinforce understanding of Hybrid Indexing Strategies through active problem-solving.
 
 ## Required Contract Fields
 
@@ -63,7 +63,7 @@ Describe a scenario where BM25 keyword search succeeds but dense vector search f
 
 ### expected learner output
 
-BM25 succeeds but dense vector fails: Searching for a serial number 'XZ-901-B'. Embeddings compress exact letter sequences into broad semantic vectors, missing the exact document. Dense vector succeeds but BM25 fails: Searching for 'financial hardship options' when the document only contains 'debt relief programs'. Hybrid search queries both indexes, ensuring matches for both conditions are fetched.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -71,7 +71,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding Advanced Retrieval & RAG Systems is critical for building production-grade QA engines, hallucination guardrails, hybrid index tools, and agentic routers.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

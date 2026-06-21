@@ -46,7 +46,7 @@ audience_notes: "Intended for AI engineers and researchers exploring efficient s
 
 ## Artifact Summary
 
-This artifact belongs to the Mixture of Experts (MoE) Architectures topic and serves as a Exercise.
+Provides practice applying the concepts of Designing an MoE Configuration — guides the learner through reasoning steps that reinforce understanding of Mixture of Experts (MoE) Architectures through active problem-solving.
 
 ## Required Contract Fields
 
@@ -133,33 +133,7 @@ For each of the three deployment contexts below, propose a complete MoE configur
 
 ### expected learner output
 
-A structured response for each context, following this format:
-
-```
-## Context [A/B/C]
-
-### 1. Number of Experts (E): [value]
-Justification: ...
-
-### 2. Top-k: [value]
-Justification: ...
-
-### 3. Capacity Factor: [value]
-Justification: ...
-
-### 4. Routing Strategy: [choice]
-Justification: ...
-
-### 5. Other Configuration: [as applicable]
-Justification: ...
-
-### Summary of Trade-offs
-- Primary benefit achieved: ...
-- Key sacrifice made: ...
-- Risk to monitor: ...
-```
-
-There is no single correct answer. The quality of the response is judged on internal consistency and the strength of the justification connecting principles to constraints.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 

@@ -50,7 +50,7 @@ audience_notes: "Intended for AI engineers, safety researchers, and developers b
 
 ## Artifact Summary
 
-This artifact belongs to the AI Safety, Alignment & Guardrails topic and serves as a Explanatory Text.
+Covers Grounding and Verification Strategies for LLM Outputs within the broader topic of AI Safety, Alignment & Guardrails — explains the core ideas, their role in AI systems, and what makes them important for practitioners to understand.
 
 ## Required Contract Fields
 

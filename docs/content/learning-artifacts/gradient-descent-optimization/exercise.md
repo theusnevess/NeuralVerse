@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Gradient Descent and Optimization topic and serves as a Exercise.
+Provides practice applying the concepts of Single Step Parameter Update — guides the learner through reasoning steps that reinforce understanding of Gradient Descent and Optimization through active problem-solving.
 
 ## Required Contract Fields
 
@@ -63,7 +63,7 @@ A parameter $\theta$ currently equals $1.5$. The gradient of the loss at this po
 
 ### expected learner output
 
-$\theta_{new} = \theta_{old} - \alpha * \nabla L(\theta) = 1.5 - (0.1 * 4.0) = 1.5 - 0.4 = 1.1$. The updated value is 1.1.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -71,7 +71,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale deep networks and search spaces.
+Deep learning builds on these core mechanisms — understanding them is essential for designing, debugging, and improving neural architectures.
 
 ## Dependency Notes
 

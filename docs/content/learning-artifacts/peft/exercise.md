@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and model adaptation developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the Parameter-Efficient Fine-Tuning (PEFT) topic and serves as a Exercise.
+Provides practice applying the concepts of LoRA Parameter Calculation — guides the learner through reasoning steps that reinforce understanding of Parameter-Efficient Fine-Tuning (PEFT) through active problem-solving.
 
 ## Required Contract Fields
 
@@ -62,7 +62,7 @@ Given a weight matrix $W \in \mathbb{R}^{4096 \times 4096}$ and a LoRA rank $r =
 
 ### expected learner output
 
-1. Original parameter count = 4096 * 4096 = 16,777,216 params. 2. LoRA matrices: A is 8 * 4096, B is 4096 * 8. Combined trainable params = (8 * 4096) + (4096 * 8) = 32,768 + 32,768 = 65,536 params. This represents a 99.61% reduction in trainable parameters.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -70,7 +70,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding Fine-Tuning and Adaptation is critical for specializing models for custom tasks, aligning generation safety, deploying LoRA adapters in production, and selecting RAG combinations.
+Adapting pre-trained models to specific tasks is a core practice in modern ML — these techniques enable efficient specialization without full retraining.
 
 ## Dependency Notes
 

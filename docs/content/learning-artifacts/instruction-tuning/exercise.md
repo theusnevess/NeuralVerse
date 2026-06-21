@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and model adaptation developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the Instruction Tuning topic and serves as a Exercise.
+Provides practice applying the concepts of Base Model Completion Drift — guides the learner through reasoning steps that reinforce understanding of Instruction Tuning through active problem-solving.
 
 ## Required Contract Fields
 
@@ -62,7 +62,7 @@ Write a raw text completion that a base model might produce for 'How do I fix a 
 
 ### expected learner output
 
-A base model might output: 'How do I fix a leaky faucet? How do I unclog a drain? Plumbing tips for beginners...' because it mimics page sequences. Instruction tuning teaches the model to recognize the query as a direct prompt and output a step-by-step resolution instead of completing the text pattern.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -70,7 +70,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding Fine-Tuning and Adaptation is critical for specializing models for custom tasks, aligning generation safety, deploying LoRA adapters in production, and selecting RAG combinations.
+Adapting pre-trained models to specific tasks is a core practice in modern ML — these techniques enable efficient specialization without full retraining.
 
 ## Dependency Notes
 

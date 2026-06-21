@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and model adaptation developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the Parameter-Efficient Fine-Tuning (PEFT) topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about Rented House Rugs vs. Brick Remodels — maps familiar concepts to the technical mechanics of Parameter-Efficient Fine-Tuning (PEFT), making abstract ideas concrete.
 
 ## Required Contract Fields
 
@@ -64,7 +64,7 @@ Imagine you want to customize a rented house. Full fine-tuning is like tearing d
 
 ### motivation
 
-Understanding Fine-Tuning and Adaptation is critical for specializing models for custom tasks, aligning generation safety, deploying LoRA adapters in production, and selecting RAG combinations.
+Adapting pre-trained models to specific tasks is a core practice in modern ML — these techniques enable efficient specialization without full retraining.
 
 ## Dependency Notes
 

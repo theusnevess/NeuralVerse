@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer vision developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the U-Net vs Mask R-CNN (Conceptual Comparison) topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring Mask Generation Flow Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand U-Net vs Mask R-CNN (Conceptual Comparison).
 
 ## Required Contract Fields
 
@@ -64,7 +64,7 @@ This specification outlines a workflow comparison player. The user switches betw
 
 ### motivation
 
-Understanding segmentation is critical for building medical scanners, self-driving cars, satellite crop trackers, and human-in-the-loop image editors.
+Segmentation techniques enable pixel-level understanding of visual data — they are fundamental to medical imaging, autonomous navigation, and remote sensing applications.
 
 ## Dependency Notes
 

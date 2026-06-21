@@ -47,7 +47,7 @@ audience_notes: "Intended for AI engineers and evaluation practitioners."
 
 ## Artifact Summary
 
-This artifact belongs to the Agent Evaluation Methodologies topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring Agent Task Trace Analyzer Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Agent Evaluation Methodologies.
 
 ## Required Contract Fields
 
@@ -57,7 +57,7 @@ Specify a step-by-step trace viewer that lets users examine an agent's actions, 
 
 ### manipulable variable or observable state
 
-The tool displays a timeline of agent actions: query formulation, tool selection, parameter formatting, tool execution, result parsing, and next-action decision. Users can click on each step to expand details showing the agent's internal reasoning, the exact tool call payload, and the response received. Each step shows a pass/fail indicator for correctness, an efficiency score based on steps taken versus optimal, and a recovery flag if the agent encountered and resolved an error.
+The tool displays a timeline of agent actions: query formulation, tool would selection, parameter formatting, tool execution, result parsing, and next-action decision. A future version would let users would click on each step to expand details showing the agent's internal reasoning, the exact tool call payload, and the response received. Each step shows a pass/fail indicator for correctness, an efficiency score based on steps taken versus optimal, and a recovery flag if the agent encountered and resolved an error.
 
 ### interpretation guidance
 

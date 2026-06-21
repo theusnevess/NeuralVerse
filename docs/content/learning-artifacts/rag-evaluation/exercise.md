@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and evaluation practitioners."
 
 ## Artifact Summary
 
-This artifact belongs to the RAG Evaluation Frameworks topic and serves as a Exercise.
+Provides practice applying the concepts of Diagnosing a RAG Pipeline — guides the learner through reasoning steps that reinforce understanding of RAG Evaluation Frameworks through active problem-solving.
 
 ## Required Contract Fields
 
@@ -81,10 +81,7 @@ Review the three RAG output examples below. For each, identify which RAG evaluat
 
 ### expected learner output
 
-For each example, the learner should state:
-1. The failing dimension.
-2. A one-sentence justification.
-3. One concrete fix (e.g., "add a faithfulness classifier post-generation," "expand the retriever top-K," "improve the embedding model for query-chunk alignment").
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -92,7 +89,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding RAG evaluation frameworks is critical for diagnosing pipeline failures, benchmarking retrieval and generation components, and building trustworthy QA systems.
+Retrieval-augmented workflows depend on evaluation to diagnose failures — mastering these frameworks is key to building trustworthy generation systems.
 
 ## Dependency Notes
 

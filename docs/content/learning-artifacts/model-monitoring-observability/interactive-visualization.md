@@ -50,7 +50,7 @@ audience_notes: "Intended for ML engineers, MLOps practitioners, and SREs managi
 
 ## Artifact Summary
 
-This artifact belongs to the Model Monitoring and Observability topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring Production Monitoring Dashboard Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Model Monitoring and Observability.
 
 ## Required Contract Fields
 
@@ -78,7 +78,7 @@ This specification outlines a browser-based production monitoring dashboard orga
 
 ### observable state
 
-The dashboard re-renders all time-series panels when the time window selector or refresh interval changes. Selecting a time range on one panel cross-filters the others. Clicking a data point on any panel updates the log explorer and trace viewer to the relevant context. The cost breakdown panel updates when the cost allocation model or rate card changes.
+The dashboard re-renders all time-series panels when the time window would selector or refresh interval changes. Selecting a time range on one panel cross-filters the others. Clicking a data point on any panel updates the log explorer and trace viewer to the relevant context. The cost breakdown panel updates when the cost allocation model or rate card changes.
 
 ### interpretation guidance
 
@@ -92,7 +92,7 @@ The dashboard re-renders all time-series panels when the time window selector or
 
 ### motivation
 
-Understanding model monitoring and observability is critical for maintaining reliable, safe, and cost-efficient production AI systems at scale.
+Production ML requires more than deployed models — monitoring and observability ensure ongoing reliability, safety, and cost efficiency at scale.
 
 ## Dependency Notes
 

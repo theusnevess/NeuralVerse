@@ -50,7 +50,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Probability Distributions topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring Probability Distribution Morpher Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Probability Distributions.
 
 ## Required Contract Fields
 
@@ -60,13 +60,13 @@ Specify a interactive curve adjuster for Gaussian, Uniform, and Bernoulli shapes
 
 ### explanation
 
-This specification outlines a distribution morpher. The user selects a distribution type (Bernoulli, Normal, Uniform) and adjusts parameters (mean, standard deviation, bounds). The tool overlays the PDF/PMF shape and calculates probability thresholds in real-time.
+This specification outlines a distribution morpher. The user would selects a distribution type (Bernoulli, Normal, Uniform) and adjusts parameters (mean, standard deviation, bounds). The tool overlays the PDF/PMF shape and calculates probability thresholds in real-time.
 
 ## Optional Enrichment Fields
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale retrieval and search systems.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

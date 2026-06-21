@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and language developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the Encoder vs Decoder Architectures topic and serves as a Explanatory Text.
+Covers Bi-directional Context vs. Causal Generation within the broader topic of Encoder vs Decoder Architectures — explains the core ideas, their role in AI systems, and what makes them important for practitioners to understand.
 
 ## Required Contract Fields
 
@@ -64,7 +64,7 @@ Transformer configurations are tailored to specific tasks: 1. Encoder-Only (e.g.
 
 ### motivation
 
-Understanding Transformers is critical for building modern LLMs (GPT-4, Llama), semantic search retrievers, RAG interfaces, and Vision Transformers.
+Transformers form the backbone of modern LLMs — understanding their attention mechanisms, scaling properties, and architectural variants is essential for working with models like GPT-4, Llama, and their successors.
 
 ## Dependency Notes
 

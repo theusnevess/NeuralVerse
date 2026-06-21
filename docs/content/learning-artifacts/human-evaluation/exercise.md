@@ -46,7 +46,7 @@ audience_notes: "Intended for AI engineers and evaluation practitioners."
 
 ## Artifact Summary
 
-This artifact belongs to the Human Evaluation of LLMs topic and serves as a Exercise.
+Provides practice applying the concepts of Designing a Human Evaluation Protocol — guides the learner through reasoning steps that reinforce understanding of Human Evaluation of LLMs through active problem-solving.
 
 ## Required Contract Fields
 
@@ -60,9 +60,7 @@ You are tasked with evaluating a conversational AI that provides technical suppo
 
 ### expected learner output
 
-Learners should produce a protocol specification including:
-
-Dimensions: Fluency (responses must be grammatically correct), Factuality (technical information must be accurate), Helpfulness (solutions must address the user's problem). Coherence may be deprioritized for short exchanges. Scale: 5-point Likert scale for each dimension with clear anchor descriptions (e.g., 1 = Completely inaccurate, 5 = Completely accurate). Agreement metric: Cohen's Kappa with a minimum threshold of 0.6 for substantial agreement. If agreement falls below threshold, annotation guidelines should be refined and annotators recalibrated.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 

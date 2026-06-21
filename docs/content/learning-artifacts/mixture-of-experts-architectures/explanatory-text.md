@@ -54,7 +54,7 @@ audience_notes: "Intended for AI engineers and researchers exploring efficient s
 
 ## Artifact Summary
 
-This artifact belongs to the Mixture of Experts (MoE) Architectures topic and serves as a Explanatory Text.
+Covers Mixture of Experts (MoE) Architecture Fundamentals within the broader topic of Mixture of Experts (MoE) Architectures — explains the core ideas, their role in AI systems, and what makes them important for practitioners to understand.
 
 ## Required Contract Fields
 

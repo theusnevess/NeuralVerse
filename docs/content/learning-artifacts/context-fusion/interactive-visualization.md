@@ -50,7 +50,7 @@ audience_notes: "Intended for AI engineers and retrieval search developers."
 
 ## Artifact Summary
 
-This artifact belongs to the Context Fusion and Aggregation topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring RRF Rank Fusion Calculator Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Context Fusion and Aggregation.
 
 ## Required Contract Fields
 
@@ -66,7 +66,7 @@ This specification outlines a reciprocal rank fusion calculator. The user moves 
 
 ### motivation
 
-Understanding Advanced Retrieval & RAG Systems is critical for building production-grade QA engines, hallucination guardrails, hybrid index tools, and agentic routers.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

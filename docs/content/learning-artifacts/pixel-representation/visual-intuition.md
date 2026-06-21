@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Digital Images and Pixel Representation topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about The Mosaic Tile Wall — maps familiar concepts to the technical mechanics of Digital Images and Pixel Representation, making abstract ideas concrete.
 
 ## Required Contract Fields
 
@@ -64,7 +64,7 @@ Imagine a mosaic tile wall. From a distance, you see a smooth portrait. As you w
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale computer vision and multimodal retrieval pipelines.
+Multimodal AI systems connect vision, language, and other modalities — these concepts form the bridge between separate representational spaces.
 
 ## Dependency Notes
 

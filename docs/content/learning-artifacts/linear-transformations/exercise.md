@@ -50,7 +50,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Linear Transformations topic and serves as a Exercise.
+Provides practice applying the concepts of Applying Linear Transformations — guides the learner through reasoning steps that reinforce understanding of Linear Transformations through active problem-solving.
 
 ## Required Contract Fields
 
@@ -64,7 +64,7 @@ A 2D vector x = [1, 2] is transformed by a matrix A = [[2, 0], [0, 3]]. Calculat
 
 ### expected learner output
 
-y = [ (2*1 + 0*2), (0*1 + 3*2) ] = [2, 6]. Geometrically, this matrix scaled the vector space by a factor of 2 along the X-axis, and by a factor of 3 along the Y-axis, representing a non-uniform stretch.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -72,7 +72,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale retrieval and search systems.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

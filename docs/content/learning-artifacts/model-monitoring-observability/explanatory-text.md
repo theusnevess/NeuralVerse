@@ -50,7 +50,7 @@ audience_notes: "Intended for ML engineers, MLOps practitioners, and SREs managi
 
 ## Artifact Summary
 
-This artifact belongs to the Model Monitoring and Observability topic and serves as a Explanatory Text.
+Covers Model Monitoring and Observability within the broader topic of Model Monitoring and Observability — explains the core ideas, their role in AI systems, and what makes them important for practitioners to understand.
 
 ## Required Contract Fields
 
@@ -131,7 +131,7 @@ Production AI systems require continuous monitoring to ensure reliability, perfo
 
 ### motivation
 
-Understanding model monitoring and observability is critical for maintaining reliable, safe, and cost-efficient production AI systems at scale.
+Production ML requires more than deployed models — monitoring and observability ensure ongoing reliability, safety, and cost efficiency at scale.
 
 ## Dependency Notes
 

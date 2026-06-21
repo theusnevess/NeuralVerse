@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Forward Propagation topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about Conveyor Belt Stations Analogy — maps familiar concepts to the technical mechanics of Forward Propagation, making abstract ideas concrete.
 
 ## Required Contract Fields
 
@@ -64,7 +64,7 @@ Imagine a sequence of manufacturing conveyor belts. The raw materials (inputs) e
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale deep networks and search spaces.
+Deep learning builds on these core mechanisms — understanding them is essential for designing, debugging, and improving neural architectures.
 
 ## Dependency Notes
 

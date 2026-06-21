@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Backpropagation topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring Gradient Graph Explorer Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Backpropagation.
 
 ## Required Contract Fields
 
@@ -64,7 +64,7 @@ This specification describes a backpropagation graph explorer. The user modifies
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale deep networks and search spaces.
+Deep learning builds on these core mechanisms — understanding them is essential for designing, debugging, and improving neural architectures.
 
 ## Dependency Notes
 

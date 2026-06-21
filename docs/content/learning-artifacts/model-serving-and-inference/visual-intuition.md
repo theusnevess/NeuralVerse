@@ -49,7 +49,7 @@ audience_notes: "Intended for ML engineers, MLOps practitioners, and backend eng
 
 ## Artifact Summary
 
-This artifact belongs to the Production AI Systems topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about The Express Toll Road — maps familiar concepts to the technical mechanics of Production AI Systems, making abstract ideas concrete.
 
 ## Required Contract Fields
 
@@ -81,7 +81,7 @@ The **KV-cache** is like a **pre-paid toll pass transponder**. Once a vehicle ha
 
 ### motivation
 
-Understanding model serving and inference optimization is critical for deploying LLMs that meet production latency, throughput, and cost requirements.
+Production ML requires efficient model serving — these optimization techniques ensure deployed models meet latency, throughput, and cost targets.
 
 ## Dependency Notes
 

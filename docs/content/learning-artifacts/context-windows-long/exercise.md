@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and language model developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the Context Windows and Long Context topic and serves as a Exercise.
+Provides practice applying the concepts of KV Cache Footprint Sizing — guides the learner through reasoning steps that reinforce understanding of Context Windows and Long Context through active problem-solving.
 
 ## Required Contract Fields
 
@@ -62,7 +62,7 @@ Calculate the memory footprint (in bytes) of a KV Cache for a batch size of 1, s
 
 ### expected learner output
 
-Size = 2 * (batch_size) * (seq_len) * (num_layers) * (num_heads) * (head_dim) * (bytes_per_param). Here: 2 * 1 * 2048 * 32 * 32 * 128 * 2 bytes (FP16). Size = 2 * 2048 * 32 * 32 * 128 * 2 = 1,073,741,824 bytes = 1.07 GB.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -70,7 +70,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding LLM foundations is critical for building generative chatbots, few-shot classifiers, long-context search retrievers, and aligned AI systems.
+Modern language models rely on these mechanisms for generation, reasoning, and alignment — understanding them is essential for building reliable LLM applications.
 
 ## Dependency Notes
 

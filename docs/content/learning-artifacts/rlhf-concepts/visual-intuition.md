@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and model adaptation developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the Reinforcement Learning from Human Feedback (RLHF) topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about Reward Training with Dog Treats — maps familiar concepts to the technical mechanics of Reinforcement Learning from Human Feedback (RLHF), making abstract ideas concrete.
 
 ## Required Contract Fields
 
@@ -64,7 +64,7 @@ Imagine a dog trainer. They can't explain in words what they want the dog to do.
 
 ### motivation
 
-Understanding Fine-Tuning and Adaptation is critical for specializing models for custom tasks, aligning generation safety, deploying LoRA adapters in production, and selecting RAG combinations.
+Adapting pre-trained models to specific tasks is a core practice in modern ML — these techniques enable efficient specialization without full retraining.
 
 ## Dependency Notes
 

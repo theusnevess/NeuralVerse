@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer vision developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the U-Net vs Mask R-CNN (Conceptual Comparison) topic and serves as a Exercise.
+Provides practice applying the concepts of Tissue Boundaries vs. Node Count Scenarios — guides the learner through reasoning steps that reinforce understanding of U-Net vs Mask R-CNN (Conceptual Comparison) through active problem-solving.
 
 ## Required Contract Fields
 
@@ -62,7 +62,7 @@ Select between U-Net and Mask R-CNN for: 1. Isolating individual tumor nodes for
 
 ### expected learner output
 
-1. Tracking tumor nodes: Mask R-CNN, because counting and tracking the growth or shrinking of individual, separate node instances is critical. 2. Segmenting liver tissue: U-Net, because liver tissue is a continuous organ without distinct 'instances', and medical imaging demands exact boundary alignment without relying on bounding box priors.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -70,7 +70,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding segmentation is critical for building medical scanners, self-driving cars, satellite crop trackers, and human-in-the-loop image editors.
+Segmentation techniques enable pixel-level understanding of visual data — they are fundamental to medical imaging, autonomous navigation, and remote sensing applications.
 
 ## Dependency Notes
 

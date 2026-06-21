@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and language developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the Positional Encoding topic and serves as a Exercise.
+Provides practice applying the concepts of Scalar Index Limits — guides the learner through reasoning steps that reinforce understanding of Positional Encoding through active problem-solving.
 
 ## Required Contract Fields
 
@@ -62,7 +62,7 @@ Explain why simply adding a scalar position index (e.g., 1, 2, 3, ...) directly 
 
 ### expected learner output
 
-Adding a scalar index causes the values to grow linearly, which dominates token semantic coordinates for long sequences. Sinusoidal encodings keep values bounded in the range [-1.0, 1.0] across all lengths, encoding relative distances as linear transformations that the model can learn easily.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -70,7 +70,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding Transformers is critical for building modern LLMs (GPT-4, Llama), semantic search retrievers, RAG interfaces, and Vision Transformers.
+Transformers form the backbone of modern LLMs — understanding their attention mechanisms, scaling properties, and architectural variants is essential for working with models like GPT-4, Llama, and their successors.
 
 ## Dependency Notes
 

@@ -50,7 +50,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Activation Functions topic and serves as a Exercise.
+Provides practice applying the concepts of ReLU and Sigmoid Mapping — guides the learner through reasoning steps that reinforce understanding of Activation Functions through active problem-solving.
 
 ## Required Contract Fields
 
@@ -64,7 +64,7 @@ Given a pre-activation scalar $z = -2.5$. Calculate the output activation using:
 
 ### expected learner output
 
-1. ReLU: $a = \max(0, -2.5) = 0.0$. 2. Sigmoid: $a = 1 / (1 + e^{2.5}) = 1 / (1 + 12.1825) = 1 / 13.1825 = 0.0758$. The outputs are 0.0 (ReLU) and approximately 0.076 (Sigmoid).
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -72,7 +72,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale deep networks and search spaces.
+Deep learning builds on these core mechanisms — understanding them is essential for designing, debugging, and improving neural architectures.
 
 ## Dependency Notes
 

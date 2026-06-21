@@ -51,7 +51,7 @@ audience_notes: "Intended for AI researchers, advanced ML engineers, and technic
 
 ## Artifact Summary
 
-This artifact belongs to the AI Research & Frontier Topics content pack and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about The Mountain Ascent — maps familiar concepts to the technical mechanics of AI Research & Frontier Topics, making abstract ideas concrete.
 
 ## Required Contract Fields
 

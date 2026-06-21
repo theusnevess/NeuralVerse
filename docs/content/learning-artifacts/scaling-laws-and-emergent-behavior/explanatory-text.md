@@ -57,7 +57,7 @@ audience_notes: "Intended for AI researchers, advanced ML engineers, and technic
 
 ## Artifact Summary
 
-This artifact belongs to the AI Research & Frontier Topics content pack and serves as a Explanatory Text.
+Covers Scaling Laws and Emergent Behavior within the broader topic of AI Research & Frontier Topics — explains the core ideas, their role in AI systems, and what makes them important for practitioners to understand.
 
 ## Required Contract Fields
 

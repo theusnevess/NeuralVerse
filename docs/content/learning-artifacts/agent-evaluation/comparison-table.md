@@ -47,7 +47,7 @@ audience_notes: "Intended for AI engineers and evaluation practitioners."
 
 ## Artifact Summary
 
-This artifact belongs to the Agent Evaluation Methodologies topic and serves as a Comparison Table.
+Compares key approaches, algorithms, or architectures within Agent Evaluation Methodologies — organizes Agent Evaluation Dimensions into a structured reference for selecting between alternatives.
 
 ## Required Contract Fields
 

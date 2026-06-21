@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and model adaptation developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the Instruction Tuning topic and serves as a Comparison Table.
+Compares key approaches, algorithms, or architectures within Instruction Tuning — organizes Base Models vs. Instruction-Tuned Models into a structured reference for selecting between alternatives.
 
 ## Required Contract Fields
 
@@ -67,7 +67,7 @@ Contrast primary training corpora, output structures, and UI interactions.
 
 ### motivation
 
-Understanding Fine-Tuning and Adaptation is critical for specializing models for custom tasks, aligning generation safety, deploying LoRA adapters in production, and selecting RAG combinations.
+Adapting pre-trained models to specific tasks is a core practice in modern ML — these techniques enable efficient specialization without full retraining.
 
 ## Dependency Notes
 

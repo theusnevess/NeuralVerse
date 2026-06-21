@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Convolutional Neural Networks (CNNs) topic and serves as a Comparison Table.
+Compares key approaches, algorithms, or architectures within Convolutional Neural Networks (CNNs) — organizes CNN vs. MLP Layers into a structured reference for selecting between alternatives.
 
 ## Required Contract Fields
 
@@ -68,7 +68,7 @@ Contrast MLP and CNN scaling, layout preservation, and bias assumptions.
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale Convolutional Neural Networks and transfer learning backbones.
+Computer vision pipelines are built on these perceptual primitives — understanding them enables effective architecture design and troubleshooting.
 
 ## Dependency Notes
 

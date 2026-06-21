@@ -88,26 +88,7 @@ A mathematician suspects there are undiscovered patterns in how prime numbers ar
 
 ### expected learner output
 
-The learner should produce a structured pipeline analysis for each context. Expected reasoning patterns:
-
-**Context A (Catalyst discovery):**
-- AI literature analysis can extract catalyst compositions and performance data from publications.
-- Surrogate models (graph neural networks on crystal structures) can screen millions of candidates.
-- Bayesian optimization can guide which candidates to synthesize and test.
-- Verification requires physical experiment — the AI reduces the search space but does not eliminate the need for lab validation.
-- Data sparsity is addressed through transfer learning from related catalytic systems and uncertainty-aware models.
-
-**Context B (Rare disease genetics):**
-- AI hypothesis generation can prioritize variants based on predicted functional impact and known pathway interactions.
-- The extreme data sparsity (200 patients) limits supervised learning — domain knowledge and prior biological priors become essential.
-- Verification follows statistical genetics standards: replication in independent cohorts, functional validation in cell models.
-- AI can suggest candidate mechanisms from knowledge graphs even when direct association signals are weak.
-
-**Context C (Prime number patterns):**
-- AI pattern discovery can detect statistically significant deviations from expected prime distributions.
-- Surrogate models are less applicable — mathematical truth requires proof, not approximation.
-- The AI generates hints and conjectures; the mathematician verifies through proof.
-- Data sparsity is not a traditional issue (prime numbers are abundant), but the space of possible patterns is combinatorially large.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 

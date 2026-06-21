@@ -48,7 +48,7 @@ audience_notes: "Intended for ML engineers, data scientists, and MLOps practitio
 
 ## Artifact Summary
 
-This artifact belongs to the Data Drift and Concept Drift topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring Drift Detection Simulator Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Data Drift and Concept Drift.
 
 ## Required Contract Fields
 

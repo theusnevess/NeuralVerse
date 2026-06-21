@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Backpropagation topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about Corporate Error Tracking Analogy — maps familiar concepts to the technical mechanics of Backpropagation, making abstract ideas concrete.
 
 ## Required Contract Fields
 
@@ -64,7 +64,7 @@ Imagine a corporate project that failed. The CEO traces the mistake back to the 
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale deep networks and search spaces.
+Deep learning builds on these core mechanisms — understanding them is essential for designing, debugging, and improving neural architectures.
 
 ## Dependency Notes
 

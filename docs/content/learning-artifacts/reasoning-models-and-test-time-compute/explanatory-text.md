@@ -56,7 +56,7 @@ audience_notes: "Intended for AI researchers and engineers interested in advance
 
 ## Artifact Summary
 
-This artifact belongs to the Reasoning Models and Test-Time Compute topic and serves as an Explanatory Text.
+Covers Reasoning Models and Test-Time Compute within the broader topic of Reasoning Models and Test-Time Compute — explains the core ideas, their role in AI systems, and what makes them important for practitioners to understand.
 
 ## Required Contract Fields
 

@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and model adaptation developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the Reinforcement Learning from Human Feedback (RLHF) topic and serves as a Exercise.
+Provides practice applying the concepts of KL-Divergence Penalization Role — guides the learner through reasoning steps that reinforce understanding of Reinforcement Learning from Human Feedback (RLHF) through active problem-solving.
 
 ## Required Contract Fields
 
@@ -62,7 +62,7 @@ Explain the role of the KL-divergence penalty during the policy optimization pha
 
 ### expected learner output
 
-The KL-divergence penalty acts as a regularization constraint, measuring the statistical distance between the active RL policy and the reference SFT model. It prevents 'reward hacking' (where the policy exploits the reward model's bugs to get high scores by generating nonsense) and ensures the model retains its linguistic coherence and pre-trained abilities.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -70,7 +70,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding Fine-Tuning and Adaptation is critical for specializing models for custom tasks, aligning generation safety, deploying LoRA adapters in production, and selecting RAG combinations.
+Adapting pre-trained models to specific tasks is a core practice in modern ML — these techniques enable efficient specialization without full retraining.
 
 ## Dependency Notes
 

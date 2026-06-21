@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Hybrid Search topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring RRF Ranking Interactive Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Hybrid Search.
 
 ## Required Contract Fields
 
@@ -65,7 +65,7 @@ This specification outlines a hybrid search simulator. The user inputs search re
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale retrieval and search systems.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

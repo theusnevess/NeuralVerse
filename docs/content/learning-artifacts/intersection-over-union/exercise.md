@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer vision developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the Intersection over Union (IoU) topic and serves as a Exercise.
+Provides practice applying the concepts of Overlapping Box Ratios — guides the learner through reasoning steps that reinforce understanding of Intersection over Union (IoU) through active problem-solving.
 
 ## Required Contract Fields
 
@@ -62,7 +62,7 @@ Box A has coordinates $[10, 10, 30, 30]$ ($xyxy$ absolute format). Box B has coo
 
 ### expected learner output
 
-Both boxes have width = 20, height = 20, Area = 400. 1. Intersection: X overlaps from 20 to 30 (width = 10). Y overlaps from 10 to 30 (height = 20). Area of Intersection = 10 * 20 = 200. 2. Union: Area(A) + Area(B) - Intersection = 400 + 400 - 200 = 600. 3. IoU = 200 / 600 = 1/3 ≈ 0.333.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -70,7 +70,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding this topic is critical for building autonomous vehicles, industrial inspections, robotic manipulators, and multi-object real-time surveillance backbones.
+Object detection pipelines power real-world applications from autonomous driving to medical imaging — understanding these architectural choices is key to building effective perception systems.
 
 ## Dependency Notes
 

@@ -50,7 +50,7 @@ audience_notes: "Intended for AI researchers and engineers exploring model-based
 
 ## Artifact Summary
 
-This artifact belongs to the World Models and Latent Simulation topic and serves as a Comparison Table.
+Compares key approaches, algorithms, or architectures within World Models and Latent Simulation — organizes World Model Paradigms Compared into a structured reference for selecting between alternatives.
 
 ## Required Contract Fields
 

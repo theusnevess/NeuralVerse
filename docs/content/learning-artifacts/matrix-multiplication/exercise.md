@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Matrix Multiplication topic and serves as a Exercise.
+Provides practice applying the concepts of Validating Matrix Multiplication Shapes — guides the learner through reasoning steps that reinforce understanding of Matrix Multiplication through active problem-solving.
 
 ## Required Contract Fields
 
@@ -62,7 +62,7 @@ Matrix A has shape (128, 768) and Matrix B has shape (768, 512). Can they be mul
 
 ### expected learner output
 
-Yes, they can be multiplied because the inner dimensions match (768). The resulting matrix shape is (128, 512). In a neural network, this represents a batch of 128 input vectors, each of size 768, mapped to a hidden layer of 512 units.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -70,7 +70,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale retrieval and search systems.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

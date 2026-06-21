@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and retrieval search developers."
 
 ## Artifact Summary
 
-This artifact belongs to the Knowledge Grounding and Attribution topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring Source-Response Citation Mapper Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Knowledge Grounding and Attribution.
 
 ## Required Contract Fields
 
@@ -65,7 +65,7 @@ This specification describes a citation correlation map. The user highlights sen
 
 ### motivation
 
-Understanding Advanced Retrieval & RAG Systems is critical for building production-grade QA engines, hallucination guardrails, hybrid index tools, and agentic routers.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

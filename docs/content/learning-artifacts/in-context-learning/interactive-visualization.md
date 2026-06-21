@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and language model developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the In-Context Learning topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring Attention Map Re-Alignments Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand In-Context Learning.
 
 ## Required Contract Fields
 
@@ -64,7 +64,7 @@ This specification describes an activation map explorer. The user adds few-shot 
 
 ### motivation
 
-Understanding LLM foundations is critical for building generative chatbots, few-shot classifiers, long-context search retrievers, and aligned AI systems.
+Modern language models rely on these mechanisms for generation, reasoning, and alignment — understanding them is essential for building reliable LLM applications.
 
 ## Dependency Notes
 

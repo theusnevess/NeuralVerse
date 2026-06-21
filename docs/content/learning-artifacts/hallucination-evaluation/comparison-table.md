@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and LLM evaluation practitioners."
 
 ## Artifact Summary
 
-This artifact belongs to the Hallucination Detection and Analysis topic and serves as a Comparison Table.
+Compares key approaches, algorithms, or architectures within Hallucination Detection and Analysis — organizes Intrinsic vs. Extrinsic Hallucination into a structured reference for selecting between alternatives.
 
 ## Required Contract Fields
 

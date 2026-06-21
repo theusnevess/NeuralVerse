@@ -51,7 +51,7 @@ audience_notes: "Intended for AI researchers and engineers interested in advance
 
 ## Artifact Summary
 
-This artifact belongs to the Reasoning Models and Test-Time Compute topic and serves as an Interactive Visualization.
+Specifies an interactive tool for exploring Reasoning Path Explorer — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Reasoning Models and Test-Time Compute.
 
 ## Required Contract Fields
 

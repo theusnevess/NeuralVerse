@@ -57,7 +57,7 @@ audience_notes: "Intended for AI engineers, researchers, and computer science st
 
 ## Artifact Summary
 
-This artifact belongs to the Neurosymbolic AI topic and serves as an Explanatory Text.
+Covers Neurosymbolic AI Concepts within the broader topic of Neurosymbolic AI — explains the core ideas, their role in AI systems, and what makes them important for practitioners to understand.
 
 ## Required Contract Fields
 

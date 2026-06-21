@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Feature Maps and Filters topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about The Infrared Goggles Analogy — maps familiar concepts to the technical mechanics of Feature Maps and Filters, making abstract ideas concrete.
 
 ## Required Contract Fields
 
@@ -65,7 +65,7 @@ Imagine looking at a forest through special infrared goggles. Trees vanish, but 
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale computer vision and multimodal retrieval pipelines.
+Multimodal AI systems connect vision, language, and other modalities — these concepts form the bridge between separate representational spaces.
 
 ## Dependency Notes
 

@@ -50,7 +50,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Linear Transformations topic and serves as a Comparison Table.
+Compares key approaches, algorithms, or architectures within Linear Transformations — organizes Standard Transformation Matrices into a structured reference for selecting between alternatives.
 
 ## Required Contract Fields
 
@@ -71,7 +71,7 @@ Compare matrices, determinants, and effects of scaling, rotation, shear, and pro
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale retrieval and search systems.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

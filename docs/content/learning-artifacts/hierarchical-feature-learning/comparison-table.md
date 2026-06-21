@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Hierarchical Feature Learning topic and serves as a Comparison Table.
+Compares key approaches, algorithms, or architectures within Hierarchical Feature Learning — organizes Layer Abstraction Levels into a structured reference for selecting between alternatives.
 
 ## Required Contract Fields
 
@@ -67,7 +67,7 @@ Compare Layer 1 and Layer 3-5 visual triggers, mathematical linearity, and seman
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale Convolutional Neural Networks and transfer learning backbones.
+Computer vision pipelines are built on these perceptual primitives — understanding them enables effective architecture design and troubleshooting.
 
 ## Dependency Notes
 

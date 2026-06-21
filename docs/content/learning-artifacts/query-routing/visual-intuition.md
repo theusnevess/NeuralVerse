@@ -50,7 +50,7 @@ audience_notes: "Intended for AI engineers and retrieval search developers."
 
 ## Artifact Summary
 
-This artifact belongs to the Query Routing and Intent Detection topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about The Post Office Sorting Office — maps familiar concepts to the technical mechanics of Query Routing and Intent Detection, making abstract ideas concrete.
 
 ## Required Contract Fields
 
@@ -66,7 +66,7 @@ Imagine a sorting office at a postal company. A mail handler reads the address a
 
 ### motivation
 
-Understanding Advanced Retrieval & RAG Systems is critical for building production-grade QA engines, hallucination guardrails, hybrid index tools, and agentic routers.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

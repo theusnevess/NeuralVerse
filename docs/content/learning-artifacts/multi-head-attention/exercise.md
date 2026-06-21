@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and language developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the Multi-Head Attention topic and serves as a Exercise.
+Provides practice applying the concepts of Attention Dimension Splits — guides the learner through reasoning steps that reinforce understanding of Multi-Head Attention through active problem-solving.
 
 ## Required Contract Fields
 
@@ -62,7 +62,7 @@ If the input embedding dimension is $d_{model} = 512$ and we use $h = 8$ attenti
 
 ### expected learner output
 
-The internal dimension d_k is d_model / h = 512 / 8 = 64. By projecting vectors into 8 smaller spaces of size 64 before computing dot products, the combined cost of the 8 heads is mathematically equivalent to computing a single head of size 512, keeping computation loads comparable.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -70,7 +70,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding Transformers is critical for building modern LLMs (GPT-4, Llama), semantic search retrievers, RAG interfaces, and Vision Transformers.
+Transformers form the backbone of modern LLMs — understanding their attention mechanisms, scaling properties, and architectural variants is essential for working with models like GPT-4, Llama, and their successors.
 
 ## Dependency Notes
 

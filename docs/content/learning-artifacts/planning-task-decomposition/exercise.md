@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and agent systems developers."
 
 ## Artifact Summary
 
-This artifact belongs to the Planning and Task Decomposition topic and serves as a Exercise.
+Provides practice applying the concepts of ReAct Thought-Action-Observation Loop — guides the learner through reasoning steps that reinforce understanding of Planning and Task Decomposition through active problem-solving.
 
 ## Required Contract Fields
 
@@ -63,7 +63,7 @@ Given the task 'analyze the quarterly report PDF and upload a summary to the dat
 
 ### expected learner output
 
-Thought: I need to read the quarterly report PDF. Action: read_pdf(file='quarterly_report.pdf'). Observation: 'Summary of profit: $1M, costs: $800k.' Thought: Now I have the summary data. I must upload this to the database. Action: upload_db(profit=1000000, costs=800000). Observation: 'Upload successful.' Thought: The task is fully complete. Final Response: I have successfully analyzed the PDF and uploaded the summary data.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -71,7 +71,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding AI Agents and Tool Use is critical for building autonomous software assistants, function callers, memory-backed bots, and self-correcting coders.
+Agentic systems extend language models beyond passive generation — these concepts enable autonomous reasoning, tool use, and multi-step execution.
 
 ## Dependency Notes
 

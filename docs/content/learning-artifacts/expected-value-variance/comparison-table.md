@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Expected Value and Variance topic and serves as a Comparison Table.
+Compares key approaches, algorithms, or architectures within Expected Value and Variance — organizes Statistical Moments Reference into a structured reference for selecting between alternatives.
 
 ## Required Contract Fields
 
@@ -69,7 +69,7 @@ Compare formulas, physical analogies, and AI meanings of expected value, varianc
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale retrieval and search systems.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

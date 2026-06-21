@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and retrieval search developers."
 
 ## Artifact Summary
 
-This artifact belongs to the Hybrid Indexing Strategies topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about Searching the Specialized Doctor Directory — maps familiar concepts to the technical mechanics of Hybrid Indexing Strategies, making abstract ideas concrete.
 
 ## Required Contract Fields
 
@@ -65,7 +65,7 @@ Imagine searching for a doctor. You can look at a directory list filtering by sp
 
 ### motivation
 
-Understanding Advanced Retrieval & RAG Systems is critical for building production-grade QA engines, hallucination guardrails, hybrid index tools, and agentic routers.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

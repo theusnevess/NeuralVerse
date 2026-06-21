@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Expected Value and Variance topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about Target Analogy for Bias and Variance — maps familiar concepts to the technical mechanics of Expected Value and Variance, making abstract ideas concrete.
 
 ## Required Contract Fields
 
@@ -65,7 +65,7 @@ Imagine shooting arrows at a target. The expected value is the average center of
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale retrieval and search systems.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

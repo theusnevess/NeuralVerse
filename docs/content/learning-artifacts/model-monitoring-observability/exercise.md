@@ -50,7 +50,7 @@ audience_notes: "Intended for ML engineers, MLOps practitioners, and SREs managi
 
 ## Artifact Summary
 
-This artifact belongs to the Model Monitoring and Observability topic and serves as a Exercise.
+Provides practice applying the concepts of Defining an Observability Strategy — guides the learner through reasoning steps that reinforce understanding of Model Monitoring and Observability through active problem-solving.
 
 ## Required Contract Fields
 
@@ -76,19 +76,7 @@ For each of the three deployment contexts below, specify:
 
 ### expected learner output
 
-A structured specification with three sections (one per context), each containing the five design decisions:
-
-| Decision | Context A — Chatbot | Context B — Batch Processor | Context C — Medical Advisor |
-|---|---|---|---|
-| SLI 1 | SLI name and measurement method | SLI name and measurement method | SLI name and measurement method |
-| SLI 2 | SLI name and measurement method | SLI name and measurement method | SLI name and measurement method |
-| SLI 3 | SLI name and measurement method | SLI name and measurement method | SLI name and measurement method |
-| SLO 1 | Target and rationale | Target and rationale | Target and rationale |
-| SLO 2 | Target and rationale | Target and rationale | Target and rationale |
-| SLO 3 | Target and rationale | Target and rationale | Target and rationale |
-| Alerting strategy | Thresholds and alert method | Thresholds and alert method | Thresholds and alert method |
-| Dashboard panels | 3-5 panel descriptions | 3-5 panel descriptions | 3-5 panel descriptions |
-| Cost tracking | Attribution, normalization, investigation triggers | Attribution, normalization, investigation triggers | Attribution, normalization, investigation triggers |
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -96,7 +84,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding model monitoring and observability is critical for maintaining reliable, safe, and cost-efficient production AI systems at scale.
+Production ML requires more than deployed models — monitoring and observability ensure ongoing reliability, safety, and cost efficiency at scale.
 
 ## Dependency Notes
 

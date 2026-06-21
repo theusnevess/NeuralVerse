@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and language model developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the Hallucinations and Reliability topic and serves as a Exercise.
+Provides practice applying the concepts of Open vs. Closed Domain Hallucinations — guides the learner through reasoning steps that reinforce understanding of Hallucinations and Reliability through active problem-solving.
 
 ## Required Contract Fields
 
@@ -62,7 +62,7 @@ Explain the distinction between 'closed-domain hallucination' (violating a provi
 
 ### expected learner output
 
-Closed-domain hallucinations occur when a model contradicts or invents facts outside of a provided context document (e.g., in summarization or RAG). Open-domain hallucinations occur when a model generates facts that contradict general real-world truths stored in its parameter weights (without any reference document).
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -70,7 +70,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding LLM foundations is critical for building generative chatbots, few-shot classifiers, long-context search retrievers, and aligned AI systems.
+Modern language models rely on these mechanisms for generation, reasoning, and alignment — understanding them is essential for building reliable LLM applications.
 
 ## Dependency Notes
 

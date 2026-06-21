@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer vision developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the Intersection over Union (IoU) topic and serves as a Comparison Table.
+Compares key approaches, algorithms, or architectures within Intersection over Union (IoU) — organizes IoU Threshold Interpretations into a structured reference for selecting between alternatives.
 
 ## Required Contract Fields
 
@@ -68,7 +68,7 @@ Contrast IoU values and corresponding anchor selection implications.
 
 ### motivation
 
-Understanding this topic is critical for building autonomous vehicles, industrial inspections, robotic manipulators, and multi-object real-time surveillance backbones.
+Object detection pipelines power real-world applications from autonomous driving to medical imaging — understanding these architectural choices is key to building effective perception systems.
 
 ## Dependency Notes
 

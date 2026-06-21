@@ -120,13 +120,7 @@ Candidate 2:
 
 ### expected learner output
 
-The learner should identify the semantically closer candidate for each query and explain the decision using meaning, context, or task relationship rather than exact word overlap alone.
-
-The expected reasoning pattern is:
-
-* Candidate 1 for Query A is closer because both describe retrieving relevant research material.
-* Candidate 1 for Query B is closer because both describe recommending learning material about neural network topics.
-* Candidate 1 for Query C is closer because both describe grouping text items by shared meaning.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 

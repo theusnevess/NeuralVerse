@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and agent systems developers."
 
 ## Artifact Summary
 
-This artifact belongs to the Reflection and Self-Correction topic and serves as a Exercise.
+Provides practice applying the concepts of Chaining Critique and Correct Prompts — guides the learner through reasoning steps that reinforce understanding of Reflection and Self-Correction through active problem-solving.
 
 ## Required Contract Fields
 
@@ -63,7 +63,7 @@ Write a prompt template that instructs a model to act as a critic, identifying t
 
 ### expected learner output
 
-Critique template: 'Review this draft answer: [draft]. Identify 3 flaws, typos, or inaccuracies. Format: 1. [flaw]'. The output is parsed. The correction prompt chains this: 'Original draft: [draft]. Flaws found: [critique_output]. Rewrite the draft to resolve these flaws.' This forces the model to attend to its own mistakes in the activation sequence.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -71,7 +71,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding AI Agents and Tool Use is critical for building autonomous software assistants, function callers, memory-backed bots, and self-correcting coders.
+Agentic systems extend language models beyond passive generation — these concepts enable autonomous reasoning, tool use, and multi-step execution.
 
 ## Dependency Notes
 

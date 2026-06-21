@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and LLM evaluation practitioners."
 
 ## Artifact Summary
 
-This artifact belongs to the Hallucination Detection and Analysis topic and serves as a Explanatory Text.
+Covers Hallucination Detection and Analysis in LLMs within the broader topic of Hallucination Detection and Analysis — explains the core ideas, their role in AI systems, and what makes them important for practitioners to understand.
 
 ## Required Contract Fields
 

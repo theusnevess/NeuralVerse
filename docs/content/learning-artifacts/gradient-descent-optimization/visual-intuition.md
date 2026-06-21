@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Gradient Descent and Optimization topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about Sledding Down a Snowy Bowl — maps familiar concepts to the technical mechanics of Gradient Descent and Optimization, making abstract ideas concrete.
 
 ## Required Contract Fields
 
@@ -65,7 +65,7 @@ Imagine sliding down a snowy bowl on a sled. Batch gradient descent is checking 
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale deep networks and search spaces.
+Deep learning builds on these core mechanisms — understanding them is essential for designing, debugging, and improving neural architectures.
 
 ## Dependency Notes
 

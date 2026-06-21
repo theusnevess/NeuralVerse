@@ -50,7 +50,7 @@ audience_notes: "Intended for AI researchers, advanced ML engineers, and technic
 
 ## Artifact Summary
 
-This artifact belongs to the AI Research & Frontier Topics content pack and serves as a Comparison Table.
+Compares key approaches, algorithms, or architectures within AI Research & Frontier Topics — organizes Scaling Law Paradigms into a structured reference for selecting between alternatives.
 
 ## Required Contract Fields
 

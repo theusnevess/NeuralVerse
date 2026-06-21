@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Epochs, Batches, and Learning Rate topic and serves as a Exercise.
+Provides practice applying the concepts of Calculating Iterations and Updates — guides the learner through reasoning steps that reinforce understanding of Epochs, Batches, and Learning Rate through active problem-solving.
 
 ## Required Contract Fields
 
@@ -63,7 +63,7 @@ A dataset contains 32,000 samples. The training configuration uses a batch size 
 
 ### expected learner output
 
-1. Iterations per epoch = 32,000 / 64 = 500 iterations. 2. Total parameter updates = 500 * 5 epochs = 2,500 updates.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -71,7 +71,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale deep networks and search spaces.
+Deep learning builds on these core mechanisms — understanding them is essential for designing, debugging, and improving neural architectures.
 
 ## Dependency Notes
 

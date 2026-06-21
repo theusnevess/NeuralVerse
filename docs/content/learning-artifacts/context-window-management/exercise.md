@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Context Window Management topic and serves as a Exercise.
+Provides practice applying the concepts of Mitigating Lost-in-the-Middle Effects — guides the learner through reasoning steps that reinforce understanding of Context Window Management through active problem-solving.
 
 ## Required Contract Fields
 
@@ -63,7 +63,7 @@ You have 10 retrieved chunks. Chunk 3 contains the direct answer to the user's q
 
 ### expected learner output
 
-The learner should reorder the chunks so that Chunk 3 sits either at the very beginning (index 0) or at the very end (index 9) of the context block, explaining that placing the most important chunk in these positions maximizes LLM attention.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -71,7 +71,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale retrieval and search systems.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

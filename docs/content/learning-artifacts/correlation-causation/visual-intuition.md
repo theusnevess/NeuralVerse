@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Correlation vs. Causation topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about Ice Cream and Sunburns Confounder — maps familiar concepts to the technical mechanics of Correlation vs. Causation, making abstract ideas concrete.
 
 ## Required Contract Fields
 
@@ -65,7 +65,7 @@ Imagine observing that ice cream sales and sunburn rates are highly correlated�
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale retrieval and search systems.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

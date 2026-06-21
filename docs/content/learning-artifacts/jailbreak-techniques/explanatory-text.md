@@ -47,7 +47,7 @@ audience_notes: "Intended for AI engineers and safety researchers deploying alig
 
 ## Artifact Summary
 
-This artifact belongs to the Jailbreak Techniques topic and serves as an Explanatory Text.
+Covers Jailbreak Techniques and Refusal Bypass within the broader topic of Jailbreak Techniques — explains the core ideas, their role in AI systems, and what makes them important for practitioners to understand.
 
 ## Required Contract Fields
 

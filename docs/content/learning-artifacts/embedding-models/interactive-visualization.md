@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Embedding Models topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring Embedding Dimensionality Interactive Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Embedding Models.
 
 ## Required Contract Fields
 
@@ -59,13 +59,13 @@ Specify a comparison tool visualising embedding dimensions and resource impacts.
 
 ### explanation
 
-This specification details an embedding model comparison tool. Users select two different embedding models (e.g., a lightweight 384D model and a heavy 1536D model) and enter text. The tool visualizes the vector dimensionality, latency estimation, and memory footprint, showing how dimension count scales resource requirements.
+This specification details an embedding model comparison tool. Users would select two different embedding models (e.g., a lightweight 384D model and a heavy 1536D model) and enter text. The tool visualizes the vector dimensionality, latency estimation, and memory footprint, showing how dimension count scales resource requirements.
 
 ## Optional Enrichment Fields
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale retrieval and search systems.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

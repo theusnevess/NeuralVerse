@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Embedding Models topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about Dense vs. Sparse Representations — maps familiar concepts to the technical mechanics of Embedding Models, making abstract ideas concrete.
 
 ## Required Contract Fields
 
@@ -65,7 +65,7 @@ Imagine looking at an apple. A sparse representation is like a checklist of exac
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale retrieval and search systems.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

@@ -50,7 +50,7 @@ audience_notes: "Intended for AI engineers and retrieval search developers."
 
 ## Artifact Summary
 
-This artifact belongs to the Query Routing and Intent Detection topic and serves as a Exercise.
+Provides practice applying the concepts of LLM vs Vector Semantic Routing — guides the learner through reasoning steps that reinforce understanding of Query Routing and Intent Detection through active problem-solving.
 
 ## Required Contract Fields
 
@@ -64,7 +64,7 @@ Explain the difference between LLM-based query routing and vector-distance-based
 
 ### expected learner output
 
-LLM-based routing parses queries using natural language reasoning, offering high flexibility but adding significant execution latency (100ms+). Vector routing compares queries against pre-defined intent vector centroids via cosine similarity, running in <10ms but struggles with complex conditional logic.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -72,7 +72,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding Advanced Retrieval & RAG Systems is critical for building production-grade QA engines, hallucination guardrails, hybrid index tools, and agentic routers.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

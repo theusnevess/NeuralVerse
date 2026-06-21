@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and language model developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the Prompting Fundamentals topic and serves as a Exercise.
+Provides practice applying the concepts of Few-Shot translation Prompt Design — guides the learner through reasoning steps that reinforce understanding of Prompting Fundamentals through active problem-solving.
 
 ## Required Contract Fields
 
@@ -62,7 +62,7 @@ Write a zero-shot prompt and a few-shot prompt for translating technical jargon 
 
 ### expected learner output
 
-Zero-shot: 'Translate: [jargon] to plain English.' Few-shot: 'Jargon: API. English: Web bridge. Jargon: CDN. English: File delivery network. Jargon: [jargon]. English:'. The few-shot version is more reliable because it explicitly demonstrates the target structure, casing, and style boundaries directly in the activation context.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -70,7 +70,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding LLM foundations is critical for building generative chatbots, few-shot classifiers, long-context search retrievers, and aligned AI systems.
+Modern language models rely on these mechanisms for generation, reasoning, and alignment — understanding them is essential for building reliable LLM applications.
 
 ## Dependency Notes
 

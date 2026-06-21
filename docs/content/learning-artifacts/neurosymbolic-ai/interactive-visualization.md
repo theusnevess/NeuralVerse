@@ -50,7 +50,7 @@ audience_notes: "Intended for AI engineers, researchers, and computer science st
 
 ## Artifact Summary
 
-This artifact belongs to the Neurosymbolic AI topic and serves as an Interactive Visualization.
+Specifies an interactive tool for exploring Neurosymbolic Integration Explorer — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Neurosymbolic AI.
 
 ## Required Contract Fields
 
@@ -60,11 +60,11 @@ Specify an interactive "Neurosymbolic Integration Explorer" tool that visualizes
 
 ### explanation
 
-This specification describes an interactive exploration environment for understanding neurosymbolic integration. The user selects among three operating modes and observes how the system processes logical reasoning problems.
+This specification describes an interactive exploration environment for understanding neurosymbolic integration. The user would selects among three operating modes and observes how the system processes logical reasoning problems.
 
 ## Core Interaction Modes
 
-The user selects among three modes via a toggle:
+The user would selects among three modes via a toggle:
 
 ### Mode 1: Neural-Only
 - A neural network attempts to solve logical reasoning tasks directly from raw inputs (e.g., rendered images of logical puzzles, or tokenized problem statements).
@@ -89,7 +89,7 @@ The user selects among three modes via a toggle:
 
 ### Main Canvas
 - A 2D layout with the raw input (e.g., a logical puzzle) at the top.
-- Below the input, the processing pipeline flows vertically through the selected mode's architecture.
+- Below the input, the processing pipeline flows vertically through the would selected mode's architecture.
 - Intermediate representations are rendered as either activation heatmaps (neural) or structured graph nodes (symbolic).
 
 ### Metrics Panel (side panel)
@@ -98,7 +98,7 @@ The user selects among three modes via a toggle:
 - OOD generalization — a separate bar showing performance on test examples outside the training distribution.
 
 ### Control Panel
-- Mode selector (neural-only, symbolic-only, hybrid).
+- Mode would selector (neural-only, symbolic-only, hybrid).
 - Difficulty slider for the logical reasoning task (simple deductions to complex multi-step proofs).
 - Noise toggle that adds perceptual noise to inputs, demonstrating neural robustness vs. symbolic brittleness and vice versa.
 

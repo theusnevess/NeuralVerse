@@ -49,7 +49,7 @@ audience_notes: "Intended for ML engineers, data scientists, and MLOps practitio
 
 ## Artifact Summary
 
-This artifact belongs to the Model Versioning and Experiment Tracking topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about The Library Archives — maps familiar concepts to the technical mechanics of Model Versioning and Experiment Tracking, making abstract ideas concrete.
 
 ## Required Contract Fields
 
@@ -73,7 +73,7 @@ The **model registry** is the librarian's master ledger. A book starts in the *S
 
 ### motivation
 
-Understanding this topic is critical for building reliable, auditable, and reproducible ML systems that can operate in production at scale.
+Production ML requires more than trained models — these operational practices ensure reliable, observable, and maintainable AI systems.
 
 ## Dependency Notes
 

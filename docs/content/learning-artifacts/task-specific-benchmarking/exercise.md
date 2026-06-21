@@ -52,7 +52,7 @@ audience_notes: "Intended for AI engineers, researchers, and practitioners evalu
 
 ## Artifact Summary
 
-This artifact belongs to the Task-Specific Benchmarking topic and serves as a Exercise.
+Provides practice applying the concepts of Interpreting Benchmark Results — guides the learner through reasoning steps that reinforce understanding of Task-Specific Benchmarking through active problem-solving.
 
 ## Required Contract Fields
 
@@ -77,10 +77,7 @@ Review the following benchmark results for three models and answer the questions
 
 ### expected learner output
 
-1. Model B scores highest on GSM8K (91.5%), the most directly relevant benchmark for mathematical reasoning, making it the best choice for a math tutoring application.
-2. Model C scores highest on MMLU (90.2%) and HellaSwag (88.3%), indicating broad knowledge and strong commonsense reasoning, suitable for general-purpose assistance.
-3. Model B scores highest on HumanEval (79.8%), making it the strongest candidate for code generation tasks.
-4. Caveats: (a) Benchmark scores do not measure real-world reliability, latency, or safety; (b) Dataset contamination may inflate scores if benchmarks were present in training data; (c) Statistical significance and confidence intervals are not reported, so apparent differences may not be meaningful; (d) A single benchmark within a category does not fully represent that capability domain.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 

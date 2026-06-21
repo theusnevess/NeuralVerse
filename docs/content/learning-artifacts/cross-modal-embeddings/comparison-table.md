@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer vision developers."
 
 ## Artifact Summary
 
-This artifact belongs to the Cross-Modal Embeddings topic and serves as a Comparison Table.
+Compares key approaches, algorithms, or architectures within Cross-Modal Embeddings — organizes Latent Spaces Compared into a structured reference for selecting between alternatives.
 
 ## Required Contract Fields
 
@@ -69,7 +69,7 @@ Contrast modality-specific embedding spaces with joint multimodal spaces.
 
 ### motivation
 
-Understanding Multimodal AI Foundations is critical for building search engines, image captioners, visual answer systems, and joint textual/visual models.
+Multimodal AI systems connect vision, language, and other modalities — these concepts form the bridge between separate representational spaces.
 
 ## Dependency Notes
 

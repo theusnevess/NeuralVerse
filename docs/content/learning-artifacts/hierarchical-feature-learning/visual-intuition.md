@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Hierarchical Feature Learning topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about Lego Assemblies Hierarchy — maps familiar concepts to the technical mechanics of Hierarchical Feature Learning, making abstract ideas concrete.
 
 ## Required Contract Fields
 
@@ -64,7 +64,7 @@ Imagine building a Lego model. Layer 1 is sorting the raw blocks by shape and co
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale Convolutional Neural Networks and transfer learning backbones.
+Computer vision pipelines are built on these perceptual primitives — understanding them enables effective architecture design and troubleshooting.
 
 ## Dependency Notes
 

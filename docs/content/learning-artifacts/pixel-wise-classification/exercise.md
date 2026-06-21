@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer vision developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the Pixel-wise Classification topic and serves as a Exercise.
+Provides practice applying the concepts of Softmax Operations Count — guides the learner through reasoning steps that reinforce understanding of Pixel-wise Classification through active problem-solving.
 
 ## Required Contract Fields
 
@@ -62,7 +62,7 @@ Given a segmentation model predicting 3 classes on a $256 \times 256$ image. Cal
 
 ### expected learner output
 
-1. Final logit tensor shape: [256, 256, 3] (Height x Width x Classes). 2. Total Softmax distributions: 256 * 256 = 65,536 (one Softmax probability vector computed over the 3 classes at every single pixel position).
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -70,7 +70,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding segmentation is critical for building medical scanners, self-driving cars, satellite crop trackers, and human-in-the-loop image editors.
+Segmentation techniques enable pixel-level understanding of visual data — they are fundamental to medical imaging, autonomous navigation, and remote sensing applications.
 
 ## Dependency Notes
 

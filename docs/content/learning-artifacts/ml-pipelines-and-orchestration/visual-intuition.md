@@ -46,7 +46,7 @@ audience_notes: "Intended for ML engineers, MLOps practitioners, and DevOps engi
 
 ## Artifact Summary
 
-This artifact belongs to the ML Pipelines and Orchestration topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about The Automated Factory Assembly Line — maps familiar concepts to the technical mechanics of ML Pipelines and Orchestration, making abstract ideas concrete.
 
 ## Required Contract Fields
 
@@ -62,7 +62,7 @@ Imagine an automated factory assembly line. Raw materials (data) arrive on conve
 
 ### motivation
 
-Understanding this topic is critical for building reliable, automated ML systems in production.
+Production ML requires reliable, automated pipelines — understanding orchestration, scheduling, and dependency management is essential for building systems that operate at scale without manual intervention.
 
 ## Dependency Notes
 

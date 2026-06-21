@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and language model developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the Large Language Models Overview topic and serves as a Exercise.
+Provides practice applying the concepts of Task-Specific vs. Foundational Models — guides the learner through reasoning steps that reinforce understanding of Large Language Models Overview through active problem-solving.
 
 ## Required Contract Fields
 
@@ -62,7 +62,7 @@ Explain the difference between a task-specific model (e.g., a sentiment classifi
 
 ### expected learner output
 
-Task-specific models are trained from scratch with supervised labels for one narrow target, making them highly specialized but rigid. Foundational LLMs are pre-trained on massive text datasets using next-token self-supervision, capturing rich general representations that can be adapted to hundreds of unseen downstream tasks via prompt configurations.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -70,7 +70,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding LLM foundations is critical for building generative chatbots, few-shot classifiers, long-context search retrievers, and aligned AI systems.
+Modern language models rely on these mechanisms for generation, reasoning, and alignment — understanding them is essential for building reliable LLM applications.
 
 ## Dependency Notes
 

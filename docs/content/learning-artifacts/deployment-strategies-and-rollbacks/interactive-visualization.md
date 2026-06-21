@@ -50,7 +50,7 @@ audience_notes: "Intended for ML engineers, MLOps practitioners, and platform en
 
 ## Artifact Summary
 
-This artifact belongs to the Deployment Strategies and Rollbacks topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring Deployment Strategy Simulator Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Deployment Strategies and Rollbacks.
 
 ## Required Contract Fields
 
@@ -60,7 +60,7 @@ Specify an interactive deployment strategy simulator that visualizes traffic rou
 
 ### explanation
 
-This specification describes a Deployment Strategy Simulator. Users begin by selecting a deployment strategy from three options: Blue-Green, Canary, or Shadow. For canary deployments, users configure traffic percentages (e.g., 5%, 25%, 50%, 100%) and set validation gates such as maximum acceptable error rate (+1%), latency P99 threshold (+50ms), and minimum health check pass rate (99%). A "Trigger Deployment" button starts the simulation.
+This specification describes a Deployment Strategy Simulator. Users begin by would selecting a deployment strategy from three options: Blue-Green, Canary, or Shadow. For canary deployments, users configure traffic percentages (e.g., 5%, 25%, 50%, 100%) and set validation gates such as maximum acceptable error rate (+1%), latency P99 threshold (+50ms), and minimum health check pass rate (99%). A "Trigger Deployment" button starts the simulation.
 
 The tool displays real-time metrics on two side-by-side dashboards—one for the current production model and one for the candidate model. Metrics include request throughput, error rate, latency percentiles (P50, P95, P99), and resource utilization (CPU, memory). Traffic flow is shown as animated request arrows splitting between model instances.
 

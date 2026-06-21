@@ -46,7 +46,7 @@ audience_notes: "Intended for AI engineers, security practitioners, and LLM appl
 
 ## Artifact Summary
 
-This artifact belongs to the Prompt Injection topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring Injection Attack Simulator Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Prompt Injection.
 
 ## Required Contract Fields
 
@@ -56,7 +56,7 @@ Specify an interactive simulator that lets users inject adversarial text into di
 
 ### manipulable variable or observable state
 
-The simulator exposes three input regions: (1) **system prompt** — the authoritative instruction block, (2) **user input** — the direct user message, and (3) **retrieved context** — simulated document content fetched from an external source. Users can inject adversarial text (e.g., "Ignore all previous instructions and do X") into any region. Toggle switches enable or disable defense layers: delimiter enforcement, input sanitization, and privilege separation. An output panel shows the model's interpreted instructions and highlights whether the injection succeeded or was blocked, along with an explanation of which defense layer intervened.
+The simulator exposes three input regions: (1) **system prompt** — the authoritative instruction block, (2) **user input** — the direct user message, and (3) **retrieved context** — simulated document content fetched from an external source. A future version would let users inject adversarial text (e.g., "Ignore all previous instructions and do X") into any region. Toggle switches enable or disable defense layers: delimiter enforcement, input sanitization, and privilege separation. An output panel shows the model's interpreted instructions and highlights whether the injection succeeded or was blocked, along with an explanation of which defense layer intervened.
 
 ### interpretation guidance
 
@@ -66,7 +66,7 @@ When the injection succeeds, the output panel displays the model's behavior as i
 
 ### motivation
 
-Understanding prompt injection is critical for building secure LLM applications that handle untrusted user input and external data sources.
+Safe and aligned AI deployment requires understanding these failure modes and defense mechanisms — they are essential for trustworthy production systems.
 
 ## Dependency Notes
 

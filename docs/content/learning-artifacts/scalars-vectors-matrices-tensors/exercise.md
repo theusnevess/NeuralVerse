@@ -50,7 +50,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Scalars, Vectors, Matrices, and Tensors topic and serves as a Exercise.
+Provides practice applying the concepts of Determining Tensor Shapes — guides the learner through reasoning steps that reinforce understanding of Scalars, Vectors, Matrices, and Tensors through active problem-solving.
 
 ## Required Contract Fields
 
@@ -64,7 +64,7 @@ An image dataset contains 100 grayscale images, each of size 28x28 pixels. Descr
 
 ### expected learner output
 
-For grayscale images, the tensor rank is 3, with shape [100, 28, 28] representing (batch_size, height, width). For RGB color images, the rank increases to 4, with shape [100, 3, 28, 28] or [100, 28, 28, 3] to accommodate the color channels.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -72,7 +72,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale retrieval and search systems.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

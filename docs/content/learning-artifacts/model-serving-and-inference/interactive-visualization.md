@@ -49,7 +49,7 @@ audience_notes: "Intended for ML engineers, MLOps practitioners, and backend eng
 
 ## Artifact Summary
 
-This artifact belongs to the Production AI Systems topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring Serving Configuration Playground Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Production AI Systems.
 
 ## Required Contract Fields
 
@@ -82,7 +82,7 @@ When the user increases concurrent requests without adjusting batch size or batc
 
 ### motivation
 
-Understanding model serving and inference optimization is critical for deploying LLMs that meet production latency, throughput, and cost requirements.
+Production ML requires efficient model serving — these optimization techniques ensure deployed models meet latency, throughput, and cost targets.
 
 ## Dependency Notes
 

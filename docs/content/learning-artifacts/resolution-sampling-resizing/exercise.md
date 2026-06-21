@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Image Resolution, Sampling, and Resizing topic and serves as a Exercise.
+Provides practice applying the concepts of Interpolated Coordinate Values — guides the learner through reasoning steps that reinforce understanding of Image Resolution, Sampling, and Resizing through active problem-solving.
 
 ## Required Contract Fields
 
@@ -63,7 +63,7 @@ You resize a grayscale image from $100 \times 100$ to $200 \times 200$. Explain 
 
 ### expected learner output
 
-The target grid has four times as many coordinates as the source. Coordinates in the target image do not map directly to integer indices in the source grid. Bilinear interpolation solves this by locating the fractional coordinate in the source grid, identifying the 4 surrounding pixels, and performing a weighted average based on linear distances.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -71,7 +71,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale computer vision and multimodal retrieval pipelines.
+Multimodal AI systems connect vision, language, and other modalities — these concepts form the bridge between separate representational spaces.
 
 ## Dependency Notes
 

@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Image Channels and Color Spaces topic and serves as a Comparison Table.
+Compares key approaches, algorithms, or architectures within Image Channels and Color Spaces — organizes RGB vs. Grayscale vs. HSV into a structured reference for selecting between alternatives.
 
 ## Required Contract Fields
 
@@ -69,7 +69,7 @@ Compare color space channels, targets, and advantages.
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale computer vision and multimodal retrieval pipelines.
+Multimodal AI systems connect vision, language, and other modalities — these concepts form the bridge between separate representational spaces.
 
 ## Dependency Notes
 

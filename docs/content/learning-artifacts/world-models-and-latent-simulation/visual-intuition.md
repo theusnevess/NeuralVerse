@@ -48,7 +48,7 @@ audience_notes: "Intended for AI researchers and engineers exploring model-based
 
 ## Artifact Summary
 
-This artifact belongs to the World Models and Latent Simulation topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about The Chess Grandmaster's Mental Board — maps familiar concepts to the technical mechanics of World Models and Latent Simulation, making abstract ideas concrete.
 
 ## Required Contract Fields
 

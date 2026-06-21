@@ -50,7 +50,7 @@ audience_notes: "Intended for AI engineers, safety researchers, and developers b
 
 ## Artifact Summary
 
-This artifact belongs to the AI Safety, Alignment & Guardrails topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about The Customs Inspection Bay — maps familiar concepts to the technical mechanics of AI Safety, Alignment & Guardrails, making abstract ideas concrete.
 
 ## Required Contract Fields
 
@@ -78,7 +78,7 @@ Every inspection decision is logged in the customs registry (monitoring and audi
 
 ### motivation
 
-Understanding policy enforcement and output validation is critical for deploying LLMs safely in production, particularly in regulated industries where unconstrained outputs can cause legal liability, safety incidents, or reputational damage.
+Safe and aligned AI deployment requires robust guardrails — understanding policy enforcement and validation is essential for trustworthy production systems in regulated environments.
 
 ## Dependency Notes
 

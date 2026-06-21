@@ -50,7 +50,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Activation Functions topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about Dimmer vs. Threshold Switch — maps familiar concepts to the technical mechanics of Activation Functions, making abstract ideas concrete.
 
 ## Required Contract Fields
 
@@ -66,7 +66,7 @@ Imagine a light switch vs. a dimmer. A linear model is like a dimmer that change
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale deep networks and search spaces.
+Deep learning builds on these core mechanisms — understanding them is essential for designing, debugging, and improving neural architectures.
 
 ## Dependency Notes
 

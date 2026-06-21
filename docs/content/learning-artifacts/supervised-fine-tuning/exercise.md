@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and model adaptation developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the Supervised Fine-Tuning (SFT) topic and serves as a Exercise.
+Provides practice applying the concepts of Prompt Token Loss Masking Role — guides the learner through reasoning steps that reinforce understanding of Supervised Fine-Tuning (SFT) through active problem-solving.
 
 ## Required Contract Fields
 
@@ -62,7 +62,7 @@ Why are the prompt tokens masked from the loss computation during SFT training, 
 
 ### expected learner output
 
-Prompt tokens are masked because we only want the model to learn how to generate correct *responses*, not how to write the user's queries. If prompt tokens were not masked, the model would update its parameters to maximize the probability of seeing those specific prompt inputs, degrading its ability to generalize to new, unseen prompts.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -70,7 +70,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding Fine-Tuning and Adaptation is critical for specializing models for custom tasks, aligning generation safety, deploying LoRA adapters in production, and selecting RAG combinations.
+Adapting pre-trained models to specific tasks is a core practice in modern ML — these techniques enable efficient specialization without full retraining.
 
 ## Dependency Notes
 

@@ -50,7 +50,7 @@ audience_notes: "Intended for AI engineers and retrieval search developers."
 
 ## Artifact Summary
 
-This artifact belongs to the Query Routing and Intent Detection topic and serves as a Explanatory Text.
+Covers Dynamic Routing Mechanisms and Semantic Intent Detection within the broader topic of Query Routing and Intent Detection — explains the core ideas, their role in AI systems, and what makes them important for practitioners to understand.
 
 ## Required Contract Fields
 
@@ -66,7 +66,7 @@ Query Routing is the architectural pattern of analyzing an incoming user query t
 
 ### motivation
 
-Understanding Advanced Retrieval & RAG Systems is critical for building production-grade QA engines, hallucination guardrails, hybrid index tools, and agentic routers.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

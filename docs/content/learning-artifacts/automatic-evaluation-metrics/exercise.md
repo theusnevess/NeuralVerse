@@ -46,7 +46,7 @@ audience_notes: "Intended for ML engineers, NLP practitioners, and AI evaluators
 
 ## Artifact Summary
 
-This artifact belongs to the Automatic Evaluation Metrics topic and serves as an Exercise.
+Provides practice applying the concepts of Selecting the Right Metric — guides the learner through reasoning steps that reinforce understanding of Automatic Evaluation Metrics through active problem-solving.
 
 ## Required Contract Fields
 
@@ -69,14 +69,7 @@ Your QA model answers factual questions. The reference answer and the model's an
 
 ### expected learner output
 
-**Scenario A — Recommended metric: BLEU**
-Reasoning: Translation quality assessment typically values precision of n-gram overlap because phrasing and terminology matter for accuracy. BLEU's precision focus and brevity penalty align with the requirement that translations match both content and form.
-
-**Scenario B — Recommended metric: ROUGE**
-Reasoning: Summarization evaluation prioritizes recall — whether all key information from the source appears in the summary. ROUGE measures content coverage via n-gram recall, which directly matches the requirement.
-
-**Scenario C — Recommended metric: BERTScore**
-Reasoning: Open-domain QA allows diverse phrasing. BERTScore uses contextual embeddings to measure semantic similarity, making it robust to lexical variation while still capturing whether the answer is factually aligned.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 

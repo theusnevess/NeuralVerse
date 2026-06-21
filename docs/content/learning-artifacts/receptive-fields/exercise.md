@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Receptive Fields topic and serves as a Exercise.
+Provides practice applying the concepts of Two-Layer Output Coverage — guides the learner through reasoning steps that reinforce understanding of Receptive Fields through active problem-solving.
 
 ## Required Contract Fields
 
@@ -62,7 +62,7 @@ A 2-layer CNN uses $3 \times 3$ kernels with stride 1 in both layers. Calculate 
 
 ### expected learner output
 
-Formula: RF_2 = RF_1 + (K_2 - 1) * S_1. With RF_1 = 3, K_2 = 3, and S_1 = 1, we get RF_2 = 3 + (3 - 1) * 1 = 3 + 2 = 5. The receptive field is 5 x 5 pixels.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -70,7 +70,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale Convolutional Neural Networks and transfer learning backbones.
+Computer vision pipelines are built on these perceptual primitives — understanding them enables effective architecture design and troubleshooting.
 
 ## Dependency Notes
 

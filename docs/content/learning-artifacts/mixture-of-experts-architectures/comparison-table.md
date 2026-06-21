@@ -47,7 +47,7 @@ audience_notes: "Intended for AI engineers and researchers exploring efficient s
 
 ## Artifact Summary
 
-This artifact belongs to the Mixture of Experts (MoE) Architectures topic and serves as a Comparison Table.
+Compares key approaches, algorithms, or architectures within Mixture of Experts (MoE) Architectures — organizes MoE Architecture Variants Comparison into a structured reference for selecting between alternatives.
 
 ## Required Contract Fields
 

@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Forward Propagation topic and serves as a Exercise.
+Provides practice applying the concepts of Layer Pre-Activation Vector — guides the learner through reasoning steps that reinforce understanding of Forward Propagation through active problem-solving.
 
 ## Required Contract Fields
 
@@ -62,7 +62,7 @@ Given a weight matrix $W = \begin{pmatrix} 0.5 & -0.2 \\ 0.1 & 0.8 \end{pmatrix}
 
 ### expected learner output
 
-$z = W * a + b = \begin{pmatrix} 0.5*2.0 + (-0.2)*1.0 \\ 0.1*2.0 + 0.8*1.0 \end{pmatrix} + \begin{pmatrix} 0.2 \\ -0.5 \end{pmatrix} = \begin{pmatrix} 0.8 \\ 1.0 \end{pmatrix} + \begin{pmatrix} 0.2 \\ -0.5 \end{pmatrix} = \begin{pmatrix} 1.0 \\ 0.5 \end{pmatrix}$. The pre-activation vector is [1.0, 0.5].
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -70,7 +70,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale deep networks and search spaces.
+Deep learning builds on these core mechanisms — understanding them is essential for designing, debugging, and improving neural architectures.
 
 ## Dependency Notes
 

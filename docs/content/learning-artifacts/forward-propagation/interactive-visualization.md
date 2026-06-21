@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Forward Propagation topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring Conveyor Inference Simulator Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Forward Propagation.
 
 ## Required Contract Fields
 
@@ -64,7 +64,7 @@ This specification outlines a step-by-step forward propagation calculator. The u
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale deep networks and search spaces.
+Deep learning builds on these core mechanisms — understanding them is essential for designing, debugging, and improving neural architectures.
 
 ## Dependency Notes
 

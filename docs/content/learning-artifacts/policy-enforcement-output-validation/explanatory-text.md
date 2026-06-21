@@ -53,7 +53,7 @@ audience_notes: "Intended for AI engineers, safety researchers, and developers b
 
 ## Artifact Summary
 
-This artifact belongs to the AI Safety, Alignment & Guardrails topic and serves as a Explanatory Text.
+Covers Policy Enforcement and Output Validation within the broader topic of AI Safety, Alignment & Guardrails — explains the core ideas, their role in AI systems, and what makes them important for practitioners to understand.
 
 ## Required Contract Fields
 
@@ -87,7 +87,7 @@ Policy enforcement for LLM outputs is a multi-layered framework that ensures gen
 
 ### motivation
 
-Understanding policy enforcement and output validation is critical for deploying LLMs safely in production, particularly in regulated industries where unconstrained outputs can cause legal liability, safety incidents, or reputational damage.
+Safe and aligned AI deployment requires robust guardrails — understanding policy enforcement and validation is essential for trustworthy production systems in regulated environments.
 
 ## Dependency Notes
 

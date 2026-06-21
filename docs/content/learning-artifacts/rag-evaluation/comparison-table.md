@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and evaluation practitioners."
 
 ## Artifact Summary
 
-This artifact belongs to the RAG Evaluation Frameworks topic and serves as a Comparison Table.
+Compares key approaches, algorithms, or architectures within RAG Evaluation Frameworks — organizes RAG Evaluation Dimensions into a structured reference for selecting between alternatives.
 
 ## Required Contract Fields
 
@@ -74,7 +74,7 @@ Faithfulness and answer relevance both assess the generation component but catch
 
 ### motivation
 
-Understanding RAG evaluation frameworks is critical for diagnosing pipeline failures, benchmarking retrieval and generation components, and building trustworthy QA systems.
+Retrieval-augmented workflows depend on evaluation to diagnose failures — mastering these frameworks is key to building trustworthy generation systems.
 
 ## Dependency Notes
 

@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and language developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the Positional Encoding topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring Wave Frequency Heatmap Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Positional Encoding.
 
 ## Required Contract Fields
 
@@ -64,7 +64,7 @@ This specification describes a sinusoidal wave grid. The user inputs sequence le
 
 ### motivation
 
-Understanding Transformers is critical for building modern LLMs (GPT-4, Llama), semantic search retrievers, RAG interfaces, and Vision Transformers.
+Transformers form the backbone of modern LLMs — understanding their attention mechanisms, scaling properties, and architectural variants is essential for working with models like GPT-4, Llama, and their successors.
 
 ## Dependency Notes
 

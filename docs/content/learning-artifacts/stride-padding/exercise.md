@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Stride and Padding topic and serves as a Exercise.
+Provides practice applying the concepts of Dimensional Padding Outputs — guides the learner through reasoning steps that reinforce understanding of Stride and Padding through active problem-solving.
 
 ## Required Contract Fields
 
@@ -62,7 +62,7 @@ An input image of size $28 \times 28$ is convolved with a $5 \times 5$ kernel. T
 
 ### expected learner output
 
-Formula: O = ((H_in - K + 2P) / S) + 1. Substituting: O = ((28 - 5 + 2*2) / 1) + 1 = ((23 + 4) / 1) + 1 = 27 + 1 = 28. The spatial output dimension is 28.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -70,7 +70,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale Convolutional Neural Networks and transfer learning backbones.
+Computer vision pipelines are built on these perceptual primitives — understanding them enables effective architecture design and troubleshooting.
 
 ## Dependency Notes
 

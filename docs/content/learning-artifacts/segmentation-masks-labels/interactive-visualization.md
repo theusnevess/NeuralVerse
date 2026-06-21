@@ -48,13 +48,13 @@ audience_notes: "Intended for AI engineers and computer vision developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the Segmentation Masks and Label Maps topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring Lookup Table Palette Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Segmentation Masks and Label Maps.
 
 ## Required Contract Fields
 
 ### objective
 
-Specify a color map selector mapping index keys to RGB colors.
+Specify a color map would selector mapping index keys to RGB colors.
 
 ### explanation
 
@@ -64,7 +64,7 @@ This specification describes an index-to-color mapper. The user edits an index g
 
 ### motivation
 
-Understanding segmentation is critical for building medical scanners, self-driving cars, satellite crop trackers, and human-in-the-loop image editors.
+Segmentation techniques enable pixel-level understanding of visual data — they are fundamental to medical imaging, autonomous navigation, and remote sensing applications.
 
 ## Dependency Notes
 

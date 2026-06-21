@@ -50,7 +50,7 @@ audience_notes: "Intended for AI engineers and retrieval search developers."
 
 ## Artifact Summary
 
-This artifact belongs to the Context Fusion and Aggregation topic and serves as a Exercise.
+Provides practice applying the concepts of Calculating RRF Scores — guides the learner through reasoning steps that reinforce understanding of Context Fusion and Aggregation through active problem-solving.
 
 ## Required Contract Fields
 
@@ -64,9 +64,7 @@ Given a document $D$ ranked 3rd in List A and 5th in List B, calculate its Recip
 
 ### expected learner output
 
-Calculation:
-$RRF(D) = \frac{1}{60 + 3} + \frac{1}{60 + 5} = \frac{1}{63} + \frac{1}{65} \approx 0.01587 + 0.01538 = 0.03125$
-This score is used to rank document $D$ in the aggregated list relative to other documents.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -74,7 +72,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding Advanced Retrieval & RAG Systems is critical for building production-grade QA engines, hallucination guardrails, hybrid index tools, and agentic routers.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

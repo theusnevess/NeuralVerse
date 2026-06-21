@@ -50,7 +50,7 @@ audience_notes: "Intended for ML engineers, MLOps practitioners, and SREs managi
 
 ## Artifact Summary
 
-This artifact belongs to the Model Monitoring and Observability topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about The Air Traffic Control Tower — maps familiar concepts to the technical mechanics of Model Monitoring and Observability, making abstract ideas concrete.
 
 ## Required Contract Fields
 
@@ -84,7 +84,7 @@ The air traffic control tower cannot prevent all problems, but it ensures that w
 
 ### motivation
 
-Understanding model monitoring and observability is critical for maintaining reliable, safe, and cost-efficient production AI systems at scale.
+Production ML requires more than deployed models — monitoring and observability ensure ongoing reliability, safety, and cost efficiency at scale.
 
 ## Dependency Notes
 

@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the RAG Foundations topic and serves as a Exercise.
+Provides practice applying the concepts of Debugging RAG Responses — guides the learner through reasoning steps that reinforce understanding of RAG Foundations through active problem-solving.
 
 ## Required Contract Fields
 
@@ -62,7 +62,7 @@ A RAG system returns a wrong answer. Inspecting the logs, you find that: Case A:
 
 ### expected learner output
 
-The learner should explain that Case A is a retrieval failure (fix by improving search index, tuning embed model, or increasing k) and Case B is a generation failure (fix by refining prompt instructions, using a more advanced model, or ordering retrieved content differently).
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -70,7 +70,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale retrieval and search systems.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Vector Spaces topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring Vector Spaces Interactive Exploration Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Vector Spaces.
 
 ## Required Contract Fields
 
@@ -64,7 +64,7 @@ This specification describes an interactive 3D plotter. The interface contains s
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale retrieval and search systems.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

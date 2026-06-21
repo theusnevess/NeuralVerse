@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Random Variables topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about Visualizing Continuous vs. Discrete Outlines — maps familiar concepts to the technical mechanics of Random Variables, making abstract ideas concrete.
 
 ## Required Contract Fields
 
@@ -65,7 +65,7 @@ Imagine a prize wheel. If the wheel has slots labeled '1st', '2nd', '3rd', the p
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale retrieval and search systems.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

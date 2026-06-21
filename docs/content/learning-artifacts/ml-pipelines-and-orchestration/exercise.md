@@ -45,7 +45,7 @@ audience_notes: "Intended for ML engineers, MLOps practitioners, and DevOps engi
 
 ## Artifact Summary
 
-This artifact belongs to the ML Pipelines and Orchestration topic and serves as a Exercise.
+Provides practice applying the concepts of Designing an ML Pipeline — guides the learner through reasoning steps that reinforce understanding of ML Pipelines and Orchestration through active problem-solving.
 
 ## Required Contract Fields
 
@@ -65,7 +65,7 @@ Choose one of the following three contexts and design a complete ML pipeline. Fo
 
 ### expected learner output
 
-A description of the pipeline design covering stages, orchestration choice, failure handling, and CI/CD integration.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -73,7 +73,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding this topic is critical for building reliable, automated ML systems in production.
+Production ML requires reliable, automated pipelines — understanding orchestration, scheduling, and dependency management is essential for building systems that operate at scale without manual intervention.
 
 ## Dependency Notes
 

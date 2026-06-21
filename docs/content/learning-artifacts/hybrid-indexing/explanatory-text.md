@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and retrieval search developers."
 
 ## Artifact Summary
 
-This artifact belongs to the Hybrid Indexing Strategies topic and serves as a Explanatory Text.
+Covers Combining Sparse Keywords, Dense Vectors, and Metadata Indexes within the broader topic of Hybrid Indexing Strategies — explains the core ideas, their role in AI systems, and what makes them important for practitioners to understand.
 
 ## Required Contract Fields
 
@@ -65,7 +65,7 @@ Hybrid Indexing combines lexical search (e.g., BM25 keyword matching) and dense 
 
 ### motivation
 
-Understanding Advanced Retrieval & RAG Systems is critical for building production-grade QA engines, hallucination guardrails, hybrid index tools, and agentic routers.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

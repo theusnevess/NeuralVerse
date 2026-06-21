@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer vision developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the One-Stage vs Two-Stage Detectors topic and serves as a Exercise.
+Provides practice applying the concepts of Real-Time Latency Trade-Offs — guides the learner through reasoning steps that reinforce understanding of One-Stage vs Two-Stage Detectors through active problem-solving.
 
 ## Required Contract Fields
 
@@ -62,7 +62,7 @@ In an autonomous vehicle detection system, identify which detector category (one
 
 ### expected learner output
 
-One-stage detectors (like YOLO) are more suitable. Autonomous driving requires real-time processing (e.g., > 30 FPS) and extremely low latency to react to obstacles. Two-stage detectors generate region proposals sequentially, adding unacceptable latency that violates safety limits.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -70,7 +70,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding this topic is critical for building autonomous vehicles, industrial inspections, robotic manipulators, and multi-object real-time surveillance backbones.
+Object detection pipelines power real-world applications from autonomous driving to medical imaging — understanding these architectural choices is key to building effective perception systems.
 
 ## Dependency Notes
 

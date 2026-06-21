@@ -50,7 +50,7 @@ audience_notes: "Intended for AI engineers, safety researchers, and developers b
 
 ## Artifact Summary
 
-This artifact belongs to the AI Safety, Alignment & Guardrails topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about The Judge and the Fact-Checkers — maps familiar concepts to the technical mechanics of AI Safety, Alignment & Guardrails, making abstract ideas concrete.
 
 ## Required Contract Fields
 

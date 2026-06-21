@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers, safety researchers, and LLM applicat
 
 ## Artifact Summary
 
-This artifact belongs to the Guardrail Architectures topic and serves as a Explanatory Text.
+Covers Guardrail Architectures for LLM Applications within the broader topic of Guardrail Architectures — explains the core ideas, their role in AI systems, and what makes them important for practitioners to understand.
 
 ## Required Contract Fields
 

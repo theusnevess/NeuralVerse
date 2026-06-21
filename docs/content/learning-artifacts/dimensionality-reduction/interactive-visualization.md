@@ -50,7 +50,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Dimensionality Reduction topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring PCA and UMAP Projection Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Dimensionality Reduction.
 
 ## Required Contract Fields
 
@@ -60,13 +60,13 @@ Specify an interactive cluster playground comparing linear vs. non-linear projec
 
 ### explanation
 
-This specification outlines a dimensionality reduction visualizer. The user selects a dataset of 3D vectors and applies PCA or UMAP projection to 2D. The tool animates the projection process, showing how clusters are separated on the flat screen.
+This specification outlines a dimensionality reduction visualizer. The user would selects a dataset of 3D vectors and applies PCA or UMAP projection to 2D. The tool animates the projection process, showing how clusters are separated on the flat screen.
 
 ## Optional Enrichment Fields
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale retrieval and search systems.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

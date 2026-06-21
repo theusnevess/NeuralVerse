@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Epochs, Batches, and Learning Rate topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring Learning Rate Loss Curve Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Epochs, Batches, and Learning Rate.
 
 ## Required Contract Fields
 
@@ -65,7 +65,7 @@ This specification outlines a learning rate scheduler simulator. The user slides
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale deep networks and search spaces.
+Deep learning builds on these core mechanisms — understanding them is essential for designing, debugging, and improving neural architectures.
 
 ## Dependency Notes
 

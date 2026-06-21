@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers, safety researchers, and developers b
 
 ## Artifact Summary
 
-This artifact belongs to the AI Safety, Alignment & Guardrails topic and serves as a Comparison Table.
+Compares key approaches, algorithms, or architectures within AI Safety, Alignment & Guardrails — organizes Validation and Enforcement Approaches into a structured reference for selecting between alternatives.
 
 ## Required Contract Fields
 
@@ -76,7 +76,7 @@ The validation and enforcement approaches form a layered defense. Structural val
 
 ### motivation
 
-Understanding policy enforcement and output validation is critical for deploying LLMs safely in production, particularly in regulated industries where unconstrained outputs can cause legal liability, safety incidents, or reputational damage.
+Safe and aligned AI deployment requires robust guardrails — understanding policy enforcement and validation is essential for trustworthy production systems in regulated environments.
 
 ## Dependency Notes
 

@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer vision developers."
 
 ## Artifact Summary
 
-This artifact belongs to the Multimodal Retrieval topic and serves as a Exercise.
+Provides practice applying the concepts of Pre-Computing Image Indices — guides the learner through reasoning steps that reinforce understanding of Multimodal Retrieval through active problem-solving.
 
 ## Required Contract Fields
 
@@ -63,7 +63,7 @@ Explain the architecture of a text-to-image search engine, highlighting how inde
 
 ### expected learner output
 
-During indexing, a vision encoder pre-computes embeddings for all catalog images, storing them in a Vector Database. At query time, the user's text query passes through a text encoder to produce a query embedding. The vector database performs an approximate nearest neighbor (ANN) search comparing the query embedding directly to the pre-computed image embeddings.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -71,7 +71,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding Multimodal AI Foundations is critical for building search engines, image captioners, visual answer systems, and joint textual/visual models.
+Multimodal AI systems connect vision, language, and other modalities — these concepts form the bridge between separate representational spaces.
 
 ## Dependency Notes
 

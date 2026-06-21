@@ -50,7 +50,7 @@ audience_notes: "Intended for ML engineers, MLOps practitioners, and platform en
 
 ## Artifact Summary
 
-This artifact belongs to the Deployment Strategies and Rollbacks topic and serves as a Comparison Table.
+Compares key approaches, algorithms, or architectures within Deployment Strategies and Rollbacks — organizes Deployment Strategies into a structured reference for selecting between alternatives.
 
 ## Required Contract Fields
 

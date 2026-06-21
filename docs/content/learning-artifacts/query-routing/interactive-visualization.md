@@ -50,7 +50,7 @@ audience_notes: "Intended for AI engineers and retrieval search developers."
 
 ## Artifact Summary
 
-This artifact belongs to the Query Routing and Intent Detection topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring Dynamic Query Router Flowchart Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Query Routing and Intent Detection.
 
 ## Required Contract Fields
 
@@ -66,7 +66,7 @@ This specification describes an interactive query routing switchboard. The user 
 
 ### motivation
 
-Understanding Advanced Retrieval & RAG Systems is critical for building production-grade QA engines, hallucination guardrails, hybrid index tools, and agentic routers.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

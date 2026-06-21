@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer vision developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the Anchor-Based vs Anchor-Free Detection topic and serves as a Comparison Table.
+Compares key approaches, algorithms, or architectures within Anchor-Based vs Anchor-Free Detection — organizes Anchor vs. Anchor-Free Designs into a structured reference for selecting between alternatives.
 
 ## Required Contract Fields
 
@@ -67,7 +67,7 @@ Compare priors, heads, advantages, and limitations of anchor-based and anchor-fr
 
 ### motivation
 
-Understanding this topic is critical for building autonomous vehicles, industrial inspections, robotic manipulators, and multi-object real-time surveillance backbones.
+Object detection pipelines power real-world applications from autonomous driving to medical imaging — understanding these architectural choices is key to building effective perception systems.
 
 ## Dependency Notes
 

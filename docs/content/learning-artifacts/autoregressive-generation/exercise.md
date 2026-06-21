@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and language model developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the Autoregressive Generation topic and serves as a Exercise.
+Provides practice applying the concepts of Logit Probabilities and Temperature Scale — guides the learner through reasoning steps that reinforce understanding of Autoregressive Generation through active problem-solving.
 
 ## Required Contract Fields
 
@@ -62,7 +62,7 @@ Given logits for three tokens: $[2.0, 1.0, -1.0]$. 1. Calculate soft probabiliti
 
 ### expected learner output
 
-1. With T=1.0, logits are [2.0, 1.0, -1.0]. Exp values: e^2 ≈ 7.389, e^1 ≈ 2.718, e^-1 ≈ 0.368. Sum = 10.475. Probs: P1 ≈ 7.389/10.475 ≈ 0.705. P2 ≈ 2.718/10.475 ≈ 0.260. P3 ≈ 0.368/10.475 ≈ 0.035. 2. With T=0.1, logits are scaled by 10: [20.0, 10.0, -10.0]. The probability of the highest logit token approaches 1.0 (P1 ≈ 0.99995), making generation almost entirely deterministic (greedy decoding).
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -70,7 +70,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding LLM foundations is critical for building generative chatbots, few-shot classifiers, long-context search retrievers, and aligned AI systems.
+Modern language models rely on these mechanisms for generation, reasoning, and alignment — understanding them is essential for building reliable LLM applications.
 
 ## Dependency Notes
 

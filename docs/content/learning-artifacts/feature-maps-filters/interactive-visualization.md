@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Feature Maps and Filters topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring Filter Weight Applicator Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Feature Maps and Filters.
 
 ## Required Contract Fields
 
@@ -65,7 +65,7 @@ This specification describes a filter builder. The user types custom weights int
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale computer vision and multimodal retrieval pipelines.
+Multimodal AI systems connect vision, language, and other modalities — these concepts form the bridge between separate representational spaces.
 
 ## Dependency Notes
 

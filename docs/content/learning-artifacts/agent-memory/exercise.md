@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and agent systems developers."
 
 ## Artifact Summary
 
-This artifact belongs to the Memory Systems for Agents topic and serves as a Exercise.
+Provides practice applying the concepts of Short-Term vs. Long-Term Constraints — guides the learner through reasoning steps that reinforce understanding of Memory Systems for Agents through active problem-solving.
 
 ## Required Contract Fields
 
@@ -63,7 +63,7 @@ Contrast short-term memory and long-term memory in agents across storage media, 
 
 ### expected learner output
 
-Short-term memory lives in the GPU/RAM context window, has zero search latency, but scales prompt token cost linearly. Long-term memory lives in an external database, has search/retrieval latency, but reduces token costs by only loading semantic slices relevant to the current turn.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -71,7 +71,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding AI Agents and Tool Use is critical for building autonomous software assistants, function callers, memory-backed bots, and self-correcting coders.
+Agentic systems extend language models beyond passive generation — these concepts enable autonomous reasoning, tool use, and multi-step execution.
 
 ## Dependency Notes
 

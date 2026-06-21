@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Hybrid Search topic and serves as a Exercise.
+Provides practice applying the concepts of Calculating RRF Scores — guides the learner through reasoning steps that reinforce understanding of Hybrid Search through active problem-solving.
 
 ## Required Contract Fields
 
@@ -63,7 +63,7 @@ Given a Lexical list [Doc A, Doc B, Doc C] and a Dense list [Doc B, Doc D, Doc A
 
 ### expected learner output
 
-For Doc A: Lexical rank=1, Dense rank=3. RRF(A) = 1/(60+1) + 1/(60+3) = 1/61 + 1/63 = 0.01639 + 0.01587 = 0.03226. For Doc B: Lexical rank=2, Dense rank=1. RRF(B) = 1/(60+2) + 1/(60+1) = 1/62 + 1/61 = 0.01613 + 0.01639 = 0.03252. Therefore, Doc B is ranked first in the hybrid output (0.03252 > 0.03226).
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -71,7 +71,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale retrieval and search systems.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

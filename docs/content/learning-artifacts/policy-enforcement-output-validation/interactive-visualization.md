@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers, safety researchers, and developers b
 
 ## Artifact Summary
 
-This artifact belongs to the AI Safety, Alignment & Guardrails topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring Policy Enforcement Pipeline Configurator Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand AI Safety, Alignment & Guardrails.
 
 ## Required Contract Fields
 
@@ -59,23 +59,23 @@ Specify an interactive pipeline configurator that maps an output validation work
 
 ### explanation
 
-This specification describes a Policy Enforcement Pipeline Configurator tool. The tool visualizes a multi-stage validation pipeline as a horizontal flowchart. Each stage represents a validation or enforcement function. Users can toggle stages on or off, configure per-stage fail-open/fail-closed policies, set approval thresholds, and observe how different sample outputs pass, fail, or get escalated through the pipeline.
+This specification describes a Policy Enforcement Pipeline Configurator tool. The tool visualizes a multi-stage validation pipeline as a horizontal flowchart. Each stage represents a validation or enforcement function. A future version would let users toggle stages on or off, configure per-stage fail-open/fail-closed policies, set approval thresholds, and observe how different sample outputs pass, fail, or get escalated through the pipeline.
 
 **Stages:**
 1. Raw Generation — the LLM output enters the pipeline.
-2. Structural Validation — checks JSON schema conformance, type correctness, and required field presence. Configurable: schema selector, strict vs. lenient mode.
+2. Structural Validation — checks JSON schema conformance, type correctness, and required field presence. Configurable: schema would selector, strict vs. lenient mode.
 3. Semantic Validation — evaluates meaning, policy compliance, and factual consistency. Configurable: target policies, confidence threshold.
-4. Policy Enforcement — applies declarative rule-based policies. Configurable: policy set selector (allow/deny lists, contextual rules).
+4. Policy Enforcement — applies declarative rule-based policies. Configurable: policy set would selector (allow/deny lists, contextual rules).
 5. Deterministic Filter — applies regex patterns, blocklists, and pattern matching. Configurable: filter set, match action (reject vs. flag).
-6. Model-Based Filter — invokes safety classifiers or LLM-as-judge. Configurable: model selector, scoring threshold.
+6. Model-Based Filter — invokes safety classifiers or LLM-as-judge. Configurable: model would selector, scoring threshold.
 7. Approval Routing — routes escalated outputs to human reviewers. Configurable: escalation threshold, reviewer pool size, SLA timeout.
 8. Final Output — disposition result: Pass (green), Reject (red), Escalate (yellow), Degraded (orange).
 
 **Manipulable variables:**
 - Per-stage on/off toggle.
-- Per-stage fail-open/fail-closed policy selector.
+- Per-stage fail-open/fail-closed policy would selector.
 - Approval threshold slider (0-100% confidence).
-- Sample output selector (pre-configured good, borderline, and violating outputs).
+- Sample output would selector (pre-configured good, borderline, and violating outputs).
 - Reviewer timeout setting.
 
 **Observable state:**
@@ -87,13 +87,13 @@ This specification describes a Policy Enforcement Pipeline Configurator tool. Th
 
 ### interpretation guidance
 
-When a sample output is processed, the user sees it move through each active stage. A green checkmark means the stage validated successfully. A red X means the stage rejected the output. A yellow warning means the stage escalated for human review. The final disposition synthesizes all stage outcomes. Users can experiment by disabling stages, switching fail-open/fail-closed modes, and adjusting thresholds to understand how configuration choices affect safety and availability trade-offs.
+When a sample output is processed, the user sees it move through each active stage. A green checkmark means the stage validated successfully. A red X means the stage rejected the output. A yellow warning means the stage escalated for human review. The final disposition synthesizes all stage outcomes. A future version would let users experiment by disabling stages, switching fail-open/fail-closed modes, and adjusting thresholds to understand how configuration choices affect safety and availability trade-offs.
 
 ## Optional Enrichment Fields
 
 ### motivation
 
-Understanding policy enforcement and output validation is critical for deploying LLMs safely in production, particularly in regulated industries where unconstrained outputs can cause legal liability, safety incidents, or reputational damage.
+Safe and aligned AI deployment requires robust guardrails — understanding policy enforcement and validation is essential for trustworthy production systems in regulated environments.
 
 ## Dependency Notes
 

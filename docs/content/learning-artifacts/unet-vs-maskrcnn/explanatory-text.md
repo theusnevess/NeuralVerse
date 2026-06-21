@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer vision developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the U-Net vs Mask R-CNN (Conceptual Comparison) topic and serves as a Explanatory Text.
+Covers Symmetric Pixel Map vs. Box-Based Mask Predictions within the broader topic of U-Net vs Mask R-CNN (Conceptual Comparison) — explains the core ideas, their role in AI systems, and what makes them important for practitioners to understand.
 
 ## Required Contract Fields
 
@@ -64,7 +64,7 @@ U-Net and Mask R-CNN represent the two main paradigms in image segmentation: 1. 
 
 ### motivation
 
-Understanding segmentation is critical for building medical scanners, self-driving cars, satellite crop trackers, and human-in-the-loop image editors.
+Segmentation techniques enable pixel-level understanding of visual data — they are fundamental to medical imaging, autonomous navigation, and remote sensing applications.
 
 ## Dependency Notes
 

@@ -48,13 +48,13 @@ audience_notes: "Intended for AI engineers and model adaptation developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the Instruction Tuning topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring Alignment Pathway Mapper Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Instruction Tuning.
 
 ## Required Contract Fields
 
 ### objective
 
-Specify a routing selector comparing statistical loops with direct responses.
+Specify a routing would selector comparing statistical loops with direct responses.
 
 ### explanation
 
@@ -64,7 +64,7 @@ This specification outlines an instruction-response alignment mapper. The user i
 
 ### motivation
 
-Understanding Fine-Tuning and Adaptation is critical for specializing models for custom tasks, aligning generation safety, deploying LoRA adapters in production, and selecting RAG combinations.
+Adapting pre-trained models to specific tasks is a core practice in modern ML — these techniques enable efficient specialization without full retraining.
 
 ## Dependency Notes
 

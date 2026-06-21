@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and agent systems developers."
 
 ## Artifact Summary
 
-This artifact belongs to the Agentic AI Fundamentals topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about The Recipe Reader vs. the Line Chef — maps familiar concepts to the technical mechanics of Agentic AI Fundamentals, making abstract ideas concrete.
 
 ## Required Contract Fields
 
@@ -65,7 +65,7 @@ Imagine a recipe reader vs. a line chef. A static LLM is like the reader: they r
 
 ### motivation
 
-Understanding AI Agents and Tool Use is critical for building autonomous software assistants, function callers, memory-backed bots, and self-correcting coders.
+Agentic systems extend language models beyond passive generation — these concepts enable autonomous reasoning, tool use, and multi-step execution.
 
 ## Dependency Notes
 

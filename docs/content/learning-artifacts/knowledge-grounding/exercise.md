@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and retrieval search developers."
 
 ## Artifact Summary
 
-This artifact belongs to the Knowledge Grounding and Attribution topic and serves as a Exercise.
+Provides practice applying the concepts of Detecting Hallucinations via Citations — guides the learner through reasoning steps that reinforce understanding of Knowledge Grounding and Attribution through active problem-solving.
 
 ## Required Contract Fields
 
@@ -63,7 +63,7 @@ Given a source document containing the statement 'Company X reported a revenue o
 
 ### expected learner output
 
-The grounding error is temporal extrapolation (claiming $5M was made 'last year' instead of 'in Q3'). Citation mapping flags this because when auditing the sentence 'Company X made $5M last year' against the cited Q3 source chunk, the semantic verification model flags a contradiction/unsupported claim due to the time window mismatch.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -71,7 +71,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding Advanced Retrieval & RAG Systems is critical for building production-grade QA engines, hallucination guardrails, hybrid index tools, and agentic routers.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Feature Maps and Filters topic and serves as a Comparison Table.
+Compares key approaches, algorithms, or architectures within Feature Maps and Filters — organizes Edge Detector vs. Blur Filter into a structured reference for selecting between alternatives.
 
 ## Required Contract Fields
 
@@ -68,7 +68,7 @@ Compare Sobel vertical and average blur kernel structures, feature maps, and app
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale computer vision and multimodal retrieval pipelines.
+Multimodal AI systems connect vision, language, and other modalities — these concepts form the bridge between separate representational spaces.
 
 ## Dependency Notes
 

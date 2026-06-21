@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and evaluation practitioners."
 
 ## Artifact Summary
 
-This artifact belongs to the RAG Evaluation Frameworks topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about The Fact-Checker and the Librarian — maps familiar concepts to the technical mechanics of RAG Evaluation Frameworks, making abstract ideas concrete.
 
 ## Required Contract Fields
 
@@ -69,7 +69,7 @@ The editor then reads the final draft and asks: does this actually answer the qu
 
 ### motivation
 
-Understanding RAG evaluation frameworks is critical for diagnosing pipeline failures, benchmarking retrieval and generation components, and building trustworthy QA systems.
+Retrieval-augmented workflows depend on evaluation to diagnose failures — mastering these frameworks is key to building trustworthy generation systems.
 
 ## Dependency Notes
 

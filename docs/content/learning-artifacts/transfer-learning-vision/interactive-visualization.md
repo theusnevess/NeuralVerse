@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Transfer Learning in Vision topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring Training Mode Flowchart Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Transfer Learning in Vision.
 
 ## Required Contract Fields
 
@@ -64,7 +64,7 @@ This specification outlines a training workflow visualizer. The user toggles bet
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale Convolutional Neural Networks and transfer learning backbones.
+Computer vision pipelines are built on these perceptual primitives — understanding them enables effective architecture design and troubleshooting.
 
 ## Dependency Notes
 

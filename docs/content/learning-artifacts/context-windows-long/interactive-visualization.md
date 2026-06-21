@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and language model developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the Context Windows and Long Context topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring KV Cache Memory Calculator Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Context Windows and Long Context.
 
 ## Required Contract Fields
 
@@ -64,7 +64,7 @@ This specification outlines a KV cache memory calculator. The user adjusts model
 
 ### motivation
 
-Understanding LLM foundations is critical for building generative chatbots, few-shot classifiers, long-context search retrievers, and aligned AI systems.
+Modern language models rely on these mechanisms for generation, reasoning, and alignment — understanding them is essential for building reliable LLM applications.
 
 ## Dependency Notes
 

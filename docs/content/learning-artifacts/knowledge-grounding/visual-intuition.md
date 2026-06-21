@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and retrieval search developers."
 
 ## Artifact Summary
 
-This artifact belongs to the Knowledge Grounding and Attribution topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about The Open-Book History Exam — maps familiar concepts to the technical mechanics of Knowledge Grounding and Attribution, making abstract ideas concrete.
 
 ## Required Contract Fields
 
@@ -65,7 +65,7 @@ Imagine an open-book history exam. The teacher gives the student a short text ab
 
 ### motivation
 
-Understanding Advanced Retrieval & RAG Systems is critical for building production-grade QA engines, hallucination guardrails, hybrid index tools, and agentic routers.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

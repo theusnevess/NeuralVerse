@@ -50,7 +50,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Overfitting and Underfitting topic and serves as a Explanatory Text.
+Covers Overfitting, Underfitting, and Generalization within the broader topic of Overfitting and Underfitting — explains the core ideas, their role in AI systems, and what makes them important for practitioners to understand.
 
 ## Required Contract Fields
 
@@ -66,7 +66,7 @@ Generalization is a model's ability to perform well on unseen data. Two common f
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale retrieval and search systems.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

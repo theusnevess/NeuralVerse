@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer vision developers."
 
 ## Artifact Summary
 
-This artifact belongs to the Multimodal Retrieval topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring Cross-Modal Vector Search Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Multimodal Retrieval.
 
 ## Required Contract Fields
 
@@ -65,7 +65,7 @@ This specification describes a cross-modal search engine simulation. The user ty
 
 ### motivation
 
-Understanding Multimodal AI Foundations is critical for building search engines, image captioners, visual answer systems, and joint textual/visual models.
+Multimodal AI systems connect vision, language, and other modalities — these concepts form the bridge between separate representational spaces.
 
 ## Dependency Notes
 

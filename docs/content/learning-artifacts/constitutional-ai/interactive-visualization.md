@@ -48,7 +48,7 @@ audience_notes: "Intended for AI safety researchers and LLM alignment engineers.
 
 ## Artifact Summary
 
-This artifact belongs to the Constitutional AI topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring Constitutional Critique Loop Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Constitutional AI.
 
 ## Required Contract Fields
 
@@ -58,7 +58,7 @@ Specify an interactive tool showing a response undergoing constitutional critiqu
 
 ### explanation
 
-This specification outlines a Constitutional Critique Loop visualization. The tool displays a model's initial response to a user prompt. The user selects which constitutional principles to apply (e.g., "Avoid harmful content," "Respect privacy," "Be honest," "Avoid bias"). The tool then runs the critique-revision cycle: the model critiques its response against the selected principles, generates a revised response, and the cycle repeats. Each round displays the critique text, the revised response, and a compliance score per principle. The user observes how responses converge toward principle-aligned outputs over successive rounds and can adjust principle weights to see how trade-offs (e.g., helpfulness vs. harmlessness) affect convergence.
+This specification outlines a Constitutional Critique Loop visualization. The tool displays a model's initial response to a user prompt. The user would selects which constitutional principles to apply (e.g., "Avoid harmful content," "Respect privacy," "Be honest," "Avoid bias"). The tool then runs the critique-revision cycle: the model critiques its response against the would selected principles, generates a revised response, and the cycle repeats. Each round displays the critique text, the revised response, and a compliance score per principle. The user observes how responses converge toward principle-aligned outputs over successive rounds and can adjust principle weights to see how trade-offs (e.g., helpfulness vs. harmlessness) affect convergence.
 
 ### manipulable variable or observable state
 

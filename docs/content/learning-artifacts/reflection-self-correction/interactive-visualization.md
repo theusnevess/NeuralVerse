@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and agent systems developers."
 
 ## Artifact Summary
 
-This artifact belongs to the Reflection and Self-Correction topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring Compiler Critique Routing Board Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Reflection and Self-Correction.
 
 ## Required Contract Fields
 
@@ -65,7 +65,7 @@ This specification describes a self-correction loop tracker. The user starts a t
 
 ### motivation
 
-Understanding AI Agents and Tool Use is critical for building autonomous software assistants, function callers, memory-backed bots, and self-correcting coders.
+Agentic systems extend language models beyond passive generation — these concepts enable autonomous reasoning, tool use, and multi-step execution.
 
 ## Dependency Notes
 

@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Epochs, Batches, and Learning Rate topic and serves as a Comparison Table.
+Compares key approaches, algorithms, or architectures within Epochs, Batches, and Learning Rate — organizes Schedule Parameter Reference into a structured reference for selecting between alternatives.
 
 ## Required Contract Fields
 
@@ -69,7 +69,7 @@ Compare learning rate, batch size, and epoch ranges and failure indicators.
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale deep networks and search spaces.
+Deep learning builds on these core mechanisms — understanding them is essential for designing, debugging, and improving neural architectures.
 
 ## Dependency Notes
 

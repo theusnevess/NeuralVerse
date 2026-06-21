@@ -50,7 +50,7 @@ audience_notes: "Intended for AI engineers, safety researchers, and developers b
 
 ## Artifact Summary
 
-This artifact belongs to the AI Safety, Alignment & Guardrails topic and serves as a Exercise.
+Provides practice applying the concepts of Designing a Policy Enforcement Strategy — guides the learner through reasoning steps that reinforce understanding of AI Safety, Alignment & Guardrails through active problem-solving.
 
 ## Required Contract Fields
 
@@ -80,17 +80,7 @@ An LLM that provides evidence-based health information to patients, including me
 
 ### expected learner output
 
-A structured strategy table for each context. Example format for Context A:
-
-| Dimension | Strategy |
-|---|---|
-| Structural requirements | JSON object with fields: action (enum: buy/sell/hold), ticker (string), confidence (0.0-1.0), rationale (string). Strict schema validation enforced. |
-| Semantic rules | No unqualified price targets, no guaranteed returns, no speculative predictions without explicit disclaimer. |
-| Deterministic filters | Blocklist of restricted tickers, regex to detect guaranteed-return phrasing, pattern match for regulatory disclaimers. |
-| Model-based filters | Safety classifier for financial advice compliance, contradiction check against latest disclosures. |
-| Approval chain triggers | Confidence < 0.7, any sell recommendation on volatile assets, first trade of a new strategy. |
-| Fail-open/fail-closed | Fail-closed on structural and deterministic stages; fail-open on model-based with warning flag. |
-| Safe degradation | Default to "hold" recommendation if validation system is unavailable. Log incident and notify compliance. |
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -98,7 +88,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding policy enforcement and output validation is critical for deploying LLMs safely in production, particularly in regulated industries where unconstrained outputs can cause legal liability, safety incidents, or reputational damage.
+Safe and aligned AI deployment requires robust guardrails — understanding policy enforcement and validation is essential for trustworthy production systems in regulated environments.
 
 ## Dependency Notes
 

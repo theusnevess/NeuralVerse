@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Reranking topic and serves as a Exercise.
+Provides practice applying the concepts of Analyzing Reranking Scalability — guides the learner through reasoning steps that reinforce understanding of Reranking through active problem-solving.
 
 ## Required Contract Fields
 
@@ -63,7 +63,7 @@ Explain why we cannot use a Cross-Encoder directly as the initial retrieval engi
 
 ### expected learner output
 
-The learner should explain that Cross-Encoders process the query and document jointly in the transformer layers, which requires O(N) neural network forward passes for every search query. Against 10M documents, this would take minutes/hours per query, violating latency budgets.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -71,7 +71,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale retrieval and search systems.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

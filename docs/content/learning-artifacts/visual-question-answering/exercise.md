@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer vision developers."
 
 ## Artifact Summary
 
-This artifact belongs to the Visual Question Answering topic and serves as a Exercise.
+Provides practice applying the concepts of Avoiding Attention Confusion in VQA — guides the learner through reasoning steps that reinforce understanding of Visual Question Answering through active problem-solving.
 
 ## Required Contract Fields
 
@@ -63,7 +63,7 @@ Given the question 'What color is the umbrella?' and an image containing a red u
 
 ### expected learner output
 
-The text query 'umbrella' triggers attention weights to concentrate on the image coordinates containing the umbrella patch. The blue bench patches receive near-zero attention scores. Consequently, the attributes fed to the decoder softmax layer are dominated by the red color features, ignoring the blue features.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -71,7 +71,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding Multimodal AI Foundations is critical for building search engines, image captioners, visual answer systems, and joint textual/visual models.
+Multimodal AI systems connect vision, language, and other modalities — these concepts form the bridge between separate representational spaces.
 
 ## Dependency Notes
 

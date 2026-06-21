@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and evaluation practitioners."
 
 ## Artifact Summary
 
-This artifact belongs to the RAG Evaluation Frameworks topic and serves as a Explanatory Text.
+Covers RAG Evaluation Frameworks and Metrics within the broader topic of RAG Evaluation Frameworks — explains the core ideas, their role in AI systems, and what makes them important for practitioners to understand.
 
 ## Required Contract Fields
 
@@ -75,7 +75,7 @@ These four dimensions decompose RAG quality into two components: retrieval quali
 
 ### motivation
 
-Understanding RAG evaluation frameworks is critical for diagnosing pipeline failures, benchmarking retrieval and generation components, and building trustworthy QA systems.
+Retrieval-augmented workflows depend on evaluation to diagnose failures — mastering these frameworks is key to building trustworthy generation systems.
 
 ## Dependency Notes
 

@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer vision developers."
 
 ## Artifact Summary
 
-This artifact belongs to the Contrastive Learning for Multimodal Models topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about The Card-Matching Puzzle Board — maps familiar concepts to the technical mechanics of Contrastive Learning for Multimodal Models, making abstract ideas concrete.
 
 ## Required Contract Fields
 
@@ -65,7 +65,7 @@ Imagine playing a matching card game. You have a pile of word cards and a pile o
 
 ### motivation
 
-Understanding Multimodal AI Foundations is critical for building search engines, image captioners, visual answer systems, and joint textual/visual models.
+Multimodal AI systems connect vision, language, and other modalities — these concepts form the bridge between separate representational spaces.
 
 ## Dependency Notes
 

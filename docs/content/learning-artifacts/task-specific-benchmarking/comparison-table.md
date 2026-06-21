@@ -52,7 +52,7 @@ audience_notes: "Intended for AI engineers, researchers, and practitioners evalu
 
 ## Artifact Summary
 
-This artifact belongs to the Task-Specific Benchmarking topic and serves as a Comparison Table.
+Compares key approaches, algorithms, or architectures within Task-Specific Benchmarking — organizes General vs. Specialized Benchmarks into a structured reference for selecting between alternatives.
 
 ## Required Contract Fields
 

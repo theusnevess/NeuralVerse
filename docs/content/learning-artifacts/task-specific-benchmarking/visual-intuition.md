@@ -52,7 +52,7 @@ audience_notes: "Intended for AI engineers, researchers, and practitioners evalu
 
 ## Artifact Summary
 
-This artifact belongs to the Task-Specific Benchmarking topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about The Decathlon Scorecard — maps familiar concepts to the technical mechanics of Task-Specific Benchmarking, making abstract ideas concrete.
 
 ## Required Contract Fields
 

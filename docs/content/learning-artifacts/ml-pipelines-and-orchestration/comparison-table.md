@@ -48,7 +48,7 @@ audience_notes: "Intended for ML engineers, MLOps practitioners, and DevOps engi
 
 ## Artifact Summary
 
-This artifact belongs to the ML Pipelines and Orchestration topic and serves as a Comparison Table.
+Compares key approaches, algorithms, or architectures within ML Pipelines and Orchestration — organizes Orchestration Frameworks into a structured reference for selecting between alternatives.
 
 ## Required Contract Fields
 
@@ -70,7 +70,7 @@ Compare Kubeflow, Apache Airflow, Flyte, Prefect, and Argo Workflows across key 
 
 ### motivation
 
-Understanding this topic is critical for building reliable, automated ML systems in production.
+Production ML requires reliable, automated pipelines — understanding orchestration, scheduling, and dependency management is essential for building systems that operate at scale without manual intervention.
 
 ## Dependency Notes
 

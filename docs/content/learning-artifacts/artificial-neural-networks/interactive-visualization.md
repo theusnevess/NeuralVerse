@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Artificial Neural Networks topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring Topology Builder Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Artificial Neural Networks.
 
 ## Required Contract Fields
 
@@ -65,7 +65,7 @@ This specification describes a neural network topology builder. The user adds la
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale deep networks and search spaces.
+Deep learning builds on these core mechanisms — understanding them is essential for designing, debugging, and improving neural architectures.
 
 ## Dependency Notes
 

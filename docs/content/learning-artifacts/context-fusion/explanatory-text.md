@@ -50,7 +50,7 @@ audience_notes: "Intended for AI engineers and retrieval search developers."
 
 ## Artifact Summary
 
-This artifact belongs to the Context Fusion and Aggregation topic and serves as a Explanatory Text.
+Covers Rank Fusion Algorithms and Cross-Encoder Re-rankers within the broader topic of Context Fusion and Aggregation — explains the core ideas, their role in AI systems, and what makes them important for practitioners to understand.
 
 ## Required Contract Fields
 
@@ -66,7 +66,7 @@ Context Fusion is the process of combining, deduplicating, and re-ordering docum
 
 ### motivation
 
-Understanding Advanced Retrieval & RAG Systems is critical for building production-grade QA engines, hallucination guardrails, hybrid index tools, and agentic routers.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

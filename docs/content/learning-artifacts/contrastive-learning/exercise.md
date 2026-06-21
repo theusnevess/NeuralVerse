@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer vision developers."
 
 ## Artifact Summary
 
-This artifact belongs to the Contrastive Learning for Multimodal Models topic and serves as a Exercise.
+Provides practice applying the concepts of Formulating the InfoNCE Loss — guides the learner through reasoning steps that reinforce understanding of Contrastive Learning for Multimodal Models through active problem-solving.
 
 ## Required Contract Fields
 
@@ -63,9 +63,7 @@ State the mathematical formula for InfoNCE loss for a batch of $N$ image-text em
 
 ### expected learner output
 
-Formula for image-to-text branch:
-$\mathcal{L}_{i} = -\log \frac{\exp(\text{sim}(I_i, T_i)/\tau)}{\sum_{j=1}^{N} \exp(\text{sim}(I_i, T_j)/\tau)}$
-Minimizing this loss maximizes the fraction inside the log. Since the numerator represents the positive pair diagonal similarity ($I_i, T_i$), maximizing it forces the similarity to approach 1 while driving negative off-diagonal terms in the denominator down.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -73,7 +71,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding Multimodal AI Foundations is critical for building search engines, image captioners, visual answer systems, and joint textual/visual models.
+Multimodal AI systems connect vision, language, and other modalities — these concepts form the bridge between separate representational spaces.
 
 ## Dependency Notes
 

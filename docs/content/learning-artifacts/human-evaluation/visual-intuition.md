@@ -46,7 +46,7 @@ audience_notes: "Intended for AI engineers and evaluation practitioners."
 
 ## Artifact Summary
 
-This artifact belongs to the Human Evaluation of LLMs topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about The Panel of Editors — maps familiar concepts to the technical mechanics of Human Evaluation of LLMs, making abstract ideas concrete.
 
 ## Required Contract Fields
 

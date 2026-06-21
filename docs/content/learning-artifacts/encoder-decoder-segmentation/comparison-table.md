@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer vision developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the Encoder–Decoder Architectures topic and serves as a Comparison Table.
+Compares key approaches, algorithms, or architectures within Encoder–Decoder Architectures — organizes Encoder-Decoder Flow Components into a structured reference for selecting between alternatives.
 
 ## Required Contract Fields
 
@@ -69,7 +69,7 @@ Contrast encoder, decoder, and skip connection roles and spatial operations.
 
 ### motivation
 
-Understanding segmentation is critical for building medical scanners, self-driving cars, satellite crop trackers, and human-in-the-loop image editors.
+Segmentation techniques enable pixel-level understanding of visual data — they are fundamental to medical imaging, autonomous navigation, and remote sensing applications.
 
 ## Dependency Notes
 

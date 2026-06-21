@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Expected Value and Variance topic and serves as a Exercise.
+Provides practice applying the concepts of Calculating RAG Latency Expectations — guides the learner through reasoning steps that reinforce understanding of Expected Value and Variance through active problem-solving.
 
 ## Required Contract Fields
 
@@ -63,7 +63,7 @@ You run a RAG retrieval system. The latency of searches has the following probab
 
 ### expected learner output
 
-E[L] = (100 * 0.7) + (500 * 0.3) = 70 + 150 = 220ms. Var(L) = E[L^2] - (E[L])^2. E[L^2] = (100^2 * 0.7) + (500^2 * 0.3) = (10000 * 0.7) + (250000 * 0.3) = 7000 + 75000 = 82000. Var(L) = 82000 - 220^2 = 82000 - 48400 = 33600 ms^2. Standard Deviation = sqrt(33600) = 183.3ms.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -71,7 +71,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale retrieval and search systems.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

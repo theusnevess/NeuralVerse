@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Artificial Neural Networks topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about The Bucket Brigade Analogy — maps familiar concepts to the technical mechanics of Artificial Neural Networks, making abstract ideas concrete.
 
 ## Required Contract Fields
 
@@ -65,7 +65,7 @@ Imagine a bucket brigade line passing water to put out a fire. The first person 
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale deep networks and search spaces.
+Deep learning builds on these core mechanisms — understanding them is essential for designing, debugging, and improving neural architectures.
 
 ## Dependency Notes
 

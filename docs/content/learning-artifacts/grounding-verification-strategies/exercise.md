@@ -50,7 +50,7 @@ audience_notes: "Intended for AI engineers, safety researchers, and developers b
 
 ## Artifact Summary
 
-This artifact belongs to the AI Safety, Alignment & Guardrails topic and serves as a Exercise.
+Provides practice applying the concepts of Designing a Verification Pipeline — guides the learner through reasoning steps that reinforce understanding of AI Safety, Alignment & Guardrails through active problem-solving.
 
 ## Required Contract Fields
 
@@ -70,23 +70,7 @@ For each of the following three scenarios, specify: (1) source types the pipelin
 
 ### expected learner output
 
-**Scenario A — Medical QA**:
-1. Source types: Structured EHR records, clinical notes, lab results, drug interaction database.
-2. Verification steps: Citation attribution (link each diagnosis suggestion to specific record entries); NLI verification (confirm suggested diagnosis entails the supporting evidence); Confidence estimation (flag any suggestion below 0.9 confidence).
-3. Confidence threshold: 0.9 for inclusion, 0.95 for diagnosis suggestions.
-4. Abstention criteria: Withhold any diagnosis unsupported by at least two independent record entries; flag uncertain cases for human review.
-
-**Scenario B — Financial Reporting**:
-1. Source types: SEC filings (10-K, 10-Q), press releases, market data APIs, analyst consensus reports.
-2. Verification steps: Citation attribution (every figure linked to a specific filing or API timestamp); Consistency checking (cross-verify figures across multiple filings and periods); Confidence estimation (quantitative figures get high scores, forward-looking statements get lower scores).
-3. Confidence threshold: 0.95 for quantitative figures, 0.7 for qualitative summaries.
-4. Abstention criteria: Flag any figure that differs across sources by more than 1%; withhold forward-looking statements with confidence below 0.7.
-
-**Scenario C — Customer Support**:
-1. Source types: Product manual, known issue database, community forum threads, warranty terms.
-2. Verification steps: NLI verification (check that proposed solution follows from documented specifications); Citation attribution (link each step to specific manual section); Consistency checking (ensure solution does not contradict documented safety warnings).
-3. Confidence threshold: 0.8 for common issues, 0.95 for safety-critical steps.
-4. Abstention criteria: Withhold any step that contradicts the product manual; escalate unverifiable issues to human agent.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 

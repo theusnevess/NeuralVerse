@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and model adaptation developers."---
 
 ## Artifact Summary
 
-This artifact belongs to the Domain Adaptation and Specialization topic and serves as a Exercise.
+Provides practice applying the concepts of Daily Interest Rate Chatbot Architecture — guides the learner through reasoning steps that reinforce understanding of Domain Adaptation and Specialization through active problem-solving.
 
 ## Required Contract Fields
 
@@ -62,7 +62,7 @@ A bank wants to build a customer assistant that answers questions about interest
 
 ### expected learner output
 
-The bank must use RAG because interest rates change daily and fine-tuning cannot integrate real-time, dynamic facts reliably without constant, expensive retraining. However, they may also use lightweight fine-tuning (e.g., LoRA) on a small set of bank conversations to teach the model the bank's stylistic tone and specific jargon, combining SFT for style and RAG for factual accuracy.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -70,7 +70,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding Fine-Tuning and Adaptation is critical for specializing models for custom tasks, aligning generation safety, deploying LoRA adapters in production, and selecting RAG combinations.
+Adapting pre-trained models to specific tasks is a core practice in modern ML — these techniques enable efficient specialization without full retraining.
 
 ## Dependency Notes
 

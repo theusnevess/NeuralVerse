@@ -50,7 +50,7 @@ audience_notes: "Intended for AI researchers, advanced ML engineers, and technic
 
 ## Artifact Summary
 
-This artifact belongs to the AI Research & Frontier Topics content pack and serves as a Exercise.
+Provides practice applying the concepts of Analyzing Scaling Trade-offs — guides the learner through reasoning steps that reinforce understanding of AI Research & Frontier Topics through active problem-solving.
 
 ## Required Contract Fields
 
@@ -83,16 +83,7 @@ You need a model that can reliably perform multi-hop mathematical reasoning and 
 
 ### expected learner output
 
-A structured strategy table for each context. Example format for Context A:
-
-| Dimension | Strategy |
-|---|---|
-| Parameter/data allocation | 1.5B parameters, 2T tokens (Chinchilla-optimal for compute budget) |
-| Scaling regime | Chinchilla (compute-optimal); Kaplan allocation would under-utilize available data |
-| Predicted scaling behavior | ~0.3 nats loss reduction from baseline small model; diminishing returns beyond 3B parameters on this compute budget |
-| Emergent capability target | No specific emergence target; general capability improvement expected to be smooth |
-| Potential limitations | Compute budget may limit ability to reach emergence thresholds for advanced reasoning; convergence may be unstable at optimal learning rate |
-| Alternative strategy | Train smaller (500M params) on more tokens to enable faster iteration; use ensemble or distillation |
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 

@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Cosine Similarity topic and serves as a Exercise.
+Provides practice applying the concepts of Proving Cosine Length Invariance — guides the learner through reasoning steps that reinforce understanding of Cosine Similarity through active problem-solving.
 
 ## Required Contract Fields
 
@@ -62,7 +62,7 @@ Vector X is [1, 2] and Vector Y is [10, 20]. Prove mathematically that their cos
 
 ### expected learner output
 
-||X|| = sqrt(1^2 + 2^2) = sqrt(5). ||Y|| = sqrt(10^2 + 20^2) = sqrt(500) = 10*sqrt(5). Dot product X . Y = (1 * 10) + (2 * 20) = 50. Cosine(X, Y) = 50 / (sqrt(5) * 10*sqrt(5)) = 50 / (10 * 5) = 50 / 50 = 1.0. This proves their cosine similarity is 1.0 despite the scale differences.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -70,7 +70,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale retrieval and search systems.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

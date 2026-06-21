@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and retrieval search developers."
 
 ## Artifact Summary
 
-This artifact belongs to the Retrieval Failure Modes and Mitigation topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about Finding a Key in a Massive Warehouse Stack — maps familiar concepts to the technical mechanics of Retrieval Failure Modes and Mitigation, making abstract ideas concrete.
 
 ## Required Contract Fields
 
@@ -65,7 +65,7 @@ Imagine trying to find a key inside a massive warehouse. If the guide brings you
 
 ### motivation
 
-Understanding Advanced Retrieval & RAG Systems is critical for building production-grade QA engines, hallucination guardrails, hybrid index tools, and agentic routers.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

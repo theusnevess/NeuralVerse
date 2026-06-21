@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer vision developers."
 
 ## Artifact Summary
 
-This artifact belongs to the Visual Question Answering topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring VQA Attention Flow Specification — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Visual Question Answering.
 
 ## Required Contract Fields
 
@@ -59,13 +59,13 @@ Specify a flowchart tracing keyword-to-patch routes before answer outputs.
 
 ### explanation
 
-This specification describes a VQA focus router. The user selects a question from a list, watching attention vectors trace from the question's keywords directly to target regions of the image before producing the answer text.
+This specification describes a VQA focus router. The user would selects a question from a list, watching attention vectors trace from the question's keywords directly to target regions of the image before producing the answer text.
 
 ## Optional Enrichment Fields
 
 ### motivation
 
-Understanding Multimodal AI Foundations is critical for building search engines, image captioners, visual answer systems, and joint textual/visual models.
+Multimodal AI systems connect vision, language, and other modalities — these concepts form the bridge between separate representational spaces.
 
 ## Dependency Notes
 

@@ -48,7 +48,7 @@ audience_notes: "Intended for AI safety researchers and LLM alignment engineers.
 
 ## Artifact Summary
 
-This artifact belongs to the Constitutional AI topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about The Editor with a Style Guide — maps familiar concepts to the technical mechanics of Constitutional AI, making abstract ideas concrete.
 
 ## Required Contract Fields
 

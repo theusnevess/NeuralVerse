@@ -51,7 +51,7 @@ audience_notes: "Intended for AI engineers, researchers, and computer science st
 
 ## Artifact Summary
 
-This artifact belongs to the Neurosymbolic AI topic and serves as a Comparison Table.
+Compares key approaches, algorithms, or architectures within Neurosymbolic AI — organizes Neurosymbolic Approaches Reference into a structured reference for selecting between alternatives.
 
 ## Required Contract Fields
 

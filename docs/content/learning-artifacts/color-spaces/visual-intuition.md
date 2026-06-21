@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Image Channels and Color Spaces topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about Stacked Colored Panes Analogy — maps familiar concepts to the technical mechanics of Image Channels and Color Spaces, making abstract ideas concrete.
 
 ## Required Contract Fields
 
@@ -65,7 +65,7 @@ Imagine three colored panes of glass—one red, one green, one blue. If you stac
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale computer vision and multimodal retrieval pipelines.
+Multimodal AI systems connect vision, language, and other modalities — these concepts form the bridge between separate representational spaces.
 
 ## Dependency Notes
 

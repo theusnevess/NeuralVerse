@@ -47,7 +47,7 @@ audience_notes: "Intended for AI engineers and safety researchers deploying alig
 
 ## Artifact Summary
 
-This artifact belongs to the Jailbreak Techniques topic and serves as an Exercise.
+Provides practice applying the concepts of Classifying and Mitigating Jailbreaks — guides the learner through reasoning steps that reinforce understanding of Jailbreak Techniques through active problem-solving.
 
 ## Required Contract Fields
 
@@ -81,14 +81,7 @@ For each of the following six prompts, identify the primary jailbreak category (
 
 ### expected learner output
 
-| Prompt | Category | Defense Strategy |
-|---|---|---|
-| Prompt 1 | Role-Playing (DAN persona) | Refusal training hardened against persona override; consistency check detecting identity-switch patterns |
-| Prompt 2 | Hypothetical Framing | Context-aware refusal that evaluates intent beyond surface framing; academic framing detector |
-| Prompt 3 | Encoding Bypass (base64) | Input normalization layer that decodes common encodings before classification |
-| Prompt 4 | Multi-Turn Manipulation | Cross-turn consistency analysis; per-turn flag accumulation with threshold-based refusal |
-| Prompt 5 | Refusal Suppression | Refusal layer that cannot be overridden by instruction; stacked refusal with independent classifiers |
-| Prompt 6 | Benign | No action needed (passes all defense layers normally) |
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 

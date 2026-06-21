@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Bias–Variance Tradeoff topic and serves as a Exercise.
+Provides practice applying the concepts of Evaluating Underparameterized Fits — guides the learner through reasoning steps that reinforce understanding of Bias–Variance Tradeoff through active problem-solving.
 
 ## Required Contract Fields
 
@@ -63,7 +63,7 @@ A simple linear regression model is used to fit a highly complex, sinusoidal dat
 
 ### expected learner output
 
-The model will exhibit high bias because a straight line is too simple to capture the oscillating sinusoidal shape (systematic modeling error). It will exhibit low variance because small changes in the noisy training samples will not significantly alter the slope of the fitted line. The total prediction error will be dominated by high bias (underfitting).
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -71,7 +71,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale retrieval and search systems.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

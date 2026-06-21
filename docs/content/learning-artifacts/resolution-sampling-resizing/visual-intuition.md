@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Image Resolution, Sampling, and Resizing topic and serves as a Visual Intuition.
+Uses analogy and mental models to build intuition about Stretching Checkerboards — maps familiar concepts to the technical mechanics of Image Resolution, Sampling, and Resizing, making abstract ideas concrete.
 
 ## Required Contract Fields
 
@@ -65,7 +65,7 @@ Imagine stretching a small rubber checkerboard. To make it larger, you must inse
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale computer vision and multimodal retrieval pipelines.
+Multimodal AI systems connect vision, language, and other modalities — these concepts form the bridge between separate representational spaces.
 
 ## Dependency Notes
 

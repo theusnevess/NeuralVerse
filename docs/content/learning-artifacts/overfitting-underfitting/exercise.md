@@ -50,7 +50,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Overfitting and Underfitting topic and serves as a Exercise.
+Provides practice applying the concepts of Diagnosing Loss Curve Convergence — guides the learner through reasoning steps that reinforce understanding of Overfitting and Underfitting through active problem-solving.
 
 ## Required Contract Fields
 
@@ -64,7 +64,7 @@ You observe your training loss continues to decrease from epoch 50 to 100, but y
 
 ### expected learner output
 
-This indicates overfitting. The model is starting to memorize noise in the training set rather than learning generalizable patterns. Two mitigation strategies are: 1. Apply Early Stopping at epoch 50 where validation loss is minimized. 2. Introduce L2 Regularization (weight decay) or Dropout to constrain the capacity of model weights.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -72,7 +72,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale retrieval and search systems.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 

@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Gradient Descent and Optimization topic and serves as a Comparison Table.
+Compares key approaches, algorithms, or architectures within Gradient Descent and Optimization — organizes Optimization Algorithms Reference into a structured reference for selecting between alternatives.
 
 ## Required Contract Fields
 
@@ -69,7 +69,7 @@ Compare SGD, Momentum, and Adam step rules, advantages, and drawbacks.
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale deep networks and search spaces.
+Deep learning builds on these core mechanisms — understanding them is essential for designing, debugging, and improving neural architectures.
 
 ## Dependency Notes
 

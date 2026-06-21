@@ -47,7 +47,7 @@ audience_notes: "Intended for AI engineers and evaluation practitioners."
 
 ## Artifact Summary
 
-This artifact belongs to the Agent Evaluation Methodologies topic and serves as a Exercise.
+Provides practice applying the concepts of Evaluating an Agent Workflow — guides the learner through reasoning steps that reinforce understanding of Agent Evaluation Methodologies through active problem-solving.
 
 ## Required Contract Fields
 
@@ -82,13 +82,7 @@ Below are three execution traces for an agent tasked with booking a round-trip f
 
 ### expected learner output
 
-Learner evaluates each trace on the four dimensions:
-- **Planning quality:** Does the agent follow a logical sequence? (A: optimal, B: redundant, C: includes irrelevant step)
-- **Tool use accuracy:** Does the agent select correct tools with proper parameters? (A: correct, B: missing parameter on first attempt, C: wrong tool initially)
-- **Completion rate:** Does the agent finish the task? (All three complete)
-- **Robustness:** Does the agent recover from errors? (A: no errors, B: recovers from missing parameter, C: recovers from wrong tool)
-
-Ranking: A (best) > B (acceptable, with recovery) > C (worst, initial tool error wasted effort).
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 

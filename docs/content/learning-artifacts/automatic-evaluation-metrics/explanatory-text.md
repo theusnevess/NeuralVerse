@@ -46,7 +46,7 @@ audience_notes: "Intended for ML engineers, NLP practitioners, and AI evaluators
 
 ## Artifact Summary
 
-This artifact belongs to the Automatic Evaluation Metrics topic and serves as an Explanatory Text.
+Covers Automatic Evaluation Metrics for LLMs within the broader topic of Automatic Evaluation Metrics — explains the core ideas, their role in AI systems, and what makes them important for practitioners to understand.
 
 ## Required Contract Fields
 

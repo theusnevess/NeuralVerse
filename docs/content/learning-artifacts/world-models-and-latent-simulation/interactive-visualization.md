@@ -49,7 +49,7 @@ audience_notes: "Intended for AI researchers and engineers exploring model-based
 
 ## Artifact Summary
 
-This artifact belongs to the World Models and Latent Simulation topic and serves as an Interactive Visualization.
+Specifies an interactive tool for exploring Latent Simulation Playground — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand World Models and Latent Simulation.
 
 ## Required Contract Fields
 
@@ -61,7 +61,7 @@ Specify an interactive tool where users define a simple environment, train a wor
 
 This specification describes a browser-based "Latent Simulation Playground" that allows learners to experiment with world models interactively. The tool should support the following workflow:
 
-**Environment selection.** The user chooses a simple environment from a set of presets:
+**Environment would selection.** The user chooses a simple environment from a set of presets:
 - Grid world: a 2D grid with obstacles, a start cell, and a goal cell; the agent moves in cardinal directions.
 - Pendulum: a classic control environment where the agent applies torque to swing up and balance a pendulum.
 - Chain: a simple chain MDP where the agent moves left or right along a sequence of states, with rewards at terminal states.

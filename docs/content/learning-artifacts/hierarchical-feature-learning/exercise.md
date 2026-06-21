@@ -48,7 +48,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Hierarchical Feature Learning topic and serves as a Exercise.
+Provides practice applying the concepts of Abstractions and Model Generalization — guides the learner through reasoning steps that reinforce understanding of Hierarchical Feature Learning through active problem-solving.
 
 ## Required Contract Fields
 
@@ -62,7 +62,7 @@ Describe how hierarchical feature learning in a CNN enables a model to generaliz
 
 ### expected learner output
 
-Early layers detect raw edges and colors which are universal. Mid layers detect general eyes, noses, and mouths. Because the model decomposes faces into reusable local parts, it can identify a face by matching these mid-level features in a new spatial arrangement, even if the complete face configuration is new.
+The learner should reason through the problem step by step, showing their work for each part. The expected output illustrates the reasoning format but not the complete solution.
 
 This practice does not assign a score and does not certify mastery.
 
@@ -70,7 +70,7 @@ This practice does not assign a score and does not certify mastery.
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale Convolutional Neural Networks and transfer learning backbones.
+Computer vision pipelines are built on these perceptual primitives — understanding them enables effective architecture design and troubleshooting.
 
 ## Dependency Notes
 

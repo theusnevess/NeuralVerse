@@ -49,7 +49,7 @@ audience_notes: "Intended for AI engineers and computer science students."---
 
 ## Artifact Summary
 
-This artifact belongs to the Vector Databases topic and serves as a Interactive Visualization.
+Specifies an interactive tool for exploring Metadata Filtering Interactive Spec — describes the controls, visual feedback, and conceptual relationships a learner would manipulate to understand Vector Databases.
 
 ## Required Contract Fields
 
@@ -59,13 +59,13 @@ Specify an interactive demo illustrating pre-, post-, and single-stage filtering
 
 ### explanation
 
-This specification outlines a visual query simulator. The screen shows a 2D cluster of points representing vectors (some blue, some orange). The user sets a query target and selects a filter ('Color = Blue'). Choosing Pre-, Post-, or Single-stage animates how nodes are grayed out and selected, highlighting how post-filtering can lead to empty results and pre-filtering can break index traversals.
+This specification outlines a visual query simulator. The screen shows a 2D cluster of points representing vectors (some blue, some orange). The user sets a query target and would selects a filter ('Color = Blue'). Choosing Pre-, Post-, or Single-stage animates how nodes are grayed out and would selected, highlighting how post-filtering can lead to empty results and pre-filtering can break index traversals.
 
 ## Optional Enrichment Fields
 
 ### motivation
 
-Understanding this topic is critical for building stable, industrial-scale retrieval and search systems.
+Retrieval-augmented workflows depend on these components working together — mastering them is key to building grounded, trustworthy generation systems.
 
 ## Dependency Notes
 
