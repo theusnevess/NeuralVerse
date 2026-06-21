@@ -33,7 +33,29 @@ const ROUTES = [
     description: 'Detailed view of module contents.',
     region: 'R3 Workspace',
     navigationGroup: 'primary',
-    isImplemented: false
+    isImplemented: true
+  },
+  {
+    id: 'lesson-detail',
+    path: '#/learning/:pathId/module/:moduleId/lesson/:lessonId',
+    pattern: /^#\/learning\/([^/]+)\/module\/([^/]+)\/lesson\/([^/]+)$/,
+    label: 'Lesson Detail',
+    title: 'Lesson Overview',
+    description: 'Canonical lesson composition and ordered artifacts.',
+    region: 'R3 Workspace',
+    navigationGroup: 'primary',
+    isImplemented: true
+  },
+  {
+    id: 'artifact-detail',
+    path: '#/learning/:pathId/module/:moduleId/lesson/:lessonId/artifact/:artifactId',
+    pattern: /^#\/learning\/([^/]+)\/module\/([^/]+)\/lesson\/([^/]+)\/artifact\/([^/]+)$/,
+    label: 'Learning Artifact',
+    title: 'Learning Artifact',
+    description: 'Canonical learning artifact rendered from NV-800 metadata.',
+    region: 'R3 Workspace',
+    navigationGroup: 'primary',
+    isImplemented: true
   },
   {
     id: 'learning-detail',
@@ -44,7 +66,18 @@ const ROUTES = [
     description: 'Module structures and path roadmap.',
     region: 'R3 Workspace',
     navigationGroup: 'primary',
-    isImplemented: false
+    isImplemented: true
+  },
+  {
+    id: 'module-detail',
+    path: '#/modules/:moduleId',
+    pattern: /^#\/modules\/([^/]+)$/,
+    label: 'Module Detail',
+    title: 'Module Overview',
+    description: 'Canonical module composition and contained lessons.',
+    region: 'R3 Workspace',
+    navigationGroup: 'primary',
+    isImplemented: true
   },
   {
     id: 'learning',

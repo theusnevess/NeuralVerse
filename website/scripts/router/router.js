@@ -97,55 +97,43 @@ class ViewController {
       learning: `
         <div class="nv-stack nv-stack--gap-md">
           <h1 class="nv-sr-only">Learning Paths</h1>
-          <div class="nv-grid nv-grid--cols-2">
-            <div class="nv-card">
-              <span class="nv-badge" data-variant="info" style="align-self: flex-start;">Path 01</span>
-              <h3>Reinforcement Learning & Agents</h3>
-              <p class="nv-muted">Master Markov Decision Processes, Q-learning, Policy Gradients, and multi-agent system execution graphs.</p>
-              <div style="margin-top: auto; padding-top: var(--sys-space-stack-sm);">
-                <a href="#/modules" class="nv-button" data-variant="secondary">Explore Track</a>
-              </div>
-            </div>
-            <div class="nv-card">
-              <span class="nv-badge" data-variant="neutral" style="align-self: flex-start;">Path 02</span>
-              <h3>Cognitive Architecture Models</h3>
-              <p class="nv-muted">Investigate bio-inspired neural networks, attention mechanisms, and sparse memory registers.</p>
-              <div style="margin-top: auto; padding-top: var(--sys-space-stack-sm);">
-                <button class="nv-button" data-variant="secondary" disabled style="opacity: 0.5; cursor: not-allowed;">Locked</button>
-              </div>
-            </div>
-          </div>
+          <div class="nv-stack nv-stack--gap-md" data-curriculum-root></div>
+        </div>
+      `,
+      'learning-detail': `
+        <div class="nv-stack nv-stack--gap-md">
+          <h1 class="nv-sr-only">Learning Path Detail</h1>
+          <div class="nv-stack nv-stack--gap-md" data-curriculum-root></div>
+        </div>
+      `,
+      'learning-path': `
+        <div class="nv-stack nv-stack--gap-md">
+          <h1 class="nv-sr-only">Learning Path Module</h1>
+          <div class="nv-stack nv-stack--gap-md" data-curriculum-root></div>
+        </div>
+      `,
+      'lesson-detail': `
+        <div class="nv-stack nv-stack--gap-md">
+          <h1 class="nv-sr-only">Lesson Detail</h1>
+          <div class="nv-stack nv-stack--gap-md" data-curriculum-root></div>
+        </div>
+      `,
+      'artifact-detail': `
+        <div class="nv-stack nv-stack--gap-md">
+          <h1 class="nv-sr-only">Learning Artifact</h1>
+          <div class="nv-stack nv-stack--gap-md" data-curriculum-root></div>
         </div>
       `,
       modules: `
         <div class="nv-stack nv-stack--gap-md">
           <h1 class="nv-sr-only">Modules</h1>
-          <div class="nv-stack nv-stack--gap-sm">
-            <div class="nv-card">
-              <div class="nv-cluster nv-cluster--gap-sm" style="justify-content: space-between;">
-                <h3>Module 1: Foundations of Deep Learning</h3>
-                <span class="nv-badge" data-variant="success">Completed</span>
-              </div>
-              <p class="nv-muted">Backpropagation algorithms, stochastic gradient descent, and activation functions catalog.</p>
-            </div>
-            <div class="nv-card">
-              <div class="nv-cluster nv-cluster--gap-sm" style="justify-content: space-between;">
-                <h3>Module 2: Agent Decision Processes</h3>
-                <span class="nv-badge" data-variant="info">Active</span>
-              </div>
-              <p class="nv-muted">State representations, value approximation formulas, and exploration vs. exploitation metrics.</p>
-              <div style="margin-top: var(--sys-space-stack-xs);">
-                <a href="#/content" class="nv-button" data-variant="primary">Start Study</a>
-              </div>
-            </div>
-            <div class="nv-card">
-              <div class="nv-cluster nv-cluster--gap-sm" style="justify-content: space-between;">
-                <h3>Module 3: Multi-Agent Environment Grids</h3>
-                <span class="nv-badge" data-variant="neutral">Locked</span>
-              </div>
-              <p class="nv-muted">Cooperative swarm communication, game theory matrices, and emergent behaviors simulation.</p>
-            </div>
-          </div>
+          <div class="nv-stack nv-stack--gap-md" data-curriculum-root></div>
+        </div>
+      `,
+      'module-detail': `
+        <div class="nv-stack nv-stack--gap-md">
+          <h1 class="nv-sr-only">Module Detail</h1>
+          <div class="nv-stack nv-stack--gap-md" data-curriculum-root></div>
         </div>
       `,
       workspace: `

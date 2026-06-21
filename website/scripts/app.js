@@ -1,4 +1,4 @@
-import { createLearningController } from "./learning/learning-controller.js?v=9";
+import { createCurriculumController } from "./curriculum/curriculum-controller.js?v=1";
 import { createContentController } from "./content/content-controller.js?v=9";
 import { createProgressController } from "./progress/progress-controller.js?v=9";
 import { createWorkspaceController } from "./workspace/workspace-controller.js?v=9";
@@ -15,14 +15,12 @@ document.addEventListener("DOMContentLoaded", () => {
     yearElement.textContent = new Date().getFullYear().toString();
   }
 
-  // Initialize the learning path controller
-  const learningController = createLearningController({
+  // Initialize the read-only curriculum controller.
+  const curriculumController = createCurriculumController({
     root: document,
   });
 
-  learningController.init().catch((error) => {
-    console.error("Learning controller failed to initialize.", error);
-  });
+  curriculumController.init();
 
   // Initialize the content controller
   const contentController = createContentController({
@@ -59,7 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
   breadcrumbsController.init();
 
   window.NeuralVerse = window.NeuralVerse || {};
-  window.NeuralVerse.learningController = learningController;
+  window.NeuralVerse.curriculumController = curriculumController;
   window.NeuralVerse.contentController = contentController;
   window.NeuralVerse.progressController = progressController;
   window.NeuralVerse.workspaceController = workspaceController;
