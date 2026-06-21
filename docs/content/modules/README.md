@@ -24,3 +24,5 @@ Modules organize Lessons into coherent instructional units. They represent highe
 *   [Model Generalization and Evaluation](model-generalization-evaluation/)
 *   [Neural Network Fundamentals](neural-network-fundamentals/)
 *   [Optimization and Training](optimization-training/)
+*   [Image Representation Foundations](image-representation-foundations/)
+*   [Visual Feature Extraction Foundations](visual-feature-extraction-foundations/)
