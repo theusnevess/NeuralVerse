@@ -4,7 +4,7 @@
 
 *   NV-800-M0 — Canonical Didactic Vision — ACTIVE
 *   NV-800-M1 — Competency, Mastery, and Engineering Readiness Architecture — ACTIVE
-*   NV-800-M7 — Canonical Learning Artifact Architecture — PHASE 1 ACTIVE
+*   NV-800-M7 — Canonical Learning Artifact Architecture — PHASE 2 ACTIVE
 
 ## Purpose
 
@@ -21,7 +21,7 @@ This architecture governs future work related to:
 * engineering readiness scoring;
 * source quality;
 * curiosity cards;
-* portfolio-oriented learning outcomes.
-* learning artifact taxonomy.
+* portfolio-oriented learning outcomes;
+* learning artifact taxonomy and contracts.
 
 NV-800 is a product and didactic architecture layer. It does not authorize implementation changes by itself.
