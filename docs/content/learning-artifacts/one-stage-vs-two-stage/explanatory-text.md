@@ -1,0 +1,102 @@
+---
+artifact_id: "artifact-one-stage-vs-two-stage-explanatory-text"
+artifact_title: "Proposal Networks vs. Dense Single Passes"
+artifact_family: "Instruction Artifacts"
+artifact_type: "Explanatory Text"
+canonical_status: "Draft"
+instructional_objectives:
+  - Explanatory
+learning_depths:
+  - Level 1 — Intuition
+  - Level 2 — Foundations
+estimated_duration: "5-8 minutes"
+supported_learning_levels:
+  - Beginner
+reuse_mode: ""
+source_artifact: ""
+dependencies:
+  prerequisite:
+  recommended_before:
+  recommended_after:
+  complementary:
+  alternative:
+authoritative_source: "Foundational One-Stage vs Two-Stage Detectors literature and scientific object detection papers."
+review_cycle: "Initial editorial review required"
+localization_ready: false
+accessibility_notes: "Use clear text and logical structure."
+keywords:
+  - one-stage detector
+  - two-stage detector
+  - region proposals
+  - feature extraction
+  - classification latency
+tags:
+  - learning-artifact
+  - detection
+  - architectures
+prerequisite_notes: "Basic mathematical and convolutional comfort."
+related_topics:
+  - object-detection-fundamentals
+  - bounding-boxes-coordinates
+  - intersection-over-union
+  - anchor-based-vs-free
+  - non-maximum-suppression
+  - one-stage-vs-two-stage
+audience_notes: "Intended for AI engineers and computer vision developers."---
+
+# Proposal Networks vs. Dense Single Passes
+
+## Artifact Summary
+
+This artifact belongs to the One-Stage vs Two-Stage Detectors topic and serves as a Explanatory Text.
+
+## Required Contract Fields
+
+### objective
+
+Explain RPN-based two-stage structures, ROI pooling, and dense grid one-stage passes.
+
+### explanation
+
+Object detectors are split into two major architectural paradigms: 1. Two-Stage Detectors (e.g., Faster R-CNN): Stage 1 generates a set of candidate Region Proposals (candidate boxes) via a Region Proposal Network (RPN). Stage 2 extracts features from these regions and runs separate classification and regression heads. They are highly accurate but slow. 2. One-Stage Detectors (e.g., YOLO, SSD, RetinaNet): Do not use a separate region proposal stage. Instead, they run localization and classification in a single dense pass over the entire image grid. They are extremely fast and suitable for real-time edge processing.
+
+## Optional Enrichment Fields
+
+### motivation
+
+Understanding this topic is critical for building autonomous vehicles, industrial inspections, robotic manipulators, and multi-object real-time surveillance backbones.
+
+## Dependency Notes
+
+This artifact is part of the One-Stage vs Two-Stage Detectors content pack.
+
+## Reuse Notes
+
+No reuse mode is asserted. The artifact can participate independently in different instructional contexts.
+
+## Accessibility Notes
+
+Text descriptions are provided for all conceptual spaces.
+
+## Evidence Boundary
+
+This Learning Artifact supports learning.
+
+It does not generate Competency Evidence.
+
+It does not certify mastery.
+
+If this artifact is used in an assessment context, that usage must be governed separately by NV-800-M4 and NV-800-M3.
+
+## Quality Review Checklist
+
+- [ ] Technical accuracy checked.
+- [ ] Pedagogical clarity checked.
+- [ ] Required contract fields complete.
+- [ ] Summary matched with objectives.
+- [ ] Internal terminology consistent.
+- [ ] Reuse suitability considered.
+- [ ] Accessibility considerations documented.
+- [ ] Does not introduce assessment logic.
+- [ ] Does not claim Competency Evidence.
+- [ ] Does not imply learner mastery.
