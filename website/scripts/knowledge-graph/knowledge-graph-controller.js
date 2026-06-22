@@ -389,10 +389,11 @@ export function createKnowledgeGraphController(options = {}) {
         modulesGrid.append(card);
       });
 
+      const currentCategory = getCategory(pathNode.title);
       const otherPathsTitle = el('h4', 'nv-kg-section-title', 'Nearby Learning Paths');
       otherPathsTitle.append(el('span', 'nv-kg-section-line'));
       const otherPathsStrip = el('div', 'nv-kg-siblings-strip');
-      const otherPaths = graph.nodes.filter(n => n.type === 'path' && n.id !== pathNode.id);
+      const otherPaths = graph.nodes.filter(n => n.type === 'path' && n.id !== pathNode.id && getCategory(n.title) === currentCategory);
       otherPaths.forEach(op => {
         const pill = el('button', 'nv-kg-sibling-pill', op.title);
         pill.type = 'button';
@@ -663,8 +664,8 @@ export function createKnowledgeGraphController(options = {}) {
           <a class="nv-button" data-variant="secondary" href="#/learning">Open Curriculum</a>
         </header>
         <details class="nv-kg-controls" open>
-          <summary>Graph controls</summary>
-          <div class="nv-kg-toolbar" aria-label="Graph controls"></div>
+          <summary>Atlas controls</summary>
+          <div class="nv-kg-toolbar" aria-label="Atlas controls"></div>
         </details>
         <div class="nv-kg-workspace">
           <div class="nv-kg-canvas-wrap" data-kg-canvas></div>
