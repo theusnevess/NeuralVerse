@@ -5,21 +5,28 @@ description: Improve TypeScript and JavaScript code quality, typing, modularity,
 
 # TypeScript Expert Skill
 
-Use this skill for TypeScript, JavaScript, React, Node, Vite, tooling, and frontend logic.
+Use this skill for TypeScript, JavaScript, React, Node.js, Vite, tooling, and frontend logic.
 
-Rules:
+## Rules
+
 - Inspect existing patterns before editing.
-- Prefer clear, explicit types when TypeScript is used.
-- Avoid broad rewrites.
-- Remove dead code and unused imports.
-- Keep modules small and cohesive.
-- Preserve public APIs unless explicitly requested.
+- Prefer clear and explicit typing.
+- Avoid broad rewrites when a localized fix is sufficient.
+- Remove dead code and unused imports when encountered.
+- Keep modules cohesive and responsibilities well separated.
+- Preserve public APIs unless explicitly instructed otherwise.
 - Avoid unnecessary dependencies.
-- Prefer deterministic, testable logic.
-- Verify build/lint/test commands when available.
+- Prefer deterministic and testable implementations.
+- Follow the project's established architecture and style.
+- Run relevant build, lint, or test commands whenever practical.
 
-Report:
-- Files changed
-- Type or logic risks
-- Commands run
-- Tests passed or failed
+## Output Report
+
+For every significant task, report:
+
+- Files modified
+- Key architectural or typing decisions
+- Potential risks or follow-up work
+- Commands executed
+- Tests or validation performed
+- Remaining known limitations
