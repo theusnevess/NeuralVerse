@@ -6,14 +6,15 @@
  */
 
 export const NODE_SIZES = {
-  path: { w: 390, h: 132 },
-  module: { w: 270, h: 90 },
-  lesson: { w: 220, h: 70 },
-  artifact: { w: 172, h: 52 },
+  path: { w: 400, h: 140 },
+  module: { w: 280, h: 96 },
+  lesson: { w: 230, h: 74 },
+  artifact: { w: 180, h: 56 },
 };
 
-const ROW_GAP = 250;
-const COL_GAP = 330;
+const ROW_GAP = 260;
+const COL_GAP = 360;
+const GOLDEN_ANGLE = Math.PI * (3 - Math.sqrt(5));
 
 function getChildren(graph, parentId) {
   return graph.edges
@@ -63,17 +64,16 @@ function placeRow(nodes, y, options = {}) {
 
 function pathOverview(graph) {
   const paths = graph.nodes.filter((node) => node.type === 'path');
-  const columns = Math.min(3, Math.max(1, Math.ceil(Math.sqrt(paths.length))));
-  const xGap = 480;
-  const yGap = 230;
   const positions = new Map();
+  const base = 200;
+  const growth = 360;
   paths.forEach((path, index) => {
-    const row = Math.floor(index / columns);
-    const col = index % columns;
+    const angle = index * GOLDEN_ANGLE;
+    const radius = base + growth * Math.sqrt(index + 1);
     positions.set(path.id, {
       ...path,
-      wx: (col - (columns - 1) / 2) * xGap,
-      wy: row * yGap,
+      wx: Math.cos(angle) * radius,
+      wy: Math.sin(angle) * radius * 0.85,
       _role: 'selected',
     });
   });
