@@ -98,14 +98,33 @@ export function createKnowledgeGraphController(options = {}) {
   function focusNode(nodeId) {
     const node = graph.nodeById.get(nodeId);
     if (!node) return;
-    if (state.focusedNodeId && state.focusedNodeId !== nodeId) state.stageHistory.push(state.focusedNodeId);
-    state.mode = MODE_BY_TYPE[node.type] || 'overview';
-    state.focusedNodeId = node.id;
-    state.selectedNodeId = node.id;
-    state.expandedNodeIds = getLineageIds(node);
+
+    // Toggle: if clicking the already focused node, close it by going to its parent
+    if (state.focusedNodeId === nodeId) {
+      const parent = getParent(node.id);
+      if (parent) {
+        if (state.stageHistory.length > 0 && state.stageHistory[state.stageHistory.length - 1] === parent.id) {
+          state.stageHistory.pop();
+        }
+        nodeId = parent.id;
+      } else {
+        resetGraph();
+        return;
+      }
+    } else {
+      if (state.focusedNodeId && state.focusedNodeId !== nodeId) {
+        state.stageHistory.push(state.focusedNodeId);
+      }
+    }
+
+    const newNode = graph.nodeById.get(nodeId);
+    state.mode = MODE_BY_TYPE[newNode.type] || 'overview';
+    state.focusedNodeId = newNode.id;
+    state.selectedNodeId = newNode.id;
+    state.expandedNodeIds = getLineageIds(newNode);
     applyCurrentRender(true);
-    renderer.pulseNode(node.id);
-    renderer.focusNodeEl(node.id);
+    renderer.pulseNode(newNode.id);
+    renderer.focusNodeEl(newNode.id);
   }
 
   function goBack() {
