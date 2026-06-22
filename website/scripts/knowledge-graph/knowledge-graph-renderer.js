@@ -13,10 +13,10 @@
 import { NODE_SIZES } from './knowledge-graph-layout.js';
 
 const COLORS = {
-  path:     { fill: '#141b2d', stroke: '#89b4fa', text: '#b4d0fc', type: '#5b8fd4', glow: '137,180,250' },
-  module:   { fill: '#142018', stroke: '#a6e3a1', text: '#c3edc0', type: '#5ba66a', glow: '166,227,161' },
-  lesson:   { fill: '#221e0f', stroke: '#f9e2af', text: '#f5dfa0', type: '#a69040', glow: '249,226,175' },
-  artifact: { fill: '#1a1528', stroke: '#cba6f7', text: '#d4bcf5', type: '#8567aa', glow: '203,166,247' },
+  path:     { fill: '#141b2d', stroke: '#89b4fa', text: '#b4d0fc', type: '#5b8fd4', glow: '137,180,250', gradStart: '#1f2a4a', gradEnd: '#131a29' },
+  module:   { fill: '#142018', stroke: '#a6e3a1', text: '#c3edc0', type: '#5ba66a', glow: '166,227,161', gradStart: '#1e3322', gradEnd: '#121e16' },
+  lesson:   { fill: '#221e0f', stroke: '#f9e2af', text: '#f5dfa0', type: '#a69040', glow: '249,226,175', gradStart: '#302c1a', gradEnd: '#201c0e' },
+  artifact: { fill: '#1a1528', stroke: '#cba6f7', text: '#d4bcf5', type: '#8567aa', glow: '203,166,247', gradStart: '#28253a', gradEnd: '#181326' },
 };
 
 const TYPE_LABELS = { path: 'LEARNING PATH', module: 'MODULE', lesson: 'LESSON', artifact: 'ARTIFACT' };
@@ -57,11 +57,11 @@ function buildNodeGroup(node) {
     fill: 'none', stroke: c.stroke,
   }));
 
-  // Main card rect
+  // Main card rect with gradient fill
   const rect = svgEl('rect', {
     class: 'nv-kg-node-shape',
     x: -hw, y: -hh, width: w, height: h, rx,
-    fill: c.fill, stroke: c.stroke,
+    fill: `url(#nv-kg-grad-${node.type})`, stroke: c.stroke,
   });
   g.append(rect);
 
@@ -89,24 +89,38 @@ function buildNodeGroup(node) {
   titleEl.style.fill = c.text;
   g.append(titleEl);
 
-  // Count badges keep overview cards informative without revealing descendants.
+  // Count badges and status mix on path overview cards
   const summary = node._summary || null;
   if (summary && node.type === 'path') {
     const labels = [`M ${summary.modules}`, `L ${summary.lessons}`, `A ${summary.artifacts}`];
     labels.forEach((label, index) => {
       const badgeBg = svgEl('rect', {
         class: 'nv-kg-count-badge',
-        x: -hw + 14 + index * 54, y: -hh + 38, width: 46, height: 20, rx: 10,
+        x: -hw + 14 + index * 56, y: -hh + 40, width: 48, height: 22, rx: 11,
         fill: 'rgba(137,180,250,0.08)', stroke: c.stroke,
       });
       const badgeText = svgEl('text', {
         class: 'nv-kg-count-text',
-        x: -hw + 37 + index * 54, y: -hh + 52, 'text-anchor': 'middle',
+        x: -hw + 38 + index * 56, y: -hh + 55, 'text-anchor': 'middle',
       });
       badgeText.textContent = label;
       badgeText.style.fill = c.text;
       g.append(badgeBg, badgeText);
     });
+    // Status mix badge
+    const rLabel = `R ${summary.reviewed}/${summary.total}`;
+    const rBg = svgEl('rect', {
+      class: 'nv-kg-count-badge',
+      x: -hw + 14 + labels.length * 56, y: -hh + 40, width: 54, height: 22, rx: 11,
+      fill: 'rgba(166,227,161,0.08)', stroke: '#a6e3a1',
+    });
+    const rText = svgEl('text', {
+      class: 'nv-kg-count-text',
+      x: -hw + 41 + labels.length * 56, y: -hh + 55, 'text-anchor': 'middle',
+    });
+    rText.textContent = rLabel;
+    rText.style.fill = '#a6e3a1';
+    g.append(rBg, rText);
   } else if (node._childCount > 0) {
     const badgeBg = svgEl('rect', {
       class: 'nv-kg-count-badge',
@@ -187,6 +201,14 @@ export class KnowledgeGraphRenderer {
     this.nodeLayer = svgEl('g', { class: 'nv-kg-node-layer' });
     this.world.append(this.edgeLayer, this.nodeLayer);
     this.svg.append(this.world);
+    const defs = svgEl('defs');
+    [['path', '#1f2a4a', '#131a29'], ['module', '#1e3322', '#121e16'], ['lesson', '#302c1a', '#201c0e'], ['artifact', '#28253a', '#181326']].forEach(([type, start, end]) => {
+      const grad = svgEl('linearGradient', { id: `nv-kg-grad-${type}`, x1: '0%', y1: '0%', x2: '100%', y2: '100%' });
+      grad.append(svgEl('stop', { offset: '0%', 'stop-color': start }));
+      grad.append(svgEl('stop', { offset: '100%', 'stop-color': end }));
+      defs.append(grad);
+    });
+    this.svg.prepend(defs);
     this.container.append(this.svg);
 
     this._attachInteraction();
@@ -342,7 +364,8 @@ export class KnowledgeGraphRenderer {
     const sh = this.svg.clientHeight || 600;
     const scaleX = (sw - 100) / bounds.width;
     const scaleY = (sh - 100) / bounds.height;
-    const k = Math.max(0.18, Math.min(1.0, Math.min(scaleX, scaleY)));
+    // Lower bound of 0.86 ensures path cards (280px) render at least 240px wide.
+    const k = Math.max(0.86, Math.min(1.0, Math.min(scaleX, scaleY)));
     this.transform = {
       x: (sw - bounds.width * k) / 2 - bounds.minX * k,
       y: (sh - bounds.height * k) / 2 - bounds.minY * k,
