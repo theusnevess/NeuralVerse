@@ -26,6 +26,7 @@
   <link rel="stylesheet" href="styles/curriculum-search.css?v=13">
   <link rel="stylesheet" href="styles/cross-links.css?v=1">
   <link rel="stylesheet" href="styles/reading-experience.css?v=1">
+  <link rel="stylesheet" href="styles/personalization.css?v=1">
 </head>
 <body>
   <!-- Skip Link for Accessibility -->
@@ -830,20 +831,36 @@
 
   <!-- Curriculum Global Search Modal -->
   <dialog id="nv-curriculum-search-modal" class="nv-search-modal" aria-labelledby="nv-search-modal-title">
-    <div class="nv-search-header">
-      <div class="nv-search-input-wrapper">
-        <svg class="nv-search-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <circle cx="11" cy="11" r="8"></circle>
-          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-        </svg>
-        <input type="search" id="nv-curriculum-search-input" class="nv-search-input" placeholder="Search curriculum (Paths, Modules, Lessons, Artifacts)..." aria-label="Search curriculum" autocomplete="off" spellcheck="false">
+    <div class="nv-search-header" style="display: flex; flex-direction: column; align-items: stretch; gap: var(--sys-space-stack-sm);">
+      <div class="nv-cluster" style="justify-content: space-between; align-items: center; width: 100%; display: flex;">
+        <div class="nv-search-input-wrapper" style="flex: 1;">
+          <svg class="nv-search-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="search" id="nv-curriculum-search-input" class="nv-search-input" placeholder="Search curriculum (Paths, Modules, Lessons, Artifacts)..." aria-label="Search curriculum" autocomplete="off" spellcheck="false">
+        </div>
+        <button type="button" id="nv-curriculum-search-close" class="nv-search-close-btn" aria-label="Close search modal" title="Close search modal" style="margin-left: var(--sys-space-inline-sm);">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
       </div>
-      <button type="button" id="nv-curriculum-search-close" class="nv-search-close-btn" aria-label="Close search modal" title="Close search modal">
-        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
-      </button>
+      <div class="nv-search-filters-bar nv-cluster" style="gap: var(--sys-space-inline-sm); margin-top: var(--sys-space-stack-xs); font-size: var(--sys-font-caption-size); color: var(--sys-color-text-secondary); width: 100%; display: flex;">
+        <label class="nv-search-filter-label" style="display: flex; align-items: center; gap: 6px; cursor: pointer; user-select: none;">
+          <input type="checkbox" id="nv-search-filter-bookmarked" style="width: 14px; height: 14px; flex-shrink: 0; margin: 0; cursor: pointer;"> Bookmarked
+        </label>
+        <label class="nv-search-filter-label" style="display: flex; align-items: center; gap: 6px; cursor: pointer; user-select: none;">
+          <input type="checkbox" id="nv-search-filter-notes" style="width: 14px; height: 14px; flex-shrink: 0; margin: 0; cursor: pointer;"> Has Notes
+        </label>
+        <label class="nv-search-filter-label" style="display: flex; align-items: center; gap: 6px; cursor: pointer; user-select: none;">
+          <input type="checkbox" id="nv-search-filter-recent" style="width: 14px; height: 14px; flex-shrink: 0; margin: 0; cursor: pointer;"> Recently Viewed
+        </label>
+        <label class="nv-search-filter-label" style="display: flex; align-items: center; gap: 6px; cursor: pointer; user-select: none;">
+          <input type="checkbox" id="nv-search-filter-collection" style="width: 14px; height: 14px; flex-shrink: 0; margin: 0; cursor: pointer;"> In Collection
+        </label>
+      </div>
     </div>
     <div id="nv-curriculum-search-results" class="nv-search-results" role="listbox" aria-label="Search results">
       <!-- Search results dynamically rendered here -->
@@ -874,6 +891,8 @@
   <script src="scripts/retrieval-playground.js?v=11"></script>
   <script src="scripts/background/neural-galaxy.js?v=12" defer></script>
   <script src="scripts/curriculum/reading-navigation.js?v=1"></script>
+  <script src="scripts/workspace/personalization-service.js?v=1"></script>
+  <script src="scripts/workspace/personalization-controller.js?v=1"></script>
   <script type="module" src="scripts/app.js?v=12"></script>
   <!-- NeuralVerse React Island Layer (NV-500-UX-007E.2)
        Self-contained local IIFE bundle — zero CDN runtime dependency.

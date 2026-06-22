@@ -830,6 +830,20 @@ export function createCurriculumController(options = {}) {
     }
     relatedSection.append(grid);
     mainContent.append(relatedSection);
+
+    if (window.NeuralVerse && typeof window.NeuralVerse.initPersonalizationExperience === 'function') {
+      window.NeuralVerse.initPersonalizationExperience({
+        pathId,
+        moduleId,
+        lessonId,
+        artifactId: null,
+        artifact: null,
+        lesson,
+        path,
+        module,
+        mainContent
+      });
+    }
   }
 
   async function renderArtifact(pathId, moduleId, lessonId, artifactId) {
@@ -1073,6 +1087,22 @@ export function createCurriculumController(options = {}) {
         artifactId,
         artifact,
         lesson,
+        path,
+        module,
+        mainContent
+      });
+    }
+
+    if (window.NeuralVerse && typeof window.NeuralVerse.initPersonalizationExperience === 'function') {
+      window.NeuralVerse.initPersonalizationExperience({
+        pathId,
+        moduleId,
+        lessonId,
+        artifactId,
+        artifact,
+        lesson,
+        path,
+        module,
         mainContent
       });
     }

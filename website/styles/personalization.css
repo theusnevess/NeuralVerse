@@ -1,0 +1,286 @@
+/**
+ * NV-900-UI8 — Personalized Learning & Knowledge Workspace Styling
+ * Glassmorphic themes, hover effects, highlight markers, and responsive dashboard.
+ */
+
+/* --- 1. Bookmark Button --- */
+.nv-button--bookmark {
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--sys-color-text-secondary);
+  cursor: pointer;
+  padding: 0 var(--sys-space-inline-xs);
+  transition: transform var(--sys-motion-duration-fast) var(--sys-motion-easing-standard), color var(--sys-motion-duration-fast);
+  line-height: 1;
+}
+
+.nv-button--bookmark:hover {
+  transform: scale(1.2);
+  color: var(--sys-color-accent-warning, #f9a825);
+}
+
+.nv-button--bookmark[data-bookmarked="true"] {
+  color: var(--sys-color-accent-warning, #f9a825);
+  animation: bookmarkBounce var(--sys-motion-duration-medium) var(--sys-motion-easing-decelerate);
+}
+
+@keyframes bookmarkBounce {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.4); }
+  100% { transform: scale(1); }
+}
+
+/* --- 2. Personalization Panels inside Metadata Column --- */
+.nv-personalization-panel {
+  border-top: 1px solid var(--sys-color-border-subtle);
+  margin-top: var(--sys-space-stack-md);
+  padding-top: var(--sys-space-stack-md);
+}
+
+.nv-notes-textarea {
+  width: 100%;
+  min-height: 120px;
+  background: var(--sys-color-bg-container, rgba(30, 30, 30, 0.4));
+  border: 1px solid var(--sys-color-border, rgba(255, 255, 255, 0.15));
+  border-radius: var(--sys-radius-sm);
+  color: var(--sys-color-text-primary);
+  font-family: inherit;
+  font-size: var(--sys-font-body-size);
+  padding: var(--sys-space-stack-xs);
+  resize: vertical;
+  transition: border-color var(--sys-motion-duration-fast);
+}
+
+.nv-notes-textarea:focus {
+  outline: none;
+  border-color: var(--sys-color-accent-primary);
+}
+
+.nv-notes-status {
+  align-self: flex-end;
+  font-size: var(--sys-font-caption-size);
+  opacity: 0.8;
+}
+
+/* --- 3. Collections List & Inputs --- */
+.nv-collections-list {
+  max-height: 120px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.nv-collection-item-label {
+  display: flex;
+  align-items: center;
+  gap: var(--sys-space-inline-xs);
+  font-size: var(--sys-font-caption-size);
+  cursor: pointer;
+  padding: 2px 0;
+}
+
+.nv-collection-item-label input[type="checkbox"] {
+  cursor: pointer;
+}
+
+.nv-add-collection-input,
+.nv-add-tag-input {
+  width: 100%;
+  font-size: var(--sys-font-caption-size) !important;
+}
+
+/* --- 4. Personal Tags --- */
+.nv-tags-container {
+  min-height: 24px;
+}
+
+.nv-tag-badge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  font-size: var(--sys-font-caption-size);
+}
+
+.nv-tag-remove-btn {
+  background: transparent;
+  border: none;
+  color: inherit;
+  font-size: 1rem;
+  line-height: 1;
+  padding: 0;
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+.nv-tag-remove-btn:hover {
+  opacity: 1;
+}
+
+/* --- 5. Paragraph-Level Highlighting --- */
+[data-highlight-anchor] {
+  transition: background-color var(--sys-motion-duration-fast) var(--sys-motion-easing-standard);
+  position: relative;
+}
+
+.nv-highlight--yellow {
+  background-color: rgba(249, 168, 37, 0.08) !important;
+  border-left: 3px solid var(--sys-color-accent-warning, #f9a825) !important;
+  padding-left: 8px !important;
+}
+
+.nv-highlight--green {
+  background-color: rgba(76, 175, 80, 0.08) !important;
+  border-left: 3px solid var(--sys-color-accent-success, #4caf50) !important;
+  padding-left: 8px !important;
+}
+
+/* Floating Highlight Toolbar on Paragraph Hover */
+.nv-paragraph-highlight-menu {
+  position: absolute;
+  top: -8px;
+  right: 8px;
+  background: var(--sys-color-bg-card, rgba(30, 30, 30, 0.85));
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--sys-color-border, rgba(255, 255, 255, 0.15));
+  border-radius: var(--sys-radius-sm);
+  padding: 4px;
+  z-index: 10;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  animation: fadeIn var(--sys-motion-duration-fast) var(--sys-motion-easing-decelerate);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.nv-highlight-color-btn {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  padding: 0;
+  transition: transform var(--sys-motion-duration-fast);
+}
+
+.nv-highlight-color-btn:hover {
+  transform: scale(1.2);
+}
+
+.nv-highlight-color-btn--yellow {
+  background-color: #f9a825;
+}
+
+.nv-highlight-color-btn--green {
+  background-color: #4caf50;
+}
+
+.nv-highlight-color-btn--clear {
+  background-color: transparent;
+  position: relative;
+}
+
+.nv-highlight-color-btn--clear::after {
+  content: '/';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 10px;
+  color: var(--sys-color-text-secondary);
+}
+
+/* --- 6. Workspace Dashboard --- */
+.nv-workspace-dashboard {
+  animation: slideIn var(--sys-motion-duration-medium) var(--sys-motion-easing-decelerate);
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.nv-continue-reading-banner {
+  background: linear-gradient(135deg, rgba(138, 180, 248, 0.1) 0%, rgba(138, 180, 248, 0.03) 100%);
+  border: 1px solid rgba(138, 180, 248, 0.2);
+  border-radius: var(--sys-radius-md);
+  padding: var(--sys-space-stack-md);
+  margin-bottom: var(--sys-space-stack-md);
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nv-continue-reading-banner__title {
+  margin: var(--sys-space-stack-xs) 0;
+  color: var(--sys-color-accent-primary);
+}
+
+.nv-dashboard-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nv-dashboard-list-item {
+  padding: var(--sys-space-stack-xs);
+  border-bottom: 1px solid var(--sys-color-border-subtle);
+  justify-content: space-between;
+  align-items: center;
+  transition: background-color var(--sys-motion-duration-fast);
+}
+
+.nv-dashboard-list-item:hover {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+.nv-dashboard-list-item__title {
+  text-decoration: none;
+  font-weight: var(--ref-font-weight-medium);
+  color: var(--sys-color-text-primary);
+  transition: color var(--sys-motion-duration-fast);
+}
+
+.nv-dashboard-list-item__title:hover {
+  color: var(--sys-color-accent-primary);
+}
+
+.nv-dashboard-collection-card {
+  background: var(--sys-color-bg-container, rgba(30, 30, 30, 0.3));
+  border: 1px solid var(--sys-color-border, rgba(255, 255, 255, 0.1));
+  border-radius: var(--sys-radius-sm);
+  padding: var(--sys-space-stack-sm);
+  transition: transform var(--sys-motion-duration-fast), border-color var(--sys-motion-duration-fast);
+}
+
+.nv-dashboard-collection-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--sys-color-accent-primary);
+}
+
+.nv-muted-link {
+  color: var(--sys-color-text-secondary);
+  text-decoration: none;
+  transition: color var(--sys-motion-duration-fast);
+}
+
+.nv-muted-link:hover {
+  color: var(--sys-color-accent-primary);
+}
+
+.nv-highlight-badge--yellow {
+  background-color: rgba(249, 168, 37, 0.2);
+  color: #f9a825;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: var(--sys-font-caption-size);
+}
+
+.nv-highlight-badge--green {
+  background-color: rgba(76, 175, 80, 0.2);
+  color: #4caf50;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: var(--sys-font-caption-size);
+}

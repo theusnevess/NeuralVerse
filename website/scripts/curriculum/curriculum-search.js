@@ -61,6 +61,11 @@ export function createCurriculumSearchController(options = {}) {
   const trigger = root.getElementById('nv-global-search-trigger');
   const closeBtn = root.getElementById('nv-curriculum-search-close');
 
+  const bookmarkedFilter = root.getElementById('nv-search-filter-bookmarked');
+  const notesFilter = root.getElementById('nv-search-filter-notes');
+  const recentFilter = root.getElementById('nv-search-filter-recent');
+  const collectionFilter = root.getElementById('nv-search-filter-collection');
+
   function ensureIndex() {
     if (flatIndex) return Promise.resolve();
     if (indexPromise) return indexPromise;
@@ -278,45 +283,77 @@ export function createCurriculumSearchController(options = {}) {
     if (!flatIndex) return;
     const normQuery = normalizeText(query);
     const queryTerms = normQuery.split(/\s+/).filter(Boolean);
-    if (queryTerms.length === 0) {
+
+    // Personalization Service Filters
+    const service = window.NeuralVerse?.PersonalizationService;
+    const filterBookmarked = bookmarkedFilter ? bookmarkedFilter.checked : false;
+    const filterNotes = notesFilter ? notesFilter.checked : false;
+    const filterRecent = recentFilter ? recentFilter.checked : false;
+    const filterCollection = collectionFilter ? collectionFilter.checked : false;
+
+    const hasActiveFilters = filterBookmarked || filterNotes || filterRecent || filterCollection;
+
+    if (queryTerms.length === 0 && !hasActiveFilters) {
       renderInitialState();
       return;
     }
 
     // Match and calculate weighted scores
     const matches = flatIndex.map(item => {
-      const normTitle = normalizeText(item.title);
-      const normSummary = normalizeText(item.summary);
-      const normId = normalizeText(item.id);
+      // 1. Apply Personalization Filters if active
+      if (hasActiveFilters && service) {
+        if (filterBookmarked && !service.isBookmarked(item.id)) return null;
+        if (filterNotes && service.getNote(item.id) === null) return null;
+        if (filterRecent && !service.getRecentlyVisited().some(h => h.id === item.id)) return null;
+        if (filterCollection && !service.getCollections().some(c => c.resources.some(r => r.id === item.id))) return null;
+      }
 
-      const allTermsMatch = queryTerms.every(term => {
-        return normTitle.includes(term) || normSummary.includes(term) || normId.includes(term) || item.type.toLowerCase().includes(term);
-      });
-
-      if (!allTermsMatch) return null;
-
-      // Calculate score
+      // 2. Query matching (if query is not empty)
       let score = 0;
-      let matchedInTitle = queryTerms.every(term => normTitle.includes(term));
-      let matchedInSummary = queryTerms.every(term => normSummary.includes(term));
-      let matchedInId = queryTerms.every(term => normId.includes(term));
+      let matchedInTitle = false;
+      let matchedInSummary = false;
+      let matchedInId = false;
 
-      if (normTitle === normQuery) {
-        score = 1000;
-      } else if (normTitle.startsWith(normQuery)) {
-        score = 800;
-      } else if (normTitle.includes(normQuery)) {
-        score = 600;
-      } else if (matchedInTitle) {
-        score = 500;
-      } else if (normSummary.includes(normQuery)) {
-        score = 400;
-      } else if (matchedInSummary) {
-        score = 300;
-      } else if (matchedInId) {
-        score = 200;
+      if (queryTerms.length > 0) {
+        const normTitle = normalizeText(item.title);
+        const normSummary = normalizeText(item.summary);
+        const normId = normalizeText(item.id);
+
+        const allTermsMatch = queryTerms.every(term => {
+          return normTitle.includes(term) || normSummary.includes(term) || normId.includes(term) || item.type.toLowerCase().includes(term);
+        });
+
+        if (!allTermsMatch) return null;
+
+        matchedInTitle = queryTerms.every(term => normTitle.includes(term));
+        matchedInSummary = queryTerms.every(term => normSummary.includes(term));
+        matchedInId = queryTerms.every(term => normId.includes(term));
+
+        if (normTitle === normQuery) {
+          score = 1000;
+        } else if (normTitle.startsWith(normQuery)) {
+          score = 800;
+        } else if (normTitle.includes(normQuery)) {
+          score = 600;
+        } else if (matchedInTitle) {
+          score = 500;
+        } else if (normSummary.includes(normQuery)) {
+          score = 400;
+        } else if (matchedInSummary) {
+          score = 300;
+        } else if (matchedInId) {
+          score = 200;
+        } else {
+          score = 100;
+        }
       } else {
+        // If query is empty but filter matches, give a base score
         score = 100;
+      }
+
+      // 3. Boost score if item is bookmarked
+      if (service && service.isBookmarked(item.id)) {
+        score += 150;
       }
 
       return {
@@ -539,6 +576,16 @@ export function createCurriculumSearchController(options = {}) {
       input.addEventListener('input', handleInput);
       input.addEventListener('keydown', handleKeyDown);
     }
+
+    // Bind personalization filter checkboxes
+    const filters = [bookmarkedFilter, notesFilter, recentFilter, collectionFilter];
+    filters.forEach(filter => {
+      if (filter) {
+        filter.addEventListener('change', () => {
+          performSearch(input ? input.value : '');
+        });
+      }
+    });
 
     // Trap focus inside modal
     modal.addEventListener('keydown', (e) => {
