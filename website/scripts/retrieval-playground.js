@@ -529,8 +529,14 @@
     return ref.source ? `Source: ${ref.source}` : "";
   }
 
+  function resolveAssetPath(path) {
+    const value = String(path || "");
+    if (!value || value.startsWith("/") || value.startsWith("http")) return value;
+    return new URL(value, document.baseURI).pathname;
+  }
+
   function renderScientificIcon(path, extraClass = "") {
-    const iconPath = String(path || "").startsWith("/") ? path : `/${path}`;
+    const iconPath = resolveAssetPath(path);
     return `<span class="nv-scientific-icon nv-discovery-panel__icon-glyph ${extraClass}" style="--nv-scientific-icon-url: url('${iconPath}');" aria-hidden="true"></span>`;
   }
 
@@ -2605,7 +2611,7 @@
       settings: "assets/icons/scientific/inspector/metadata-panel.svg",
     };
     const iconPath = icons[name] || icons.search;
-    const resolvedIconPath = iconPath.startsWith('/') ? iconPath : `/${iconPath}`;
+    const resolvedIconPath = resolveAssetPath(iconPath);
     return `
       <span
         class="nv-empty-illustration nv-scientific-icon nv-scientific-icon--xl"

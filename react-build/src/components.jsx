@@ -14,7 +14,10 @@ import React from 'react'
 const SIZE_MAP = { sm: '1rem', md: '1.1rem', lg: '1.35rem' }
 
 export function NvScientificIcon({ iconPath, className = '', label, size = 'md' }) {
-  const resolvedPath = String(iconPath || '').startsWith('/') ? iconPath : `/${iconPath}`
+  const rawPath = String(iconPath || '')
+  const resolvedPath = rawPath.startsWith('/') || rawPath.startsWith('http')
+    ? rawPath
+    : new URL(rawPath, document.baseURI).pathname
   const dim = SIZE_MAP[size] ?? SIZE_MAP.md
   return (
     <span
