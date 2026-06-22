@@ -1,150 +1,151 @@
 import { hasVisualization } from '../visualizations/visualization-registry.js';
 import { buildKnowledgeGraphModel, DEPENDENCY_TYPES } from './knowledge-graph-model.js';
-import { computeClusterAnchors, computeLayout, computeVisibleEdges, computeBounds } from './knowledge-graph-layout.js';
+import { computeLayout, computeVisibleEdges, computeBounds } from './knowledge-graph-layout.js';
 import { KnowledgeGraphRenderer } from './knowledge-graph-renderer.js';
 
 function el(tag, cls = '', text = '') {
-  const n = document.createElement(tag);
-  if (cls) n.className = cls;
-  if (text) n.textContent = text;
-  return n;
+  const node = document.createElement(tag);
+  if (cls) node.className = cls;
+  if (text) node.textContent = text;
+  return node;
 }
-function normalize(s) {
-  return String(s || '')
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-z0-9]+/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
+
+function normalize(value) {
+  return String(value || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, ' ').trim();
 }
+
+const MODE_BY_TYPE = { path: 'path', module: 'module', lesson: 'lesson', artifact: 'artifact' };
 
 export function createKnowledgeGraphController(options = {}) {
   const root = options.root || document;
   let graph = null;
   let renderer = null;
-  let clusterAnchors = null;
   let nodePositions = null;
   let visibleEdges = null;
-  let routeInitialized = false;
 
   const state = {
-    selectedNodeId: '',
-    expandedPaths: new Set(),
-    expandedModules: new Set(),
-    expandedLessons: new Set(),
+    mode: 'overview',
+    focusedNodeId: null,
+    expandedNodeIds: new Set(),
+    selectedNodeId: null,
   };
 
   function target() { return root.querySelector('[data-knowledge-graph-root]'); }
+  function getChildren(id) { return graph.edges.filter((edge) => edge.type === 'contains' && edge.source === id).map((edge) => graph.nodeById.get(edge.target)).filter(Boolean); }
+  function getParent(id) { const edge = graph.edges.find((candidate) => candidate.type === 'contains' && candidate.target === id); return edge ? graph.nodeById.get(edge.source) : null; }
+  function getSiblings(node) { const parent = getParent(node.id); return parent ? getChildren(parent.id).filter((child) => child.id !== node.id) : []; }
+  function getDependencies(id) { return (graph.edgesByNodeId.get(id) || []).filter((edge) => DEPENDENCY_TYPES.includes(edge.type)); }
 
   async function ensureGraph() {
     if (graph) return;
     const service = window.NeuralVerse?.curriculum?.service;
     if (!service) throw new Error('Curriculum service unavailable.');
-    const index = await service.getIndex();
-    graph = buildKnowledgeGraphModel(index, { hasVisualization });
-    clusterAnchors = computeClusterAnchors(graph);
+    graph = buildKnowledgeGraphModel(await service.getIndex(), { hasVisualization });
+  }
+
+  function annotateNodes() {
+    nodePositions.forEach((node, id) => {
+      const children = getChildren(id);
+      node._childCount = children.length;
+      node._expanded = state.expandedNodeIds.has(id) || state.focusedNodeId === id;
+      if (node.type === 'path') {
+        const modules = children;
+        const lessons = modules.flatMap((module) => getChildren(module.id));
+        const artifacts = lessons.flatMap((lesson) => getChildren(lesson.id));
+        const reviewed = [...modules, ...lessons, ...artifacts].filter((item) => item.status === 'Reviewed').length;
+        node._summary = { modules: modules.length, lessons: lessons.length, artifacts: artifacts.length, reviewed };
+      }
+    });
   }
 
   function recomputeLayout() {
-    nodePositions = computeLayout(graph, state.expandedPaths, state.expandedModules, state.expandedLessons, clusterAnchors);
-    // Annotate child counts and expanded state for renderer
-    nodePositions.forEach((node, id) => {
-      const childEdges = graph.edges.filter(e => e.type === 'contains' && e.source === id);
-      node._childCount = childEdges.length;
-      node._expanded = state.expandedPaths.has(id) || state.expandedModules.has(id) || state.expandedLessons.has(id);
+    nodePositions = computeLayout(graph, state);
+    annotateNodes();
+    visibleEdges = computeVisibleEdges(graph, nodePositions).filter((edge) => {
+      if (edge.type === 'contains') return true;
+      return state.mode === 'artifact' && (edge.source === state.focusedNodeId || edge.target === state.focusedNodeId);
     });
-    visibleEdges = computeVisibleEdges(graph, nodePositions);
+  }
+
+  function getLineageIds(node) {
+    return new Set([node.lineage?.pathId, node.lineage?.moduleId, node.lineage?.lessonId, node.id].filter(Boolean));
   }
 
   function getNeighborIds(nodeId) {
-    const neighbors = new Set();
-    graph.edges.forEach(e => {
-      if (e.source === nodeId) neighbors.add(e.target);
-      if (e.target === nodeId) neighbors.add(e.source);
+    const selected = graph.nodeById.get(nodeId);
+    const ids = getLineageIds(selected || {});
+    visibleEdges.forEach((edge) => {
+      if (edge.source === nodeId) ids.add(edge.target);
+      if (edge.target === nodeId) ids.add(edge.source);
     });
-    return neighbors;
+    return ids;
   }
 
-  // ── Handlers for renderer ────────────────────────────────────────────────
+  function applyCurrentRender(center = true) {
+    recomputeLayout();
+    renderer.update(nodePositions, visibleEdges);
+    if (state.selectedNodeId) renderer.applyFocus(state.selectedNodeId, getNeighborIds(state.selectedNodeId));
+    else renderer.applyFocus('', new Set());
+    if (center && state.focusedNodeId) renderer.centerOn(state.focusedNodeId, nodePositions, true);
+    else if (center) renderer.fitAll(computeBounds(nodePositions));
+    renderToolbar();
+    renderInspector();
+    renderFallback();
+  }
+
+  function focusNode(nodeId) {
+    const node = graph.nodeById.get(nodeId);
+    if (!node) return;
+    state.mode = MODE_BY_TYPE[node.type] || 'overview';
+    state.focusedNodeId = node.id;
+    state.selectedNodeId = node.id;
+    state.expandedNodeIds = getLineageIds(node);
+    applyCurrentRender(true);
+    renderer.pulseNode(node.id);
+    renderer.focusNodeEl(node.id);
+  }
+
+  function resetGraph() {
+    state.mode = 'overview';
+    state.focusedNodeId = null;
+    state.selectedNodeId = null;
+    state.expandedNodeIds.clear();
+    applyCurrentRender(true);
+  }
+
   const handlers = {
-    selectNode(nodeId) {
-      const node = graph.nodeById.get(nodeId);
-      if (!node) return;
-
-      // Toggle expand/collapse one level at a time.
-      if (node.type === 'path') {
-        if (state.expandedPaths.has(nodeId)) {
-          state.expandedPaths.delete(nodeId);
-          graph.edges.filter(e => e.type === 'contains' && e.source === nodeId).forEach(e => {
-            state.expandedModules.delete(e.target);
-            graph.edges.filter(child => child.type === 'contains' && child.source === e.target)
-              .forEach(child => state.expandedLessons.delete(child.target));
-          });
-        } else {
-          state.expandedPaths.add(nodeId);
-        }
-      } else if (node.type === 'module') {
-        if (node.lineage?.pathId) state.expandedPaths.add(node.lineage.pathId);
-        if (state.expandedModules.has(nodeId)) {
-          state.expandedModules.delete(nodeId);
-          // Collapse child lessons too
-          graph.edges.filter(e => e.type === 'contains' && e.source === nodeId)
-            .forEach(e => state.expandedLessons.delete(e.target));
-        } else {
-          state.expandedModules.add(nodeId);
-        }
-      } else if (node.type === 'lesson') {
-        if (node.lineage?.pathId) state.expandedPaths.add(node.lineage.pathId);
-        if (node.lineage?.moduleId) state.expandedModules.add(node.lineage.moduleId);
-        state.expandedLessons.has(nodeId)
-          ? state.expandedLessons.delete(nodeId)
-          : state.expandedLessons.add(nodeId);
-      } else if (node.type === 'artifact') {
-        if (node.lineage?.pathId) state.expandedPaths.add(node.lineage.pathId);
-        if (node.lineage?.moduleId) state.expandedModules.add(node.lineage.moduleId);
-        if (node.lineage?.lessonId) state.expandedLessons.add(node.lineage.lessonId);
-      }
-
-      recomputeLayout();
-      renderer.update(nodePositions, visibleEdges);
-      state.selectedNodeId = nodeId;
-      renderer.applyFocus(nodeId, getNeighborIds(nodeId));
-      renderer.centerOn(nodeId, nodePositions, true);
-      renderInspector();
-      renderFallback();
-    },
+    selectNode: focusNode,
     clearSelection() {
-      state.selectedNodeId = '';
+      state.selectedNodeId = null;
       renderer.applyFocus('', new Set());
       renderInspector();
     },
-    centerNode(nodeId) {
-      renderer.centerOn(nodeId, nodePositions);
-    },
+    centerNode(nodeId) { renderer.centerOn(nodeId, nodePositions); },
     moveFocus(delta) {
       const ids = renderer.getVisibleNodeIds();
       const cur = ids.indexOf(state.selectedNodeId);
       const next = Math.max(0, Math.min(ids.length - 1, cur + delta));
-      if (ids[next]) { handlers.selectNode(ids[next]); renderer.focusNodeEl(ids[next]); }
+      if (ids[next]) focusNode(ids[next]);
     },
   };
 
-  // ── Shell ──────────────────────────────────────────────────────────────────
   function renderShell() {
-    const c = target();
-    if (!c) return;
-    c.innerHTML = `
+    const container = target();
+    if (!container) return;
+    container.innerHTML = `
       <section class="nv-kg" aria-labelledby="nv-kg-title">
         <header class="nv-kg-hero nv-curriculum-hero">
           <div class="nv-stack nv-stack--gap-xs">
-            <span class="nv-curriculum-card__kicker">NV-900 Graph Atlas</span>
+            <span class="nv-curriculum-card__kicker">NV-900 Curriculum Atlas</span>
             <h1 id="nv-kg-title">Knowledge Explorer</h1>
-            <p class="nv-muted">Navigate the curriculum as a scientific atlas. Start with Learning Paths, then expand into modules, lessons, and artifacts.</p>
+            <p class="nv-muted">Explore the curriculum through focused levels: paths, modules, lessons, and artifacts.</p>
           </div>
           <a class="nv-button" data-variant="secondary" href="#/learning">Open Curriculum</a>
         </header>
-        <div class="nv-kg-toolbar" aria-label="Graph controls"></div>
+        <details class="nv-kg-controls" open>
+          <summary>Graph controls</summary>
+          <div class="nv-kg-toolbar" aria-label="Graph controls"></div>
+        </details>
         <div class="nv-kg-workspace">
           <div class="nv-kg-canvas-wrap" data-kg-canvas></div>
           <aside class="nv-kg-inspector" data-kg-inspector aria-label="Node details"></aside>
@@ -153,310 +154,156 @@ export function createKnowledgeGraphController(options = {}) {
       </section>`;
   }
 
-  // ── Toolbar ────────────────────────────────────────────────────────────────
+  function button(label, fn, variant = 'secondary') {
+    const b = el('button', 'nv-button nv-kg-tool-btn', label);
+    b.type = 'button';
+    b.dataset.variant = variant;
+    b.addEventListener('click', fn);
+    return b;
+  }
+
+  function group(title) {
+    const wrapper = el('div', 'nv-kg-control-group');
+    wrapper.append(el('span', 'nv-kg-control-label', title));
+    return wrapper;
+  }
+
   function renderToolbar() {
     const toolbar = root.querySelector('.nv-kg-toolbar');
     if (!toolbar || !graph) return;
     toolbar.innerHTML = '';
 
-    // Search
+    const searchGroup = group('Search / Focus');
     const search = el('input', 'nv-input nv-kg-search');
     search.type = 'search';
-    search.placeholder = 'Find a path, module, or lesson…';
+    search.placeholder = 'Find any curriculum node...';
     search.setAttribute('aria-label', 'Search curriculum nodes');
     search.setAttribute('list', 'nv-kg-dl');
     search.setAttribute('aria-describedby', 'nv-kg-search-status');
     const datalist = el('datalist');
     datalist.id = 'nv-kg-dl';
-    graph.nodes.slice().sort((a, b) => a.title.localeCompare(b.title)).forEach(n => {
-      const o = el('option');
-      o.value = n.id;
-      o.label = `${n.title} (${n.typeLabel})`;
-      datalist.append(o);
+    graph.nodes.slice().sort((a, b) => a.title.localeCompare(b.title)).forEach((node) => {
+      const option = el('option');
+      option.value = node.id;
+      option.label = `${node.title} (${node.typeLabel})`;
+      datalist.append(option);
     });
     search.addEventListener('change', () => {
       const q = normalize(search.value);
-      const match = graph.nodeById.get(search.value)
-        || graph.nodes.find(n => normalize(n.title).includes(q));
+      const match = graph.nodeById.get(search.value) || graph.nodes.find((node) => normalize(node.title).includes(q));
+      const status = root.querySelector('#nv-kg-search-status');
       if (!match) {
-        const status = root.querySelector('#nv-kg-search-status');
-        if (status) status.textContent = search.value ? `No graph node found for "${search.value}".` : '';
-        renderer.applyFocus('', new Set());
+        if (status) status.textContent = search.value ? `No node found for ${search.value}.` : '';
         return;
       }
-      const status = root.querySelector('#nv-kg-search-status');
-      if (status) status.textContent = `Focused ${match.title}.`;
-      // Auto-expand ancestors and then pulse the destination node.
-      if (match.type === 'module' && match.lineage?.pathId) {
-        state.expandedPaths.add(match.lineage.pathId);
-      }
-      if (match.type === 'lesson' && match.lineage?.moduleId) {
-        if (match.lineage?.pathId) state.expandedPaths.add(match.lineage.pathId);
-        state.expandedModules.add(match.lineage.moduleId);
-      }
-      if (match.type === 'artifact') {
-        if (match.lineage?.pathId) state.expandedPaths.add(match.lineage.pathId);
-        if (match.lineage?.moduleId) state.expandedModules.add(match.lineage.moduleId);
-        if (match.lineage?.lessonId) state.expandedLessons.add(match.lineage.lessonId);
-      }
-      recomputeLayout();
-      renderer.update(nodePositions, visibleEdges);
-      state.selectedNodeId = match.id;
-      renderer.applyFocus(match.id, getNeighborIds(match.id));
-      renderer.centerOn(match.id, nodePositions, true);
-      renderer.pulseNode(match.id);
-      renderer.focusNodeEl(match.id);
-      renderInspector();
-      renderFallback();
+      if (status) status.textContent = `Focused ${match.typeLabel}: ${match.title}.`;
+      focusNode(match.id);
     });
     const searchStatus = el('span', 'nv-kg-search-status');
     searchStatus.id = 'nv-kg-search-status';
     searchStatus.setAttribute('aria-live', 'polite');
+    searchGroup.append(search, searchStatus, datalist);
 
-    // Buttons
-    const btns = el('div', 'nv-kg-toolbar-btns');
-    [
-      ['Fit All', () => renderer.fitAll(computeBounds(nodePositions))],
-      ['Zoom +', () => renderer.zoomBy(1.3)],
-      ['Zoom −', () => renderer.zoomBy(0.77)],
-      ['Pan ←', () => renderer.panBy(120, 0)],
-      ['Pan →', () => renderer.panBy(-120, 0)],
-      ['Pan ↑', () => renderer.panBy(0, 120)],
-      ['Pan ↓', () => renderer.panBy(0, -120)],
-      ['Expand Level', expandSelectedLevel],
-      ['Collapse All', () => { state.expandedPaths.clear(); state.expandedModules.clear(); state.expandedLessons.clear(); state.selectedNodeId = ''; recomputeLayout(); renderer.update(nodePositions, visibleEdges); renderer.applyFocus('', new Set()); renderInspector(); renderFallback(); }],
-    ].forEach(([label, fn]) => {
-      const b = el('button', 'nv-button nv-kg-tool-btn', label);
-      b.type = 'button';
-      b.dataset.variant = 'secondary';
-      b.addEventListener('click', fn);
-      btns.append(b);
-    });
+    const viewGroup = group('View Mode');
+    viewGroup.append(button('Overview', resetGraph), button('Focus', () => state.selectedNodeId && focusNode(state.selectedNodeId)));
 
-    // Legend
-    const legend = el('div', 'nv-kg-legend');
-    [['path', 'Learning Path'], ['module', 'Module'], ['lesson', 'Lesson'], ['artifact', 'Artifact']].forEach(([type, label]) => {
-      legend.append(el('span', `nv-kg-legend-item nv-kg-legend-item--${type}`, label));
-    });
-
-    const searchWrap = el('div', 'nv-kg-search-wrap');
-    searchWrap.append(search, searchStatus, datalist);
-    toolbar.append(searchWrap, btns, legend);
-  }
-
-  function expandSelectedLevel() {
-    const node = graph.nodeById.get(state.selectedNodeId);
-    if (!node) {
-      const firstPath = graph.nodes.find(n => n.type === 'path');
-      if (firstPath) state.expandedPaths.add(firstPath.id);
-    } else if (node.type === 'path') state.expandedPaths.add(node.id);
-    else if (node.type === 'module') state.expandedModules.add(node.id);
-    else if (node.type === 'lesson') state.expandedLessons.add(node.id);
-    recomputeLayout();
-    renderer.update(nodePositions, visibleEdges);
-    if (state.selectedNodeId) renderer.applyFocus(state.selectedNodeId, getNeighborIds(state.selectedNodeId));
-    renderInspector();
-    renderFallback();
-  }
-
-  // ── Inspector ──────────────────────────────────────────────────────────────
-  function renderInspector() {
-    const panel = root.querySelector('[data-kg-inspector]');
-    if (!panel) return;
-    panel.innerHTML = '';
-
-    const node = graph?.nodeById.get(state.selectedNodeId);
-
-    if (!node) {
-      // Rich empty context
-      const pathCount = graph?.nodes.filter(n => n.type === 'path').length || 0;
-      const modCount  = graph?.nodes.filter(n => n.type === 'module').length || 0;
-      const lesCount  = graph?.nodes.filter(n => n.type === 'lesson').length || 0;
-      const artCount  = graph?.nodes.filter(n => n.type === 'artifact').length || 0;
-
-      panel.append(
-        el('h2', 'nv-kg-insp-title', 'Knowledge Graph'),
-        detail('Learning Paths', String(pathCount)),
-        detail('Modules', String(modCount)),
-        detail('Lessons', String(lesCount)),
-        detail('Artifacts', String(artCount)),
-      );
-
-      const guide = el('div', 'nv-kg-insp-guide');
-      guide.innerHTML = `
-        <h3>How to explore</h3>
-        <ul>
-          <li><strong>Click</strong> a module to expand its lessons</li>
-          <li><strong>Click</strong> a lesson to reveal artifacts</li>
-          <li><strong>Click again</strong> to collapse</li>
-          <li><strong>Double-click</strong> to center on a node</li>
-          <li><strong>Scroll wheel</strong> to zoom in/out</li>
-          <li><strong>Drag canvas</strong> to pan around</li>
-          <li><strong>Search bar</strong> finds and focuses any item</li>
-        </ul>
-        <h3>Color key</h3>
-        <ul>
-          <li><span style="color:#89b4fa">■</span> Learning Paths — cyan blue</li>
-          <li><span style="color:#a6e3a1">■</span> Modules — soft green</li>
-          <li><span style="color:#f9e2af">■</span> Lessons — warm amber</li>
-          <li><span style="color:#cba6f7">■</span> Artifacts — lavender</li>
-        </ul>
-        <h3>Keyboard shortcuts</h3>
-        <ul>
-          <li><kbd>↑</kbd> <kbd>↓</kbd> Navigate nodes</li>
-          <li><kbd>Enter</kbd> / <kbd>Space</kbd> Select/expand</li>
-          <li><kbd>Tab</kbd> Move between nodes</li>
-        </ul>`;
-      panel.append(guide);
-      return;
-    }
-
-    // Selected node details
-    const lineage = (node.lineage.labels || []).join(' › ') || '—';
-    const connCount = (graph.edgesByNodeId.get(node.id) || []).length;
-    const isExpanded = state.expandedPaths.has(node.id) || state.expandedModules.has(node.id) || state.expandedLessons.has(node.id);
-
-    panel.append(el('span', `nv-kg-insp-type nv-kg-insp-type--${node.type}`, node.typeLabel));
-    panel.append(el('h2', 'nv-kg-insp-title', node.title));
-
-    const dets = el('div', 'nv-kg-insp-details');
-    dets.append(
-      detail('Status', node.status),
-      detail('Lineage', lineage),
-      detail('Connections', String(connCount)),
+    const expansionGroup = group('Expansion');
+    expansionGroup.append(
+      button('Expand', () => state.selectedNodeId && focusNode(state.selectedNodeId)),
+      button('Collapse', resetGraph),
+      button('Back to Parent', () => { const node = graph.nodeById.get(state.focusedNodeId); const parent = node && getParent(node.id); parent ? focusNode(parent.id) : resetGraph(); }),
     );
-    if (node.metadata?.overview) dets.append(detail('Overview', node.metadata.overview));
-    if (node.metadata?.estimatedDuration) dets.append(detail('Duration', node.metadata.estimatedDuration));
-    if (node.metadata?.artifactType) dets.append(detail('Artifact type', node.metadata.artifactType));
 
-    // Relationship lists
-    const contains = (graph.edgesByNodeId.get(node.id) || [])
-      .filter(e => e.type === 'contains' && e.source === node.id)
-      .map(e => graph.nodeById.get(e.target)?.title)
-      .filter(Boolean);
-    const parents = (graph.edgesByNodeId.get(node.id) || [])
-      .filter(e => e.type === 'contains' && e.target === node.id)
-      .map(e => graph.nodeById.get(e.source)?.title)
-      .filter(Boolean);
-    if (parents.length) dets.append(detail('Parent', parents.join(', ')));
-    if (contains.length) dets.append(detail('Related items', contains.join(', ')));
-    ['prerequisite', 'recommended_before', 'recommended_after', 'complementary', 'alternative'].forEach(type => {
-      const rels = (graph.edgesByNodeId.get(node.id) || [])
-        .filter(e => e.type === type)
-        .map(e => graph.nodeById.get(e.source === node.id ? e.target : e.source)?.title)
-        .filter(Boolean);
-      if (rels.length) dets.append(detail(type.replace(/_/g, ' '), rels.join(', ')));
-    });
+    const cameraGroup = group('Camera');
+    cameraGroup.append(button('Fit', () => renderer.fitAll(computeBounds(nodePositions))), button('Zoom +', () => renderer.zoomBy(1.25)), button('Zoom -', () => renderer.zoomBy(0.8)));
 
-    panel.append(dets);
+    const legend = group('Legend');
+    legend.classList.add('nv-kg-legend');
+    [['path', 'Path'], ['module', 'Module'], ['lesson', 'Lesson'], ['artifact', 'Artifact']].forEach(([type, label]) => legend.append(el('span', `nv-kg-legend-item nv-kg-legend-item--${type}`, label)));
 
-    // Actions
-    const actions = el('div', 'nv-kg-insp-actions');
-    const openBtn = el('button', 'nv-button', 'Open Resource');
-    openBtn.type = 'button'; openBtn.dataset.variant = 'primary';
-    openBtn.addEventListener('click', () => { window.location.hash = node.route; });
-    actions.append(openBtn);
-
-    const focusBtn = el('button', 'nv-button', 'Focus');
-    focusBtn.type = 'button'; focusBtn.dataset.variant = 'secondary';
-    focusBtn.addEventListener('click', () => {
-      renderer.applyFocus(node.id, getNeighborIds(node.id));
-      renderer.centerOn(node.id, nodePositions, true);
-      renderer.pulseNode(node.id);
-    });
-    actions.append(focusBtn);
-
-    const centerBtn = el('button', 'nv-button', 'Center View');
-    centerBtn.type = 'button'; centerBtn.dataset.variant = 'secondary';
-    centerBtn.addEventListener('click', () => renderer.centerOn(node.id, nodePositions));
-    actions.append(centerBtn);
-
-    if (node.type === 'module' || node.type === 'lesson') {
-      const toggleBtn = el('button', 'nv-button', isExpanded ? 'Collapse' : 'Expand');
-      toggleBtn.type = 'button'; toggleBtn.dataset.variant = 'secondary';
-      toggleBtn.addEventListener('click', () => handlers.selectNode(node.id));
-      actions.append(toggleBtn);
-    }
-
-    if (node.type === 'path') {
-      const toggleBtn = el('button', 'nv-button', isExpanded ? 'Collapse' : 'Expand');
-      toggleBtn.type = 'button'; toggleBtn.dataset.variant = 'secondary';
-      toggleBtn.addEventListener('click', () => handlers.selectNode(node.id));
-      actions.append(toggleBtn);
-    }
-
-    const lineageBtn = el('button', 'nv-button', 'Reveal Lineage');
-    lineageBtn.type = 'button'; lineageBtn.dataset.variant = 'secondary';
-    lineageBtn.addEventListener('click', () => revealLineage(node));
-    actions.append(lineageBtn);
-
-    panel.append(actions);
-  }
-
-  function revealLineage(node) {
-    if (node.lineage?.pathId) state.expandedPaths.add(node.lineage.pathId);
-    if (node.lineage?.moduleId) state.expandedModules.add(node.lineage.moduleId);
-    if (node.lineage?.lessonId && node.type === 'artifact') state.expandedLessons.add(node.lineage.lessonId);
-    recomputeLayout();
-    renderer.update(nodePositions, visibleEdges);
-    state.selectedNodeId = node.id;
-    renderer.applyFocus(node.id, getNeighborIds(node.id));
-    renderer.centerOn(node.id, nodePositions, true);
-    renderInspector();
-    renderFallback();
+    toolbar.append(searchGroup, viewGroup, expansionGroup, cameraGroup, legend);
   }
 
   function detail(label, value) {
     const d = el('div', 'nv-kg-detail');
-    d.append(el('span', 'nv-kg-detail__label', label), el('span', 'nv-kg-detail__value', value || '—'));
+    d.append(el('span', 'nv-kg-detail__label', label), el('span', 'nv-kg-detail__value', value || '-'));
     return d;
+  }
+
+  function renderInspector() {
+    const panel = root.querySelector('[data-kg-inspector]');
+    if (!panel) return;
+    panel.innerHTML = '';
+    const node = state.selectedNodeId ? graph.nodeById.get(state.selectedNodeId) : null;
+
+    if (!node) {
+      const visible = nodePositions ? nodePositions.size : 0;
+      panel.append(el('h2', 'nv-kg-insp-title', 'Curriculum Atlas'), detail('Current level', 'Learning Path Overview'), detail('Visible nodes', String(visible)), detail('Visible relationships', String(visibleEdges?.length || 0)));
+      const guide = el('div', 'nv-kg-insp-guide');
+      guide.innerHTML = '<h3>How to explore</h3><p>Select a Learning Path to reveal modules. Continue into a module for lessons, a lesson for artifacts, or search any item to jump directly to its local neighborhood.</p><h3>Shortcuts</h3><p>Tab to nodes, Enter or Space to focus, arrow keys to move between visible nodes.</p>';
+      panel.append(guide);
+      return;
+    }
+
+    const children = getChildren(node.id);
+    const siblings = getSiblings(node);
+    const dependencies = getDependencies(node.id);
+    panel.append(el('span', `nv-kg-insp-type nv-kg-insp-type--${node.type}`, node.typeLabel), el('h2', 'nv-kg-insp-title', node.title));
+    const details = el('div', 'nv-kg-insp-details');
+    details.append(
+      detail('Status', node.status),
+      detail('Lineage', (node.lineage?.labels || []).join(' > ')),
+      detail('Description', node.metadata?.overview || node.metadata?.artifactType || 'Local curriculum node'),
+      detail('Children', String(children.length)),
+      detail('Siblings', String(siblings.length)),
+      detail('Dependencies', String(dependencies.length)),
+      detail('Focus level', state.mode),
+    );
+    panel.append(details);
+
+    const actions = el('div', 'nv-kg-insp-actions');
+    actions.append(
+      button('Focus', () => focusNode(node.id)),
+      button('Expand children', () => focusNode(node.id)),
+      button('Collapse', resetGraph),
+      button('Back to parent', () => { const parent = getParent(node.id); parent ? focusNode(parent.id) : resetGraph(); }),
+      button('Open resource', () => { window.location.hash = node.route; }, 'primary'),
+      button('Center view', () => renderer.centerOn(node.id, nodePositions)),
+    );
+    panel.append(actions);
   }
 
   function renderFallback() {
     const fallback = root.querySelector('[data-kg-fallback]');
     if (!fallback || !nodePositions) return;
     fallback.innerHTML = '';
-    const nodes = [...nodePositions.values()];
     const list = el('ol', 'nv-kg-fallback-list');
-    nodes.forEach(node => {
+    [...nodePositions.values()].forEach((node) => {
       const item = el('li');
-      const link = el('a', '', `${node.typeLabel}: ${node.title}`);
-      link.href = node.route;
-      item.append(link);
+      const trigger = el('button', 'nv-kg-fallback-button', `${node.typeLabel}: ${node.title}`);
+      trigger.type = 'button';
+      trigger.addEventListener('click', () => focusNode(node.id));
+      item.append(trigger);
       list.append(item);
     });
-    const rels = el('ol', 'nv-kg-fallback-list');
-    visibleEdges.forEach(edge => {
-      rels.append(el('li', '', `${graph.nodeById.get(edge.source)?.title || edge.source} contains ${graph.nodeById.get(edge.target)?.title || edge.target}`));
-    });
-    fallback.append(el('h2', '', 'Current Atlas Text View'), el('h3', '', 'Nodes'), list, el('h3', '', 'Relationships'), rels);
+    fallback.append(el('h2', '', 'Current Atlas Text View'), list);
   }
 
   function applyHashFocus() {
     const query = String(window.location.hash || '').split('?')[1];
-    if (!query) return;
-    const params = new URLSearchParams(query);
-    const focusId = params.get('focus');
+    const focusId = query ? new URLSearchParams(query).get('focus') : '';
     const node = focusId ? graph.nodeById.get(focusId) : null;
     if (!node) return;
-    if (node.lineage?.pathId) state.expandedPaths.add(node.lineage.pathId);
-    if (node.type === 'module') state.expandedPaths.add(node.lineage?.pathId || '');
-    if (node.type === 'lesson' || node.type === 'artifact') state.expandedModules.add(node.lineage?.moduleId || '');
-    if (node.type === 'artifact') state.expandedLessons.add(node.lineage?.lessonId || '');
-    state.expandedPaths.delete('');
-    state.expandedModules.delete('');
-    state.expandedLessons.delete('');
+    state.mode = MODE_BY_TYPE[node.type] || 'overview';
+    state.focusedNodeId = node.id;
     state.selectedNodeId = node.id;
+    state.expandedNodeIds = getLineageIds(node);
   }
 
-  // ── Main render ──────────────────────────────────────────────────────────
   async function renderCurrentRoute() {
     if (!target()) {
-      if (renderer) {
-        renderer.destroy();
-        renderer = null;
-      }
-      routeInitialized = false;
+      if (renderer) renderer.destroy();
+      renderer = null;
       return;
     }
     renderShell();
@@ -469,18 +316,13 @@ export function createKnowledgeGraphController(options = {}) {
       renderer = new KnowledgeGraphRenderer(canvasWrap, handlers);
       renderer.render(nodePositions, visibleEdges);
       requestAnimationFrame(() => renderer.fitAll(computeBounds(nodePositions)));
-      if (state.selectedNodeId) requestAnimationFrame(() => {
-        renderer.applyFocus(state.selectedNodeId, getNeighborIds(state.selectedNodeId));
-        renderer.centerOn(state.selectedNodeId, nodePositions, true);
-        renderer.pulseNode(state.selectedNodeId);
-      });
+      if (state.selectedNodeId) requestAnimationFrame(() => renderer.applyFocus(state.selectedNodeId, getNeighborIds(state.selectedNodeId)));
       renderToolbar();
       renderInspector();
       renderFallback();
-      routeInitialized = true;
     } catch (err) {
-      const c = target();
-      if (c) c.innerHTML = `<section class="nv-panel"><h1>Graph unavailable</h1><p>${err.message}</p></section>`;
+      const container = target();
+      if (container) container.innerHTML = `<section class="nv-panel"><h1>Graph unavailable</h1><p>${err.message}</p></section>`;
     }
   }
 
@@ -490,7 +332,6 @@ export function createKnowledgeGraphController(options = {}) {
       if (!String(window.location.hash || '').startsWith('#/knowledge-graph') && renderer) {
         renderer.destroy();
         renderer = null;
-        routeInitialized = false;
       }
     });
     renderCurrentRoute();

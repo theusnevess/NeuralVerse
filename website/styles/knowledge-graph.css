@@ -15,20 +15,51 @@
 }
 
 /* ── Toolbar ──────────────────────────────────────────────────────────────── */
+.nv-kg-controls {
+  border: 1px solid rgba(137, 180, 250, 0.1);
+  border-radius: 14px;
+  background: rgba(15, 15, 23, 0.94);
+  box-shadow: 0 2px 18px rgba(0, 0, 0, 0.45);
+}
+
+.nv-kg-controls summary {
+  display: none;
+  padding: 10px 14px;
+  color: rgba(205, 214, 244, 0.78);
+  cursor: pointer;
+  font-weight: 700;
+}
+
 .nv-kg-toolbar {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 10px;
   padding: 12px 16px;
-  border: 1px solid rgba(137, 180, 250, 0.1);
-  border-radius: 14px;
-  background: rgba(15, 15, 23, 0.94);
-  box-shadow: 0 2px 18px rgba(0, 0, 0, 0.45);
   backdrop-filter: blur(12px);
 }
 
-.nv-kg-search-wrap {
+.nv-kg-control-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.nv-kg-control-label {
+  padding-inline: 6px;
+  color: rgba(205, 214, 244, 0.46);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.64rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.nv-kg-search-wrap,
+.nv-kg-control-group:first-child {
   display: grid;
   gap: 4px;
   min-inline-size: min(100%, 18rem);
@@ -46,13 +77,6 @@
   color: rgba(205, 214, 244, 0.54);
   font-size: 0.72rem;
   line-height: 1.2;
-}
-
-.nv-kg-toolbar-btns {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  flex: 1 1 24rem;
 }
 
 .nv-kg-tool-btn {
@@ -162,6 +186,10 @@
   transform: translateY(-2px);
 }
 
+.nv-kg-node--role-parent { opacity: 0.74; }
+.nv-kg-node--role-child { opacity: 0.92; }
+.nv-kg-node--role-sibling { opacity: 0.34; }
+
 /* Glow halo */
 .nv-kg-node-glow {
   stroke-width: 2.5;
@@ -177,6 +205,11 @@
 .nv-kg-node.is-selected .nv-kg-node-shape {
   stroke-width: 2.5;
   filter: brightness(1.25) drop-shadow(0 0 12px rgba(137,180,250,0.4));
+}
+
+.nv-kg-node.is-selected {
+  transform-box: fill-box;
+  transform-origin: center;
 }
 
 .nv-kg-node.is-pulsing .nv-kg-node-glow {
@@ -250,6 +283,16 @@
 
 .nv-kg-edge.is-dim {
   opacity: 0.08;
+}
+
+.nv-kg-edge--dependency {
+  stroke: rgba(203, 166, 247, 0.35);
+  stroke-dasharray: 7 7;
+}
+
+.nv-kg-edge--sibling {
+  stroke: rgba(205, 214, 244, 0.1);
+  stroke-dasharray: 3 8;
 }
 
 .nv-kg-svg[data-zoom="far"] .nv-kg-node-type,
@@ -362,6 +405,15 @@
   color: #89b4fa;
 }
 
+.nv-kg-fallback-button {
+  border: 0;
+  background: transparent;
+  color: #89b4fa;
+  cursor: pointer;
+  padding: 0;
+  text-align: start;
+}
+
 /* Guide (empty state) */
 .nv-kg-insp-guide {
   font-size: 0.82rem;
@@ -413,9 +465,11 @@
 }
 
 @media (max-width: 520px) {
+  .nv-kg-controls summary { display: block; }
+  .nv-kg-controls:not([open]) .nv-kg-toolbar { display: none; }
   .nv-kg-toolbar { padding: 10px 12px; gap: 8px; }
+  .nv-kg-control-group { inline-size: 100%; flex-wrap: wrap; }
   .nv-kg-search-wrap { min-inline-size: 0; max-inline-size: none; inline-size: 100%; }
-  .nv-kg-toolbar-btns { flex-basis: 100%; }
   .nv-kg-svg { block-size: 50vh; min-block-size: 20rem; }
   .nv-kg-canvas-wrap { min-block-size: 20rem; }
   .nv-kg-tool-btn { font-size: 0.72rem; padding: 4px 8px; }

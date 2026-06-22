@@ -41,7 +41,7 @@ function buildNodeGroup(node) {
   const rx = node.type === 'path' ? 18 : node.type === 'module' ? 14 : node.type === 'lesson' ? 12 : 8;
 
   const g = svgEl('g', {
-    class: `nv-kg-node nv-kg-node--${node.type}`,
+    class: `nv-kg-node nv-kg-node--${node.type} nv-kg-node--role-${node._role || 'context'}`,
     'data-node-id': node.id,
     'data-type': node.type,
     tabindex: '0',
@@ -89,8 +89,25 @@ function buildNodeGroup(node) {
   titleEl.style.fill = c.text;
   g.append(titleEl);
 
-  // Child count badge (for expandable nodes)
-  if (node._childCount > 0) {
+  // Count badges keep overview cards informative without revealing descendants.
+  const summary = node._summary || null;
+  if (summary && node.type === 'path') {
+    const labels = [`M ${summary.modules}`, `L ${summary.lessons}`, `A ${summary.artifacts}`];
+    labels.forEach((label, index) => {
+      const badgeBg = svgEl('rect', {
+        class: 'nv-kg-count-badge',
+        x: -hw + 14 + index * 54, y: -hh + 38, width: 46, height: 20, rx: 10,
+        fill: 'rgba(137,180,250,0.08)', stroke: c.stroke,
+      });
+      const badgeText = svgEl('text', {
+        class: 'nv-kg-count-text',
+        x: -hw + 37 + index * 54, y: -hh + 52, 'text-anchor': 'middle',
+      });
+      badgeText.textContent = label;
+      badgeText.style.fill = c.text;
+      g.append(badgeBg, badgeText);
+    });
+  } else if (node._childCount > 0) {
     const badgeBg = svgEl('rect', {
       class: 'nv-kg-count-badge',
       x: hw - 42, y: -hh + 6, width: 34, height: 18, rx: 9,
@@ -127,12 +144,16 @@ function buildEdgePath(srcNode, tgtNode) {
   const cy2 = y1 + (y2 - y1) * 0.6;
 
   return svgEl('path', {
-    class: 'nv-kg-edge',
+    class: `nv-kg-edge nv-kg-edge--${srcNode.id === tgtNode.id ? 'self' : 'link'}`,
     d: `M ${x1} ${y1} C ${x1} ${cy1}, ${x2} ${cy2}, ${x2} ${y2}`,
     'data-edge-src': srcNode.id,
     'data-edge-tgt': tgtNode.id,
     fill: 'none',
   });
+}
+
+function isDependency(edge) {
+  return !['contains', 'sibling'].includes(edge.type);
 }
 
 // ── Renderer class ──────────────────────────────────────────────────────────
@@ -269,7 +290,13 @@ export class KnowledgeGraphRenderer {
     edges.forEach(edge => {
       const src = nodePositions.get(edge.source);
       const tgt = nodePositions.get(edge.target);
-      if (src && tgt) this.edgeLayer.append(buildEdgePath(src, tgt));
+      if (src && tgt) {
+        const path = buildEdgePath(src, tgt);
+        path.dataset.edgeType = edge.type;
+        if (isDependency(edge)) path.classList.add('nv-kg-edge--dependency');
+        if (edge.type === 'sibling') path.classList.add('nv-kg-edge--sibling');
+        this.edgeLayer.append(path);
+      }
     });
 
     nodePositions.forEach(node => {

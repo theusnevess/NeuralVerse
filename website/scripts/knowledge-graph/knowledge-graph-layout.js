@@ -1,176 +1,163 @@
 /**
- * NV-900-Graph-Polish — Knowledge Graph Layout Engine (Iteration 2)
+ * NV-900-UI10C — Focus-based curriculum atlas layout.
  *
- * Organic, deterministic atlas placement.
- *
- * Level 1: Learning Paths only.
- * Level 2: Selected/expanded Path + Modules.
- * Level 3: Selected/expanded Module + Lessons.
- * Level 4: Selected/expanded Lesson + Artifacts.
+ * The graph is rendered from explicit state instead of accumulated expansion.
+ * Each mode shows one readable neighborhood with deterministic rows and arcs.
  */
 
-// ── Node visual sizes (larger than Iteration 1) ─────────────────────────────
 export const NODE_SIZES = {
-  path:     { w: 360, h: 118 },
-  module:   { w: 260, h: 86 },
-  lesson:   { w: 210, h: 66 },
-  artifact: { w: 160, h: 46 },
+  path: { w: 390, h: 132 },
+  module: { w: 270, h: 90 },
+  lesson: { w: 220, h: 70 },
+  artifact: { w: 172, h: 52 },
 };
 
-// ── Spiral placement constants ───────────────────────────────────────────────
-const GOLDEN_ANGLE = Math.PI * (3 - Math.sqrt(5));  // ≈2.399 radians
-const SPIRAL_BASE  = 120;
-const SPIRAL_GROWTH = 178;
-const CLUSTER_PAD  = 430;
+const ROW_GAP = 250;
+const COL_GAP = 330;
 
-// ── Helpers ─────────────────────────────────────────────────────────────────
-
-function getChildIds(parentId, edges) {
-  return edges
-    .filter(e => e.type === 'contains' && e.source === parentId)
-    .map(e => e.target);
+function getChildren(graph, parentId) {
+  return graph.edges
+    .filter((edge) => edge.type === 'contains' && edge.source === parentId)
+    .map((edge) => graph.nodeById.get(edge.target))
+    .filter(Boolean);
 }
 
-function placeChildren(parent, childIds, graph, radius, arcOffset = 0) {
-  const nodes = [];
-  const count = childIds.length;
-  childIds.forEach((childId, index) => {
-    const child = graph.nodeById.get(childId);
-    if (!child) return;
-    const spread = Math.min(Math.PI * 1.35, Math.PI * 0.42 + count * 0.22);
-    const t = count === 1 ? 0.5 : index / (count - 1);
-    const angle = arcOffset - spread / 2 + t * spread;
-    const drift = ((index % 2 === 0 ? 1 : -1) * (18 + (index % 3) * 14));
-    nodes.push({
-      ...child,
-      wx: parent.wx + Math.cos(angle) * (radius + drift),
-      wy: parent.wy + Math.sin(angle) * (radius - drift * 0.35),
-      _parentId: parent.id,
-    });
-  });
-  return nodes;
+function getParent(graph, nodeId) {
+  const edge = graph.edges.find((candidate) => candidate.type === 'contains' && candidate.target === nodeId);
+  return edge ? graph.nodeById.get(edge.source) : null;
 }
 
-function avoidCollisions(nodes) {
-  for (let pass = 0; pass < 30; pass++) {
-    let moved = false;
-    for (let i = 0; i < nodes.length; i++) {
-      for (let j = i + 1; j < nodes.length; j++) {
-        const a = nodes[i], b = nodes[j];
-        const as = NODE_SIZES[a.type] || NODE_SIZES.lesson;
-        const bs = NODE_SIZES[b.type] || NODE_SIZES.lesson;
-        const minDist = Math.max(as.w, bs.w) * 0.92 + Math.max(as.h, bs.h) * 1.1 + 88;
-        const dx = b.wx - a.wx;
-        const dy = b.wy - a.wy;
-        const dist = Math.max(1, Math.sqrt(dx * dx + dy * dy));
-        if (dist < minDist) {
-          const push = (minDist - dist) * 0.5;
-          const nx = dx / dist;
-          const ny = dy / dist;
-          if (!a._locked) { a.wx -= nx * push; a.wy -= ny * push; }
-          if (!b._locked) { b.wx += nx * push; b.wy += ny * push; }
-          moved = true;
-        }
-      }
-    }
-    if (!moved) break;
-  }
+function getSiblings(graph, node) {
+  const parent = getParent(graph, node.id);
+  if (!parent) return [];
+  return getChildren(graph, parent.id).filter((candidate) => candidate.id !== node.id);
 }
 
-function layoutExpandedPath(pathNode, graph, expandedPaths, expandedModules, expandedLessons, anchor) {
-  const path = { ...pathNode, wx: anchor.x, wy: anchor.y, _locked: true };
-  const nodes = [path];
-  if (!expandedPaths.has(pathNode.id)) return nodes;
-
-  const modules = placeChildren(path, getChildIds(path.id, graph.edges), graph, 520, Math.PI / 2);
-  nodes.push(...modules);
-  modules.forEach(module => {
-    if (!expandedModules.has(module.id)) return;
-    const lessons = placeChildren(module, getChildIds(module.id, graph.edges), graph, 400, Math.PI / 2 + 0.28);
-    nodes.push(...lessons);
-    lessons.forEach(lesson => {
-      if (!expandedLessons.has(lesson.id)) return;
-      nodes.push(...placeChildren(lesson, getChildIds(lesson.id, graph.edges), graph, 430, Math.PI / 2 - 0.18));
-    });
-  });
-  avoidCollisions(nodes);
-  return nodes;
+function getDependencyNodes(graph, nodeId) {
+  const dependencyTypes = new Set(['prerequisite', 'recommended_before', 'recommended_after', 'complementary', 'alternative']);
+  return graph.edges
+    .filter((edge) => dependencyTypes.has(edge.type) && (edge.source === nodeId || edge.target === nodeId))
+    .map((edge) => graph.nodeById.get(edge.source === nodeId ? edge.target : edge.source))
+    .filter(Boolean);
 }
 
-// ── Organic cluster anchor placement (golden-angle spiral) ──────────────────
-
-export function computeClusterAnchors(graph) {
-  const paths = graph.nodes.filter(n => n.type === 'path');
-  const anchors = new Map();
-  const n = paths.length;
-
-  // Place clusters on a Fermat spiral with golden-angle separation.
-  // This produces an organic, non-grid distribution.
-  paths.forEach((path, i) => {
-    const angle = i * GOLDEN_ANGLE;
-    const radius = SPIRAL_BASE + SPIRAL_GROWTH * Math.sqrt(i + 1);
-    const x = Math.cos(angle) * radius * 1.62;
-    const y = Math.sin(angle) * radius * 1.08;
-    anchors.set(path.id, { x, y });
-  });
-
-  // Ensure minimum separation (collision pass)
-  const ids = [...anchors.keys()];
-  for (let pass = 0; pass < 8; pass++) {
-    let moved = false;
-    for (let i = 0; i < ids.length; i++) {
-      for (let j = i + 1; j < ids.length; j++) {
-        const a = anchors.get(ids[i]);
-        const b = anchors.get(ids[j]);
-        const dx = b.x - a.x, dy = b.y - a.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < CLUSTER_PAD && dist > 0) {
-          const push = (CLUSTER_PAD - dist) / 2;
-          const nx = dx / dist, ny = dy / dist;
-          a.x -= nx * push; a.y -= ny * push;
-          b.x += nx * push; b.y += ny * push;
-          moved = true;
-        }
-      }
-    }
-    if (!moved) break;
-  }
-
-  return anchors;
-}
-
-// ── Public API ──────────────────────────────────────────────────────────────
-
-export function computeLayout(graph, expandedPaths, expandedModules, expandedLessons, clusterAnchors) {
+function placeRow(nodes, y, options = {}) {
   const positioned = [];
-  graph.nodes.filter(n => n.type === 'path').forEach(pathNode => {
-    const anchor = clusterAnchors.get(pathNode.id) || { x: 0, y: 0 };
-    layoutExpandedPath(pathNode, graph, expandedPaths, expandedModules, expandedLessons, anchor)
-      .forEach(n => positioned.push(n));
+  const count = nodes.length;
+  const gap = options.gap || COL_GAP;
+  const maxVisible = options.maxVisible || 12;
+  const visible = nodes.slice(0, maxVisible);
+  const start = -((visible.length - 1) * gap) / 2;
+  visible.forEach((node, index) => {
+    const arc = options.arc ? Math.sin((index / Math.max(1, visible.length - 1)) * Math.PI) * 54 : 0;
+    positioned.push({
+      ...node,
+      wx: start + index * gap,
+      wy: y + arc,
+      _role: options.role || 'context',
+      _hiddenCount: index === visible.length - 1 && count > maxVisible ? count - maxVisible : 0,
+    });
   });
-  avoidCollisions(positioned);
+  return positioned;
+}
+
+function pathOverview(graph) {
+  const paths = graph.nodes.filter((node) => node.type === 'path');
+  const columns = Math.min(3, Math.max(1, Math.ceil(Math.sqrt(paths.length))));
+  const xGap = 480;
+  const yGap = 230;
   const positions = new Map();
-  positioned.forEach(n => positions.set(n.id, n));
+  paths.forEach((path, index) => {
+    const row = Math.floor(index / columns);
+    const col = index % columns;
+    positions.set(path.id, {
+      ...path,
+      wx: (col - (columns - 1) / 2) * xGap,
+      wy: row * yGap,
+      _role: 'selected',
+    });
+  });
   return positions;
+}
+
+function addNode(map, node, x, y, role) {
+  if (!node) return;
+  map.set(node.id, { ...node, wx: x, wy: y, _role: role });
+}
+
+function layoutPathFocus(graph, path) {
+  const positions = new Map();
+  addNode(positions, path, 0, -ROW_GAP / 2, 'selected');
+  placeRow(getChildren(graph, path.id), ROW_GAP / 2, { role: 'child', arc: true, maxVisible: 10 })
+    .forEach((node) => positions.set(node.id, node));
+  return positions;
+}
+
+function layoutModuleFocus(graph, module) {
+  const positions = new Map();
+  const parent = getParent(graph, module.id);
+  addNode(positions, parent, 0, -ROW_GAP, 'parent');
+  getSiblings(graph, module).slice(0, 8).forEach((sibling, index, siblings) => {
+    const side = index < siblings.length / 2 ? -1 : 1;
+    const offsetIndex = index < siblings.length / 2 ? index : index - Math.ceil(siblings.length / 2);
+    addNode(positions, sibling, side * (430 + offsetIndex * 245), 0, 'sibling');
+  });
+  addNode(positions, module, 0, 0, 'selected');
+  placeRow(getChildren(graph, module.id), ROW_GAP, { role: 'child', arc: true, maxVisible: 10 })
+    .forEach((node) => positions.set(node.id, node));
+  return positions;
+}
+
+function layoutLessonFocus(graph, lesson) {
+  const positions = new Map();
+  const parent = getParent(graph, lesson.id);
+  addNode(positions, parent, 0, -ROW_GAP, 'parent');
+  getSiblings(graph, lesson).slice(0, 8).forEach((sibling, index, siblings) => {
+    const start = -((siblings.length - 1) * 230) / 2;
+    addNode(positions, sibling, start + index * 230, -80, 'sibling');
+  });
+  addNode(positions, lesson, 0, 0, 'selected');
+  placeRow(getChildren(graph, lesson.id), ROW_GAP, { role: 'child', arc: true, gap: 250, maxVisible: 12 })
+    .forEach((node) => positions.set(node.id, node));
+  return positions;
+}
+
+function layoutArtifactFocus(graph, artifact) {
+  const positions = new Map();
+  const parent = getParent(graph, artifact.id);
+  addNode(positions, parent, 0, -ROW_GAP, 'parent');
+  addNode(positions, artifact, 0, 0, 'selected');
+  const related = [...getSiblings(graph, artifact), ...getDependencyNodes(graph, artifact.id)]
+    .filter((node, index, all) => all.findIndex((candidate) => candidate.id === node.id) === index);
+  placeRow(related, ROW_GAP, { role: 'child', arc: true, gap: 240, maxVisible: 12 })
+    .forEach((node) => positions.set(node.id, node));
+  return positions;
+}
+
+export function computeLayout(graph, state) {
+  const focused = state.focusedNodeId ? graph.nodeById.get(state.focusedNodeId) : null;
+  if (!focused || state.mode === 'overview') return pathOverview(graph);
+  if (state.mode === 'path' || focused.type === 'path') return layoutPathFocus(graph, focused);
+  if (state.mode === 'module' || focused.type === 'module') return layoutModuleFocus(graph, focused);
+  if (state.mode === 'lesson' || focused.type === 'lesson') return layoutLessonFocus(graph, focused);
+  return layoutArtifactFocus(graph, focused);
 }
 
 export function computeVisibleEdges(graph, nodePositions) {
   const visibleIds = new Set(nodePositions.keys());
-  return graph.edges.filter(e =>
-    e.type === 'contains' && visibleIds.has(e.source) && visibleIds.has(e.target)
-  );
+  return graph.edges.filter((edge) => visibleIds.has(edge.source) && visibleIds.has(edge.target));
 }
 
 export function computeBounds(nodePositions) {
   let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
-  nodePositions.forEach(n => {
-    const hw = (NODE_SIZES[n.type]?.w || 160) / 2;
-    const hh = (NODE_SIZES[n.type]?.h || 48) / 2;
-    minX = Math.min(minX, n.wx - hw);
-    minY = Math.min(minY, n.wy - hh);
-    maxX = Math.max(maxX, n.wx + hw);
-    maxY = Math.max(maxY, n.wy + hh);
+  nodePositions.forEach((node) => {
+    const hw = (NODE_SIZES[node.type]?.w || 160) / 2;
+    const hh = (NODE_SIZES[node.type]?.h || 48) / 2;
+    minX = Math.min(minX, node.wx - hw);
+    minY = Math.min(minY, node.wy - hh);
+    maxX = Math.max(maxX, node.wx + hw);
+    maxY = Math.max(maxY, node.wy + hh);
   });
   if (minX === Infinity) return { minX: 0, minY: 0, maxX: 900, maxY: 600, width: 900, height: 600 };
-  return { minX, minY, maxX, maxY, width: maxX - minX + 300, height: maxY - minY + 300 };
+  return { minX, minY, maxX, maxY, width: maxX - minX + 240, height: maxY - minY + 220 };
 }
