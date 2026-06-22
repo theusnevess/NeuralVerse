@@ -388,19 +388,22 @@ export function createKnowledgeGraphController(options = {}) {
         });
         modulesGrid.append(card);
       });
-
       const currentCategory = getCategory(pathNode.title);
-      const otherPathsTitle = el('h4', 'nv-kg-section-title', 'Nearby Learning Paths');
-      otherPathsTitle.append(el('span', 'nv-kg-section-line'));
-      const otherPathsStrip = el('div', 'nv-kg-siblings-strip');
       const otherPaths = graph.nodes.filter(n => n.type === 'path' && n.id !== pathNode.id && getCategory(n.title) === currentCategory);
-      otherPaths.forEach(op => {
-        const pill = el('button', 'nv-kg-sibling-pill', op.title);
-        pill.type = 'button';
-        pill.addEventListener('click', () => selectNode(op.id));
-        otherPathsStrip.append(pill);
-      });
-      contentCol.append(otherPathsTitle, otherPathsStrip);
+      if (otherPaths.length > 0) {
+        const relatedBox = el('div', 'nv-kg-related-paths-box');
+        const relatedTitle = el('h4', 'nv-kg-related-title', 'Related Paths');
+        const relatedList = el('div', 'nv-kg-related-list');
+        otherPaths.forEach(op => {
+          const item = el('button', 'nv-kg-related-item');
+          item.type = 'button';
+          item.innerHTML = `<span class="nv-kg-related-bullet"></span><span class="nv-kg-related-text">${op.title}</span>`;
+          item.addEventListener('click', () => selectNode(op.id));
+          relatedList.append(item);
+        });
+        relatedBox.append(relatedTitle, relatedList);
+        heroCol.append(relatedBox);
+      }
 
       layout.append(heroCol, contentCol);
       atlasContainer.append(layout);

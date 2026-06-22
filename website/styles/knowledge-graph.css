@@ -468,21 +468,16 @@
 /* ── Sibling Strip & Pills ───────────────────────────────────────────────── */
 .nv-kg-siblings-strip {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
-  overflow-x: auto;
-  padding: 4px;
-  scrollbar-width: none; /* Hide scrollbar for clean look */
-}
-
-.nv-kg-siblings-strip::-webkit-scrollbar {
-  display: none;
+  padding: 6px 0;
 }
 
 .nv-kg-sibling-pill {
   flex-shrink: 0;
   padding: 6px 14px;
-  background: rgba(255, 255, 255, 0.015);
-  border: 1px solid rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 20px;
   font-size: 0.75rem;
   color: var(--nv-text-secondary);
@@ -492,14 +487,86 @@
 }
 
 .nv-kg-sibling-pill:hover {
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.08);
   color: var(--nv-text-primary);
-  border-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.25);
 }
 
 .nv-kg-sibling-pill:focus-visible {
   border-color: var(--nv-accent-path);
   box-shadow: 0 0 0 1px var(--nv-accent-path);
+}
+
+/* ── Related Paths Sidebar Box ───────────────────────────────────────────── */
+.nv-kg-related-paths-box {
+  margin-top: 16px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.nv-kg-related-title {
+  margin: 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  color: var(--nv-accent-path);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: 8px;
+}
+
+.nv-kg-related-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.nv-kg-related-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: none;
+  color: var(--nv-text-secondary);
+  font-size: 0.78rem;
+  text-align: left;
+  padding: 6px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.nv-kg-related-item:hover {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--nv-text-primary);
+  transform: translateX(2px);
+}
+
+.nv-kg-related-bullet {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--nv-accent-path);
+  opacity: 0.6;
+  flex-shrink: 0;
+}
+
+.nv-kg-related-item:hover .nv-kg-related-bullet {
+  opacity: 1;
+  box-shadow: 0 0 8px var(--nv-accent-path);
+}
+
+.nv-kg-related-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
 }
 
 /* ── Chronological Flow Pipeline ─────────────────────────────────────────── */
