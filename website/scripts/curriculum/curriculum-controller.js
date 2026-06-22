@@ -1064,6 +1064,18 @@ export function createCurriculumController(options = {}) {
 
     navFooter.append(navCluster);
     mainContent.append(navFooter);
+
+    if (window.NeuralVerse && typeof window.NeuralVerse.initReadingExperience === 'function') {
+      window.NeuralVerse.initReadingExperience({
+        pathId,
+        moduleId,
+        lessonId,
+        artifactId,
+        artifact,
+        lesson,
+        mainContent
+      });
+    }
   }
 
   async function renderCurrentRoute(hashValue = window.location.hash) {

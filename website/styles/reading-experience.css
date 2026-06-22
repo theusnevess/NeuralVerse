@@ -1,0 +1,407 @@
+/* ==========================================================================
+   NV-900-UI7 — Reading & Study Experience
+   Styling for long-form technical study, typography, spacing, and controls.
+   ========================================================================== */
+
+/* Reading Column Refinement */
+.nv-curriculum-reader {
+  max-width: 800px;
+  margin-inline: auto;
+  font-size: 1.05rem;
+  line-height: 1.75;
+  color: var(--sys-color-text-secondary);
+}
+
+/* Typography & Heading Hierarchy */
+.nv-curriculum-reader h2 {
+  font-family: var(--sys-font-display-family);
+  font-size: var(--ref-font-size-600);
+  font-weight: var(--ref-font-weight-bold);
+  color: var(--sys-color-text-primary);
+  margin-top: var(--sys-space-layout-gap);
+  margin-bottom: var(--sys-space-stack-sm);
+  border-bottom: 1px solid var(--sys-premium-border);
+  padding-bottom: var(--sys-space-stack-xs);
+  letter-spacing: -0.02em;
+}
+
+.nv-curriculum-reader h3 {
+  font-family: var(--sys-font-display-family);
+  font-size: var(--ref-font-size-500);
+  font-weight: var(--ref-font-weight-semibold);
+  color: var(--sys-color-text-primary);
+  margin-top: var(--sys-space-stack-lg);
+  margin-bottom: var(--sys-space-stack-xs);
+}
+
+.nv-curriculum-reader h4 {
+  font-family: var(--sys-font-display-family);
+  font-size: var(--ref-font-size-400);
+  font-weight: var(--ref-font-weight-semibold);
+  color: var(--sys-color-text-primary);
+  margin-top: var(--sys-space-stack-md);
+  margin-bottom: var(--sys-space-stack-xs);
+}
+
+.nv-curriculum-reader p {
+  margin-bottom: var(--sys-space-stack-md);
+}
+
+/* Lists */
+.nv-curriculum-reader ul,
+.nv-curriculum-reader ol {
+  margin-bottom: var(--sys-space-stack-md);
+  padding-left: var(--sys-space-layout-gap);
+}
+
+.nv-curriculum-reader li {
+  margin-bottom: var(--sys-space-stack-xs);
+  line-height: 1.7;
+}
+
+/* Blockquotes & Callouts */
+.nv-curriculum-reader blockquote {
+  border-left: 4px solid var(--sys-color-accent-primary);
+  background: color-mix(in srgb, var(--sys-color-accent-primary) 6%, var(--sys-color-surface-raised));
+  padding: var(--sys-space-stack-sm) var(--sys-space-layout-gap);
+  border-radius: 0 var(--sys-premium-radius-card) var(--sys-premium-radius-card) 0;
+  margin-inline: 0;
+  margin-block: var(--sys-space-stack-md);
+  font-style: italic;
+}
+
+/* Inline Code */
+.nv-curriculum-reader :not(pre) > code {
+  background: color-mix(in srgb, var(--sys-color-accent-primary) 8%, var(--sys-color-surface-raised));
+  color: var(--sys-color-accent-primary);
+  padding: 0.2em 0.4em;
+  border-radius: var(--sys-radius-sm, 4px);
+  font-family: var(--sys-font-code-family, monospace);
+  font-size: 0.9em;
+  word-break: break-word;
+}
+
+/* Code Blocks */
+.nv-curriculum-reader pre {
+  background: var(--sys-color-surface-raised);
+  border: 1px solid var(--sys-premium-border);
+  border-radius: var(--sys-premium-radius-card);
+  padding: var(--sys-space-stack-md);
+  overflow-x: auto;
+  margin-block: var(--sys-space-stack-md);
+  position: relative;
+}
+
+.nv-curriculum-reader pre code {
+  font-family: var(--sys-font-code-family, monospace);
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: var(--sys-color-text-primary);
+  display: block;
+  white-space: pre;
+}
+
+.nv-copy-code-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: color-mix(in srgb, var(--sys-color-bg-primary) 80%, transparent);
+  border: 1px solid var(--sys-premium-border);
+  border-radius: var(--sys-radius-sm, 4px);
+  color: var(--sys-color-text-secondary);
+  font-size: 0.75rem;
+  padding: 0.2rem 0.5rem;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity var(--sys-motion-duration-feedback) var(--sys-motion-ease-interface),
+              background var(--sys-motion-duration-feedback) var(--sys-motion-ease-interface);
+}
+
+.nv-curriculum-reader pre:hover .nv-copy-code-btn {
+  opacity: 1;
+}
+
+.nv-copy-code-btn:hover {
+  background: var(--sys-color-accent-primary);
+  color: var(--sys-color-bg-primary);
+}
+
+.nv-copy-code-btn:focus-visible {
+  opacity: 1;
+  outline: 2px solid var(--sys-color-accent-primary);
+}
+
+/* Sticky Reading Header */
+.nv-sticky-reading-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: color-mix(in srgb, var(--sys-color-bg-primary) 85%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--sys-premium-border);
+  margin-bottom: var(--sys-space-stack-md);
+  padding: var(--sys-space-stack-xs) var(--sys-space-layout-gap);
+  display: flex;
+  flex-direction: column;
+  animation: nvSlideDown 0.3s var(--sys-motion-ease-interface);
+}
+
+@keyframes nvSlideDown {
+  from {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.nv-sticky-reading-header__content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--sys-space-inline-md);
+  width: 100%;
+}
+
+.nv-sticky-reading-header__left {
+  display: flex;
+  align-items: center;
+  gap: var(--sys-space-inline-sm);
+  flex-wrap: wrap;
+}
+
+.nv-sticky-reading-header__title {
+  font-family: var(--sys-font-display-family);
+  font-weight: var(--ref-font-weight-semibold);
+  color: var(--sys-color-text-primary);
+  font-size: 0.95rem;
+}
+
+.nv-sticky-reading-header__type {
+  font-size: var(--sys-font-caption-size);
+  color: var(--sys-color-text-secondary);
+  border-left: 1px solid var(--sys-premium-border);
+  padding-left: var(--sys-space-inline-sm);
+}
+
+.nv-sticky-reading-header__right {
+  display: flex;
+  align-items: center;
+  gap: var(--sys-space-inline-md);
+}
+
+.nv-sticky-reading-header__lesson-label {
+  font-size: var(--sys-font-caption-size);
+  color: var(--sys-color-text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+
+.nv-button--back-to-lesson {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.8rem;
+  height: auto;
+}
+
+.nv-sticky-reading-header__progress-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background: var(--sys-color-accent-primary);
+  width: 100%;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.1s linear;
+}
+
+/* Table of Contents Styling */
+.nv-toc-list {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.nv-toc-item {
+  margin-bottom: var(--sys-space-stack-xs);
+  line-height: 1.4;
+}
+
+.nv-toc-item--h3 {
+  padding-left: var(--sys-space-inline-sm);
+}
+
+.nv-toc-item--h4 {
+  padding-left: var(--sys-space-inline-md);
+}
+
+.nv-toc-link {
+  color: var(--sys-color-text-secondary);
+  font-size: 0.85rem;
+  text-decoration: none;
+  transition: color var(--sys-motion-duration-feedback) var(--sys-motion-ease-interface);
+  display: block;
+}
+
+.nv-toc-link:hover,
+.nv-toc-link--active {
+  color: var(--sys-color-accent-primary);
+}
+
+.nv-toc-link--active {
+  font-weight: var(--ref-font-weight-semibold);
+}
+
+/* Collapsible Mobile TOC */
+.nv-mobile-toc {
+  display: none;
+}
+
+@media (max-width: 72rem) {
+  .nv-mobile-toc {
+    display: block;
+    margin-bottom: var(--sys-space-stack-md);
+    background: var(--sys-color-surface-raised);
+    border: 1px solid var(--sys-premium-border);
+    border-radius: var(--sys-premium-radius-card);
+    padding: var(--sys-space-stack-sm) var(--sys-space-layout-gap);
+  }
+  .nv-mobile-toc summary {
+    font-weight: var(--ref-font-weight-semibold);
+    color: var(--sys-color-text-primary);
+    cursor: pointer;
+    user-select: none;
+    font-family: var(--sys-font-display-family);
+  }
+  .nv-mobile-toc .nv-toc-list {
+    margin-top: var(--sys-space-stack-sm);
+  }
+}
+
+/* Table Styling */
+.nv-curriculum-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-block: var(--sys-space-stack-md);
+  font-size: 0.95rem;
+  background: var(--sys-color-surface-raised);
+  border-radius: var(--sys-premium-radius-card);
+  overflow: hidden;
+  border: 1px solid var(--sys-premium-border);
+}
+
+.nv-curriculum-table th,
+.nv-curriculum-table td {
+  padding: var(--sys-space-stack-sm) var(--sys-space-layout-gap);
+  text-align: left;
+  border-bottom: 1px solid var(--sys-premium-border);
+}
+
+.nv-curriculum-table th {
+  background: color-mix(in srgb, var(--sys-color-bg-primary) 60%, var(--sys-color-surface-raised));
+  color: var(--sys-color-text-primary);
+  font-weight: var(--ref-font-weight-semibold);
+  font-family: var(--sys-font-display-family);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.nv-curriculum-table tr:last-child td {
+  border-bottom: none;
+}
+
+.nv-curriculum-table tr:hover {
+  background: color-mix(in srgb, var(--sys-color-accent-primary) 4%, transparent);
+}
+
+.nv-table-container {
+  width: 100%;
+  overflow-x: auto;
+  margin-block: var(--sys-space-stack-md);
+  border-radius: var(--sys-premium-radius-card);
+  box-shadow: 0 4px 20px color-mix(in srgb, var(--sys-color-bg-primary) 80%, black);
+}
+
+/* Quick Navigation Toolbar */
+.nv-reading-quick-nav {
+  display: flex;
+  gap: var(--sys-space-inline-sm);
+  margin-block: var(--sys-space-stack-lg);
+  justify-content: center;
+  flex-wrap: wrap;
+  padding-block: var(--sys-space-stack-sm);
+  border-block: 1px solid var(--sys-premium-border);
+}
+
+.nv-button--quick-nav {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.8rem;
+  height: auto;
+}
+
+@media (min-width: 72rem) {
+  .nv-mobile-only {
+    display: none !important;
+  }
+}
+
+/* Exercise Styling */
+.nv-exercise-section {
+  border-radius: var(--sys-premium-radius-card);
+  padding: var(--sys-space-stack-md) var(--sys-space-layout-gap);
+  margin-block: var(--sys-space-stack-md);
+  border: 1px solid var(--sys-premium-border);
+}
+
+.nv-exercise-section--task {
+  border-left: 4px solid var(--sys-color-accent-primary);
+  background: color-mix(in srgb, var(--sys-color-accent-primary) 4%, var(--sys-color-surface-raised));
+}
+
+.nv-exercise-section--output {
+  border-left: 4px solid var(--sys-color-success, #00c853);
+  background: color-mix(in srgb, var(--sys-color-success, #00c853) 4%, var(--sys-color-surface-raised));
+}
+
+.nv-exercise-section--guidance {
+  border-left: 4px solid var(--sys-color-warning, #ffb300);
+  background: color-mix(in srgb, var(--sys-color-warning, #ffb300) 4%, var(--sys-color-surface-raised));
+}
+
+.nv-exercise-section__title {
+  margin: 0 0 var(--sys-space-stack-xs) 0 !important;
+  font-family: var(--sys-font-display-family);
+  text-transform: uppercase;
+  font-size: 0.9rem !important;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  gap: var(--sys-space-inline-xs);
+}
+
+.nv-exercise-section__title--task {
+  color: var(--sys-color-accent-primary) !important;
+}
+
+.nv-exercise-section__title--output {
+  color: var(--sys-color-success, #00c853) !important;
+}
+
+.nv-exercise-section__title--guidance {
+  color: var(--sys-color-warning, #ffb300) !important;
+}
+
+/* Accessibility visible focus indicator */
+.nv-toc-link:focus-visible,
+.nv-button--quick-nav:focus-visible,
+.nv-mobile-toc summary:focus-visible {
+  outline: 2px solid var(--sys-color-accent-primary);
+  outline-offset: 2px;
+  border-radius: var(--sys-radius-sm, 4px);
+}
