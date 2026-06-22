@@ -16,8 +16,46 @@ function byId(items, id) {
   return items.find((item) => item.id === id) || null;
 }
 
+function parseFrontmatter(markdown) {
+  const match = String(markdown || '').match(/^---\r?\n([\s\S]*?)\r?\n---/);
+  if (!match) return {};
+  const yaml = match[1];
+  const metadata = {};
+  let currentKey = null;
+
+  yaml.split(/\r?\n/).forEach(line => {
+    const trimmed = line.trim();
+    if (!trimmed) return;
+
+    if (trimmed.startsWith('-') && currentKey) {
+      const val = trimmed.slice(1).trim().replace(/^["']|["']$/g, '').trim();
+      if (Array.isArray(metadata[currentKey])) {
+        metadata[currentKey].push(val);
+      } else {
+        metadata[currentKey] = [val];
+      }
+      return;
+    }
+
+    const colonIdx = line.indexOf(':');
+    if (colonIdx === -1) return;
+    const key = line.slice(0, colonIdx).trim();
+    let val = line.slice(colonIdx + 1).trim();
+    val = val.replace(/^["']|["']$/g, '').trim();
+
+    if (val === '') {
+      metadata[key] = [];
+      currentKey = key;
+    } else {
+      metadata[key] = val;
+      currentKey = null;
+    }
+  });
+  return metadata;
+}
+
 function stripFrontmatter(markdown) {
-  return String(markdown || '').replace(/^---\n[\s\S]*?---\s*/, '').trim();
+  return String(markdown || '').replace(/^---\r?\n[\s\S]*?---\r?\n\s*/, '').trim();
 }
 
 function orderArtifacts(artifacts) {
@@ -103,11 +141,18 @@ export function createCurriculumService(options = {}) {
     const artifact = await getArtifact(artifactId);
     if (!artifact) return null;
     if (!artifactMarkdownCache.has(artifact.source)) {
-      artifactMarkdownCache.set(artifact.source, stripFrontmatter(await fetchText(artifact.source)));
+      const promise = (async () => {
+        const rawText = await fetchText(artifact.source);
+        const metadata = parseFrontmatter(rawText);
+        const stripped = stripFrontmatter(rawText);
+        return { metadata, markdown: stripped };
+      })();
+      artifactMarkdownCache.set(artifact.source, promise);
     }
+    const cached = await artifactMarkdownCache.get(artifact.source);
     return {
-      artifact,
-      markdown: artifactMarkdownCache.get(artifact.source),
+      artifact: { ...artifact, ...cached.metadata },
+      markdown: cached.markdown,
     };
   }
 

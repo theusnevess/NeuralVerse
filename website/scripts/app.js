@@ -3,6 +3,7 @@ import { createContentController } from "./content/content-controller.js?v=9";
 import { createProgressController } from "./progress/progress-controller.js?v=9";
 import { createWorkspaceController } from "./workspace/workspace-controller.js?v=9";
 import { createBreadcrumbsController } from "./navigation/breadcrumbs-controller.js?v=10";
+import { createCurriculumSearchController } from "./curriculum/curriculum-search.js?v=13";
 
 window.NV_DEBUG = window.NV_DEBUG || false;
 
@@ -21,6 +22,13 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   curriculumController.init();
+
+  // Initialize the curriculum search controller
+  const searchController = createCurriculumSearchController({
+    root: document,
+  });
+
+  searchController.init();
 
   // Initialize the content controller
   const contentController = createContentController({
@@ -58,6 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   window.NeuralVerse = window.NeuralVerse || {};
   window.NeuralVerse.curriculumController = curriculumController;
+  window.NeuralVerse.searchController = searchController;
   window.NeuralVerse.contentController = contentController;
   window.NeuralVerse.progressController = progressController;
   window.NeuralVerse.workspaceController = workspaceController;

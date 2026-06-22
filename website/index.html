@@ -23,6 +23,7 @@
   <link rel="stylesheet" href="styles/research-observatory.css?v=1">
   <link rel="stylesheet" href="styles/observatory-signals.css?v=5">
   <link rel="stylesheet" href="styles/curriculum.css?v=1">
+  <link rel="stylesheet" href="styles/curriculum-search.css?v=13">
 </head>
 <body>
   <!-- Skip Link for Accessibility -->
@@ -38,7 +39,14 @@
       <div class="nv-header-brand">
         <img class="nv-header-brand-mark" src="assets/brand/neuralverse-wordmark.png" alt="NeuralVerse">
       </div>
-
+      <button type="button" id="nv-global-search-trigger" class="nv-global-search-trigger" aria-label="Search curriculum (Ctrl+K)">
+        <svg class="nv-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <span class="nv-search-placeholder">Search curriculum...</span>
+        <kbd class="nv-search-kbd">Ctrl+K</kbd>
+      </button>
     </header>
 
     <div class="nv-shell-body">
@@ -817,6 +825,42 @@
       </div>
     </footer>
   </div>
+
+  <!-- Curriculum Global Search Modal -->
+  <dialog id="nv-curriculum-search-modal" class="nv-search-modal" aria-labelledby="nv-search-modal-title">
+    <div class="nv-search-header">
+      <div class="nv-search-input-wrapper">
+        <svg class="nv-search-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="search" id="nv-curriculum-search-input" class="nv-search-input" placeholder="Search curriculum (Paths, Modules, Lessons, Artifacts)..." aria-label="Search curriculum" autocomplete="off" spellcheck="false">
+      </div>
+      <button type="button" id="nv-curriculum-search-close" class="nv-search-close-btn" aria-label="Close search modal" title="Close search modal">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+    <div id="nv-curriculum-search-results" class="nv-search-results" role="listbox" aria-label="Search results">
+      <!-- Search results dynamically rendered here -->
+    </div>
+    <div class="nv-search-footer">
+      <div class="nv-search-shortcuts">
+        <span class="nv-search-shortcut-item">
+          <kbd class="nv-search-shortcut-kbd">↑↓</kbd> Navigate
+        </span>
+        <span class="nv-search-shortcut-item">
+          <kbd class="nv-search-shortcut-kbd">Enter</kbd> Select
+        </span>
+        <span class="nv-search-shortcut-item">
+          <kbd class="nv-search-shortcut-kbd">Esc</kbd> Close
+        </span>
+      </div>
+      <div class="nv-search-brand-footer">NeuralVerse Search Engine</div>
+    </div>
+  </dialog>
 
   <!-- Script Initialization -->
   <script src="scripts/router/routes.js?v=13"></script>

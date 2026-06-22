@@ -128,7 +128,7 @@ function breadcrumbs(items) {
       nav.append(link);
     } else {
       const current = el('span', 'nv-curriculum-breadcrumbs__item', item.label);
-      current.setAttribute('aria-current', 'page');
+      current.setAttribute('aria-current', 'location');
       nav.append(current);
     }
   });
@@ -422,76 +422,382 @@ export function createCurriculumController(options = {}) {
     await renderModule(path?.id || 'canonical', moduleId);
   }
 
-  async function renderLesson(pathId, moduleId, lessonId) {
-    const [lesson, artifacts] = await Promise.all([service.getLesson(lessonId), service.getArtifactsForLesson(lessonId)]);
-    const [path, module] = await Promise.all([service.getLearningPath(pathId), service.getModule(moduleId)]);
-    const body = renderShell(lesson?.title || 'Lesson', lesson?.learningGoal || lesson?.overview || 'Lesson not found.', [
+  function appendMetadataItem(dl, label, value) {
+    const dt = el('dt', 'nv-lesson-workspace__metadata-label', label);
+    const dd = el('dd', 'nv-lesson-workspace__metadata-value', value);
+    dl.append(dt, dd);
+  }
+
+  function renderLessonFlow(activeType = null) {
+    const flowViz = el('div', 'nv-lesson-flow-viz');
+    flowViz.setAttribute('aria-label', 'Canonical Lesson Flow');
+
+    const steps = [
+      { type: 'Explanatory Text', num: 1 },
+      { type: 'Visual Intuition', num: 2 },
+      { type: 'Interactive Visualization', label: 'Interactive Spec', num: 3 },
+      { type: 'Exercise', num: 4 },
+      { type: 'Comparison Table', num: 5 }
+    ];
+
+    steps.forEach((step, idx) => {
+      if (idx > 0) {
+        const connector = el('div', 'nv-lesson-flow-viz__connector', '→');
+        connector.setAttribute('aria-hidden', 'true');
+        flowViz.append(connector);
+      }
+
+      const stepEl = el('div', 'nv-lesson-flow-viz__step');
+      const isActive = activeType && (activeType === step.type || (step.type === 'Interactive Visualization' && activeType.startsWith('Interactive')));
+      if (isActive) {
+        stepEl.setAttribute('data-active', 'true');
+      }
+
+      const icon = el('span', 'nv-lesson-flow-viz__step-icon', String(step.num));
+      const label = el('span', 'nv-lesson-flow-viz__step-label', step.label || step.type);
+
+      stepEl.append(icon, label);
+      flowViz.append(stepEl);
+    });
+
+    return flowViz;
+  }
+
+  async function renderWorkspaceLayout(pathId, moduleId, lessonId, activeArtifactId = null) {
+    const container = target();
+    if (!container) return null;
+    container.innerHTML = '';
+
+    const [lesson, artifacts] = await Promise.all([
+      service.getLesson(lessonId),
+      service.getArtifactsForLesson(lessonId)
+    ]);
+    const [path, module] = await Promise.all([
+      service.getLearningPath(pathId),
+      service.getModule(moduleId)
+    ]);
+
+    if (!lesson) {
+      container.append(emptyState('Lesson not found', 'The requested lesson is not available.'));
+      return null;
+    }
+
+    setWorkspace(lesson.title, `Topic: ${lesson.topic || 'General'}`);
+
+    const workspaceEl = el('div', 'nv-lesson-workspace');
+
+    const focusModeKey = 'nv_curriculum_workspace_focus_mode';
+    const isFocusMode = localStorage.getItem(focusModeKey) === 'true';
+    if (isFocusMode) {
+      workspaceEl.classList.add('nv-lesson-workspace--focus');
+    }
+
+    const header = el('header', 'nv-lesson-workspace__header nv-curriculum-hero');
+
+    const breadcrumbItems = [
       { label: 'Learning Paths', href: '#/learning' },
       { label: path?.title || 'Learning Path', href: path ? `#/learning/${path.id}` : '#/learning' },
-      { label: module?.title || 'Module', href: `#/learning/${pathId}/module/${moduleId}` },
-      { label: lesson?.title || 'Lesson' },
-    ], lesson ? [
-      { label: 'Artifacts', value: String(artifacts.length) },
-      { label: 'Topic', value: lesson.topic },
-      { label: 'Status', value: lesson.canonicalStatus },
-    ] : []);
-    if (!body || !lesson) return;
+      { label: module?.title || 'Module', href: `#/learning/${pathId}/module/${moduleId}` }
+    ];
+    if (activeArtifactId) {
+      const activeArt = artifacts.find(a => a.id === activeArtifactId);
+      breadcrumbItems.push({
+        label: lesson.title,
+        href: `#/learning/${pathId}/module/${moduleId}/lesson/${lessonId}`
+      });
+      breadcrumbItems.push({
+        label: activeArt ? activeArt.title : 'Artifact'
+      });
+    } else {
+      breadcrumbItems.push({
+        label: lesson.title
+      });
+    }
+    header.append(breadcrumbs(breadcrumbItems));
 
-    const metaRow = el('div', 'nv-card-meta');
-    metaRow.append(meta('Status', lesson.canonicalStatus), meta('Artifacts', String(artifacts.length)), meta('Topic', lesson.topic));
-    body.append(metaRow);
+    const titleCluster = el('div', 'nv-cluster nv-cluster--gap-sm');
+    titleCluster.style.justifyContent = 'space-between';
+    titleCluster.style.alignItems = 'flex-start';
+    titleCluster.style.width = '100%';
 
-    const flow = el('ol', 'nv-curriculum-flow');
-    ['Explanatory Text', 'Visual Intuition', 'Interactive Visualization Specification', 'Exercise', 'Comparison Table'].forEach((label) => {
-      flow.append(el('li', '', label));
+    const titleGroup = el('div', 'nv-stack nv-stack--gap-xs');
+    titleGroup.append(
+      el('span', 'nv-curriculum-card__kicker', `Lesson / Topic: ${lesson.topic || 'General'}`),
+      el('h1', 'nv-lesson-workspace__title', lesson.title)
+    );
+
+    const controlsGroup = el('div', 'nv-cluster nv-cluster--gap-sm');
+    controlsGroup.style.alignItems = 'center';
+
+    const statusBadgeEl = statusBadge(lesson.canonicalStatus);
+
+    const focusBtn = el('button', 'nv-button nv-button--focus-mode', isFocusMode ? 'Exit Focus' : 'Focus Mode');
+    focusBtn.type = 'button';
+    focusBtn.dataset.variant = 'secondary';
+
+    const updateFocusMode = (active) => {
+      if (active) {
+        workspaceEl.classList.add('nv-lesson-workspace--focus');
+        focusBtn.textContent = 'Exit Focus';
+        localStorage.setItem(focusModeKey, 'true');
+      } else {
+        workspaceEl.classList.remove('nv-lesson-workspace--focus');
+        focusBtn.textContent = 'Focus Mode';
+        localStorage.setItem(focusModeKey, 'false');
+      }
+    };
+
+    focusBtn.addEventListener('click', () => {
+      const active = !workspaceEl.classList.contains('nv-lesson-workspace--focus');
+      updateFocusMode(active);
     });
-    const flowNote = el('p', 'nv-muted', 'This visual sequence follows canonical lesson order for presentation only. It does not enforce sequence control.');
-    body.append(flow, flowNote);
 
-    body.append(renderFilterableCollection(artifacts, (artifact, index) => card(artifact.title, typeLabel(artifact.type), `#/learning/${pathId}/module/${moduleId}/lesson/${lesson.id}/artifact/${artifact.id}`, artifact.canonicalStatus, [
-      meta('Type', typeLabel(artifact.type)),
-      meta('Duration', artifact.estimatedDuration),
-    ], { kind: 'artifact', kicker: `Artifact ${index + 1}` }), 'No artifacts found for this lesson.', 'nv-stack nv-stack--gap-sm'));
-    setWorkspace(lesson.title, `${artifacts.length} artifacts in this lesson.`);
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && workspaceEl.classList.contains('nv-lesson-workspace--focus')) {
+        updateFocusMode(false);
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+
+    window.addEventListener('hashchange', () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    }, { once: true });
+
+    controlsGroup.append(statusBadgeEl, focusBtn);
+    titleCluster.append(titleGroup, controlsGroup);
+    header.append(titleCluster);
+    workspaceEl.append(header);
+
+    const grid = el('div', 'nv-lesson-workspace__grid');
+
+    const outlineCol = el('aside', 'nv-lesson-workspace__outline-col');
+    outlineCol.setAttribute('aria-label', 'Lesson Outline');
+
+    const outlineAccordion = el('details', 'nv-lesson-workspace__outline-accordion');
+    outlineAccordion.setAttribute('open', 'true');
+
+    const outlineSummary = el('summary', 'nv-lesson-workspace__outline-summary');
+    outlineSummary.append(el('span', '', 'Lesson Outline'));
+
+    const outlineContent = el('div', 'nv-lesson-workspace__outline-content');
+    const outlineList = el('ul', 'nv-lesson-workspace__outline-list');
+    outlineList.setAttribute('role', 'list');
+
+    // Add Lesson Overview item
+    const overviewLink = el('a', 'nv-lesson-workspace__outline-item');
+    overviewLink.href = `#/learning/${pathId}/module/${moduleId}/lesson/${lessonId}`;
+    if (!activeArtifactId) {
+      overviewLink.setAttribute('aria-current', 'location');
+    }
+    const overviewTitle = el('span', 'nv-lesson-workspace__outline-item-title', 'Lesson Overview');
+    const overviewMeta = el('span', 'nv-lesson-workspace__outline-item-meta');
+    const overviewType = el('span', '', 'Lesson Overview');
+    overviewMeta.append(overviewType);
+    overviewLink.append(overviewTitle, overviewMeta);
+
+    const overviewLi = el('li');
+    overviewLi.append(overviewLink);
+    outlineList.append(overviewLi);
+
+    artifacts.forEach((art, index) => {
+      const itemLink = el('a', 'nv-lesson-workspace__outline-item');
+      itemLink.href = `#/learning/${pathId}/module/${moduleId}/lesson/${lessonId}/artifact/${art.id}`;
+
+      if (activeArtifactId === art.id) {
+        itemLink.setAttribute('aria-current', 'location');
+      }
+
+      const itemTitle = el('span', 'nv-lesson-workspace__outline-item-title', art.title);
+
+      const itemMeta = el('span', 'nv-lesson-workspace__outline-item-meta');
+      const itemType = el('span', '', typeLabel(art.type));
+      const itemBadge = el('span', 'nv-badge', art.canonicalStatus);
+      itemBadge.dataset.variant = art.canonicalStatus === 'Reviewed' ? 'success' : 'neutral';
+
+      itemMeta.append(itemType, itemBadge);
+      itemLink.append(itemTitle, itemMeta);
+
+      const li = el('li');
+      li.append(itemLink);
+      outlineList.append(li);
+    });
+
+    outlineContent.append(outlineList);
+    outlineAccordion.append(outlineSummary, outlineContent);
+    outlineCol.append(outlineAccordion);
+    grid.append(outlineCol);
+
+    const contentCol = el('div', 'nv-lesson-workspace__content-col');
+    const mainContent = el('main', 'nv-lesson-workspace__main-content');
+    mainContent.setAttribute('tabindex', '-1');
+    contentCol.append(mainContent);
+    grid.append(contentCol);
+
+    const metadataCol = el('aside', 'nv-lesson-workspace__metadata-col');
+    metadataCol.setAttribute('aria-label', 'Artifact Metadata');
+    const metadataCard = el('div', 'nv-panel nv-lesson-workspace__metadata-card nv-stack nv-stack--gap-md');
+    const metadataTitle = el('h3', 'nv-lesson-workspace__section-title', 'Metadata');
+    const metadataList = el('dl', 'nv-lesson-workspace__metadata-list');
+    metadataCard.append(metadataTitle, metadataList);
+    metadataCol.append(metadataCard);
+    grid.append(metadataCol);
+
+    workspaceEl.append(grid);
+    container.append(workspaceEl);
+
+    return {
+      mainContent,
+      metadataList,
+      artifacts,
+      lesson,
+      path,
+      module
+    };
+  }
+
+  async function renderLesson(pathId, moduleId, lessonId) {
+    const layout = await renderWorkspaceLayout(pathId, moduleId, lessonId, null);
+    if (!layout) return;
+
+    const { mainContent, metadataList, artifacts, lesson } = layout;
+
+    appendMetadataItem(metadataList, 'Topic', lesson.topic || 'General');
+    appendMetadataItem(metadataList, 'Status', lesson.canonicalStatus || 'Draft');
+    appendMetadataItem(metadataList, 'Artifacts Count', String(artifacts.length));
+    if (lesson.learningGoal) {
+      appendMetadataItem(metadataList, 'Learning Goal', lesson.learningGoal);
+    }
+
+    const heading = el('h2', '', 'Lesson Overview');
+    const goalText = el('p', '', lesson.learningGoal || lesson.overview || 'Understand the core competencies of this lesson.');
+
+    const flowHeading = el('h3', '', 'Canonical Learning Flow');
+    const flowViz = renderLessonFlow(null);
+    const flowNote = el('p', 'nv-muted', 'This visual sequence follows the canonical lesson order for presentation only. It does not enforce sequence control.');
+    flowNote.style.fontSize = 'var(--sys-font-caption-size)';
+
+    const artifactListHeading = el('h3', '', 'Lesson Artifacts');
+    const artifactsGrid = el('div', 'nv-grid nv-grid--cols-2');
+
+    artifacts.forEach((art, index) => {
+      const artCard = card(
+        art.title,
+        typeLabel(art.type),
+        `#/learning/${pathId}/module/${moduleId}/lesson/${lessonId}/artifact/${art.id}`,
+        art.canonicalStatus,
+        [
+          meta('Type', typeLabel(art.type)),
+          meta('Duration', art.estimatedDuration || 'Not specified')
+        ],
+        { kind: 'artifact', kicker: `Artifact ${index + 1}` }
+      );
+      artifactsGrid.append(artCard);
+    });
+
+    mainContent.append(
+      heading,
+      goalText,
+      flowHeading,
+      flowViz,
+      flowNote,
+      el('hr'),
+      artifactListHeading,
+      artifactsGrid
+    );
   }
 
   async function renderArtifact(pathId, moduleId, lessonId, artifactId) {
     const content = await service.loadArtifactMarkdown(artifactId);
-    const [path, module, lesson] = await Promise.all([service.getLearningPath(pathId), service.getModule(moduleId), service.getLesson(lessonId)]);
-    const body = renderShell(content?.artifact?.title || 'Learning Artifact', typeLabel(content?.artifact?.type) || 'Artifact not found.', [
-      { label: 'Learning Paths', href: '#/learning' },
-      { label: path?.title || 'Learning Path', href: path ? `#/learning/${path.id}` : '#/learning' },
-      { label: module?.title || 'Module', href: `#/learning/${pathId}/module/${moduleId}` },
-      { label: lesson?.title || 'Lesson', href: `#/learning/${pathId}/module/${moduleId}/lesson/${lessonId}` },
-      { label: content?.artifact?.title || 'Artifact' },
-    ], content ? [
-      { label: 'Type', value: typeLabel(content.artifact.type) },
-      { label: 'Duration', value: content.artifact.estimatedDuration || 'Not specified' },
-      { label: 'Status', value: content.artifact.canonicalStatus },
-    ] : []);
-    if (!body || !content) return;
+    if (!content) {
+      const container = target();
+      if (container) container.innerHTML = '';
+      container.append(emptyState('Artifact not found', 'The requested artifact is not available.'));
+      return;
+    }
 
     const { artifact, markdown } = content;
-    const metaRow = el('div', 'nv-card-meta');
-    metaRow.append(
-      meta('Status', artifact.canonicalStatus),
-      meta('Type', typeLabel(artifact.type)),
-      meta('Duration', artifact.estimatedDuration),
-      meta('Objectives', artifact.instructionalObjectives.join(', '))
-    );
-    body.append(metaRow);
+    const layout = await renderWorkspaceLayout(pathId, moduleId, lessonId, artifactId);
+    if (!layout) return;
+
+    const { mainContent, metadataList, artifacts } = layout;
+
+    appendMetadataItem(metadataList, 'Type', typeLabel(artifact.type));
+    appendMetadataItem(metadataList, 'Status', artifact.canonicalStatus || 'Draft');
+    appendMetadataItem(metadataList, 'Duration', artifact.estimatedDuration || 'Not specified');
+
+    const depths = artifact.learning_depths || [];
+    if (depths.length) {
+      appendMetadataItem(metadataList, 'Learning Depths', depths.join(', '));
+    }
+
+    const objectives = artifact.instructional_objectives || [];
+    if (objectives.length) {
+      appendMetadataItem(metadataList, 'Objectives', objectives.join(', '));
+    }
+
+    const flowViz = renderLessonFlow(artifact.type);
+    mainContent.append(flowViz);
+
+    const banner = el('div', 'nv-lesson-workspace__artifact-type-banner');
+    const badge = el('span', 'nv-badge', typeLabel(artifact.type));
+    badge.dataset.variant = 'info';
+    banner.append(badge);
+    mainContent.append(banner);
 
     if (artifact.type === 'Interactive Visualization') {
       const notice = el('aside', 'nv-panel nv-curriculum-callout');
       notice.append(el('strong', '', 'Specification only'));
       notice.append(el('p', 'nv-muted', 'This artifact describes a future interactive visualization. No executable interaction is fabricated in the frontend.'));
-      body.append(notice);
+      mainContent.append(notice);
     }
 
-    const article = el('article', 'nv-panel nv-curriculum-reader');
+    const readerKind = artifact.type === 'Explanatory Text' ? 'explanatory' :
+                       artifact.type === 'Visual Intuition' ? 'visual' :
+                       artifact.type === 'Interactive Visualization' ? 'interactive-spec' :
+                       artifact.type === 'Exercise' ? 'exercise' : 'comparison';
+
+    const article = el('article', `nv-panel nv-curriculum-reader nv-curriculum-reader--${readerKind}`);
     article.innerHTML = markdownToHtml(markdown);
-    body.append(article);
-    setWorkspace(artifact.title, `${typeLabel(artifact.type)} artifact.`);
+    mainContent.append(article);
+
+    const currentIndex = artifacts.findIndex(art => art.id === artifactId);
+    const navFooter = el('nav', 'nv-lesson-workspace__navigation');
+    navFooter.setAttribute('aria-label', 'Artifact Navigation');
+
+    const navCluster = el('div', 'nv-cluster');
+    navCluster.style.justifyContent = 'space-between';
+    navCluster.style.alignItems = 'center';
+    navCluster.style.width = '100%';
+
+    if (currentIndex > 0) {
+      const prevBtn = el('a', 'nv-button nv-button--prev', '← Previous');
+      prevBtn.dataset.variant = 'secondary';
+      prevBtn.href = `#/learning/${pathId}/module/${moduleId}/lesson/${lessonId}/artifact/${artifacts[currentIndex - 1].id}`;
+      navCluster.append(prevBtn);
+    } else {
+      const prevPlaceholder = el('button', 'nv-button nv-button--prev', '← Previous');
+      prevPlaceholder.dataset.variant = 'secondary';
+      prevPlaceholder.disabled = true;
+      navCluster.append(prevPlaceholder);
+    }
+
+    const positionText = el('span', 'nv-lesson-workspace__position-indicator', `Artifact ${currentIndex + 1} of ${artifacts.length}`);
+    navCluster.append(positionText);
+
+    if (currentIndex < artifacts.length - 1) {
+      const nextBtn = el('a', 'nv-button nv-button--next', 'Next →');
+      nextBtn.dataset.variant = 'secondary';
+      nextBtn.href = `#/learning/${pathId}/module/${moduleId}/lesson/${lessonId}/artifact/${artifacts[currentIndex + 1].id}`;
+      navCluster.append(nextBtn);
+    } else {
+      const nextPlaceholder = el('button', 'nv-button nv-button--next', 'Next →');
+      nextPlaceholder.dataset.variant = 'secondary';
+      nextPlaceholder.disabled = true;
+      navCluster.append(nextPlaceholder);
+    }
+
+    navFooter.append(navCluster);
+    mainContent.append(navFooter);
   }
 
   async function renderCurrentRoute(hashValue = window.location.hash) {
@@ -517,7 +823,6 @@ export function createCurriculumController(options = {}) {
 
   function init() {
     window.addEventListener('nv:routerendered', () => renderCurrentRoute(window.location.hash));
-    window.addEventListener('hashchange', () => renderCurrentRoute(window.location.hash));
     renderCurrentRoute(window.location.hash);
 
     window.NeuralVerse = window.NeuralVerse || {};

@@ -96,43 +96,36 @@ class ViewController {
       `,
       learning: `
         <div class="nv-stack nv-stack--gap-md">
-          <h1 class="nv-sr-only">Learning Paths</h1>
           <div class="nv-stack nv-stack--gap-md" data-curriculum-root></div>
         </div>
       `,
       'learning-detail': `
         <div class="nv-stack nv-stack--gap-md">
-          <h1 class="nv-sr-only">Learning Path Detail</h1>
           <div class="nv-stack nv-stack--gap-md" data-curriculum-root></div>
         </div>
       `,
       'learning-path': `
         <div class="nv-stack nv-stack--gap-md">
-          <h1 class="nv-sr-only">Learning Path Module</h1>
           <div class="nv-stack nv-stack--gap-md" data-curriculum-root></div>
         </div>
       `,
       'lesson-detail': `
         <div class="nv-stack nv-stack--gap-md">
-          <h1 class="nv-sr-only">Lesson Detail</h1>
           <div class="nv-stack nv-stack--gap-md" data-curriculum-root></div>
         </div>
       `,
       'artifact-detail': `
         <div class="nv-stack nv-stack--gap-md">
-          <h1 class="nv-sr-only">Learning Artifact</h1>
           <div class="nv-stack nv-stack--gap-md" data-curriculum-root></div>
         </div>
       `,
       modules: `
         <div class="nv-stack nv-stack--gap-md">
-          <h1 class="nv-sr-only">Modules</h1>
           <div class="nv-stack nv-stack--gap-md" data-curriculum-root></div>
         </div>
       `,
       'module-detail': `
         <div class="nv-stack nv-stack--gap-md">
-          <h1 class="nv-sr-only">Module Detail</h1>
           <div class="nv-stack nv-stack--gap-md" data-curriculum-root></div>
         </div>
       `,
