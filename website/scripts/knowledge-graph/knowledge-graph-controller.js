@@ -238,6 +238,18 @@ export function createKnowledgeGraphController(options = {}) {
       button('Reset Atlas', () => resetGraph(true))
     );
     panel.append(actions);
+  }  function getCategory(pathTitle) {
+    const title = pathTitle.toLowerCase();
+    if (title.includes('retrieval') || title.includes('rag') || title.includes('vector')) {
+      return 'Retrieval & Context Optimization';
+    }
+    if (title.includes('agent') || title.includes('flow') || title.includes('pipeline')) {
+      return 'Agentic & Pipeline Orchestration';
+    }
+    if (title.includes('neural') || title.includes('optimization') || title.includes('learning')) {
+      return 'Foundational Networks & Math';
+    }
+    return 'Generative Architectures & Research';
   }
 
   function renderAtlas() {
@@ -248,41 +260,70 @@ export function createKnowledgeGraphController(options = {}) {
     const atlasContainer = el('div', 'nv-kg-atlas');
 
     if (state.mode === 'overview') {
-      const grid = el('div', 'nv-kg-grid');
+      const gallery = el('div', 'nv-kg-asymmetric-gallery');
       const paths = graph.nodes.filter(n => n.type === 'path');
 
+      // Group paths by category
+      const groups = {};
       paths.forEach(path => {
-        const card = el('div', 'nv-kg-card nv-kg-card--path');
-        card.tabIndex = 0;
-        card.setAttribute('aria-label', `Learning Path: ${path.title}`);
-
-        const modules = getChildren(path.id);
-        const lessons = modules.flatMap(m => getChildren(m.id));
-        const artifacts = lessons.flatMap(l => getChildren(l.id));
-
-        card.innerHTML = `
-          <div class="nv-kg-card__header">
-            <span class="nv-kg-card__kicker">Learning Path</span>
-            <span class="nv-kg-status nv-kg-status--${path.status.toLowerCase()}">${path.status}</span>
-          </div>
-          <h3 class="nv-kg-card__title">${path.title}</h3>
-          <p class="nv-kg-card__desc">${path.metadata?.overview || 'Curriculum Path'}</p>
-          <div class="nv-kg-card__footer">
-            <span class="nv-kg-chip"><b>${modules.length}</b> Modules</span>
-            <span class="nv-kg-chip"><b>${lessons.length}</b> Lessons</span>
-            <span class="nv-kg-chip"><b>${artifacts.length}</b> Artifacts</span>
-          </div>
-        `;
-        card.addEventListener('click', () => selectNode(path.id));
-        card.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            selectNode(path.id);
-          }
-        });
-        grid.append(card);
+        const cat = getCategory(path.title);
+        if (!groups[cat]) groups[cat] = [];
+        groups[cat].push(path);
       });
-      atlasContainer.append(grid);
+
+      const categories = [
+        'Foundational Networks & Math',
+        'Retrieval & Context Optimization',
+        'Agentic & Pipeline Orchestration',
+        'Generative Architectures & Research'
+      ];
+
+      categories.forEach((catName, idx) => {
+        const pathList = groups[catName] || [];
+        if (pathList.length === 0) return;
+
+        const section = el('section', 'nv-kg-gallery-section');
+        const header = el('h4', 'nv-kg-gallery-header');
+        header.innerHTML = `<span>0${idx + 1} //</span> ${catName}`;
+
+        const grid = el('div', 'nv-kg-gallery-grid');
+        pathList.forEach(path => {
+          const card = el('div', 'nv-kg-card nv-kg-card--path');
+          card.tabIndex = 0;
+          card.setAttribute('aria-label', `Learning Path: ${path.title}`);
+
+          const modules = getChildren(path.id);
+          const lessons = modules.flatMap(m => getChildren(m.id));
+          const artifacts = lessons.flatMap(l => getChildren(l.id));
+
+          card.innerHTML = `
+            <div class="nv-kg-card__header">
+              <span class="nv-kg-card__kicker">Learning Path</span>
+              <span class="nv-kg-status nv-kg-status--${path.status.toLowerCase()}">${path.status}</span>
+            </div>
+            <h3 class="nv-kg-card__title">${path.title}</h3>
+            <p class="nv-kg-card__desc">${path.metadata?.overview || 'Curriculum Path'}</p>
+            <div class="nv-kg-card__footer">
+              <span class="nv-kg-chip"><b>${modules.length}</b> Modules</span>
+              <span class="nv-kg-chip"><b>${lessons.length}</b> Lessons</span>
+              <span class="nv-kg-chip"><b>${artifacts.length}</b> Artifacts</span>
+            </div>
+          `;
+          card.addEventListener('click', () => selectNode(path.id));
+          card.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              selectNode(path.id);
+            }
+          });
+          grid.append(card);
+        });
+
+        section.append(header, grid);
+        gallery.append(section);
+      });
+
+      atlasContainer.append(gallery);
     }
     else if (state.mode === 'path') {
       const pathNode = graph.nodeById.get(state.selectedNodeId);
@@ -314,7 +355,8 @@ export function createKnowledgeGraphController(options = {}) {
       heroCol.append(actions);
 
       const sectionTitle = el('h4', 'nv-kg-section-title', 'Contained Modules');
-      const modulesGrid = el('div', 'nv-kg-grid');
+      sectionTitle.append(el('span', 'nv-kg-section-line'));
+      const modulesGrid = el('div', 'nv-kg-gallery-grid');
       contentCol.append(sectionTitle, modulesGrid);
 
       modules.forEach(mod => {
@@ -348,6 +390,7 @@ export function createKnowledgeGraphController(options = {}) {
       });
 
       const otherPathsTitle = el('h4', 'nv-kg-section-title', 'Nearby Learning Paths');
+      otherPathsTitle.append(el('span', 'nv-kg-section-line'));
       const otherPathsStrip = el('div', 'nv-kg-siblings-strip');
       const otherPaths = graph.nodes.filter(n => n.type === 'path' && n.id !== pathNode.id);
       otherPaths.forEach(op => {
@@ -389,7 +432,8 @@ export function createKnowledgeGraphController(options = {}) {
       heroCol.append(actions);
 
       const sectionTitle = el('h4', 'nv-kg-section-title', 'Contained Lessons');
-      const lessonsGrid = el('div', 'nv-kg-grid');
+      sectionTitle.append(el('span', 'nv-kg-section-line'));
+      const lessonsGrid = el('div', 'nv-kg-gallery-grid');
       contentCol.append(sectionTitle, lessonsGrid);
 
       lessons.forEach(lesson => {
@@ -420,6 +464,7 @@ export function createKnowledgeGraphController(options = {}) {
       });
 
       const siblingsTitle = el('h4', 'nv-kg-section-title', 'Sibling Modules');
+      siblingsTitle.append(el('span', 'nv-kg-section-line'));
       const siblingsStrip = el('div', 'nv-kg-siblings-strip');
       const siblings = getSiblings(modNode);
       siblings.forEach(sib => {
@@ -460,6 +505,7 @@ export function createKnowledgeGraphController(options = {}) {
       heroCol.append(actions);
 
       const sectionTitle = el('h4', 'nv-kg-section-title', 'Artifact Flow Order');
+      sectionTitle.append(el('span', 'nv-kg-section-line'));
       const flowList = el('div', 'nv-kg-flow-list');
       contentCol.append(sectionTitle, flowList);
 
@@ -495,6 +541,7 @@ export function createKnowledgeGraphController(options = {}) {
       });
 
       const siblingsTitle = el('h4', 'nv-kg-section-title', 'Sibling Lessons');
+      siblingsTitle.append(el('span', 'nv-kg-section-line'));
       const siblingsStrip = el('div', 'nv-kg-siblings-strip');
       const siblings = getSiblings(lessonNode);
       siblings.forEach(sib => {
@@ -538,7 +585,8 @@ export function createKnowledgeGraphController(options = {}) {
 
       if (parentLesson) {
         const sibTitle = el('h4', 'nv-kg-section-title', 'Sibling Artifacts');
-        const sibGrid = el('div', 'nv-kg-grid');
+        sibTitle.append(el('span', 'nv-kg-section-line'));
+        const sibGrid = el('div', 'nv-kg-gallery-grid');
         contentCol.append(sibTitle, sibGrid);
 
         const siblings = getChildren(parentLesson.id).filter(a => a.id !== artNode.id);
@@ -566,7 +614,8 @@ export function createKnowledgeGraphController(options = {}) {
 
       if (deps.length > 0) {
         const depTitle = el('h4', 'nv-kg-section-title', 'Declared Dependencies');
-        const depGrid = el('div', 'nv-kg-grid');
+        depTitle.append(el('span', 'nv-kg-section-line'));
+        const depGrid = el('div', 'nv-kg-gallery-grid');
         contentCol.append(depTitle, depGrid);
 
         deps.forEach(edge => {
