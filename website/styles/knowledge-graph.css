@@ -1,8 +1,8 @@
 /* =============================================================================
-   NeuralVerse Knowledge Graph — Premium Dark UI  (NV-900-UIX)
+   NeuralVerse Knowledge Graph — Premium Dark UI  (NV-900-Graph-Polish)
    ============================================================================= */
 
-/* ── Page wrapper ────────────────────────────────────────────────────────────── */
+/* ── Layout ───────────────────────────────────────────────────────────────── */
 .nv-kg {
   display: grid;
   gap: 16px;
@@ -14,40 +14,68 @@
   align-items: start;
 }
 
-/* ── Toolbar ─────────────────────────────────────────────────────────────────── */
+/* ── Toolbar ──────────────────────────────────────────────────────────────── */
 .nv-kg-toolbar {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 10px;
   padding: 12px 16px;
-  border: 1px solid rgba(137, 180, 250, 0.12);
-  border-radius: 12px;
-  background: rgba(17, 17, 27, 0.92);
-  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(8px);
+  border: 1px solid rgba(137, 180, 250, 0.1);
+  border-radius: 14px;
+  background: rgba(15, 15, 23, 0.94);
+  box-shadow: 0 2px 18px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(12px);
 }
 
-.nv-kg-search-wrap { display: flex; gap: 8px; align-items: center; flex: 1; min-inline-size: 200px; }
-.nv-kg-search { min-inline-size: 180px; flex: 1; max-inline-size: 320px; }
+.nv-kg-search-wrap {
+  display: grid;
+  gap: 4px;
+  min-inline-size: min(100%, 18rem);
+  flex: 1 1 20rem;
+  max-inline-size: 28rem;
+}
 
-.nv-kg-toolbar-btns { display: flex; flex-wrap: wrap; gap: 6px; }
-.nv-kg-tool-btn { padding: 5px 10px; font-size: 0.78rem; }
+.nv-kg-search {
+  min-inline-size: 200px;
+  inline-size: 100%;
+}
 
-/* Legend */
+.nv-kg-search-status {
+  min-block-size: 1rem;
+  color: rgba(205, 214, 244, 0.54);
+  font-size: 0.72rem;
+  line-height: 1.2;
+}
+
+.nv-kg-toolbar-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  flex: 1 1 24rem;
+}
+
+.nv-kg-tool-btn {
+  padding: 5px 12px;
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+
 .nv-kg-legend {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 12px;
   margin-left: auto;
 }
+
 .nv-kg-legend-item {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
   font-size: 0.72rem;
-  color: rgba(205, 214, 244, 0.55);
+  color: rgba(205, 214, 244, 0.5);
 }
+
 .nv-kg-legend-item::before {
   content: '';
   display: inline-block;
@@ -56,172 +84,226 @@
   border-radius: 3px;
   flex-shrink: 0;
 }
-.nv-kg-legend-item--path::before     { background: #89b4fa; box-shadow: 0 0 4px #89b4fa; }
-.nv-kg-legend-item--module::before   { background: #a6e3a1; box-shadow: 0 0 4px #a6e3a1; }
-.nv-kg-legend-item--lesson::before   { background: #f9e2af; box-shadow: 0 0 4px #f9e2af; }
-.nv-kg-legend-item--artifact::before { background: #cba6f7; box-shadow: 0 0 4px #cba6f7; }
 
-/* ── Workspace layout ─────────────────────────────────────────────────────────── */
+.nv-kg-legend-item--path::before     { background: #89b4fa; box-shadow: 0 0 6px rgba(137,180,250,0.5); }
+.nv-kg-legend-item--module::before   { background: #a6e3a1; box-shadow: 0 0 6px rgba(166,227,161,0.5); }
+.nv-kg-legend-item--lesson::before   { background: #f9e2af; box-shadow: 0 0 6px rgba(249,226,175,0.5); }
+.nv-kg-legend-item--artifact::before { background: #cba6f7; box-shadow: 0 0 6px rgba(203,166,247,0.5); }
+
+/* ── Workspace grid ──────────────────────────────────────────────────────── */
 .nv-kg-workspace {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 22rem;
-  gap: 14px;
+  grid-template-columns: minmax(0, 1fr) 24rem;
+  gap: 16px;
   align-items: start;
 }
 
-/* ── Canvas ──────────────────────────────────────────────────────────────────── */
+/* ── Canvas container ────────────────────────────────────────────────────── */
 .nv-kg-canvas-wrap {
-  border: 1px solid rgba(137, 180, 250, 0.1);
-  border-radius: 14px;
+  border: 1px solid rgba(137, 180, 250, 0.08);
+  border-radius: 16px;
   overflow: hidden;
+  min-block-size: 72vh;
+  /* Starfield dot-grid background */
   background:
-    radial-gradient(ellipse at 20% 15%, rgba(137,180,250,0.06) 0%, transparent 55%),
-    radial-gradient(ellipse at 80% 80%, rgba(166,227,161,0.04) 0%, transparent 50%),
-    /* dot grid */
-    radial-gradient(circle, rgba(137,180,250,0.15) 1px, transparent 1px),
-    #0f0f17;
-  background-size: auto, auto, 36px 36px;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
-  min-block-size: 70vh;
+    radial-gradient(ellipse at 15% 10%, rgba(137,180,250,0.06), transparent 50%),
+    radial-gradient(ellipse at 85% 75%, rgba(166,227,161,0.04), transparent 45%),
+    radial-gradient(ellipse at 50% 50%, rgba(203,166,247,0.03), transparent 60%),
+    radial-gradient(circle, rgba(137,180,250,0.12) 1px, transparent 1px),
+    #0b0b13;
+  background-size: auto, auto, auto, 40px 40px;
+  box-shadow:
+    0 0 60px rgba(137, 180, 250, 0.04),
+    0 4px 30px rgba(0, 0, 0, 0.5);
+  position: relative;
+}
+
+.nv-kg-canvas-wrap::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 50%, transparent 45%, rgba(0,0,0,0.22));
 }
 
 .nv-kg-svg {
   display: block;
   inline-size: 100%;
-  block-size: 70vh;
+  block-size: 72vh;
   min-block-size: 36rem;
   user-select: none;
   -webkit-user-select: none;
+  overflow: hidden;
 }
 
-/* ── SVG node shapes ─────────────────────────────────────────────────────────── */
-.nv-kg-node { cursor: pointer; transition: opacity 0.22s ease; }
+/* ── World group transitions ─────────────────────────────────────────────── */
+.nv-kg-world {
+  transition: transform 0.28s cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+/* ── Nodes ────────────────────────────────────────────────────────────────── */
+.nv-kg-node {
+  cursor: pointer;
+  transition: opacity 0.25s ease;
+  animation: nv-kg-node-enter 0.48s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
 .nv-kg-node:focus { outline: none; }
 
 .nv-kg-node-shape {
-  stroke-width: 1.5;
+  stroke-width: 1.4;
   vector-effect: non-scaling-stroke;
-  transition: fill 0.18s ease, stroke 0.18s ease, filter 0.18s ease;
-}
-.nv-kg-node:hover .nv-kg-node-shape {
-  filter: brightness(1.15);
+  transition: filter 0.2s ease, stroke-width 0.2s ease;
+  filter: drop-shadow(0 10px 20px rgba(0,0,0,0.28));
 }
 
-.nv-kg-node-glow {
+.nv-kg-node:hover .nv-kg-node-shape {
+  filter: brightness(1.2);
   stroke-width: 2;
+  transform: translateY(-2px);
+}
+
+/* Glow halo */
+.nv-kg-node-glow {
+  stroke-width: 2.5;
   opacity: 0;
   vector-effect: non-scaling-stroke;
-  transition: opacity 0.2s ease;
-  filter: blur(5px);
+  filter: blur(6px);
+  transition: opacity 0.25s ease;
 }
 
-/* Selected state */
-.nv-kg-node.is-selected .nv-kg-node-glow { opacity: 0.6; }
+/* Selected */
+.nv-kg-node.is-selected { opacity: 1 !important; }
+.nv-kg-node.is-selected .nv-kg-node-glow { opacity: 0.55; }
 .nv-kg-node.is-selected .nv-kg-node-shape {
   stroke-width: 2.5;
-  filter: brightness(1.2) drop-shadow(0 0 8px currentColor);
+  filter: brightness(1.25) drop-shadow(0 0 12px rgba(137,180,250,0.4));
 }
-.nv-kg-node.is-selected { opacity: 1 !important; }
 
-/* Focus-mode dimming */
-.nv-kg-node.is-dim { opacity: 0.22; pointer-events: none; }
-.nv-kg-node.is-neighbor { opacity: 0.75; }
+.nv-kg-node.is-pulsing .nv-kg-node-glow {
+  animation: nv-kg-node-pulse 1.05s ease-out both;
+}
 
-/* Per-type glow colours */
-.nv-kg-node--path.is-selected     .nv-kg-node-shape { stroke: #89b4fa; }
-.nv-kg-node--module.is-selected   .nv-kg-node-shape { stroke: #a6e3a1; }
-.nv-kg-node--lesson.is-selected   .nv-kg-node-shape { stroke: #f9e2af; }
-.nv-kg-node--artifact.is-selected .nv-kg-node-shape { stroke: #cba6f7; }
+/* Focus mode: dim / neighbor */
+.nv-kg-node.is-dim { opacity: 0.15; pointer-events: none; }
+.nv-kg-node.is-neighbor { opacity: 0.7; }
 
-/* Keyboard focus ring via glow */
+/* Keyboard focus ring */
 .nv-kg-node:focus-visible .nv-kg-node-shape {
-  filter: drop-shadow(0 0 10px rgba(137,180,250,0.8));
-  stroke-width: 2;
+  filter: drop-shadow(0 0 12px rgba(137,180,250,0.7));
+  stroke-width: 2.5;
 }
 
 /* Typography */
 .nv-kg-node-type {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
   font-size: 8px;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   pointer-events: none;
 }
+
 .nv-kg-node-title {
   font-family: inherit;
-  font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.01em;
   pointer-events: none;
 }
-.nv-kg-node-expand {
-  font-family: monospace;
-  font-size: 16px;
+
+.nv-kg-node-title--path     { font-size: 14px; }
+.nv-kg-node-title--module   { font-size: 12px; }
+.nv-kg-node-title--lesson   { font-size: 11px; }
+.nv-kg-node-title--artifact { font-size: 10px; }
+
+/* Count badge */
+.nv-kg-count-badge {
+  stroke-width: 0.8;
+  vector-effect: non-scaling-stroke;
+}
+.nv-kg-count-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
   font-weight: 700;
   pointer-events: none;
 }
 
-/* Reviewed badge */
+/* Status badge */
 .nv-kg-badge--reviewed { fill: #a6e3a1; }
 
-/* ── Edges ───────────────────────────────────────────────────────────────────── */
+/* ── Edges ────────────────────────────────────────────────────────────────── */
 .nv-kg-edge {
-  stroke: rgba(137, 180, 250, 0.18);
-  stroke-width: 1.5;
+  stroke: rgba(137, 180, 250, 0.12);
+  stroke-width: 1.2;
   vector-effect: non-scaling-stroke;
   fill: none;
-  transition: stroke 0.18s ease, stroke-width 0.18s ease, opacity 0.2s ease;
-  pointer-events: none;
-}
-.nv-kg-edge.is-connected {
-  stroke: rgba(137, 180, 250, 0.6);
-  stroke-width: 2;
+  pointer-events: stroke;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+  transition: stroke 0.2s ease, opacity 0.25s ease, stroke-width 0.2s ease;
+  animation: nv-kg-edge-grow 0.52s ease-out both;
 }
 
-/* ── Inspector ───────────────────────────────────────────────────────────────── */
+.nv-kg-edge:hover,
+.nv-kg-edge.is-active {
+  stroke: rgba(137, 180, 250, 0.72);
+  stroke-width: 2.2;
+}
+
+.nv-kg-edge.is-dim {
+  opacity: 0.08;
+}
+
+.nv-kg-svg[data-zoom="far"] .nv-kg-node-type,
+.nv-kg-svg[data-zoom="far"] .nv-kg-detail-hint {
+  opacity: 0;
+}
+
+.nv-kg-svg[data-zoom="far"] .nv-kg-node-title--lesson,
+.nv-kg-svg[data-zoom="far"] .nv-kg-node-title--artifact {
+  opacity: 0;
+}
+
+.nv-kg-svg[data-zoom="medium"] .nv-kg-node-type {
+  opacity: 0.55;
+}
+
+/* ── Inspector ────────────────────────────────────────────────────────────── */
 .nv-kg-inspector {
   position: sticky;
   inset-block-start: 16px;
-  border: 1px solid rgba(137, 180, 250, 0.1);
-  border-radius: 14px;
-  background: rgba(17, 17, 27, 0.95);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-  padding: 20px;
+  border: 1px solid rgba(137, 180, 250, 0.08);
+  border-radius: 16px;
+  background: rgba(15, 15, 23, 0.96);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+  padding: 22px;
   display: grid;
   gap: 14px;
-  max-block-size: calc(70vh + 2rem);
+  max-block-size: calc(72vh + 2rem);
   overflow: auto;
+  backdrop-filter: blur(8px);
 }
 
 .nv-kg-insp-type {
   display: inline-block;
-  padding: 2px 8px;
+  padding: 3px 10px;
   border-radius: 20px;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
-.nv-kg-insp-type--path     { background: rgba(137,180,250,0.15); color: #89b4fa; border: 1px solid rgba(137,180,250,0.35); }
-.nv-kg-insp-type--module   { background: rgba(166,227,161,0.12); color: #a6e3a1; border: 1px solid rgba(166,227,161,0.30); }
-.nv-kg-insp-type--lesson   { background: rgba(249,226,175,0.12); color: #f9e2af; border: 1px solid rgba(249,226,175,0.28); }
-.nv-kg-insp-type--artifact { background: rgba(203,166,247,0.12); color: #cba6f7; border: 1px solid rgba(203,166,247,0.28); }
+
+.nv-kg-insp-type--path     { background: rgba(137,180,250,0.12); color: #89b4fa; border: 1px solid rgba(137,180,250,0.3); }
+.nv-kg-insp-type--module   { background: rgba(166,227,161,0.10); color: #a6e3a1; border: 1px solid rgba(166,227,161,0.25); }
+.nv-kg-insp-type--lesson   { background: rgba(249,226,175,0.10); color: #f9e2af; border: 1px solid rgba(249,226,175,0.25); }
+.nv-kg-insp-type--artifact { background: rgba(203,166,247,0.10); color: #cba6f7; border: 1px solid rgba(203,166,247,0.25); }
 
 .nv-kg-insp-title {
   margin: 0;
-  font-size: 1.05rem;
+  font-size: 1.1rem;
   font-weight: 700;
   color: #cdd6f4;
   line-height: 1.3;
-}
-
-.nv-kg-insp-hint {
-  margin: 0;
-  font-size: 0.8rem;
-  color: rgba(205,214,244,0.45);
-  line-height: 1.6;
-  white-space: pre-line;
 }
 
 .nv-kg-insp-details { display: grid; gap: 6px; }
@@ -229,58 +311,139 @@
 .nv-kg-detail {
   display: grid;
   gap: 2px;
-  padding-block: 6px;
-  border-block-end: 1px solid rgba(255,255,255,0.05);
+  padding-block: 7px;
+  border-block-end: 1px solid rgba(255,255,255,0.04);
 }
+
 .nv-kg-detail__label {
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.68rem;
   text-transform: uppercase;
-  letter-spacing: 0.07em;
-  color: rgba(205,214,244,0.4);
+  letter-spacing: 0.08em;
+  color: rgba(205, 214, 244, 0.35);
 }
+
 .nv-kg-detail__value {
-  font-size: 0.83rem;
-  color: rgba(205,214,244,0.75);
-  line-height: 1.4;
+  font-size: 0.84rem;
+  color: rgba(205, 214, 244, 0.72);
+  line-height: 1.45;
 }
 
 .nv-kg-insp-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  padding-top: 6px;
+  padding-top: 8px;
 }
 
-/* ── Responsive ──────────────────────────────────────────────────────────────── */
+.nv-kg-fallback {
+  border: 1px solid rgba(137, 180, 250, 0.08);
+  border-radius: 16px;
+  background: rgba(15, 15, 23, 0.86);
+  padding: 18px;
+  display: grid;
+  gap: 10px;
+}
+
+.nv-kg-fallback h2,
+.nv-kg-fallback h3 {
+  margin: 0;
+}
+
+.nv-kg-fallback-list {
+  display: grid;
+  gap: 6px;
+  max-block-size: 12rem;
+  overflow: auto;
+  margin: 0;
+}
+
+.nv-kg-fallback-list a {
+  color: #89b4fa;
+}
+
+/* Guide (empty state) */
+.nv-kg-insp-guide {
+  font-size: 0.82rem;
+  color: rgba(205, 214, 244, 0.55);
+  line-height: 1.6;
+}
+
+.nv-kg-insp-guide h3 {
+  margin: 14px 0 6px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: rgba(205, 214, 244, 0.65);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.nv-kg-insp-guide ul {
+  margin: 0;
+  padding-left: 16px;
+}
+
+.nv-kg-insp-guide li {
+  margin-bottom: 4px;
+}
+
+.nv-kg-insp-guide kbd {
+  display: inline-block;
+  padding: 1px 5px;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  background: rgba(255,255,255,0.05);
+  color: #89b4fa;
+}
+
+/* ── Responsive ──────────────────────────────────────────────────────────── */
 @media (max-width: 1024px) {
-  .nv-kg-workspace {
-    grid-template-columns: minmax(0, 1fr) 18rem;
-  }
+  .nv-kg-workspace { grid-template-columns: minmax(0, 1fr) 20rem; }
 }
 
 @media (max-width: 860px) {
-  .nv-kg-workspace {
-    grid-template-columns: 1fr;
-  }
+  .nv-kg-workspace { grid-template-columns: 1fr; }
   .nv-kg-inspector {
     position: static;
-    max-block-size: 28rem;
+    max-block-size: 26rem;
   }
   .nv-kg-legend { display: none; }
 }
 
 @media (max-width: 520px) {
-  .nv-kg-toolbar { gap: 7px; padding: 10px 12px; }
-  .nv-kg-svg { block-size: 55vh; min-block-size: 20rem; }
+  .nv-kg-toolbar { padding: 10px 12px; gap: 8px; }
+  .nv-kg-search-wrap { min-inline-size: 0; max-inline-size: none; inline-size: 100%; }
+  .nv-kg-toolbar-btns { flex-basis: 100%; }
+  .nv-kg-svg { block-size: 50vh; min-block-size: 20rem; }
   .nv-kg-canvas-wrap { min-block-size: 20rem; }
-  .nv-kg-toolbar-btns .nv-kg-tool-btn { font-size: 0.72rem; padding: 4px 7px; }
+  .nv-kg-tool-btn { font-size: 0.72rem; padding: 4px 8px; }
 }
 
-/* ── Reduced motion ──────────────────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
+  .nv-kg-world,
   .nv-kg-node,
   .nv-kg-node-shape,
   .nv-kg-node-glow,
-  .nv-kg-edge { transition: none !important; }
+  .nv-kg-edge {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+@keyframes nv-kg-node-enter {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes nv-kg-node-pulse {
+  0% { opacity: 0.15; stroke-width: 2; }
+  45% { opacity: 0.9; stroke-width: 5; }
+  100% { opacity: 0.55; stroke-width: 2.5; }
+}
+
+@keyframes nv-kg-edge-grow {
+  from { opacity: 0; stroke-dashoffset: 1; }
+  to { opacity: 1; stroke-dashoffset: 0; }
 }

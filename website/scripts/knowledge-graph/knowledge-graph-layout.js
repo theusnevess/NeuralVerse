@@ -1,195 +1,166 @@
 /**
- * NV-900-UIX — Knowledge Graph Layout Engine
+ * NV-900-Graph-Polish — Knowledge Graph Layout Engine (Iteration 2)
  *
- * Cluster-based, top-down tree layout.
- * Stable, deterministic, progressive disclosure aware.
+ * Organic, deterministic atlas placement.
  *
- * Coordinate space: world-space pixels.
- * Each cluster is placed at an (cx, cy) anchor.
- * Nodes within a cluster are positioned relative to that anchor.
+ * Level 1: Learning Paths only.
+ * Level 2: Selected/expanded Path + Modules.
+ * Level 3: Selected/expanded Module + Lessons.
+ * Level 4: Selected/expanded Lesson + Artifacts.
  */
 
-// ── Node visual sizes ──────────────────────────────────────────────────────────
+// ── Node visual sizes (larger than Iteration 1) ─────────────────────────────
 export const NODE_SIZES = {
-  path:     { w: 220, h: 64 },
-  module:   { w: 170, h: 50 },
-  lesson:   { w: 144, h: 40 },
-  artifact: { w: 120, h: 30 },
+  path:     { w: 360, h: 118 },
+  module:   { w: 260, h: 86 },
+  lesson:   { w: 210, h: 66 },
+  artifact: { w: 160, h: 46 },
 };
 
-// ── Spacing constants ─────────────────────────────────────────────────────────
-const CLUSTER_COLS       = 4;    // paths per row
-const CLUSTER_SLOT_W     = 860;  // horizontal slot per cluster (px)
-const CLUSTER_SLOT_H     = 360;  // vertical slot per cluster (px, unexpanded)
-const CLUSTER_GAP_X      = 200;  // gap between cluster columns
-const CLUSTER_GAP_Y      = 220;  // gap between cluster rows
-const ROW_STAGGER        = 180;  // x-offset for odd rows
+// ── Spiral placement constants ───────────────────────────────────────────────
+const GOLDEN_ANGLE = Math.PI * (3 - Math.sqrt(5));  // ≈2.399 radians
+const SPIRAL_BASE  = 120;
+const SPIRAL_GROWTH = 178;
+const CLUSTER_PAD  = 430;
 
-const PATH_TO_MOD_Y      = 110;  // vertical gap: path → module layer
-const MOD_TO_LES_Y       = 100;  // vertical gap: module → lesson layer
-const LES_TO_ART_Y       = 80;   // vertical gap: lesson → artifact layer
-const SIBLING_GAP_MOD    = 24;   // horizontal gap between module subtrees
-const SIBLING_GAP_LES    = 14;   // horizontal gap between lesson subtrees
-const SIBLING_GAP_ART    = 10;   // horizontal gap between artifact nodes
+// ── Helpers ─────────────────────────────────────────────────────────────────
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
-
-/** Return all module IDs belonging to a path (from contains edges). */
 function getChildIds(parentId, edges) {
   return edges
     .filter(e => e.type === 'contains' && e.source === parentId)
     .map(e => e.target);
 }
 
-/** Subtree width of a module (depends on whether lessons are expanded). */
-function lessonSubtreeWidth(lessonId, expandedLessons, edges) {
-  if (!expandedLessons.has(lessonId)) return NODE_SIZES.lesson.w;
-  const artIds = getChildIds(lessonId, edges);
-  if (!artIds.length) return NODE_SIZES.lesson.w;
-  const total = artIds.length * NODE_SIZES.artifact.w + (artIds.length - 1) * SIBLING_GAP_ART;
-  return Math.max(NODE_SIZES.lesson.w, total);
-}
-
-function moduleSubtreeWidth(moduleId, expandedModules, expandedLessons, edges) {
-  if (!expandedModules.has(moduleId)) return NODE_SIZES.module.w;
-  const lessonIds = getChildIds(moduleId, edges);
-  if (!lessonIds.length) return NODE_SIZES.module.w;
-  const total = lessonIds.reduce((s, lid) =>
-    s + lessonSubtreeWidth(lid, expandedLessons, edges), 0
-  ) + (lessonIds.length - 1) * SIBLING_GAP_LES;
-  return Math.max(NODE_SIZES.module.w, total);
-}
-
-// ── Cluster-level layout ──────────────────────────────────────────────────────
-
-/**
- * Compute (x, y) positions for all visible nodes within one cluster.
- * Returns an array of { id, x, y, type, ...node } in world space.
- * All positions are absolute (anchor already added).
- */
-function layoutCluster(pathNode, graph, expandedModules, expandedLessons, anchorX, anchorY) {
-  const { edges, nodeById } = graph;
+function placeChildren(parent, childIds, graph, radius, arcOffset = 0) {
   const nodes = [];
-
-  // ── Path node ───────────────────────────────────────────────────
-  const pathX = anchorX;
-  const pathY = anchorY;
-  nodes.push({ ...pathNode, wx: pathX, wy: pathY });
-
-  // ── Modules ─────────────────────────────────────────────────────
-  const moduleIds = getChildIds(pathNode.id, edges);
-  const modWidths = moduleIds.map(mid =>
-    moduleSubtreeWidth(mid, expandedModules, expandedLessons, edges)
-  );
-  const totalModW = modWidths.reduce((s, w) => s + w, 0)
-    + Math.max(0, moduleIds.length - 1) * SIBLING_GAP_MOD;
-  let modCursorX = pathX - totalModW / 2;
-  const modY = pathY + PATH_TO_MOD_Y;
-
-  moduleIds.forEach((moduleId, mi) => {
-    const moduleNode = nodeById.get(moduleId);
-    if (!moduleNode) return;
-    const modW = modWidths[mi];
-    const modCenterX = modCursorX + modW / 2;
-    nodes.push({ ...moduleNode, wx: modCenterX, wy: modY });
-
-    // ── Lessons ────────────────────────────────────────────────────
-    if (expandedModules.has(moduleId)) {
-      const lessonIds = getChildIds(moduleId, edges);
-      const lesWidths = lessonIds.map(lid =>
-        lessonSubtreeWidth(lid, expandedLessons, edges)
-      );
-      const totalLesW = lesWidths.reduce((s, w) => s + w, 0)
-        + Math.max(0, lessonIds.length - 1) * SIBLING_GAP_LES;
-      let lesCursorX = modCenterX - totalLesW / 2;
-      const lesY = modY + MOD_TO_LES_Y;
-
-      lessonIds.forEach((lessonId, li) => {
-        const lessonNode = nodeById.get(lessonId);
-        if (!lessonNode) return;
-        const lesW = lesWidths[li];
-        const lesCenterX = lesCursorX + lesW / 2;
-        nodes.push({ ...lessonNode, wx: lesCenterX, wy: lesY });
-
-        // ── Artifacts ──────────────────────────────────────────────
-        if (expandedLessons.has(lessonId)) {
-          const artIds = getChildIds(lessonId, edges);
-          const totalArtW = artIds.length * NODE_SIZES.artifact.w
-            + Math.max(0, artIds.length - 1) * SIBLING_GAP_ART;
-          let artCursorX = lesCenterX - totalArtW / 2;
-          const artY = lesY + LES_TO_ART_Y;
-          artIds.forEach(artId => {
-            const artNode = nodeById.get(artId);
-            if (!artNode) return;
-            nodes.push({ ...artNode, wx: artCursorX + NODE_SIZES.artifact.w / 2, wy: artY });
-            artCursorX += NODE_SIZES.artifact.w + SIBLING_GAP_ART;
-          });
-        }
-
-        lesCursorX += lesW + SIBLING_GAP_LES;
-      });
-    }
-
-    modCursorX += modW + SIBLING_GAP_MOD;
+  const count = childIds.length;
+  childIds.forEach((childId, index) => {
+    const child = graph.nodeById.get(childId);
+    if (!child) return;
+    const spread = Math.min(Math.PI * 1.35, Math.PI * 0.42 + count * 0.22);
+    const t = count === 1 ? 0.5 : index / (count - 1);
+    const angle = arcOffset - spread / 2 + t * spread;
+    const drift = ((index % 2 === 0 ? 1 : -1) * (18 + (index % 3) * 14));
+    nodes.push({
+      ...child,
+      wx: parent.wx + Math.cos(angle) * (radius + drift),
+      wy: parent.wy + Math.sin(angle) * (radius - drift * 0.35),
+      _parentId: parent.id,
+    });
   });
-
   return nodes;
 }
 
-// ── Top-level entry points ────────────────────────────────────────────────────
+function avoidCollisions(nodes) {
+  for (let pass = 0; pass < 30; pass++) {
+    let moved = false;
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        const a = nodes[i], b = nodes[j];
+        const as = NODE_SIZES[a.type] || NODE_SIZES.lesson;
+        const bs = NODE_SIZES[b.type] || NODE_SIZES.lesson;
+        const minDist = Math.max(as.w, bs.w) * 0.92 + Math.max(as.h, bs.h) * 1.1 + 88;
+        const dx = b.wx - a.wx;
+        const dy = b.wy - a.wy;
+        const dist = Math.max(1, Math.sqrt(dx * dx + dy * dy));
+        if (dist < minDist) {
+          const push = (minDist - dist) * 0.5;
+          const nx = dx / dist;
+          const ny = dy / dist;
+          if (!a._locked) { a.wx -= nx * push; a.wy -= ny * push; }
+          if (!b._locked) { b.wx += nx * push; b.wy += ny * push; }
+          moved = true;
+        }
+      }
+    }
+    if (!moved) break;
+  }
+}
 
-/**
- * Compute anchor (world-space x,y) for each Learning Path cluster.
- * Stable and deterministic — independent of expansion state.
- */
+function layoutExpandedPath(pathNode, graph, expandedPaths, expandedModules, expandedLessons, anchor) {
+  const path = { ...pathNode, wx: anchor.x, wy: anchor.y, _locked: true };
+  const nodes = [path];
+  if (!expandedPaths.has(pathNode.id)) return nodes;
+
+  const modules = placeChildren(path, getChildIds(path.id, graph.edges), graph, 520, Math.PI / 2);
+  nodes.push(...modules);
+  modules.forEach(module => {
+    if (!expandedModules.has(module.id)) return;
+    const lessons = placeChildren(module, getChildIds(module.id, graph.edges), graph, 400, Math.PI / 2 + 0.28);
+    nodes.push(...lessons);
+    lessons.forEach(lesson => {
+      if (!expandedLessons.has(lesson.id)) return;
+      nodes.push(...placeChildren(lesson, getChildIds(lesson.id, graph.edges), graph, 430, Math.PI / 2 - 0.18));
+    });
+  });
+  avoidCollisions(nodes);
+  return nodes;
+}
+
+// ── Organic cluster anchor placement (golden-angle spiral) ──────────────────
+
 export function computeClusterAnchors(graph) {
   const paths = graph.nodes.filter(n => n.type === 'path');
   const anchors = new Map();
+  const n = paths.length;
+
+  // Place clusters on a Fermat spiral with golden-angle separation.
+  // This produces an organic, non-grid distribution.
   paths.forEach((path, i) => {
-    const col = i % CLUSTER_COLS;
-    const row = Math.floor(i / CLUSTER_COLS);
-    const stagger = row % 2 === 1 ? ROW_STAGGER : 0;
-    anchors.set(path.id, {
-      x: 120 + col * (CLUSTER_SLOT_W + CLUSTER_GAP_X) + stagger,
-      y: 80  + row * (CLUSTER_SLOT_H + CLUSTER_GAP_Y),
-    });
+    const angle = i * GOLDEN_ANGLE;
+    const radius = SPIRAL_BASE + SPIRAL_GROWTH * Math.sqrt(i + 1);
+    const x = Math.cos(angle) * radius * 1.62;
+    const y = Math.sin(angle) * radius * 1.08;
+    anchors.set(path.id, { x, y });
   });
+
+  // Ensure minimum separation (collision pass)
+  const ids = [...anchors.keys()];
+  for (let pass = 0; pass < 8; pass++) {
+    let moved = false;
+    for (let i = 0; i < ids.length; i++) {
+      for (let j = i + 1; j < ids.length; j++) {
+        const a = anchors.get(ids[i]);
+        const b = anchors.get(ids[j]);
+        const dx = b.x - a.x, dy = b.y - a.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < CLUSTER_PAD && dist > 0) {
+          const push = (CLUSTER_PAD - dist) / 2;
+          const nx = dx / dist, ny = dy / dist;
+          a.x -= nx * push; a.y -= ny * push;
+          b.x += nx * push; b.y += ny * push;
+          moved = true;
+        }
+      }
+    }
+    if (!moved) break;
+  }
+
   return anchors;
 }
 
-/**
- * Compute world-space positions for ALL visible nodes.
- * Returns Map<nodeId, {wx, wy, ...node}>
- */
-export function computeLayout(graph, expandedModules, expandedLessons, clusterAnchors) {
-  const positions = new Map();
-  const paths = graph.nodes.filter(n => n.type === 'path');
-  paths.forEach(pathNode => {
+// ── Public API ──────────────────────────────────────────────────────────────
+
+export function computeLayout(graph, expandedPaths, expandedModules, expandedLessons, clusterAnchors) {
+  const positioned = [];
+  graph.nodes.filter(n => n.type === 'path').forEach(pathNode => {
     const anchor = clusterAnchors.get(pathNode.id) || { x: 0, y: 0 };
-    const clusterNodes = layoutCluster(
-      pathNode, graph, expandedModules, expandedLessons, anchor.x, anchor.y
-    );
-    clusterNodes.forEach(n => positions.set(n.id, n));
+    layoutExpandedPath(pathNode, graph, expandedPaths, expandedModules, expandedLessons, anchor)
+      .forEach(n => positioned.push(n));
   });
+  avoidCollisions(positioned);
+  const positions = new Map();
+  positioned.forEach(n => positions.set(n.id, n));
   return positions;
 }
 
-/**
- * Compute visible edges for the current expansion state.
- * Collapses edges to "path → module → collapsed-count" when children are hidden.
- */
 export function computeVisibleEdges(graph, nodePositions) {
   const visibleIds = new Set(nodePositions.keys());
   return graph.edges.filter(e =>
-    e.type === 'contains'
-      && visibleIds.has(e.source)
-      && visibleIds.has(e.target)
+    e.type === 'contains' && visibleIds.has(e.source) && visibleIds.has(e.target)
   );
 }
 
-/**
- * Compute canvas bounds from all visible node positions.
- */
 export function computeBounds(nodePositions) {
   let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
   nodePositions.forEach(n => {
@@ -200,6 +171,6 @@ export function computeBounds(nodePositions) {
     maxX = Math.max(maxX, n.wx + hw);
     maxY = Math.max(maxY, n.wy + hh);
   });
-  return { minX, minY, maxX, maxY,
-    width: maxX - minX + 200, height: maxY - minY + 200 };
+  if (minX === Infinity) return { minX: 0, minY: 0, maxX: 900, maxY: 600, width: 900, height: 600 };
+  return { minX, minY, maxX, maxY, width: maxX - minX + 300, height: maxY - minY + 300 };
 }
