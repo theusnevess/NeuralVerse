@@ -481,3 +481,22 @@
   background-color: color-mix(in srgb, var(--sys-color-accent-primary) 10%, transparent);
   box-shadow: 0 0 4px color-mix(in srgb, var(--sys-color-accent-primary) 30%, transparent);
 }
+.nv-search-graph-link {
+  align-self: flex-start;
+  margin-top: var(--ref-space-200);
+  padding: var(--ref-space-100) var(--ref-space-300);
+  border: var(--sys-border-subtle) solid color-mix(in srgb, var(--sys-color-accent-primary) 52%, transparent);
+  border-radius: var(--ref-radius-round);
+  background: color-mix(in srgb, var(--sys-color-accent-primary) 10%, transparent);
+  color: var(--sys-color-accent-primary);
+  font: inherit;
+  font-size: var(--sys-font-caption-size);
+  cursor: pointer;
+}
+
+.nv-search-graph-link:hover,
+.nv-search-graph-link:focus-visible {
+  background: color-mix(in srgb, var(--sys-color-accent-primary) 18%, transparent);
+  outline: var(--ref-border-width-emphasis) solid color-mix(in srgb, var(--sys-color-accent-primary) 40%, transparent);
+  outline-offset: var(--ref-space-100);
+}

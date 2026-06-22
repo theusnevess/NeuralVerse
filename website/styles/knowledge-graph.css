@@ -1,0 +1,300 @@
+.nv-kg {
+  display: grid;
+  gap: var(--sys-space-stack-md);
+  max-inline-size: 100%;
+}
+
+.nv-kg-hero {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+}
+
+.nv-kg-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sys-space-inline-sm);
+  align-items: stretch;
+  padding: var(--sys-space-inset-md);
+  border: var(--sys-border-subtle) solid var(--sys-premium-border);
+  border-radius: var(--sys-premium-radius-card);
+  background: color-mix(in srgb, var(--sys-premium-surface) 88%, transparent);
+  box-shadow: var(--sys-premium-shadow-card);
+}
+
+.nv-kg-control,
+.nv-kg-search {
+  min-inline-size: 13rem;
+}
+
+.nv-kg-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ref-space-200);
+  align-items: center;
+  min-inline-size: 0;
+  margin: 0;
+  padding: var(--ref-space-200) var(--ref-space-300);
+  border: var(--sys-border-subtle) solid var(--sys-color-border-subtle);
+  border-radius: var(--sys-radius-surface);
+}
+
+.nv-kg-filter legend {
+  padding-inline: var(--ref-space-100);
+  color: var(--sys-color-text-muted);
+  font-family: var(--sys-font-code-family);
+  font-size: var(--sys-font-caption-size);
+}
+
+.nv-kg-check {
+  display: inline-flex;
+  gap: var(--ref-space-100);
+  align-items: center;
+  color: var(--sys-color-text-secondary);
+  font-size: var(--sys-font-caption-size);
+  text-transform: capitalize;
+}
+
+.nv-kg-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(18rem, 24rem);
+  gap: var(--sys-space-stack-md);
+  align-items: start;
+}
+
+.nv-kg-canvas-panel,
+.nv-kg-inspector,
+.nv-kg-fallback {
+  border: var(--sys-border-subtle) solid var(--sys-premium-border);
+  border-radius: var(--sys-premium-radius-card);
+  background:
+    radial-gradient(circle at 18% 12%, color-mix(in srgb, var(--sys-color-accent-primary) 12%, transparent), transparent 32%),
+    color-mix(in srgb, var(--sys-premium-surface) 92%, transparent);
+  box-shadow: var(--sys-premium-shadow-card);
+}
+
+.nv-kg-canvas-panel {
+  min-block-size: 36rem;
+  overflow: hidden;
+}
+
+.nv-kg-canvas {
+  inline-size: 100%;
+  min-block-size: 36rem;
+}
+
+.nv-kg-svg {
+  display: block;
+  inline-size: 100%;
+  block-size: min(72vh, 48rem);
+  min-block-size: 34rem;
+  background:
+    linear-gradient(color-mix(in srgb, var(--sys-color-accent-primary) 8%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--sys-color-accent-primary) 8%, transparent) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+.nv-kg-svg:focus-visible,
+.nv-kg-node:focus-visible .nv-kg-node-shape,
+.nv-kg-edge:focus-visible {
+  outline: none;
+  filter: drop-shadow(0 0 8px color-mix(in srgb, var(--sys-color-accent-primary) 65%, transparent));
+}
+
+.nv-kg-edge {
+  fill: none;
+  stroke: color-mix(in srgb, var(--sys-color-text-muted) 34%, transparent);
+  stroke-width: 1.4;
+  vector-effect: non-scaling-stroke;
+  pointer-events: stroke;
+  cursor: pointer;
+}
+
+.nv-kg-edge--contains {
+  stroke: color-mix(in srgb, var(--sys-color-accent-primary) 42%, transparent);
+}
+
+.nv-kg-edge--sibling {
+  stroke-dasharray: 5 7;
+}
+
+.nv-kg-edge--prerequisite,
+.nv-kg-edge--recommended_before,
+.nv-kg-edge--recommended_after {
+  stroke: color-mix(in srgb, var(--ref-color-blue-500) 48%, transparent);
+}
+
+.nv-kg-edge--complementary {
+  stroke: color-mix(in srgb, var(--ref-color-green-500) 42%, transparent);
+}
+
+.nv-kg-edge--alternative {
+  stroke: color-mix(in srgb, var(--ref-color-amber-500) 42%, transparent);
+}
+
+.nv-kg-edge.is-selected {
+  stroke: var(--sys-color-accent-primary);
+  stroke-width: 2.6;
+}
+
+.nv-kg-arrow {
+  fill: color-mix(in srgb, var(--sys-color-accent-primary) 56%, transparent);
+}
+
+.nv-kg-node {
+  cursor: pointer;
+}
+
+.nv-kg-node-shape {
+  fill: color-mix(in srgb, var(--sys-color-surface-raised) 88%, transparent);
+  stroke: var(--sys-color-border-subtle);
+  stroke-width: 1.2;
+  vector-effect: non-scaling-stroke;
+}
+
+.nv-kg-node--path .nv-kg-node-shape {
+  stroke: color-mix(in srgb, var(--sys-color-accent-primary) 70%, transparent);
+}
+
+.nv-kg-node--module .nv-kg-node-shape {
+  stroke: color-mix(in srgb, var(--ref-color-blue-500) 60%, transparent);
+}
+
+.nv-kg-node--lesson .nv-kg-node-shape {
+  stroke: color-mix(in srgb, var(--ref-color-green-500) 52%, transparent);
+}
+
+.nv-kg-node--artifact .nv-kg-node-shape {
+  stroke: color-mix(in srgb, var(--ref-color-amber-500) 50%, transparent);
+}
+
+.nv-kg-node.is-selected .nv-kg-node-shape,
+.nv-kg-node.is-focus .nv-kg-node-shape {
+  fill: color-mix(in srgb, var(--sys-color-accent-primary) 14%, var(--sys-color-surface-raised));
+  stroke: var(--sys-color-accent-primary);
+  stroke-width: 2;
+}
+
+.nv-kg-node-type {
+  fill: var(--sys-color-text-muted);
+  font-family: var(--sys-font-code-family);
+  font-size: 10px;
+  text-transform: uppercase;
+}
+
+.nv-kg-node-title {
+  fill: var(--sys-color-text-primary);
+  font-size: 12px;
+  font-weight: var(--ref-font-weight-semibold);
+}
+
+.nv-kg-node-badge--reviewed {
+  fill: var(--sys-color-semantic-success);
+}
+
+.nv-kg-node-badge--viz {
+  fill: var(--sys-color-accent-primary);
+}
+
+.nv-kg-node-badge--bookmark {
+  fill: var(--ref-color-amber-500);
+}
+
+.nv-kg-inspector {
+  position: sticky;
+  inset-block-start: var(--sys-space-stack-md);
+  display: grid;
+  gap: var(--sys-space-stack-sm);
+  padding: var(--sys-space-inset-md);
+  max-block-size: calc(100vh - 8rem);
+  overflow: auto;
+}
+
+.nv-kg-inspector h2,
+.nv-kg-fallback h2,
+.nv-kg-fallback h3 {
+  margin: 0;
+}
+
+.nv-kg-inspector-list,
+.nv-kg-detail {
+  display: grid;
+  gap: var(--ref-space-100);
+}
+
+.nv-kg-detail {
+  padding-block: var(--ref-space-200);
+  border-block-end: var(--sys-border-subtle) solid var(--sys-color-border-subtle);
+}
+
+.nv-kg-detail__label {
+  color: var(--sys-color-text-muted);
+  font-family: var(--sys-font-code-family);
+  font-size: var(--sys-font-caption-size);
+}
+
+.nv-kg-detail__value {
+  color: var(--sys-color-text-secondary);
+  line-height: var(--ref-font-line-height-relaxed);
+}
+
+.nv-kg-fallback {
+  display: grid;
+  gap: var(--sys-space-stack-sm);
+  padding: var(--sys-space-inset-md);
+}
+
+.nv-kg-fallback-list {
+  display: grid;
+  gap: var(--ref-space-200);
+  max-block-size: 16rem;
+  overflow: auto;
+  margin: 0;
+}
+
+.nv-kg-fallback-list a {
+  color: var(--sys-color-accent-primary);
+}
+
+@media (max-width: 900px) {
+  .nv-kg-hero,
+  .nv-kg-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .nv-kg-inspector {
+    position: static;
+    max-block-size: none;
+  }
+}
+
+@media (max-width: 520px) {
+  .nv-kg-toolbar {
+    padding: var(--sys-space-inset-sm);
+  }
+
+  .nv-kg-control,
+  .nv-kg-search,
+  .nv-kg-toolbar .nv-button {
+    inline-size: 100%;
+  }
+
+  .nv-kg-filter {
+    inline-size: 100%;
+  }
+
+  .nv-kg-canvas-panel,
+  .nv-kg-canvas {
+    min-block-size: 24rem;
+  }
+
+  .nv-kg-svg {
+    block-size: 24rem;
+    min-block-size: 24rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nv-kg * {
+    scroll-behavior: auto;
+  }
+}

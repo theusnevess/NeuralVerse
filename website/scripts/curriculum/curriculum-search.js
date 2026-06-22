@@ -444,6 +444,19 @@ export function createCurriculumSearchController(options = {}) {
       matchInfoDiv.innerHTML = matchInfoHtml + evidences.join(' ');
       anchor.appendChild(matchInfoDiv);
 
+      const graphLink = document.createElement('button');
+      graphLink.type = 'button';
+      graphLink.className = 'nv-search-graph-link';
+      graphLink.textContent = 'View in Graph';
+      graphLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        closeModal();
+        const mode = item.type === 'artifact' ? 'artifact-neighborhood' : item.type === 'lesson' ? 'focused-lesson' : 'overview';
+        window.location.hash = `#/knowledge-graph?mode=${mode}&focus=${encodeURIComponent(item.id)}`;
+      });
+      anchor.appendChild(graphLink);
+
       anchor.addEventListener('click', (e) => {
         e.preventDefault();
         closeModal();

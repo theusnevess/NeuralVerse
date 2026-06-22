@@ -14,6 +14,17 @@ const ROUTES = [
     isImplemented: true
   },
   {
+    id: 'knowledge-graph',
+    path: '#/knowledge-graph',
+    pattern: /^#\/knowledge-graph(?:\?.*)?$/,
+    label: 'Knowledge Graph',
+    title: 'Knowledge Graph & Semantic Exploration',
+    description: 'Explore deterministic curriculum relationships across paths, modules, lessons, and artifacts.',
+    region: 'R3 Workspace',
+    navigationGroup: 'primary',
+    isImplemented: true
+  },
+  {
     id: 'retrieval-playground',
     path: '#/retrieval-playground',
     pattern: /^#\/retrieval-playground$/,

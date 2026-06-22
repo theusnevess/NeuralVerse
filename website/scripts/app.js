@@ -4,6 +4,7 @@ import { createProgressController } from "./progress/progress-controller.js?v=9"
 import { createWorkspaceController } from "./workspace/workspace-controller.js?v=9";
 import { createBreadcrumbsController } from "./navigation/breadcrumbs-controller.js?v=10";
 import { createCurriculumSearchController } from "./curriculum/curriculum-search.js?v=13";
+import { createKnowledgeGraphController } from "./knowledge-graph/knowledge-graph-controller.js?v=1";
 
 window.NV_DEBUG = window.NV_DEBUG || false;
 
@@ -64,6 +65,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   breadcrumbsController.init();
 
+  const knowledgeGraphController = createKnowledgeGraphController({
+    root: document,
+  });
+
+  knowledgeGraphController.init();
+
   window.NeuralVerse = window.NeuralVerse || {};
   window.NeuralVerse.curriculumController = curriculumController;
   window.NeuralVerse.searchController = searchController;
@@ -71,6 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
   window.NeuralVerse.progressController = progressController;
   window.NeuralVerse.workspaceController = workspaceController;
   window.NeuralVerse.breadcrumbsController = breadcrumbsController;
+  window.NeuralVerse.knowledgeGraphController = knowledgeGraphController;
 });
 
 function shiftFocusToWorkspace() {

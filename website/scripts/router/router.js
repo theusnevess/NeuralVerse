@@ -124,6 +124,11 @@ class ViewController {
           <div class="nv-stack nv-stack--gap-md" data-curriculum-root></div>
         </div>
       `,
+      'knowledge-graph': `
+        <div class="nv-stack nv-stack--gap-md">
+          <div class="nv-stack nv-stack--gap-md" data-knowledge-graph-root></div>
+        </div>
+      `,
       'module-detail': `
         <div class="nv-stack nv-stack--gap-md">
           <div class="nv-stack nv-stack--gap-md" data-curriculum-root></div>
