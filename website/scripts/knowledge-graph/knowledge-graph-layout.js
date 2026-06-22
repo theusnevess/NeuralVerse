@@ -100,7 +100,8 @@ function layoutModuleFocus(graph, module) {
   getSiblings(graph, module).slice(0, 8).forEach((sibling, index, siblings) => {
     const side = index < siblings.length / 2 ? -1 : 1;
     const offsetIndex = index < siblings.length / 2 ? index : index - Math.ceil(siblings.length / 2);
-    addNode(positions, sibling, side * (430 + offsetIndex * 245), 0, 'sibling');
+    // Use 320 instead of 245 for offset to prevent overlap (module width is 280)
+    addNode(positions, sibling, side * (440 + offsetIndex * 320), 0, 'sibling');
   });
   addNode(positions, module, 0, 0, 'selected');
   placeRow(getChildren(graph, module.id), ROW_GAP, { role: 'child', arc: true, maxVisible: 10 })
@@ -113,8 +114,9 @@ function layoutLessonFocus(graph, lesson) {
   const parent = getParent(graph, lesson.id);
   addNode(positions, parent, 0, -ROW_GAP, 'parent');
   getSiblings(graph, lesson).slice(0, 8).forEach((sibling, index, siblings) => {
-    const start = -((siblings.length - 1) * 230) / 2;
-    addNode(positions, sibling, start + index * 230, -80, 'sibling');
+    // Lesson width is 230, use 280 gap to leave 50px padding
+    const start = -((siblings.length - 1) * 280) / 2;
+    addNode(positions, sibling, start + index * 280, -90, 'sibling');
   });
   addNode(positions, lesson, 0, 0, 'selected');
   placeRow(getChildren(graph, lesson.id), ROW_GAP, { role: 'child', arc: true, gap: 250, maxVisible: 12 })
