@@ -109,7 +109,6 @@
 .nv-curriculum-card {
   position: relative;
   overflow: hidden;
-  min-block-size: 100%;
 }
 
 .nv-curriculum-card::before {
