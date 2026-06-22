@@ -28,7 +28,6 @@ export function createKnowledgeGraphController(options = {}) {
     focusedNodeId: null,
     expandedNodeIds: new Set(),
     selectedNodeId: null,
-    stageHistory: [],
   };
 
   function target() { return root.querySelector('[data-knowledge-graph-root]'); }
@@ -48,14 +47,13 @@ export function createKnowledgeGraphController(options = {}) {
     nodePositions.forEach((node, id) => {
       const children = getChildren(id);
       node._childCount = children.length;
-      node._expanded = state.expandedNodeIds.has(id) || state.focusedNodeId === id;
+      node._expanded = state.expandedNodeIds.has(id) || state.selectedNodeId === id;
       if (node.type === 'path') {
         const modules = children;
         const lessons = modules.flatMap((module) => getChildren(module.id));
         const artifacts = lessons.flatMap((lesson) => getChildren(lesson.id));
         const reviewed = [...modules, ...lessons, ...artifacts].filter((item) => item.status === 'Reviewed').length;
-        const total = modules.length + lessons.length + artifacts.length;
-        node._summary = { modules: modules.length, lessons: lessons.length, artifacts: artifacts.length, reviewed, total };
+        node._summary = { modules: modules.length, lessons: lessons.length, artifacts: artifacts.length, reviewed };
       }
     });
   }
@@ -65,7 +63,7 @@ export function createKnowledgeGraphController(options = {}) {
     annotateNodes();
     visibleEdges = computeVisibleEdges(graph, nodePositions).filter((edge) => {
       if (edge.type === 'contains') return true;
-      return state.mode === 'artifact' && (edge.source === state.focusedNodeId || edge.target === state.focusedNodeId);
+      return state.mode === 'artifact' && (edge.source === state.selectedNodeId || edge.target === state.selectedNodeId);
     });
   }
 
@@ -88,7 +86,7 @@ export function createKnowledgeGraphController(options = {}) {
     renderer.update(nodePositions, visibleEdges);
     if (state.selectedNodeId) renderer.applyFocus(state.selectedNodeId, getNeighborIds(state.selectedNodeId));
     else renderer.applyFocus('', new Set());
-    if (center && state.focusedNodeId) renderer.centerOn(state.focusedNodeId, nodePositions, true);
+    if (center && state.selectedNodeId) renderer.centerOn(state.selectedNodeId, nodePositions, true);
     else if (center) renderer.fitAll(computeBounds(nodePositions));
     renderToolbar();
     renderInspector();
@@ -98,41 +96,24 @@ export function createKnowledgeGraphController(options = {}) {
   function focusNode(nodeId) {
     const node = graph.nodeById.get(nodeId);
     if (!node) return;
+    
+    // Select the node
+    state.selectedNodeId = node.id;
 
-    // Toggle: if clicking the already focused node, close it by going to its parent
-    if (state.focusedNodeId === nodeId) {
-      const parent = getParent(node.id);
-      if (parent) {
-        if (state.stageHistory.length > 0 && state.stageHistory[state.stageHistory.length - 1] === parent.id) {
-          state.stageHistory.pop();
-        }
-        nodeId = parent.id;
-      } else {
-        resetGraph();
-        return;
-      }
+    // Toggle expansion
+    if (state.expandedNodeIds.has(node.id)) {
+      state.expandedNodeIds.delete(node.id);
     } else {
-      if (state.focusedNodeId && state.focusedNodeId !== nodeId) {
-        state.stageHistory.push(state.focusedNodeId);
-      }
+      state.expandedNodeIds.add(node.id);
+      // Ensure lineage is open so we can see it (e.g. if found via search)
+      getLineageIds(node).forEach(id => {
+        if (id !== node.id) state.expandedNodeIds.add(id);
+      });
     }
 
-    const newNode = graph.nodeById.get(nodeId);
-    state.mode = MODE_BY_TYPE[newNode.type] || 'overview';
-    state.focusedNodeId = newNode.id;
-    state.selectedNodeId = newNode.id;
-    state.expandedNodeIds = getLineageIds(newNode);
     applyCurrentRender(true);
-    renderer.pulseNode(newNode.id);
-    renderer.focusNodeEl(newNode.id);
-  }
-
-  function goBack() {
-    if (state.stageHistory.length === 0) { resetGraph(); return; }
-    const prevId = state.stageHistory.pop();
-    const prevNode = graph.nodeById.get(prevId);
-    if (prevNode) focusNode(prevId);
-    else resetGraph();
+    renderer.pulseNode(node.id);
+    renderer.focusNodeEl(node.id);
   }
 
   function resetGraph() {
@@ -140,7 +121,6 @@ export function createKnowledgeGraphController(options = {}) {
     state.focusedNodeId = null;
     state.selectedNodeId = null;
     state.expandedNodeIds.clear();
-    state.stageHistory = [];
     applyCurrentRender(true);
   }
 
@@ -242,7 +222,7 @@ export function createKnowledgeGraphController(options = {}) {
     expansionGroup.append(
       button('Expand', () => state.selectedNodeId && focusNode(state.selectedNodeId)),
       button('Collapse', resetGraph),
-      button('Back', goBack),
+      button('Back to Parent', () => { const node = graph.nodeById.get(state.focusedNodeId); const parent = node && getParent(node.id); parent ? focusNode(parent.id) : resetGraph(); }),
     );
 
     const cameraGroup = group('Camera');
@@ -297,7 +277,7 @@ export function createKnowledgeGraphController(options = {}) {
       button('Focus', () => focusNode(node.id)),
       button('Expand children', () => focusNode(node.id)),
       button('Collapse', resetGraph),
-      button('Back', goBack),
+      button('Back to parent', () => { const parent = getParent(node.id); parent ? focusNode(parent.id) : resetGraph(); }),
       button('Open resource', () => { window.location.hash = node.route; }, 'primary'),
       button('Center view', () => renderer.centerOn(node.id, nodePositions)),
     );
