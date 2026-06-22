@@ -1,4 +1,5 @@
 import { createCurriculumService } from './curriculum-service.js?v=1';
+import { hasVisualization, createVisualization } from '../visualizations/visualization-registry.js';
 
 function el(tagName, className = '', text = '') {
   const node = document.createElement(tagName);
@@ -327,6 +328,18 @@ function setWorkspace(title, description) {
 export function createCurriculumController(options = {}) {
   const root = options.root || document;
   const service = options.service || createCurriculumService();
+  let activeVisualization = null;
+
+  function cleanupActiveVisualization() {
+    if (activeVisualization) {
+      try {
+        activeVisualization.destroy();
+      } catch (e) {
+        console.error('Error destroying visualization:', e);
+      }
+      activeVisualization = null;
+    }
+  }
 
   async function findRouteForArtifact(artifactId) {
     const index = await service.getIndex();
@@ -885,10 +898,25 @@ export function createCurriculumController(options = {}) {
     mainContent.append(banner);
 
     if (artifact.type === 'Interactive Visualization') {
-      const notice = el('aside', 'nv-panel nv-curriculum-callout');
-      notice.append(el('strong', '', 'Specification only'));
-      notice.append(el('p', 'nv-muted', 'This artifact describes a future interactive visualization. No executable interaction is fabricated in the frontend.'));
-      mainContent.append(notice);
+      if (hasVisualization(artifactId)) {
+        const vizContainer = el('div', 'nv-visualization-container');
+        vizContainer.id = `visualization-${artifactId}`;
+        mainContent.append(vizContainer);
+        try {
+          activeVisualization = createVisualization(artifactId);
+          if (activeVisualization) {
+            activeVisualization.initialize(vizContainer);
+          }
+        } catch (err) {
+          console.error(`Failed to initialize visualization for ${artifactId}:`, err);
+          vizContainer.textContent = 'Failed to load interactive visualization.';
+        }
+      } else {
+        const notice = el('aside', 'nv-panel nv-curriculum-callout');
+        notice.append(el('strong', '', 'Specification only'));
+        notice.append(el('p', 'nv-muted', 'This artifact describes a future interactive visualization. No executable interaction is fabricated in the frontend.'));
+        mainContent.append(notice);
+      }
     }
 
     const readerKind = artifact.type === 'Explanatory Text' ? 'explanatory' :
@@ -1110,6 +1138,7 @@ export function createCurriculumController(options = {}) {
 
   async function renderCurrentRoute(hashValue = window.location.hash) {
     if (!target()) return;
+    cleanupActiveVisualization();
     const parts = routeParts(hashValue);
 
     try {

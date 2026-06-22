@@ -1,0 +1,657 @@
+/* ==========================================================================
+   NeuralVerse Interactive Visualizations CSS (NV-900-UI9)
+   ========================================================================== */
+
+/* Main Container Wrapper */
+.nv-visualization-container {
+  margin: var(--sys-space-stack-lg, 24px) 0;
+  padding: var(--sys-space-stack-md, 16px);
+  background: var(--sys-color-bg-panel, #1e1e2e);
+  border: 1px solid var(--sys-color-border, #313244);
+  border-radius: var(--sys-radius-lg, 12px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+}
+
+/* Visualization Layout */
+.nv-viz-layout {
+  display: flex;
+  flex-direction: row;
+  gap: var(--sys-space-layout-gap, 24px);
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .nv-viz-layout {
+    flex-direction: column;
+  }
+}
+
+/* Canvas Area */
+.nv-viz-canvas-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #11111b;
+  border: 1px solid var(--sys-color-border, #313244);
+  border-radius: var(--sys-radius-md, 8px);
+  padding: 12px;
+  position: relative;
+  min-height: 300px;
+}
+
+.nv-viz-canvas {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  cursor: crosshair;
+}
+
+/* Sidebar Controls */
+.nv-viz-sidebar {
+  width: 320px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: rgba(255, 255, 255, 0.02);
+  padding: 16px;
+  border-radius: var(--sys-radius-md, 8px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+@media (max-width: 768px) {
+  .nv-viz-sidebar {
+    width: 100%;
+  }
+}
+
+.nv-viz-sidebar h3 {
+  margin: 0 0 4px 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--sys-color-text-primary, #cdd6f4);
+}
+
+.nv-viz-control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.nv-viz-control-group label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--sys-color-text-secondary, #a6adc8);
+}
+
+/* Inputs, Sliders, Buttons */
+.nv-viz-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.nv-input {
+  width: 100%;
+  background: #11111b;
+  border: 1px solid var(--sys-color-border, #313244);
+  border-radius: var(--sys-radius-sm, 4px);
+  color: #ffffff;
+  padding: 6px 10px;
+  font-family: monospace;
+  font-size: 0.85rem;
+}
+
+.nv-input:focus {
+  outline: 2px solid var(--sys-color-accent, #cba6f7);
+  border-color: transparent;
+}
+
+.nv-slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--sys-color-border, #313244);
+  outline: none;
+}
+
+.nv-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--sys-color-accent, #cba6f7);
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.nv-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+.nv-btn {
+  background: var(--sys-color-accent, #cba6f7);
+  color: #11111b;
+  border: none;
+  border-radius: var(--sys-radius-sm, 4px);
+  padding: 8px 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.nv-btn:hover {
+  filter: brightness(1.1);
+}
+
+.nv-btn-reset {
+  background: transparent;
+  border: 1px solid var(--sys-color-border, #313244);
+  color: var(--sys-color-text-secondary, #a6adc8);
+}
+
+.nv-btn-reset:hover {
+  border-color: var(--sys-color-accent, #cba6f7);
+  color: #ffffff;
+}
+
+/* Metrics Displays */
+.nv-viz-metrics {
+  background: #11111b;
+  border: 1px solid var(--sys-color-border, #313244);
+  border-radius: var(--sys-radius-sm, 4px);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.nv-viz-metric-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: monospace;
+  font-size: 0.85rem;
+}
+
+.nv-viz-metric-label {
+  color: var(--sys-color-text-muted, #7f849c);
+}
+
+.nv-viz-metric-value {
+  color: var(--sys-color-accent, #cba6f7);
+  font-weight: 600;
+}
+
+.nv-viz-radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.nv-viz-radio-group label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+/* K-Nearest Neighbor Lists */
+.nv-nn-list {
+  list-style: none;
+  padding: 0;
+  margin: 4px 0 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.nv-nn-list li {
+  font-size: 0.8rem;
+  color: var(--sys-color-text-secondary, #a6adc8);
+  padding: 4px 8px;
+  background: rgba(255, 255, 255, 0.02);
+  border-left: 3px solid #10b981;
+  border-radius: 0 4px 4px 0;
+}
+
+/* RAG Visualization styling */
+.nv-viz-rag {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.nv-viz-rag-queries {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.nv-viz-rag-tabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 1px solid var(--sys-color-border, #313244);
+  padding-bottom: 8px;
+}
+
+.nv-rag-tab {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--sys-color-text-muted, #7f849c);
+  padding: 6px 12px;
+  cursor: pointer;
+  font-weight: 600;
+  border-radius: var(--sys-radius-sm, 4px);
+  transition: all 0.2s ease;
+}
+
+.nv-rag-tab.active {
+  background: rgba(168, 85, 247, 0.15);
+  border-color: rgba(168, 85, 247, 0.3);
+  color: var(--sys-color-accent, #cba6f7);
+}
+
+.nv-viz-rag-body {
+  background: #11111b;
+  border: 1px solid var(--sys-color-border, #313244);
+  border-radius: var(--sys-radius-md, 8px);
+  padding: 16px;
+  min-height: 200px;
+}
+
+.nv-rag-panel h4 {
+  margin: 0 0 8px 0;
+  font-size: 1rem;
+  color: #ffffff;
+}
+
+.nv-rag-docs-list {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.nv-rag-docs-list li {
+  display: flex;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--sys-color-text-secondary, #a6adc8);
+  line-height: 1.4;
+}
+
+.nv-bullet {
+  width: 6px;
+  height: 6px;
+  background: var(--sys-color-accent, #cba6f7);
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 6px;
+}
+
+.nv-rag-prompt-preview {
+  margin: 12px 0 0 0;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: var(--sys-radius-sm, 4px);
+  color: #a6e3a1; /* green text */
+  font-family: monospace;
+  font-size: 0.8rem;
+  white-space: pre-wrap;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.nv-rag-generation-box {
+  background: rgba(0, 0, 0, 0.3);
+  padding: 12px;
+  border-radius: var(--sys-radius-sm, 4px);
+  min-height: 60px;
+  margin-bottom: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.nv-rag-response-text {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #cdd6f4;
+}
+
+/* Attention Heatmap Grid */
+.nv-attention-matrix-grid {
+  display: grid;
+  grid-template-columns: 60px repeat(5, 1fr);
+  gap: 4px;
+  max-width: 100%;
+}
+
+.nv-matrix-header {
+  font-size: 0.75rem;
+  font-family: monospace;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--sys-color-text-muted, #7f849c);
+  padding: 4px;
+  text-align: center;
+}
+
+.nv-matrix-header-row {
+  justify-content: flex-end;
+  padding-right: 8px;
+  font-weight: 600;
+}
+
+.nv-matrix-header-col {
+  border-bottom: 1px solid var(--sys-color-border, #313244);
+  font-weight: 600;
+}
+
+.nv-matrix-cell {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 42px;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.nv-matrix-cell span {
+  font-size: 0.75rem;
+  font-family: monospace;
+  color: #ffffff;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+}
+
+.nv-matrix-cell.active-row {
+  box-shadow: inset 0 0 0 2px #cba6f7;
+}
+
+.nv-token-chips-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.nv-token-chip {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--sys-color-border, #313244);
+  color: var(--sys-color-text-secondary, #a6adc8);
+  border-radius: 16px;
+  padding: 4px 10px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  font-family: monospace;
+  transition: all 0.2s ease;
+}
+
+.nv-token-chip.active {
+  background: var(--sys-color-accent, #cba6f7);
+  color: #11111b;
+  border-color: transparent;
+}
+
+/* Attention weights bars */
+.nv-attention-weights-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.nv-attention-bar-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nv-attention-bar-token {
+  width: 60px;
+  font-size: 0.8rem;
+  font-family: monospace;
+  text-align: right;
+  color: var(--sys-color-text-secondary, #a6adc8);
+}
+
+.nv-attention-bar-track {
+  flex: 1;
+  height: 8px;
+  background: var(--sys-color-border, #313244);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.nv-attention-bar-fill {
+  height: 100%;
+  background: var(--sys-color-accent, #cba6f7);
+  border-radius: 4px;
+}
+
+.nv-attention-bar-value {
+  width: 35px;
+  font-size: 0.8rem;
+  font-family: monospace;
+  color: #ffffff;
+}
+
+/* CNN Grids */
+.nv-viz-conv-grids {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  background: #11111b;
+  border: 1px solid var(--sys-color-border, #313244);
+  border-radius: var(--sys-radius-md, 8px);
+  padding: 16px;
+}
+
+.nv-conv-grid-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.nv-conv-grid-container h4 {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--sys-color-text-secondary, #a6adc8);
+}
+
+.nv-conv-grid {
+  display: grid;
+  gap: 3px;
+}
+
+.nv-conv-cell {
+  width: 32px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-family: monospace;
+  color: var(--sys-color-text-secondary, #a6adc8);
+  transition: all 0.15s ease;
+}
+
+.nv-conv-cell.in-kernel {
+  background: rgba(168, 85, 247, 0.25);
+  border-color: #a855f7;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.nv-conv-cell.active-output {
+  background: rgba(16, 185, 129, 0.4);
+  border-color: #10b981;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.nv-conv-cell.computed-output {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+}
+
+.nv-conv-kernel-arrow {
+  font-size: 24px;
+  color: var(--sys-color-text-muted, #7f849c);
+}
+
+.nv-conv-animation-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.nv-conv-animation-controls button {
+  flex: 1;
+}
+
+.nv-conv-calculation-box {
+  background: #11111b;
+  border: 1px solid var(--sys-color-border, #313244);
+  border-radius: var(--sys-radius-sm, 4px);
+  padding: 12px;
+}
+
+.nv-conv-calculation-box h4 {
+  margin: 0 0 6px 0;
+  font-size: 0.85rem;
+  color: #ffffff;
+}
+
+.nv-conv-formula {
+  font-family: monospace;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: var(--sys-color-text-secondary, #a6adc8);
+  word-break: break-all;
+}
+
+/* Segmentation scene styling */
+.nv-viz-segmentation-viewer {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #11111b;
+  border: 1px solid var(--sys-color-border, #313244);
+  border-radius: var(--sys-radius-md, 8px);
+  padding: 16px;
+}
+
+.nv-seg-container {
+  width: 320px;
+  height: 240px;
+  border-radius: var(--sys-radius-md, 8px);
+  overflow: hidden;
+  position: relative;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
+  background-color: #1e1e2e;
+}
+
+.nv-seg-background-scene {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.nv-seg-region {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border: 1px dashed transparent;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.nv-seg-class-toggles {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.nv-seg-toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.nv-seg-color-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+}
+
+.indicator-sky { background: #38bdf8; }
+.indicator-road { background: #64748b; }
+.indicator-building { background: #f43f5e; }
+.indicator-car { background: #eab308; }
+
+/* Deep learning forward prop styling */
+.nv-forward-prop-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.nv-forward-prop-controls button {
+  flex: 1;
+}
+
+.nv-fprop-calculation-box {
+  background: #11111b;
+  border: 1px solid var(--sys-color-border, #313244);
+  border-radius: var(--sys-radius-sm, 4px);
+  padding: 12px;
+}
+
+.nv-fprop-calculation-box h4 {
+  margin: 0 0 6px 0;
+  font-size: 0.85rem;
+  color: #ffffff;
+}
+
+.nv-fprop-formula {
+  font-family: monospace;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--sys-color-text-secondary, #a6adc8);
+}
+
+.nv-hidden {
+  display: none !important;
+}
+
+/* Accent metrics highlighting */
+.highlight-metric {
+  background: rgba(168, 85, 247, 0.1);
+  border: 1px solid rgba(168, 85, 247, 0.2);
+  border-radius: 4px;
+  padding: 6px 8px;
+  margin-top: 4px;
+}
