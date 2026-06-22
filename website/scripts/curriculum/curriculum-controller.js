@@ -80,6 +80,36 @@ function card(title, summary, href, status, extra = [], options = {}) {
   return article;
 }
 
+function renderCrossLinkCard(entity, entityType, href) {
+  const article = el('article', 'nv-card nv-cross-link-card');
+  article.dataset.status = entity.canonicalStatus || 'Draft';
+
+  const header = el('div', 'nv-cluster nv-cluster--gap-sm');
+  header.style.justifyContent = 'space-between';
+  header.style.alignItems = 'flex-start';
+
+  const headingGroup = el('div', 'nv-stack nv-stack--gap-xs');
+  const kicker = el('span', 'nv-cross-link-card__kicker', entityType);
+  const heading = el('h4', 'nv-cross-link-card__title');
+  const titleLink = el('a', '', entity.title);
+  titleLink.href = href;
+  heading.append(titleLink);
+  headingGroup.append(kicker, heading);
+
+  header.append(headingGroup, statusBadge(entity.canonicalStatus));
+
+  const description = el('p', 'nv-cross-link-card__description', entity.overview || entity.aim || entity.learningGoal || '');
+
+  const actions = el('div', 'nv-cross-link-card__action');
+  const link = el('a', 'nv-button', 'Explore →');
+  link.dataset.variant = 'secondary';
+  link.href = href;
+  actions.append(link);
+
+  article.append(header, description, actions);
+  return article;
+}
+
 function renderFilterableCollection(items, renderItem, emptyMessage, className = 'nv-grid nv-grid--cols-2') {
   const wrapper = el('section', 'nv-curriculum-collection');
   const controls = el('div', 'nv-curriculum-filter', '');
@@ -298,6 +328,26 @@ export function createCurriculumController(options = {}) {
   const root = options.root || document;
   const service = options.service || createCurriculumService();
 
+  async function findRouteForArtifact(artifactId) {
+    const index = await service.getIndex();
+    for (const path of index.learningPaths) {
+      if (path.artifactScope && path.artifactScope.includes(artifactId)) {
+        for (const moduleId of path.moduleIds) {
+          const mod = index.modules.find((m) => m.id === moduleId);
+          if (mod && mod.artifactScope && mod.artifactScope.includes(artifactId)) {
+            for (const lessonId of mod.lessonIds) {
+              const les = index.lessons.find((l) => l.id === lessonId);
+              if (les && les.artifactIds && les.artifactIds.includes(artifactId)) {
+                return { pathId: path.id, moduleId: mod.id, lessonId: les.id };
+              }
+            }
+          }
+        }
+      }
+    }
+    return null;
+  }
+
   function target() {
     return root.querySelector('[data-curriculum-root]');
   }
@@ -385,6 +435,22 @@ export function createCurriculumController(options = {}) {
       meta('Lessons', String(module.lessonIds.length)),
       meta('Artifacts', String(module.artifactScope.length)),
     ], { kind: 'module', kicker: `Module ${index + 1}` }), 'No modules available for this learning path.'));
+
+    // Path Cross-Link / Curriculum Summary Section
+    const pathSection = el('section', 'nv-cross-links-section');
+    pathSection.setAttribute('aria-label', 'Contextual Navigation');
+    const pathTitle = el('h3', 'nv-cross-links-section__title', 'Curriculum Summary');
+    const summaryCard = el('article', 'nv-card nv-cross-link-card');
+    summaryCard.dataset.status = path.canonicalStatus;
+    const summaryHeader = el('div', 'nv-cluster nv-cluster--gap-sm');
+    summaryHeader.style.justifyContent = 'space-between';
+    const summaryTitle = el('h4', 'nv-cross-link-card__title', path.title);
+    summaryHeader.append(summaryTitle, statusBadge(path.canonicalStatus));
+    const summaryDesc = el('p', 'nv-cross-link-card__description', path.aim || path.overview || '');
+    summaryCard.append(summaryHeader, summaryDesc);
+    pathSection.append(pathTitle, summaryCard);
+    body.append(pathSection);
+
     setWorkspace(path.title, `${modules.length} modules in this learning path.`);
   }
 
@@ -413,6 +479,34 @@ export function createCurriculumController(options = {}) {
       meta('Artifacts', String(lesson.artifactIds.length)),
       meta('Topic', lesson.topic),
     ], { kind: 'lesson', kicker: `Lesson ${index + 1}` }), 'No lessons found in this module.', 'nv-stack nv-stack--gap-sm'));
+
+    // Module Cross-Links Context Panel
+    const relatedSection = el('section', 'nv-cross-links-section');
+    relatedSection.setAttribute('aria-label', 'Contextual Navigation');
+    relatedSection.append(el('h3', 'nv-cross-links-section__title', 'Contextual Navigation'));
+
+    const grid = el('div', 'nv-cross-links-grid');
+    if (path) {
+      grid.append(renderCrossLinkCard(path, 'Parent Learning Path', `#/learning/${path.id}`));
+
+      const moduleIdx = path.moduleIds.indexOf(moduleId);
+      const pathModules = await service.getModulesForPath(pathId);
+      if (moduleIdx > 0) {
+        const prevMod = pathModules[moduleIdx - 1];
+        if (prevMod) {
+          grid.append(renderCrossLinkCard(prevMod, 'Previous Module', `#/learning/${pathId}/module/${prevMod.id}`));
+        }
+      }
+      if (moduleIdx < path.moduleIds.length - 1) {
+        const nextMod = pathModules[moduleIdx + 1];
+        if (nextMod) {
+          grid.append(renderCrossLinkCard(nextMod, 'Next Module', `#/learning/${pathId}/module/${nextMod.id}`));
+        }
+      }
+    }
+    relatedSection.append(grid);
+    body.append(relatedSection);
+
     setWorkspace(module.title, `${lessons.length} lessons in this module.`);
   }
 
@@ -704,6 +798,38 @@ export function createCurriculumController(options = {}) {
       artifactListHeading,
       artifactsGrid
     );
+
+    // Lesson Cross-Links Context Panel
+    const relatedSection = el('section', 'nv-cross-links-section');
+    relatedSection.setAttribute('aria-label', 'Contextual Navigation');
+    relatedSection.append(el('h3', 'nv-cross-links-section__title', 'Contextual Navigation'));
+
+    const grid = el('div', 'nv-cross-links-grid');
+    const path = await service.getLearningPath(pathId);
+    const module = await service.getModule(moduleId);
+    if (path) {
+      grid.append(renderCrossLinkCard(path, 'Parent Learning Path', `#/learning/${path.id}`));
+    }
+    if (module) {
+      grid.append(renderCrossLinkCard(module, 'Parent Module', `#/learning/${pathId}/module/${module.id}`));
+
+      const lessonIdx = module.lessonIds.indexOf(lessonId);
+      const moduleLessons = await service.getLessonsForModule(moduleId);
+      if (lessonIdx > 0) {
+        const prevLesson = moduleLessons[lessonIdx - 1];
+        if (prevLesson) {
+          grid.append(renderCrossLinkCard(prevLesson, 'Previous Lesson', `#/learning/${pathId}/module/${moduleId}/lesson/${prevLesson.id}`));
+        }
+      }
+      if (lessonIdx < module.lessonIds.length - 1) {
+        const nextLesson = moduleLessons[lessonIdx + 1];
+        if (nextLesson) {
+          grid.append(renderCrossLinkCard(nextLesson, 'Next Lesson', `#/learning/${pathId}/module/${moduleId}/lesson/${nextLesson.id}`));
+        }
+      }
+    }
+    relatedSection.append(grid);
+    mainContent.append(relatedSection);
   }
 
   async function renderArtifact(pathId, moduleId, lessonId, artifactId) {
@@ -759,6 +885,146 @@ export function createCurriculumController(options = {}) {
     const article = el('article', `nv-panel nv-curriculum-reader nv-curriculum-reader--${readerKind}`);
     article.innerHTML = markdownToHtml(markdown);
     mainContent.append(article);
+
+    // Contextual Cross-Links Section
+    const relatedNavSection = el('section', 'nv-cross-links-section');
+    relatedNavSection.setAttribute('aria-label', 'Contextual Navigation');
+
+    const sectionTitle = el('h3', 'nv-cross-links-section__title', 'Contextual Navigation');
+    relatedNavSection.append(sectionTitle);
+
+    // Parent lineage
+    const path = await service.getLearningPath(pathId);
+    const module = await service.getModule(moduleId);
+    const lesson = await service.getLesson(lessonId);
+    if (path && module && lesson) {
+      const partOfTrail = el('div', 'nv-part-of-trail');
+      partOfTrail.append(el('span', 'nv-part-of-trail__label', 'Part of:'));
+
+      const pathLink = el('a', 'nv-part-of-trail__item', path.title);
+      pathLink.href = `#/learning/${path.id}`;
+
+      const moduleLink = el('a', 'nv-part-of-trail__item', module.title);
+      moduleLink.href = `#/learning/${path.id}/module/${module.id}`;
+
+      const lessonLink = el('a', 'nv-part-of-trail__item', lesson.title);
+      lessonLink.href = `#/learning/${path.id}/module/${module.id}/lesson/${lesson.id}`;
+
+      partOfTrail.append(
+        pathLink,
+        el('span', 'nv-part-of-trail__separator', ' → '),
+        moduleLink,
+        el('span', 'nv-part-of-trail__separator', ' → '),
+        lessonLink
+      );
+      relatedNavSection.append(partOfTrail);
+    }
+
+    // Related sibling artifacts
+    const siblings = artifacts.filter(a => a.id !== artifactId);
+    if (siblings.length > 0) {
+      const sibTitle = el('h4', '', 'Related Artifacts (in this lesson)');
+      sibTitle.style.fontSize = 'var(--ref-font-size-400)';
+      sibTitle.style.marginBlock = 'var(--sys-space-stack-sm)';
+      relatedNavSection.append(sibTitle);
+
+      const grid = el('div', 'nv-cross-links-grid');
+      siblings.forEach(sib => {
+        grid.append(renderCrossLinkCard(sib, typeLabel(sib.type), `#/learning/${pathId}/module/${moduleId}/lesson/${lessonId}/artifact/${sib.id}`));
+      });
+      relatedNavSection.append(grid);
+    }
+
+    // Dependency metadata relationships (prerequisites, complementary, alternative, recommended_before, recommended_after)
+    const resolveArtifacts = async (val) => {
+      if (!val) return [];
+      const ids = Array.isArray(val) ? val : [val];
+      const index = await service.getIndex();
+      return ids.map(id => index.artifacts.find(a => a.id === id)).filter(Boolean);
+    };
+
+    const prereqs = await resolveArtifacts(artifact.prerequisite);
+    const complementary = await resolveArtifacts(artifact.complementary);
+    const recBefore = await resolveArtifacts(artifact.recommended_before);
+    const recAfter = await resolveArtifacts(artifact.recommended_after);
+    const alternative = await resolveArtifacts(artifact.alternative);
+
+    if (prereqs.length > 0) {
+      const subTitle = el('h4', '', 'Prerequisites');
+      subTitle.style.fontSize = 'var(--ref-font-size-400)';
+      subTitle.style.marginBlock = 'var(--sys-space-stack-sm)';
+      relatedNavSection.append(subTitle);
+
+      const grid = el('div', 'nv-cross-links-grid');
+      for (const item of prereqs) {
+        const route = await findRouteForArtifact(item.id);
+        const href = route ? `#/learning/${route.pathId}/module/${route.moduleId}/lesson/${route.lessonId}/artifact/${item.id}` : '#/learning';
+        grid.append(renderCrossLinkCard(item, 'Prerequisite', href));
+      }
+      relatedNavSection.append(grid);
+    }
+
+    if (complementary.length > 0) {
+      const subTitle = el('h4', '', 'Complementary Resources');
+      subTitle.style.fontSize = 'var(--ref-font-size-400)';
+      subTitle.style.marginBlock = 'var(--sys-space-stack-sm)';
+      relatedNavSection.append(subTitle);
+
+      const grid = el('div', 'nv-cross-links-grid');
+      for (const item of complementary) {
+        const route = await findRouteForArtifact(item.id);
+        const href = route ? `#/learning/${route.pathId}/module/${route.moduleId}/lesson/${route.lessonId}/artifact/${item.id}` : '#/learning';
+        grid.append(renderCrossLinkCard(item, 'Complementary', href));
+      }
+      relatedNavSection.append(grid);
+    }
+
+    if (recBefore.length > 0) {
+      const subTitle = el('h4', '', 'Recommended Before');
+      subTitle.style.fontSize = 'var(--ref-font-size-400)';
+      subTitle.style.marginBlock = 'var(--sys-space-stack-sm)';
+      relatedNavSection.append(subTitle);
+
+      const grid = el('div', 'nv-cross-links-grid');
+      for (const item of recBefore) {
+        const route = await findRouteForArtifact(item.id);
+        const href = route ? `#/learning/${route.pathId}/module/${route.moduleId}/lesson/${route.lessonId}/artifact/${item.id}` : '#/learning';
+        grid.append(renderCrossLinkCard(item, 'Recommended Before', href));
+      }
+      relatedNavSection.append(grid);
+    }
+
+    if (recAfter.length > 0) {
+      const subTitle = el('h4', '', 'Recommended After');
+      subTitle.style.fontSize = 'var(--ref-font-size-400)';
+      subTitle.style.marginBlock = 'var(--sys-space-stack-sm)';
+      relatedNavSection.append(subTitle);
+
+      const grid = el('div', 'nv-cross-links-grid');
+      for (const item of recAfter) {
+        const route = await findRouteForArtifact(item.id);
+        const href = route ? `#/learning/${route.pathId}/module/${route.moduleId}/lesson/${route.lessonId}/artifact/${item.id}` : '#/learning';
+        grid.append(renderCrossLinkCard(item, 'Recommended After', href));
+      }
+      relatedNavSection.append(grid);
+    }
+
+    if (alternative.length > 0) {
+      const subTitle = el('h4', '', 'Alternative Resources');
+      subTitle.style.fontSize = 'var(--ref-font-size-400)';
+      subTitle.style.marginBlock = 'var(--sys-space-stack-sm)';
+      relatedNavSection.append(subTitle);
+
+      const grid = el('div', 'nv-cross-links-grid');
+      for (const item of alternative) {
+        const route = await findRouteForArtifact(item.id);
+        const href = route ? `#/learning/${route.pathId}/module/${route.moduleId}/lesson/${route.lessonId}/artifact/${item.id}` : '#/learning';
+        grid.append(renderCrossLinkCard(item, 'Alternative Resource', href));
+      }
+      relatedNavSection.append(grid);
+    }
+
+    mainContent.append(relatedNavSection);
 
     const currentIndex = artifacts.findIndex(art => art.id === artifactId);
     const navFooter = el('nav', 'nv-lesson-workspace__navigation');

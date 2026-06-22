@@ -1,0 +1,130 @@
+/**
+ * NeuralVerse Curriculum Cross-Linking & Contextual Navigation CSS
+ *
+ * Compliance:
+ * Matches NeuralVerse design system variables, colors, glassmorphic themes, and spacing tokens.
+ */
+
+.nv-cross-links-section {
+  margin-top: var(--sys-space-layout-gap);
+  padding-top: var(--sys-space-layout-gap);
+  border-top: 1px solid var(--sys-color-border-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sys-space-stack-md);
+}
+
+.nv-cross-links-section__title {
+  font-family: var(--sys-font-display-family);
+  font-size: var(--ref-font-size-500);
+  color: var(--sys-color-text-primary);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--sys-space-inline-xs);
+}
+
+.nv-cross-links-grid {
+  display: grid;
+  gap: var(--sys-space-layout-gap);
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  width: 100%;
+}
+
+.nv-cross-link-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  transition: transform var(--sys-motion-duration-feedback) var(--sys-motion-ease-interface),
+              box-shadow var(--sys-motion-duration-feedback) var(--sys-motion-ease-interface),
+              border-color var(--sys-motion-duration-feedback) var(--sys-motion-ease-interface);
+}
+
+.nv-cross-link-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--sys-color-accent-primary);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--sys-color-accent-primary) 15%, transparent);
+}
+
+.nv-cross-link-card__kicker {
+  font-size: var(--sys-font-caption-size);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--sys-color-accent-primary);
+  font-weight: var(--ref-font-weight-semibold);
+}
+
+.nv-cross-link-card__title {
+  font-size: var(--ref-font-size-400);
+  font-family: var(--sys-font-display-family);
+  margin-top: var(--sys-space-stack-xs);
+  margin-bottom: var(--sys-space-stack-sm);
+  color: var(--sys-color-text-primary);
+  line-height: var(--sys-font-body-line-height);
+}
+
+.nv-cross-link-card__title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.nv-cross-link-card__title a:hover {
+  color: var(--sys-color-accent-primary);
+}
+
+.nv-cross-link-card__description {
+  font-size: var(--sys-font-caption-size);
+  color: color-mix(in srgb, var(--sys-color-text-primary) 70%, transparent);
+  line-height: var(--sys-font-body-line-height);
+  margin-bottom: var(--sys-space-stack-md);
+  flex-grow: 1;
+}
+
+.nv-cross-link-card__action {
+  margin-top: auto;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Part Of lineage trail style */
+.nv-part-of-trail {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sys-space-inline-xs);
+  background-color: var(--sys-color-surface-raised);
+  padding: var(--sys-space-inset-sm) var(--sys-space-inset-md);
+  border-radius: var(--sys-radius-control);
+  border: 1px solid var(--sys-color-border-subtle);
+  font-size: var(--sys-font-caption-size);
+  margin-bottom: var(--sys-space-stack-sm);
+}
+
+.nv-part-of-trail__label {
+  font-weight: var(--ref-font-weight-bold);
+  color: color-mix(in srgb, var(--sys-color-text-primary) 75%, transparent);
+}
+
+.nv-part-of-trail__item {
+  color: var(--sys-color-accent-primary);
+  text-decoration: none;
+  font-weight: var(--ref-font-weight-medium);
+  transition: color var(--sys-motion-duration-feedback) var(--sys-motion-ease-interface);
+}
+
+.nv-part-of-trail__item:hover {
+  color: var(--sys-color-text-primary);
+  text-decoration: underline;
+}
+
+.nv-part-of-trail__separator {
+  color: color-mix(in srgb, var(--sys-color-text-primary) 30%, transparent);
+}
+
+/* Ensure secondary context sections sit properly in responsive screen sizes */
+@media (max-width: 48rem) {
+  .nv-cross-links-grid {
+    grid-template-columns: 1fr;
+  }
+}
