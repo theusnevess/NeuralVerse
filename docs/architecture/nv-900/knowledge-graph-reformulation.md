@@ -1,6 +1,6 @@
-# NeuralVerse Knowledge Graph — Full Reformulation (NV-900-UI10F)
+# NeuralVerse Knowledge Graph — Full Reformulation (NV-900-GRAPH-REDESIGN)
 
-This document presents the architecture, visual decisions, interaction model, and Playwright verification results for the reformulated Knowledge Graph tab in NeuralVerse.
+This document presents the architecture, visual decisions, interaction model, and Playwright verification results for the redesigned Curriculum Atlas in NeuralVerse.
 
 ## 1. Problem Diagnosis
 Although the previous concentric radial layout engine satisfied technical checks (zero collisions, correct trigonometric placement), it failed to deliver a premium exploration experience. 
@@ -23,7 +23,7 @@ graph TD
     Stage4 -->|Select Artifact| Stage5[Stage 5: Artifact Focus]
 ```
 
-- **Stage 1 — Curriculum Atlas**: Displays only the 19 Learning Paths as large, premium atlas cards in a structured grid.
+- **Stage 1 — Curriculum Atlas**: Displays the 19 Learning Paths organized under elegant, minimalist section headers (museum collection style) rather than a flat grid.
 - **Stage 2 — Learning Path Focus**: Focuses on a single Path hero card, displaying its contained Modules as medium-sized cards, along with a horizontal strip of neighboring paths.
 - **Stage 3 — Module Focus**: Displays the parent Path lineage, the selected Module hero card, contained Lessons as readable cards, and sibling Modules for context.
 - **Stage 4 — Lesson Focus**: Displays parent Module lineage, selected Lesson hero card, and the exact flow order of contained Artifacts.
@@ -33,13 +33,14 @@ graph TD
 
 ## 3. Visual Design Decisions
 Aligning with the **NeuralVerse Dark Research Lab** visual identity:
-- **Glassmorphic Cards**: Cards are styled with custom semi-transparent backgrounds (`rgba(20, 20, 31, 0.7)`), backdrop blurs, and thin borders.
-- **Hierarchical Type Accents**:
-  - **Learning Paths**: Blue accent border (`#89b4fa`) with subtle blue hover glow.
-  - **Modules**: Green accent border (`#a6e3a1`) with green hover glow.
-  - **Lessons**: Yellow accent border (`#f9e2af`) with yellow hover glow.
-  - **Artifacts**: Purple accent border (`#cba6f7`) with purple hover glow.
-- **Subtle Connectors**: In Stage 4 (Lesson Focus), artifacts are connected by a chronological flow index badge (`1`, `2`, `3`) instead of messy canvas lines.
+- **Museum Layout**: Learning Paths are categorized dynamically under subject areas (e.g. "Retrieval & Context Optimization", "Foundational Networks & Math") with staggered card entry animations.
+- **Asymmetry and Whitespace**: Generous spacing (`gap: 48px`), custom side-by-side sticky column layouts, and horizontal connection lines (`.nv-kg-section-line`) replace dense hairballs.
+- **Card Hierarchy Sizing & Accents**:
+  - **Learning Paths**: Largest visual weight, blue accent border (`#89b4fa`) with subtle blue hover glow.
+  - **Modules**: Medium weight, green accent border (`#a6e3a1`) with green hover glow.
+  - **Lessons**: Smaller weight, yellow accent border (`#f9e2af`) with yellow hover glow.
+  - **Artifacts**: Compact weight, purple accent border (`#cba6f7`) with purple hover glow.
+- **High-Contrast Typography**: Precise `JetBrains Mono` subheadings and labels, strict truncation, and clean status badges (`.nv-kg-status--reviewed` and `.nv-kg-status--draft`).
 
 ---
 
@@ -47,8 +48,8 @@ Aligning with the **NeuralVerse Dark Research Lab** visual identity:
 - **Single Page Hierarchy**: Enforced a single `<h1>` tag (`#nv-kg-title`) and a single `aria-current="page"` per view.
 - **Keyboard Navigation**: All cards are natively focusable using `tabindex="0"`. Pressing `Enter` or `Space` activates the card, and `Backspace` triggers the parent navigation hook (go back).
 - **Responsive Layouts**:
-  - **Desktop**: Atlas cards and Inspector details panel sit side by side.
-  - **Tablet & Mobile**: Responsive single-column grid. Inspector slides below the content, and controls are collapsible via `<details>` to prevent horizontal overflow.
+  - **Desktop & Tablet (>= 768px)**: Staged cards and Inspector details panel sit side by side.
+  - **Mobile (< 768px)**: Responsive single-column grid. Inspector slides below the content, and controls are collapsible via a `<details>` element with a toggle summary to prevent pushing content below the fold.
 
 ---
 
@@ -63,7 +64,7 @@ The audit script (`scripts/nv-900-ui10f-graph-reformulation-audit.js`) validates
 
 | Screenshot | Description |
 |---|---|
-| `atlas-overview-1440.png` | Desktop overview (Stage 1) grid containing only 19 Learning Paths |
+| `atlas-overview-1440.png` | Desktop overview (Stage 1) grid containing Learning Paths by Category |
 | `atlas-overview-390.png` | Mobile overview card layout |
 | `path-focus-1440.png` | Path focused view (Stage 2) with Module cards |
 | `module-focus-1440.png` | Module focused view (Stage 3) with Lesson cards |
@@ -79,3 +80,4 @@ The audit script (`scripts/nv-900-ui10f-graph-reformulation-audit.js`) validates
 - **Page errors**: 0
 - **Failed requests**: 0
 - **Status**: `PASS`
+- **Latest Commit**: `0f771ff`
