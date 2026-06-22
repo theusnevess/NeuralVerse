@@ -1,7 +1,5 @@
 import { hasVisualization } from '../visualizations/visualization-registry.js';
 import { buildKnowledgeGraphModel, DEPENDENCY_TYPES } from './knowledge-graph-model.js';
-import { computeLayout, computeVisibleEdges, computeBounds } from './knowledge-graph-layout.js';
-import { KnowledgeGraphRenderer } from './knowledge-graph-renderer.js';
 
 function el(tag, cls = '', text = '') {
   const node = document.createElement(tag);
@@ -14,21 +12,17 @@ function normalize(value) {
   return String(value || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, ' ').trim();
 }
 
-const MODE_BY_TYPE = { path: 'path', module: 'module', lesson: 'lesson', artifact: 'artifact' };
-
 export function createKnowledgeGraphController(options = {}) {
   const root = options.root || document;
   let graph = null;
-  let renderer = null;
-  let nodePositions = null;
-  let visibleEdges = null;
 
   const state = {
+    // 'overview' | 'path' | 'module' | 'lesson' | 'artifact'
     mode: 'overview',
-    focusedNodeId: null,
-    expandedNodeIds: new Set(),
     selectedNodeId: null,
   };
+
+  const historyStack = [];
 
   function target() { return root.querySelector('[data-knowledge-graph-root]'); }
   function getChildren(id) { return graph.edges.filter((edge) => edge.type === 'contains' && edge.source === id).map((edge) => graph.nodeById.get(edge.target)).filter(Boolean); }
@@ -43,126 +37,55 @@ export function createKnowledgeGraphController(options = {}) {
     graph = buildKnowledgeGraphModel(await service.getIndex(), { hasVisualization });
   }
 
-  function annotateNodes() {
-    nodePositions.forEach((node, id) => {
-      const children = getChildren(id);
-      node._childCount = children.length;
-      node._expanded = state.expandedNodeIds.has(id) || state.selectedNodeId === id;
-      if (node.type === 'path') {
-        const modules = children;
-        const lessons = modules.flatMap((module) => getChildren(module.id));
-        const artifacts = lessons.flatMap((lesson) => getChildren(lesson.id));
-        const reviewed = [...modules, ...lessons, ...artifacts].filter((item) => item.status === 'Reviewed').length;
-        node._summary = { modules: modules.length, lessons: lessons.length, artifacts: artifacts.length, reviewed };
+  function selectNode(nodeId, pushHistory = true) {
+    const node = graph.nodeById.get(nodeId);
+    if (!node) {
+      resetGraph(pushHistory);
+      return;
+    }
+    if (pushHistory && state.selectedNodeId !== node.id) {
+      historyStack.push(state.selectedNodeId);
+    }
+    state.selectedNodeId = node.id;
+    state.mode = node.type;
+    applyCurrentRender();
+  }
+
+  function goBack() {
+    if (historyStack.length > 0) {
+      const prev = historyStack.pop();
+      if (prev) {
+        selectNode(prev, false);
+      } else {
+        resetGraph(false);
       }
-    });
+    } else {
+      if (state.selectedNodeId) {
+        const parent = getParent(state.selectedNodeId);
+        if (parent) {
+          selectNode(parent.id, true);
+        } else {
+          resetGraph(true);
+        }
+      } else {
+        resetGraph(true);
+      }
+    }
   }
 
-  function recomputeLayout() {
-    nodePositions = computeLayout(graph, state);
-    annotateNodes();
-    visibleEdges = computeVisibleEdges(graph, nodePositions).filter((edge) => {
-      if (edge.type === 'contains') return true;
-      return state.mode === 'artifact' && (edge.source === state.selectedNodeId || edge.target === state.selectedNodeId);
-    });
+  function resetGraph(pushHistory = true) {
+    if (pushHistory && state.selectedNodeId !== null) {
+      historyStack.push(state.selectedNodeId);
+    }
+    state.selectedNodeId = null;
+    state.mode = 'overview';
+    applyCurrentRender();
   }
 
-  function getLineageIds(node) {
-    return new Set([node.lineage?.pathId, node.lineage?.moduleId, node.lineage?.lessonId, node.id].filter(Boolean));
-  }
-
-  function getNeighborIds(nodeId) {
-    const selected = graph.nodeById.get(nodeId);
-    const ids = getLineageIds(selected || {});
-    visibleEdges.forEach((edge) => {
-      if (edge.source === nodeId) ids.add(edge.target);
-      if (edge.target === nodeId) ids.add(edge.source);
-    });
-    return ids;
-  }
-
-  function applyCurrentRender(center = true) {
-    recomputeLayout();
-    renderer.update(nodePositions, visibleEdges);
-    if (state.selectedNodeId) renderer.applyFocus(state.selectedNodeId, getNeighborIds(state.selectedNodeId));
-    else renderer.applyFocus('', new Set());
-    if (center && state.selectedNodeId) renderer.centerOn(state.selectedNodeId, nodePositions, true);
-    else if (center) renderer.fitAll(computeBounds(nodePositions));
+  function applyCurrentRender() {
+    renderAtlas();
     renderToolbar();
     renderInspector();
-    renderFallback();
-  }
-
-  function focusNode(nodeId) {
-    const node = graph.nodeById.get(nodeId);
-    if (!node) return;
-    
-    // Select the node
-    state.selectedNodeId = node.id;
-
-    // Toggle expansion
-    if (state.expandedNodeIds.has(node.id)) {
-      state.expandedNodeIds.delete(node.id);
-    } else {
-      state.expandedNodeIds.add(node.id);
-      // Ensure lineage is open so we can see it (e.g. if found via search)
-      getLineageIds(node).forEach(id => {
-        if (id !== node.id) state.expandedNodeIds.add(id);
-      });
-    }
-
-    applyCurrentRender(true);
-    renderer.pulseNode(node.id);
-    renderer.focusNodeEl(node.id);
-  }
-
-  function resetGraph() {
-    state.mode = 'overview';
-    state.focusedNodeId = null;
-    state.selectedNodeId = null;
-    state.expandedNodeIds.clear();
-    applyCurrentRender(true);
-  }
-
-  const handlers = {
-    selectNode: focusNode,
-    clearSelection() {
-      state.selectedNodeId = null;
-      renderer.applyFocus('', new Set());
-      renderInspector();
-    },
-    centerNode(nodeId) { renderer.centerOn(nodeId, nodePositions); },
-    moveFocus(delta) {
-      const ids = renderer.getVisibleNodeIds();
-      const cur = ids.indexOf(state.selectedNodeId);
-      const next = Math.max(0, Math.min(ids.length - 1, cur + delta));
-      if (ids[next]) focusNode(ids[next]);
-    },
-  };
-
-  function renderShell() {
-    const container = target();
-    if (!container) return;
-    container.innerHTML = `
-      <section class="nv-kg" aria-labelledby="nv-kg-title">
-        <header class="nv-kg-hero nv-curriculum-hero">
-          <div class="nv-stack nv-stack--gap-xs">
-            <span class="nv-curriculum-card__kicker">NV-900 Curriculum Atlas</span>
-            <h1 id="nv-kg-title">Knowledge Explorer</h1>
-            <p class="nv-muted">Explore the curriculum through focused levels: paths, modules, lessons, and artifacts.</p>
-          </div>
-          <a class="nv-button" data-variant="secondary" href="#/learning">Open Curriculum</a>
-        </header>
-        <details class="nv-kg-controls" open>
-          <summary>Graph controls</summary>
-          <div class="nv-kg-toolbar" aria-label="Graph controls"></div>
-        </details>
-        <div class="nv-kg-workspace">
-          <div class="nv-kg-canvas-wrap" data-kg-canvas></div>
-          <aside class="nv-kg-inspector" data-kg-inspector aria-label="Node details"></aside>
-        </div>
-        <section class="nv-kg-fallback" data-kg-fallback aria-label="Text fallback for current graph"></section>
-      </section>`;
   }
 
   function button(label, fn, variant = 'secondary') {
@@ -184,6 +107,7 @@ export function createKnowledgeGraphController(options = {}) {
     if (!toolbar || !graph) return;
     toolbar.innerHTML = '';
 
+    // Search input group
     const searchGroup = group('Search / Focus');
     const search = el('input', 'nv-input nv-kg-search');
     search.type = 'search';
@@ -208,31 +132,42 @@ export function createKnowledgeGraphController(options = {}) {
         return;
       }
       if (status) status.textContent = `Focused ${match.typeLabel}: ${match.title}.`;
-      focusNode(match.id);
+      selectNode(match.id);
     });
     const searchStatus = el('span', 'nv-kg-search-status');
     searchStatus.id = 'nv-kg-search-status';
     searchStatus.setAttribute('aria-live', 'polite');
     searchGroup.append(search, searchStatus, datalist);
 
-    const viewGroup = group('View Mode');
-    viewGroup.append(button('Overview', resetGraph), button('Focus', () => state.selectedNodeId && focusNode(state.selectedNodeId)));
-
-    const expansionGroup = group('Expansion');
-    expansionGroup.append(
-      button('Expand', () => state.selectedNodeId && focusNode(state.selectedNodeId)),
-      button('Collapse', resetGraph),
-      button('Back to Parent', () => { const node = graph.nodeById.get(state.focusedNodeId); const parent = node && getParent(node.id); parent ? focusNode(parent.id) : resetGraph(); }),
+    // Stage Navigation Actions
+    const navGroup = group('Stage navigation');
+    navGroup.append(
+      button('Back', goBack),
+      button('Reset Atlas', () => resetGraph(true))
     );
 
-    const cameraGroup = group('Camera');
-    cameraGroup.append(button('Fit', () => renderer.fitAll(computeBounds(nodePositions))), button('Zoom +', () => renderer.zoomBy(1.25)), button('Zoom -', () => renderer.zoomBy(0.8)));
+    // View Actions
+    const viewGroup = group('View actions');
+    // Fit scrolls page back to top to align perfectly
+    viewGroup.append(
+      button('Fit', () => {
+        const wrap = root.querySelector('[data-kg-canvas]');
+        if (wrap) { wrap.scrollTop = 0; wrap.scrollLeft = 0; }
+      }),
+      button('Open Selected', () => {
+        const node = state.selectedNodeId ? graph.nodeById.get(state.selectedNodeId) : null;
+        if (node) window.location.hash = node.route;
+      }, 'primary')
+    );
 
+    // Legend
     const legend = group('Legend');
     legend.classList.add('nv-kg-legend');
-    [['path', 'Path'], ['module', 'Module'], ['lesson', 'Lesson'], ['artifact', 'Artifact']].forEach(([type, label]) => legend.append(el('span', `nv-kg-legend-item nv-kg-legend-item--${type}`, label)));
+    [['path', 'Path'], ['module', 'Module'], ['lesson', 'Lesson'], ['artifact', 'Artifact']].forEach(([type, label]) => {
+      legend.append(el('span', `nv-kg-legend-item nv-kg-legend-item--${type}`, label));
+    });
 
-    toolbar.append(searchGroup, viewGroup, expansionGroup, cameraGroup, legend);
+    toolbar.append(searchGroup, navGroup, viewGroup, legend);
   }
 
   function detail(label, value) {
@@ -248,10 +183,31 @@ export function createKnowledgeGraphController(options = {}) {
     const node = state.selectedNodeId ? graph.nodeById.get(state.selectedNodeId) : null;
 
     if (!node) {
-      const visible = nodePositions ? nodePositions.size : 0;
-      panel.append(el('h2', 'nv-kg-insp-title', 'Curriculum Atlas'), detail('Current level', 'Learning Path Overview'), detail('Visible nodes', String(visible)), detail('Visible relationships', String(visibleEdges?.length || 0)));
+      const paths = graph.nodes.filter(n => n.type === 'path').length;
+      const modules = graph.nodes.filter(n => n.type === 'module').length;
+      const lessons = graph.nodes.filter(n => n.type === 'lesson').length;
+      const artifacts = graph.nodes.filter(n => n.type === 'artifact').length;
+
+      panel.append(
+        el('h2', 'nv-kg-insp-title', 'Curriculum Atlas'),
+        detail('Current stage', 'Stage 1 — Overview'),
+        detail('Total Paths', String(paths)),
+        detail('Total Modules', String(modules)),
+        detail('Total Lessons', String(lessons)),
+        detail('Total Artifacts', String(artifacts))
+      );
+
       const guide = el('div', 'nv-kg-insp-guide');
-      guide.innerHTML = '<h3>How to explore</h3><p>Select a Learning Path to reveal modules. Continue into a module for lessons, a lesson for artifacts, or search any item to jump directly to its local neighborhood.</p><h3>Shortcuts</h3><p>Tab to nodes, Enter or Space to focus, arrow keys to move between visible nodes.</p>';
+      guide.innerHTML = `
+        <h3>How to explore</h3>
+        <p>Select any Learning Path card in the atlas grid to focus. You can drill down hierarchically from Path to Module, Lesson, and individual Artifacts.</p>
+        <h3>Keyboard shortcuts</h3>
+        <ul>
+          <li><kbd>Tab</kbd> to move focus</li>
+          <li><kbd>Enter</kbd> or <kbd>Space</kbd> to select card</li>
+          <li><kbd>Backspace</kbd> to go back</li>
+        </ul>
+      `;
       panel.append(guide);
       return;
     }
@@ -259,92 +215,457 @@ export function createKnowledgeGraphController(options = {}) {
     const children = getChildren(node.id);
     const siblings = getSiblings(node);
     const dependencies = getDependencies(node.id);
-    panel.append(el('span', `nv-kg-insp-type nv-kg-insp-type--${node.type}`, node.typeLabel), el('h2', 'nv-kg-insp-title', node.title));
+
+    panel.append(
+      el('span', `nv-kg-insp-type nv-kg-insp-type--${node.type}`, node.typeLabel),
+      el('h2', 'nv-kg-insp-title', node.title)
+    );
+
     const details = el('div', 'nv-kg-insp-details');
     details.append(
       detail('Status', node.status),
       detail('Lineage', (node.lineage?.labels || []).join(' > ')),
-      detail('Description', node.metadata?.overview || node.metadata?.artifactType || 'Local curriculum node'),
-      detail('Children', String(children.length)),
-      detail('Siblings', String(siblings.length)),
-      detail('Dependencies', String(dependencies.length)),
-      detail('Focus level', state.mode),
+      detail('Children count', String(children.length)),
+      detail('Siblings count', String(siblings.length)),
+      detail('Dependencies count', String(dependencies.length))
     );
     panel.append(details);
 
     const actions = el('div', 'nv-kg-insp-actions');
     actions.append(
-      button('Focus', () => focusNode(node.id)),
-      button('Expand children', () => focusNode(node.id)),
-      button('Collapse', resetGraph),
-      button('Back to parent', () => { const parent = getParent(node.id); parent ? focusNode(parent.id) : resetGraph(); }),
-      button('Open resource', () => { window.location.hash = node.route; }, 'primary'),
-      button('Center view', () => renderer.centerOn(node.id, nodePositions)),
+      button('Open Resource', () => { window.location.hash = node.route; }, 'primary'),
+      button('Back', goBack),
+      button('Reset Atlas', () => resetGraph(true))
     );
     panel.append(actions);
   }
 
-  function renderFallback() {
-    const fallback = root.querySelector('[data-kg-fallback]');
-    if (!fallback || !nodePositions) return;
-    fallback.innerHTML = '';
-    const list = el('ol', 'nv-kg-fallback-list');
-    [...nodePositions.values()].forEach((node) => {
-      const item = el('li');
-      const trigger = el('button', 'nv-kg-fallback-button', `${node.typeLabel}: ${node.title}`);
-      trigger.type = 'button';
-      trigger.addEventListener('click', () => focusNode(node.id));
-      item.append(trigger);
-      list.append(item);
-    });
-    fallback.append(el('h2', '', 'Current Atlas Text View'), list);
+  function renderAtlas() {
+    const canvasWrap = root.querySelector('[data-kg-canvas]');
+    if (!canvasWrap) return;
+    canvasWrap.innerHTML = '';
+
+    const atlasContainer = el('div', 'nv-kg-atlas');
+
+    if (state.mode === 'overview') {
+      const grid = el('div', 'nv-kg-grid');
+      const paths = graph.nodes.filter(n => n.type === 'path');
+
+      paths.forEach(path => {
+        const card = el('div', 'nv-kg-card nv-kg-card--path');
+        card.tabIndex = 0;
+        card.setAttribute('aria-label', `Learning Path: ${path.title}`);
+
+        const modules = getChildren(path.id);
+        const lessons = modules.flatMap(m => getChildren(m.id));
+        const artifacts = lessons.flatMap(l => getChildren(l.id));
+
+        card.innerHTML = `
+          <div class="nv-kg-card__header">
+            <span class="nv-kg-card__kicker">Learning Path</span>
+            <span class="nv-kg-status nv-kg-status--${path.status.toLowerCase()}">${path.status}</span>
+          </div>
+          <h3 class="nv-kg-card__title">${path.title}</h3>
+          <p class="nv-kg-card__desc">${path.metadata?.overview || 'Curriculum Path'}</p>
+          <div class="nv-kg-card__footer">
+            <span class="nv-kg-chip"><b>${modules.length}</b> Modules</span>
+            <span class="nv-kg-chip"><b>${lessons.length}</b> Lessons</span>
+            <span class="nv-kg-chip"><b>${artifacts.length}</b> Artifacts</span>
+          </div>
+        `;
+        card.addEventListener('click', () => selectNode(path.id));
+        card.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            selectNode(path.id);
+          }
+        });
+        grid.append(card);
+      });
+      atlasContainer.append(grid);
+    }
+    else if (state.mode === 'path') {
+      const pathNode = graph.nodeById.get(state.selectedNodeId);
+      const modules = getChildren(pathNode.id);
+
+      const layout = el('div', 'nv-kg-stage-layout');
+      const heroCol = el('div', 'nv-kg-stage-hero-col');
+      const contentCol = el('div', 'nv-kg-stage-content-col');
+
+      const heroCard = el('div', 'nv-kg-card nv-kg-card--path nv-kg-hero-card');
+      heroCard.innerHTML = `
+        <div class="nv-kg-card__header">
+          <span class="nv-kg-card__kicker">Selected Learning Path</span>
+          <span class="nv-kg-status nv-kg-status--${pathNode.status.toLowerCase()}">${pathNode.status}</span>
+        </div>
+        <h3 class="nv-kg-card__title">${pathNode.title}</h3>
+        <p class="nv-kg-card__desc">${pathNode.metadata?.overview || 'Curriculum Path'}</p>
+        <div class="nv-kg-card__footer">
+          <span class="nv-kg-chip"><b>${modules.length}</b> Modules</span>
+        </div>
+      `;
+      heroCol.append(heroCard);
+
+      const actions = el('div', 'nv-kg-insp-actions');
+      actions.append(
+        button('Back to Atlas', goBack),
+        button('Open Path', () => { window.location.hash = pathNode.route; }, 'primary')
+      );
+      heroCol.append(actions);
+
+      const sectionTitle = el('h4', 'nv-kg-section-title', 'Contained Modules');
+      const modulesGrid = el('div', 'nv-kg-grid');
+      contentCol.append(sectionTitle, modulesGrid);
+
+      modules.forEach(mod => {
+        const card = el('div', 'nv-kg-card nv-kg-card--module');
+        card.tabIndex = 0;
+        card.setAttribute('aria-label', `Module: ${mod.title}`);
+
+        const modLessons = getChildren(mod.id);
+        const modArtifacts = modLessons.flatMap(l => getChildren(l.id));
+
+        card.innerHTML = `
+          <div class="nv-kg-card__header">
+            <span class="nv-kg-card__kicker">Module</span>
+            <span class="nv-kg-status nv-kg-status--${mod.status.toLowerCase()}">${mod.status}</span>
+          </div>
+          <h3 class="nv-kg-card__title">${mod.title}</h3>
+          <p class="nv-kg-card__desc">${mod.metadata?.overview || 'Module details'}</p>
+          <div class="nv-kg-card__footer">
+            <span class="nv-kg-chip"><b>${modLessons.length}</b> Lessons</span>
+            <span class="nv-kg-chip"><b>${modArtifacts.length}</b> Artifacts</span>
+          </div>
+        `;
+        card.addEventListener('click', () => selectNode(mod.id));
+        card.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            selectNode(mod.id);
+          }
+        });
+        modulesGrid.append(card);
+      });
+
+      const otherPathsTitle = el('h4', 'nv-kg-section-title', 'Nearby Learning Paths');
+      const otherPathsStrip = el('div', 'nv-kg-siblings-strip');
+      const otherPaths = graph.nodes.filter(n => n.type === 'path' && n.id !== pathNode.id);
+      otherPaths.forEach(op => {
+        const pill = el('button', 'nv-kg-sibling-pill', op.title);
+        pill.type = 'button';
+        pill.addEventListener('click', () => selectNode(op.id));
+        otherPathsStrip.append(pill);
+      });
+      contentCol.append(otherPathsTitle, otherPathsStrip);
+
+      layout.append(heroCol, contentCol);
+      atlasContainer.append(layout);
+    }
+    else if (state.mode === 'module') {
+      const modNode = graph.nodeById.get(state.selectedNodeId);
+      const parentPath = getParent(modNode.id);
+      const lessons = getChildren(modNode.id);
+
+      const layout = el('div', 'nv-kg-stage-layout');
+      const heroCol = el('div', 'nv-kg-stage-hero-col');
+      const contentCol = el('div', 'nv-kg-stage-content-col');
+
+      const heroCard = el('div', 'nv-kg-card nv-kg-card--module nv-kg-hero-card');
+      heroCard.innerHTML = `
+        <div class="nv-kg-card__header">
+          <span class="nv-kg-card__kicker">Selected Module (${parentPath ? parentPath.title : 'Path'})</span>
+          <span class="nv-kg-status nv-kg-status--${modNode.status.toLowerCase()}">${modNode.status}</span>
+        </div>
+        <h3 class="nv-kg-card__title">${modNode.title}</h3>
+        <p class="nv-kg-card__desc">${modNode.metadata?.overview || 'Module details'}</p>
+      `;
+      heroCol.append(heroCard);
+
+      const actions = el('div', 'nv-kg-insp-actions');
+      actions.append(
+        button('Back to Path', goBack),
+        button('Open Module', () => { window.location.hash = modNode.route; }, 'primary')
+      );
+      heroCol.append(actions);
+
+      const sectionTitle = el('h4', 'nv-kg-section-title', 'Contained Lessons');
+      const lessonsGrid = el('div', 'nv-kg-grid');
+      contentCol.append(sectionTitle, lessonsGrid);
+
+      lessons.forEach(lesson => {
+        const card = el('div', 'nv-kg-card nv-kg-card--lesson');
+        card.tabIndex = 0;
+        card.setAttribute('aria-label', `Lesson: ${lesson.title}`);
+
+        const lessArtifacts = getChildren(lesson.id);
+
+        card.innerHTML = `
+          <div class="nv-kg-card__header">
+            <span class="nv-kg-card__kicker">Lesson</span>
+            <span class="nv-kg-status nv-kg-status--${lesson.status.toLowerCase()}">${lesson.status}</span>
+          </div>
+          <h3 class="nv-kg-card__title">${lesson.title}</h3>
+          <div class="nv-kg-card__footer">
+            <span class="nv-kg-chip"><b>${lessArtifacts.length}</b> Artifacts</span>
+          </div>
+        `;
+        card.addEventListener('click', () => selectNode(lesson.id));
+        card.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            selectNode(lesson.id);
+          }
+        });
+        lessonsGrid.append(card);
+      });
+
+      const siblingsTitle = el('h4', 'nv-kg-section-title', 'Sibling Modules');
+      const siblingsStrip = el('div', 'nv-kg-siblings-strip');
+      const siblings = getSiblings(modNode);
+      siblings.forEach(sib => {
+        const pill = el('button', 'nv-kg-sibling-pill', sib.title);
+        pill.type = 'button';
+        pill.addEventListener('click', () => selectNode(sib.id));
+        siblingsStrip.append(pill);
+      });
+      contentCol.append(siblingsTitle, siblingsStrip);
+
+      layout.append(heroCol, contentCol);
+      atlasContainer.append(layout);
+    }
+    else if (state.mode === 'lesson') {
+      const lessonNode = graph.nodeById.get(state.selectedNodeId);
+      const parentModule = getParent(lessonNode.id);
+      const artifacts = getChildren(lessonNode.id);
+
+      const layout = el('div', 'nv-kg-stage-layout');
+      const heroCol = el('div', 'nv-kg-stage-hero-col');
+      const contentCol = el('div', 'nv-kg-stage-content-col');
+
+      const heroCard = el('div', 'nv-kg-card nv-kg-card--lesson nv-kg-hero-card');
+      heroCard.innerHTML = `
+        <div class="nv-kg-card__header">
+          <span class="nv-kg-card__kicker">Selected Lesson (${parentModule ? parentModule.title : 'Module'})</span>
+          <span class="nv-kg-status nv-kg-status--${lessonNode.status.toLowerCase()}">${lessonNode.status}</span>
+        </div>
+        <h3 class="nv-kg-card__title">${lessonNode.title}</h3>
+      `;
+      heroCol.append(heroCard);
+
+      const actions = el('div', 'nv-kg-insp-actions');
+      actions.append(
+        button('Back to Module', goBack),
+        button('Open Lesson', () => { window.location.hash = lessonNode.route; }, 'primary')
+      );
+      heroCol.append(actions);
+
+      const sectionTitle = el('h4', 'nv-kg-section-title', 'Artifact Flow Order');
+      const flowList = el('div', 'nv-kg-flow-list');
+      contentCol.append(sectionTitle, flowList);
+
+      artifacts.forEach((art, index) => {
+        const flowItem = el('div', 'nv-kg-flow-item');
+        const indexBadge = el('span', 'nv-kg-flow-index', String(index + 1));
+
+        const card = el('div', 'nv-kg-card nv-kg-card--artifact nv-kg-flow-card');
+        card.tabIndex = 0;
+        card.setAttribute('aria-label', `Artifact: ${art.title}`);
+
+        const durStr = art.metadata?.duration ? `${art.metadata.duration} min` : '';
+
+        card.innerHTML = `
+          <div class="nv-kg-card__header">
+            <span class="nv-kg-card__kicker">${art.metadata?.artifactType || 'Artifact'}</span>
+            <span class="nv-kg-status nv-kg-status--${art.status.toLowerCase()}">${art.status}</span>
+          </div>
+          <h3 class="nv-kg-card__title">${art.title}</h3>
+          <div class="nv-kg-card__footer">
+            ${durStr ? `<span class="nv-kg-chip">${durStr}</span>` : ''}
+          </div>
+        `;
+        card.addEventListener('click', () => selectNode(art.id));
+        card.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            selectNode(art.id);
+          }
+        });
+        flowItem.append(indexBadge, card);
+        flowList.append(flowItem);
+      });
+
+      const siblingsTitle = el('h4', 'nv-kg-section-title', 'Sibling Lessons');
+      const siblingsStrip = el('div', 'nv-kg-siblings-strip');
+      const siblings = getSiblings(lessonNode);
+      siblings.forEach(sib => {
+        const pill = el('button', 'nv-kg-sibling-pill', sib.title);
+        pill.type = 'button';
+        pill.addEventListener('click', () => selectNode(sib.id));
+        siblingsStrip.append(pill);
+      });
+      contentCol.append(siblingsTitle, siblingsStrip);
+
+      layout.append(heroCol, contentCol);
+      atlasContainer.append(layout);
+    }
+    else if (state.mode === 'artifact') {
+      const artNode = graph.nodeById.get(state.selectedNodeId);
+      const parentLesson = getParent(artNode.id);
+      const deps = getDependencies(artNode.id);
+
+      const layout = el('div', 'nv-kg-stage-layout');
+      const heroCol = el('div', 'nv-kg-stage-hero-col');
+      const contentCol = el('div', 'nv-kg-stage-content-col');
+
+      const heroCard = el('div', 'nv-kg-card nv-kg-card--artifact nv-kg-hero-card');
+      const durStr = artNode.metadata?.duration ? `${artNode.metadata.duration} min` : '';
+      heroCard.innerHTML = `
+        <div class="nv-kg-card__header">
+          <span class="nv-kg-card__kicker">${artNode.metadata?.artifactType || 'Artifact'} (${parentLesson ? parentLesson.title : 'Lesson'})</span>
+          <span class="nv-kg-status nv-kg-status--${artNode.status.toLowerCase()}">${artNode.status}</span>
+        </div>
+        <h3 class="nv-kg-card__title">${artNode.title}</h3>
+        ${durStr ? `<p class="nv-kg-card__desc">Estimated Duration: ${durStr}</p>` : ''}
+      `;
+      heroCol.append(heroCard);
+
+      const actions = el('div', 'nv-kg-insp-actions');
+      actions.append(
+        button('Back to Lesson', goBack),
+        button('Open Artifact', () => { window.location.hash = artNode.route; }, 'primary')
+      );
+      heroCol.append(actions);
+
+      if (parentLesson) {
+        const sibTitle = el('h4', 'nv-kg-section-title', 'Sibling Artifacts');
+        const sibGrid = el('div', 'nv-kg-grid');
+        contentCol.append(sibTitle, sibGrid);
+
+        const siblings = getChildren(parentLesson.id).filter(a => a.id !== artNode.id);
+        siblings.forEach(sib => {
+          const card = el('div', 'nv-kg-card nv-kg-card--artifact');
+          card.tabIndex = 0;
+          card.setAttribute('aria-label', `Sibling Artifact: ${sib.title}`);
+          card.innerHTML = `
+            <div class="nv-kg-card__header">
+              <span class="nv-kg-card__kicker">${sib.metadata?.artifactType || 'Artifact'}</span>
+              <span class="nv-kg-status nv-kg-status--${sib.status.toLowerCase()}">${sib.status}</span>
+            </div>
+            <h3 class="nv-kg-card__title">${sib.title}</h3>
+          `;
+          card.addEventListener('click', () => selectNode(sib.id));
+          card.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              selectNode(sib.id);
+            }
+          });
+          sibGrid.append(card);
+        });
+      }
+
+      if (deps.length > 0) {
+        const depTitle = el('h4', 'nv-kg-section-title', 'Declared Dependencies');
+        const depGrid = el('div', 'nv-kg-grid');
+        contentCol.append(depTitle, depGrid);
+
+        deps.forEach(edge => {
+          const depNode = graph.nodeById.get(edge.target);
+          if (!depNode) return;
+          const card = el('div', `nv-kg-card nv-kg-card--${depNode.type}`);
+          card.tabIndex = 0;
+          card.setAttribute('aria-label', `Dependency: ${depNode.title}`);
+          card.innerHTML = `
+            <div class="nv-kg-card__header">
+              <span class="nv-kg-card__kicker">${depNode.typeLabel}</span>
+              <span class="nv-kg-status nv-kg-status--${depNode.status.toLowerCase()}">${depNode.status}</span>
+            </div>
+            <h3 class="nv-kg-card__title">${depNode.title}</h3>
+          `;
+          card.addEventListener('click', () => selectNode(depNode.id));
+          card.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              selectNode(depNode.id);
+            }
+          });
+          depGrid.append(card);
+        });
+      }
+
+      layout.append(heroCol, contentCol);
+      atlasContainer.append(layout);
+    }
+
+    canvasWrap.append(atlasContainer);
+  }
+
+  function renderShell() {
+    const container = target();
+    if (!container) return;
+    container.innerHTML = `
+      <section class="nv-kg" aria-labelledby="nv-kg-title">
+        <header class="nv-kg-hero nv-curriculum-hero">
+          <div class="nv-stack nv-stack--gap-xs">
+            <span class="nv-curriculum-card__kicker">NV-900 Curriculum Atlas</span>
+            <h1 id="nv-kg-title">Knowledge Explorer</h1>
+            <p class="nv-muted">Explore the curriculum through focused levels: paths, modules, lessons, and artifacts.</p>
+          </div>
+          <a class="nv-button" data-variant="secondary" href="#/learning">Open Curriculum</a>
+        </header>
+        <details class="nv-kg-controls" open>
+          <summary>Graph controls</summary>
+          <div class="nv-kg-toolbar" aria-label="Graph controls"></div>
+        </details>
+        <div class="nv-kg-workspace">
+          <div class="nv-kg-canvas-wrap" data-kg-canvas></div>
+          <aside class="nv-kg-inspector" data-kg-inspector aria-label="Node details"></aside>
+        </div>
+      </section>`;
+  }
+
+  async function renderCurrentRoute() {
+    if (!target()) return;
+    renderShell();
+    try {
+      await ensureGraph();
+      applyHashFocus();
+      applyCurrentRender();
+    } catch (err) {
+      const container = target();
+      if (container) {
+        container.innerHTML = `<section class="nv-panel"><h1>Atlas unavailable</h1><p>${err.message}</p></section>`;
+      }
+    }
+  }
+
+  function handleKeyDown(e) {
+    if (e.key === 'Backspace') {
+      const activeEl = document.activeElement;
+      if (activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'SELECT' || activeEl.tagName === 'TEXTAREA')) {
+        return; // Don't hijack input backspacing
+      }
+      e.preventDefault();
+      goBack();
+    }
   }
 
   function applyHashFocus() {
     const query = String(window.location.hash || '').split('?')[1];
     const focusId = query ? new URLSearchParams(query).get('focus') : '';
     const node = focusId ? graph.nodeById.get(focusId) : null;
-    if (!node) return;
-    state.mode = MODE_BY_TYPE[node.type] || 'overview';
-    state.focusedNodeId = node.id;
-    state.selectedNodeId = node.id;
-    state.expandedNodeIds = getLineageIds(node);
-  }
-
-  async function renderCurrentRoute() {
-    if (!target()) {
-      if (renderer) renderer.destroy();
-      renderer = null;
-      return;
-    }
-    renderShell();
-    try {
-      await ensureGraph();
-      applyHashFocus();
-      recomputeLayout();
-      const canvasWrap = root.querySelector('[data-kg-canvas]');
-      if (renderer) renderer.destroy();
-      renderer = new KnowledgeGraphRenderer(canvasWrap, handlers);
-      renderer.render(nodePositions, visibleEdges);
-      requestAnimationFrame(() => renderer.fitAll(computeBounds(nodePositions)));
-      if (state.selectedNodeId) requestAnimationFrame(() => renderer.applyFocus(state.selectedNodeId, getNeighborIds(state.selectedNodeId)));
-      renderToolbar();
-      renderInspector();
-      renderFallback();
-    } catch (err) {
-      const container = target();
-      if (container) container.innerHTML = `<section class="nv-panel"><h1>Graph unavailable</h1><p>${err.message}</p></section>`;
+    if (node) {
+      state.selectedNodeId = node.id;
+      state.mode = node.type;
+    } else {
+      state.selectedNodeId = null;
+      state.mode = 'overview';
     }
   }
 
   function init() {
     window.addEventListener('nv:routerendered', () => renderCurrentRoute());
-    window.addEventListener('hashchange', () => {
-      if (!String(window.location.hash || '').startsWith('#/knowledge-graph') && renderer) {
-        renderer.destroy();
-        renderer = null;
-      }
-    });
+    window.addEventListener('keydown', handleKeyDown);
     renderCurrentRoute();
   }
 

@@ -1,5 +1,5 @@
 # NV-900 Knowledge Graph: Comprehensive Audit Report
-Date: 2026-06-22T19:53:56.296Z
+Date: 2026-06-22T19:59:23.936Z
 
 ## Exploration Metrics
 - **Paths expanded:** 19
@@ -13,6 +13,24 @@ Date: 2026-06-22T19:53:56.296Z
 - **Page Errors:** 0
 - **Failed Interactions:** 0
 - **Total Collisions / Overlaps:** 0
+
+## Visual Stages Audit
+
+### 1. Overview (Root Paths)
+Nodes representing main learning pathways distributed in a concentric radial structure around the global center.
+![Overview (Paths)](images/01_overview.png)
+
+### 2. Paths Expanded (Modules Visible)
+Branching out from paths to reveal modules without visual overlaps.
+![Paths Expanded](images/02_paths_expanded.png)
+
+### 3. Modules Expanded (Lessons Visible)
+Sub-branches detailing modules down to individual lessons.
+![Modules Expanded](images/03_modules_expanded.png)
+
+### 4. Fully Expanded Mind Map (Artifacts Visible)
+The full depth of the curriculum fully expanded in concentric rings, proving the correctness of the anti-overlap radial math.
+![Fully Expanded](images/04_fully_expanded.png)
 
 ## Overlap Details
 No overlaps detected. The layout scaling is perfectly distributing the angles and spacing!

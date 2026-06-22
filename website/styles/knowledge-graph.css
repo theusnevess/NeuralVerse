@@ -1,5 +1,5 @@
 /* =============================================================================
-   NeuralVerse Knowledge Graph — Premium Dark UI  (NV-900-Graph-Polish)
+   NeuralVerse Knowledge Graph — Premium Dark UI & Staged Atlas (NV-900-UI10F)
    ============================================================================= */
 
 /* ── Layout ───────────────────────────────────────────────────────────────── */
@@ -126,8 +126,9 @@
 .nv-kg-canvas-wrap {
   border: 1px solid rgba(137, 180, 250, 0.08);
   border-radius: 16px;
-  overflow: hidden;
+  overflow-y: auto;
   min-block-size: 72vh;
+  max-block-size: 80vh;
   /* Starfield dot-grid background */
   background:
     radial-gradient(ellipse at 15% 10%, rgba(137,180,250,0.06), transparent 50%),
@@ -142,286 +143,354 @@
   position: relative;
 }
 
-.nv-kg-canvas-wrap::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: radial-gradient(circle at 50% 50%, transparent 45%, rgba(0,0,0,0.22));
+/* ── Staged Atlas Layouts ────────────────────────────────────────────────── */
+.nv-kg-atlas {
+  padding: 24px;
+  box-sizing: border-box;
+  width: 100%;
 }
 
-.nv-kg-svg {
-  display: block;
-  inline-size: 100%;
-  block-size: 72vh;
-  min-block-size: 36rem;
-  user-select: none;
-  -webkit-user-select: none;
-  overflow: hidden;
-}
-
-/* ── World group transitions ─────────────────────────────────────────────── */
-.nv-kg-world {
-  transition: transform 0.28s cubic-bezier(0.33, 1, 0.68, 1);
-}
-
-/* ── Nodes ────────────────────────────────────────────────────────────────── */
-.nv-kg-node {
-  cursor: pointer;
-  transition: opacity 0.25s ease;
-  animation: nv-kg-node-enter 0.48s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-.nv-kg-node:focus { outline: none; }
-
-.nv-kg-node-shape {
-  stroke-width: 1.4;
-  vector-effect: non-scaling-stroke;
-  transition: filter 0.25s ease, stroke-width 0.25s ease, transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-  transform-origin: center;
-  transform-box: fill-box;
-  filter: drop-shadow(0 10px 20px rgba(0,0,0,0.28));
-}
-
-.nv-kg-node:hover .nv-kg-node-shape {
-  filter: brightness(1.25) drop-shadow(0 0 8px rgba(137,180,250,0.25));
-  stroke-width: 2;
-  transform: scale(1.03);
-}
-
-.nv-kg-node:hover .nv-kg-node-glow {
-  opacity: 0.3;
-  transform: scale(1.03);
-}
-
-.nv-kg-node--role-parent { opacity: 0.74; }
-.nv-kg-node--role-child { opacity: 0.92; }
-.nv-kg-node--role-sibling { opacity: 0.34; }
-.nv-kg-node--role-selected { opacity: 1; }
-
-/* Glow halo */
-.nv-kg-node-glow {
-  stroke-width: 2.5;
-  opacity: 0;
-  vector-effect: non-scaling-stroke;
-  filter: blur(6px);
-  transform-origin: center;
-  transform-box: fill-box;
-  transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-/* Selected */
-.nv-kg-node.is-selected { opacity: 1 !important; }
-.nv-kg-node.is-selected .nv-kg-node-glow { 
-  opacity: 0.7; 
-  filter: blur(10px); 
-  transform: scale(1.06);
-}
-.nv-kg-node.is-selected .nv-kg-node-shape {
-  stroke-width: 2.5;
-  filter: brightness(1.3) drop-shadow(0 0 18px rgba(137,180,250,0.55));
-  transform: scale(1.06);
-}
-
-.nv-kg-node.is-pulsing .nv-kg-node-glow {
-  animation: nv-kg-node-pulse 1.05s ease-out both;
-}
-
-/* Focus mode: dim / neighbor */
-.nv-kg-node.is-dim { opacity: 0.15; pointer-events: none; }
-.nv-kg-node.is-neighbor { opacity: 0.7; }
-
-/* Keyboard focus ring */
-.nv-kg-node:focus-visible .nv-kg-node-shape {
-  filter: drop-shadow(0 0 12px rgba(137,180,250,0.7));
-  stroke-width: 2.5;
-}
-
-/* Typography */
-.nv-kg-node-type {
-  font-family: 'JetBrains Mono', 'Fira Code', monospace;
-  font-size: 8px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  pointer-events: none;
-}
-
-.nv-kg-node-title {
-  font-family: inherit;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-  pointer-events: none;
-}
-
-.nv-kg-node-title--path     { font-size: 16px; }
-.nv-kg-node-title--module   { font-size: 14px; }
-.nv-kg-node-title--lesson   { font-size: 12px; }
-.nv-kg-node-title--artifact { font-size: 11px; }
-
-/* Count badge */
-.nv-kg-count-badge {
-  stroke-width: 0.8;
-  vector-effect: non-scaling-stroke;
-}
-.nv-kg-count-text {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
-  font-weight: 700;
-  pointer-events: none;
-}
-
-/* Status badge */
-.nv-kg-badge--reviewed { fill: #a6e3a1; }
-
-/* ── Edges ────────────────────────────────────────────────────────────────── */
-.nv-kg-edge {
-  stroke: rgba(137, 180, 250, 0.12);
-  stroke-width: 1.2;
-  vector-effect: non-scaling-stroke;
-  fill: none;
-  pointer-events: stroke;
-  stroke-dasharray: 1;
-  stroke-dashoffset: 0;
-  transition: stroke 0.2s ease, opacity 0.25s ease, stroke-width 0.2s ease;
-  animation: nv-kg-edge-grow 0.52s ease-out both;
-}
-
-.nv-kg-edge:hover,
-.nv-kg-edge.is-active {
-  stroke: rgba(137, 180, 250, 0.72);
-  stroke-width: 2.2;
-}
-
-.nv-kg-edge.is-dim {
-  opacity: 0.08;
-}
-
-.nv-kg-edge--dependency {
-  stroke: rgba(203, 166, 247, 0.35);
-  stroke-dasharray: 7 7;
-}
-
-.nv-kg-edge--sibling {
-  stroke: rgba(205, 214, 244, 0.1);
-  stroke-dasharray: 3 8;
-}
-
-.nv-kg-svg[data-zoom="far"] .nv-kg-node-type,
-.nv-kg-svg[data-zoom="far"] .nv-kg-detail-hint {
-  opacity: 0;
-}
-
-.nv-kg-svg[data-zoom="far"] .nv-kg-node-title--lesson,
-.nv-kg-svg[data-zoom="far"] .nv-kg-node-title--artifact {
-  opacity: 0;
-}
-
-.nv-kg-svg[data-zoom="medium"] .nv-kg-node-type {
-  opacity: 0.55;
-}
-
-/* ── Inspector ────────────────────────────────────────────────────────────── */
-.nv-kg-inspector {
-  position: sticky;
-  inset-block-start: 16px;
-  border: 1px solid rgba(137, 180, 250, 0.08);
-  border-radius: 16px;
-  background: rgba(15, 15, 23, 0.96);
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
-  padding: 22px;
+.nv-kg-grid {
   display: grid;
-  gap: 14px;
-  max-block-size: calc(72vh + 2rem);
-  overflow: auto;
-  backdrop-filter: blur(8px);
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
 }
 
-.nv-kg-insp-type {
-  display: inline-block;
-  padding: 3px 10px;
-  border-radius: 20px;
+.nv-kg-stage-layout {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+.nv-kg-stage-hero-col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: sticky;
+  top: 0;
+}
+
+.nv-kg-stage-content-col {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.nv-kg-section-title {
+  margin: 0 0 12px;
+  font-size: 0.9rem;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
+  color: rgba(205, 214, 244, 0.46);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  padding-bottom: 8px;
+}
+
+/* ── Premium Cards ───────────────────────────────────────────────────────── */
+.nv-kg-card {
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  background: rgba(20, 20, 31, 0.7);
+  backdrop-filter: blur(8px);
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.28s cubic-bezier(0.33, 1, 0.68, 1);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  outline: none;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.nv-kg-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--card-glow-color, rgba(137, 180, 250, 0.4));
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35), 0 0 12px var(--card-glow-color-soft, rgba(137, 180, 250, 0.15));
+}
+
+.nv-kg-card:focus-visible {
+  border-color: var(--card-glow-color, #89b4fa);
+  box-shadow: 0 0 0 2px rgba(137, 180, 250, 0.3), 0 0 16px var(--card-glow-color-soft, rgba(137, 180, 250, 0.25));
+}
+
+.nv-kg-card--selected {
+  border-color: var(--card-glow-color, #89b4fa);
+  box-shadow: 0 0 16px var(--card-glow-color-soft, rgba(137, 180, 250, 0.25));
+}
+
+.nv-kg-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nv-kg-card__kicker {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--card-glow-color, #89b4fa);
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
-.nv-kg-insp-type--path     { background: rgba(137,180,250,0.12); color: #89b4fa; border: 1px solid rgba(137,180,250,0.3); }
-.nv-kg-insp-type--module   { background: rgba(166,227,161,0.10); color: #a6e3a1; border: 1px solid rgba(166,227,161,0.25); }
-.nv-kg-insp-type--lesson   { background: rgba(249,226,175,0.10); color: #f9e2af; border: 1px solid rgba(249,226,175,0.25); }
-.nv-kg-insp-type--artifact { background: rgba(203,166,247,0.10); color: #cba6f7; border: 1px solid rgba(203,166,247,0.25); }
-
-.nv-kg-insp-title {
+.nv-kg-card__title {
   margin: 0;
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   font-weight: 700;
   color: #cdd6f4;
   line-height: 1.3;
 }
 
-.nv-kg-insp-details { display: grid; gap: 6px; }
+.nv-kg-card__desc {
+  margin: 0;
+  font-size: 0.84rem;
+  color: rgba(205, 214, 244, 0.6);
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.nv-kg-card__footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: auto;
+}
+
+/* Card Types */
+.nv-kg-card--path {
+  --card-glow-color: #89b4fa;
+  --card-glow-color-soft: rgba(137, 180, 250, 0.15);
+  border-left: 3px solid #89b4fa;
+}
+
+.nv-kg-card--module {
+  --card-glow-color: #a6e3a1;
+  --card-glow-color-soft: rgba(166, 227, 161, 0.15);
+  border-left: 3px solid #a6e3a1;
+}
+
+.nv-kg-card--lesson {
+  --card-glow-color: #f9e2af;
+  --card-glow-color-soft: rgba(249, 226, 175, 0.15);
+  border-left: 3px solid #f9e2af;
+}
+
+.nv-kg-card--artifact {
+  --card-glow-color: #cba6f7;
+  --card-glow-color-soft: rgba(203, 166, 247, 0.15);
+  border-left: 3px solid #cba6f7;
+}
+
+/* Hero Cards */
+.nv-kg-hero-card {
+  cursor: default;
+  background: linear-gradient(135deg, rgba(20, 20, 31, 0.9), rgba(10, 10, 15, 0.95));
+  border: 1.5px solid var(--card-glow-color, #89b4fa);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 20px var(--card-glow-color-soft, rgba(137, 180, 250, 0.2));
+  padding: 24px;
+}
+
+.nv-kg-hero-card:hover {
+  transform: none;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 20px var(--card-glow-color-soft, rgba(137, 180, 250, 0.2));
+}
+
+.nv-kg-hero-card .nv-kg-card__title {
+  font-size: 1.45rem;
+}
+
+.nv-kg-hero-card .nv-kg-card__desc {
+  -webkit-line-clamp: none;
+  overflow: visible;
+}
+
+/* ── Badges & Chips ──────────────────────────────────────────────────────── */
+.nv-kg-status {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.nv-kg-status--reviewed {
+  background: rgba(166, 227, 161, 0.12);
+  color: #a6e3a1;
+  border: 1px solid rgba(166, 227, 161, 0.2);
+}
+
+.nv-kg-status--draft {
+  background: rgba(249, 226, 175, 0.1);
+  color: #f9e2af;
+  border: 1px solid rgba(249, 226, 175, 0.18);
+}
+
+.nv-kg-chip {
+  font-size: 0.72rem;
+  color: rgba(205, 214, 244, 0.7);
+  background: rgba(255, 255, 255, 0.04);
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+.nv-kg-chip b {
+  color: #cdd6f4;
+}
+
+/* ── Sibling lists ───────────────────────────────────────────────────────── */
+.nv-kg-siblings-strip {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 8px 4px;
+}
+
+.nv-kg-sibling-pill {
+  flex-shrink: 0;
+  padding: 8px 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  font-size: 0.8rem;
+  color: rgba(205, 214, 244, 0.5);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.nv-kg-sibling-pill:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: rgba(205, 214, 244, 0.85);
+}
+
+.nv-kg-sibling-pill--active {
+  background: rgba(137, 180, 250, 0.08);
+  border-color: rgba(137, 180, 250, 0.25);
+  color: #89b4fa;
+}
+
+/* ── Connectors ──────────────────────────────────────────────────────────── */
+.nv-kg-flow-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+}
+
+.nv-kg-flow-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.nv-kg-flow-index {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: rgba(205, 214, 244, 0.5);
+  flex-shrink: 0;
+}
+
+.nv-kg-flow-item:hover .nv-kg-flow-index {
+  border-color: var(--card-glow-color, #89b4fa);
+  color: var(--card-glow-color, #89b4fa);
+}
+
+.nv-kg-flow-card {
+  flex: 1;
+}
+
+/* ── Inspector details ───────────────────────────────────────────────────── */
+.nv-kg-inspector {
+  border: 1px solid rgba(137, 180, 250, 0.08);
+  border-radius: 16px;
+  padding: 24px;
+  background: rgba(15, 15, 23, 0.94);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.55);
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.nv-kg-insp-title {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #cdd6f4;
+}
+
+.nv-kg-insp-type {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  padding: 2px 6px;
+  border-radius: 4px;
+  display: inline-block;
+  align-self: start;
+  text-transform: uppercase;
+}
+
+.nv-kg-insp-type--path { background: rgba(137, 180, 250, 0.12); color: #89b4fa; }
+.nv-kg-insp-type--module { background: rgba(166, 227, 161, 0.12); color: #a6e3a1; }
+.nv-kg-insp-type--lesson { background: rgba(249, 226, 175, 0.12); color: #f9e2af; }
+.nv-kg-insp-type--artifact { background: rgba(203, 166, 247, 0.12); color: #cba6f7; }
+
+.nv-kg-insp-details {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
 
 .nv-kg-detail {
-  display: grid;
-  gap: 2px;
-  padding-block: 7px;
-  border-block-end: 1px solid rgba(255,255,255,0.04);
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  padding-bottom: 8px;
 }
 
 .nv-kg-detail__label {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.68rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: rgba(205, 214, 244, 0.35);
+  font-size: 0.8rem;
+  color: rgba(205, 214, 244, 0.44);
 }
 
 .nv-kg-detail__value {
-  font-size: 0.84rem;
-  color: rgba(205, 214, 244, 0.72);
-  line-height: 1.45;
+  font-size: 0.82rem;
+  color: #cdd6f4;
+  text-align: right;
+  max-width: 14rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .nv-kg-insp-actions {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 8px;
-  padding-top: 8px;
+  margin-top: auto;
+}
+
+.nv-kg-insp-actions button {
+  width: 100%;
 }
 
 .nv-kg-fallback {
-  border: 1px solid rgba(137, 180, 250, 0.08);
-  border-radius: 16px;
-  background: rgba(15, 15, 23, 0.86);
-  padding: 18px;
-  display: grid;
-  gap: 10px;
-}
-
-.nv-kg-fallback h2,
-.nv-kg-fallback h3 {
-  margin: 0;
-}
-
-.nv-kg-fallback-list {
-  display: grid;
-  gap: 6px;
-  max-block-size: 12rem;
-  overflow: auto;
-  margin: 0;
-}
-
-.nv-kg-fallback-list a {
-  color: #89b4fa;
-}
-
-.nv-kg-fallback-button {
-  border: 0;
-  background: transparent;
-  color: #89b4fa;
-  cursor: pointer;
-  padding: 0;
-  text-align: start;
+  display: none;
 }
 
 /* Guide (empty state) */
@@ -472,6 +541,7 @@
     max-block-size: 26rem;
   }
   .nv-kg-legend { display: none; }
+  .nv-kg-stage-layout { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 520px) {
@@ -480,34 +550,14 @@
   .nv-kg-toolbar { padding: 10px 12px; gap: 8px; }
   .nv-kg-control-group { inline-size: 100%; flex-wrap: wrap; }
   .nv-kg-search-wrap { min-inline-size: 0; max-inline-size: none; inline-size: 100%; }
-  .nv-kg-svg { block-size: 50vh; min-block-size: 20rem; }
   .nv-kg-canvas-wrap { min-block-size: 20rem; }
   .nv-kg-tool-btn { font-size: 0.72rem; padding: 4px 8px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .nv-kg-world,
-  .nv-kg-node,
-  .nv-kg-node-shape,
-  .nv-kg-node-glow,
-  .nv-kg-edge {
+  .nv-kg-card,
+  .nv-kg-sibling-pill {
     transition: none !important;
     animation: none !important;
   }
-}
-
-@keyframes nv-kg-node-enter {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes nv-kg-node-pulse {
-  0% { opacity: 0.15; stroke-width: 2; }
-  45% { opacity: 0.9; stroke-width: 5; }
-  100% { opacity: 0.55; stroke-width: 2.5; }
-}
-
-@keyframes nv-kg-edge-grow {
-  from { opacity: 0; stroke-dashoffset: 1; }
-  to { opacity: 1; stroke-dashoffset: 0; }
 }
