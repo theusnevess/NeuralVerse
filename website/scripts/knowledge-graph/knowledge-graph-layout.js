@@ -40,18 +40,18 @@ export function computeLayout(graph, state) {
 
   // Radius configuration for each tier
   const LEVEL_RADIUS = {
-    path: 1400,      // Distance from center to paths
-    module: 450,     // Distance from path to modules
-    lesson: 300,     // Distance from module to lessons
-    artifact: 240    // Distance from lesson to artifacts
+    path: 2400,      // Distance from center to paths
+    module: 600,     // Distance from path to modules
+    lesson: 400,     // Distance from module to lessons
+    artifact: 280    // Distance from lesson to artifacts
   };
 
-  function placeRadial(node, startAngle, endAngle, currentRadius, centerX, centerY) {
+  function placeRadial(node, startAngle, endAngle, currentRadius) {
     const angle = (startAngle + endAngle) / 2;
     
-    // Smooth angle interpolation for subtrees to push them outwards naturally
-    const wx = centerX + Math.cos(angle) * currentRadius;
-    const wy = centerY + Math.sin(angle) * currentRadius;
+    // Nodes are placed on concentric circles based on their depth
+    const wx = Math.cos(angle) * currentRadius;
+    const wy = Math.sin(angle) * currentRadius;
 
     positions.set(node.id, { 
       ...node, 
@@ -66,9 +66,6 @@ export function computeLayout(graph, state) {
         let currentStart = startAngle;
         const totalNodeWeight = calculateWeight(node.id);
         
-        // For children, we place them relative to their parent's position to form true branches
-        // But to keep the mind map expanding radially without crossing, we keep using the global angle slices
-        // but set the origin to the parent's coordinates.
         for (const child of children) {
           const childWeight = calculateWeight(child.id);
           // Distribute angle proportionally to weight
@@ -76,7 +73,7 @@ export function computeLayout(graph, state) {
           const childEndAngle = currentStart + childAngleSpan;
           
           const radiusOffset = LEVEL_RADIUS[child.type] || 200;
-          placeRadial(child, currentStart, childEndAngle, radiusOffset, wx, wy);
+          placeRadial(child, currentStart, childEndAngle, currentRadius + radiusOffset);
           
           currentStart = childEndAngle;
         }
@@ -91,8 +88,8 @@ export function computeLayout(graph, state) {
     const angleSpan = (weight / totalWeight) * Math.PI * 2;
     const endAngle = currentStart + angleSpan;
     
-    // Place root paths around a central absolute origin (0,0)
-    placeRadial(path, currentStart, endAngle, LEVEL_RADIUS.path, 0, 0);
+    // Place root paths around the central absolute origin
+    placeRadial(path, currentStart, endAngle, LEVEL_RADIUS.path);
     
     currentStart = endAngle;
   }
