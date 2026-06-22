@@ -1,291 +1,205 @@
 /**
- * Knowledge Graph Layout Engine (NV-900-UI10A)
+ * NV-900-UIX — Knowledge Graph Layout Engine
  *
- * Root cause of previous collapse:
- *   - All nodes of each type were assigned the same x column (TYPE_X).
- *   - Y positions were computed independently per type with gap * index,
- *     producing 15,898px of height for 120 lessons at 132px gap.
- *   - fitView() then tried to compress this into a 720px viewBox.
- *   - The result was all nodes visually collapsed into an unreadable vertical strip.
+ * Cluster-based, top-down tree layout.
+ * Stable, deterministic, progressive disclosure aware.
  *
- * Strategy (Overview):
- *   - Group paths into rows (max PATHS_PER_ROW per row).
- *   - Within each path group block: Path node left, Modules center, Lessons right.
- *   - Each group block has independent vertical space derived from its content.
- *   - Artifacts hidden by default; shown only in focused/neighborhood modes.
- *
- * Strategy (Focused/Neighborhood):
- *   - Use the same layered approach but scoped to the relevant subgraph.
- *   - Focus node is visually centered.
+ * Coordinate space: world-space pixels.
+ * Each cluster is placed at an (cx, cy) anchor.
+ * Nodes within a cluster are positioned relative to that anchor.
  */
 
-// Layout constants
-const PATHS_PER_ROW = 3;           // paths arranged in a grid row
-const COL_GAP = 320;               // horizontal gap between hierarchy columns (px)
-const PATH_COL_X = 120;            // x of path node within its group block
-const MODULE_COL_X = PATH_COL_X + COL_GAP;   // 440
-const LESSON_COL_X = MODULE_COL_X + COL_GAP; // 760
-const ARTIFACT_COL_X = LESSON_COL_X + COL_GAP; // 1080
+// ── Node visual sizes ──────────────────────────────────────────────────────────
+export const NODE_SIZES = {
+  path:     { w: 220, h: 64 },
+  module:   { w: 170, h: 50 },
+  lesson:   { w: 144, h: 40 },
+  artifact: { w: 120, h: 30 },
+};
 
-const NODE_H = 64;                 // node height (matches renderer rect height 62 + margin)
-const LESSON_V_GAP = 80;           // vertical gap between lessons within a module
-const MODULE_V_GAP = 40;           // extra gap between sibling module groups
-const PATH_ROW_GAP = 80;           // vertical gap between path grid rows
-const GROUP_BLOCK_PAD_Y = 48;      // top padding within each path group block
+// ── Spacing constants ─────────────────────────────────────────────────────────
+const CLUSTER_COLS       = 4;    // paths per row
+const CLUSTER_SLOT_W     = 860;  // horizontal slot per cluster (px)
+const CLUSTER_SLOT_H     = 360;  // vertical slot per cluster (px, unexpanded)
+const CLUSTER_GAP_X      = 200;  // gap between cluster columns
+const CLUSTER_GAP_Y      = 220;  // gap between cluster rows
+const ROW_STAGGER        = 180;  // x-offset for odd rows
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+const PATH_TO_MOD_Y      = 110;  // vertical gap: path → module layer
+const MOD_TO_LES_Y       = 100;  // vertical gap: module → lesson layer
+const LES_TO_ART_Y       = 80;   // vertical gap: lesson → artifact layer
+const SIBLING_GAP_MOD    = 24;   // horizontal gap between module subtrees
+const SIBLING_GAP_LES    = 14;   // horizontal gap between lesson subtrees
+const SIBLING_GAP_ART    = 10;   // horizontal gap between artifact nodes
 
-function sortByTitle(nodes) {
-  return [...nodes].sort((a, b) => (a.lineage.labels || []).join('/').localeCompare((b.lineage.labels || []).join('/')) || a.title.localeCompare(b.title));
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
+/** Return all module IDs belonging to a path (from contains edges). */
+function getChildIds(parentId, edges) {
+  return edges
+    .filter(e => e.type === 'contains' && e.source === parentId)
+    .map(e => e.target);
 }
 
-/**
- * Build layout result object.
- */
-function layoutResult(nodes, edges) {
-  const maxX = nodes.reduce((m, n) => Math.max(m, n.x), 0);
-  const maxY = nodes.reduce((m, n) => Math.max(m, n.y), 0);
-  return {
-    nodes,
-    edges,
-    width: Math.max(900, maxX + 240),
-    height: Math.max(560, maxY + 120)
-  };
+/** Subtree width of a module (depends on whether lessons are expanded). */
+function lessonSubtreeWidth(lessonId, expandedLessons, edges) {
+  if (!expandedLessons.has(lessonId)) return NODE_SIZES.lesson.w;
+  const artIds = getChildIds(lessonId, edges);
+  if (!artIds.length) return NODE_SIZES.lesson.w;
+  const total = artIds.length * NODE_SIZES.artifact.w + (artIds.length - 1) * SIBLING_GAP_ART;
+  return Math.max(NODE_SIZES.lesson.w, total);
 }
 
-// ─── Overview Mode ─────────────────────────────────────────────────────────────
+function moduleSubtreeWidth(moduleId, expandedModules, expandedLessons, edges) {
+  if (!expandedModules.has(moduleId)) return NODE_SIZES.module.w;
+  const lessonIds = getChildIds(moduleId, edges);
+  if (!lessonIds.length) return NODE_SIZES.module.w;
+  const total = lessonIds.reduce((s, lid) =>
+    s + lessonSubtreeWidth(lid, expandedLessons, edges), 0
+  ) + (lessonIds.length - 1) * SIBLING_GAP_LES;
+  return Math.max(NODE_SIZES.module.w, total);
+}
+
+// ── Cluster-level layout ──────────────────────────────────────────────────────
 
 /**
- * Lays out path/module/lesson nodes grouped by curriculum hierarchy.
- * Paths are arranged in a grid (PATHS_PER_ROW columns), each with its modules
- * and lessons positioned in sub-columns to the right.
- *
- * Artifacts are excluded unless showArtifacts=true.
+ * Compute (x, y) positions for all visible nodes within one cluster.
+ * Returns an array of { id, x, y, type, ...node } in world space.
+ * All positions are absolute (anchor already added).
  */
-export function layoutOverviewGraph(graph, showArtifacts = false) {
-  const paths = sortByTitle(graph.nodes.filter(n => n.type === 'path'));
-  const laidOutNodes = [];
-  const seenIds = new Set();
+function layoutCluster(pathNode, graph, expandedModules, expandedLessons, anchorX, anchorY) {
+  const { edges, nodeById } = graph;
+  const nodes = [];
 
-  // Compute a bounding height for one path group (path + all its modules + lessons)
-  function groupBlockHeight(path) {
-    const moduleItems = (path.lineage ? [] : []).concat(
-      [...(graph.moduleById ? graph.moduleById.values() : [])]
-        .filter(m => {
-          const pathNode = graph.nodeById?.get(path.id);
-          return pathNode && graph.parentPathByModule?.get(m.id)?.id === path.id;
-        })
-    );
+  // ── Path node ───────────────────────────────────────────────────
+  const pathX = anchorX;
+  const pathY = anchorY;
+  nodes.push({ ...pathNode, wx: pathX, wy: pathY });
 
-    // Walk graph model to find modules belonging to this path
-    const pathModuleIds = [];
-    graph.edges.forEach(e => {
-      if (e.type === 'contains' && e.source === path.id) pathModuleIds.push(e.target);
-    });
+  // ── Modules ─────────────────────────────────────────────────────
+  const moduleIds = getChildIds(pathNode.id, edges);
+  const modWidths = moduleIds.map(mid =>
+    moduleSubtreeWidth(mid, expandedModules, expandedLessons, edges)
+  );
+  const totalModW = modWidths.reduce((s, w) => s + w, 0)
+    + Math.max(0, moduleIds.length - 1) * SIBLING_GAP_MOD;
+  let modCursorX = pathX - totalModW / 2;
+  const modY = pathY + PATH_TO_MOD_Y;
 
-    let totalH = GROUP_BLOCK_PAD_Y;
-    pathModuleIds.forEach(mid => {
-      const moduleLessonIds = [];
-      graph.edges.forEach(e => {
-        if (e.type === 'contains' && e.source === mid) moduleLessonIds.push(e.target);
-      });
-      const lessonCount = Math.max(1, moduleLessonIds.length);
-      totalH += lessonCount * LESSON_V_GAP + MODULE_V_GAP;
-    });
-    return Math.max(NODE_H + GROUP_BLOCK_PAD_Y * 2, totalH + GROUP_BLOCK_PAD_Y);
-  }
+  moduleIds.forEach((moduleId, mi) => {
+    const moduleNode = nodeById.get(moduleId);
+    if (!moduleNode) return;
+    const modW = modWidths[mi];
+    const modCenterX = modCursorX + modW / 2;
+    nodes.push({ ...moduleNode, wx: modCenterX, wy: modY });
 
-  // Arrange paths in rows of PATHS_PER_ROW
-  let currentRowY = 60;
+    // ── Lessons ────────────────────────────────────────────────────
+    if (expandedModules.has(moduleId)) {
+      const lessonIds = getChildIds(moduleId, edges);
+      const lesWidths = lessonIds.map(lid =>
+        lessonSubtreeWidth(lid, expandedLessons, edges)
+      );
+      const totalLesW = lesWidths.reduce((s, w) => s + w, 0)
+        + Math.max(0, lessonIds.length - 1) * SIBLING_GAP_LES;
+      let lesCursorX = modCenterX - totalLesW / 2;
+      const lesY = modY + MOD_TO_LES_Y;
 
-  for (let rowStart = 0; rowStart < paths.length; rowStart += PATHS_PER_ROW) {
-    const rowPaths = paths.slice(rowStart, rowStart + PATHS_PER_ROW);
+      lessonIds.forEach((lessonId, li) => {
+        const lessonNode = nodeById.get(lessonId);
+        if (!lessonNode) return;
+        const lesW = lesWidths[li];
+        const lesCenterX = lesCursorX + lesW / 2;
+        nodes.push({ ...lessonNode, wx: lesCenterX, wy: lesY });
 
-    // Find max group block height in this row
-    let rowHeight = 0;
-    rowPaths.forEach(p => { rowHeight = Math.max(rowHeight, groupBlockHeight(p)); });
-    rowHeight = Math.max(rowHeight, 200);
-
-    rowPaths.forEach((pathNode, colIndex) => {
-      // Each path occupies a horizontal band
-      const groupOffsetX = colIndex * (ARTIFACT_COL_X + 240); // wide block per path
-      const pathX = groupOffsetX + PATH_COL_X;
-      const pathCenterY = currentRowY + rowHeight / 2;
-
-      if (!seenIds.has(pathNode.id)) {
-        laidOutNodes.push({ ...pathNode, x: pathX, y: pathCenterY, focus: false });
-        seenIds.add(pathNode.id);
-      }
-
-      // Collect modules for this path
-      const moduleIds = [];
-      graph.edges.forEach(e => {
-        if (e.type === 'contains' && e.source === pathNode.id) moduleIds.push(e.target);
-      });
-      const moduleNodes = moduleIds.map(id => graph.nodeById.get(id)).filter(Boolean);
-
-      // Position modules vertically centered in the path group block
-      const totalModuleArea = rowHeight - GROUP_BLOCK_PAD_Y * 2;
-      const moduleSpacing = moduleNodes.length > 1
-        ? Math.min(LESSON_V_GAP * 3, totalModuleArea / (moduleNodes.length - 1))
-        : 0;
-      const moduleStartY = moduleNodes.length > 1
-        ? currentRowY + GROUP_BLOCK_PAD_Y + (totalModuleArea - moduleSpacing * (moduleNodes.length - 1)) / 2
-        : pathCenterY;
-
-      moduleNodes.forEach((moduleNode, mi) => {
-        const moduleX = groupOffsetX + MODULE_COL_X;
-        const moduleY = moduleStartY + mi * moduleSpacing;
-
-        if (!seenIds.has(moduleNode.id)) {
-          laidOutNodes.push({ ...moduleNode, x: moduleX, y: moduleY, focus: false });
-          seenIds.add(moduleNode.id);
+        // ── Artifacts ──────────────────────────────────────────────
+        if (expandedLessons.has(lessonId)) {
+          const artIds = getChildIds(lessonId, edges);
+          const totalArtW = artIds.length * NODE_SIZES.artifact.w
+            + Math.max(0, artIds.length - 1) * SIBLING_GAP_ART;
+          let artCursorX = lesCenterX - totalArtW / 2;
+          const artY = lesY + LES_TO_ART_Y;
+          artIds.forEach(artId => {
+            const artNode = nodeById.get(artId);
+            if (!artNode) return;
+            nodes.push({ ...artNode, wx: artCursorX + NODE_SIZES.artifact.w / 2, wy: artY });
+            artCursorX += NODE_SIZES.artifact.w + SIBLING_GAP_ART;
+          });
         }
 
-        // Collect lessons for this module
-        const lessonIds = [];
-        graph.edges.forEach(e => {
-          if (e.type === 'contains' && e.source === moduleNode.id) lessonIds.push(e.target);
-        });
-        const lessonNodes = lessonIds.map(id => graph.nodeById.get(id)).filter(Boolean);
-
-        const totalLessonH = Math.max(0, (lessonNodes.length - 1)) * LESSON_V_GAP;
-        const lessonStartY = moduleY - totalLessonH / 2;
-
-        lessonNodes.forEach((lessonNode, li) => {
-          const lessonX = groupOffsetX + LESSON_COL_X;
-          const lessonY = lessonStartY + li * LESSON_V_GAP;
-
-          if (!seenIds.has(lessonNode.id)) {
-            laidOutNodes.push({ ...lessonNode, x: lessonX, y: lessonY, focus: false });
-            seenIds.add(lessonNode.id);
-          }
-
-          // Optionally show artifacts
-          if (showArtifacts) {
-            const artifactIds = [];
-            graph.edges.forEach(e => {
-              if (e.type === 'contains' && e.source === lessonNode.id) artifactIds.push(e.target);
-            });
-            const artifactNodes = artifactIds.map(id => graph.nodeById.get(id)).filter(Boolean);
-            const artStartY = lessonY - ((artifactNodes.length - 1) * 60) / 2;
-            artifactNodes.forEach((artNode, ai) => {
-              if (!seenIds.has(artNode.id)) {
-                laidOutNodes.push({ ...artNode, x: groupOffsetX + ARTIFACT_COL_X, y: artStartY + ai * 60, focus: false });
-                seenIds.add(artNode.id);
-              }
-            });
-          }
-        });
+        lesCursorX += lesW + SIBLING_GAP_LES;
       });
-    });
+    }
 
-    currentRowY += rowHeight + PATH_ROW_GAP;
-  }
-
-  // Filter edges to only visible nodes
-  const visibleIds = new Set(laidOutNodes.map(n => n.id));
-  const edges = graph.edges.filter(e => visibleIds.has(e.source) && visibleIds.has(e.target));
-
-  return layoutResult(laidOutNodes, edges);
-}
-
-// ─── Focused Lesson Mode ────────────────────────────────────────────────────────
-
-/**
- * Lesson-focused layout:
- *   Path (left) → Module (center-left) → Selected Lesson (center) →
- *   Artifacts (right) + Sibling Lessons (below lesson column)
- */
-export function layoutFocusedLessonGraph(graph, lessonId) {
-  const lesson = graph.nodeById.get(lessonId) || graph.nodes.find(n => n.type === 'lesson');
-  if (!lesson) return layoutResult([], []);
-
-  const ids = new Set([lesson.id, lesson.lineage.pathId, lesson.lineage.moduleId].filter(Boolean));
-  const lessonItem = graph.lessonById?.get(lesson.id);
-  (lessonItem?.artifactIds || []).forEach(id => ids.add(id));
-
-  // Sibling lessons (same module)
-  const moduleItem = graph.moduleById?.get(lesson.lineage.moduleId);
-  (moduleItem?.lessonIds || []).forEach(id => ids.add(id));
-
-  // Dependency edges
-  graph.edges.forEach(e => {
-    if (ids.has(e.source) || ids.has(e.target)) { ids.add(e.source); ids.add(e.target); }
+    modCursorX += modW + SIBLING_GAP_MOD;
   });
 
-  const nodes = [...ids].map(id => graph.nodeById.get(id)).filter(Boolean);
-  return _layerLayout(nodes, graph.edges, lesson.id, graph);
+  return nodes;
 }
 
-// ─── Artifact Neighborhood Mode ──────────────────────────────────────────────
+// ── Top-level entry points ────────────────────────────────────────────────────
 
 /**
- * Artifact-neighborhood layout:
- *   Path → Module → Lesson → Selected Artifact (focus center)
- *   + sibling artifacts + dependency artifacts around perimeter
+ * Compute anchor (world-space x,y) for each Learning Path cluster.
+ * Stable and deterministic — independent of expansion state.
  */
-export function layoutArtifactNeighborhoodGraph(graph, artifactId) {
-  const artifact = graph.nodeById.get(artifactId) || graph.nodes.find(n => n.type === 'artifact');
-  if (!artifact) return layoutResult([], []);
-
-  const ids = new Set([artifact.id, artifact.lineage.lessonId, artifact.lineage.moduleId, artifact.lineage.pathId].filter(Boolean));
-  const lessonItem = graph.lessonById?.get(artifact.lineage.lessonId);
-  (lessonItem?.artifactIds || []).forEach(id => ids.add(id)); // siblings
-
-  graph.edges.forEach(e => {
-    if (ids.has(e.source) || ids.has(e.target)) { ids.add(e.source); ids.add(e.target); }
+export function computeClusterAnchors(graph) {
+  const paths = graph.nodes.filter(n => n.type === 'path');
+  const anchors = new Map();
+  paths.forEach((path, i) => {
+    const col = i % CLUSTER_COLS;
+    const row = Math.floor(i / CLUSTER_COLS);
+    const stagger = row % 2 === 1 ? ROW_STAGGER : 0;
+    anchors.set(path.id, {
+      x: 120 + col * (CLUSTER_SLOT_W + CLUSTER_GAP_X) + stagger,
+      y: 80  + row * (CLUSTER_SLOT_H + CLUSTER_GAP_Y),
+    });
   });
-
-  const nodes = [...ids].map(id => graph.nodeById.get(id)).filter(Boolean);
-  return _layerLayout(nodes, graph.edges, artifact.id, graph);
+  return anchors;
 }
 
-// ─── Shared Focused Layout ───────────────────────────────────────────────────
+/**
+ * Compute world-space positions for ALL visible nodes.
+ * Returns Map<nodeId, {wx, wy, ...node}>
+ */
+export function computeLayout(graph, expandedModules, expandedLessons, clusterAnchors) {
+  const positions = new Map();
+  const paths = graph.nodes.filter(n => n.type === 'path');
+  paths.forEach(pathNode => {
+    const anchor = clusterAnchors.get(pathNode.id) || { x: 0, y: 0 };
+    const clusterNodes = layoutCluster(
+      pathNode, graph, expandedModules, expandedLessons, anchor.x, anchor.y
+    );
+    clusterNodes.forEach(n => positions.set(n.id, n));
+  });
+  return positions;
+}
 
 /**
- * Shared layered layout for focused/neighborhood modes.
- * Assigns each node to a column by type; groups by parent within each column.
- * The focus node is vertically centered.
+ * Compute visible edges for the current expansion state.
+ * Collapses edges to "path → module → collapsed-count" when children are hidden.
  */
-function _layerLayout(nodes, allEdges, focusId, graph) {
-  const byType = { path: [], module: [], lesson: [], artifact: [] };
-  nodes.forEach(n => { if (byType[n.type]) byType[n.type].push(n); });
+export function computeVisibleEdges(graph, nodePositions) {
+  const visibleIds = new Set(nodePositions.keys());
+  return graph.edges.filter(e =>
+    e.type === 'contains'
+      && visibleIds.has(e.source)
+      && visibleIds.has(e.target)
+  );
+}
 
-  const columnX = { path: 80, module: 80 + COL_GAP, lesson: 80 + COL_GAP * 2, artifact: 80 + COL_GAP * 3 };
-  const laidOut = [];
-
-  // Center-Y anchor: try to keep focus node at y=300
-  const FOCUS_Y = 300;
-
-  // For each column, position nodes grouped by parent, focus node centered
-  Object.entries(byType).forEach(([type, typeNodes]) => {
-    if (!typeNodes.length) return;
-    const x = columnX[type];
-
-    // Sort: focus first, then by lineage
-    const sorted = [...typeNodes].sort((a, b) => {
-      if (a.id === focusId) return -1;
-      if (b.id === focusId) return 1;
-      return (a.lineage.labels || []).join('/').localeCompare((b.lineage.labels || []).join('/'));
-    });
-
-    // Find focus node index
-    const focusIdx = sorted.findIndex(n => n.id === focusId);
-    const effectiveFocusIdx = focusIdx >= 0 ? focusIdx : 0;
-    const startY = FOCUS_Y - effectiveFocusIdx * LESSON_V_GAP;
-
-    sorted.forEach((node, i) => {
-      laidOut.push({
-        ...node,
-        x,
-        y: Math.max(60, startY + i * LESSON_V_GAP),
-        focus: node.id === focusId
-      });
-    });
+/**
+ * Compute canvas bounds from all visible node positions.
+ */
+export function computeBounds(nodePositions) {
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  nodePositions.forEach(n => {
+    const hw = (NODE_SIZES[n.type]?.w || 160) / 2;
+    const hh = (NODE_SIZES[n.type]?.h || 48) / 2;
+    minX = Math.min(minX, n.wx - hw);
+    minY = Math.min(minY, n.wy - hh);
+    maxX = Math.max(maxX, n.wx + hw);
+    maxY = Math.max(maxY, n.wy + hh);
   });
-
-  const visibleIds = new Set(laidOut.map(n => n.id));
-  const edges = allEdges.filter(e => visibleIds.has(e.source) && visibleIds.has(e.target));
-  return layoutResult(laidOut, edges);
+  return { minX, minY, maxX, maxY,
+    width: maxX - minX + 200, height: maxY - minY + 200 };
 }

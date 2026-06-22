@@ -1,11 +1,11 @@
-/* ==========================================================================
-   NeuralVerse Knowledge Graph CSS (NV-900-UI10A)
-   ========================================================================== */
+/* =============================================================================
+   NeuralVerse Knowledge Graph — Premium Dark UI  (NV-900-UIX)
+   ============================================================================= */
 
-/* ── Outer wrapper ─────────────────────────────────────────────────────────── */
+/* ── Page wrapper ────────────────────────────────────────────────────────────── */
 .nv-kg {
   display: grid;
-  gap: var(--sys-space-stack-md, 16px);
+  gap: 16px;
   max-inline-size: 100%;
 }
 
@@ -14,297 +14,217 @@
   align-items: start;
 }
 
-/* ── Toolbar ────────────────────────────────────────────────────────────────── */
+/* ── Toolbar ─────────────────────────────────────────────────────────────────── */
 .nv-kg-toolbar {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: center;
   gap: 10px;
-  padding: 14px 16px;
-  border: 1px solid var(--sys-premium-border, rgba(255,255,255,0.08));
+  padding: 12px 16px;
+  border: 1px solid rgba(137, 180, 250, 0.12);
   border-radius: 12px;
-  background: color-mix(in srgb, var(--sys-premium-surface, #1e1e2e) 92%, transparent);
-  box-shadow: var(--sys-premium-shadow-card, 0 4px 20px rgba(0,0,0,0.35));
+  background: rgba(17, 17, 27, 0.92);
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
 }
 
-.nv-kg-toolbar-section {
+.nv-kg-search-wrap { display: flex; gap: 8px; align-items: center; flex: 1; min-inline-size: 200px; }
+.nv-kg-search { min-inline-size: 180px; flex: 1; max-inline-size: 320px; }
+
+.nv-kg-toolbar-btns { display: flex; flex-wrap: wrap; gap: 6px; }
+.nv-kg-tool-btn { padding: 5px 10px; font-size: 0.78rem; }
+
+/* Legend */
+.nv-kg-legend {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
+  gap: 10px;
+  margin-left: auto;
 }
-
-.nv-kg-toolbar-section--view {
-  border-top: 1px solid rgba(255,255,255,0.05);
-  padding-top: 10px;
-}
-
-.nv-kg-control,
-.nv-kg-search {
-  min-inline-size: 14rem;
-  max-inline-size: 24rem;
-}
-
-.nv-kg-filter {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  align-items: center;
-  min-inline-size: 0;
-  margin: 0;
-  padding: 6px 10px;
-  border: 1px solid rgba(255,255,255,0.07);
-  border-radius: 8px;
-}
-
-.nv-kg-filter legend {
-  padding-inline: 4px;
-  color: var(--sys-color-text-muted, #6c7086);
-  font-family: var(--sys-font-code-family, monospace);
-  font-size: 0.72rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.nv-kg-check {
+.nv-kg-legend-item {
   display: inline-flex;
-  gap: 5px;
   align-items: center;
-  color: var(--sys-color-text-secondary, #a6adc8);
-  font-size: 0.8rem;
-  text-transform: capitalize;
-  cursor: pointer;
+  gap: 5px;
+  font-size: 0.72rem;
+  color: rgba(205, 214, 244, 0.55);
 }
-
-.nv-kg-artifact-toggle {
-  padding: 4px 10px;
-  border: 1px solid var(--sys-color-accent-primary, #89b4fa);
-  border-radius: 20px;
-  color: var(--sys-color-accent-primary, #89b4fa);
-  font-size: 0.8rem;
-  transition: background 0.15s ease;
+.nv-kg-legend-item::before {
+  content: '';
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  flex-shrink: 0;
 }
+.nv-kg-legend-item--path::before     { background: #89b4fa; box-shadow: 0 0 4px #89b4fa; }
+.nv-kg-legend-item--module::before   { background: #a6e3a1; box-shadow: 0 0 4px #a6e3a1; }
+.nv-kg-legend-item--lesson::before   { background: #f9e2af; box-shadow: 0 0 4px #f9e2af; }
+.nv-kg-legend-item--artifact::before { background: #cba6f7; box-shadow: 0 0 4px #cba6f7; }
 
-.nv-kg-artifact-toggle:hover {
-  background: rgba(137, 180, 250, 0.08);
-}
-
-.nv-kg-view-btn {
-  padding: 4px 10px;
-  font-size: 0.78rem;
-}
-
-/* ── Grid: canvas + inspector ──────────────────────────────────────────────── */
-.nv-kg-grid {
+/* ── Workspace layout ─────────────────────────────────────────────────────────── */
+.nv-kg-workspace {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(18rem, 22rem);
-  gap: 16px;
+  grid-template-columns: minmax(0, 1fr) 22rem;
+  gap: 14px;
   align-items: start;
 }
 
-.nv-kg-canvas-panel,
-.nv-kg-inspector {
-  border: 1px solid var(--sys-premium-border, rgba(255,255,255,0.08));
-  border-radius: 12px;
-  background: color-mix(in srgb, var(--sys-premium-surface, #1e1e2e) 92%, transparent);
-  box-shadow: var(--sys-premium-shadow-card, 0 4px 20px rgba(0,0,0,0.35));
-}
-
-/* ── Canvas Panel ───────────────────────────────────────────────────────────── */
-.nv-kg-canvas-panel {
-  min-block-size: 36rem;
+/* ── Canvas ──────────────────────────────────────────────────────────────────── */
+.nv-kg-canvas-wrap {
+  border: 1px solid rgba(137, 180, 250, 0.1);
+  border-radius: 14px;
   overflow: hidden;
-  position: relative;
-}
-
-.nv-kg-canvas {
-  inline-size: 100%;
-  min-block-size: 36rem;
+  background:
+    radial-gradient(ellipse at 20% 15%, rgba(137,180,250,0.06) 0%, transparent 55%),
+    radial-gradient(ellipse at 80% 80%, rgba(166,227,161,0.04) 0%, transparent 50%),
+    /* dot grid */
+    radial-gradient(circle, rgba(137,180,250,0.15) 1px, transparent 1px),
+    #0f0f17;
+  background-size: auto, auto, 36px 36px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+  min-block-size: 70vh;
 }
 
 .nv-kg-svg {
   display: block;
   inline-size: 100%;
-  block-size: min(74vh, 52rem);
-  min-block-size: 34rem;
-  /* Grid drawn as SVG pattern inside the renderer — no CSS background needed */
+  block-size: 70vh;
+  min-block-size: 36rem;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
-.nv-kg-empty-state {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 34rem;
-  padding: 2rem;
-  color: var(--sys-color-text-muted, #6c7086);
-  text-align: center;
-}
-
-/* ── Focus/keyboard ring ────────────────────────────────────────────────────── */
-.nv-kg-svg:focus-visible {
-  outline: 2px solid var(--sys-color-accent-primary, #89b4fa);
-  outline-offset: 2px;
-}
-
-.nv-kg-node:focus-visible .nv-kg-node-shape {
-  outline: none;
-  filter: drop-shadow(0 0 10px color-mix(in srgb, var(--sys-color-accent-primary, #89b4fa) 70%, transparent));
-}
-
-.nv-kg-edge:focus-visible {
-  outline: none;
-  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--sys-color-accent-primary, #89b4fa) 60%, transparent));
-}
-
-/* ── Edges ──────────────────────────────────────────────────────────────────── */
-.nv-kg-edge {
-  fill: none;
-  stroke: rgba(137, 180, 250, 0.22);
-  stroke-width: 1.5;
-  vector-effect: non-scaling-stroke;
-  pointer-events: stroke;
-  cursor: pointer;
-  transition: stroke 0.15s ease, stroke-width 0.15s ease;
-}
-
-.nv-kg-edge:hover {
-  stroke: rgba(137, 180, 250, 0.55);
-  stroke-width: 2;
-}
-
-.nv-kg-edge--contains {
-  stroke: rgba(137, 180, 250, 0.35);
-}
-
-.nv-kg-edge--sibling {
-  stroke: rgba(137, 180, 250, 0.18);
-  stroke-dasharray: 6 8;
-}
-
-.nv-kg-edge--prerequisite,
-.nv-kg-edge--recommended_before,
-.nv-kg-edge--recommended_after {
-  stroke: rgba(96, 165, 250, 0.45);
-  stroke-dasharray: 4 5;
-}
-
-.nv-kg-edge--complementary {
-  stroke: rgba(74, 222, 128, 0.38);
-}
-
-.nv-kg-edge--alternative {
-  stroke: rgba(251, 191, 36, 0.38);
-}
-
-.nv-kg-edge.is-selected {
-  stroke: var(--sys-color-accent-primary, #89b4fa);
-  stroke-width: 2.5;
-}
-
-/* ── Nodes ──────────────────────────────────────────────────────────────────── */
-.nv-kg-node {
-  cursor: pointer;
-}
-
-/* Glow rect behind selected/focus nodes */
-.nv-kg-node-glow {
-  fill: none;
-  stroke: var(--sys-color-accent-primary, #89b4fa);
-  stroke-width: 2;
-  opacity: 0.25;
-  filter: blur(6px);
-}
+/* ── SVG node shapes ─────────────────────────────────────────────────────────── */
+.nv-kg-node { cursor: pointer; transition: opacity 0.22s ease; }
+.nv-kg-node:focus { outline: none; }
 
 .nv-kg-node-shape {
-  fill: color-mix(in srgb, var(--sys-color-surface-raised, #313244) 90%, transparent);
-  stroke: rgba(137, 180, 250, 0.25);
-  stroke-width: 1.2;
+  stroke-width: 1.5;
   vector-effect: non-scaling-stroke;
-  transition: fill 0.15s ease, stroke 0.15s ease;
+  transition: fill 0.18s ease, stroke 0.18s ease, filter 0.18s ease;
+}
+.nv-kg-node:hover .nv-kg-node-shape {
+  filter: brightness(1.15);
 }
 
-/* Per-type border colours */
-.nv-kg-node--path .nv-kg-node-shape {
-  stroke: rgba(137, 180, 250, 0.65);
+.nv-kg-node-glow {
+  stroke-width: 2;
+  opacity: 0;
+  vector-effect: non-scaling-stroke;
+  transition: opacity 0.2s ease;
+  filter: blur(5px);
 }
 
-.nv-kg-node--module .nv-kg-node-shape {
-  stroke: rgba(96, 165, 250, 0.55);
+/* Selected state */
+.nv-kg-node.is-selected .nv-kg-node-glow { opacity: 0.6; }
+.nv-kg-node.is-selected .nv-kg-node-shape {
+  stroke-width: 2.5;
+  filter: brightness(1.2) drop-shadow(0 0 8px currentColor);
 }
+.nv-kg-node.is-selected { opacity: 1 !important; }
 
-.nv-kg-node--lesson .nv-kg-node-shape {
-  stroke: rgba(74, 222, 128, 0.48);
-}
+/* Focus-mode dimming */
+.nv-kg-node.is-dim { opacity: 0.22; pointer-events: none; }
+.nv-kg-node.is-neighbor { opacity: 0.75; }
 
-.nv-kg-node--artifact .nv-kg-node-shape {
-  stroke: rgba(251, 191, 36, 0.45);
-}
+/* Per-type glow colours */
+.nv-kg-node--path.is-selected     .nv-kg-node-shape { stroke: #89b4fa; }
+.nv-kg-node--module.is-selected   .nv-kg-node-shape { stroke: #a6e3a1; }
+.nv-kg-node--lesson.is-selected   .nv-kg-node-shape { stroke: #f9e2af; }
+.nv-kg-node--artifact.is-selected .nv-kg-node-shape { stroke: #cba6f7; }
 
-/* Selected / focused state */
-.nv-kg-node.is-selected .nv-kg-node-shape,
-.nv-kg-node.is-focus .nv-kg-node-shape {
-  fill: color-mix(in srgb, var(--sys-color-accent-primary, #89b4fa) 14%, var(--sys-color-surface-raised, #313244));
-  stroke: var(--sys-color-accent-primary, #89b4fa);
+/* Keyboard focus ring via glow */
+.nv-kg-node:focus-visible .nv-kg-node-shape {
+  filter: drop-shadow(0 0 10px rgba(137,180,250,0.8));
   stroke-width: 2;
 }
 
-/* Node typography */
+/* Typography */
 .nv-kg-node-type {
-  fill: var(--sys-color-text-muted, #6c7086);
-  font-family: var(--sys-font-code-family, monospace);
-  font-size: 9px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  pointer-events: none;
 }
-
 .nv-kg-node-title {
-  fill: var(--sys-color-text-primary, #cdd6f4);
-  font-size: 11px;
+  font-family: inherit;
+  font-size: 12px;
   font-weight: 600;
+  letter-spacing: 0.01em;
+  pointer-events: none;
+}
+.nv-kg-node-expand {
+  font-family: monospace;
+  font-size: 16px;
+  font-weight: 700;
+  pointer-events: none;
 }
 
-/* Status / metadata badge dots */
-.nv-kg-node-badge--reviewed {
-  fill: var(--sys-color-semantic-success, #a6e3a1);
-}
+/* Reviewed badge */
+.nv-kg-badge--reviewed { fill: #a6e3a1; }
 
-.nv-kg-node-badge--viz {
-  fill: var(--sys-color-accent-primary, #89b4fa);
+/* ── Edges ───────────────────────────────────────────────────────────────────── */
+.nv-kg-edge {
+  stroke: rgba(137, 180, 250, 0.18);
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+  fill: none;
+  transition: stroke 0.18s ease, stroke-width 0.18s ease, opacity 0.2s ease;
+  pointer-events: none;
 }
-
-.nv-kg-node-badge--bookmark {
-  fill: #f9e2af;
+.nv-kg-edge.is-connected {
+  stroke: rgba(137, 180, 250, 0.6);
+  stroke-width: 2;
 }
 
 /* ── Inspector ───────────────────────────────────────────────────────────────── */
 .nv-kg-inspector {
   position: sticky;
   inset-block-start: 16px;
+  border: 1px solid rgba(137, 180, 250, 0.1);
+  border-radius: 14px;
+  background: rgba(17, 17, 27, 0.95);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  padding: 20px;
   display: grid;
-  gap: 12px;
-  padding: 16px;
-  max-block-size: calc(100vh - 8rem);
+  gap: 14px;
+  max-block-size: calc(70vh + 2rem);
   overflow: auto;
 }
 
-.nv-kg-inspector-title {
-  margin: 0 0 8px 0;
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--sys-color-text-primary, #cdd6f4);
+.nv-kg-insp-type {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.nv-kg-insp-type--path     { background: rgba(137,180,250,0.15); color: #89b4fa; border: 1px solid rgba(137,180,250,0.35); }
+.nv-kg-insp-type--module   { background: rgba(166,227,161,0.12); color: #a6e3a1; border: 1px solid rgba(166,227,161,0.30); }
+.nv-kg-insp-type--lesson   { background: rgba(249,226,175,0.12); color: #f9e2af; border: 1px solid rgba(249,226,175,0.28); }
+.nv-kg-insp-type--artifact { background: rgba(203,166,247,0.12); color: #cba6f7; border: 1px solid rgba(203,166,247,0.28); }
+
+.nv-kg-insp-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #cdd6f4;
   line-height: 1.3;
 }
 
-.nv-kg-inspector-section {
-  display: grid;
-  gap: 6px;
+.nv-kg-insp-hint {
+  margin: 0;
+  font-size: 0.8rem;
+  color: rgba(205,214,244,0.45);
+  line-height: 1.6;
+  white-space: pre-line;
 }
 
-.nv-kg-inspector-hint {
-  margin: 8px 0 0 0;
-  font-size: 0.8rem;
-  color: var(--sys-color-text-muted, #6c7086);
-  line-height: 1.4;
-}
+.nv-kg-insp-details { display: grid; gap: 6px; }
 
 .nv-kg-detail {
   display: grid;
@@ -312,112 +232,55 @@
   padding-block: 6px;
   border-block-end: 1px solid rgba(255,255,255,0.05);
 }
-
 .nv-kg-detail__label {
-  color: var(--sys-color-text-muted, #6c7086);
-  font-family: var(--sys-font-code-family, monospace);
-  font-size: 0.72rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.07em;
+  color: rgba(205,214,244,0.4);
 }
-
 .nv-kg-detail__value {
-  color: var(--sys-color-text-secondary, #a6adc8);
-  font-size: 0.85rem;
+  font-size: 0.83rem;
+  color: rgba(205,214,244,0.75);
   line-height: 1.4;
 }
 
-/* ── Fallback ────────────────────────────────────────────────────────────────── */
-.nv-kg-fallback-details {
-  border: 1px solid rgba(255,255,255,0.07);
-  border-radius: 8px;
-  padding: 8px 14px;
-}
-
-.nv-kg-fallback-details summary {
-  cursor: pointer;
-  color: var(--sys-color-text-muted, #6c7086);
-  font-size: 0.82rem;
-  user-select: none;
-}
-
-.nv-kg-fallback {
-  display: grid;
-  gap: 12px;
-  padding: 12px 0;
-}
-
-.nv-kg-fallback h3 {
-  margin: 8px 0 4px;
-  font-size: 0.85rem;
-  color: var(--sys-color-text-secondary, #a6adc8);
-}
-
-.nv-kg-fallback-list {
-  display: grid;
-  gap: 4px;
-  max-block-size: 14rem;
-  overflow: auto;
-  margin: 0;
-  padding-left: 18px;
-  font-size: 0.82rem;
-}
-
-.nv-kg-fallback-list a {
-  color: var(--sys-color-accent-primary, #89b4fa);
+.nv-kg-insp-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-top: 6px;
 }
 
 /* ── Responsive ──────────────────────────────────────────────────────────────── */
 @media (max-width: 1024px) {
-  .nv-kg-grid {
-    grid-template-columns: minmax(0, 1fr) minmax(15rem, 18rem);
+  .nv-kg-workspace {
+    grid-template-columns: minmax(0, 1fr) 18rem;
   }
 }
 
-@media (max-width: 900px) {
-  .nv-kg-hero,
-  .nv-kg-grid {
+@media (max-width: 860px) {
+  .nv-kg-workspace {
     grid-template-columns: 1fr;
   }
-
   .nv-kg-inspector {
     position: static;
-    max-block-size: none;
+    max-block-size: 28rem;
   }
+  .nv-kg-legend { display: none; }
 }
 
 @media (max-width: 520px) {
-  .nv-kg-toolbar {
-    padding: 10px 12px;
-  }
-
-  .nv-kg-control,
-  .nv-kg-search {
-    inline-size: 100%;
-    min-inline-size: 0;
-    max-inline-size: none;
-  }
-
-  .nv-kg-toolbar .nv-button,
-  .nv-kg-filter {
-    inline-size: 100%;
-  }
-
-  .nv-kg-canvas-panel,
-  .nv-kg-canvas {
-    min-block-size: 22rem;
-  }
-
-  .nv-kg-svg {
-    block-size: 22rem;
-    min-block-size: 22rem;
-  }
+  .nv-kg-toolbar { gap: 7px; padding: 10px 12px; }
+  .nv-kg-svg { block-size: 55vh; min-block-size: 20rem; }
+  .nv-kg-canvas-wrap { min-block-size: 20rem; }
+  .nv-kg-toolbar-btns .nv-kg-tool-btn { font-size: 0.72rem; padding: 4px 7px; }
 }
 
+/* ── Reduced motion ──────────────────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
-  .nv-kg * {
-    transition: none !important;
-    animation: none !important;
-    scroll-behavior: auto;
-  }
+  .nv-kg-node,
+  .nv-kg-node-shape,
+  .nv-kg-node-glow,
+  .nv-kg-edge { transition: none !important; }
 }
