@@ -222,6 +222,10 @@ function createDidacticOrchestrator() {
     registerRealAgent('code-simulation-lab', window.NeuralVerse.codeSimulationLaboratoryAgent);
   }
 
+  if (window.NeuralVerse?.researchStateOfArtAgent) {
+    registerRealAgent('research-state-of-art', window.NeuralVerse.researchStateOfArtAgent);
+  }
+
   return {
     orchestrate,
     invokeAgent,

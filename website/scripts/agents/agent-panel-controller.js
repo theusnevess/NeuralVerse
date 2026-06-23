@@ -59,6 +59,19 @@ const CODE_LAB_ACTIONS = [
   { id: 'design-experiment', label: 'Design Experiment', prompt: 'Design a reproducible experiment for this concept' }
 ];
 
+const RESEARCH_ACTIONS = [
+  { id: 'historical-context', label: 'Historical Context', prompt: 'Give historical context for this concept' },
+  { id: 'landmark-papers', label: 'Landmark Papers', prompt: 'What are the landmark papers behind this concept?' },
+  { id: 'benchmark-landscape', label: 'Benchmark Landscape', prompt: 'What benchmarks are commonly used in this area?' },
+  { id: 'research-trends', label: 'Research Trends', prompt: 'What are the current research trends?' },
+  { id: 'open-problems', label: 'Open Problems', prompt: 'What limitations remain unsolved?' },
+  { id: 'compare-directions', label: 'Compare Research Directions', prompt: 'Compare competing research directions' },
+  { id: 'reading-roadmap', label: 'Reading Roadmap', prompt: 'What should I read after mastering this lesson?' },
+  { id: 'frontier-topics', label: 'Frontier Topics', prompt: 'What frontier topics connect to this concept?' },
+  { id: 'evidence-confidence', label: 'Evidence Confidence', prompt: 'How mature is the evidence for this topic?' },
+  { id: 'connect-research', label: 'Connect to Research', prompt: 'Connect this curriculum item to broader research' }
+];
+
 function createAgentPanelController(options = {}) {
   const root = options.root || document;
   const orchestrator = options.orchestrator || window.NeuralVerse?.didacticOrchestrator;
@@ -188,6 +201,17 @@ function createAgentPanelController(options = {}) {
         </div>
       </div>
 
+      <div class="nv-agent-panel__quick-actions" data-agent-research-actions style="display: none;">
+        <div class="nv-agent-panel__quick-actions-label">Research Actions</div>
+        <div class="nv-agent-panel__quick-actions-grid">
+          ${RESEARCH_ACTIONS.map(a => `
+            <button class="nv-agent-quick-action-btn nv-agent-quick-action-btn--research" data-quick-action="${a.id}" data-prompt="${a.prompt}" type="button" aria-label="${a.label}">
+              ${a.label}
+            </button>
+          `).join('')}
+        </div>
+      </div>
+
       <div class="nv-agent-panel__input-area">
         <label class="nv-agent-panel__input-label" for="nv-agent-input">Your Query</label>
         <div class="nv-agent-panel__input-row">
@@ -258,7 +282,7 @@ function createAgentPanelController(options = {}) {
     const inputEl = panelElement.querySelector('#nv-agent-input');
     const historyToggle = panelElement.querySelector('.nv-agent-panel__history-toggle');
     const responseActions = panelElement.querySelector('[data-agent-response-actions]');
-    const quickActionContainers = panelElement.querySelectorAll('[data-agent-quick-actions], [data-agent-curriculum-actions], [data-agent-visual-actions], [data-agent-code-lab-actions]');
+    const quickActionContainers = panelElement.querySelectorAll('[data-agent-quick-actions], [data-agent-curriculum-actions], [data-agent-visual-actions], [data-agent-code-lab-actions], [data-agent-research-actions]');
 
     closeBtn?.addEventListener('click', closePanel);
     submitBtn?.addEventListener('click', handleSubmit);
@@ -367,6 +391,7 @@ function createAgentPanelController(options = {}) {
     const curriculumActionsRow = panelElement?.querySelector('[data-agent-curriculum-actions]');
     const visualActionsRow = panelElement?.querySelector('[data-agent-visual-actions]');
     const codeLabActionsRow = panelElement?.querySelector('[data-agent-code-lab-actions]');
+    const researchActionsRow = panelElement?.querySelector('[data-agent-research-actions]');
 
     selectedAgentId = selectEl?.value || null;
 
@@ -392,6 +417,10 @@ function createAgentPanelController(options = {}) {
 
     if (codeLabActionsRow) {
       codeLabActionsRow.style.display = selectedAgentId === 'code-simulation-lab' ? 'block' : 'none';
+    }
+
+    if (researchActionsRow) {
+      researchActionsRow.style.display = selectedAgentId === 'research-state-of-art' ? 'block' : 'none';
     }
 
     hideGuardrailNotice();
@@ -556,7 +585,28 @@ function createAgentPanelController(options = {}) {
     if (section.type === 'lab-card') {
       return `<div class="nv-agent-lab-card">${formatMarkdown(section.content || '')}</div>`;
     }
+    if (section.type === 'research-card') {
+      return renderResearchCard(section);
+    }
+    if (section.type === 'confidence-card') {
+      return renderConfidenceCard(section);
+    }
+    if (section.type === 'research-table') {
+      return renderMarkdownTable(section.content);
+    }
     return formatMarkdown(section.content || '');
+  }
+
+  function renderResearchCard(section) {
+    const confidence = section.confidence ? `<span class="nv-agent-confidence-badge" data-confidence="${escapeHtml(section.confidence)}">${escapeHtml(section.confidence)}</span>` : '';
+    return `<div class="nv-agent-research-card">${confidence}${formatMarkdown(section.content || '')}</div>`;
+  }
+
+  function renderConfidenceCard(section) {
+    return `<div class="nv-agent-confidence-card">
+      <span class="nv-agent-confidence-badge" data-confidence="${escapeHtml(section.confidence || section.content || '')}">${escapeHtml(section.confidence || section.content || '')}</span>
+      <div>${formatMarkdown(section.content || '')}</div>
+    </div>`;
   }
 
   function renderCodeBlock(section) {

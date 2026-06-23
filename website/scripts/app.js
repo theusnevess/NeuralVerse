@@ -14,6 +14,7 @@ import { createDidacticArchitectureAgent } from "./agents/didactic-architecture-
 import { createCurriculumDependencyAgent } from "./agents/curriculum-dependency-agent.js?v=1";
 import { createVisualInteractiveMediaAgent } from "./agents/visual-interactive-media-agent.js?v=1";
 import { createCodeSimulationLaboratoryAgent } from "./agents/code-simulation-laboratory-agent.js?v=1";
+import { createResearchStateOfArtAgent } from "./agents/research-state-of-art-agent.js?v=1";
 import { createAgentPanelController } from "./agents/agent-panel-controller.js?v=1";
 
 window.NV_DEBUG = window.NV_DEBUG || false;
@@ -111,6 +112,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const codeLabAgent = window.NeuralVerse?.codeSimulationLaboratoryAgent;
   if (codeLabAgent && orchestrator?.registerRealAgent) {
     orchestrator.registerRealAgent('code-simulation-lab', codeLabAgent);
+  }
+
+  // Register the Research & State-of-the-Art Agent with the orchestrator
+  const researchAgent = window.NeuralVerse?.researchStateOfArtAgent;
+  if (researchAgent && orchestrator?.registerRealAgent) {
+    orchestrator.registerRealAgent('research-state-of-art', researchAgent);
   }
 
   // Bind agent trigger button

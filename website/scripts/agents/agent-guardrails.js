@@ -154,7 +154,7 @@ function createAgentGuardrails() {
     if (lowerText.includes('modify') || lowerText.includes('change') || lowerText.includes('update')) {
       actions.push('modify-nv800-content');
     }
-    if (lowerText.includes('score') || lowerText.includes('grade') || lowerText.includes('mark')) {
+    if (/\b(score|grade|mark)\b/.test(lowerText)) {
       actions.push('create-scores');
     }
     if (lowerText.includes('mastery') || lowerText.includes('certify') || lowerText.includes('competence')) {
