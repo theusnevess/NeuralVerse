@@ -22,7 +22,7 @@ function createAgentContract(agentDefinition) {
     status: agentDefinition.status || 'scaffolded',
 
     canHandle(context) {
-      if (!context) return false;
+      if (!context || typeof context !== 'object') return false;
       if (!context.userQuery && !context.requestType) return false;
 
       const query = (context.userQuery || '').toLowerCase();
@@ -32,37 +32,39 @@ function createAgentContract(agentDefinition) {
     },
 
     buildPrompt(context) {
+      const safeContext = context && typeof context === 'object' ? context : {};
       const parts = [];
 
       parts.push(`Agent: ${agentDefinition.name}`);
       parts.push(`Role: ${agentDefinition.role}`);
 
-      if (context.currentRoute) {
-        parts.push(`Current Route: ${context.currentRoute}`);
+      if (safeContext.currentRoute) {
+        parts.push(`Current Route: ${safeContext.currentRoute}`);
       }
-      if (context.selectedPath) {
-        parts.push(`Learning Path: ${context.selectedPath.title || context.selectedPath.id}`);
+      if (safeContext.selectedPath) {
+        parts.push(`Learning Path: ${safeContext.selectedPath.title || safeContext.selectedPath.id}`);
       }
-      if (context.selectedModule) {
-        parts.push(`Module: ${context.selectedModule.title || context.selectedModule.id}`);
+      if (safeContext.selectedModule) {
+        parts.push(`Module: ${safeContext.selectedModule.title || safeContext.selectedModule.id}`);
       }
-      if (context.selectedLesson) {
-        parts.push(`Lesson: ${context.selectedLesson.title || context.selectedLesson.id}`);
+      if (safeContext.selectedLesson) {
+        parts.push(`Lesson: ${safeContext.selectedLesson.title || safeContext.selectedLesson.id}`);
       }
-      if (context.selectedArtifact) {
-        parts.push(`Artifact: ${context.selectedArtifact.title || context.selectedArtifact.id}`);
-        parts.push(`Artifact Type: ${context.selectedArtifact.type || 'unknown'}`);
+      if (safeContext.selectedArtifact) {
+        parts.push(`Artifact: ${safeContext.selectedArtifact.title || safeContext.selectedArtifact.id}`);
+        parts.push(`Artifact Type: ${safeContext.selectedArtifact.type || 'unknown'}`);
       }
-      if (context.userQuery) {
-        parts.push(`User Query: ${context.userQuery}`);
+      if (safeContext.userQuery) {
+        parts.push(`User Query: ${safeContext.userQuery}`);
       }
 
       return parts.join('\n');
     },
 
     run(context) {
-      const prompt = contract.buildPrompt(context);
-      const scaffoldedOutput = generateScaffoldedOutput(agentDefinition.id, context);
+      const safeContext = context && typeof context === 'object' ? context : {};
+      const prompt = contract.buildPrompt(safeContext);
+      const scaffoldedOutput = generateScaffoldedOutput(agentDefinition.id, safeContext);
 
       return {
         agentId: agentDefinition.id,
@@ -76,13 +78,14 @@ function createAgentContract(agentDefinition) {
     },
 
     formatResponse(result) {
+      const safeResult = result && typeof result === 'object' ? result : {};
       return {
-        agentId: result.agentId,
-        agentName: result.agentName,
-        content: result.output,
-        timestamp: result.timestamp,
-        status: result.status,
-        disclaimer: result.disclaimer,
+        agentId: safeResult.agentId || agentDefinition.id,
+        agentName: safeResult.agentName || agentDefinition.name,
+        content: safeResult.output || safeResult.content || 'No agent response content was produced.',
+        timestamp: safeResult.timestamp || new Date().toISOString(),
+        status: safeResult.status || 'scaffolded',
+        disclaimer: safeResult.disclaimer || 'This is a scaffolded response. Full agent behavior requires future implementation phases.',
         formattedAt: new Date().toISOString()
       };
     },
@@ -111,8 +114,9 @@ function getKeywordsForAgent(agentId) {
 }
 
 function generateScaffoldedOutput(agentId, context) {
-  const query = context.userQuery || 'No specific query provided.';
-  const artifactTitle = context.selectedArtifact?.title || context.selectedModule?.title || 'current context';
+  const safeContext = context && typeof context === 'object' ? context : {};
+  const query = safeContext.userQuery || 'No specific query provided.';
+  const artifactTitle = safeContext.selectedArtifact?.title || safeContext.selectedModule?.title || 'current context';
 
   const scaffoldedResponses = {
     'curriculum-dependency': `**Curriculum & Dependency Analysis**\n\nRegarding "${query}" in the context of "${artifactTitle}":\n\nAs a scaffolded agent, I can indicate that dependency analysis would examine:\n- Prerequisite chain completeness\n- Learning sequence ordering\n- Missing dependency identification\n- Cross-module relationship validation\n\n*Full dependency graph traversal requires future implementation phases.*`,

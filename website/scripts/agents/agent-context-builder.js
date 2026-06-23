@@ -7,6 +7,28 @@
  */
 
 function createAgentContextBuilder() {
+  let curriculumIndex = window.NeuralVerse?.curriculumIndex || null;
+
+  function setCurriculumIndex(index) {
+    curriculumIndex = index && typeof index === 'object' ? index : null;
+  }
+
+  function getIndexCollection(name) {
+    return Array.isArray(curriculumIndex?.[name]) ? curriculumIndex[name] : [];
+  }
+
+  function byId(collection, id) {
+    return getIndexCollection(collection).find((item) => item.id === id) || null;
+  }
+
+  function cloneEntity(entity) {
+    if (!entity) return null;
+    const clone = { ...entity };
+    if (Array.isArray(entity.instructionalObjectives)) clone.instructionalObjectives = [...entity.instructionalObjectives];
+    if (Array.isArray(entity.learningDepths)) clone.learningDepths = [...entity.learningDepths];
+    return clone;
+  }
+
   function buildContext() {
     const context = {
       currentRoute: detectCurrentRoute(),
@@ -48,7 +70,7 @@ function createAgentContextBuilder() {
       const hash = window.location.hash || '';
       const pathMatch = hash.match(/#\/learning\/([^/]+)/);
       if (pathMatch) {
-        return { id: pathMatch[1], title: formatId(pathMatch[1]) };
+        return cloneEntity(byId('learningPaths', decodeURIComponent(pathMatch[1]))) || { id: decodeURIComponent(pathMatch[1]) };
       }
     } catch (e) {
       // silent
@@ -61,7 +83,7 @@ function createAgentContextBuilder() {
       const hash = window.location.hash || '';
       const moduleMatch = hash.match(/#\/(?:learning\/[^/]+\/)?(?:module\/|modules\/)([^/]+)/);
       if (moduleMatch) {
-        return { id: moduleMatch[1], title: formatId(moduleMatch[1]) };
+        return cloneEntity(byId('modules', decodeURIComponent(moduleMatch[1]))) || { id: decodeURIComponent(moduleMatch[1]) };
       }
     } catch (e) {
       // silent
@@ -74,7 +96,7 @@ function createAgentContextBuilder() {
       const hash = window.location.hash || '';
       const lessonMatch = hash.match(/#\/learning\/[^/]+\/module\/[^/]+\/lesson\/([^/]+)/);
       if (lessonMatch) {
-        return { id: lessonMatch[1], title: formatId(lessonMatch[1]) };
+        return cloneEntity(byId('lessons', decodeURIComponent(lessonMatch[1]))) || { id: decodeURIComponent(lessonMatch[1]) };
       }
     } catch (e) {
       // silent
@@ -87,7 +109,7 @@ function createAgentContextBuilder() {
       const hash = window.location.hash || '';
       const artifactMatch = hash.match(/#\/learning\/[^/]+\/module\/[^/]+\/lesson\/[^/]+\/artifact\/([^/]+)/);
       if (artifactMatch) {
-        return { id: artifactMatch[1], title: formatId(artifactMatch[1]) };
+        return cloneEntity(byId('artifacts', decodeURIComponent(artifactMatch[1]))) || { id: decodeURIComponent(artifactMatch[1]) };
       }
     } catch (e) {
       // silent
@@ -98,15 +120,21 @@ function createAgentContextBuilder() {
   function detectArtifactType() {
     const artifact = getSelectedArtifact();
     if (!artifact) return null;
-    return 'learning-artifact';
+    return artifact.type || 'learning-artifact';
   }
 
   function detectCanonicalStatus() {
-    return 'unknown';
+    const artifact = getSelectedArtifact();
+    const lesson = getSelectedLesson();
+    const module = getSelectedModule();
+    const path = getSelectedLearningPath();
+    return artifact?.canonicalStatus || lesson?.canonicalStatus || module?.canonicalStatus || path?.canonicalStatus || 'unknown';
   }
 
   function getInstructionalObjectives() {
-    return [];
+    const artifact = getSelectedArtifact();
+    const lesson = getSelectedLesson();
+    return artifact?.instructionalObjectives || lesson?.instructionalObjectives || [];
   }
 
   function detectLearningDepth() {
@@ -187,12 +215,6 @@ function createAgentContextBuilder() {
     return parts.join(' | ') || 'No curriculum context available.';
   }
 
-  function formatId(id) {
-    return String(id || '')
-      .replace(/[-_]/g, ' ')
-      .replace(/\b\w/g, (c) => c.toUpperCase());
-  }
-
   function getContextForAgent(agentId) {
     const baseContext = buildContext();
     baseContext.agentId = agentId;
@@ -208,7 +230,8 @@ function createAgentContextBuilder() {
     getSelectedModule,
     getSelectedLesson,
     getSelectedArtifact,
-    detectLearningDepth
+    detectLearningDepth,
+    setCurriculumIndex
   };
 }
 

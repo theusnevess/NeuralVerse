@@ -151,20 +151,26 @@ function createAgentGuardrails() {
     const text = typeof request === 'string' ? request : JSON.stringify(request);
     const lowerText = text.toLowerCase();
 
-    if (lowerText.includes('modify') || lowerText.includes('change') || lowerText.includes('update')) {
+    if (/\b(modify|change|update|rewrite|store|alter)\b/.test(lowerText) && /\b(curriculum|artifact|file|nv-800|registry|official)\b/.test(lowerText)) {
       actions.push('modify-nv800-content');
     }
-    if (/\b(score|grade|mark)\b/.test(lowerText)) {
-      actions.push('create-scores');
-    }
-    if (lowerText.includes('mastery') || lowerText.includes('certify') || lowerText.includes('competence')) {
-      actions.push('create-mastery-claims');
-    }
-    if (lowerText.includes('status') || lowerText.includes('lifecycle') || lowerText.includes('review')) {
+    if (/\b(registry entry|nv-800 registry|lifecycle|canonical_status|canonical status|reviewed)\b/.test(lowerText)) {
       actions.push('change-lifecycle-status');
     }
+    if (/\b(score|grade|mark|graded|rating)\b/.test(lowerText)) {
+      actions.push('create-scores');
+    }
+    if (/\b(mastery|mastered|certify|competence|competency evidence)\b/.test(lowerText)) {
+      actions.push('create-mastery-claims');
+    }
+    if (/\b(evidence boundary|bypass)\b/.test(lowerText)) {
+      actions.push('bypass-evidence-boundary');
+    }
+    if (/<\s*script\b|<\s*img\b|<\s*svg\b|javascript\s*:|\beval\s*\(|new function\b|settimeout\s*\(\s*['"]/i.test(text)) {
+      actions.push('alter-agent-contracts');
+    }
 
-    return actions;
+    return [...new Set(actions)];
   }
 
   function buildRefusalResponse(agentId, violations) {

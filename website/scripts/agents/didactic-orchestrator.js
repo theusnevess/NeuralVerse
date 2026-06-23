@@ -23,7 +23,56 @@ function createDidacticOrchestrator() {
   const realAgents = new Map();
 
   function registerRealAgent(agentId, agentImpl) {
-    realAgents.set(agentId, agentImpl);
+    const normalizedAgent = normalizeAgentImplementation(agentId, agentImpl);
+    const validation = validateAgentContract(agentId, normalizedAgent);
+    if (!validation.valid) {
+      return { registered: false, reason: validation.reason };
+    }
+    realAgents.set(agentId, normalizedAgent);
+    return { registered: true };
+  }
+
+  function normalizeAgentImplementation(agentId, agentImpl) {
+    if (!agentImpl || typeof agentImpl !== 'object') return agentImpl;
+    if (typeof agentImpl.canHandle !== 'function' || typeof agentImpl.run !== 'function') return agentImpl;
+    const fallbackContract = contracts.get(agentId) || createAgentContract(registry.getAgent(agentId));
+    return {
+      id: agentImpl.id || agentId,
+      name: agentImpl.name || fallbackContract.name,
+      canHandle: typeof agentImpl.canHandle === 'function' ? agentImpl.canHandle : fallbackContract.canHandle,
+      buildPrompt: typeof agentImpl.buildPrompt === 'function' ? agentImpl.buildPrompt : fallbackContract.buildPrompt,
+      run: typeof agentImpl.run === 'function' ? agentImpl.run : fallbackContract.run,
+      formatResponse: typeof agentImpl.formatResponse === 'function' ? agentImpl.formatResponse : (result) => {
+        if (result && typeof result === 'object' && (result.sections || result.content || result.type)) return result;
+        return fallbackContract.formatResponse(result);
+      },
+      guardrails: agentImpl.guardrails || fallbackContract.guardrails
+    };
+  }
+
+  function validateAgentContract(agentId, agentImpl) {
+    if (!registry.isRegistered(agentId)) {
+      return { valid: false, reason: 'Agent ID is not registered.' };
+    }
+    if (!agentImpl || typeof agentImpl !== 'object') {
+      return { valid: false, reason: 'Agent implementation must be an object.' };
+    }
+    const requiredFunctions = ['canHandle', 'buildPrompt', 'run', 'formatResponse'];
+    for (const fn of requiredFunctions) {
+      if (typeof agentImpl[fn] !== 'function') {
+        return { valid: false, reason: `Agent implementation missing ${fn}().` };
+      }
+    }
+    return { valid: true };
+  }
+
+  function normalizeContext(context) {
+    if (!context || typeof context !== 'object') return contextBuilder.buildContext();
+    return { ...context };
+  }
+
+  function normalizeQuery(userQuery) {
+    return typeof userQuery === 'string' ? userQuery : String(userQuery || '');
   }
 
   function initialize() {
@@ -49,16 +98,18 @@ function createDidacticOrchestrator() {
       return buildErrorResponse(agentId, 'Agent not found in registry.');
     }
 
-    const context = options.context || contextBuilder.getContextForAgent(agentId);
-    context.userQuery = userQuery;
+    const context = normalizeContext(options.context || contextBuilder.getContextForAgent(agentId));
+    const query = normalizeQuery(userQuery);
+    context.agentId = agentId;
+    context.userQuery = query;
 
-    const guardrailCheck = guardrails.checkAgentRequest(agentId, userQuery, context);
+    const guardrailCheck = guardrails.checkAgentRequest(agentId, query, context);
     if (!guardrailCheck.allowed) {
       const refusal = guardrailCheck.governedRefusal;
       guardrails.logInvocation(agentId, 'user-query', { type: 'governed-refusal' }, context);
       invocationHistory.push({
         agentId,
-        userQuery,
+        userQuery: query,
         response: refusal,
         timestamp: new Date().toISOString(),
         status: 'refused'
@@ -69,16 +120,21 @@ function createDidacticOrchestrator() {
     const realAgent = realAgents.get(agentId);
     if (realAgent && realAgent.canHandle && realAgent.run) {
       try {
+        const canHandleResult = realAgent.canHandle(context);
+        if (typeof canHandleResult !== 'boolean') {
+          return buildErrorResponse(agentId, 'Agent canHandle() returned a non-boolean value.');
+        }
         const result = await realAgent.run(context, options);
+        const formattedResult = realAgent.formatResponse(result);
         guardrails.logInvocation(agentId, 'user-query', { type: 'success' }, context);
         invocationHistory.push({
           agentId,
-          userQuery,
-          response: result,
+          userQuery: query,
+          response: formattedResult,
           timestamp: new Date().toISOString(),
           status: 'success'
         });
-        return result;
+        return formattedResult;
       } catch (error) {
         return buildErrorResponse(agentId, `Agent execution failed: ${error.message}`);
       }
@@ -97,7 +153,7 @@ function createDidacticOrchestrator() {
 
       invocationHistory.push({
         agentId,
-        userQuery,
+        userQuery: query,
         response: formattedResult,
         timestamp: new Date().toISOString(),
         status: 'success'
@@ -110,16 +166,17 @@ function createDidacticOrchestrator() {
   }
 
   async function orchestrate(userQuery, options = {}) {
-    const context = options.context || contextBuilder.buildContext();
-    context.userQuery = userQuery;
+    const context = normalizeContext(options.context || contextBuilder.buildContext());
+    const query = normalizeQuery(userQuery);
+    context.userQuery = query;
 
     const eligibleAgents = selectEligibleAgents(context);
 
     if (eligibleAgents.length === 0) {
-      const defaultAgentId = options.preferredAgent || findBestAgentForQuery(userQuery);
+      const defaultAgentId = options.preferredAgent || findBestAgentForQuery(query);
       if (defaultAgentId) {
         return {
-          primary: await invokeAgent(defaultAgentId, userQuery, { context }),
+          primary: await invokeAgent(defaultAgentId, query, { context }),
           eligibleAgents: [defaultAgentId],
           context
         };
@@ -133,7 +190,7 @@ function createDidacticOrchestrator() {
     }
 
     const primaryAgentId = options.preferredAgent || eligibleAgents[0].id;
-    const primaryResponse = await invokeAgent(primaryAgentId, userQuery, { context });
+    const primaryResponse = await invokeAgent(primaryAgentId, query, { context });
 
     return {
       primary: primaryResponse,
@@ -165,7 +222,7 @@ function createDidacticOrchestrator() {
   }
 
   function calculateQueryRelevance(query, agent) {
-    const lowerQuery = query.toLowerCase();
+    const lowerQuery = normalizeQuery(query).toLowerCase();
     const keywords = [agent.name.toLowerCase(), agent.role.toLowerCase(), ...agent.capabilities];
     let score = 0;
 
@@ -234,6 +291,7 @@ function createDidacticOrchestrator() {
     clearInvocationHistory,
     getRegisteredAgents,
     getAgentContract,
+    validateAgentContract,
     registerRealAgent,
     contextBuilder,
     guardrails

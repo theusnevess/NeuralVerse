@@ -124,6 +124,19 @@ const NARRATIVE_ACTIONS = [
   { id: 'orient-my-next-steps', label: 'Orient My Next Steps', prompt: 'Orient my next learning steps for this concept' }
 ];
 
+const CURIOSITY_ACTIONS = [
+  { id: 'did-you-know', label: 'Did You Know?', prompt: 'What is an interesting fact about this topic?' },
+  { id: 'surprising-connection', label: 'Surprising Connection', prompt: 'What unexpected connection exists here?' },
+  { id: 'historical-anecdote', label: 'Historical Anecdote', prompt: 'What is a famous historical anecdote about this topic?' },
+  { id: 'thought-experiment', label: 'Thought Experiment', prompt: 'Run a thought experiment on what if this assumption changed.' },
+  { id: 'counterintuitive-insight', label: 'Counterintuitive Insight', prompt: 'What counterintuitive insight surprises most learners?' },
+  { id: 'interdisciplinary-bridge', label: 'Interdisciplinary Bridge', prompt: 'How does this relate to another field?' },
+  { id: 'frontier-curiosity', label: 'Frontier Curiosity', prompt: 'What is a fascinating frontier research direction?' },
+  { id: 'everyday-analogy', label: 'Everyday Analogy', prompt: 'Give me an everyday analogy for this concept.' },
+  { id: 'why-it-changed-field', label: 'Why It Changed the Field', prompt: 'Explain why this concept changed the field in a meaningful shift.' },
+  { id: 'explore-next-curiosity', label: 'Explore Next', prompt: 'Recommend intellectually adjacent ideas to explore next.' }
+];
+
 function createAgentPanelController(options = {}) {
   const root = options.root || document;
   const orchestrator = options.orchestrator || window.NeuralVerse?.didacticOrchestrator;
@@ -138,6 +151,7 @@ function createAgentPanelController(options = {}) {
   let lastQuery = '';
   let interactionHistory = [];
   let collapsedSections = new Set(loadPreference('collapsed', []));
+  let eventsBound = false;
 
   const EXPLANATION_MODES = [
     { id: 'default', label: 'Default' },
@@ -156,13 +170,25 @@ function createAgentPanelController(options = {}) {
 
   function init() {
     injectPanelMarkup();
+    if (!panelElement) return;
     bindEvents();
     renderAgentList();
     restoreMode();
+    handleAgentSelect();
+
+    const triggerBtn = document.querySelector('#nv-agent-trigger');
+    if (triggerBtn) {
+      triggerBtn.setAttribute('aria-controls', 'nv-agent-panel');
+      triggerBtn.setAttribute('aria-expanded', 'false');
+    }
   }
 
   function injectPanelMarkup() {
-    if (root.querySelector('#nv-agent-panel')) return;
+    const existingPanel = root.querySelector('#nv-agent-panel');
+    if (existingPanel) {
+      panelElement = existingPanel;
+      return;
+    }
 
     const panel = document.createElement('aside');
     panel.id = 'nv-agent-panel';
@@ -308,6 +334,17 @@ function createAgentPanelController(options = {}) {
         </div>
       </div>
 
+      <div class="nv-agent-panel__quick-actions" data-agent-curiosity-actions style="display: none;">
+        <div class="nv-agent-panel__quick-actions-label">Curiosity Actions</div>
+        <div class="nv-agent-panel__quick-actions-grid">
+          ${CURIOSITY_ACTIONS.map(a => `
+            <button class="nv-agent-quick-action-btn nv-agent-quick-action-btn--narrative nv-agent-quick-action-btn--curiosity" data-quick-action="${a.id}" data-prompt="${a.prompt}" type="button" aria-label="${a.label}">
+              ${a.label}
+            </button>
+          `).join('')}
+        </div>
+      </div>
+
       <div class="nv-agent-panel__input-area">
         <label class="nv-agent-panel__input-label" for="nv-agent-input">Your Query</label>
         <div class="nv-agent-panel__input-row">
@@ -369,6 +406,8 @@ function createAgentPanelController(options = {}) {
 
   function bindEvents() {
     if (!panelElement) return;
+    if (eventsBound) return;
+    eventsBound = true;
 
     const closeBtn = panelElement.querySelector('.nv-agent-panel__close');
     const submitBtn = panelElement.querySelector('.nv-agent-submit');
@@ -378,7 +417,7 @@ function createAgentPanelController(options = {}) {
     const inputEl = panelElement.querySelector('#nv-agent-input');
     const historyToggle = panelElement.querySelector('.nv-agent-panel__history-toggle');
     const responseActions = panelElement.querySelector('[data-agent-response-actions]');
-    const quickActionContainers = panelElement.querySelectorAll('[data-agent-quick-actions], [data-agent-curriculum-actions], [data-agent-visual-actions], [data-agent-code-lab-actions], [data-agent-research-actions], [data-agent-transfer-actions], [data-agent-assessment-actions], [data-agent-obsidian-actions], [data-agent-narrative-actions]');
+    const quickActionContainers = panelElement.querySelectorAll('[data-agent-quick-actions], [data-agent-curriculum-actions], [data-agent-visual-actions], [data-agent-code-lab-actions], [data-agent-research-actions], [data-agent-transfer-actions], [data-agent-assessment-actions], [data-agent-obsidian-actions], [data-agent-narrative-actions], [data-agent-curiosity-actions]');
 
     closeBtn?.addEventListener('click', closePanel);
     submitBtn?.addEventListener('click', handleSubmit);
@@ -391,6 +430,13 @@ function createAgentPanelController(options = {}) {
       const hasText = inputEl.value.trim().length > 0;
       const hasAgent = selectEl?.value;
       if (submitBtn) submitBtn.disabled = !hasText || !hasAgent;
+    });
+
+    inputEl?.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        e.preventDefault();
+        handleSubmit();
+      }
     });
 
     responseActions?.addEventListener('click', (e) => {
@@ -492,6 +538,7 @@ function createAgentPanelController(options = {}) {
     const assessmentActionsRow = panelElement?.querySelector('[data-agent-assessment-actions]');
     const obsidianActionsRow = panelElement?.querySelector('[data-agent-obsidian-actions]');
     const narrativeActionsRow = panelElement?.querySelector('[data-agent-narrative-actions]');
+    const curiosityActionsRow = panelElement?.querySelector('[data-agent-curiosity-actions]');
 
     selectedAgentId = selectEl?.value || null;
 
@@ -499,47 +546,32 @@ function createAgentPanelController(options = {}) {
       submitBtn.disabled = !selectedAgentId || !inputEl?.value.trim();
     }
 
-    if (modeRow) {
-      modeRow.style.display = selectedAgentId === 'didactic-architecture' ? 'block' : 'none';
-    }
-
-    if (quickActionsRow) {
-      quickActionsRow.style.display = selectedAgentId === 'didactic-architecture' ? 'block' : 'none';
-    }
-
-    if (curriculumActionsRow) {
-      curriculumActionsRow.style.display = selectedAgentId === 'curriculum-dependency' ? 'block' : 'none';
-    }
-
-    if (visualActionsRow) {
-      visualActionsRow.style.display = selectedAgentId === 'visual-interactive-media' ? 'block' : 'none';
-    }
-
-    if (codeLabActionsRow) {
-      codeLabActionsRow.style.display = selectedAgentId === 'code-simulation-lab' ? 'block' : 'none';
-    }
-
-    if (researchActionsRow) {
-      researchActionsRow.style.display = selectedAgentId === 'research-state-of-art' ? 'block' : 'none';
-    }
-
-    if (transferActionsRow) {
-      transferActionsRow.style.display = selectedAgentId === 'application-professional-transfer' ? 'block' : 'none';
-    }
-
-    if (assessmentActionsRow) {
-      assessmentActionsRow.style.display = selectedAgentId === 'assessment-reinforcement' ? 'block' : 'none';
-    }
-
-    if (obsidianActionsRow) {
-      obsidianActionsRow.style.display = selectedAgentId === 'obsidian-knowledge-governance' ? 'block' : 'none';
-    }
-
-    if (narrativeActionsRow) {
-      narrativeActionsRow.style.display = selectedAgentId === 'storytelling-learning-journey' ? 'block' : 'none';
-    }
+    setActionRowVisible(modeRow, selectedAgentId === 'didactic-architecture');
+    setActionRowVisible(quickActionsRow, selectedAgentId === 'didactic-architecture');
+    setActionRowVisible(curriculumActionsRow, selectedAgentId === 'curriculum-dependency');
+    setActionRowVisible(visualActionsRow, selectedAgentId === 'visual-interactive-media');
+    setActionRowVisible(codeLabActionsRow, selectedAgentId === 'code-simulation-lab');
+    setActionRowVisible(researchActionsRow, selectedAgentId === 'research-state-of-art');
+    setActionRowVisible(transferActionsRow, selectedAgentId === 'application-professional-transfer');
+    setActionRowVisible(assessmentActionsRow, selectedAgentId === 'assessment-reinforcement');
+    setActionRowVisible(obsidianActionsRow, selectedAgentId === 'obsidian-knowledge-governance');
+    setActionRowVisible(narrativeActionsRow, selectedAgentId === 'storytelling-learning-journey');
+    setActionRowVisible(curiosityActionsRow, selectedAgentId === 'curiosity-engagement');
 
     hideGuardrailNotice();
+  }
+
+  function setActionRowVisible(row, visible) {
+    if (!row) return;
+    row.style.display = visible ? 'block' : 'none';
+    row.hidden = !visible;
+    row.querySelectorAll('button, select, textarea, input, a[href]').forEach((el) => {
+      if (visible) {
+        el.removeAttribute('tabindex');
+      } else {
+        el.setAttribute('tabindex', '-1');
+      }
+    });
   }
 
   function handleModeChange() {
@@ -611,14 +643,15 @@ function createAgentPanelController(options = {}) {
         addRecentPrompt(query);
       } else {
         lastResult = result;
+        const safeResult = result || {};
         if (responseContent) {
           responseContent.innerHTML = `<div class="nv-agent-panel__result">
             <div class="nv-agent-panel__result-header">
-              <span class="nv-badge" data-variant="info">${escapeHtml(result.agentName || agentId)}</span>
-              <span class="nv-agent-panel__result-time">${formatTime(result.timestamp)}</span>
+              <span class="nv-badge" data-variant="info">${escapeHtml(safeResult.agentName || agentId)}</span>
+              <span class="nv-agent-panel__result-time">${formatTime(safeResult.timestamp)}</span>
             </div>
-            <div class="nv-agent-panel__result-content">${formatMarkdown(result.content || '')}</div>
-            ${result.disclaimer ? `<div class="nv-agent-panel__disclaimer">${escapeHtml(result.disclaimer)}</div>` : ''}
+            <div class="nv-agent-panel__result-content">${formatMarkdown(safeResult.content || 'No response content was produced.')}</div>
+            ${safeResult.disclaimer ? `<div class="nv-agent-panel__disclaimer">${escapeHtml(safeResult.disclaimer)}</div>` : ''}
           </div>`;
         }
         if (responseActions) responseActions.style.display = 'flex';
@@ -721,6 +754,9 @@ function createAgentPanelController(options = {}) {
     }
     if (section.type === 'narrative-card') {
       return `<div class="nv-agent-narrative-card">${formatMarkdown(section.content || '')}</div>`;
+    }
+    if (section.type === 'curiosity-card') {
+      return `<div class="nv-agent-curiosity-card">${formatMarkdown(section.content || '')}</div>`;
     }
     return formatMarkdown(section.content || '');
   }
@@ -967,6 +1003,7 @@ function createAgentPanelController(options = {}) {
     isOpen = true;
     panelElement.classList.add('nv-agent-panel--open');
     panelElement.setAttribute('aria-hidden', 'false');
+    document.querySelector('#nv-agent-trigger')?.setAttribute('aria-expanded', 'true');
     updateContextDisplay();
 
     const firstFocusable = panelElement.querySelector('select, textarea, button');
@@ -978,6 +1015,7 @@ function createAgentPanelController(options = {}) {
     isOpen = false;
     panelElement.classList.remove('nv-agent-panel--open');
     panelElement.setAttribute('aria-hidden', 'true');
+    document.querySelector('#nv-agent-trigger')?.setAttribute('aria-expanded', 'false');
 
     const triggerBtn = document.querySelector('#nv-agent-trigger');
     if (triggerBtn) triggerBtn.focus();

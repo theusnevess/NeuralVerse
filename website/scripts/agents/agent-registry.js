@@ -274,22 +274,43 @@ const AGENT_DEFINITIONS = [
 function createAgentRegistry() {
   const agents = new Map();
 
+  function cloneValue(value) {
+    if (Array.isArray(value)) return value.map(cloneValue);
+    if (value && typeof value === 'object') {
+      return Object.fromEntries(Object.entries(value).map(([key, entry]) => [key, cloneValue(entry)]));
+    }
+    return value;
+  }
+
+  function freezeValue(value) {
+    if (Array.isArray(value)) {
+      value.forEach(freezeValue);
+    } else if (value && typeof value === 'object') {
+      Object.values(value).forEach(freezeValue);
+    }
+    return Object.freeze(value);
+  }
+
+  function cloneAgent(agent) {
+    return agent ? cloneValue(agent) : null;
+  }
+
   function registerAgents() {
     AGENT_DEFINITIONS.forEach((def) => {
-      agents.set(def.id, {
+      agents.set(def.id, freezeValue({
         ...def,
         status: 'scaffolded',
         registeredAt: new Date().toISOString()
-      });
+      }));
     });
   }
 
   function getAgent(agentId) {
-    return agents.get(agentId) || null;
+    return cloneAgent(agents.get(agentId));
   }
 
   function getAllAgents() {
-    return Array.from(agents.values());
+    return Array.from(agents.values()).map(cloneAgent);
   }
 
   function getAgentsByCategory(category) {
@@ -318,7 +339,7 @@ function createAgentRegistry() {
     getAgentIds,
     isRegistered,
     getAgentStatus,
-    AGENT_DEFINITIONS
+    AGENT_DEFINITIONS: freezeValue(cloneValue(AGENT_DEFINITIONS))
   };
 }
 
