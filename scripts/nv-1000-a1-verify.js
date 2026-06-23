@@ -339,7 +339,7 @@ function serveFile(req, res) {
     await page.selectOption('#nv-agent-select', 'didactic-architecture');
     await page.waitForTimeout(300);
     const quickActionCount = await page.evaluate(() => {
-      return document.querySelectorAll('.nv-agent-quick-action-btn:not(.nv-agent-quick-action-btn--curriculum):not(.nv-agent-quick-action-btn--visual):not(.nv-agent-quick-action-btn--code-lab):not(.nv-agent-quick-action-btn--research)').length;
+      return document.querySelectorAll('.nv-agent-quick-action-btn:not(.nv-agent-quick-action-btn--curriculum):not(.nv-agent-quick-action-btn--visual):not(.nv-agent-quick-action-btn--code-lab):not(.nv-agent-quick-action-btn--research):not(.nv-agent-quick-action-btn--transfer):not(.nv-agent-quick-action-btn--assessment)').length;
     });
     check('Quick action buttons present (9)', quickActionCount === 9);
 
@@ -451,7 +451,7 @@ function serveFile(req, res) {
     // --- Test 17: Existing routes ---
     console.log('\n--- Test 17: Existing Routes ---');
     for (const route of ['/', '/#/', '/#/overview', '/#/module/ml-fundamentals']) {
-      await page.goto(`http://127.0.0.1:8091/${route}`, { waitUntil: 'networkidle' });
+      await page.goto(`http://127.0.0.1:8091${route}`, { waitUntil: 'networkidle' });
       await page.waitForTimeout(500);
       const ok = await page.evaluate(() => document.title && document.title.length > 0 && !document.querySelector('.error-page'));
       check(`Route ${route} renders`, ok);
@@ -472,8 +472,12 @@ function serveFile(req, res) {
     const decision = failed.length === 0 ? 'READY' : 'NOT READY';
     console.log(`\nNV-1000-A1 Decision: ${decision}`);
 
-    fs.writeFileSync(path.join(OUTPUT_DIR, 'nv-1000-a1-results.json'),
-      JSON.stringify({ passed, failed, decision, consoleErrors, failedRequests }, null, 2));
+    try {
+      fs.writeFileSync(path.join(OUTPUT_DIR, 'nv-1000-a1-results.json'),
+        JSON.stringify({ passed, failed, decision, consoleErrors, failedRequests }, null, 2));
+    } catch (err) {
+      console.warn(`Warning: Could not write results JSON (filesystem might be read-only): ${err.message}`);
+    }
 
     await browser.close();
   } catch (e) {

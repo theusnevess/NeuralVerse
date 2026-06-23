@@ -15,6 +15,8 @@ import { createCurriculumDependencyAgent } from "./agents/curriculum-dependency-
 import { createVisualInteractiveMediaAgent } from "./agents/visual-interactive-media-agent.js?v=1";
 import { createCodeSimulationLaboratoryAgent } from "./agents/code-simulation-laboratory-agent.js?v=1";
 import { createResearchStateOfArtAgent } from "./agents/research-state-of-art-agent.js?v=1";
+import { createApplicationProfessionalTransferAgent } from "./agents/application-professional-transfer-agent.js?v=1";
+import { createAssessmentReinforcementAgent } from "./agents/assessment-reinforcement-agent.js?v=1";
 import { createAgentPanelController } from "./agents/agent-panel-controller.js?v=1";
 
 window.NV_DEBUG = window.NV_DEBUG || false;
@@ -118,6 +120,18 @@ document.addEventListener("DOMContentLoaded", () => {
   const researchAgent = window.NeuralVerse?.researchStateOfArtAgent;
   if (researchAgent && orchestrator?.registerRealAgent) {
     orchestrator.registerRealAgent('research-state-of-art', researchAgent);
+  }
+
+  // Register the Application & Professional Transfer Agent with the orchestrator
+  const transferAgent = window.NeuralVerse?.applicationProfessionalTransferAgent;
+  if (transferAgent && orchestrator?.registerRealAgent) {
+    orchestrator.registerRealAgent('application-professional-transfer', transferAgent);
+  }
+
+  // Register the Assessment & Reinforcement Agent with the orchestrator
+  const assessmentAgent = window.NeuralVerse?.assessmentReinforcementAgent;
+  if (assessmentAgent && orchestrator?.registerRealAgent) {
+    orchestrator.registerRealAgent('assessment-reinforcement', assessmentAgent);
   }
 
   // Bind agent trigger button

@@ -338,7 +338,7 @@ function serveFile(req, res) {
     // --- Test 16: Existing routes ---
     console.log('\n--- Test 16: Existing Routes ---');
     for (const route of ['/', '/#/', '/#/overview', '/#/module/ml-fundamentals']) {
-      await page.goto(`http://127.0.0.1:8092/${route}`, { waitUntil: 'networkidle' });
+      await page.goto(`http://127.0.0.1:8092${route}`, { waitUntil: 'networkidle' });
       await page.waitForTimeout(500);
       const ok = await page.evaluate(() => document.title && document.title.length > 0 && !document.querySelector('.error-page'));
       check(`Route ${route} renders`, ok);
@@ -378,8 +378,12 @@ function serveFile(req, res) {
     const decision = failed.length === 0 ? 'READY' : 'NOT READY';
     console.log(`\nNV-1000-A2 Decision: ${decision}`);
 
-    fs.writeFileSync(path.join(OUTPUT_DIR, 'nv-1000-a2-results.json'),
-      JSON.stringify({ passed, failed, decision, consoleErrors, failedRequests }, null, 2));
+    try {
+      fs.writeFileSync(path.join(OUTPUT_DIR, 'nv-1000-a2-results.json'),
+        JSON.stringify({ passed, failed, decision, consoleErrors, failedRequests }, null, 2));
+    } catch (err) {
+      console.warn(`Warning: Could not write results JSON (filesystem might be read-only): ${err.message}`);
+    }
 
     await browser.close();
   } catch (e) {

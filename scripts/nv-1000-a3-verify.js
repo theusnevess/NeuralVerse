@@ -285,14 +285,18 @@ function serveFile(req, res) {
     const decision = failed.length === 0 ? 'READY' : 'NOT READY';
     console.log(`\nNV-1000-A3 Decision: ${decision}`);
 
-    fs.writeFileSync(path.join(OUTPUT_DIR, 'nv-1000-a3-results.json'), JSON.stringify({
-      passed,
-      failed,
-      decision,
-      consoleErrors,
-      pageErrors,
-      failedRequests
-    }, null, 2));
+    try {
+      fs.writeFileSync(path.join(OUTPUT_DIR, 'nv-1000-a3-results.json'), JSON.stringify({
+        passed,
+        failed,
+        decision,
+        consoleErrors,
+        pageErrors,
+        failedRequests
+      }, null, 2));
+    } catch (err) {
+      console.warn(`Warning: Could not write results JSON (filesystem might be read-only): ${err.message}`);
+    }
 
     await browser.close();
   } catch (error) {

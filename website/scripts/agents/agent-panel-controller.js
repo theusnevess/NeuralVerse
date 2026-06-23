@@ -72,6 +72,32 @@ const RESEARCH_ACTIONS = [
   { id: 'connect-research', label: 'Connect to Research', prompt: 'Connect this curriculum item to broader research' }
 ];
 
+const TRANSFER_ACTIONS = [
+  { id: 'real-world-applications', label: 'Real-World Applications', prompt: 'Where is this concept applied in the real world?' },
+  { id: 'production-architecture', label: 'Production Architecture', prompt: 'Show the production architecture mapping for this concept' },
+  { id: 'engineering-trade-offs', label: 'Engineering Trade-Offs', prompt: 'What are the engineering trade-offs of this approach?' },
+  { id: 'mlops-perspective', label: 'MLOps Perspective', prompt: 'Explain the MLOps and operational perspective for this concept' },
+  { id: 'decision-framework', label: 'Decision Framework', prompt: 'Provide a structured decision framework for this topic' },
+  { id: 'failure-modes', label: 'Failure Modes', prompt: 'What are the failure modes in production and how do we mitigate them?' },
+  { id: 'scaling-strategy', label: 'Scaling Strategy', prompt: 'What are the scaling considerations for this system?' },
+  { id: 'industry-case-study', label: 'Industry Case Study', prompt: 'Generate an industry case study template for this concept' },
+  { id: 'career-context', label: 'Career Context', prompt: 'How does this concept relate to professional engineering roles?' },
+  { id: 'design-review', label: 'Design Review', prompt: 'Conduct a professional design review for this concept' }
+];
+
+const ASSESSMENT_ACTIONS = [
+  { id: 'practice-questions', label: 'Generate Practice Questions', prompt: 'Generate practice questions for this concept' },
+  { id: 'flashcards', label: 'Build Flashcards', prompt: 'Build flashcards for this concept' },
+  { id: 'retrieval-practice', label: 'Retrieval Practice', prompt: 'Create a retrieval practice exercise for this concept' },
+  { id: 'self-assessment', label: 'Guided Self-Assessment', prompt: 'Provide a guided self-assessment for this concept' },
+  { id: 'mini-challenge', label: 'Mini Challenge', prompt: 'Create a mini challenge for this concept' },
+  { id: 'reinforcement-plan', label: 'Reinforcement Plan', prompt: 'Generate a reinforcement plan for this concept' },
+  { id: 'misconception-check', label: 'Misconception Check', prompt: 'Create a misconception check for this concept' },
+  { id: 'reflection-journal', label: 'Reflection Journal', prompt: 'Generate a reflection journal prompt for this concept' },
+  { id: 'connect-concepts', label: 'Connect Concepts', prompt: 'Generate concept connection exercises for this concept' },
+  { id: 'review-session', label: 'Build Review Session', prompt: 'Build a structured review session for this concept' }
+];
+
 function createAgentPanelController(options = {}) {
   const root = options.root || document;
   const orchestrator = options.orchestrator || window.NeuralVerse?.didacticOrchestrator;
@@ -212,6 +238,28 @@ function createAgentPanelController(options = {}) {
         </div>
       </div>
 
+      <div class="nv-agent-panel__quick-actions" data-agent-transfer-actions style="display: none;">
+        <div class="nv-agent-panel__quick-actions-label">Transfer Actions</div>
+        <div class="nv-agent-panel__quick-actions-grid">
+          ${TRANSFER_ACTIONS.map(a => `
+            <button class="nv-agent-quick-action-btn nv-agent-quick-action-btn--transfer" data-quick-action="${a.id}" data-prompt="${a.prompt}" type="button" aria-label="${a.label}">
+              ${a.label}
+            </button>
+          `).join('')}
+        </div>
+      </div>
+
+      <div class="nv-agent-panel__quick-actions" data-agent-assessment-actions style="display: none;">
+        <div class="nv-agent-panel__quick-actions-label">Assessment Actions</div>
+        <div class="nv-agent-panel__quick-actions-grid">
+          ${ASSESSMENT_ACTIONS.map(a => `
+            <button class="nv-agent-quick-action-btn nv-agent-quick-action-btn--assessment" data-quick-action="${a.id}" data-prompt="${a.prompt}" type="button" aria-label="${a.label}">
+              ${a.label}
+            </button>
+          `).join('')}
+        </div>
+      </div>
+
       <div class="nv-agent-panel__input-area">
         <label class="nv-agent-panel__input-label" for="nv-agent-input">Your Query</label>
         <div class="nv-agent-panel__input-row">
@@ -282,7 +330,7 @@ function createAgentPanelController(options = {}) {
     const inputEl = panelElement.querySelector('#nv-agent-input');
     const historyToggle = panelElement.querySelector('.nv-agent-panel__history-toggle');
     const responseActions = panelElement.querySelector('[data-agent-response-actions]');
-    const quickActionContainers = panelElement.querySelectorAll('[data-agent-quick-actions], [data-agent-curriculum-actions], [data-agent-visual-actions], [data-agent-code-lab-actions], [data-agent-research-actions]');
+    const quickActionContainers = panelElement.querySelectorAll('[data-agent-quick-actions], [data-agent-curriculum-actions], [data-agent-visual-actions], [data-agent-code-lab-actions], [data-agent-research-actions], [data-agent-transfer-actions], [data-agent-assessment-actions]');
 
     closeBtn?.addEventListener('click', closePanel);
     submitBtn?.addEventListener('click', handleSubmit);
@@ -392,6 +440,8 @@ function createAgentPanelController(options = {}) {
     const visualActionsRow = panelElement?.querySelector('[data-agent-visual-actions]');
     const codeLabActionsRow = panelElement?.querySelector('[data-agent-code-lab-actions]');
     const researchActionsRow = panelElement?.querySelector('[data-agent-research-actions]');
+    const transferActionsRow = panelElement?.querySelector('[data-agent-transfer-actions]');
+    const assessmentActionsRow = panelElement?.querySelector('[data-agent-assessment-actions]');
 
     selectedAgentId = selectEl?.value || null;
 
@@ -421,6 +471,14 @@ function createAgentPanelController(options = {}) {
 
     if (researchActionsRow) {
       researchActionsRow.style.display = selectedAgentId === 'research-state-of-art' ? 'block' : 'none';
+    }
+
+    if (transferActionsRow) {
+      transferActionsRow.style.display = selectedAgentId === 'application-professional-transfer' ? 'block' : 'none';
+    }
+
+    if (assessmentActionsRow) {
+      assessmentActionsRow.style.display = selectedAgentId === 'assessment-reinforcement' ? 'block' : 'none';
     }
 
     hideGuardrailNotice();
@@ -593,6 +651,12 @@ function createAgentPanelController(options = {}) {
     }
     if (section.type === 'research-table') {
       return renderMarkdownTable(section.content);
+    }
+    if (section.type === 'engineering-card') {
+      return `<div class="nv-agent-engineering-card">${formatMarkdown(section.content || '')}</div>`;
+    }
+    if (section.type === 'reinforcement-card') {
+      return `<div class="nv-agent-reinforcement-card">${formatMarkdown(section.content || '')}</div>`;
     }
     return formatMarkdown(section.content || '');
   }

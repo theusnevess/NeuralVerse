@@ -579,6 +579,9 @@ class ViewController {
           dirPath = pathParts.join('/') + '/';
         }
       }
+      if (dirPath.startsWith('//')) {
+        dirPath = '/' + dirPath.replace(/^\/+/, '');
+      }
       const response = await fetch(`${dirPath}pages/${viewId}.html?v=10`);
       if (response.ok) {
         const html = await response.text();

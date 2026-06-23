@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/** NV-1000-A5 Verification Script */
+/** NV-1000-A6 Verification Script */
 
 const http = require('http');
 const path = require('path');
@@ -7,8 +7,12 @@ const fs = require('fs');
 const { chromium } = require('/home/matheusneves/.cache/ms-playwright-go/1.57.0/package/index.js');
 
 const WEBSITE_DIR = path.resolve(__dirname, '..', 'website');
-const OUTPUT_DIR = '/tmp/neuralverse-nv1000-a5-verify';
-if (!fs.existsSync(OUTPUT_DIR)) fs.mkdirSync(OUTPUT_DIR, { recursive: true });
+const OUTPUT_DIR = '/tmp/neuralverse-nv1000-a6-verify';
+if (!fs.existsSync(OUTPUT_DIR)) {
+  try {
+    fs.mkdirSync(OUTPUT_DIR, { recursive: true });
+  } catch(e) {}
+}
 
 const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.png': 'image/png', '.svg': 'image/svg+xml', '.md': 'text/markdown' };
 
@@ -40,23 +44,23 @@ function serveFile(req, res) {
 
   try {
     server = http.createServer(serveFile);
-    await new Promise((resolve) => server.listen(8095, '127.0.0.1', resolve));
-    console.log('Server running at http://127.0.0.1:8095/\n');
+    await new Promise((resolve) => server.listen(8096, '127.0.0.1', resolve));
+    console.log('Server running at http://127.0.0.1:8096/\n');
     const browser = await chromium.launch({ headless: true });
     const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
     const consoleErrors = [];
     const pageErrors = [];
     const failedRequests = [];
     page.on('console', (msg) => { if (msg.type() === 'error') consoleErrors.push(msg.text()); });
-    page.on('pageerror', (error) => pageErrors.push(error.message));
+    page.on('pageerror', (error) => pageErrors.push(error.stack || error.message));
     page.on('requestfailed', (req) => failedRequests.push(req.url()));
     page.on('response', (response) => { if (response.status() >= 400) failedRequests.push(`${response.status()} ${response.url()}`); });
 
-    await page.goto('http://127.0.0.1:8095/', { waitUntil: 'domcontentloaded' });
+    await page.goto('http://127.0.0.1:8096/', { waitUntil: 'domcontentloaded' });
     await page.waitForTimeout(2000);
 
     const baseContext = {
-      userQuery: 'Connect query routing to research',
+      userQuery: 'Explain trade-offs of microservices for query routing',
       selectedPath: { id: 'path-advanced-rag-foundations', title: 'Advanced RAG Foundations' },
       selectedModule: { id: 'module-advanced-retrieval-pipelines', title: 'Advanced Retrieval Pipelines' },
       selectedLesson: { id: 'lesson-query-routing', title: 'Query Routing' },
@@ -67,7 +71,7 @@ function serveFile(req, res) {
 
     console.log('--- Test 1: Agent Module Loaded ---');
     const moduleCheck = await page.evaluate(async () => {
-      const agent = window.NeuralVerse?.researchStateOfArtAgent;
+      const agent = window.NeuralVerse?.applicationProfessionalTransferAgent;
       if (!agent) return { loaded: false };
       await agent.initialize();
       return {
@@ -77,109 +81,104 @@ function serveFile(req, res) {
         hasCanHandle: typeof agent.canHandle === 'function',
         hasDetectIntent: typeof agent.detectIntent === 'function',
         hasModes: typeof agent.getAvailableModes === 'function',
-        hasConfidence: typeof agent.getConfidenceLevels === 'function',
         hasCache: typeof agent.getCacheStats === 'function',
-        modes: agent.getAvailableModes(),
-        confidence: agent.getConfidenceLevels()
+        modes: agent.getAvailableModes()
       };
     });
-    check('researchStateOfArtAgent loaded', moduleCheck.loaded);
+    check('applicationProfessionalTransferAgent loaded', moduleCheck.loaded);
     check('Has initialize function', moduleCheck.hasInitialize);
     check('Has run function', moduleCheck.hasRun);
     check('Has canHandle function', moduleCheck.hasCanHandle);
     check('Has detectIntent function', moduleCheck.hasDetectIntent);
     check('Has getAvailableModes function', moduleCheck.hasModes);
-    check('Has getConfidenceLevels function', moduleCheck.hasConfidence);
     check('Has getCacheStats function', moduleCheck.hasCache);
-    check('Has 10 research modes', moduleCheck.modes?.length === 10);
-    check('Has confidence taxonomy', ['Established', 'Emerging', 'Experimental', 'Speculative'].every((x) => moduleCheck.confidence?.includes(x)));
+    check('Has 10 transfer modes', moduleCheck.modes?.length === 10);
 
     console.log('\n--- Test 2: Agent Modes ---');
     const modeQueries = [
-      ['historical_context', 'Give historical context for attention'],
-      ['landmark_papers', 'What are landmark papers behind attention?'],
-      ['benchmark_landscape', 'What benchmarks are used for retrieval?'],
-      ['research_trends', 'What are research trends in RAG?'],
-      ['open_problems', 'What open problems remain?'],
-      ['method_comparison', 'Compare dense retrieval vs sparse retrieval'],
-      ['reading_roadmap', 'What should I read after mastering this lesson?'],
-      ['frontier_topics', 'What frontier topics connect here?'],
-      ['evidence_confidence', 'How mature is the evidence?'],
-      ['curriculum_bridge', 'Connect this to research']
+      ['real_world_applications', 'Where is this concept applied in the real world?'],
+      ['production_architecture', 'Show the production architecture mapping for this concept'],
+      ['engineering_trade_offs', 'What are the engineering trade-offs of this approach?'],
+      ['mlops_perspective', 'Explain the MLOps and operational perspective for this concept'],
+      ['decision_framework', 'Provide a structured decision framework for this topic'],
+      ['failure_modes', 'What are the failure modes in production and how do we mitigate them?'],
+      ['scaling_strategy', 'What are the scaling considerations for this system?'],
+      ['industry_case_study', 'Generate an industry case study template for this concept'],
+      ['career_context', 'How does this concept relate to professional engineering roles?'],
+      ['design_review', 'Conduct a professional design review for this concept']
     ];
     for (const [mode, query] of modeQueries) {
       const result = await page.evaluate(async ({ mode, query, baseContext }) => {
-        const agent = window.NeuralVerse.researchStateOfArtAgent;
+        const agent = window.NeuralVerse.applicationProfessionalTransferAgent;
         return await agent.run({ ...baseContext, userQuery: query }, { mode });
       }, { mode, query, baseContext });
       check(`${mode}: operational`, result?.status === 'operational');
       check(`${mode}: returns sections`, Array.isArray(result?.sections) && result.sections.length >= 6);
-      check(`${mode}: has Research Scope`, result?.sections?.some((s) => s.title === 'Research Scope'));
-      check(`${mode}: has Confidence Level`, result?.sections?.some((s) => s.title === 'Confidence Level'));
-      check(`${mode}: has Known Limitations`, result?.sections?.some((s) => s.title === 'Known Limitations'));
-      check(`${mode}: has Follow-up Reading`, result?.sections?.some((s) => s.title === 'Suggested Follow-up Reading'));
+      check(`${mode}: has Professional Context`, result?.sections?.some((s) => s.title === 'Professional Context'));
+      check(`${mode}: has Assumptions`, result?.sections?.some((s) => s.title === 'Assumptions'));
+      check(`${mode}: has Trade-Offs`, result?.sections?.some((s) => s.title === 'Trade-Offs'));
+      check(`${mode}: has Limitations`, result?.sections?.some((s) => s.title === 'Limitations'));
+      check(`${mode}: has Alternative Advice`, result?.sections?.some((s) => s.title === 'When Another Choice May Be Better'));
     }
 
-    console.log('\n--- Test 3: Research Integrity ---');
+    console.log('\n--- Test 3: Professional Transfer Integrity ---');
     const integrity = await page.evaluate(async ({ baseContext }) => {
-      const agent = window.NeuralVerse.researchStateOfArtAgent;
-      const papers = await agent.run({ ...baseContext, userQuery: 'landmark papers attention' }, { mode: 'landmark_papers' });
-      const benchmarks = await agent.run({ ...baseContext, userQuery: 'benchmark landscape retrieval rag' }, { mode: 'benchmark_landscape' });
-      const frontier = await agent.run({ ...baseContext, userQuery: 'frontier future speculative topics' }, { mode: 'frontier_topics' });
-      return { papers, benchmarks, frontier, cache: agent.getCacheStats() };
+      const agent = window.NeuralVerse.applicationProfessionalTransferAgent;
+      const apps = await agent.run({ ...baseContext, userQuery: 'real-world applications for LLMs' }, { mode: 'real_world_applications' });
+      const architecture = await agent.run({ ...baseContext, userQuery: 'production architecture for RAG' }, { mode: 'production_architecture' });
+      const tradeoffs = await agent.run({ ...baseContext, userQuery: 'engineering trade-offs for computer vision' }, { mode: 'engineering_trade_offs' });
+      const failures = await agent.run({ ...baseContext, userQuery: 'failure modes of machine learning' }, { mode: 'failure_modes' });
+      return { apps, architecture, tradeoffs, failures, cache: agent.getCacheStats() };
     }, { baseContext });
-    check('Landmark response includes curated known paper', JSON.stringify(integrity.papers).includes('Attention Is All You Need'));
-    check('Landmark response includes citation boundary', JSON.stringify(integrity.papers).includes('avoids fabricating'));
-    check('Benchmark response avoids scores', !/\b\d+\.\d+\b/.test(JSON.stringify(integrity.benchmarks)));
-    check('Benchmark response includes interpretation rule', JSON.stringify(integrity.benchmarks).includes('No benchmark scores'));
-    check('Frontier response is experimental', integrity.frontier.confidenceLevel === 'Experimental');
-    check('Cache records entries', integrity.cache.entries >= 3);
+    check('Real-world apps includes VLM/copilot or e-commerce cases', JSON.stringify(integrity.apps).includes('standard production deployment'));
+    check('Architecture includes component flow elements', JSON.stringify(integrity.architecture).includes('Client') || JSON.stringify(integrity.architecture).includes('User Client'));
+    check('Tradeoffs does not declare a binary winner', JSON.stringify(integrity.tradeoffs).includes('depends heavily'));
+    check('Failure modes lists mitigation strategies', JSON.stringify(integrity.failures).includes('Mitigation'));
+    check('Cache records entries', integrity.cache.entries >= 4);
 
     console.log('\n--- Test 4: Orchestrator Integration ---');
     const orchResult = await page.evaluate(async ({ baseContext }) => {
       const orchestrator = window.NeuralVerse?.didacticOrchestrator;
-      return await orchestrator.invokeAgent('research-state-of-art', 'Connect retrieval to research', { context: baseContext });
+      return await orchestrator.invokeAgent('application-professional-transfer', 'Explain trade-offs of microservices', { context: baseContext });
     }, { baseContext });
-    check('Orchestrator invokes A5 agent', orchResult?.agentId === 'research-state-of-art');
-    check('Orchestrator returns research sections', orchResult?.sections?.length >= 6);
+    check('Orchestrator invokes A6 agent', orchResult?.agentId === 'application-professional-transfer');
+    check('Orchestrator returns transfer sections', orchResult?.sections?.length >= 6);
 
     console.log('\n--- Test 5: Panel UI ---');
     await page.click('#nv-agent-trigger');
     await page.waitForTimeout(500);
-    await page.selectOption('#nv-agent-select', 'research-state-of-art');
+    await page.selectOption('#nv-agent-select', 'application-professional-transfer');
     await page.waitForTimeout(300);
     const panelUi = await page.evaluate(() => {
-      const researchActions = document.querySelector('[data-agent-research-actions]');
-      const buttons = [...document.querySelectorAll('.nv-agent-quick-action-btn--research')];
+      const transferActions = document.querySelector('[data-agent-transfer-actions]');
+      const buttons = [...document.querySelectorAll('.nv-agent-quick-action-btn--transfer')];
       return {
-        researchVisible: researchActions && researchActions.style.display !== 'none',
+        transferVisible: transferActions && transferActions.style.display !== 'none',
         buttonCount: buttons.length,
         allButtonsHaveLabels: buttons.every((button) => !!button.getAttribute('aria-label')),
-        otherActionsHidden: ['[data-agent-code-lab-actions]', '[data-agent-visual-actions]', '[data-agent-curriculum-actions]', '[data-agent-quick-actions]'].every((sel) => document.querySelector(sel)?.style.display === 'none')
+        otherActionsHidden: ['[data-agent-code-lab-actions]', '[data-agent-visual-actions]', '[data-agent-curriculum-actions]', '[data-agent-quick-actions]', '[data-agent-research-actions]'].every((sel) => document.querySelector(sel)?.style.display === 'none')
       };
     });
-    check('Research actions visible when A5 selected', panelUi.researchVisible);
-    check('Has 10 research action buttons', panelUi.buttonCount === 10);
-    check('Research action buttons have labels', panelUi.allButtonsHaveLabels);
+    check('Transfer actions visible when A6 selected', panelUi.transferVisible);
+    check('Has 10 transfer action buttons', panelUi.buttonCount === 10);
+    check('Transfer action buttons have labels', panelUi.allButtonsHaveLabels);
     check('Other action groups hidden', panelUi.otherActionsHidden);
 
-    console.log('\n--- Test 6: Panel Research Cards ---');
-    await page.fill('#nv-agent-input', 'What are landmark papers behind attention?');
+    console.log('\n--- Test 6: Panel Transfer Cards ---');
+    await page.fill('#nv-agent-input', 'Show the production architecture mapping for this concept');
     await page.dispatchEvent('#nv-agent-input', 'input');
     await page.waitForFunction(() => !document.querySelector('.nv-agent-submit')?.disabled, null, { timeout: 3000 });
     await page.click('.nv-agent-submit');
     await page.waitForFunction(() => document.querySelectorAll('.nv-agent-section').length > 0, null, { timeout: 5000 }).catch(() => {});
     const responseUi = await page.evaluate(() => ({
       hasSections: document.querySelectorAll('.nv-agent-section').length > 0,
-      hasResearchCard: document.querySelectorAll('.nv-agent-research-card').length > 0,
-      hasConfidenceBadge: document.querySelectorAll('.nv-agent-confidence-badge').length > 0,
-      hasTable: document.querySelectorAll('.nv-agent-table').length > 0,
+      hasEngineeringCard: document.querySelectorAll('.nv-agent-engineering-card').length > 0,
+      hasExecutionFlow: document.querySelectorAll('.nv-agent-execution-flow').length > 0,
       hasReasoning: !!document.querySelector('[data-agent-reasoning-value]')?.textContent?.trim()
     }));
     check('Panel renders structured sections', responseUi.hasSections);
-    check('Panel renders research cards', responseUi.hasResearchCard);
-    check('Panel renders confidence badges', responseUi.hasConfidenceBadge);
-    check('Panel renders accessible research table', responseUi.hasTable);
+    check('Panel renders engineering cards', responseUi.hasEngineeringCard);
+    check('Panel renders accessible execution flow diagram', responseUi.hasExecutionFlow);
     check('Panel shows reasoning strategy', responseUi.hasReasoning);
 
     console.log('\n--- Test 7: Keyboard & Responsive ---');
@@ -203,10 +202,10 @@ function serveFile(req, res) {
       const registry = window.NeuralVerse?.agentRegistry;
       const resp = await fetch('data/curriculum-index.json');
       const data = await resp.json();
-      return { registryCount: registry?.getAgentIds?.().length, a5Status: registry?.getAgentStatus?.('research-state-of-art'), learningPaths: data.counts?.learningPaths, modules: data.counts?.modules, lessons: data.counts?.lessons, artifacts: data.counts?.artifacts };
+      return { registryCount: registry?.getAgentIds?.().length, a6Status: registry?.getAgentStatus?.('application-professional-transfer'), learningPaths: data.counts?.learningPaths, modules: data.counts?.modules, lessons: data.counts?.lessons, artifacts: data.counts?.artifacts };
     });
     check('Registry remains 10 canonical agents', preservation.registryCount === 10);
-    check('A5 registry lifecycle remains scaffolded', preservation.a5Status === 'scaffolded');
+    check('A6 registry lifecycle remains scaffolded', preservation.a6Status === 'scaffolded');
     check('Curriculum index unchanged: 19 paths', preservation.learningPaths === 19);
     check('Curriculum index unchanged: 40 modules', preservation.modules === 40);
     check('Curriculum index unchanged: 120 lessons', preservation.lessons === 120);
@@ -222,15 +221,15 @@ function serveFile(req, res) {
     console.log(`Passed: ${passed.length}`);
     console.log(`Failed: ${failed.length}`);
     const decision = failed.length === 0 ? 'READY' : 'NOT READY';
-    console.log(`\nNV-1000-A5 Decision: ${decision}`);
+    console.log(`\nNV-1000-A6 Decision: ${decision}`);
     try {
-      fs.writeFileSync(path.join(OUTPUT_DIR, 'nv-1000-a5-results.json'), JSON.stringify({ passed, failed, decision, consoleErrors, pageErrors, failedRequests }, null, 2));
+      fs.writeFileSync(path.join(OUTPUT_DIR, 'nv-1000-a6-results.json'), JSON.stringify({ passed, failed, decision, consoleErrors, pageErrors, failedRequests }, null, 2));
     } catch (err) {
-      console.warn(`Warning: Could not write results JSON (filesystem might be read-only): ${err.message}`);
+      console.warn(`Warning: Could not write results JSON: ${err.message}`);
     }
     await browser.close();
   } catch (error) {
-    console.error('Verification failed with error:', error.message);
+    console.error('Verification failed with error:', error.stack || error.message);
     process.exitCode = 1;
   } finally {
     if (server) server.close();

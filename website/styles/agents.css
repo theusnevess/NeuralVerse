@@ -1088,3 +1088,51 @@
   opacity: 1;
   transform: translateY(0);
 }
+
+/* =========================================================
+   Agent Panel — Application & Professional Transfer Quick Actions & Cards
+   ========================================================= */
+
+.nv-agent-quick-action-btn--transfer {
+  border-color: rgba(167, 139, 250, 0.34);
+  background-color: rgba(88, 28, 135, 0.08);
+  color: #c084fc;
+}
+
+.nv-agent-quick-action-btn--transfer:hover {
+  background-color: rgba(139, 92, 246, 0.16);
+  border-color: rgba(167, 139, 250, 0.74);
+  color: #e9d5ff;
+}
+
+.nv-agent-engineering-card {
+  border: 1px solid rgba(167, 139, 250, 0.22);
+  background: linear-gradient(135deg, rgba(88, 28, 135, 0.12), rgba(15, 23, 42, 0.38));
+  border-radius: var(--sys-radius-panel, 8px);
+  padding: var(--sys-space-stack-sm, 8px);
+  color: var(--sys-color-text-primary, #e2e8f0);
+}
+
+/* =========================================================
+   Agent Panel — Assessment & Reinforcement Quick Actions & Cards
+   ========================================================= */
+
+.nv-agent-quick-action-btn--assessment {
+  border-color: rgba(251, 146, 60, 0.34);
+  background-color: rgba(194, 65, 12, 0.08);
+  color: #fb923c;
+}
+
+.nv-agent-quick-action-btn--assessment:hover {
+  background-color: rgba(234, 88, 12, 0.16);
+  border-color: rgba(251, 146, 60, 0.74);
+  color: #ffedd5;
+}
+
+.nv-agent-reinforcement-card {
+  border: 1px solid rgba(251, 146, 60, 0.22);
+  background: linear-gradient(135deg, rgba(194, 65, 12, 0.12), rgba(15, 23, 42, 0.38));
+  border-radius: var(--sys-radius-panel, 8px);
+  padding: var(--sys-space-stack-sm, 8px);
+  color: var(--sys-color-text-primary, #e2e8f0);
+}

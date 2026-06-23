@@ -123,8 +123,8 @@ const networkLogs = [];
   });
 
   page.on('pageerror', err => {
-    pageErrors.push(err.toString());
-    console.error(`[PAGE ERROR] ${err.toString()}`);
+    pageErrors.push(err.stack || err.toString());
+    console.error(`[PAGE ERROR] ${err.stack || err.toString()}`);
   });
 
   page.on('requestfailed', req => {
