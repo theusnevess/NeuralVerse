@@ -157,6 +157,12 @@ function createAgentGuardrails() {
     if (/simulation\s+is\s+(?:now\s+)?running|implemented\s+this\s+(widget|visualization)|will\s+execute\s+automatically/i.test(lowerText)) {
       actions.push('modify-nv800-content');
     }
+    if (/\b(execute|run)\s+(this|the|some|user|arbitrary|malicious)\s+(code|script|program|command)\b/i.test(lowerText)) {
+      actions.push('modify-nv800-content');
+    }
+    if (/\bexecute\b.*\bcode\b/i.test(lowerText)) {
+      actions.push('modify-nv800-content');
+    }
     if (/\b(registry entry|nv-800 registry|lifecycle|canonical_status|canonical status|reviewed)\b/.test(lowerText)) {
       actions.push('change-lifecycle-status');
     }

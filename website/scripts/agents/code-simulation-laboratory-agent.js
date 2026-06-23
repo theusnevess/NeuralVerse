@@ -8,9 +8,9 @@
 
 const CODE_INTENT_PATTERNS = {
   code_example: ['code example', 'show me code', 'toy example', 'implement', 'in code', 'python', 'javascript', 'typescript', 'pseudocode'],
-  step_execution: ['step by step', 'execution flow', 'walk through', 'how would this behave', 'intermediate state'],
+  step_execution: ['step by step', 'execution flow', 'execution trace', 'how would this behave', 'intermediate state'],
   algorithm_walkthrough: ['algorithm', 'iterations', 'state changes', 'visualization companion', 'convergence'],
-  mini_lab: ['laboratory', 'mini lab', 'lab exercise', 'guided experiment', 'hands-on'],
+  mini_lab: ['laboratory', 'mini lab', 'lab exercise', 'lab', 'guided experiment', 'hands-on'],
   simulation_specification: ['simulate', 'simulation', 'controls', 'observable output', 'interactive parameters'],
   debugging: ['debug', 'bug', 'mistake', 'common error', 'why is this failing'],
   complexity_analysis: ['complexity', 'big o', 'time complexity', 'space complexity', 'scalability', 'bottleneck'],
@@ -47,6 +47,7 @@ function createCodeSimulationLaboratoryAgent() {
 
   async function run(context = {}, options = {}) {
     await initialize();
+    if (!context) context = {};
 
     const query = context.userQuery || '';
     const mode = options.mode || detectIntent(query);
