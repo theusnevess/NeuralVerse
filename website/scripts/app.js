@@ -13,6 +13,7 @@ import { createDidacticOrchestrator } from "./agents/didactic-orchestrator.js?v=
 import { createDidacticArchitectureAgent } from "./agents/didactic-architecture-agent.js?v=1";
 import { createCurriculumDependencyAgent } from "./agents/curriculum-dependency-agent.js?v=1";
 import { createVisualInteractiveMediaAgent } from "./agents/visual-interactive-media-agent.js?v=1";
+import { createCodeSimulationLaboratoryAgent } from "./agents/code-simulation-laboratory-agent.js?v=1";
 import { createAgentPanelController } from "./agents/agent-panel-controller.js?v=1";
 
 window.NV_DEBUG = window.NV_DEBUG || false;
@@ -104,6 +105,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const visualMediaAgent = window.NeuralVerse?.visualInteractiveMediaAgent;
   if (visualMediaAgent && orchestrator?.registerRealAgent) {
     orchestrator.registerRealAgent('visual-interactive-media', visualMediaAgent);
+  }
+
+  // Register the Code, Simulation & Laboratory Agent with the orchestrator
+  const codeLabAgent = window.NeuralVerse?.codeSimulationLaboratoryAgent;
+  if (codeLabAgent && orchestrator?.registerRealAgent) {
+    orchestrator.registerRealAgent('code-simulation-lab', codeLabAgent);
   }
 
   // Bind agent trigger button

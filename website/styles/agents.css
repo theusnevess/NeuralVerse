@@ -592,6 +592,82 @@
 }
 
 /* =========================================================
+   Agent Panel — Code Lab Quick Actions & Cards
+   ========================================================= */
+
+.nv-agent-quick-action-btn--code-lab {
+  border-color: rgba(125, 211, 252, 0.34);
+  background-color: rgba(15, 23, 42, 0.38);
+}
+
+.nv-agent-quick-action-btn--code-lab:hover {
+  background-color: rgba(14, 116, 144, 0.18);
+  border-color: rgba(125, 211, 252, 0.76);
+}
+
+.nv-agent-code-block {
+  border: 1px solid rgba(56, 189, 248, 0.18);
+  background: rgba(2, 6, 23, 0.64);
+  border-radius: var(--sys-radius-panel, 8px);
+  overflow: hidden;
+}
+
+.nv-agent-code-block__label {
+  padding: 4px 8px;
+  border-bottom: 1px solid rgba(56, 189, 248, 0.12);
+  color: var(--sys-color-accent-primary, #0e7490);
+  font-family: var(--ref-font-family-monospace, monospace);
+  font-size: 0.5625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.nv-agent-code-block pre {
+  margin: 0;
+  padding: var(--sys-space-stack-sm, 8px);
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.nv-agent-code-block code {
+  color: var(--sys-color-text-primary, #e2e8f0);
+  font-size: 0.6875rem;
+  line-height: 1.6;
+}
+
+.nv-agent-lab-card {
+  border: 1px solid rgba(14, 116, 144, 0.2);
+  background: rgba(15, 23, 42, 0.42);
+  border-radius: var(--sys-radius-panel, 8px);
+  padding: var(--sys-space-stack-sm, 8px);
+}
+
+.nv-agent-execution-flow {
+  list-style: none;
+  display: grid;
+  gap: var(--sys-space-stack-xs, 6px);
+  margin: 0;
+  padding: 0;
+}
+
+.nv-agent-execution-flow__item {
+  position: relative;
+  border: 1px solid rgba(56, 189, 248, 0.14);
+  border-radius: var(--sys-radius-control, 4px);
+  padding: 6px 8px;
+  background: rgba(14, 116, 144, 0.08);
+}
+
+.nv-agent-execution-flow__item + .nv-agent-execution-flow__item::before {
+  content: '↓';
+  position: absolute;
+  left: 8px;
+  top: -13px;
+  color: var(--sys-color-accent-primary, #0e7490);
+  font-size: 0.625rem;
+}
+
+/* =========================================================
    Agent Panel — Hierarchy Tree
    ========================================================= */
 

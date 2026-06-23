@@ -46,6 +46,19 @@ const VISUAL_ACTIONS = [
   { id: 'best-teaching-medium', label: 'Best Teaching Medium', prompt: 'What is the best teaching medium for this concept?' }
 ];
 
+const CODE_LAB_ACTIONS = [
+  { id: 'generate-code-example', label: 'Generate Code Example', prompt: 'Show me how this works in code' },
+  { id: 'explain-code', label: 'Explain Code', prompt: 'Walk through this implementation step by step' },
+  { id: 'build-mini-lab', label: 'Build Mini Lab', prompt: 'Give me a mini laboratory exercise' },
+  { id: 'simulation-spec', label: 'Simulation Specification', prompt: 'Can we simulate this algorithm?' },
+  { id: 'step-execution', label: 'Step-by-Step Execution', prompt: 'Explain the execution flow step by step' },
+  { id: 'debug-common-errors', label: 'Debug Common Errors', prompt: 'What common implementation mistakes should I debug?' },
+  { id: 'analyze-complexity', label: 'Analyze Complexity', prompt: 'Analyze the time and space complexity' },
+  { id: 'build-pipeline', label: 'Build Pipeline', prompt: 'Build an educational pipeline for this concept' },
+  { id: 'explore-parameters', label: 'Explore Parameters', prompt: 'Explore the important parameters and trade-offs' },
+  { id: 'design-experiment', label: 'Design Experiment', prompt: 'Design a reproducible experiment for this concept' }
+];
+
 function createAgentPanelController(options = {}) {
   const root = options.root || document;
   const orchestrator = options.orchestrator || window.NeuralVerse?.didacticOrchestrator;
@@ -164,6 +177,17 @@ function createAgentPanelController(options = {}) {
         </div>
       </div>
 
+      <div class="nv-agent-panel__quick-actions" data-agent-code-lab-actions style="display: none;">
+        <div class="nv-agent-panel__quick-actions-label">Code Lab Actions</div>
+        <div class="nv-agent-panel__quick-actions-grid">
+          ${CODE_LAB_ACTIONS.map(a => `
+            <button class="nv-agent-quick-action-btn nv-agent-quick-action-btn--code-lab" data-quick-action="${a.id}" data-prompt="${a.prompt}" type="button" aria-label="${a.label}">
+              ${a.label}
+            </button>
+          `).join('')}
+        </div>
+      </div>
+
       <div class="nv-agent-panel__input-area">
         <label class="nv-agent-panel__input-label" for="nv-agent-input">Your Query</label>
         <div class="nv-agent-panel__input-row">
@@ -234,7 +258,7 @@ function createAgentPanelController(options = {}) {
     const inputEl = panelElement.querySelector('#nv-agent-input');
     const historyToggle = panelElement.querySelector('.nv-agent-panel__history-toggle');
     const responseActions = panelElement.querySelector('[data-agent-response-actions]');
-    const quickActionContainers = panelElement.querySelectorAll('[data-agent-quick-actions], [data-agent-curriculum-actions], [data-agent-visual-actions]');
+    const quickActionContainers = panelElement.querySelectorAll('[data-agent-quick-actions], [data-agent-curriculum-actions], [data-agent-visual-actions], [data-agent-code-lab-actions]');
 
     closeBtn?.addEventListener('click', closePanel);
     submitBtn?.addEventListener('click', handleSubmit);
@@ -342,6 +366,7 @@ function createAgentPanelController(options = {}) {
     const quickActionsRow = panelElement?.querySelector('[data-agent-quick-actions]');
     const curriculumActionsRow = panelElement?.querySelector('[data-agent-curriculum-actions]');
     const visualActionsRow = panelElement?.querySelector('[data-agent-visual-actions]');
+    const codeLabActionsRow = panelElement?.querySelector('[data-agent-code-lab-actions]');
 
     selectedAgentId = selectEl?.value || null;
 
@@ -363,6 +388,10 @@ function createAgentPanelController(options = {}) {
 
     if (visualActionsRow) {
       visualActionsRow.style.display = selectedAgentId === 'visual-interactive-media' ? 'block' : 'none';
+    }
+
+    if (codeLabActionsRow) {
+      codeLabActionsRow.style.display = selectedAgentId === 'code-simulation-lab' ? 'block' : 'none';
     }
 
     hideGuardrailNotice();
@@ -518,7 +547,36 @@ function createAgentPanelController(options = {}) {
     if (section.type === 'timeline') {
       return renderTimeline(section.content);
     }
+    if (section.type === 'code-block') {
+      return renderCodeBlock(section);
+    }
+    if (section.type === 'execution-flow') {
+      return renderExecutionFlow(section.content);
+    }
+    if (section.type === 'lab-card') {
+      return `<div class="nv-agent-lab-card">${formatMarkdown(section.content || '')}</div>`;
+    }
     return formatMarkdown(section.content || '');
+  }
+
+  function renderCodeBlock(section) {
+    const language = section.language || 'text';
+    return `<div class="nv-agent-code-block" data-language="${escapeHtml(language)}">
+      <div class="nv-agent-code-block__label">${escapeHtml(language)}</div>
+      <pre><code>${escapeHtml(section.content || '')}</code></pre>
+    </div>`;
+  }
+
+  function renderExecutionFlow(text) {
+    if (!text) return '';
+    const steps = text.split('\n').map((line) => line.trim()).filter(Boolean).filter((line) => line !== '↓');
+    if (steps.length === 0) return formatMarkdown(text);
+    let html = '<ol class="nv-agent-execution-flow">';
+    steps.forEach((step) => {
+      html += `<li class="nv-agent-execution-flow__item">${formatMarkdown(step)}</li>`;
+    });
+    html += '</ol>';
+    return html;
   }
 
   function renderTimeline(text) {

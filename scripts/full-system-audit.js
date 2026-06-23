@@ -301,7 +301,7 @@ const networkLogs = [];
     }
     
     // Exit Presentation
-    const closePresentationBtn = page.locator('button:has-text("Return to Workspace"), button:has-text("Exit"), button:has-text("Close")');
+    const closePresentationBtn = page.locator('button:visible:has-text("Return to Workspace"), button:visible:has-text("Exit"), button:visible:has-text("Close")');
     if (await closePresentationBtn.count() > 0) {
       await closePresentationBtn.first().click();
       await page.waitForTimeout(500);

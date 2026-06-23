@@ -218,6 +218,10 @@ function createDidacticOrchestrator() {
     registerRealAgent('visual-interactive-media', window.NeuralVerse.visualInteractiveMediaAgent);
   }
 
+  if (window.NeuralVerse?.codeSimulationLaboratoryAgent) {
+    registerRealAgent('code-simulation-lab', window.NeuralVerse.codeSimulationLaboratoryAgent);
+  }
+
   return {
     orchestrate,
     invokeAgent,
