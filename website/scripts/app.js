@@ -17,6 +17,7 @@ import { createCodeSimulationLaboratoryAgent } from "./agents/code-simulation-la
 import { createResearchStateOfArtAgent } from "./agents/research-state-of-art-agent.js?v=1";
 import { createApplicationProfessionalTransferAgent } from "./agents/application-professional-transfer-agent.js?v=1";
 import { createAssessmentReinforcementAgent } from "./agents/assessment-reinforcement-agent.js?v=1";
+import { createObsidianKnowledgeGovernanceAgent } from "./agents/obsidian-knowledge-governance-agent.js?v=1";
 import { createAgentPanelController } from "./agents/agent-panel-controller.js?v=1";
 
 window.NV_DEBUG = window.NV_DEBUG || false;
@@ -132,6 +133,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const assessmentAgent = window.NeuralVerse?.assessmentReinforcementAgent;
   if (assessmentAgent && orchestrator?.registerRealAgent) {
     orchestrator.registerRealAgent('assessment-reinforcement', assessmentAgent);
+  }
+
+  // Register the Obsidian & Knowledge Governance Agent with the orchestrator
+  const obsidianAgent = window.NeuralVerse?.obsidianKnowledgeGovernanceAgent;
+  if (obsidianAgent && orchestrator?.registerRealAgent) {
+    orchestrator.registerRealAgent('obsidian-knowledge-governance', obsidianAgent);
   }
 
   // Bind agent trigger button

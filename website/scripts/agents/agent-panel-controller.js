@@ -98,6 +98,19 @@ const ASSESSMENT_ACTIONS = [
   { id: 'review-session', label: 'Build Review Session', prompt: 'Build a structured review session for this concept' }
 ];
 
+const OBSIDIAN_ACTIONS = [
+  { id: 'permanent-note', label: 'Create Permanent Note', prompt: 'Create permanent note template for this concept' },
+  { id: 'suggest-backlinks', label: 'Suggest Backlinks', prompt: 'Suggest backlinks for this concept' },
+  { id: 'recommend-tags', label: 'Recommend Tags', prompt: 'Recommend tags for this concept' },
+  { id: 'organize-collections', label: 'Organize Collections', prompt: 'Organize collections for this concept' },
+  { id: 'build-concept-map', label: 'Build Concept Map', prompt: 'Build concept map for this concept' },
+  { id: 'explore-neighbor-concepts', label: 'Explore Neighbor Concepts', prompt: 'Explore neighbor concepts for this concept' },
+  { id: 'refine-note', label: 'Refine Note', prompt: 'Refine note for this concept' },
+  { id: 'split-into-atomic-notes', label: 'Split Into Atomic Notes', prompt: 'Split into atomic notes for this concept' },
+  { id: 'plan-knowledge-review', label: 'Plan Knowledge Review', prompt: 'Plan knowledge review for this concept' },
+  { id: 'obsidian-strategy', label: 'Obsidian Strategy', prompt: 'Provide Obsidian strategy for this concept' }
+];
+
 function createAgentPanelController(options = {}) {
   const root = options.root || document;
   const orchestrator = options.orchestrator || window.NeuralVerse?.didacticOrchestrator;
@@ -260,6 +273,17 @@ function createAgentPanelController(options = {}) {
         </div>
       </div>
 
+      <div class="nv-agent-panel__quick-actions" data-agent-obsidian-actions style="display: none;">
+        <div class="nv-agent-panel__quick-actions-label">Obsidian & Knowledge Actions</div>
+        <div class="nv-agent-panel__quick-actions-grid">
+          ${OBSIDIAN_ACTIONS.map(a => `
+            <button class="nv-agent-quick-action-btn nv-agent-quick-action-btn--obsidian" data-quick-action="${a.id}" data-prompt="${a.prompt}" type="button" aria-label="${a.label}">
+              ${a.label}
+            </button>
+          `).join('')}
+        </div>
+      </div>
+
       <div class="nv-agent-panel__input-area">
         <label class="nv-agent-panel__input-label" for="nv-agent-input">Your Query</label>
         <div class="nv-agent-panel__input-row">
@@ -330,7 +354,7 @@ function createAgentPanelController(options = {}) {
     const inputEl = panelElement.querySelector('#nv-agent-input');
     const historyToggle = panelElement.querySelector('.nv-agent-panel__history-toggle');
     const responseActions = panelElement.querySelector('[data-agent-response-actions]');
-    const quickActionContainers = panelElement.querySelectorAll('[data-agent-quick-actions], [data-agent-curriculum-actions], [data-agent-visual-actions], [data-agent-code-lab-actions], [data-agent-research-actions], [data-agent-transfer-actions], [data-agent-assessment-actions]');
+    const quickActionContainers = panelElement.querySelectorAll('[data-agent-quick-actions], [data-agent-curriculum-actions], [data-agent-visual-actions], [data-agent-code-lab-actions], [data-agent-research-actions], [data-agent-transfer-actions], [data-agent-assessment-actions], [data-agent-obsidian-actions]');
 
     closeBtn?.addEventListener('click', closePanel);
     submitBtn?.addEventListener('click', handleSubmit);
@@ -442,6 +466,7 @@ function createAgentPanelController(options = {}) {
     const researchActionsRow = panelElement?.querySelector('[data-agent-research-actions]');
     const transferActionsRow = panelElement?.querySelector('[data-agent-transfer-actions]');
     const assessmentActionsRow = panelElement?.querySelector('[data-agent-assessment-actions]');
+    const obsidianActionsRow = panelElement?.querySelector('[data-agent-obsidian-actions]');
 
     selectedAgentId = selectEl?.value || null;
 
@@ -479,6 +504,10 @@ function createAgentPanelController(options = {}) {
 
     if (assessmentActionsRow) {
       assessmentActionsRow.style.display = selectedAgentId === 'assessment-reinforcement' ? 'block' : 'none';
+    }
+
+    if (obsidianActionsRow) {
+      obsidianActionsRow.style.display = selectedAgentId === 'obsidian-knowledge-governance' ? 'block' : 'none';
     }
 
     hideGuardrailNotice();
@@ -657,6 +686,9 @@ function createAgentPanelController(options = {}) {
     }
     if (section.type === 'reinforcement-card') {
       return `<div class="nv-agent-reinforcement-card">${formatMarkdown(section.content || '')}</div>`;
+    }
+    if (section.type === 'knowledge-card') {
+      return `<div class="nv-agent-knowledge-card">${formatMarkdown(section.content || '')}</div>`;
     }
     return formatMarkdown(section.content || '');
   }
