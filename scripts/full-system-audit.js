@@ -1,12 +1,49 @@
 const fs = require('fs');
 const path = require('path');
+const http = require('http');
 const { chromium } = require('/home/matheusneves/.cache/ms-playwright-go/1.57.0/package/index.js');
 
 const BASE_URL = 'http://127.0.0.1:8080/';
 const ARTIFACTS_DIR = '/tmp/neuralverse-full-system-audit';
+const WEBSITE_DIR = path.resolve(__dirname, '../website');
 
 if (!fs.existsSync(ARTIFACTS_DIR)) {
   fs.mkdirSync(ARTIFACTS_DIR, { recursive: true });
+}
+
+const MIME = {
+  '.html': 'text/html',
+  '.js':   'text/javascript',
+  '.css':  'text/css',
+  '.json': 'application/json',
+  '.png':  'image/png',
+  '.jpg':  'image/jpeg',
+  '.svg':  'image/svg+xml',
+  '.ico':  'image/x-icon',
+  '.md':   'text/markdown',
+  '.txt':  'text/plain',
+  '.woff': 'font/woff',
+  '.woff2':'font/woff2',
+};
+
+function serveFile(req, res) {
+  let urlPath = req.url.split('?')[0];
+  if (urlPath === '/' || urlPath === '') urlPath = '/index.html';
+  const filePath = path.join(WEBSITE_DIR, urlPath);
+  const ext = path.extname(filePath).toLowerCase();
+  try {
+    if (!fs.existsSync(filePath) || !fs.statSync(filePath).isFile()) {
+      const idx = path.join(WEBSITE_DIR, 'index.html');
+      res.writeHead(200, { 'Content-Type': 'text/html', 'Cache-Control': 'no-cache' });
+      res.end(fs.readFileSync(idx));
+      return;
+    }
+    res.writeHead(200, { 'Content-Type': MIME[ext] || 'application/octet-stream', 'Cache-Control': 'no-cache' });
+    res.end(fs.readFileSync(filePath));
+  } catch(e) {
+    res.writeHead(500);
+    res.end(`Error: ${e.message}`);
+  }
 }
 
 const consoleLogs = [];
@@ -17,6 +54,10 @@ const networkLogs = [];
 
 (async () => {
   console.log("Starting Full-System Audit, Hardening & Certification...");
+  const server = http.createServer(serveFile);
+  await new Promise(r => server.listen(8080, '127.0.0.1', r));
+  console.log(`Self-contained server running at ${BASE_URL}`);
+
   const browser = await chromium.launch({
     headless: true,
   });
@@ -277,6 +318,12 @@ const networkLogs = [];
   await rmContext.close();
 
   // Search Matrix Audit
+  const searchModeTab = page.locator('#tab-search');
+  if (await searchModeTab.count() > 0) {
+    await searchModeTab.click();
+    await page.waitForTimeout(300);
+  }
+
   const queries = ["bert", "clip", "yolo", "rag", "pytorch", "deep learning", "nonexistent-query"];
   for (const q of queries) {
     console.log(`Running search check for query: "${q}"`);
@@ -322,6 +369,7 @@ const networkLogs = [];
   console.log(`[ACCESSIBILITY] empty focusable elements in nav: ${emptyFocusableNav}`);
 
   await browser.close();
+  server.close();
 
   // Fix Audit Report Accuracy: claim PASS only if raw metrics are valid
   let status = "PASS";

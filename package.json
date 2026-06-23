@@ -1,0 +1,7 @@
+{
+  "name": "neuralverse",
+  "private": true,
+  "scripts": {
+    "build": "npm --prefix react-build run build"
+  }
+}

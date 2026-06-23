@@ -27,8 +27,10 @@
   <link rel="stylesheet" href="styles/cross-links.css?v=1">
   <link rel="stylesheet" href="styles/reading-experience.css?v=1">
   <link rel="stylesheet" href="styles/personalization.css?v=1">
+  <link rel="stylesheet" href="styles/active-learning.css?v=1">
   <link rel="stylesheet" href="styles/visualizations.css?v=1">
   <link rel="stylesheet" href="styles/knowledge-graph.css?v=1">
+  <link rel="stylesheet" href="styles/agents.css?v=1">
 </head>
 <body>
   <!-- Skip Link for Accessibility -->
@@ -44,7 +46,13 @@
       <div class="nv-header-brand">
         <img class="nv-header-brand-mark" src="assets/brand/neuralverse-wordmark.png" alt="NeuralVerse">
       </div>
-      <button type="button" id="nv-global-search-trigger" class="nv-global-search-trigger" aria-label="Search curriculum (Ctrl+K)">
+      <button type="button" id="nv-agent-trigger" class="nv-agent-trigger" aria-label="Open Didactic Agent Assist">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M12 16v-4M12 8h.01"/>
+        </svg>
+      </button>
+    <button type="button" id="nv-global-search-trigger" class="nv-global-search-trigger" aria-label="Search curriculum (Ctrl+K)">
         <svg class="nv-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <circle cx="11" cy="11" r="8"></circle>
           <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -904,6 +912,5 @@
        Self-contained local IIFE bundle — zero CDN runtime dependency.
        Built from react-build/ via: cd react-build && npm run build
        The existing application functions identically if dist/ is absent. -->
-  <script src="dist/react-islands.js?v=nv-500-ux-007e12" defer></script>
 </body>
 </html>
