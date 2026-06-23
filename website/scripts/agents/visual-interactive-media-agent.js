@@ -10,7 +10,7 @@ const VISUAL_INTENT_PATTERNS = {
   visual_intuition: ['visualize', 'visual intuition', 'visual metaphor', 'look like', 'mental model'],
   diagram_recommendation: ['diagram', 'flowchart', 'architecture', 'pipeline', 'map this', 'draw'],
   interactive_specification: ['interactive', 'simulation', 'widget', 'controls', 'parameter', 'slider'],
-  comparison_visualization: ['compare visually', 'visual comparison', 'versus', ' vs ', 'side by side', 'matrix'],
+  comparison_visualization: ['compare', 'compare visually', 'visual comparison', 'versus', ' vs ', 'side by side', 'matrix'],
   animation_specification: ['animation', 'animate', 'motion', 'stages', 'transition', 'replay'],
   timeline_construction: ['timeline', 'chronological', 'sequence over time', 'training pipeline', 'inference pipeline'],
   mathematical_visualization: ['geometric', 'mathematical', 'vector', 'matrix', 'probability', 'optimization', 'latent'],
@@ -88,6 +88,7 @@ function createVisualInteractiveMediaAgent() {
 
   async function run(context = {}, options = {}) {
     await initialize();
+    if (!context) context = {};
 
     const query = context.userQuery || '';
     const mode = options.mode || detectIntent(query);
@@ -354,6 +355,15 @@ function createVisualInteractiveMediaAgent() {
 
   function chooseDiagramType(topic, query, context) {
     const lower = `${topic} ${query} ${context.artifactType || ''}`.toLowerCase();
+    if (lower.includes('architecture')) {
+      return { type: 'layered architecture', reason: 'The concept implies stacked layers with clear separation of concerns.' };
+    }
+    if (lower.includes('hierarchy') || lower.includes('hierarchical')) {
+      return { type: 'hierarchy', reason: 'The concept decomposes into nested or parent-child structures.' };
+    }
+    if (lower.includes('timeline') || lower.includes('chronological')) {
+      return { type: 'timeline', reason: 'The concept involves ordered phases or temporal progression.' };
+    }
     if (lower.includes('rag') || lower.includes('retrieval') || lower.includes('pipeline')) {
       return { type: 'pipeline', reason: 'The concept emphasizes ordered transformations and directional data flow.' };
     }

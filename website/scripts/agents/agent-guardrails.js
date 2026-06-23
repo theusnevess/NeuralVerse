@@ -151,7 +151,10 @@ function createAgentGuardrails() {
     const text = typeof request === 'string' ? request : JSON.stringify(request);
     const lowerText = text.toLowerCase();
 
-    if (/\b(modify|change|update|rewrite|store|alter|remove|delete|promote|reorder|mutate)\b/.test(lowerText) && /\b(curriculum|artifact|file|nv-800|registry|official|prerequisite|dependency|module|lesson|graph)\b/.test(lowerText)) {
+    if (/\b(modify|change|update|rewrite|store|alter|remove|delete|promote|reorder|mutate|add|move|implement)\b/.test(lowerText) && /\b(curriculum|artifact|file|nv-800|registry|official|prerequisite|dependency|module|lesson|graph|edge|atlas|topology|widget)\b/.test(lowerText)) {
+      actions.push('modify-nv800-content');
+    }
+    if (/simulation\s+is\s+(?:now\s+)?running|implemented\s+this\s+(widget|visualization)|will\s+execute\s+automatically/i.test(lowerText)) {
       actions.push('modify-nv800-content');
     }
     if (/\b(registry entry|nv-800 registry|lifecycle|canonical_status|canonical status|reviewed)\b/.test(lowerText)) {
