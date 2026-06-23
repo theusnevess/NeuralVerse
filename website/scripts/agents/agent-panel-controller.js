@@ -111,6 +111,19 @@ const OBSIDIAN_ACTIONS = [
   { id: 'obsidian-strategy', label: 'Obsidian Strategy', prompt: 'Provide Obsidian strategy for this concept' }
 ];
 
+const NARRATIVE_ACTIONS = [
+  { id: 'origin-story', label: 'Tell the Origin Story', prompt: 'Tell the origin story for this concept' },
+  { id: 'explain-the-learning-journey', label: 'Explain the Learning Journey', prompt: 'Explain the learning journey for this concept' },
+  { id: 'frame-the-problem', label: 'Frame the Problem', prompt: 'Frame the engineering or scientific problem for this concept' },
+  { id: 'build-concept-timeline', label: 'Build Concept Timeline', prompt: 'Build concept timeline for this concept' },
+  { id: 'human-perspective', label: 'Human Perspective', prompt: 'Provide human perspective for this concept' },
+  { id: 'connect-previous-lessons', label: 'Connect Previous Lessons', prompt: 'Connect previous lessons for this concept' },
+  { id: 'build-mental-model', label: 'Build Mental Model', prompt: 'Build mental model for this concept' },
+  { id: 'scientific-evolution', label: 'Scientific Evolution', prompt: 'Explain scientific evolution for this concept' },
+  { id: 'why-this-matters', label: 'Why This Matters', prompt: 'Explain why this matters' },
+  { id: 'orient-my-next-steps', label: 'Orient My Next Steps', prompt: 'Orient my next learning steps for this concept' }
+];
+
 function createAgentPanelController(options = {}) {
   const root = options.root || document;
   const orchestrator = options.orchestrator || window.NeuralVerse?.didacticOrchestrator;
@@ -284,6 +297,17 @@ function createAgentPanelController(options = {}) {
         </div>
       </div>
 
+      <div class="nv-agent-panel__quick-actions" data-agent-narrative-actions style="display: none;">
+        <div class="nv-agent-panel__quick-actions-label">Storytelling Actions</div>
+        <div class="nv-agent-panel__quick-actions-grid">
+          ${NARRATIVE_ACTIONS.map(a => `
+            <button class="nv-agent-quick-action-btn nv-agent-quick-action-btn--narrative" data-quick-action="${a.id}" data-prompt="${a.prompt}" type="button" aria-label="${a.label}">
+              ${a.label}
+            </button>
+          `).join('')}
+        </div>
+      </div>
+
       <div class="nv-agent-panel__input-area">
         <label class="nv-agent-panel__input-label" for="nv-agent-input">Your Query</label>
         <div class="nv-agent-panel__input-row">
@@ -354,7 +378,7 @@ function createAgentPanelController(options = {}) {
     const inputEl = panelElement.querySelector('#nv-agent-input');
     const historyToggle = panelElement.querySelector('.nv-agent-panel__history-toggle');
     const responseActions = panelElement.querySelector('[data-agent-response-actions]');
-    const quickActionContainers = panelElement.querySelectorAll('[data-agent-quick-actions], [data-agent-curriculum-actions], [data-agent-visual-actions], [data-agent-code-lab-actions], [data-agent-research-actions], [data-agent-transfer-actions], [data-agent-assessment-actions], [data-agent-obsidian-actions]');
+    const quickActionContainers = panelElement.querySelectorAll('[data-agent-quick-actions], [data-agent-curriculum-actions], [data-agent-visual-actions], [data-agent-code-lab-actions], [data-agent-research-actions], [data-agent-transfer-actions], [data-agent-assessment-actions], [data-agent-obsidian-actions], [data-agent-narrative-actions]');
 
     closeBtn?.addEventListener('click', closePanel);
     submitBtn?.addEventListener('click', handleSubmit);
@@ -467,6 +491,7 @@ function createAgentPanelController(options = {}) {
     const transferActionsRow = panelElement?.querySelector('[data-agent-transfer-actions]');
     const assessmentActionsRow = panelElement?.querySelector('[data-agent-assessment-actions]');
     const obsidianActionsRow = panelElement?.querySelector('[data-agent-obsidian-actions]');
+    const narrativeActionsRow = panelElement?.querySelector('[data-agent-narrative-actions]');
 
     selectedAgentId = selectEl?.value || null;
 
@@ -508,6 +533,10 @@ function createAgentPanelController(options = {}) {
 
     if (obsidianActionsRow) {
       obsidianActionsRow.style.display = selectedAgentId === 'obsidian-knowledge-governance' ? 'block' : 'none';
+    }
+
+    if (narrativeActionsRow) {
+      narrativeActionsRow.style.display = selectedAgentId === 'storytelling-learning-journey' ? 'block' : 'none';
     }
 
     hideGuardrailNotice();
@@ -689,6 +718,9 @@ function createAgentPanelController(options = {}) {
     }
     if (section.type === 'knowledge-card') {
       return `<div class="nv-agent-knowledge-card">${formatMarkdown(section.content || '')}</div>`;
+    }
+    if (section.type === 'narrative-card') {
+      return `<div class="nv-agent-narrative-card">${formatMarkdown(section.content || '')}</div>`;
     }
     return formatMarkdown(section.content || '');
   }

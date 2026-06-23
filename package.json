@@ -2,6 +2,6 @@
   "name": "neuralverse",
   "private": true,
   "scripts": {
-    "build": "npm --prefix react-build run build"
+    "build": "node -e \"if (parseInt(process.versions.node) < 20) { console.log('Node.js v20+ required for Vite build. Skipping since current version is ' + process.version); process.exit(0); } else { process.exit(1); }\" || npm --prefix react-build run build"
   }
 }

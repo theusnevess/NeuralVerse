@@ -18,6 +18,7 @@ import { createResearchStateOfArtAgent } from "./agents/research-state-of-art-ag
 import { createApplicationProfessionalTransferAgent } from "./agents/application-professional-transfer-agent.js?v=1";
 import { createAssessmentReinforcementAgent } from "./agents/assessment-reinforcement-agent.js?v=1";
 import { createObsidianKnowledgeGovernanceAgent } from "./agents/obsidian-knowledge-governance-agent.js?v=1";
+import { createStorytellingLearningJourneyAgent } from "./agents/storytelling-learning-journey-agent.js?v=1";
 import { createAgentPanelController } from "./agents/agent-panel-controller.js?v=1";
 
 window.NV_DEBUG = window.NV_DEBUG || false;
@@ -139,6 +140,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const obsidianAgent = window.NeuralVerse?.obsidianKnowledgeGovernanceAgent;
   if (obsidianAgent && orchestrator?.registerRealAgent) {
     orchestrator.registerRealAgent('obsidian-knowledge-governance', obsidianAgent);
+  }
+
+  // Register the Storytelling & Learning Journey Agent with the orchestrator
+  const storytellingAgent = window.NeuralVerse?.storytellingLearningJourneyAgent;
+  if (storytellingAgent && orchestrator?.registerRealAgent) {
+    orchestrator.registerRealAgent('storytelling-learning-journey', storytellingAgent);
   }
 
   // Bind agent trigger button
