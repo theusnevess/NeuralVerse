@@ -339,7 +339,7 @@ function serveFile(req, res) {
     await page.selectOption('#nv-agent-select', 'didactic-architecture');
     await page.waitForTimeout(300);
     const quickActionCount = await page.evaluate(() => {
-      return document.querySelectorAll('.nv-agent-quick-action-btn:not(.nv-agent-quick-action-btn--curriculum):not(.nv-agent-quick-action-btn--visual):not(.nv-agent-quick-action-btn--code-lab):not(.nv-agent-quick-action-btn--research):not(.nv-agent-quick-action-btn--transfer):not(.nv-agent-quick-action-btn--assessment):not(.nv-agent-quick-action-btn--obsidian):not(.nv-agent-quick-action-btn--narrative)').length;
+      return document.querySelectorAll('.nv-agent-quick-action-btn:not(.nv-agent-quick-action-btn--curriculum):not(.nv-agent-quick-action-btn--visual):not(.nv-agent-quick-action-btn--code-lab):not(.nv-agent-quick-action-btn--research):not(.nv-agent-quick-action-btn--transfer):not(.nv-agent-quick-action-btn--assessment):not(.nv-agent-quick-action-btn--obsidian):not(.nv-agent-quick-action-btn--narrative):not(.nv-agent-quick-action-btn--curiosity)').length;
     });
     check('Quick action buttons present (9)', quickActionCount === 9);
 
