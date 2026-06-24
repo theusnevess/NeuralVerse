@@ -1,11 +1,93 @@
-<div class="nv-stack nv-stack--gap-md">
+<div class="nv-stack nv-stack--gap-md nv-settings-page">
   <h1 class="nv-sr-only">Settings</h1>
 
-  <section class="nv-panel nv-stack nv-stack--gap-sm" aria-label="Settings status">
-    <h2 style="margin: 0; font-size: var(--sys-font-body-size);">Settings</h2>
-    <p class="nv-muted" style="margin: 0;">
-      Adjust workspace preferences from the tools you use most.
-    </p>
-    <a href="#/retrieval-playground" class="nv-button" data-variant="primary" style="align-self: flex-start;">Open Retrieval Workspace</a>
-  </section>
+  <header class="nv-page-header">
+    <p class="nv-page-header__eyebrow">Configuration</p>
+    <h1>Settings</h1>
+    <p>Configure your workspace preferences and manage your data.</p>
+  </header>
+
+  <div data-persistence-warning></div>
+
+  <div data-persistence-root class="nv-stack nv-stack--gap-lg">
+
+    <!-- Export Card -->
+    <section class="nv-card" aria-labelledby="persistence-export-heading">
+      <div class="nv-card__header">
+        <h3 id="persistence-export-heading" class="nv-card__title">Export Personal Data</h3>
+        <span class="nv-badge" data-variant="info">Backup</span>
+      </div>
+      <p class="nv-card__description">Export your complete NeuralVerse personalization state to a local backup file.</p>
+      <div class="nv-card__body">
+        <div class="nv-stack nv-stack--gap-sm">
+          <p class="nv-muted nv-card__meta">Current data sections:</p>
+          <div class="nv-cluster nv-cluster--gap-xs" data-current-data-grid></div>
+        </div>
+      </div>
+      <div class="nv-card__footer">
+        <button type="button" class="nv-button" data-variant="primary" data-action="export" aria-label="Export personal data to backup file">
+          Export Personal Data
+        </button>
+        <div class="nv-persistence-status" data-status="export-status" role="status" aria-live="polite" style="display: none;"></div>
+      </div>
+    </section>
+
+    <!-- Import Card -->
+    <section class="nv-card" aria-labelledby="persistence-import-heading">
+      <div class="nv-card__header">
+        <h3 id="persistence-import-heading" class="nv-card__title">Import Backup</h3>
+        <span class="nv-badge" data-variant="info">Restore</span>
+      </div>
+      <p class="nv-card__description">Restore a previously exported NeuralVerse backup file.</p>
+      <div class="nv-card__body">
+        <div class="nv-stack nv-stack--gap-md">
+
+          <!-- Import Strategy -->
+          <fieldset class="nv-persistence-fieldset" aria-label="Import strategy">
+            <legend class="nv-persistence-fieldset__legend">Import Strategy</legend>
+            <div class="nv-stack nv-stack--gap-xs">
+              <label class="nv-radio-label">
+                <input type="radio" class="nv-radio" name="nv-import-mode" value="merge" checked>
+                <span class="nv-radio-label__text">
+                  <strong>Merge with existing data</strong>
+                  <span class="nv-muted">Preserve existing data. Imported values override conflicts.</span>
+                </span>
+              </label>
+              <label class="nv-radio-label">
+                <input type="radio" class="nv-radio" name="nv-import-mode" value="replace">
+                <span class="nv-radio-label__text">
+                  <strong>Replace existing data</strong>
+                  <span class="nv-muted">Delete current personalization and use imported data as source of truth.</span>
+                </span>
+              </label>
+            </div>
+          </fieldset>
+
+          <!-- File Selection -->
+          <div class="nv-stack nv-stack--gap-xs">
+            <label class="nv-button nv-button--file-label" for="nv-backup-file-input">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="16" height="16">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+              </svg>
+              Choose Backup
+            </label>
+            <input type="file" id="nv-backup-file-input" class="nv-sr-only" accept=".json" data-file-input aria-describedby="nv-file-help">
+            <p id="nv-file-help" class="nv-muted nv-persistence-hint">Accepts .json files exported from NeuralVerse.</p>
+          </div>
+
+          <!-- Preview -->
+          <div data-import-preview></div>
+
+          <!-- Import Confirm -->
+          <div class="nv-card__footer">
+            <button type="button" class="nv-button" data-variant="primary" data-import-confirm disabled aria-label="Confirm import">
+              Import
+            </button>
+            <div class="nv-persistence-status" data-status="import-status" role="status" aria-live="polite" style="display: none;"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
 </div>

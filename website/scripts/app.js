@@ -165,6 +165,16 @@ document.addEventListener("DOMContentLoaded", () => {
   window.NeuralVerse.workspaceController = workspaceController;
   window.NeuralVerse.breadcrumbsController = breadcrumbsController;
   window.NeuralVerse.knowledgeGraphController = knowledgeGraphController;
+
+  // NV-1100-P1: Initialize persistence controller on settings route
+  window.addEventListener('nv:routerendered', function (e) {
+    if (e.detail && e.detail.routeId === 'settings') {
+      if (window.NeuralVerse?.createPersistenceController) {
+        const pc = window.NeuralVerse.createPersistenceController({ root: document });
+        pc.init();
+      }
+    }
+  });
 });
 
 function shiftFocusToWorkspace() {
