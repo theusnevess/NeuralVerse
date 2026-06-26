@@ -91,3 +91,93 @@ When responding:
 - Do not hide errors.
 - Do not claim tests passed unless they were actually run.
 - Do not commit unless explicitly asked.
+
+# NeuralVerse Local Agent Rules
+
+## Operating Principle
+
+Use the NeuralVerse Agentic Development Harness for all non-trivial development tasks.
+
+Do not treat the model as the development system. The development system is:
+
+- local project instructions;
+- bounded context;
+- task-specific skills;
+- validation;
+- documentation;
+- Git hygiene;
+- persistent memory.
+
+## Default Workflow
+
+1. Classify the task with `harness-orchestrator`.
+2. Limit repository context with `context-governance`.
+3. Use `token-economy-auditor` for medium or large tasks.
+4. Activate only the skills relevant to the task.
+5. Locate before reading; confirm before editing; inspect before refactoring.
+6. Apply minimal safe changes.
+7. Validate with targeted commands.
+8. Use Playwright for UI, route, responsiveness, or browser behavior.
+9. Record durable decisions with `obsidian-memory-maintainer` when warranted.
+10. Finish with `git-hygiene`.
+
+## Context Rules
+
+- Do not read the whole repository by default.
+- Do not inspect `node_modules`, build outputs, backups, logs, caches, or generated artifacts.
+- Prefer diffs over rereading entire files after edits.
+- Prefer concise summaries over full logs.
+
+## Tool Rules
+
+Use:
+
+- `fd` for file discovery.
+- `rg` for text and symbol search.
+- `ast-grep` for structural JavaScript/TypeScript searches.
+- Playwright for browser validation.
+- Context7 for external library/framework documentation.
+
+Do not inspect `node_modules`, `dist`, `build`, `.vite`, caches, screenshots, backups, generated reports, or lock files unless directly relevant.
+
+## Safety Rules
+
+- Do not run destructive commands without explicit approval.
+- Do not commit unless explicitly requested.
+- Do not install tools, plugins, MCPs, or dependencies without clear justification.
+- Do not modify secrets, credentials, `.env` files, or global config unless explicitly requested.
+
+## NeuralVerse Governance
+
+Implementation decisions must respect:
+
+Vision
+→ UI Constitution
+→ Architecture Guide
+→ Local Harness
+→ Implementation
+
+## Reporting
+
+For significant work, report:
+
+- task classification;
+- skills used;
+- context scope;
+- files changed;
+- commands run;
+- validation results;
+- remaining risks.
+
+## Repository Inspection Priority
+
+Use repository tools in this order:
+
+1. `git status --short` for worktree safety.
+2. `fd` for file discovery.
+3. `rg` for text and symbol search.
+4. `ast-grep` for structural JavaScript/TypeScript searches.
+5. focused file reads.
+6. `git diff` after edits.
+
+Do not begin with broad file reads.

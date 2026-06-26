@@ -1,3 +1,7 @@
+.opencode/backups/
 screenshots/
+artifacts/
+scratch/
 final-qa-report.json
+/tmp/neuralverse-*/
 /tmp/neuralverse-full-system-audit/
