@@ -102,3 +102,85 @@ Do not add new MCPs, plugins, or agent frameworks unless they provide measurable
 - validation quality;
 - repository navigation;
 - persistent project memory.
+
+## Harness V2 — Intelligence Layers
+
+V2 extends the v1 foundation with four intelligence layers. They add
+discipline, measurement, and self-evaluation without expanding the
+runtime surface. No new dependencies are introduced.
+
+### Ponytail Engineering Discipline
+
+A specialist skill that runs before code is written or modified. It
+applies a decision ladder that forces the agent to ask:
+
+1. Does this need to exist?
+2. Does the codebase already solve this?
+3. Can an existing component, function, or module be reused?
+4. Can the platform or standard library solve it?
+5. Can an existing dependency solve it?
+6. Can the change be one line or localized?
+7. Only then write the minimal required code.
+
+Ponytail prefers deletion over addition, reuse over new abstraction,
+and local fixes over global refactors. It activates for implementation
+tasks and is skipped for documentation, audits, dry runs, and
+configuration inspection. See
+`.opencode/skills/ponytail-engineering/SKILL.md`.
+
+### Telemetry Layer
+
+A compact `## Harness Telemetry` block appears in final reports for
+non-trivial tasks. Fields cover task type, cost level, pipeline
+variant, skills activated and skipped, files inspected and modified,
+commands run, validation performed, documentation and memory updates,
+estimated context scope, and remaining risks.
+
+Telemetry is local report telemetry only. There are no external
+services, no secret logging, and no persistent storage. See
+`.opencode/skills/harness-telemetry/SKILL.md`.
+
+### Confidence Engineering
+
+A `## Confidence Assessment` block appears in final reports for
+medium/high cost tasks and all implementation tasks. Scores cover
+repository evidence, validation confidence, architecture consistency,
+scope control, residual risk, and overall confidence on a 0-100 scale.
+
+Confidence is evidence-based. If overall confidence is below 80, a
+required follow-up is stated. If it is below 60, the task is not
+presented as complete. See
+`.opencode/skills/confidence-engineering/SKILL.md`.
+
+### Codebase Memory MCP — Experimental Candidate
+
+An MCP-based structural code discovery layer is on the candidate
+list. Its intended position is inside the repository discovery stage,
+after context governance and before `fd`, `rg`, `ast-grep`, and
+focused reads.
+
+The candidate is policy-only at this stage. It is not installed and
+not configured. It must not replace `fd`, `rg`, `ast-grep`, or focused
+reads, and its output must be verified with repository evidence. It
+will be promoted only after a pilot that demonstrates real reduction
+in files inspected, repeated searches, and module discovery cost,
+without introducing stale-index errors or false confidence. See
+`docs/architecture/harness/codebase-memory-mcp-policy.md`.
+
+### Headroom — Deferred
+
+Headroom-style context compression remains deferred. It will only be
+considered once the telemetry layer has produced enough evidence that
+context compression is actually needed. Adding it before that would
+be premature optimization.
+
+## Reporting Contract (V2)
+
+Non-trivial final outputs must include, in this order:
+
+1. `## Harness Pipeline Used` — compact checklist.
+2. `## Harness Telemetry` — produced by `harness-telemetry`.
+3. `## Confidence Assessment` — produced by `confidence-engineering`.
+
+Trivial or read-only responses may omit the telemetry and confidence
+blocks.

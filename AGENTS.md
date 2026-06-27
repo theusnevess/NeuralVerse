@@ -110,16 +110,32 @@ Do not treat the model as the development system. The development system is:
 
 ## Default Workflow
 
-1. Classify the task with `harness-orchestrator`.
-2. Limit repository context with `context-governance`.
-3. Use `token-economy-auditor` for medium or large tasks.
-4. Activate only the skills relevant to the task.
-5. Locate before reading; confirm before editing; inspect before refactoring.
-6. Apply minimal safe changes.
-7. Validate with targeted commands.
-8. Use Playwright for UI, route, responsiveness, or browser behavior.
-9. Record durable decisions with `obsidian-memory-maintainer` when warranted.
-10. Finish with `git-hygiene`.
+The Harness follows an adaptive pipeline rather than a fixed sequence.
+The Harness Orchestrator dynamically selects the minimum workflow required.
+
+### Common Patterns
+
+**Simple bug fix:**
+git status → orchestrator → context → testing-and-debugging → git-hygiene
+
+**Architecture change:**
+git status → orchestrator → context → token-auditor → architecture-review → documentation → obsidian → git-hygiene
+
+**UI polish:**
+git status → orchestrator → context → design-system → react-ui-polish → accessibility → playwright → git-hygiene
+
+### Pipeline Stages
+
+1. `git status --short` — worktree safety
+2. Harness Orchestrator — **always first**. Classify task, select skills. May determine the task is minimal and reduce the pipeline.
+3. Context Governance — limit scope
+4. Token Economy Auditor — cost evaluation (medium/large only)
+5. Repository Discovery — `fd` → `rg` → `ast-grep` (locate before reading)
+6. Specialist Skills — activate 3-5 relevant skills
+7. Implementation — minimal safe changes
+8. Validation — targeted commands
+9. Documentation — update if decisions changed
+10. Git Hygiene — final status, diff, report
 
 ## Context Rules
 
@@ -168,6 +184,70 @@ For significant work, report:
 - commands run;
 - validation results;
 - remaining risks.
+
+Every non-trivial final output must include, in this order:
+
+1. `## Harness Pipeline Used` — compact checklist.
+2. `## Harness Telemetry` — produced by the `harness-telemetry` skill.
+3. `## Confidence Assessment` — produced by the `confidence-engineering`
+   skill.
+
+Trivial or read-only responses may omit telemetry and confidence.
+
+### Harness Pipeline Used
+
+```
+## Harness Pipeline Used
+
+- Task classification:
+- Cost level:
+- Skills activated:
+- Skills skipped:
+- Context scope:
+- Repository discovery:
+- Validation:
+- Documentation/memory decision:
+- Git hygiene:
+```
+
+### Harness Telemetry
+
+```
+## Harness Telemetry
+
+- Task type:
+- Cost level:
+- Pipeline variant:
+- Skills activated:
+- Skills skipped:
+- Files inspected:
+- Files modified:
+- Commands run:
+- Validation performed:
+- Documentation updated:
+- Persistent memory updated:
+- Estimated context scope:
+- Remaining risks:
+```
+
+### Confidence Assessment
+
+```
+## Confidence Assessment
+
+- Repository evidence:
+- Validation confidence:
+- Architecture consistency:
+- Scope control:
+- Residual risk:
+- Overall confidence:
+- Reason for score:
+- Required follow-up:
+```
+
+If overall confidence is below 80, the `Required follow-up` field must
+name a concrete next validation step. If overall confidence is below
+60, the task must not be presented as complete.
 
 ## Repository Inspection Priority
 
