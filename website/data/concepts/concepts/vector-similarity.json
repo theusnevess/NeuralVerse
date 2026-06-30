@@ -1,0 +1,107 @@
+{
+  "id": "vector-similarity",
+  "name": "Vector Similarity",
+  "slug": "vector-similarity",
+  "summary": "Measures of closeness between vectors in embedding space, including cosine similarity and Euclidean distance.",
+  "definition": "Vector similarity metrics quantify how close two embedding vectors are. Cosine similarity measures angular distance; L2 norm measures Euclidean distance. Used as the foundation for retrieval systems.",
+  "aliases": [
+    "similarity metrics",
+    "distance metrics"
+  ],
+  "keywords": [
+    "cosine similarity",
+    "Euclidean",
+    "distance",
+    "similarity",
+    "vector"
+  ],
+  "sharedKnowledgeDomains": [
+    "embeddings"
+  ],
+  "relatedConcepts": [
+    {
+      "concept": "semantic-search",
+      "type": "uses"
+    },
+    {
+      "concept": "dense-retrieval",
+      "type": "uses"
+    },
+    {
+      "concept": "reranking",
+      "type": "supports"
+    }
+  ],
+  "prerequisiteConcepts": [
+    "word-embeddings"
+  ],
+  "artifactReferences": [
+    "artifact-contrastive-learning-comparison-table",
+    "artifact-contrastive-learning-exercise",
+    "artifact-contrastive-learning-explanatory-text",
+    "artifact-contrastive-learning-interactive-visualization",
+    "artifact-contrastive-learning-visual-intuition",
+    "artifact-cosine-similarity-math-comparison-table",
+    "artifact-cosine-similarity-math-exercise",
+    "artifact-cosine-similarity-math-explanatory-text",
+    "artifact-cosine-similarity-math-interactive-visualization",
+    "artifact-cosine-similarity-math-visual-intuition",
+    "artifact-cross-modal-embeddings-comparison-table",
+    "artifact-cross-modal-embeddings-exercise",
+    "artifact-cross-modal-embeddings-explanatory-text",
+    "artifact-cross-modal-embeddings-interactive-visualization",
+    "artifact-cross-modal-embeddings-visual-intuition",
+    "artifact-distance-metrics-comparison-table",
+    "artifact-distance-metrics-exercise",
+    "artifact-distance-metrics-explanatory-text",
+    "artifact-distance-metrics-interactive-visualization",
+    "artifact-distance-metrics-visual-intuition",
+    "artifact-dot-product-math-comparison-table",
+    "artifact-dot-product-math-exercise",
+    "artifact-dot-product-math-explanatory-text",
+    "artifact-dot-product-math-interactive-visualization",
+    "artifact-dot-product-math-visual-intuition",
+    "artifact-embeddings-semantic-similarity-comparison-table",
+    "artifact-embeddings-semantic-similarity-exercise",
+    "artifact-embeddings-semantic-similarity-explanatory-text",
+    "artifact-embeddings-semantic-similarity-interactive-visualization",
+    "artifact-embeddings-semantic-similarity-visual-intuition",
+    "artifact-hybrid-search-comparison-table",
+    "artifact-hybrid-search-exercise",
+    "artifact-hybrid-search-explanatory-text",
+    "artifact-hybrid-search-interactive-visualization",
+    "artifact-hybrid-search-visual-intuition",
+    "artifact-multimodal-retrieval-comparison-table",
+    "artifact-multimodal-retrieval-exercise",
+    "artifact-multimodal-retrieval-explanatory-text",
+    "artifact-multimodal-retrieval-interactive-visualization",
+    "artifact-multimodal-retrieval-visual-intuition",
+    "artifact-nearest-neighbor-search-comparison-table",
+    "artifact-nearest-neighbor-search-exercise",
+    "artifact-nearest-neighbor-search-explanatory-text",
+    "artifact-nearest-neighbor-search-interactive-visualization",
+    "artifact-nearest-neighbor-search-visual-intuition",
+    "artifact-vector-databases-comparison-table",
+    "artifact-vector-databases-exercise",
+    "artifact-vector-databases-explanatory-text",
+    "artifact-vector-databases-interactive-visualization",
+    "artifact-vector-databases-visual-intuition",
+    "artifact-vector-spaces-comparison-table",
+    "artifact-vector-spaces-exercise",
+    "artifact-vector-spaces-explanatory-text",
+    "artifact-vector-spaces-interactive-visualization",
+    "artifact-vector-spaces-visual-intuition"
+  ],
+  "difficulty": "intermediate",
+  "category": "embeddings",
+  "canonicalStatus": "Reviewed",
+  "version": "1.0.0",
+  "reviewedBy": "NV-1100-P4 Implementation",
+  "lastReviewed": "2026-06-24",
+  "sourceReferences": [],
+  "examples": [],
+  "counterExamples": [],
+  "commonMisconceptions": [],
+  "recommendedVisualizations": [],
+  "recommendedLabs": []
+}

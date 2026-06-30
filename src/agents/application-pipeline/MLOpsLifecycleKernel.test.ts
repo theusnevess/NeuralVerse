@@ -393,8 +393,8 @@ describe('MLOps Lifecycle Kernel — Registry', () => {
   });
 
   it('should sort constraints deterministically', () => {
-    const c2 = { ...VALID_CONSTRAINT, constraintId: 'const-002', constraintType: 'throughput' };
-    const c1 = { ...VALID_CONSTRAINT, constraintId: 'const-001', constraintType: 'latency' };
+    const c2 = { ...VALID_CONSTRAINT, constraintId: 'const-002', constraintType: 'throughput' as const };
+    const c1 = { ...VALID_CONSTRAINT, constraintId: 'const-001', constraintType: 'latency' as const };
 
     const registry = composeMLOpsRegistry(
       [VALID_LIFECYCLE],
@@ -408,8 +408,8 @@ describe('MLOps Lifecycle Kernel — Registry', () => {
   });
 
   it('should sort deployments deterministically', () => {
-    const d2 = { ...VALID_DEPLOYMENT, deploymentId: 'dep-002', deploymentType: 'edge' };
-    const d1 = { ...VALID_DEPLOYMENT, deploymentId: 'dep-001', deploymentType: 'cloud' };
+    const d2 = { ...VALID_DEPLOYMENT, deploymentId: 'dep-002', deploymentType: 'edge' as const };
+    const d1 = { ...VALID_DEPLOYMENT, deploymentId: 'dep-001', deploymentType: 'cloud' as const };
 
     const registry = composeMLOpsRegistry(
       [VALID_LIFECYCLE],
@@ -423,8 +423,8 @@ describe('MLOps Lifecycle Kernel — Registry', () => {
   });
 
   it('should sort monitoring deterministically', () => {
-    const m2 = { ...VALID_MONITORING, monitoringId: 'mon-002', monitoringType: 'drift' };
-    const m1 = { ...VALID_MONITORING, monitoringId: 'mon-001', monitoringType: 'performance' };
+    const m2 = { ...VALID_MONITORING, monitoringId: 'mon-002', monitoringType: 'drift' as const };
+    const m1 = { ...VALID_MONITORING, monitoringId: 'mon-001', monitoringType: 'performance' as const };
 
     const registry = composeMLOpsRegistry(
       [VALID_LIFECYCLE],
@@ -639,7 +639,7 @@ describe('MLOps Lifecycle Kernel — Validation', () => {
       registryVersion: '1.0.0',
       compositionVersion: '1.0.0',
       decisions: [],
-      deterministic: false,
+      deterministic: false as true,
       generatedFrom: 'deterministic_mlops_lifecycle_kernel',
       randomUsed: false,
       timeDependency: false,

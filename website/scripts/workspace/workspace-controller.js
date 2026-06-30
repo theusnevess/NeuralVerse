@@ -1,6 +1,7 @@
 import { createProgressService } from "../progress/progress-service.js";
 import { createContentService } from "../content/content-service.js";
 import { createLearningService } from "../learning/learning-service.js";
+import { createReviewDashboard } from "../spaced-repetition/review-dashboard.js";
 
 function getStatusFromPercent(value) {
   if (value <= 0) return "Not Started";
@@ -72,6 +73,34 @@ export function createWorkspaceController(options = {}) {
   const progressService = options.progressService || createProgressService();
   const contentService = options.contentService || createContentService();
   const learningService = options.learningService || createLearningService();
+  const reviewDashboard = options.reviewDashboard || window.NeuralVerse?.reviewDashboard || createReviewDashboard();
+
+  const _dirtySections = new Set();
+  const _sectionRenderers = {
+    review: renderReviewDashboard,
+    labs: renderRecentLabs,
+    memories: renderPinnedMemories,
+    semantic: renderSemanticSuggestions,
+    visualizations: renderRecentVisualizations,
+    pinnedViz: renderPinnedVisualizations,
+    continuity: null
+  };
+
+  function markDirty(section) {
+    _dirtySections.add(section);
+  }
+
+  function renderDirty() {
+    if (_dirtySections.size === 0) return;
+    var sections = Array.from(_dirtySections);
+    _dirtySections.clear();
+    for (var i = 0; i < sections.length; i++) {
+      var renderer = _sectionRenderers[sections[i]];
+      if (typeof renderer === 'function') {
+        try { renderer(); } catch (e) { /* silent */ }
+      }
+    }
+  }
 
   function getElements() {
     return {
@@ -517,25 +546,379 @@ export function createWorkspaceController(options = {}) {
       console.error("Workspace continuity failed to render.", error);
     });
 
+    renderReviewDashboard();
+    wireReviewLaunchers();
+    renderRecentLabs();
+    setTimeout(wireReviewLaunchers, 250);
+    setTimeout(wireReviewLaunchers, 800);
+    setTimeout(wireReviewLaunchers, 1500);
+
     window.addEventListener('nv:routerendered', (e) => {
       const routeId = e.detail?.routeId;
       if (routeId === 'workspace') {
         renderContinuity().catch(console.error);
+        renderReviewDashboard();
+        wireReviewLaunchers();
+        renderRecentLabs();
+        renderPinnedMemories();
+        renderSemanticSuggestions();
+        renderRecentVisualizations();
+        renderPinnedVisualizations();
+        setTimeout(wireReviewLaunchers, 250);
+        setTimeout(wireReviewLaunchers, 800);
+        setTimeout(renderRecentLabs, 250);
+        setTimeout(renderRecentLabs, 800);
+        setTimeout(renderPinnedMemories, 250);
+        setTimeout(renderPinnedMemories, 800);
+        setTimeout(renderSemanticSuggestions, 250);
+        setTimeout(renderSemanticSuggestions, 800);
+        setTimeout(renderRecentVisualizations, 250);
+        setTimeout(renderRecentVisualizations, 800);
+        setTimeout(renderPinnedVisualizations, 250);
+        setTimeout(renderPinnedVisualizations, 800);
       }
     });
 
     window.addEventListener("nv:contentloaded", () => {
       renderContinuity().catch(console.error);
+      renderReviewDashboard();
+      wireReviewLaunchers();
+      setTimeout(wireReviewLaunchers, 250);
     });
 
     window.addEventListener("nv:progressupdated", () => {
       renderContinuity().catch(console.error);
+      renderReviewDashboard();
+      wireReviewLaunchers();
+      setTimeout(wireReviewLaunchers, 250);
     });
+
+    window.addEventListener("nv:reviewupdated", () => {
+      renderReviewDashboard();
+      wireReviewLaunchers();
+    });
+
+    // NV-1100-P7: Re-render recent labs when lab state changes
+    window.addEventListener("nv:lab_recent_updated", () => {
+      renderRecentLabs();
+    });
+
+    window.addEventListener("nv:lab_state_saved", () => {
+      renderRecentLabs();
+    });
+
+    // NV-1100-P8: Re-render pinned memories when memory state changes
+    window.addEventListener("nv:memory_pinned", () => {
+      renderPinnedMemories();
+      renderSemanticSuggestions();
+    });
+
+    window.addEventListener("nv:memory_created", () => {
+      renderPinnedMemories();
+      renderSemanticSuggestions();
+    });
+
+    window.addEventListener("nv:memory_updated", () => {
+      renderPinnedMemories();
+      renderSemanticSuggestions();
+    });
+
+    // Personalization controller re-renders the workspace DOM. We re-render
+    // the review dashboard afterward so the data stays in sync.
+    window.addEventListener("nv:workspaceupdated", () => {
+      renderReviewDashboard();
+    });
+
+    // Deferred render on idle for non-critical sections
+    if (typeof requestIdleCallback !== 'undefined') {
+      requestIdleCallback(function () {
+        renderDirty();
+      });
+    }
+
+    // Polling fallback: the personalization controller renders asynchronously
+    // and may complete after the workspace controller init. Re-render after a
+    // short delay to ensure the dashboard is updated.
+    setTimeout(renderReviewDashboard, 250);
+    setTimeout(renderReviewDashboard, 800);
+  }
+
+  function renderReviewDashboard() {
+    if (!reviewDashboard || typeof reviewDashboard.render !== 'function') return;
+    try {
+      reviewDashboard.render(root);
+    } catch (error) {
+      if (window.NV_DEBUG) console.warn('Review dashboard render failed', error);
+    }
+    renderReviewDueList();
+  }
+
+  function renderReviewDueList() {
+    if (!root) return;
+    const mount = root.querySelector('[data-review-due-list-mount]');
+    if (!mount) return;
+    const discovery = window.NeuralVerse?.reviewDiscovery;
+    const scheduler = window.NeuralVerse?.reviewScheduler;
+    if (!discovery || !scheduler) {
+      mount.innerHTML = '';
+      return;
+    }
+    try {
+      const html = discovery.renderDueArtifactsList(scheduler, { limit: 5 });
+      mount.innerHTML = html;
+    } catch (e) {
+      mount.innerHTML = '';
+    }
+  }
+
+  function wireReviewLaunchers() {
+    if (!root) return;
+    const startBtn = root.querySelector('[data-review-dashboard-start]');
+    const continueBtn = root.querySelector('[data-review-dashboard-continue]');
+    const skipBtn = root.querySelector('[data-review-dashboard-skip]');
+    const dashboardCard = root.querySelector('[data-review-dashboard]');
+
+    function openSession() {
+      const ctrl = window.NeuralVerse?.reviewSessionController;
+      if (!ctrl) {
+        if (window.NV_DEBUG) console.warn('Review session controller not available');
+        return;
+      }
+      // Always start a fresh session from the workspace dashboard.
+      // Resume is reserved for reload restoration (the session state marker
+      // is honored only by the reload-survival path, not by user-initiated
+      // Start Review clicks).
+      const result = ctrl.startSession();
+      if (window.NV_DEBUG) console.log('Review session opened:', result);
+    }
+
+    if (startBtn && !startBtn.dataset.reviewWired) {
+      startBtn.addEventListener('click', (e) => { e.preventDefault(); openSession(); });
+      startBtn.dataset.reviewWired = '1';
+    }
+    if (continueBtn && !continueBtn.dataset.reviewWired) {
+      continueBtn.addEventListener('click', (e) => { e.preventDefault(); openSession(); });
+      continueBtn.dataset.reviewWired = '1';
+    }
+    if (skipBtn && !skipBtn.dataset.reviewWired) {
+      skipBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        // Skip = do nothing for now; the dashboard closes any visible session state.
+        // This is informational only; no state mutation.
+      });
+      skipBtn.dataset.reviewWired = '1';
+    }
+    if (dashboardCard && !dashboardCard.dataset.reviewWired) {
+      dashboardCard.addEventListener('click', (e) => {
+        if (e.target.closest('button')) return;
+        // Clicking the card body does not auto-open a session; reserved for future "click to expand".
+      });
+      dashboardCard.dataset.reviewWired = '1';
+    }
+  }
+
+  function renderRecentLabs() {
+    var mount = root.querySelector('[data-recent-labs-mount]');
+    if (!mount) return;
+
+    var storage = window.NeuralVerse?.LabStateStorage;
+    var registry = window.NeuralVerse?.LabRegistry;
+    if (!storage || !registry) {
+      mount.innerHTML = '<p class="nv-muted">Laboratory system not available.</p>';
+      return;
+    }
+
+    var recent = storage.getRecentLabs();
+    if (!recent || recent.length === 0) {
+      mount.innerHTML = '<p class="nv-muted">No laboratories visited yet. <a href="#/laboratory">Browse laboratories</a></p>';
+      return;
+    }
+
+    var html = '<div style="display:flex;flex-direction:column;gap:8px;">';
+    recent.slice(0, 5).forEach(function (r) {
+      var lab = registry.get(r.labId);
+      html += '<a href="#/laboratory/' + (lab ? lab.slug : r.labId) + '" ';
+      html += 'class="nv-lab-card nv-lab-card--recent" style="display:block;text-decoration:none;color:inherit;">';
+      html += '<h4 class="nv-lab-card-title" style="margin:0 0 4px 0;font-size:0.9rem;">' + (r.title || r.labId) + '</h4>';
+      html += '<span class="nv-lab-card-time">Last opened: ' + (r.lastOpened ? new Intl.DateTimeFormat(undefined, { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(r.lastOpened)) : 'Never') + '</span>';
+      html += '</a>';
+    });
+    html += '</div>';
+    if (recent.length > 5) {
+      html += '<a href="#/laboratory" style="display:block;margin-top:8px;font-size:0.8rem;color:var(--sys-color-accent-primary);text-decoration:none;">View all laboratories</a>';
+    }
+    mount.innerHTML = html;
+  }
+
+  function renderPinnedMemories() {
+    var mount = root.querySelector('[data-pinned-memories-mount]');
+    if (!mount) return;
+
+    var memoryRegistry = window.NeuralVerse?.MemoryRegistry;
+    if (!memoryRegistry) {
+      mount.innerHTML = '';
+      return;
+    }
+
+    var pinned = memoryRegistry.getPinned ? memoryRegistry.getPinned() : [];
+    if (!pinned || pinned.length === 0) {
+      mount.innerHTML = '<p class="nv-muted" style="font-size:0.85rem;">No pinned memories. <a href="#/memory">Create one</a></p>';
+      return;
+    }
+
+    var html = '<div style="display:flex;flex-direction:column;gap:8px;">';
+    pinned.slice(0, 5).forEach(function (mem) {
+      html += '<a href="#/memory/' + mem.id + '" ';
+      html += 'class="nv-memory-card" style="display:block;text-decoration:none;color:inherit;padding:12px;">';
+      html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">';
+      html += '<span class="nv-memory-type-badge" data-type="' + (mem.type || 'note') + '">' + (mem.type || 'note') + '</span>';
+      html += '<span style="color:var(--sys-color-accent-primary);font-size:0.75rem;">&#x1F4CC;</span>';
+      html += '</div>';
+      html += '<h4 style="margin:0 0 4px 0;font-size:0.9rem;font-weight:600;color:var(--sys-color-text-primary);">' + (mem.title || 'Untitled') + '</h4>';
+      if (mem.summary) {
+        html += '<p style="margin:0;font-size:0.8rem;color:var(--sys-color-text-secondary);">' + mem.summary.substring(0, 100) + '</p>';
+      }
+      html += '</a>';
+    });
+    html += '</div>';
+    mount.innerHTML = html;
+  }
+
+  function renderSemanticSuggestions() {
+    var mount = root.querySelector('[data-semantic-suggestions-mount]');
+    if (!mount) return;
+
+    var engine = window.NeuralVerse?.SemanticEngine;
+    var recs = window.NeuralVerse?.RecommendationEngine;
+    if (!engine || !recs) {
+      mount.innerHTML = '';
+      return;
+    }
+
+    // Use the most recently accessed concept from session continuity
+    var session = window.NeuralVerse?.SessionContinuity;
+    var recentConcepts = session ? (session.loadSession()?.recentConcepts || []) : [];
+    var conceptId = recentConcepts.length > 0 ? recentConcepts[0] : null;
+
+    if (!conceptId) {
+      mount.innerHTML = '<p class="nv-muted" style="font-size:0.85rem;">No semantic context available. <a href="#/semantic-learning">Explore concepts</a></p>';
+      return;
+    }
+
+    var concept = engine.getConcept(conceptId);
+    if (!concept) {
+      mount.innerHTML = '<p class="nv-muted" style="font-size:0.85rem;">Concept not found. <a href="#/semantic-learning">Explore concepts</a></p>';
+      return;
+    }
+
+    var recommendations = recs.getRecommendations(conceptId);
+    var html = '<div style="display:flex;flex-direction:column;gap:8px;">';
+    html += '<p style="font-size:0.85rem;color:var(--sys-color-text-secondary, #999);margin:0;">Context: <strong>' + (concept.name || conceptId) + '</strong></p>';
+
+    // Related concepts (max 3)
+    if (recommendations.categories.relatedConcepts && recommendations.categories.relatedConcepts.length > 0) {
+      html += '<div style="font-size:0.8rem;color:var(--sys-color-text-secondary, #999);margin-top:4px;">Related:</div>';
+      recommendations.categories.relatedConcepts.slice(0, 3).forEach(function (item) {
+        html += '<a href="#/knowledge-graph?focus=' + encodeURIComponent(item.id) + '" style="display:block;font-size:0.85rem;color:var(--sys-color-accent-primary, #06b6d4);text-decoration:none;padding:4px 0;">' + (item.name || item.id) + '</a>';
+      });
+    }
+
+    // Suggested labs (max 2)
+    if (recommendations.categories.relatedLabs && recommendations.categories.relatedLabs.length > 0) {
+      html += '<div style="font-size:0.8rem;color:var(--sys-color-text-secondary, #999);margin-top:8px;">Labs:</div>';
+      recommendations.categories.relatedLabs.slice(0, 2).forEach(function (item) {
+        html += '<a href="#/laboratory/' + encodeURIComponent(item.slug || item.id) + '" style="display:block;font-size:0.85rem;color:var(--sys-color-accent-primary, #06b6d4);text-decoration:none;padding:4px 0;">' + (item.name || item.id) + '</a>';
+      });
+    }
+
+    html += '</div>';
+    mount.innerHTML = html;
+  }
+
+  function escapeWorkspaceHtml(value) {
+    return String(value == null ? '' : value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function renderRecentVisualizations() {
+    var mount = root.querySelector('[data-recent-viz-mount]');
+    if (!mount) return;
+
+    var storage = window.NeuralVerse?.VizStateStorage;
+    if (!storage) {
+      mount.innerHTML = '<p class="nv-muted" style="font-size:0.85rem;">Visualization system not available. <a href="#/visualizations">Browse visualizations</a></p>';
+      return;
+    }
+
+    var recent = storage.getRecent();
+    if (!recent || recent.length === 0) {
+      mount.innerHTML = '<p class="nv-muted" style="font-size:0.85rem;">No visualizations visited yet. <a href="#/visualizations">Browse visualizations</a></p>';
+      return;
+    }
+
+    var html = '<div class="nv-pviz-workspace-recent">';
+    recent.slice(0, 5).forEach(function (r) {
+      html += '<a href="#/visualizations/' + encodeURIComponent(r.vizId) + '" class="nv-pviz-workspace-item">';
+      html += '<div class="nv-pviz-workspace-item-title">' + escapeWorkspaceHtml(r.title || r.vizId) + '</div>';
+      html += '<div class="nv-pviz-workspace-item-meta">Last opened: ' + escapeWorkspaceHtml(r.lastOpened ? new Intl.DateTimeFormat(undefined, { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(r.lastOpened)) : 'Never') + '</div>';
+      html += '</a>';
+    });
+    html += '</div>';
+    if (recent.length > 5) {
+      html += '<a href="#/visualizations" style="display:block;margin-top:8px;font-size:0.8rem;color:var(--sys-color-accent-primary, #06b6d4);text-decoration:none;">View all visualizations</a>';
+    }
+    mount.innerHTML = html;
+  }
+
+  function renderPinnedVisualizations() {
+    var mount = root.querySelector('[data-pinned-viz-mount]');
+    if (!mount) return;
+
+    var storage = window.NeuralVerse?.VizStateStorage;
+    var registry = window.NeuralVerse?.ParametricRegistry;
+    if (!storage || !registry) {
+      mount.innerHTML = '';
+      return;
+    }
+
+    var favorites = storage.loadFavorites();
+    if (!favorites || favorites.length === 0) {
+      mount.innerHTML = '<p class="nv-muted" style="font-size:0.85rem;">No pinned visualizations yet. <a href="#/visualizations">Explore visualizations</a></p>';
+      return;
+    }
+
+    var html = '<div class="nv-pviz-workspace-recent">';
+    favorites.slice(0, 5).forEach(function (vizId) {
+      var def = registry.get(vizId);
+      if (!def) return;
+      html += '<a href="#/visualizations/' + encodeURIComponent(def.slug) + '" class="nv-pviz-workspace-item">';
+      html += '<div class="nv-pviz-workspace-item-title">&#9733; ' + escapeWorkspaceHtml(def.title || vizId) + '</div>';
+      html += '<div class="nv-pviz-workspace-item-meta">' + escapeWorkspaceHtml(def.category || '') + '</div>';
+      html += '</a>';
+    });
+    html += '</div>';
+    if (favorites.length > 5) {
+      html += '<a href="#/visualizations" style="display:block;margin-top:8px;font-size:0.8rem;color:var(--sys-color-accent-primary, #06b6d4);text-decoration:none;">View all visualizations</a>';
+    }
+    mount.innerHTML = html;
   }
 
   return {
     init,
     renderContinuity,
+    renderReviewDashboard,
+    renderRecentLabs,
+    renderPinnedMemories,
+    renderSemanticSuggestions,
+    renderRecentVisualizations,
+    renderPinnedVisualizations,
+    wireReviewLaunchers,
+    markDirty,
+    renderDirty,
   };
 }
 

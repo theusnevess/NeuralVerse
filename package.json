@@ -2,6 +2,15 @@
   "name": "neuralverse",
   "private": true,
   "scripts": {
-    "build": "node -e \"if (parseInt(process.versions.node) < 20) { console.log('Node.js v20+ required for Vite build. Skipping since current version is ' + process.version); process.exit(0); } else { process.exit(1); }\" || npm --prefix react-build run build"
+    "build": "node -e \"if (parseInt(process.versions.node) < 20) { console.log('Node.js v20+ required for Vite build. Skipping since current version is ' + process.version); process.exit(0); } else { process.exit(1); }\" || npm --prefix react-build run build",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "npm run typecheck",
+    "test": "node -e \"require('node:fs').rmSync('.tmp/ts-tests', { recursive: true, force: true })\" && tsc -p tsconfig.test.json --noCheck && node --test .tmp/ts-tests/src/agents/**/*.test.js .tmp/ts-tests/src/retrieval/**/*.test.js && node -e \"require('node:fs').rmSync('.tmp/ts-tests', { recursive: true, force: true })\"",
+    "coverage": "node -e \"require('node:fs').rmSync('.tmp/ts-tests', { recursive: true, force: true })\" && tsc -p tsconfig.test.json --noCheck && node --experimental-test-coverage --test .tmp/ts-tests/src/agents/**/*.test.js .tmp/ts-tests/src/retrieval/**/*.test.js && node -e \"require('node:fs').rmSync('.tmp/ts-tests', { recursive: true, force: true })\""
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.57.0",
+    "@types/node": "^20.19.25",
+    "typescript": "^5.9.3"
   }
 }

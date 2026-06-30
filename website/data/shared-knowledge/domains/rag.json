@@ -1,0 +1,79 @@
+{
+  "id": "rag",
+  "title": "Retrieval-Augmented Generation",
+  "summary": "Coupling parametric generators (LLMs) with non-parametric retrievers (vector databases) to fetch factual context before generation, grounding responses in external documents.",
+  "concepts": ["dense retrieval", "reranking", "chunk segmentation", "vector indexing", "hybrid search", "context injection", "attribution", "grounding"],
+  "keywords": ["RAG", "retrieval", "augmented generation", "vector database", "semantic search", "reranking", "chunking", "HNSW", "embedding"],
+  "historicalContext": "Large Language Models, while fluent, frequently hallucinate facts when queried on dynamic or private data, and retraining them is prohibitively expensive. This limitation led Patrick Lewis and Meta researchers in 2020 to introduce Retrieval-Augmented Generation (RAG)—coupling a parametric generator (LLM) with a non-parametric retriever (vector database) to fetch factual context before generation.",
+  "landmarkReferences": [
+    {
+      "title": "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks",
+      "authors": "Lewis et al.",
+      "year": "2020",
+      "contribution": "Connected neural retrieval with generation for knowledge-intensive tasks."
+    },
+    {
+      "title": "Dense Passage Retrieval for Open-Domain Question Answering",
+      "authors": "Karpukhin et al.",
+      "year": "2020",
+      "contribution": "Advanced dense vector retrieval for open-domain QA."
+    }
+  ],
+  "industryApplications": ["Internal developer documentation QA", "Legal contract search systems", "Medical guideline assistants", "Customer support systems", "Knowledge management"],
+  "commonMisconceptions": [
+    {
+      "trigger": "rag",
+      "wrong": "Adding more documents to the prompt context always yields more accurate answers.",
+      "correct": "Injecting more documents into the prompt does not always increase accuracy. Models frequently fail to extract facts buried in the middle of long prompts ('lost in the middle' effect)."
+    }
+  ],
+  "analogies": [
+    {
+      "text": "RAG is like an open-book exam where the student (LLM) looks up relevant pages in a textbook (Vector Database) before writing an answer.",
+      "limitations": "If the textbook contains incorrect information or the index points to the wrong page, the student will write an incorrect answer."
+    }
+  ],
+  "curiosityFacts": [
+    "Did you know that the term RAG was coined by Patrick Lewis in 2020 because the team wanted a name that sounded like 'Ragged', but it became the industry standard?",
+    "Vannevar Bush's 1945 essay 'As We May Think' described the 'Memex'—a device that let users store and retrieve documents based on associative links, pre-dating modern vector retrieval."
+  ],
+  "storySeeds": [
+    "RAG represents the shift from parametric-only model generation to hybrid systems combining static knowledge weights with dynamic retrieval databases.",
+    "RAG changed the landscape by decoupling static parametric knowledge from dynamic factual documents, letting lightweight models access fresh private data without expensive retraining."
+  ],
+  "assessmentSeeds": [
+    "Under what system demands would you recommend dense vector search over traditional keyword index searches?",
+    "Why is chunk segmentation strategy crucial to the reliability of prompt injections in RAG pipelines?"
+  ],
+  "professionalInsights": [
+    "Use vector index sharding and partition indices by tenant or metadata to avoid scanning unnecessary sections of the database.",
+    "Observe system performance using evaluation frameworks like RAGAS, measuring faithfulness, answer relevance, and context precision.",
+    "A customer support RAG pipeline integrated a Cross-Encoder reranker. This raised context precision by 25% while maintaining latency bounds by filtering candidate passages to the top 5 before reranking."
+  ],
+  "recommendedVisualizations": ["rag-pipeline-diagram", "retrieval-flow-chart"],
+  "recommendedLabs": ["build-a-rag-pipeline", "vector-search-playground"],
+  "relatedArtifacts": [],
+  "relatedConcepts": [
+    { "domain": "embeddings", "type": "uses" },
+    { "domain": "llms", "type": "uses" },
+    { "domain": "transformers", "type": "depends_on" }
+  ],
+  "lastReviewed": "2026-06-24",
+  "canonicalStatus": "Reviewed",
+  "version": "1.0.0",
+  "reviewedBy": "NV-1100-P3 Implementation",
+  "sourceReferences": [
+    {
+      "id": "ref-rag-0",
+      "title": "RAG (Lewis et al.)",
+      "type": "paper",
+      "description": "Canonical RAG architecture"
+    },
+    {
+      "id": "ref-rag-1",
+      "title": "DPR (Karpukhin et al.)",
+      "type": "paper",
+      "description": "Dense passage retrieval"
+    }
+  ]
+}

@@ -1,0 +1,80 @@
+{
+  "id": "semantic-search",
+  "name": "Semantic Search",
+  "slug": "semantic-search",
+  "summary": "Information retrieval based on meaning and context rather than exact keyword matching.",
+  "definition": "Semantic search uses dense vector embeddings to find documents similar in meaning to a query, using cosine similarity or other distance metrics in embedding space.",
+  "aliases": [
+    "meaning-based search",
+    "vector search"
+  ],
+  "keywords": [
+    "semantic",
+    "search",
+    "meaning",
+    "embedding",
+    "retrieval"
+  ],
+  "sharedKnowledgeDomains": [
+    "embeddings",
+    "rag"
+  ],
+  "relatedConcepts": [
+    {
+      "concept": "dense-retrieval",
+      "type": "implements"
+    },
+    {
+      "concept": "vector-similarity",
+      "type": "uses"
+    }
+  ],
+  "prerequisiteConcepts": [
+    "word-embeddings",
+    "vector-similarity"
+  ],
+  "artifactReferences": [
+    "artifact-embeddings-semantic-similarity-comparison-table",
+    "artifact-embeddings-semantic-similarity-exercise",
+    "artifact-embeddings-semantic-similarity-explanatory-text",
+    "artifact-embeddings-semantic-similarity-interactive-visualization",
+    "artifact-embeddings-semantic-similarity-visual-intuition",
+    "artifact-hybrid-indexing-comparison-table",
+    "artifact-hybrid-indexing-exercise",
+    "artifact-hybrid-indexing-explanatory-text",
+    "artifact-hybrid-indexing-interactive-visualization",
+    "artifact-hybrid-indexing-visual-intuition",
+    "artifact-hybrid-search-comparison-table",
+    "artifact-hybrid-search-exercise",
+    "artifact-hybrid-search-explanatory-text",
+    "artifact-hybrid-search-interactive-visualization",
+    "artifact-hybrid-search-visual-intuition",
+    "artifact-multimodal-retrieval-comparison-table",
+    "artifact-multimodal-retrieval-exercise",
+    "artifact-multimodal-retrieval-explanatory-text",
+    "artifact-multimodal-retrieval-interactive-visualization",
+    "artifact-multimodal-retrieval-visual-intuition",
+    "artifact-nearest-neighbor-search-comparison-table",
+    "artifact-nearest-neighbor-search-exercise",
+    "artifact-nearest-neighbor-search-explanatory-text",
+    "artifact-nearest-neighbor-search-interactive-visualization",
+    "artifact-nearest-neighbor-search-visual-intuition",
+    "artifact-vector-databases-comparison-table",
+    "artifact-vector-databases-exercise",
+    "artifact-vector-databases-explanatory-text",
+    "artifact-vector-databases-interactive-visualization",
+    "artifact-vector-databases-visual-intuition"
+  ],
+  "difficulty": "intermediate",
+  "category": "retrieval",
+  "canonicalStatus": "Reviewed",
+  "version": "1.0.0",
+  "reviewedBy": "NV-1100-P4 Implementation",
+  "lastReviewed": "2026-06-24",
+  "sourceReferences": [],
+  "examples": [],
+  "counterExamples": [],
+  "commonMisconceptions": [],
+  "recommendedVisualizations": [],
+  "recommendedLabs": []
+}

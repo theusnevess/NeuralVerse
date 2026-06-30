@@ -1,0 +1,100 @@
+<div class="nv-memory" data-memory-root>
+  <header class="nv-memory-header">
+    <h1>Memory</h1>
+    <p>Organize your learning notes, bookmarks, and study context.</p>
+    <div class="nv-memory-header-actions">
+      <button class="nv-button" data-variant="primary" data-memory-action="create" aria-label="Create new memory">New Memory</button>
+      <button class="nv-button" data-variant="secondary" data-memory-action="toggle-archived" aria-label="Show archived memories">Archived</button>
+      <select class="nv-lab-select" data-memory-sort aria-label="Sort memories">
+        <option value="updatedAt">Last Updated</option>
+        <option value="createdAt">Date Created</option>
+        <option value="title">Title</option>
+      </select>
+      <select class="nv-lab-select" data-memory-filter-type aria-label="Filter by type">
+        <option value="">All Types</option>
+        <option value="note">Notes</option>
+        <option value="bookmark">Bookmarks</option>
+        <option value="highlight">Highlights</option>
+        <option value="collection">Collections</option>
+        <option value="workspace">Workspace</option>
+        <option value="laboratory">Laboratory</option>
+        <option value="review">Review</option>
+        <option value="search">Search</option>
+        <option value="custom">Custom</option>
+      </select>
+    </div>
+  </header>
+  <div class="nv-memory-body">
+    <section class="nv-memory-pinned" data-memory-pinned-section aria-label="Pinned Memories">
+      <h2>Pinned Memories</h2>
+      <div data-memory-pinned-mount></div>
+    </section>
+    <section class="nv-memory-recent" data-memory-recent-section aria-label="Recent Memories">
+      <h2>Recent Memories</h2>
+      <div data-memory-recent-mount></div>
+    </section>
+    <section class="nv-memory-collections" data-memory-collections-section aria-label="Collections">
+      <h2>Collections</h2>
+      <div data-memory-collections-mount></div>
+    </section>
+  </div>
+  <!-- Editor overlay -->
+  <div class="nv-memory-editor-overlay" data-memory-editor-overlay hidden aria-label="Memory editor">
+    <div class="nv-memory-editor" data-memory-editor role="dialog" aria-labelledby="memory-editor-title">
+      <h2 id="memory-editor-title">New Memory</h2>
+      <form data-memory-editor-form>
+        <div class="nv-memory-form-group">
+          <label for="memory-type">Type</label>
+          <select id="memory-type" name="type" required>
+            <option value="note">Note</option>
+            <option value="bookmark">Bookmark</option>
+            <option value="highlight">Highlight</option>
+            <option value="collection">Collection</option>
+            <option value="workspace">Workspace</option>
+            <option value="laboratory">Laboratory</option>
+            <option value="review">Review</option>
+            <option value="search">Search</option>
+            <option value="custom">Custom</option>
+          </select>
+        </div>
+        <div class="nv-memory-form-group">
+          <label for="memory-title">Title</label>
+          <input type="text" id="memory-title" name="title" required placeholder="Memory title">
+        </div>
+        <div class="nv-memory-form-group">
+          <label for="memory-summary">Summary</label>
+          <input type="text" id="memory-summary" name="summary" placeholder="Brief summary">
+        </div>
+        <div class="nv-memory-form-group">
+          <label for="memory-content">Content</label>
+          <textarea id="memory-content" name="content" rows="6" placeholder="Detailed content..."></textarea>
+        </div>
+        <div class="nv-memory-form-group">
+          <label for="memory-tags">Tags (comma-separated)</label>
+          <input type="text" id="memory-tags" name="tags" placeholder="tag1, tag2, tag3">
+        </div>
+        <div class="nv-memory-form-group">
+          <label for="memory-concepts">Related Concepts (comma-separated)</label>
+          <input type="text" id="memory-concepts" name="relatedConcepts" placeholder="concept1, concept2">
+        </div>
+        <div class="nv-memory-form-group">
+          <label for="memory-artifacts">Related Artifacts (comma-separated)</label>
+          <input type="text" id="memory-artifacts" name="relatedArtifacts" placeholder="artifact1, artifact2">
+        </div>
+        <div class="nv-memory-form-actions">
+          <button type="submit" class="nv-button" data-variant="primary">Save</button>
+          <button type="button" class="nv-button" data-variant="ghost" data-memory-action="cancel-edit">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- Confirmation dialog -->
+  <dialog class="nv-memory-dialog" data-memory-confirm-dialog aria-labelledby="memory-confirm-title">
+    <h3 id="memory-confirm-title">Confirm Deletion</h3>
+    <p data-memory-confirm-message>Are you sure you want to delete this memory?</p>
+    <div class="nv-memory-dialog-actions">
+      <button class="nv-button" data-variant="danger" data-memory-action="confirm-delete">Delete</button>
+      <button class="nv-button" data-variant="ghost" data-memory-action="cancel-delete">Cancel</button>
+    </div>
+  </dialog>
+</div>

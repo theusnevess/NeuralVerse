@@ -5,6 +5,8 @@
  * promote reflection, and generate educational exercises without grading or evaluation.
  */
 
+import { createSharedKnowledgeService } from '../shared-knowledge/shared-knowledge-service.js';
+
 const ASSESSMENT_INTENT_PATTERNS = {
   practice_questions: ['practice question', 'exercises', 'questions', 'test my understanding', 'problems'],
   flashcards: ['flashcard', 'flashcards', 'card', 'cards', 'vocabulary', 'term'],
@@ -31,148 +33,33 @@ const MODE_LABELS = {
   review_session: 'Review Session Builder'
 };
 
-const CURATED_ASSESSMENT_MAP = {
-  'machine-learning': {
-    domainName: 'Machine Learning',
-    questions: [
-      'Explain how decision tree boundaries differ from logistic regression boundaries in your own words.',
-      'Why is regularizing feature weights beneficial when dealing with highly correlated inputs?'
-    ],
-    flashcards: [
-      { front: 'Overfitting', back: 'A model learning noise in training data instead of general patterns.', hint: 'Think high variance.' },
-      { front: 'L1 Regularization', back: 'Adds absolute value of weights penalty to simplify models.', hint: 'Sparsity inducer.' }
-    ],
-    retrieval: 'Sketch the difference between high-bias and high-variance error curves over training epochs from memory.',
-    selfAssessment: 'How would you explain the trade-offs of linear models to a non-technical peer?',
-    challenge: 'A model has 99% accuracy but performs poorly on new test classes. Critique this validation setup.',
-    plan: ['Revisit ML Fundamentals Module', 'Practice regularization simulations', 'Review bias-variance tradeoff lesson'],
-    misconceptions: 'Believing that higher training performance always translates to better real-world deployment outcomes.',
-    journal: 'Write down one concept from linear models that clicked today and one that still feels hazy.',
-    connections: 'How do learning rate adjustments in gradient descent connect to regularization constraints?',
-    sessionObjectives: 'Strengthen fundamental intuition behind model parameters and generalization limits.'
-  },
-  'deep-learning': {
-    domainName: 'Deep Learning',
-    questions: [
-      'Explain the purpose of the key, query, and value vectors in self-attention mechanisms.',
-      'Why does initializing weights to zero prevent deep networks from learning distinct features?'
-    ],
-    flashcards: [
-      { front: 'Gradient Vanishing', back: 'Gradients shrinking close to zero, blocking weight adjustments in early layers.', hint: 'Common with sigmoid activations.' },
-      { front: 'Backpropagation', back: 'Algorithm computing gradient of loss function with respect to weights using chain rule.', hint: 'Backward pass.' }
-    ],
-    retrieval: 'Recall the mathematical formula for Softmax normalization and describe how it shapes class logits.',
-    selfAssessment: 'Explain why non-linear activation functions are necessary for deep networks to learn complex functions.',
-    challenge: 'Design a neural network topology that processes temporal sequences without using recursive loops.',
-    plan: ['Review Deep Learning Basics', 'Analyze feedforward network backward pass', 'Revisit activation functions'],
-    misconceptions: 'Assuming that adding more hidden layers always improves the model without risks of vanishing gradients.',
-    journal: 'How has your mental model of backpropagation changed since you started studying neural networks?',
-    connections: 'Connect activation saturation in deep networks to the vanishing gradient problem in recurrent networks.',
-    sessionObjectives: 'Deconstruct activation mechanisms, gradient flows, and optimization backbones.'
-  },
-  'computer-vision': {
-    domainName: 'Computer Vision',
-    applications: ['Visual feature extractors', 'Object detectors', 'Image segmentation blocks'],
-    questions: [
-      'Compare standard convolutions with depthwise separable convolutions in terms of calculation overhead.',
-      'Why do pooling layers assist in establishing spatial invariance within CNN feature maps?'
-    ],
-    flashcards: [
-      { front: 'Convolution', back: 'Mathematical operation applying a kernel filter across input channels to extract features.', hint: 'Feature extractor.' },
-      { front: 'Receptive Field', back: 'Specific region of input space that influences a particular feature node.', hint: 'Visual footprint.' }
-    ],
-    retrieval: 'Write down the steps a typical CNN performs to transform raw pixel grids into class likelihood distributions.',
-    selfAssessment: 'Explain the role of data augmentation in training robust image classifier models.',
-    challenge: 'A classification network behaves erratically under variations in image brightness. Devise a visual test suite.',
-    plan: ['Revisit CNN Foundations', 'Review convolutional layer operations', 'Analyze spatial pooling mechanisms'],
-    misconceptions: 'Believing that filters in deep CNN layers focus on raw pixel intensities rather than abstract edges and textures.',
-    journal: 'Summarize the primary intuition behind local connectivity in visual models.',
-    connections: 'Connect visual feature representations in CNN backbones to the token retrieval processes in visual transformers.',
-    sessionObjectives: 'Deepen understanding of feature extractors, spatial hierarchies, and filter activations.'
-  },
-  'llms': {
-    domainName: 'Large Language Models',
-    questions: [
-      'Contrast temperature scaling with top-k filtering during text generation decoding.',
-      'What are the advantages of tokenization strategies like Byte-Pair Encoding compared to word-level models?'
-    ],
-    flashcards: [
-      { front: 'Attention Matrix', back: 'Represents pairwise token relationship strengths in transformer blocks.', hint: 'Calculated using query-key dot products.' },
-      { front: 'Context Window', back: 'The maximum sequence length a transformer network can process in a single invocation.', hint: 'Memory capacity boundary.' }
-    ],
-    retrieval: 'Detail the sequence of steps that occur from input text to vocabulary token output generation.',
-    selfAssessment: 'How would you explain the trade-offs of autoregressive generation compared to encoder-only tasks?',
-    challenge: 'A model starts repeating phrases in a loop. Diagnose the prompt parameters and generation settings.',
-    plan: ['Review Transformer Architecture', 'Analyze attention mechanism inputs', 'Revisit generation decoding schemes'],
-    misconceptions: 'Expecting models to perform complex multi-step logical reasoning tasks reliably in a single forward pass without step-by-step guidance.',
-    journal: 'Document your insights regarding how prompt layout affects in-context learning.',
-    connections: 'How do attention weight distributions connect to human cognitive retrieval dynamics?',
-    sessionObjectives: 'Master transformer decoding, attention weights, and tokenization characteristics.'
-  },
-  'rag': {
-    domainName: 'Retrieval-Augmented Generation',
-    questions: [
-      'Under what system demands would you recommend dense vector search over traditional keyword index searches?',
-      'Why is chunk segmentation strategy crucial to the reliability of prompt injections in RAG pipelines?'
-    ],
-    flashcards: [
-      { front: 'Vector Embedding', back: 'High-dimensional numerical projection representing the semantic meaning of text chunks.', hint: 'Dense retrieval block.' },
-      { front: 'Reranking', back: 'Re-ordering retrieved search documents using a precise cross-encoder prior to LLM input.', hint: 'Accuracy booster.' }
-    ],
-    retrieval: 'Trace the path of a query through a complete RAG system without looking at any diagrams.',
-    selfAssessment: 'Explain how chunk size choices impact retrieval performance and model cost trade-offs.',
-    challenge: 'A RAG pipeline retrieves relevant snippets, but the LLM answer leaves out critical numbers. Diagnose the prompt template.',
-    plan: ['Review RAG Pipelines Module', 'Review embedding techniques', 'Examine search indexing parameters'],
-    misconceptions: 'Believing that adding more background documents to the prompt context always yields more accurate model answers.',
-    journal: 'What surprised you most about the difference between keyword matching and semantic vector lookup?',
-    connections: 'Connect dense vector cosine distances with attention alignment scores in visual layers.',
-    sessionObjectives: 'Understand vector space transformations, reranking layers, and context extraction limits.'
-  },
-  'agents': {
-    domainName: 'AI Agents',
-    questions: [
-      'Contrast the planning behavior of a ReAct agent loop with linear directed acyclic graph (DAG) routing.',
-      'What security risks arise when giving LLM agents direct tool access without sandboxing?'
-    ],
-    flashcards: [
-      { front: 'ReAct Pattern', back: 'A framework combining reasoning and action loops to guide step-by-step agent execution.', hint: 'Thought, Action, Observation cycle.' },
-      { front: 'Tool Calling', back: 'Agent output formatting specifying function names and arguments for execution.', hint: 'Interface bridge.' }
-    ],
-    retrieval: 'Explain how an agent knows when to stop executing tools and return a final response to the user.',
-    selfAssessment: 'Describe the role of feedback loops in improving the reliability of autonomous multi-step agents.',
-    challenge: 'An agent tool-use execution loop becomes stuck executing the same failed API call repeatedly. Critique the loop safety bounds.',
-    plan: ['Review Agent Workflows', 'Study planning graphs', 'Analyze tool calling interfaces'],
-    misconceptions: 'Assuming that agents are inherently reliable decision makers for multi-step goals without continuous feedback safeguards.',
-    journal: 'What are the main security concerns you have about deploying agents in internal enterprise directories?',
-    connections: 'How do planning loops in agents build upon conversational memory chains in large language models?',
-    sessionObjectives: 'Deconstruct reasoning graphs, tool invocation hooks, and execution safety policies.'
-  },
-  'mlops': {
-    domainName: 'MLOps',
-    questions: [
-      'Explain how prediction drift differ from concept drift in deployed model monitoring.',
-      'What are the trade-offs of using automated canary rollouts compared to instant blue-green deployments?'
-    ],
-    flashcards: [
-      { front: 'Data Drift', back: 'Changes in the distribution of input data over time compared to the training set baseline.', hint: 'PSI monitored.' },
-      { front: 'Model Registry', back: 'Central repository storing trained model artifacts, signatures, and version states.', hint: 'Version controller.' }
-    ],
-    retrieval: 'Describe the stages of model deployment from registry verification to shadow traffic validation.',
-    selfAssessment: 'Explain why training-serving skew occurs and how you would prevent it.',
-    challenge: 'A deployed model shows an increase in prediction latency but normal resource utilization. What variables would you examine first?',
-    plan: ['Review MLOps Lifecycles', 'Analyze pipeline monitoring metrics', 'Examine container scaling rules'],
-    misconceptions: 'Assuming that deploying a model to a target cluster completes the project lifecycle without ongoing maintenance constraints.',
-    journal: 'Draft a short checklist of monitoring thresholds you would configure for an enterprise classifier service.',
-    connections: 'Connect features store dependencies with model signature validations in model registries.',
-    sessionObjectives: 'Master deployment lifecycles, monitoring thresholds, and pipeline auditability.'
-  }
+const FALLBACK_ASSESSMENT_DATA = {
+  domainName: 'Systems Engineering Principles',
+  questions: [
+    'Explain the role of decoupled microservice interfaces in systems engineering.',
+    'Why does shared-state concurrency introduce potential race conditions in database transactions?'
+  ],
+  flashcards: [
+    { front: 'Decoupling', back: 'Splitting components so they change and scale independently.', hint: 'Independent scalability.' },
+    { front: 'Concurrency', back: 'Executing multiple processes in overlapping time intervals.', hint: 'Parallel paths.' }
+  ],
+  retrieval: 'Detail the core stages of database replication from read replica scaling to failover logic.',
+  selfAssessment: 'How would you explain the trade-offs of microservices compared to monolithic designs in your own words?',
+  challenge: 'A database scaling project leads to data conflicts. Critique the replication policy.',
+  plan: ['Review database scaling patterns', 'Analyze replication latencies', 'Revisit decoupled service lessons'],
+  misconceptions: 'Believing that microservices are always superior to monolithic architectures for small-scale applications.',
+  journal: 'Write down one system boundary condition that clicked today and one that feels fuzzy.',
+  connections: 'Connect database concurrency controls to thread isolation rules in multi-core execution environments.',
+  sessionObjectives: 'Deepen understanding of distributed systems coordination, scaling boundaries, and caching patterns.'
 };
 
 function createAssessmentReinforcementAgent() {
   const responseCache = new Map();
+  const sharedKnowledge = createSharedKnowledgeService();
 
-  function initialize() {
-    return Promise.resolve({ status: 'ready', modes: Object.keys(MODE_LABELS).length });
+  async function initialize() {
+    await sharedKnowledge.initialize();
+    return { status: 'ready', modes: Object.keys(MODE_LABELS).length };
   }
 
   function canHandle(context) {
@@ -181,6 +68,7 @@ function createAssessmentReinforcementAgent() {
 
   async function run(context = {}, options = {}) {
     await initialize();
+    if (!context) context = {};
     const query = context.userQuery || '';
     const mode = options.mode || detectIntent(query);
     const topic = resolveTopic(context, query);
@@ -351,24 +239,26 @@ function createAssessmentReinforcementAgent() {
   }
 
   function getDomainData(domain) {
-    return CURATED_ASSESSMENT_MAP[domain] || {
-      domainName: 'Systems Engineering Principles',
-      questions: [
-        'Explain the role of decoupled microservice interfaces in systems engineering.',
-        'Why does shared-state concurrency introduce potential race conditions in database transactions?'
-      ],
-      flashcards: [
-        { front: 'Decoupling', back: 'Splitting components so they change and scale independently.', hint: 'Independent scalability.' },
-        { front: 'Concurrency', back: 'Executing multiple processes in overlapping time intervals.', hint: 'Parallel paths.' }
-      ],
-      retrieval: 'Detail the core stages of database replication from read replica scaling to failover logic.',
-      selfAssessment: 'How would you explain the trade-offs of microservices compared to monolithic designs in your own words?',
-      challenge: 'A database scaling project leads to data conflicts. Critique the replication policy.',
-      plan: ['Review database scaling patterns', 'Analyze replication latencies', 'Revisit decoupled service lessons'],
-      misconceptions: 'Believing that microservices are always superior to monolithic architectures for small-scale applications.',
-      journal: 'Write down one system boundary condition that clicked today and one that feels fuzzy.',
-      connections: 'Connect database concurrency controls to thread isolation rules in multi-core execution environments.',
-      sessionObjectives: 'Deepen understanding of distributed systems coordination, scaling boundaries, and caching patterns.'
+    const domainData = sharedKnowledge.getSyncDomain(domain);
+    if (!domainData) return FALLBACK_ASSESSMENT_DATA;
+
+    const misconceptions = domainData.commonMisconceptions || [];
+    return {
+      domainName: domainData.title,
+      questions: domainData.assessmentSeeds || [],
+      flashcards: (domainData.concepts || []).slice(0, 4).map((c) => ({
+        front: c,
+        back: `Core concept in ${domainData.title}`,
+        hint: 'Review the curriculum for details'
+      })),
+      retrieval: `Recall the key structural aspects of ${domainData.title} from memory.`,
+      selfAssessment: `How would you explain the trade-offs of ${domainData.title} concepts to a peer?`,
+      challenge: `Critique a production system that uses ${domainData.title} concepts without monitoring.`,
+      plan: (domainData.relatedConcepts || []).map((c) => `Review ${c} connections`),
+      misconceptions: misconceptions.length > 0 ? misconceptions[0].wrong : '',
+      journal: `Write down one concept from ${domainData.title} that clicked today and one that still feels hazy.`,
+      connections: `Connect ${domainData.title} concepts to other curriculum modules.`,
+      sessionObjectives: `Strengthen fundamental intuition behind ${domainData.title}.`
     };
   }
 

@@ -1,6 +1,4 @@
 <div class="nv-stack nv-stack--gap-md nv-settings-page">
-  <h1 class="nv-sr-only">Settings</h1>
-
   <header class="nv-page-header">
     <p class="nv-page-header__eyebrow">Configuration</p>
     <h1>Settings</h1>
@@ -86,6 +84,126 @@
             <div class="nv-persistence-status" data-status="import-status" role="status" aria-live="polite" style="display: none;"></div>
           </div>
         </div>
+      </div>
+    </section>
+
+    <!-- Review Preferences -->
+    <section class="nv-card" aria-labelledby="review-prefs-heading">
+      <div class="nv-card__header">
+        <h3 id="review-prefs-heading" class="nv-card__title">Review Preferences</h3>
+        <span class="nv-badge" data-variant="info">Spaced Repetition</span>
+      </div>
+      <p class="nv-card__description">Configure your spaced repetition review behavior. All values are stored locally; nothing is sent to a server.</p>
+      <div class="nv-card__body">
+        <div class="nv-stack nv-stack--gap-sm">
+          <div class="nv-cluster nv-cluster--gap-sm" style="justify-content: space-between; align-items: center;">
+            <label for="nv-review-daily-limit" style="margin: 0;">Daily review limit</label>
+            <input type="number" id="nv-review-daily-limit" min="1" max="1000" value="50" data-review-pref="dailyLimit" style="width: 100px;" aria-describedby="nv-review-daily-limit-help">
+          </div>
+          <p id="nv-review-daily-limit-help" class="nv-muted" style="font-size: 0.75rem; margin: 0;">Maximum items per review session (1–1000).</p>
+
+          <div class="nv-cluster nv-cluster--gap-sm" style="justify-content: space-between; align-items: center;">
+            <label for="nv-review-show-overdue" style="margin: 0;">Show overdue first</label>
+            <input type="checkbox" id="nv-review-show-overdue" data-review-pref="showOverdueFirst" aria-describedby="nv-review-show-overdue-help">
+          </div>
+          <p id="nv-review-show-overdue-help" class="nv-muted" style="font-size: 0.75rem; margin: 0;">Prioritize overdue items at the top of the review queue.</p>
+
+          <div class="nv-cluster nv-cluster--gap-sm" style="justify-content: space-between; align-items: center;">
+            <label for="nv-review-include-artifacts" style="margin: 0;">Include curriculum artifacts</label>
+            <input type="checkbox" id="nv-review-include-artifacts" data-review-pref="includeArtifacts" aria-describedby="nv-review-include-artifacts-help">
+          </div>
+          <p id="nv-review-include-artifacts-help" class="nv-muted" style="font-size: 0.75rem; margin: 0;">Schedule reviews of curriculum artifacts.</p>
+
+          <div class="nv-cluster nv-cluster--gap-sm" style="justify-content: space-between; align-items: center;">
+            <label for="nv-review-include-flashcards" style="margin: 0;">Include flashcards</label>
+            <input type="checkbox" id="nv-review-include-flashcards" data-review-pref="includeFlashcards" aria-describedby="nv-review-include-flashcards-help">
+          </div>
+          <p id="nv-review-include-flashcards-help" class="nv-muted" style="font-size: 0.75rem; margin: 0;">Schedule reviews of flashcards.</p>
+        </div>
+      </div>
+      <div class="nv-card__footer">
+        <button type="button" class="nv-button" data-variant="danger" data-review-action="reset" aria-label="Reset review schedule and history">
+          Reset Review Schedule
+        </button>
+        <div class="nv-persistence-status" data-status="review-reset-status" role="status" aria-live="polite" style="display: none;"></div>
+      </div>
+    </section>
+
+    <section class="nv-card" aria-labelledby="gen-settings-heading" data-gen-settings-root>
+      <div class="nv-card__header">
+        <h3 class="nv-card__title" id="gen-settings-heading">Optional Local Generative Layer</h3>
+        <span class="nv-badge" data-variant="info">Optional</span>
+      </div>
+      <p class="nv-card__description">
+        Configure optional local generative assistance. All processing stays on your machine.
+        No data is sent to external services.
+      </p>
+      <div class="nv-card__body">
+        <div class="nv-gen-settings__warning">
+          ⚠️ This feature requires a local LLM server (Ollama, llama.cpp, or compatible).
+          No cloud endpoints are allowed. All generation is local and non-canonical.
+        </div>
+        <div class="nv-gen-settings" data-gen-settings-controls>
+          <div class="nv-settings-field">
+            <label class="nv-settings-label">
+              <input type="checkbox" data-gen-setting="enabled"> Enable Local Generative Layer
+            </label>
+          </div>
+          <div class="nv-settings-field">
+            <label class="nv-settings-label" for="gen-setting-provider">Provider</label>
+            <select id="gen-setting-provider" class="nv-settings-select" data-gen-setting="provider">
+              <option value="ollama">Ollama (Local)</option>
+              <option value="llamacpp">llama.cpp</option>
+              <option value="openai-local">OpenAI-Compatible Local</option>
+            </select>
+          </div>
+          <div class="nv-settings-field">
+            <label class="nv-settings-label" for="gen-setting-endpoint">Endpoint URL</label>
+            <input type="url" id="gen-setting-endpoint" class="nv-settings-input" data-gen-setting="endpoint" value="http://localhost:11434" placeholder="http://localhost:11434">
+          </div>
+          <div class="nv-settings-field">
+            <label class="nv-settings-label" for="gen-setting-model">Selected Model</label>
+            <input type="text" id="gen-setting-model" class="nv-settings-input" data-gen-setting="selectedModel" placeholder="Model name (e.g., qwen3-coder-next)">
+          </div>
+          <div class="nv-settings-field">
+            <label class="nv-settings-label" for="gen-setting-privacy">Privacy Level</label>
+            <select id="gen-setting-privacy" class="nv-settings-select" data-gen-setting="privacyLevel">
+              <option value="none">No context</option>
+              <option value="current_artifact_only" selected>Current artifact only</option>
+              <option value="curriculum_context">Curriculum context</option>
+              <option value="semantic_context">Semantic context</option>
+              <option value="include_user_memory">Include user memory</option>
+              <option value="include_review_state">Include review state</option>
+            </select>
+          </div>
+          <div class="nv-settings-field">
+            <label class="nv-settings-label" for="gen-setting-maxtokens">Default Max Tokens</label>
+            <input type="number" id="gen-setting-maxtokens" class="nv-settings-input" data-gen-setting="maxTokens" value="800" min="100" max="4096">
+          </div>
+          <div class="nv-settings-field">
+            <label class="nv-settings-label" for="gen-setting-temp">Default Temperature</label>
+            <input type="number" id="gen-setting-temp" class="nv-settings-input" data-gen-setting="temperature" value="0.2" min="0" max="2" step="0.1">
+          </div>
+          <div class="nv-settings-field">
+            <label class="nv-settings-label">
+              <input type="checkbox" data-gen-setting="includeMemoryContext"> Include Memory Context
+            </label>
+          </div>
+          <div class="nv-settings-field">
+            <label class="nv-settings-label">
+              <input type="checkbox" data-gen-setting="includeReviewContext"> Include Review Context
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="nv-card__footer">
+        <button type="button" class="nv-button" data-variant="secondary" data-gen-action="test-connection" aria-label="Test connection to local model endpoint">
+          Test Connection
+        </button>
+        <button type="button" class="nv-button" data-variant="danger" data-gen-action="clear-audit-log" aria-label="Clear generation audit log">
+          Clear Audit Log
+        </button>
+        <div class="nv-persistence-status" data-status="gen-settings-status" role="status" aria-live="polite" style="display: none;"></div>
       </div>
     </section>
 

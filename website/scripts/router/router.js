@@ -78,6 +78,7 @@ class ViewController {
       home: `
         <div class="nv-stack nv-stack--gap-md nv-hero-observatory">
           <header class="nv-stack nv-stack--gap-xs">
+            <h1 class="nv-sr-only">NeuralVerse Home</h1>
           </header>
           <div class="nv-panel">
             <div class="nv-empty-state nv-hero-brand-lockup">
@@ -96,46 +97,147 @@ class ViewController {
       `,
       learning: `
         <div class="nv-stack nv-stack--gap-md">
-          <div class="nv-stack nv-stack--gap-md" data-curriculum-root></div>
+          <div class="nv-stack nv-stack--gap-md" data-curriculum-root>
+            <h1 class="nv-sr-only">Learning Paths</h1>
+          </div>
         </div>
       `,
       'learning-detail': `
         <div class="nv-stack nv-stack--gap-md">
-          <div class="nv-stack nv-stack--gap-md" data-curriculum-root></div>
+          <div class="nv-stack nv-stack--gap-md" data-curriculum-root>
+            <h1 class="nv-sr-only">Learning Path Details</h1>
+          </div>
         </div>
       `,
       'learning-path': `
         <div class="nv-stack nv-stack--gap-md">
-          <div class="nv-stack nv-stack--gap-md" data-curriculum-root></div>
+          <div class="nv-stack nv-stack--gap-md" data-curriculum-root>
+            <h1 class="nv-sr-only">Learning Path Details</h1>
+          </div>
         </div>
       `,
       'lesson-detail': `
         <div class="nv-stack nv-stack--gap-md">
-          <div class="nv-stack nv-stack--gap-md" data-curriculum-root></div>
+          <div class="nv-stack nv-stack--gap-md" data-curriculum-root>
+            <h1 class="nv-sr-only">Lesson Details</h1>
+          </div>
         </div>
       `,
       'artifact-detail': `
         <div class="nv-stack nv-stack--gap-md">
-          <div class="nv-stack nv-stack--gap-md" data-curriculum-root></div>
+          <div class="nv-stack nv-stack--gap-md" data-curriculum-root>
+            <h1 class="nv-sr-only">Artifact Details</h1>
+          </div>
         </div>
       `,
       modules: `
         <div class="nv-stack nv-stack--gap-md">
-          <div class="nv-stack nv-stack--gap-md" data-curriculum-root></div>
+          <div class="nv-stack nv-stack--gap-md" data-curriculum-root>
+            <h1 class="nv-sr-only">Curriculum Modules</h1>
+          </div>
         </div>
       `,
       'knowledge-graph': `
         <div class="nv-stack nv-stack--gap-md">
-          <div class="nv-stack nv-stack--gap-md" data-knowledge-graph-root></div>
+          <div class="nv-stack nv-stack--gap-md" data-knowledge-graph-root>
+            <h1 class="nv-sr-only">Knowledge Graph</h1>
+          </div>
         </div>
       `,
       'module-detail': `
         <div class="nv-stack nv-stack--gap-md">
-          <div class="nv-stack nv-stack--gap-md" data-curriculum-root></div>
+          <div class="nv-stack nv-stack--gap-md" data-curriculum-root>
+            <h1 class="nv-sr-only">Module Details</h1>
+          </div>
         </div>
       `,
       workspace: `
         <div id="nv-workspace-content-body" class="nv-stack nv-stack--gap-md">
+          <h1 class="nv-sr-only">Personalized Learning & Study Dashboard</h1>
+          <article class="nv-card nv-review-dashboard" data-review-dashboard aria-label="Today's Reviews">
+            <header class="nv-card__header">
+              <h2 class="nv-card__title">Today's Reviews</h2>
+              <p class="nv-card__subtitle">Spaced repetition (SM-2) — deterministic, local-first</p>
+            </header>
+            <div class="nv-card__body">
+              <dl class="nv-review-dashboard__metrics" aria-label="Review summary">
+                <div class="nv-review-dashboard__metric">
+                  <dt>Due today</dt>
+                  <dd data-review-dashboard-due-today>0</dd>
+                </div>
+                <div class="nv-review-dashboard__metric">
+                  <dt>Overdue</dt>
+                  <dd data-review-dashboard-overdue>0</dd>
+                </div>
+                <div class="nv-review-dashboard__metric">
+                  <dt>Completed today</dt>
+                  <dd data-review-dashboard-reviewed-today>0</dd>
+                </div>
+              </dl>
+              <div class="nv-review-dashboard__next">
+                <h3 class="nv-review-dashboard__next-title">Next scheduled review</h3>
+                <p>
+                  <strong data-review-dashboard-next-item>Nothing scheduled</strong>
+                  <span class="nv-muted" data-review-dashboard-next-time>—</span>
+                </p>
+              </div>
+              <div class="nv-review-dashboard__upcoming">
+                <h3 class="nv-review-dashboard__upcoming-title">Upcoming</h3>
+                <ul data-review-dashboard-upcoming aria-label="Upcoming reviews"></ul>
+              </div>
+              <div class="nv-review-dashboard__actions">
+                <button type="button" class="nv-button" data-variant="primary" data-review-dashboard-start aria-label="Start review session">Start Review</button>
+                <button type="button" class="nv-button" data-variant="secondary" data-review-dashboard-continue aria-label="Continue review session">Continue</button>
+                <button type="button" class="nv-button" data-variant="ghost" data-review-dashboard-skip aria-label="Skip current review">Skip</button>
+              </div>
+              <p class="nv-review-dashboard__empty" data-review-dashboard-empty hidden>All caught up.</p>
+            </div>
+          </article>
+          <article class="nv-card" data-recent-labs-card aria-label="Recent Laboratories">
+            <header class="nv-card__header">
+              <h2 class="nv-card__title">Recent Laboratories</h2>
+              <p class="nv-card__subtitle">Interactive experiments — deterministic, local-first</p>
+            </header>
+            <div class="nv-card__body" data-recent-labs-mount>
+              <p class="nv-muted">No laboratories visited yet.</p>
+            </div>
+          </article>
+           <article class="nv-card" data-pinned-memories-card aria-label="Pinned Memories">
+            <header class="nv-card__header">
+              <h2 class="nv-card__title">Pinned Memories</h2>
+              <p class="nv-card__subtitle">Your most important notes and bookmarks</p>
+            </header>
+            <div class="nv-card__body" data-pinned-memories-mount>
+              <p class="nv-muted">No pinned memories yet.</p>
+            </div>
+          </article>
+          <article class="nv-card" data-semantic-suggestions-card aria-label="Semantic Suggestions">
+            <header class="nv-card__header">
+              <h2 class="nv-card__title">Semantic Suggestions</h2>
+              <p class="nv-card__subtitle">Deterministic concept recommendations</p>
+            </header>
+            <div class="nv-card__body" data-semantic-suggestions-mount>
+              <p class="nv-muted">No semantic context available.</p>
+            </div>
+          </article>
+          <article class="nv-card" data-recent-viz-card aria-label="Recent Visualizations">
+            <header class="nv-card__header">
+              <h2 class="nv-card__title">Recent Visualizations</h2>
+              <p class="nv-card__subtitle">Parametric visualizations — deterministic, local-first</p>
+            </header>
+            <div class="nv-card__body" data-recent-viz-mount>
+              <p class="nv-muted">No visualizations visited yet. <a href="#/visualizations">Browse visualizations</a></p>
+            </div>
+          </article>
+          <article class="nv-card" data-pinned-viz-card aria-label="Pinned Visualizations">
+            <header class="nv-card__header">
+              <h2 class="nv-card__title">Pinned Visualizations</h2>
+              <p class="nv-card__subtitle">Your favorite parametric visualizations</p>
+            </header>
+            <div class="nv-card__body" data-pinned-viz-mount>
+              <p class="nv-muted">No pinned visualizations yet. <a href="#/visualizations">Explore visualizations</a></p>
+            </div>
+          </article>
           <div class="nv-search-loading">
             <div class="nv-search-loading-spinner"></div>
             <div class="nv-search-loading-text">Loading personalization dashboard...</div>
@@ -163,6 +265,141 @@ class ViewController {
                 References: Sutton, R. S. and Barto, A. G. (2018). Reinforcement Learning: An Introduction. MIT Press.
               </p>
             </div>
+          </div>
+        </div>
+      `,
+      laboratory: `
+        <div class="nv-lab-index" data-lab-index>
+          <header class="nv-lab-index-header">
+            <h1>Interactive Laboratories</h1>
+            <p>Browse and launch deterministic educational experiments. All execution happens locally in your browser.</p>
+          </header>
+          <div data-lab-index-content>
+            <div class="nv-search-loading">
+              <div class="nv-search-loading-spinner"></div>
+              <div class="nv-search-loading-text">Loading laboratories...</div>
+            </div>
+          </div>
+        </div>
+      `,
+      memory: `
+        <div class="nv-memory" data-memory-root>
+          <header class="nv-memory-header">
+            <h1>Memory</h1>
+            <p>Organize your learning notes, bookmarks, and study context.</p>
+            <div class="nv-memory-header-actions">
+              <button class="nv-button" data-variant="primary" data-memory-action="create" aria-label="Create new memory">New Memory</button>
+              <button class="nv-button" data-variant="secondary" data-memory-action="toggle-archived" aria-label="Show archived memories">Archived</button>
+              <select class="nv-lab-select" data-memory-sort aria-label="Sort memories">
+                <option value="updatedAt">Last Updated</option>
+                <option value="createdAt">Date Created</option>
+                <option value="title">Title</option>
+              </select>
+              <select class="nv-lab-select" data-memory-filter-type aria-label="Filter by type">
+                <option value="">All Types</option>
+                <option value="note">Notes</option>
+                <option value="bookmark">Bookmarks</option>
+                <option value="highlight">Highlights</option>
+                <option value="workspace">Workspace</option>
+                <option value="laboratory">Laboratory</option>
+                <option value="review">Review</option>
+                <option value="search">Search</option>
+                <option value="custom">Custom</option>
+              </select>
+            </div>
+          </header>
+          <div class="nv-memory-body">
+            <section class="nv-memory-pinned" data-memory-pinned-section aria-label="Pinned Memories">
+              <h2>Pinned Memories</h2>
+              <div data-memory-pinned-mount></div>
+            </section>
+            <section class="nv-memory-recent" data-memory-recent-section aria-label="Recent Memories">
+              <h2>Recent Memories</h2>
+              <div data-memory-recent-mount></div>
+            </section>
+            <section class="nv-memory-collections" data-memory-collections-section aria-label="Collections">
+              <h2>Collections</h2>
+              <div data-memory-collections-mount></div>
+            </section>
+          </div>
+          <div class="nv-memory-editor-overlay" data-memory-editor-overlay hidden aria-label="Memory editor">
+            <div class="nv-memory-editor" data-memory-editor role="dialog" aria-labelledby="memory-editor-title">
+              <h2 id="memory-editor-title">New Memory</h2>
+              <form data-memory-editor-form>
+                <div class="nv-memory-form-group">
+                  <label for="memory-type">Type</label>
+                  <select id="memory-type" name="type" required>
+                    <option value="note">Note</option>
+                    <option value="bookmark">Bookmark</option>
+                    <option value="highlight">Highlight</option>
+                    <option value="workspace">Workspace</option>
+                    <option value="laboratory">Laboratory</option>
+                    <option value="review">Review</option>
+                    <option value="search">Search</option>
+                    <option value="custom">Custom</option>
+                  </select>
+                </div>
+                <div class="nv-memory-form-group">
+                  <label for="memory-title">Title</label>
+                  <input type="text" id="memory-title" name="title" required placeholder="Memory title">
+                </div>
+                <div class="nv-memory-form-group">
+                  <label for="memory-summary">Summary</label>
+                  <input type="text" id="memory-summary" name="summary" placeholder="Brief summary">
+                </div>
+                <div class="nv-memory-form-group">
+                  <label for="memory-content">Content</label>
+                  <textarea id="memory-content" name="content" rows="6" placeholder="Detailed content..."></textarea>
+                </div>
+                <div class="nv-memory-form-group">
+                  <label for="memory-tags">Tags (comma-separated)</label>
+                  <input type="text" id="memory-tags" name="tags" placeholder="tag1, tag2, tag3">
+                </div>
+                <div class="nv-memory-form-group">
+                  <label for="memory-concepts">Related Concepts (comma-separated)</label>
+                  <input type="text" id="memory-concepts" name="relatedConcepts" placeholder="concept1, concept2">
+                </div>
+                <div class="nv-memory-form-group">
+                  <label for="memory-artifacts">Related Artifacts (comma-separated)</label>
+                  <input type="text" id="memory-artifacts" name="relatedArtifacts" placeholder="artifact1, artifact2">
+                </div>
+                <div class="nv-memory-form-actions">
+                  <button type="submit" class="nv-button" data-variant="primary">Save</button>
+                  <button type="button" class="nv-button" data-variant="ghost" data-memory-action="cancel-edit">Cancel</button>
+                </div>
+              </form>
+            </div>
+          </div>
+          <dialog class="nv-memory-dialog" data-memory-confirm-dialog aria-labelledby="memory-confirm-title">
+            <h3 id="memory-confirm-title">Confirm Deletion</h3>
+            <p data-memory-confirm-message>Are you sure you want to delete this memory?</p>
+            <div class="nv-memory-dialog-actions">
+              <button class="nv-button" data-variant="danger" data-memory-action="confirm-delete">Delete</button>
+              <button class="nv-button" data-variant="ghost" data-memory-action="cancel-delete">Cancel</button>
+            </div>
+          </dialog>
+        </div>
+      `,
+      'memory-detail': `
+        <div class="nv-memory" data-memory-root>
+          <div class="nv-memory-detail" data-memory-detail-mount>
+            <p>Loading memory...</p>
+          </div>
+        </div>
+      `,
+      'laboratory-detail': `
+        <div class="nv-lab-viewer" data-lab-viewer>
+          <div class="nv-lab-viewer-header">
+            <a href="#/laboratory" class="nv-lab-back-btn" aria-label="Back to laboratories">Back</a>
+            <h2 data-lab-title>Loading...</h2>
+            <span class="nv-lab-header-summary" data-lab-summary></span>
+          </div>
+          <div class="nv-lab-parameter-panel" data-lab-parameters>
+            <h3>Parameters</h3>
+          </div>
+          <div class="nv-lab-visualization-panel">
+            <div class="nv-lab-metadata" data-lab-metadata></div>
+            <div data-lab-visualization></div>
           </div>
         </div>
       `,
@@ -561,7 +798,11 @@ class ViewController {
     const route = state.currentRoute;
     if (!route) return;
 
-    const viewId = route.id === 'not-found' ? 'not-found' : (route.isImplemented ? route.id : 'not-found');
+    const viewId = route.id === 'content-detail'
+      ? 'content'
+      : route.id === 'not-found'
+        ? 'not-found'
+        : (route.isImplemented ? route.id : 'not-found');
     if (window.NV_DEBUG) console.log(`Rendering view: ${viewId}`);
 
     let rendered = false;

@@ -173,81 +173,289 @@ Vision
 → Local Harness
 → Implementation
 
+## Codebase Memory MCP (Experimental)
+
+A local MCP server named `codebase-memory` is configured in
+`neuralverse/.opencode/opencode.json` (and mirrored in the root
+`.opencode/opencode.json`). It is an experimental structural discovery
+accelerator. It must not be used for trivial CSS, text, or
+documentation tasks. Activation is decided by `harness-orchestrator`
+based on task class. Its output is a hint, never evidence. Every
+suggestion must be confirmed through `fd` → `rg` → `ast-grep` →
+focused reads. See
+`docs/architecture/harness/codebase-memory-mcp-policy.md`.
+
 ## Reporting
 
-For significant work, report:
+The Harness produces a single **Harness Execution Report** for every
+non-trivial task. Trivial or pure Q&A responses may omit it.
 
-- task classification;
-- skills used;
-- context scope;
-- files changed;
-- commands run;
-- validation results;
-- remaining risks.
+The canonical template lives in
+`.opencode/skills/harness-orchestrator/SKILL.md` under
+`## Report Format`. Telemetry, confidence, and git-hygiene all fill
+fields into that single template — they do not emit separate blocks.
 
-Every non-trivial final output must include, in this order:
+### Report Sections (in order)
 
-1. `## Harness Pipeline Used` — compact checklist.
-2. `## Harness Telemetry` — produced by the `harness-telemetry` skill.
-3. `## Confidence Assessment` — produced by the `confidence-engineering`
-   skill.
+1. `HARNESS SUMMARY` — ultra-compact header. 2-second scan.
+2. `HARNESS EXECUTION REPORT` — full header.
+3. `PIPELINE` — horizontal flow with `→`. Skipped stages omitted.
+4. `EXECUTION TIMELINE` — chronological list of executed skills.
+5. `ACTIVE SKILLS` / `SKIPPED SKILLS` — one skill per line.
+6. `REPOSITORY DISCOVERY` — compact table.
+7. `VALIDATION` — compact table.
+8. `TELEMETRY` — dot-aligned metrics.
+9. `CONFIDENCE` — aligned bars.
+10. `REMAINING RISKS` — max 5 bullets.
+11. `FOOTER` — tool-style status block.
 
-Trivial or read-only responses may omit telemetry and confidence.
+### Icons
 
-### Harness Pipeline Used
+- `[✓]` executed, pass, yes
+- `[•]` considered, active, info
+- `[-]` skipped, no
+- `[!]` warning, risk
+- `[→]` flow, arrow
 
-```
-## Harness Pipeline Used
-
-- Task classification:
-- Cost level:
-- Skills activated:
-- Skills skipped:
-- Context scope:
-- Repository discovery:
-- Validation:
-- Documentation/memory decision:
-- Git hygiene:
-```
-
-### Harness Telemetry
+### Skeleton
 
 ```
-## Harness Telemetry
+════════════════════════════════════════════════════════════════════════════════
+HARNESS SUMMARY
 
-- Task type:
-- Cost level:
-- Pipeline variant:
-- Skills activated:
-- Skills skipped:
-- Files inspected:
-- Files modified:
-- Commands run:
-- Validation performed:
-- Documentation updated:
-- Persistent memory updated:
-- Estimated context scope:
-- Remaining risks:
+Task             <one short line>
+Status           SUCCESS | PARTIAL | FAILED
+Confidence       <n>%
+Pipeline         <short name>
+Skills           <n> active
+Files            <n> modified
+Validation       PASS | FAIL | PARTIAL
+════════════════════════════════════════════════════════════════════════════════
+
+--------------------------------------------------------------------------------
+HARNESS EXECUTION REPORT
+
+Task.................<one short line>
+Status...............SUCCESS | PARTIAL | FAILED
+Overall Confidence...<n>%
+Cost Level...........low | medium | high
+Pipeline Variant.....<short name>
+Duration.............<n> s
+
+--------------------------------------------------------------------------------
+PIPELINE
+
+Request → Classification → Context → Discovery
+       → Skills → Validation → Confidence → Git
+
+CONSIDERED   [•] Codebase Memory MCP
+             [•] token-economy-auditor
+
+--------------------------------------------------------------------------------
+EXECUTION TIMELINE
+
+01 <skill>          <short action>
+02 <skill>          <short action>
+03 <skill>          <short action>
+
+--------------------------------------------------------------------------------
+ACTIVE SKILLS
+
+[✓] <skill>
+[✓] <skill>
+
+SKIPPED SKILLS
+
+[-] <n> skills omitted
+
+--------------------------------------------------------------------------------
+REPOSITORY DISCOVERY
+
+Discovered        <n>
+Inspected         <n>
+Modified          <n>
+Ignored           <n> folders
+
+Search tools      [✓] git status  [✓] fd  [✓] rg  [✓] ast-grep  [✓] focused reads
+
+--------------------------------------------------------------------------------
+VALIDATION
+
+<command>          [✓] PASS
+<command>          [✓] PASS
+<command>          [✗] FAIL
+
+--------------------------------------------------------------------------------
+TELEMETRY
+
+Task Type............<name>
+Pipeline.............<name>
+Context..............<n> files
+Commands.............<n>
+Duration.............<n> s
+Files Modified.......<n>
+Documentation........Updated | No Changes
+Persistent Memory....Updated | No Changes
+
+--------------------------------------------------------------------------------
+CONFIDENCE
+
+Repository Evidence       █████████░ 95%
+Validation                ████████░░ 90%
+Architecture              ██████████ 100%
+Scope Control             █████████░ 93%
+Residual Risk             LOW
+Overall                   93%
+
+--------------------------------------------------------------------------------
+REMAINING RISKS
+
+[!] <risk>
+[!] <risk>
+[!] <risk>
+
+--------------------------------------------------------------------------------
+FOOTER
+
+Harness v2.0
+Status            SUCCESS | PARTIAL | FAILED
+Confidence        <n>%
+Pipeline          <short name>
+Duration          <n> s
+════════════════════════════════════════════════════════════════════════════════
 ```
 
-### Confidence Assessment
+### HARNESS SUMMARY Rules
+
+- First block in the report. 2-second scan.
+- Pad the label column to 14 characters.
+- The 7 fields are required: Task, Status, Confidence, Pipeline,
+  Skills, Files, Validation.
+
+### Pipeline Rules
+
+- Render the executed pipeline as a **horizontal flow** with `→`.
+- Maximum 8 stages per line. Wrap to a second line if needed.
+- Skipped stages do not render in the flow. They go to
+  `SKIPPED SKILLS` or to `CONSIDERED` beneath the flow.
+- For trivial or read-only tasks, the flow collapses to the
+  stages that actually ran.
+
+### Execution Timeline Rules
+
+- One entry per executed skill, in chronological order.
+- Two-digit zero-padded number, then skill name padded to 22
+  characters, then short action label (max 60 chars).
+- The action label is the standard mapping from
+  `harness-orchestrator/SKILL.md` unless a task-specific override
+  is justified.
+- Skills in `SKIPPED SKILLS` do not appear in the timeline.
+
+### Active / Skipped Skills Rules
+
+- Active: one per line, `[✓]` marker. Maximum 8 entries; the
+  rest go to SKIPPED.
+- Skipped: **summary only**. Show the count. Optionally list
+  the first 3 names.
+- Do not list every skipped skill by default.
+
+### Repository Discovery Rules
+
+- `Discovered` — count of files surfaced by `git status`, `fd`,
+  `rg`, `ast-grep`, and focused reads.
+- `Inspected` — count of files actually read.
+- `Modified` — count of files actually written or edited.
+- `Ignored` — count of folder patterns in the default ignore
+  list. Default list: `node_modules`, `dist`, `build`, `coverage`,
+  `docs`, `backups`, `artifacts`.
+- `Search tools` — single line with `[✓]` markers for each tool
+  actually used.
+
+### Validation Rules
+
+- One line per check.
+- Command name padded to 24 characters, then `[✓] PASS`,
+  `[✗] FAIL`, or `[~] PARTIAL`.
+
+### Confidence Rules
+
+- One line per metric: label, bar, score with `%`.
+- Labels left-padded to 22 characters.
+- Bars 10 cells wide: `█` filled, `░` empty.
+- Bars round to the nearest 10.
+- `Residual Risk` and `Overall` rows use the same alignment.
+- Use exactly these four labels: `Repository Evidence`,
+  `Validation`, `Architecture`, `Scope Control`.
+
+### Remaining Risks Rules
+
+- Maximum 5 bullets, `[!]` marker, no paragraphs.
+- No duplication of facts that already appear in other sections.
+
+### Footer Rules
+
+- Compact status block.
+- Mirrors the HARNESS SUMMARY `Status` and `Confidence`.
+- Adds `Duration` for a tool-style close.
+
+### Field Discipline
+
+- One fact per line. No paragraphs anywhere in the report.
+- A fact appears in at most one section.
+- The `Status` and `Confidence` shown in the HARNESS SUMMARY,
+  CONFIDENCE block, and FOOTER are the same value, by design
+  (the report is allowed to repeat the absolute essentials at
+  the boundary, but the body sections are deduplicated).
+- Dot alignment is 18 characters for `TELEMETRY` and the
+  `HARNESS EXECUTION REPORT` header lines.
+- HARNESS SUMMARY label column is 14 characters.
+- REPOSITORY DISCOVERY label column is 14 characters.
+- VALIDATION command column is 24 characters.
+- CONFIDENCE label column is 22 characters.
+- FOOTER label column is 14 characters.
+- Maximum 5 lines in `REMAINING RISKS`.
+- The total report must remain scannable in under 10 seconds.
+- HARNESS SUMMARY must scan in under 2 seconds.
+
+### Status Mapping
+
+- `SUCCESS` — overall confidence >= 80 and all validations passed.
+- `PARTIAL` — overall confidence 60-79, or any validation PARTIAL.
+- `FAILED` — overall confidence below 60, or any required validation
+  failed.
+
+### Confidence Thresholds
+
+- Below 80 — first bullet in `REMAINING RISKS` is the required
+  follow-up step.
+- Below 60 — `Status` becomes `FAILED` or `PARTIAL`; the task is
+  not presented as complete.
+
+## Codebase Memory MCP
+
+The Codebase Memory MCP is configured as an optional advisory
+layer. It sits inside the canonical evidence chain:
 
 ```
-## Confidence Assessment
-
-- Repository evidence:
-- Validation confidence:
-- Architecture consistency:
-- Scope control:
-- Residual risk:
-- Overall confidence:
-- Reason for score:
-- Required follow-up:
+Context Governance
+  ↓
+Codebase Memory MCP  (optional, advisory)
+  ↓
+fd
+  ↓
+rg
+  ↓
+ast-grep
+  ↓
+Focused Reads
+  ↓
+Evidence
 ```
 
-If overall confidence is below 80, the `Required follow-up` field must
-name a concrete next validation step. If overall confidence is below
-60, the task must not be presented as complete.
+The MCP may suggest candidate files. It never replaces repository
+evidence. Every MCP suggestion must be confirmed through the
+lower stages before being acted on. See
+`docs/architecture/harness/codebase-memory-mcp-policy.md`.
 
 ## Repository Inspection Priority
 

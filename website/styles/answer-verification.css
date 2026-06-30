@@ -1,0 +1,157 @@
+/* NV-1100-P6 — Answer Verification styles */
+
+.nv-verification-card {
+  background: rgba(13, 17, 28, 0.6);
+  border: 1px solid rgba(138, 180, 248, 0.15);
+  border-radius: 6px;
+  padding: 16px;
+  margin: 16px 0;
+  color: var(--sys-color-text-primary, #e6ebf5);
+}
+
+.nv-verification-card__header {
+  margin: 0 0 12px 0;
+}
+
+.nv-verification-card__title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+  color: rgba(230, 235, 245, 0.7);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.nv-verification-card__prompt {
+  font-size: 1rem;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.nv-verification-card__label {
+  display: block;
+  font-size: 0.85rem;
+  margin: 0 0 4px 0;
+  color: rgba(230, 235, 245, 0.7);
+}
+
+.nv-verification-card__input {
+  width: 100%;
+  background: rgba(8, 12, 22, 0.6);
+  border: 1px solid rgba(138, 180, 248, 0.2);
+  border-radius: 4px;
+  padding: 8px 10px;
+  color: var(--sys-color-text-primary, #e6ebf5);
+  font-family: inherit;
+  font-size: 0.9rem;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+.nv-verification-card__input:focus-visible {
+  outline: 2px solid var(--sys-color-accent-primary, #4dabf7);
+  outline-offset: 2px;
+}
+
+.nv-verification-card__help {
+  font-size: 0.75rem;
+  color: rgba(230, 235, 245, 0.5);
+  margin: 4px 0 0 0;
+}
+
+.nv-verification-card__actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.nv-verification-card__result {
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  border: 1px solid transparent;
+}
+
+.nv-verification-result--match {
+  background: rgba(105, 218, 138, 0.1);
+  border-color: rgba(105, 218, 138, 0.3);
+  color: #69da8a;
+}
+
+.nv-verification-result--no_match {
+  background: rgba(255, 184, 77, 0.1);
+  border-color: rgba(255, 184, 77, 0.3);
+  color: #ffb84d;
+}
+
+.nv-verification-result--partial {
+  background: rgba(138, 180, 248, 0.1);
+  border-color: rgba(138, 180, 248, 0.3);
+  color: #8ab4f8;
+}
+
+.nv-verification-result--invalid {
+  background: rgba(255, 107, 107, 0.1);
+  border-color: rgba(255, 107, 107, 0.3);
+  color: #ff6b6b;
+}
+
+.nv-verification-result__message {
+  margin: 0;
+}
+
+.nv-verification-history-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nv-verification-history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+  font-size: 0.85rem;
+  border-bottom: 1px solid rgba(138, 180, 248, 0.08);
+}
+
+.nv-verification-history-item:last-child {
+  border-bottom: none;
+}
+
+.nv-verification-history-item__status {
+  font-size: 0.7rem;
+  padding: 2px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.nv-verification-history-item__status--match {
+  background: rgba(105, 218, 138, 0.1);
+  color: #69da8a;
+}
+
+.nv-verification-history-item__status--no_match {
+  background: rgba(255, 184, 77, 0.1);
+  color: #ffb84d;
+}
+
+.nv-verification-history-item__status--partial {
+  background: rgba(138, 180, 248, 0.1);
+  color: #8ab4f8;
+}
+
+.nv-verification-history-item__status--invalid {
+  background: rgba(255, 107, 107, 0.1);
+  color: #ff6b6b;
+}
+
+@media (max-width: 480px) {
+  .nv-verification-card__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

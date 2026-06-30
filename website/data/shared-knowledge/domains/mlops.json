@@ -1,0 +1,72 @@
+{
+  "id": "mlops",
+  "title": "MLOps & ML Systems Engineering",
+  "summary": "Combining software engineering (DevOps) and machine learning to build continuous training, deployment, and monitoring systems for production ML.",
+  "concepts": ["model deployment", "CI/CD for ML", "data drift", "concept drift", "model registry", "canary deployment", "feature stores", "monitoring", "observability", "rollback"],
+  "keywords": ["MLOps", "deployment", "monitoring", "drift", "CI/CD", "canary", "rollback", "feature store", "model registry", "observability"],
+  "historicalContext": "Historically, models were developed in Jupyter notebooks, but frequently failed in production because of environment changes, distribution drift, or lack of automated testing. This disconnect motivated engineers to establish MLOps—combining software engineering (DevOps) and machine learning to build continuous training, deployment, and monitoring systems.",
+  "landmarkReferences": [
+    {
+      "title": "Hidden Technical Debt in Machine Learning Systems",
+      "authors": "Sculley et al. (Google)",
+      "year": "2015",
+      "contribution": "Revealed that actual ML code represents only a tiny fraction of a production system."
+    }
+  ],
+  "industryApplications": ["Continuous integration for ML models", "Real-time drift monitoring", "Enterprise model governance dashboards", "Automated retraining pipelines", "Model versioning"],
+  "commonMisconceptions": [
+    {
+      "trigger": "deploy",
+      "wrong": "Deploying a model to a target cluster completes the project lifecycle.",
+      "correct": "Deploying a model is just the beginning. Ongoing maintenance, monitoring, retraining, and governance are required for reliable production ML."
+    }
+  ],
+  "analogies": [
+    {
+      "text": "An MLOps pipeline is like an automated water treatment plant, constantly checking water quality (Data Drift) and adjusting filters (Retraining) automatically.",
+      "limitations": "Water plants filter known contaminants, whereas MLOps pipelines can fail to validate complex data changes."
+    }
+  ],
+  "curiosityFacts": [
+    "Did you know that Google's 2015 paper 'Hidden Technical Debt in Machine Learning Systems' revealed that actual ML code represents only a tiny fraction of a production system? Most of the infrastructure is dedicated to data ingestion, serving, and monitoring.",
+    "The term 'DevOps' was coined by Patrick Debois in 2009. The machine learning community adopted these automation principles in 2018 as MLOps to manage experimental instability."
+  ],
+  "storySeeds": [
+    "The discipline shifted from manual, experimental notebooks to structured, automated systems engineering lifecycles.",
+    "MLOps transformed machine learning from an experimental, notebook-driven science into a structured, automated systems engineering discipline."
+  ],
+  "assessmentSeeds": [
+    "Explain how prediction drift differ from concept drift in deployed model monitoring.",
+    "What are the trade-offs of using automated canary rollouts compared to instant blue-green deployments?"
+  ],
+  "professionalInsights": [
+    "Use auto-scaling pod groups triggered by model server queue length rather than simple CPU/memory metrics.",
+    "Centralize logs, configure alerting thresholds on prediction latency anomalies, and track feature drift metrics across model versions.",
+    "An online service automated model deployment using GitOps. Pre-deployment checks blocked a newly trained model from deploying when its signature validation detected a missing field, avoiding a production outage."
+  ],
+  "recommendedVisualizations": ["mlops-pipeline-diagram", "deployment-strategy-comparison"],
+  "recommendedLabs": ["build-an-mlops-pipeline", "drift-detection-playground"],
+  "relatedArtifacts": [],
+  "relatedConcepts": [
+    { "domain": "machine-learning", "type": "related_to" },
+    { "domain": "optimization", "type": "related_to" }
+  ],
+  "lastReviewed": "2026-06-24",
+  "canonicalStatus": "Reviewed",
+  "version": "1.0.0",
+  "reviewedBy": "NV-1100-P3 Implementation",
+  "sourceReferences": [
+    {
+      "id": "ref-mlops-0",
+      "title": "Hidden Technical Debt (Sculley et al.)",
+      "type": "paper",
+      "description": "ML systems technical debt"
+    },
+    {
+      "id": "ref-mlops-1",
+      "title": "ML Systems Design (Huyen)",
+      "type": "book",
+      "description": "MLOps design patterns"
+    }
+  ]
+}

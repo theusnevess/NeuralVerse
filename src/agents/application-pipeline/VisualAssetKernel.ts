@@ -25,6 +25,7 @@ import type {
   VisualAssetProvenance,
   VisualRelationship,
   VisualGovernance,
+  VisualAssetDecision,
   VisualAssetTraceDecision,
   VisualAssetTrace,
   VisualAssetRegistry,

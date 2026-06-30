@@ -1,0 +1,179 @@
+{
+  "validator": "NV-1100-P3A Shared Knowledge Governance Validator",
+  "generatedAt": "2026-06-26T23:03:07.440Z",
+  "timestamp": "2026-06-26T23:03:07.440Z",
+  "schemaVersion": "2.0",
+  "summary": {
+    "domainsChecked": 10,
+    "domainsPassed": 10,
+    "errors": 0,
+    "warnings": 0,
+    "info": 8
+  },
+  "domains": [
+    {
+      "id": "machine-learning",
+      "title": "Machine Learning Foundations",
+      "version": "1.0.0",
+      "reviewedBy": "NV-1100-P3 Implementation",
+      "canonicalStatus": "Reviewed",
+      "sourceReferences": 2,
+      "typedRelations": 3,
+      "conceptCount": 9
+    },
+    {
+      "id": "deep-learning",
+      "title": "Deep Learning Fundamentals",
+      "version": "1.0.0",
+      "reviewedBy": "NV-1100-P3 Implementation",
+      "canonicalStatus": "Reviewed",
+      "sourceReferences": 2,
+      "typedRelations": 4,
+      "conceptCount": 9
+    },
+    {
+      "id": "computer-vision",
+      "title": "Computer Vision",
+      "version": "1.0.0",
+      "reviewedBy": "NV-1100-P3 Implementation",
+      "canonicalStatus": "Reviewed",
+      "sourceReferences": 2,
+      "typedRelations": 3,
+      "conceptCount": 9
+    },
+    {
+      "id": "llms",
+      "title": "Large Language Models",
+      "version": "1.0.0",
+      "reviewedBy": "NV-1100-P3 Implementation",
+      "canonicalStatus": "Reviewed",
+      "sourceReferences": 2,
+      "typedRelations": 3,
+      "conceptCount": 10
+    },
+    {
+      "id": "rag",
+      "title": "Retrieval-Augmented Generation",
+      "version": "1.0.0",
+      "reviewedBy": "NV-1100-P3 Implementation",
+      "canonicalStatus": "Reviewed",
+      "sourceReferences": 2,
+      "typedRelations": 3,
+      "conceptCount": 8
+    },
+    {
+      "id": "agents",
+      "title": "AI Agents & Agentic Systems",
+      "version": "1.0.0",
+      "reviewedBy": "NV-1100-P3 Implementation",
+      "canonicalStatus": "Reviewed",
+      "sourceReferences": 1,
+      "typedRelations": 3,
+      "conceptCount": 8
+    },
+    {
+      "id": "mlops",
+      "title": "MLOps & ML Systems Engineering",
+      "version": "1.0.0",
+      "reviewedBy": "NV-1100-P3 Implementation",
+      "canonicalStatus": "Reviewed",
+      "sourceReferences": 2,
+      "typedRelations": 2,
+      "conceptCount": 10
+    },
+    {
+      "id": "transformers",
+      "title": "Transformers & Attention Mechanisms",
+      "version": "1.0.0",
+      "reviewedBy": "NV-1100-P3 Implementation",
+      "canonicalStatus": "Reviewed",
+      "sourceReferences": 2,
+      "typedRelations": 4,
+      "conceptCount": 8
+    },
+    {
+      "id": "embeddings",
+      "title": "Embeddings & Vector Representations",
+      "version": "1.0.0",
+      "reviewedBy": "NV-1100-P3 Implementation",
+      "canonicalStatus": "Reviewed",
+      "sourceReferences": 2,
+      "typedRelations": 2,
+      "conceptCount": 7
+    },
+    {
+      "id": "optimization",
+      "title": "Optimization & Training",
+      "version": "1.0.0",
+      "reviewedBy": "NV-1100-P3 Implementation",
+      "canonicalStatus": "Reviewed",
+      "sourceReferences": 1,
+      "typedRelations": 3,
+      "conceptCount": 10
+    }
+  ],
+  "errors": [],
+  "warnings": [],
+  "info": [
+    "Cross-domain concept \"regularization\" (allowed overlap): machine-learning, optimization",
+    "Cross-domain concept \"backpropagation\" (allowed overlap): deep-learning, optimization",
+    "Cross-domain concept \"batch normalization\" (allowed overlap): deep-learning, optimization",
+    "Cross-domain concept \"dropout\" (allowed overlap): deep-learning, optimization",
+    "Cross-domain concept \"convolution\" (allowed overlap): deep-learning, computer-vision",
+    "Cross-domain concept \"causal masking\" (allowed overlap): llms, transformers",
+    "Cross-domain concept \"dense retrieval\" (allowed overlap): rag, embeddings",
+    "Found 7 cross-domain concept duplication(s) total"
+  ],
+  "duplicateConcepts": [
+    {
+      "concept": "regularization",
+      "domains": [
+        "machine-learning",
+        "optimization"
+      ]
+    },
+    {
+      "concept": "backpropagation",
+      "domains": [
+        "deep-learning",
+        "optimization"
+      ]
+    },
+    {
+      "concept": "batch normalization",
+      "domains": [
+        "deep-learning",
+        "optimization"
+      ]
+    },
+    {
+      "concept": "dropout",
+      "domains": [
+        "deep-learning",
+        "optimization"
+      ]
+    },
+    {
+      "concept": "convolution",
+      "domains": [
+        "deep-learning",
+        "computer-vision"
+      ]
+    },
+    {
+      "concept": "causal masking",
+      "domains": [
+        "llms",
+        "transformers"
+      ]
+    },
+    {
+      "concept": "dense retrieval",
+      "domains": [
+        "rag",
+        "embeddings"
+      ]
+    }
+  ],
+  "decision": "READY"
+}

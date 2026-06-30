@@ -1451,6 +1451,88 @@
 
           <!-- Right Sidebar Column (Stats, Bookmarks) -->
           <div class="nv-stack nv-stack--gap-md">
+            <article class="nv-card nv-review-dashboard" data-review-dashboard aria-label="Today's Reviews" data-review-launch>
+              <header class="nv-card__header">
+                <h2 class="nv-card__title">Today's Reviews</h2>
+                <p class="nv-card__subtitle">Spaced repetition (SM-2) — deterministic, local-first</p>
+              </header>
+              <div class="nv-card__body">
+                <dl class="nv-review-dashboard__metrics" aria-label="Review summary">
+                  <div class="nv-review-dashboard__metric">
+                    <dt>Due today</dt>
+                    <dd data-review-dashboard-due-today>0</dd>
+                  </div>
+                  <div class="nv-review-dashboard__metric">
+                    <dt>Overdue</dt>
+                    <dd data-review-dashboard-overdue>0</dd>
+                  </div>
+                  <div class="nv-review-dashboard__metric">
+                    <dt>Completed today</dt>
+                    <dd data-review-dashboard-reviewed-today>0</dd>
+                  </div>
+                </dl>
+                <div class="nv-review-dashboard__next">
+                  <h3 class="nv-review-dashboard__next-title">Next scheduled review</h3>
+                  <p>
+                    <strong data-review-dashboard-next-item>Nothing scheduled</strong>
+                    <span class="nv-muted" data-review-dashboard-next-time>—</span>
+                  </p>
+                </div>
+                <div class="nv-review-dashboard__upcoming">
+                  <h3 class="nv-review-dashboard__upcoming-title">Upcoming</h3>
+                  <ul data-review-dashboard-upcoming aria-label="Upcoming reviews"></ul>
+                </div>
+                <div class="nv-review-dashboard__due-list" data-review-due-list-section>
+                  <h3 class="nv-review-dashboard__due-list-title">Artifacts due for review</h3>
+                  <div data-review-due-list-mount></div>
+                </div>
+                <div class="nv-review-dashboard__actions">
+                  <button type="button" class="nv-button" data-variant="primary" data-review-dashboard-start aria-label="Start review session">Start Review</button>
+                  <button type="button" class="nv-button" data-variant="secondary" data-review-dashboard-continue aria-label="Continue review session">Continue</button>
+                  <button type="button" class="nv-button" data-variant="ghost" data-review-dashboard-skip aria-label="Skip current review">Skip</button>
+                </div>
+                <p class="nv-review-dashboard__empty" data-review-dashboard-empty hidden>All caught up.</p>
+              </div>
+            </article>
+            <div class="nv-panel nv-stack nv-stack--gap-sm">
+              <header class="nv-card__header">
+                <h2 class="nv-card__title">Today's Reviews</h2>
+                <p class="nv-card__subtitle">Spaced repetition (SM-2) — deterministic, local-first</p>
+              </header>
+              <div class="nv-card__body">
+                <dl class="nv-review-dashboard__metrics" aria-label="Review summary">
+                  <div class="nv-review-dashboard__metric">
+                    <dt>Due today</dt>
+                    <dd data-review-dashboard-due-today>0</dd>
+                  </div>
+                  <div class="nv-review-dashboard__metric">
+                    <dt>Overdue</dt>
+                    <dd data-review-dashboard-overdue>0</dd>
+                  </div>
+                  <div class="nv-review-dashboard__metric">
+                    <dt>Completed today</dt>
+                    <dd data-review-dashboard-reviewed-today>0</dd>
+                  </div>
+                </dl>
+                <div class="nv-review-dashboard__next">
+                  <h3 class="nv-review-dashboard__next-title">Next scheduled review</h3>
+                  <p>
+                    <strong data-review-dashboard-next-item>Nothing scheduled</strong>
+                    <span class="nv-muted" data-review-dashboard-next-time>—</span>
+                  </p>
+                </div>
+                <div class="nv-review-dashboard__upcoming">
+                  <h3 class="nv-review-dashboard__upcoming-title">Upcoming</h3>
+                  <ul data-review-dashboard-upcoming aria-label="Upcoming reviews"></ul>
+                </div>
+                <div class="nv-review-dashboard__actions">
+                  <button type="button" class="nv-button" data-variant="primary" data-review-dashboard-start aria-label="Start review session">Start Review</button>
+                  <button type="button" class="nv-button" data-variant="secondary" data-review-dashboard-continue aria-label="Continue review session">Continue</button>
+                  <button type="button" class="nv-button" data-variant="ghost" data-review-dashboard-skip aria-label="Skip current review">Skip</button>
+                </div>
+                <p class="nv-review-dashboard__empty" data-review-dashboard-empty hidden>All caught up.</p>
+              </div>
+            </article>
             <div class="nv-panel nv-stack nv-stack--gap-sm">
               <h3>Personal Metrics</h3>
               <dl class="nv-curriculum-stats" style="grid-template-columns: repeat(2, 1fr); gap: var(--sys-space-stack-sm);">
@@ -1493,6 +1575,43 @@
               <h3>Quick Search Filters</h3>
               <p class="nv-muted" style="font-size: var(--sys-font-caption-size);">Use global search shortcut <kbd class="nv-search-kbd">Ctrl+K</kbd> to access bookmark filters.</p>
             </div>
+
+            <article class="nv-card" data-pinned-memories-card aria-label="Pinned Memories">
+              <header class="nv-card__header">
+                <h2 class="nv-card__title">Pinned Memories</h2>
+                <p class="nv-card__subtitle">Your most important notes and bookmarks</p>
+              </header>
+              <div class="nv-card__body" data-pinned-memories-mount>
+                <p class="nv-muted">No pinned memories yet.</p>
+              </div>
+            </article>
+            <article class="nv-card" data-semantic-suggestions-card aria-label="Semantic Suggestions">
+              <header class="nv-card__header">
+                <h2 class="nv-card__title">Semantic Suggestions</h2>
+                <p class="nv-card__subtitle">Deterministic concept recommendations</p>
+              </header>
+              <div class="nv-card__body" data-semantic-suggestions-mount>
+                <p class="nv-muted">No semantic context available.</p>
+              </div>
+            </article>
+            <article class="nv-card" data-recent-viz-card aria-label="Recent Visualizations">
+              <header class="nv-card__header">
+                <h2 class="nv-card__title">Recent Visualizations</h2>
+                <p class="nv-card__subtitle">Parametric visualizations — deterministic, local-first</p>
+              </header>
+              <div class="nv-card__body" data-recent-viz-mount>
+                <p class="nv-muted">No visualizations visited yet. <a href="#/visualizations">Browse visualizations</a></p>
+              </div>
+            </article>
+            <article class="nv-card" data-pinned-viz-card aria-label="Pinned Visualizations">
+              <header class="nv-card__header">
+                <h2 class="nv-card__title">Pinned Visualizations</h2>
+                <p class="nv-card__subtitle">Your favorite parametric visualizations</p>
+              </header>
+              <div class="nv-card__body" data-pinned-viz-mount>
+                <p class="nv-muted">No pinned visualizations yet. <a href="#/visualizations">Explore visualizations</a></p>
+              </div>
+            </article>
           </div>
         </div>
       </div>

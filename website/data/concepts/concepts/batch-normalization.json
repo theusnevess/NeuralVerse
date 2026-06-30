@@ -1,0 +1,59 @@
+{
+  "id": "batch-normalization",
+  "name": "Batch Normalization",
+  "slug": "batch-normalization",
+  "summary": "A technique that normalizes layer inputs to stabilize and accelerate training.",
+  "definition": "Batch normalization normalizes activations across the mini-batch to zero mean and unit variance, then applies learnable scale and shift parameters. It reduces internal covariate shift.",
+  "aliases": [
+    "batch norm",
+    "BatchNorm"
+  ],
+  "keywords": [
+    "batch normalization",
+    "normalization",
+    "training stability",
+    "covariate shift"
+  ],
+  "sharedKnowledgeDomains": [
+    "deep-learning"
+  ],
+  "relatedConcepts": [
+    {
+      "concept": "neural-networks",
+      "type": "uses"
+    },
+    {
+      "concept": "regularization",
+      "type": "related_to"
+    }
+  ],
+  "prerequisiteConcepts": [
+    "neural-networks"
+  ],
+  "artifactReferences": [
+    "artifact-epochs-batches-learning-rate-comparison-table",
+    "artifact-epochs-batches-learning-rate-exercise",
+    "artifact-epochs-batches-learning-rate-explanatory-text",
+    "artifact-epochs-batches-learning-rate-interactive-visualization",
+    "artifact-epochs-batches-learning-rate-visual-intuition"
+  ],
+  "difficulty": "intermediate",
+  "category": "deep-learning",
+  "canonicalStatus": "Reviewed",
+  "version": "1.0.0",
+  "reviewedBy": "NV-1100-P4 Implementation",
+  "lastReviewed": "2026-06-24",
+  "sourceReferences": [
+    {
+      "id": "ref-bn-0",
+      "title": "Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift",
+      "type": "paper",
+      "description": "Ioffe & Szegedy 2015"
+    }
+  ],
+  "examples": [],
+  "counterExamples": [],
+  "commonMisconceptions": [],
+  "recommendedVisualizations": [],
+  "recommendedLabs": []
+}

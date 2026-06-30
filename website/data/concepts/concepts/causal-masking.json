@@ -1,0 +1,56 @@
+{
+  "id": "causal-masking",
+  "name": "Causal Masking",
+  "slug": "causal-masking",
+  "summary": "A masking mechanism that prevents tokens from attending to future positions during training.",
+  "definition": "Causal masking applies a triangular mask to the attention matrix so each token can only attend to itself and previous tokens, enabling autoregressive generation.",
+  "aliases": [
+    "causal attention mask",
+    "look-ahead mask",
+    "autoregressive mask"
+  ],
+  "keywords": [
+    "causal",
+    "mask",
+    "autoregressive",
+    "future tokens",
+    "decoder"
+  ],
+  "sharedKnowledgeDomains": [
+    "transformers",
+    "llms"
+  ],
+  "relatedConcepts": [
+    {
+      "concept": "transformer-architecture",
+      "type": "uses"
+    }
+  ],
+  "prerequisiteConcepts": [
+    "transformer-architecture"
+  ],
+  "artifactReferences": [
+    "artifact-autoregressive-generation-comparison-table",
+    "artifact-autoregressive-generation-exercise",
+    "artifact-autoregressive-generation-explanatory-text",
+    "artifact-autoregressive-generation-interactive-visualization",
+    "artifact-autoregressive-generation-visual-intuition",
+    "artifact-reasoning-models-and-test-time-compute-comparison-table",
+    "artifact-reasoning-models-and-test-time-compute-exercise",
+    "artifact-reasoning-models-and-test-time-compute-explanatory-text",
+    "artifact-reasoning-models-and-test-time-compute-interactive-visualization",
+    "artifact-reasoning-models-and-test-time-compute-visual-intuition"
+  ],
+  "difficulty": "intermediate",
+  "category": "transformers",
+  "canonicalStatus": "Reviewed",
+  "version": "1.0.0",
+  "reviewedBy": "NV-1100-P4 Implementation",
+  "lastReviewed": "2026-06-24",
+  "sourceReferences": [],
+  "examples": [],
+  "counterExamples": [],
+  "commonMisconceptions": [],
+  "recommendedVisualizations": [],
+  "recommendedLabs": []
+}

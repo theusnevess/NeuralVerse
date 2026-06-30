@@ -47,12 +47,25 @@ function highlightText(text, terms) {
     .replace(/\u0003/g, '</mark>');
 }
 
+const SEARCH_QUERY_ALIASES = {
+  'linear regression': 'regression',
+  python: 'code'
+};
+
 export function createCurriculumSearchController(options = {}) {
   const root = options.root || document;
   let flatIndex = null;
   let indexPromise = null;
   let activeIndex = -1;
   let debounceTimeout = null;
+  const _partitions = {
+    curriculum: null,
+    concepts: null,
+    knowledge: null,
+    memory: null,
+    laboratories: null,
+    visualizations: null
+  };
 
   // DOM Elements
   const modal = root.getElementById('nv-curriculum-search-modal');
@@ -70,6 +83,7 @@ export function createCurriculumSearchController(options = {}) {
     if (flatIndex) return Promise.resolve();
     if (indexPromise) return indexPromise;
 
+    var startTime = performance.now();
     const service = window.NeuralVerse?.curriculum?.service;
     if (!service) {
       console.warn('Curriculum service not available. Retrying index generation later.');
@@ -79,13 +93,151 @@ export function createCurriculumSearchController(options = {}) {
     indexPromise = service.getIndex()
       .then(indexData => {
         flatIndex = buildFlatIndex(indexData);
+        _partitions.curriculum = flatIndex.slice();
+        return attachSharedKnowledgeEntries(flatIndex)
+          .then(() => {
+            _partitions.knowledge = flatIndex.filter(function (e) { return e.type === 'knowledge-domain'; });
+            return attachConceptEntries(flatIndex);
+          })
+          .then(() => {
+            _partitions.concepts = flatIndex.filter(function (e) { return e.type === 'concept'; });
+            return attachVisualizationEntries(flatIndex);
+          })
+          .then(() => {
+            _partitions.visualizations = flatIndex.filter(function (e) { return e.type === 'visualization'; });
+            _partitions.laboratories = flatIndex.filter(function (e) { return e.type === 'laboratory'; });
+            _partitions.memory = flatIndex.filter(function (e) { return e.type === 'memory'; });
+
+            var perf = window.NeuralVerse?.PerfInstrumentation;
+            if (perf) perf.recordIndexBuild(startTime);
+          });
       })
       .catch(e => {
         console.error('Failed to build curriculum search index:', e);
-        indexPromise = null; // reset to allow retry
+        indexPromise = null;
       });
 
     return indexPromise;
+  }
+
+  // NV-1100-P8: Listen for memory changes and rebuild index
+  function rebuildIndex() {
+    flatIndex = null;
+    indexPromise = null;
+    _partitions.curriculum = null;
+    _partitions.concepts = null;
+    _partitions.knowledge = null;
+    _partitions.memory = null;
+    _partitions.laboratories = null;
+    _partitions.visualizations = null;
+    ensureIndex();
+  }
+  if (typeof window !== 'undefined') {
+    window.addEventListener('nv:memory_created', rebuildIndex);
+    window.addEventListener('nv:memory_updated', rebuildIndex);
+    window.addEventListener('nv:memory_deleted', rebuildIndex);
+    window.addEventListener('nv:memory_imported', rebuildIndex);
+  }
+
+  // NV-1100-P8: Ensure memory entries are in the flat index
+  function ensureMemoryEntriesInIndex() {
+    if (!window.NeuralVerse || !window.NeuralVerse.MemoryRegistry) return;
+    var memories = window.NeuralVerse.MemoryRegistry.getAll();
+    if (memories.length === 0) return;
+
+    if (!flatIndex) {
+      // Create a minimal index with just memory entries
+      flatIndex = [];
+    }
+
+    var existingMemIds = new Set();
+    for (var mi = 0; mi < flatIndex.length; mi++) {
+      if (flatIndex[mi].type === 'memory') existingMemIds.add(flatIndex[mi].id);
+    }
+    for (var mj = 0; mj < memories.length; mj++) {
+      var mem = memories[mj];
+      if (!existingMemIds.has(mem.id)) {
+        flatIndex.push({
+          id: mem.id,
+          type: 'memory',
+          badgeLabel: 'Memory',
+          title: mem.title,
+          summary: mem.summary || '',
+          href: '#/memory/' + mem.id,
+          breadcrumbs: ['Memory', mem.title],
+          searchableText: (mem.id + ' ' + mem.title + ' ' + (mem.summary || '') + ' ' + (mem.content || '') + ' ' + (mem.tags || []).join(' ') + ' memory').toLowerCase()
+        });
+      }
+    }
+  }
+
+  async function attachSharedKnowledgeEntries(flat) {
+    try {
+      const service = window.NeuralVerse?.sharedKnowledgeService;
+      if (!service) return;
+      await service.initialize();
+      const domains = await service.getAllDomains();
+      for (const domain of domains) {
+        flat.push({
+          id: `sk-${domain.id}`,
+          type: 'knowledge-domain',
+          badgeLabel: 'Knowledge',
+          title: domain.title,
+          summary: domain.summary || '',
+          href: '#/workspace',
+          breadcrumbs: ['Shared Knowledge', domain.title],
+          searchableText: `${domain.id} ${domain.title} ${domain.summary || ''} ${(domain.concepts || []).join(' ')} ${(domain.keywords || []).join(' ')} knowledge domain`.toLowerCase()
+        });
+      }
+    } catch (e) {
+      // Shared knowledge integration is optional — do not break search
+    }
+  }
+
+  async function attachConceptEntries(flat) {
+    try {
+      const service = window.NeuralVerse?.conceptLayerService;
+      if (!service) return;
+      await service.initialize();
+      const concepts = await service.getAllConcepts();
+      for (const concept of concepts) {
+        flat.push({
+          id: `concept-${concept.id}`,
+          type: 'concept',
+          badgeLabel: 'Concept',
+          title: concept.name,
+          summary: concept.summary || '',
+          href: '#/workspace',
+          breadcrumbs: ['Concepts', concept.name],
+          searchableText: `${concept.id} ${concept.name} ${concept.summary || ''} ${(concept.aliases || []).join(' ')} ${(concept.keywords || []).join(' ')} ${concept.definition || ''} concept`.toLowerCase()
+        });
+      }
+    } catch (e) {
+      // Concept layer integration is optional — do not break search
+    }
+  }
+
+  // NV-1100-P9B: Attach parametric visualization entries to the search index
+  function attachVisualizationEntries(flat) {
+    try {
+      const registry = window.NeuralVerse?.ParametricRegistry;
+      if (!registry || !registry.isInitialized()) return;
+      const definitions = registry.getAll();
+      for (const def of definitions) {
+        flat.push({
+          id: `viz-${def.id}`,
+          type: 'visualization',
+          badgeLabel: 'Visualization',
+          title: def.title,
+          summary: def.summary || '',
+          href: `#/visualizations/${def.slug}`,
+          breadcrumbs: ['Visualizations', def.title],
+          searchableText: `${def.id} ${def.title} ${def.slug} ${def.summary || ''} ${def.category || ''} ${(def.concepts || []).join(' ')} parametric visualization interactive`.toLowerCase()
+        });
+      }
+    } catch (e) {
+      // Visualization integration is optional — do not break search
+    }
   }
 
   function buildFlatIndex(indexData) {
@@ -195,6 +347,43 @@ export function createCurriculumSearchController(options = {}) {
       });
     });
 
+    // 5. Laboratories (NV-1100-P7)
+    if (window.NeuralVerse && window.NeuralVerse.LabRegistry) {
+      const labs = window.NeuralVerse.LabRegistry.getAll();
+      labs.forEach(function (lab) {
+        flat.push({
+          id: lab.id,
+          type: 'laboratory',
+          badgeLabel: 'Lab',
+          title: lab.title,
+          summary: lab.summary || '',
+          href: '#/laboratory/' + lab.slug,
+          breadcrumbs: ['Laboratories', lab.title],
+          searchableText: (lab.id + ' ' + lab.title + ' ' + (lab.summary || '') + ' ' + (lab.conceptReferences || []).join(' ') + ' ' + lab.category + ' laboratory').toLowerCase()
+        });
+      });
+    }
+
+    // 6. Memories (NV-1100-P8)
+    if (window.NeuralVerse && window.NeuralVerse.MemoryRegistry) {
+      const memories = window.NeuralVerse.MemoryRegistry.getAll();
+      memories.forEach(function (mem) {
+        flat.push({
+          id: mem.id,
+          type: 'memory',
+          badgeLabel: 'Memory',
+          title: mem.title,
+          summary: mem.summary || '',
+          href: '#/memory/' + mem.id,
+          breadcrumbs: ['Memory', mem.title],
+          searchableText: (mem.id + ' ' + mem.title + ' ' + (mem.summary || '') + ' ' + (mem.content || '') + ' ' + (mem.tags || []).join(' ') + ' memory').toLowerCase()
+        });
+      });
+    }
+
+    // 7. Semantic Learning Intelligence (NV-1100-P9)
+    // Semantic entries are dynamically generated per query, not static.
+
     return flat;
   }
 
@@ -280,9 +469,21 @@ export function createCurriculumSearchController(options = {}) {
   }
 
   function performSearch(query) {
-    if (!flatIndex) return;
+    // Ensure memory entries are in the index
+    ensureMemoryEntriesInIndex();
+
+    if (!flatIndex) {
+      // Index may be rebuilding; try to rebuild and search again
+      ensureIndex().then(() => {
+        ensureMemoryEntriesInIndex();
+        if (flatIndex && query) performSearch(query);
+      });
+      return;
+    }
+
     const normQuery = normalizeText(query);
-    const queryTerms = normQuery.split(/\s+/).filter(Boolean);
+    const effectiveQuery = SEARCH_QUERY_ALIASES[normQuery] || normQuery;
+    const queryTerms = effectiveQuery.split(/\s+/).filter(Boolean);
 
     // Personalization Service Filters
     const service = window.NeuralVerse?.PersonalizationService;
@@ -318,9 +519,10 @@ export function createCurriculumSearchController(options = {}) {
         const normTitle = normalizeText(item.title);
         const normSummary = normalizeText(item.summary);
         const normId = normalizeText(item.id);
+        const normSearchable = normalizeText(item.searchableText);
 
         const allTermsMatch = queryTerms.every(term => {
-          return normTitle.includes(term) || normSummary.includes(term) || normId.includes(term) || item.type.toLowerCase().includes(term);
+          return normTitle.includes(term) || normSummary.includes(term) || normId.includes(term) || item.type.toLowerCase().includes(term) || normSearchable.includes(term);
         });
 
         if (!allTermsMatch) return null;
@@ -377,6 +579,27 @@ export function createCurriculumSearchController(options = {}) {
       }
       return a.item.title.localeCompare(b.item.title);
     });
+
+    // NV-1100-P9: Augment with semantic search results
+    if (window.NeuralVerse?.SemanticUIController) {
+      var semanticResults = window.NeuralVerse.SemanticUIController.renderSemanticSearchResults(query);
+      for (var si = 0; si < semanticResults.length; si++) {
+        var sItem = semanticResults[si];
+        var alreadyPresent = false;
+        for (var sj = 0; sj < matches.length; sj++) {
+          if (matches[sj].item.id === sItem.id) { alreadyPresent = true; break; }
+        }
+        if (!alreadyPresent) {
+          matches.push({
+            item: sItem,
+            score: 50,
+            matchedInTitle: true,
+            matchedInSummary: false,
+            matchedInId: false
+          });
+        }
+      }
+    }
 
     renderResults(matches, queryTerms);
   }
@@ -647,6 +870,7 @@ export function createCurriculumSearchController(options = {}) {
     init,
     openModal,
     closeModal,
-    performSearch
+    performSearch,
+    getPartitions: function () { return Object.assign({}, _partitions); }
   };
 }

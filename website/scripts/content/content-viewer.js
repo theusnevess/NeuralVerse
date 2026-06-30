@@ -17,6 +17,60 @@ function renderParagraph(lines) {
   return `<p>${renderInlineMarkdown(lines.join(" "))}</p>`;
 }
 
+function getScheduler() {
+  if (typeof window === 'undefined') return null;
+  return window.NeuralVerse?.reviewScheduler || null;
+}
+
+function renderReviewBadgeGroup(artifactId, type) {
+  const renderer = typeof window !== 'undefined' ? window.NeuralVerse?.reviewBadgeRenderer : null;
+  const scheduler = getScheduler();
+  if (!renderer || !scheduler) return '';
+  if (typeof renderer.renderBadgeAndAction === 'function') {
+    try {
+      return renderer.renderBadgeAndAction(artifactId, type || 'artifact', scheduler);
+    } catch (e) { return ''; }
+  }
+  return '';
+}
+
+function renderReviewMetadataPanel(artifactId, type) {
+  const renderer = typeof window !== 'undefined' ? window.NeuralVerse?.reviewBadgeRenderer : null;
+  const scheduler = getScheduler();
+  if (!renderer || !scheduler) return '';
+  if (typeof renderer.renderMetadataPanel === 'function') {
+    try {
+      return renderer.renderMetadataPanel(artifactId, type || 'artifact', scheduler);
+    } catch (e) { return ''; }
+  }
+  return '';
+}
+
+function wireReviewAction(target) {
+  if (!target) return;
+  const actionBtn = target.querySelector('[data-review-action]');
+  if (!actionBtn || actionBtn.dataset.reviewWired === '1') return;
+  if (actionBtn.disabled || actionBtn.getAttribute('aria-disabled') === 'true') return;
+  actionBtn.dataset.reviewWired = '1';
+  actionBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    const scheduler = getScheduler();
+    const ctrl = window.NeuralVerse?.reviewSessionController;
+    if (!scheduler || !ctrl) return;
+    const targetId = actionBtn.getAttribute('data-review-target-id');
+    const targetType = actionBtn.getAttribute('data-review-target-type') || 'artifact';
+    if (!targetId) return;
+    // Ensure the item is in the schedule (idempotent)
+    try { scheduler.ensureItem(targetId, targetType); } catch (err) { /* ignore */ }
+    // Check for an unfinished session
+    if (typeof ctrl.hasActiveSession === 'function' && ctrl.hasActiveSession()) {
+      ctrl.resumeSession();
+    } else {
+      ctrl.startSession();
+    }
+  });
+}
+
 export function renderMarkdown(markdown) {
   const lines = String(markdown || "").split(/\r?\n/);
   const html = [];
@@ -118,11 +172,15 @@ export function renderContentViewer(target, content) {
   }
 
   const { metadata, markdown } = content;
+  const artifactId = metadata.id || metadata.slug || '';
+  const reviewBadge = renderReviewBadgeGroup(artifactId, 'artifact');
+  const reviewMeta = renderReviewMetadataPanel(artifactId, 'artifact');
 
   target.innerHTML = `
     <article class="nv-content-viewer" aria-labelledby="content-viewer-title">
       <header class="nv-content-viewer__header">
         <h1 id="content-viewer-title">${escapeHtml(metadata.title)}</h1>
+        ${reviewBadge}
 
         <dl class="nv-content-meta" aria-label="Content metadata">
           <div>
@@ -140,11 +198,14 @@ export function renderContentViewer(target, content) {
         </dl>
       </header>
 
+      ${reviewMeta}
+
       <div class="nv-markdown-content">
         ${renderMarkdown(markdown)}
       </div>
     </article>
   `;
+  wireReviewAction(target);
 }
 
 export function renderContentEmptyState(target, message = "No content selected.") {

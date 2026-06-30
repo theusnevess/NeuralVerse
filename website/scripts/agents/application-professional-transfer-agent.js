@@ -3,7 +3,12 @@
  *
  * Offline, deterministic senior engineering mentor bridging curriculum concepts
  * to real-world production systems, engineering decisions, trade-offs, and scaling.
+ *
+ * Uses the shared knowledge repository (NV-1100-P3) for domain data.
+ * Falls back to local defaults if shared data is unavailable.
  */
+
+import { createSharedKnowledgeService } from '../shared-knowledge/shared-knowledge-service.js';
 
 const TRANSFER_INTENT_PATTERNS = {
   real_world_applications: ['application', 'real-world', 'industry', 'use case', 'where is this used', 'enterprise', 'production use'],
@@ -31,98 +36,28 @@ const MODE_LABELS = {
   design_review: 'Professional Design Review'
 };
 
-const CURATED_TRANSFER_MAP = {
-  'machine-learning': {
-    domainName: 'Machine Learning',
-    applications: ['Fraud detection pipelines', 'E-commerce recommendation systems', 'Predictive maintenance for manufacturing'],
-    architecture: 'Client\n↓\nAPI Gateway\n↓\nFeature Store (e.g. Feast)\n↓\nInference Pipeline (e.g. Triton/Seldon)\n↓\nModel Registry\n↓\nPrediction Logging',
-    tradeOffs: '| Option | Latency | Operational Cost | Explainability |\n|---|---|---|---|\n| Batch Scoring | High (delayed) | Low (offline resource) | High (auditable) |\n| Real-time Scoring | Low (<50ms) | High (always-on container) | Medium (dynamic input) |',
-    mlops: 'Monitor prediction drift using population stability index (PSI) and feature distributions in your data warehouse.',
-    framework: '| Constraint | Batch Processing | Real-Time API | Recommendation |\n|---|---|---|---|\n| Latency < 100ms | No | Yes | Use Real-Time API |\n| Throughput-focused | Yes | No | Use Batch Processing |',
-    failures: '| Sourced Failure | Root Cause | Mitigation |\n|---|---|---|\n| Feature Drift | Environment change | Schedule automated model retraining |\n| Stale Features | Offline pipeline lag | Implement streaming feature engineering |',
-    scaling: 'Implement offline sharding of feature tables and read-through caching for high-concurrency real-time lookups.',
-    caseStudy: 'A retail platform migrated from batch recommendations to a real-time retrieval setup. By indexing items in a feature store, they reduced prediction lag by 90% while maintaining retrieval recall.',
-    roles: 'ML Engineer: Handles model serving and feature pipeline integration.\nData Scientist: Prototypes offline feature formulas.'
-  },
-  'deep-learning': {
-    domainName: 'Deep Learning',
-    applications: ['Large-scale visual inspection', 'Real-time document intelligence', 'Industrial audio anomaly detection'],
-    architecture: 'Client\n↓\nRequest Batcher\n↓\nGPU Inference Server (Triton)\n↓\nTensorRT Engine\n↓\nResponse Broker',
-    tradeOffs: '| Option | Latency | Compute Resource | Model Accuracy |\n|---|---|---|---|\n| FP16 TensorRT | Low | GPU (optimized) | Negligible change |\n| FP32 Native | High | GPU (standard) | Baseline accuracy |',
-    mlops: 'Track GPU memory utilization and dynamic batch size queues via Prometheus metrics dashboard.',
-    framework: '| Constraint | GPU Optimization | CPU Fallback | Recommendation |\n|---|---|---|---|\n| Edge deployment | TensorRT / ONNX | OpenVINO | ONNX Runtime |\n| Cloud scaling | Triton | Standard serving | Triton Server |',
-    failures: '| Sourced Failure | Root Cause | Mitigation |\n|---|---|---|\n| GPU Out-Of-Memory | Large input dimensions | Implement strict request validation and dynamic batch size limits |',
-    scaling: 'Use concurrent model execution instances on a single GPU and implement model parallelization for extremely large model weights.',
-    caseStudy: 'A document QA system implemented model quantization (INT8) to deploy vision-language models on edge hardware. This reduced GPU memory utilization by 50% with less than 1% degradation in score metrics.',
-    roles: 'ML Engineer: Writes Triton configurations.\nPlatform Engineer: Allocates GPU clusters.'
-  },
-  'computer-vision': {
-    domainName: 'Computer Vision',
-    applications: ['Edge-based assembly line inspection', 'Live video analytics for retail safety', 'Autonomous vehicle perception blocks'],
-    architecture: 'Client (Video Stream)\n↓\nFrame Extractor & Resizer\n↓\nObject Detector (e.g. YOLO)\n↓\nTracker (e.g. ByteTrack)\n↓\nMetadata Publisher',
-    tradeOffs: '| Option | Edge Processing | Cloud Processing | Recommendation |\n|---|---|---|---|\n| Edge Device | Local, low latency | Limited compute power | Edge for safety |\n| Cloud Server | High compute power | Network dependency | Cloud for batch analytics |',
-    mlops: 'Observe camera drift (blur, lighting shifts) by monitoring average contrast and brightness parameters in the incoming frame stream.',
-    framework: '| Constraint | Local DSP / NPU | Cloud GPU | Recommendation |\n|---|---|---|---|\n| Offline Operation | Yes | No | Edge Deployment |\n| High Resolution | No | Yes | Hybrid/Cloud |',
-    failures: '| Sourced Failure | Root Cause | Mitigation |\n|---|---|---|\n| False Positives | Lighting shifts | Augment training dataset with synthetic lighting variations |',
-    scaling: 'Employ hardware-accelerated video decoding (e.g., NVIDIA NVDEC) and drop frames dynamically when the analysis queue backs up.',
-    caseStudy: 'An industrial inspection line implemented edge-based vision models. To avoid network latency bottleneck, frames were downsampled on-device and only anomalous frames were uploaded to the cloud repository.',
-    roles: 'CV Engineer: Benchmarks detector backbones.\nEmbedded Engineer: Compiles models for target NPUs.'
-  },
-  'llms': {
-    domainName: 'Large Language Models',
-    applications: ['Context-aware enterprise copilots', 'Structured metadata extraction', 'Automated customer support agents'],
-    architecture: 'User Client\n↓\nUser Input\n↓\nInput Guardrails\n↓\nOrchestrator (e.g. LangChain)\n↓\nLLM API / Host (vLLM)\n↓\nOutput Guardrails\n↓\nUser Response',
-    tradeOffs: '| Option | Latency | Hosting Cost | Domain Adaptation |\n|---|---|---|---|\n| API (Closed) | Variable | Pay-per-token | System prompting |\n| Self-hosted (vLLM) | Low (with batching) | High fixed hardware cost | Fine-tuning capability |',
-    mlops: 'Monitor token throughput (tokens/sec), generation latency, cost metrics, and detect semantic drift or policy violations in user prompts.',
-    framework: '| Constraint | Proprietary API | Self-Hosted Open LLM | Recommendation |\n|---|---|---|---|\n| Sensitive Data | No | Yes | Self-Hosted Open LLM |\n| Rapid Prototyping | Yes | No | Proprietary API |',
-    failures: '| Sourced Failure | Root Cause | Mitigation |\n|---|---|---|\n| Prompt Injection | Malicious inputs | Implement input schema validation and separate system instructions |',
-    scaling: 'Deploy vLLM with PagedAttention to maximize GPU memory efficiency and enable continuous batching for high concurrent traffic.',
-    caseStudy: 'An enterprise copilot team migrated from commercial APIs to a self-hosted 8x7B Mixture-of-Experts (MoE) model. By using vLLM, they reduced per-query latency by 40% and gained absolute data privacy.',
-    roles: 'AI Engineer: Engineers prompts and orchestrates tools.\nMLOps Engineer: Configures LLM host clusters.'
-  },
-  'rag': {
-    domainName: 'Retrieval-Augmented Generation',
-    applications: ['Internal developer documentation QA', 'Legal contract search systems', 'Medical guideline assistants'],
-    architecture: 'User Client\n↓\nQuery\n↓\nEmbedding Generator\n↓\nVector Search (ANN)\n↓\nMetadata Filtering\n↓\nReranker (Cross-Encoder)\n↓\nPrompt Constructor\n↓\nGenerator (LLM)',
-    tradeOffs: '| Component | Latency | Retrieval Accuracy | Resource Cost |\n|---|---|---|---|\n| Dense Retriever Only | Low | Medium | Low (vector search) |\n| Dense + Reranker | Medium | High | Medium (GPU inference) |',
-    mlops: 'Observe system performance using evaluation frameworks like RAGAS, measuring faithfulness, answer relevance, and context precision.',
-    framework: '| Constraint | Vector Store (ANN) | Relational DB | Recommendation |\n|---|---|---|---|\n| High-dimensional Search | Yes | No | Dedicated Vector Database |\n| Simple Keyword Search | No | Yes | Traditional BM25 |',
-    failures: '| Sourced Failure | Root Cause | Mitigation |\n|---|---|---|\n| Hallucination | Retrieval gap | Enforce strict grounding prompts and verify citation matches |',
-    scaling: 'Use vector index sharding and partition indices by tenant or metadata to avoid scanning unnecessary sections of the database.',
-    caseStudy: 'A customer support RAG pipeline integrated a Cross-Encoder reranker. This raised context precision by 25% while maintaining latency bounds by filtering candidate passages to the top 5 before reranking.',
-    roles: 'Search Engineer: Tunes vector indices and hybrid search.\nAI Engineer: Integrates retrieved context with LLM generation.'
-  },
-  'agents': {
-    domainName: 'AI Agents',
-    applications: ['Autonomous developer workspaces', 'Complex data analysis workflows', 'Automated ticketing and triage engines'],
-    architecture: 'Goal\n↓\nPlanning Block\n↓\nTool Selector\n↓\nTool Execution (Sandbox)\n↓\nEvaluation Loop\n↓\nGoal Assessment',
-    tradeOffs: '| Pattern | Latency | Token Cost | Reliability |\n|---|---|---|---|\n| ReAct (Looping) | High | High | Low (can drift) |\n| Linear Pipeline | Low | Low | High (predictable) |',
-    mlops: 'Audit agent traces to monitor step execution count, token usage, tool errors, and flag infinite execution loops in production.',
-    framework: '| Constraint | ReAct Planner | Linear DAG Router | Recommendation |\n|---|---|---|---|\n| Unpredictable tasks | Yes | No | ReAct Planner |\n| Deterministic process | No | Yes | Linear DAG Router |',
-    failures: '| Sourced Failure | Root Cause | Mitigation |\n|---|---|---|\n| Loop Lock | Tool failure | Impose strict loop counts and fallback safety boundaries |',
-    scaling: 'Isolate tool execution in self-contained worker pools and use asynchronous queues to manage long-running planning steps.',
-    caseStudy: 'An operations automation agent was modified from a free-form ReAct model to a structured routing graph. This reduced task failure rates from 30% to less than 2% by restricting tool paths.',
-    roles: 'AI Engineer: Builds graph topologies and tool interfaces.\nPlatform Engineer: Maintains sandbox execution environments.'
-  },
-  'mlops': {
-    domainName: 'MLOps',
-    applications: ['Continuous integration for ML models', 'Real-time drift monitoring', 'Enterprise model governance dashboards'],
-    architecture: 'Model Train Trigger\n↓\nCI/CD Pipeline\n↓\nModel Registration\n↓\nCanary Deployment\n↓\nMonitoring & Logging\n↓\nAlert / Rollback Engine',
-    tradeOffs: '| Deployment | Rollback Speed | Traffic Control | Infrastructure Cost |\n|---|---|---|---|\n| Canary (Split) | Fast | Fine-grained | High (duplicate pods) |\n| Blue/Green | Fast | Binary | High (duplicate pods) |',
-    mlops: 'Centralize logs, configure alerting thresholds on prediction latency anomalies, and track feature drift metrics across model versions.',
-    framework: '| Constraint | Canary Deploy | Direct Deploy | Recommendation |\n|---|---|---|---|\n| Critical Business | Yes | No | Canary Deployment |\n| Internal prototype | No | Yes | Direct Deployment |',
-    failures: '| Sourced Failure | Root Cause | Mitigation |\n|---|---|---|\n| Deployment Failure | Schema mismatch | Validate model input/output signatures in CI/CD pipeline |',
-    scaling: 'Use auto-scaling pod groups triggered by model server queue length rather than simple CPU/memory metrics.',
-    caseStudy: 'An online service automated model deployment using GitOps. Pre-deployment checks blocked a newly trained model from deploying when its signature validation detected a missing field, avoiding a production outage.',
-    roles: 'MLOps Engineer: Configures CI/CD pipelines.\nPlatform Engineer: Allocates Kubernetes nodes.'
-  }
+const FALLBACK_TRANSFER_DATA = {
+  domainName: 'General Systems Engineering',
+  applications: ['Automated business reporting pipelines', 'API request throttling databases', 'Enterprise search interfaces'],
+  architecture: 'User Client\n↓\nLoad Balancer\n↓\nApplication Backend\n↓\nDatabase Server\n↓\nCache Memory',
+  tradeOffs: '| Design | Latency | Compute Resource | Maintenance Cost |\n|---|---|---|---|\n| Simple Monolith | Medium | Low | Low |\n| Microservices | Low (with cache) | High | High |',
+  mlops: 'Log prediction/request latency metrics to observe systems health over time.',
+  framework: '| Constraint | Standard Database | Vector Index | Recommendation |\n|---|---|---|---|\n| Text Search | Yes | No | Relational Database |\n| Semantic Match | No | Yes | Vector Database |',
+  failures: '| Sourced Failure | Root Cause | Mitigation |\n|---|---|---|\n| Memory Leak | Unclosed connections | Implement strict context closures and pool recycling |',
+  scaling: 'Add read-through cache nodes and partition databases to handle traffic surges.',
+  caseStudy: 'An enterprise service successfully scaled its read capacity 10x by implementing a multi-node read replica database setup.',
+  roles: 'Software Engineer: Implements database transactions.\nPlatform Engineer: Maintains load balancer configurations.'
 };
 
 function createApplicationProfessionalTransferAgent() {
   const responseCache = new Map();
+  const sharedKnowledge = (typeof window !== 'undefined' && window.NeuralVerse?.sharedKnowledgeService)
+    ? window.NeuralVerse.sharedKnowledgeService
+    : createSharedKnowledgeService();
 
-  function initialize() {
-    return Promise.resolve({ status: 'ready', modes: Object.keys(MODE_LABELS).length });
+  async function initialize() {
+    await sharedKnowledge.initialize();
+    return { status: 'ready', modes: Object.keys(MODE_LABELS).length };
   }
 
   function canHandle(context) {
@@ -131,6 +66,7 @@ function createApplicationProfessionalTransferAgent() {
 
   async function run(context = {}, options = {}) {
     await initialize();
+    if (!context) context = {};
     const query = context.userQuery || '';
     const mode = options.mode || detectIntent(query);
     const topic = resolveTopic(context, query);
@@ -292,18 +228,22 @@ function createApplicationProfessionalTransferAgent() {
   }
 
   function getDomainData(domain) {
-    return CURATED_TRANSFER_MAP[domain] || {
-      domainName: 'General Systems Engineering',
-      applications: ['Automated business reporting pipelines', 'API request throttling databases', 'Enterprise search interfaces'],
-      architecture: 'User Client\n↓\nLoad Balancer\n↓\nApplication Backend\n↓\nDatabase Server\n↓\nCache Memory',
-      tradeOffs: '| Design | Latency | Compute Resource | Maintenance Cost |\n|---|---|---|---|\n| Simple Monolith | Medium | Low | Low |\n| Microservices | Low (with cache) | High | High |',
-      mlops: 'Log prediction/request latency metrics to observe systems health over time.',
-      framework: '| Constraint | Standard Database | Vector Index | Recommendation |\n|---|---|---|---|\n| Text Search | Yes | No | Relational Database |\n| Semantic Match | No | Yes | Vector Database |',
-      failures: '| Sourced Failure | Root Cause | Mitigation |\n|---|---|---|\n| Memory Leak | Unclosed connections | Implement strict context closures and pool recycling |',
-      scaling: 'Add read-through cache nodes and partition databases to handle traffic surges.',
-      caseStudy: 'An enterprise service successfully scaled its read capacity 10x by implementing a multi-node read replica database setup.',
-      roles: 'Software Engineer: Implements database transactions.\nPlatform Engineer: Maintains load balancer configurations.'
-    };
+    const cached = sharedKnowledge.getSyncDomain(domain);
+    if (cached) {
+      return {
+        domainName: cached.title,
+        applications: cached.industryApplications || [],
+        architecture: (cached.professionalInsights || []).join('\n'),
+        tradeOffs: '',
+        mlops: (cached.professionalInsights || []).slice(0, 2).join('\n'),
+        framework: '',
+        failures: '',
+        scaling: (cached.professionalInsights || []).slice(-1).join('\n'),
+        caseStudy: '',
+        roles: ''
+      };
+    }
+    return FALLBACK_TRANSFER_DATA;
   }
 
   function resolveDomain(topic, query) {

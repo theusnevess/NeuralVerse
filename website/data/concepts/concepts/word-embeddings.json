@@ -1,0 +1,89 @@
+{
+  "id": "word-embeddings",
+  "name": "Word Embeddings",
+  "slug": "word-embeddings",
+  "summary": "Dense vector representations of words that capture semantic relationships.",
+  "definition": "Word embeddings map words to dense vectors in continuous space where semantically similar words are close together. Word2Vec, GloVe, and FastText are foundational approaches.",
+  "aliases": [
+    "embeddings",
+    "word vectors",
+    "word representations"
+  ],
+  "keywords": [
+    "embedding",
+    "word2vec",
+    "glove",
+    "vector",
+    "semantic"
+  ],
+  "sharedKnowledgeDomains": [
+    "embeddings"
+  ],
+  "relatedConcepts": [
+    {
+      "concept": "semantic-search",
+      "type": "uses"
+    },
+    {
+      "concept": "vector-similarity",
+      "type": "uses"
+    }
+  ],
+  "prerequisiteConcepts": [],
+  "artifactReferences": [
+    "artifact-contrastive-learning-comparison-table",
+    "artifact-contrastive-learning-exercise",
+    "artifact-contrastive-learning-explanatory-text",
+    "artifact-contrastive-learning-interactive-visualization",
+    "artifact-contrastive-learning-visual-intuition",
+    "artifact-cosine-similarity-math-comparison-table",
+    "artifact-cosine-similarity-math-exercise",
+    "artifact-cosine-similarity-math-explanatory-text",
+    "artifact-cosine-similarity-math-interactive-visualization",
+    "artifact-cosine-similarity-math-visual-intuition",
+    "artifact-cross-modal-embeddings-comparison-table",
+    "artifact-cross-modal-embeddings-exercise",
+    "artifact-cross-modal-embeddings-explanatory-text",
+    "artifact-cross-modal-embeddings-interactive-visualization",
+    "artifact-cross-modal-embeddings-visual-intuition",
+    "artifact-embedding-models-comparison-table",
+    "artifact-embedding-models-exercise",
+    "artifact-embedding-models-explanatory-text",
+    "artifact-embedding-models-interactive-visualization",
+    "artifact-embedding-models-visual-intuition",
+    "artifact-embeddings-semantic-similarity-comparison-table",
+    "artifact-embeddings-semantic-similarity-exercise",
+    "artifact-embeddings-semantic-similarity-explanatory-text",
+    "artifact-embeddings-semantic-similarity-interactive-visualization",
+    "artifact-embeddings-semantic-similarity-visual-intuition",
+    "artifact-tokenization-representations-comparison-table",
+    "artifact-tokenization-representations-exercise",
+    "artifact-tokenization-representations-explanatory-text",
+    "artifact-tokenization-representations-interactive-visualization",
+    "artifact-tokenization-representations-visual-intuition",
+    "artifact-unsupervised-learning-comparison-table",
+    "artifact-unsupervised-learning-exercise",
+    "artifact-unsupervised-learning-explanatory-text",
+    "artifact-unsupervised-learning-interactive-visualization",
+    "artifact-unsupervised-learning-visual-intuition"
+  ],
+  "difficulty": "beginner",
+  "category": "embeddings",
+  "canonicalStatus": "Reviewed",
+  "version": "1.0.0",
+  "reviewedBy": "NV-1100-P4 Implementation",
+  "lastReviewed": "2026-06-24",
+  "sourceReferences": [
+    {
+      "id": "ref-emb-0",
+      "title": "Efficient Estimation of Word Representations in Vector Space",
+      "type": "paper",
+      "description": "Mikolov et al. 2013 - Word2Vec"
+    }
+  ],
+  "examples": [],
+  "counterExamples": [],
+  "commonMisconceptions": [],
+  "recommendedVisualizations": [],
+  "recommendedLabs": []
+}

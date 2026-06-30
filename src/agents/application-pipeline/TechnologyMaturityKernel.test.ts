@@ -434,8 +434,8 @@ describe('Technology Maturity Kernel — Registry', () => {
   });
 
   it('should sort ecosystem profiles deterministically', () => {
-    const e2 = { ...VALID_ECOSYSTEM, ecosystemId: 'eco-002', ecosystemStability: 'stable' };
-    const e1 = { ...VALID_ECOSYSTEM, ecosystemId: 'eco-001', ecosystemStability: 'mature' };
+    const e2 = { ...VALID_ECOSYSTEM, ecosystemId: 'eco-002', ecosystemStability: 'stable' as const };
+    const e1 = { ...VALID_ECOSYSTEM, ecosystemId: 'eco-001', ecosystemStability: 'mature' as const };
 
     const registry = composeTechnologyMaturityRegistry(
       [VALID_MATURITY],
@@ -450,8 +450,8 @@ describe('Technology Maturity Kernel — Registry', () => {
   });
 
   it('should sort adoption profiles deterministically', () => {
-    const a2 = { ...VALID_ADOPTION, adoptionId: 'ado-002', industryAdoptionType: 'startup' };
-    const a1 = { ...VALID_ADOPTION, adoptionId: 'ado-001', industryAdoptionType: 'enterprise' };
+    const a2 = { ...VALID_ADOPTION, adoptionId: 'ado-002', industryAdoptionType: 'startup' as const };
+    const a1 = { ...VALID_ADOPTION, adoptionId: 'ado-001', industryAdoptionType: 'enterprise' as const };
 
     const registry = composeTechnologyMaturityRegistry(
       [VALID_MATURITY],
@@ -466,8 +466,8 @@ describe('Technology Maturity Kernel — Registry', () => {
   });
 
   it('should sort classifications deterministically', () => {
-    const c2 = { ...VALID_CLASSIFICATION, classificationId: 'cls-002', lifecycleType: 'growing' };
-    const c1 = { ...VALID_CLASSIFICATION, classificationId: 'cls-001', lifecycleType: 'mature' };
+    const c2 = { ...VALID_CLASSIFICATION, classificationId: 'cls-002', lifecycleType: 'growing' as const };
+    const c1 = { ...VALID_CLASSIFICATION, classificationId: 'cls-001', lifecycleType: 'mature' as const };
 
     const registry = composeTechnologyMaturityRegistry(
       [VALID_MATURITY],
@@ -482,8 +482,8 @@ describe('Technology Maturity Kernel — Registry', () => {
   });
 
   it('should sort indicators deterministically', () => {
-    const i2 = { ...VALID_INDICATOR, indicatorId: 'ind-002', indicatorType: 'tooling' };
-    const i1 = { ...VALID_INDICATOR, indicatorId: 'ind-001', indicatorType: 'documentation' };
+    const i2 = { ...VALID_INDICATOR, indicatorId: 'ind-002', indicatorType: 'tooling' as const };
+    const i1 = { ...VALID_INDICATOR, indicatorId: 'ind-001', indicatorType: 'documentation' as const };
 
     const registry = composeTechnologyMaturityRegistry(
       [VALID_MATURITY],
@@ -691,7 +691,7 @@ describe('Technology Maturity Kernel — Validation', () => {
       registryVersion: '1.0.0',
       compositionVersion: '1.0.0',
       decisions: [],
-      deterministic: false,
+      deterministic: false as true,
       generatedFrom: 'deterministic_technology_maturity_kernel',
       randomUsed: false,
       timeDependency: false,

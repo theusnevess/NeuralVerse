@@ -1,0 +1,71 @@
+{
+  "id": "model-deployment",
+  "name": "Model Deployment",
+  "slug": "model-deployment",
+  "summary": "The process of making trained models available for serving predictions in production.",
+  "definition": "Model deployment encompasses packaging, serving, versioning, and scaling models for production inference. Includes containerization, API endpoints, and load balancing.",
+  "aliases": [
+    "model serving",
+    "inference deployment"
+  ],
+  "keywords": [
+    "deployment",
+    "serving",
+    "inference",
+    "production",
+    "API"
+  ],
+  "sharedKnowledgeDomains": [
+    "mlops"
+  ],
+  "relatedConcepts": [
+    {
+      "concept": "model-monitoring",
+      "type": "supports"
+    },
+    {
+      "concept": "data-drift",
+      "type": "uses"
+    }
+  ],
+  "prerequisiteConcepts": [],
+  "artifactReferences": [
+    "artifact-deployment-strategies-and-rollbacks-comparison-table",
+    "artifact-deployment-strategies-and-rollbacks-exercise",
+    "artifact-deployment-strategies-and-rollbacks-explanatory-text",
+    "artifact-deployment-strategies-and-rollbacks-interactive-visualization",
+    "artifact-deployment-strategies-and-rollbacks-visual-intuition",
+    "artifact-ml-pipelines-and-orchestration-comparison-table",
+    "artifact-ml-pipelines-and-orchestration-exercise",
+    "artifact-ml-pipelines-and-orchestration-explanatory-text",
+    "artifact-ml-pipelines-and-orchestration-interactive-visualization",
+    "artifact-ml-pipelines-and-orchestration-visual-intuition",
+    "artifact-model-monitoring-observability-comparison-table",
+    "artifact-model-monitoring-observability-exercise",
+    "artifact-model-monitoring-observability-explanatory-text",
+    "artifact-model-monitoring-observability-interactive-visualization",
+    "artifact-model-monitoring-observability-visual-intuition",
+    "artifact-model-serving-and-inference-comparison-table",
+    "artifact-model-serving-and-inference-exercise",
+    "artifact-model-serving-and-inference-explanatory-text",
+    "artifact-model-serving-and-inference-interactive-visualization",
+    "artifact-model-serving-and-inference-visual-intuition",
+    "artifact-model-versioning-and-experiment-tracking-comparison-table",
+    "artifact-model-versioning-and-experiment-tracking-exercise",
+    "artifact-model-versioning-and-experiment-tracking-explanatory-text",
+    "artifact-model-versioning-and-experiment-tracking-interactive-visualization",
+    "artifact-model-versioning-and-experiment-tracking-visual-intuition"
+  ],
+  "difficulty": "advanced",
+  "category": "mlops",
+  "canonicalStatus": "Reviewed",
+  "version": "1.0.0",
+  "reviewedBy": "NV-1100-P4 Implementation",
+  "lastReviewed": "2026-06-24",
+  "sourceReferences": [],
+  "examples": [],
+  "counterExamples": [],
+  "commonMisconceptions": [],
+  "recommendedVisualizations": [],
+  "recommendedLabs": []
+}

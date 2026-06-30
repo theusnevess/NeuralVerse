@@ -1,0 +1,194 @@
+/* Semantic Learning Intelligence — Styles
+   NV-1100-P9 */
+
+.nv-sem-panel {
+  padding: 24px;
+  background: var(--nv-color-surface, #1a1a2e);
+  border-radius: 12px;
+  border: 1px solid var(--nv-color-border, rgba(255,255,255,0.1));
+  max-width: 800px;
+}
+
+.nv-sem-panel-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--nv-color-text, #e0e0e0);
+  margin: 0 0 4px 0;
+}
+
+.nv-sem-panel-subtitle {
+  font-size: 0.9rem;
+  color: var(--nv-color-text-muted, #888);
+  margin: 0 0 20px 0;
+}
+
+.nv-sem-section {
+  margin-bottom: 20px;
+}
+
+.nv-sem-section-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--nv-color-text, #e0e0e0);
+  margin: 0 0 10px 0;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--nv-color-border, rgba(255,255,255,0.1));
+}
+
+.nv-sem-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nv-sem-item {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--nv-color-border-light, rgba(255,255,255,0.05));
+}
+
+.nv-sem-item:last-child {
+  border-bottom: none;
+}
+
+.nv-sem-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--nv-color-text, #e0e0e0);
+  padding: 6px 8px;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+
+.nv-sem-link:hover,
+.nv-sem-link:focus {
+  background: var(--nv-color-surface-hover, rgba(255,255,255,0.05));
+  outline: 2px solid var(--nv-color-accent, #06b6d4);
+  outline-offset: 2px;
+}
+
+.nv-sem-item-name {
+  font-weight: 500;
+  flex: 1;
+}
+
+.nv-sem-item-type {
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.nv-sem-type-concept {
+  background: rgba(6, 182, 212, 0.15);
+  color: #06b6d4;
+}
+
+.nv-sem-type-artifact {
+  background: rgba(168, 85, 247, 0.15);
+  color: #a855f7;
+}
+
+.nv-sem-type-laboratory {
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+}
+
+.nv-sem-type-memory {
+  background: rgba(251, 191, 36, 0.15);
+  color: #fbbf24;
+}
+
+.nv-sem-type-review {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+.nv-sem-type-shared-knowledge-domain {
+  background: rgba(59, 130, 246, 0.15);
+  color: #3b82f6;
+}
+
+.nv-sem-item-reason {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--nv-color-text-muted, #888);
+  margin-top: 4px;
+  padding-left: 8px;
+}
+
+.nv-sem-item-depth {
+  font-size: 0.75rem;
+  color: var(--nv-color-text-muted, #888);
+}
+
+.nv-sem-footer {
+  font-size: 0.8rem;
+  color: var(--nv-color-text-muted, #666);
+  text-align: center;
+  margin-top: 20px;
+  padding-top: 12px;
+  border-top: 1px solid var(--nv-color-border, rgba(255,255,255,0.1));
+  font-style: italic;
+}
+
+.nv-sem-empty {
+  color: var(--nv-color-text-muted, #888);
+  text-align: center;
+  padding: 20px;
+}
+
+.nv-sem-workspace-card {
+  background: var(--nv-color-surface, #1a1a2e);
+  border-radius: 12px;
+  border: 1px solid var(--nv-color-border, rgba(255,255,255,0.1));
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.nv-sem-card-header {
+  margin-bottom: 16px;
+}
+
+.nv-sem-card-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--nv-color-text, #e0e0e0);
+  margin: 0 0 4px 0;
+}
+
+.nv-sem-card-concept {
+  font-size: 0.85rem;
+  color: var(--nv-color-text-muted, #888);
+  margin: 0;
+}
+
+.nv-sem-card-body {
+  display: grid;
+  gap: 12px;
+}
+
+.nv-sem-traversal {
+  margin-top: 16px;
+}
+
+.nv-sem-traversal-info {
+  font-size: 0.85rem;
+  color: var(--nv-color-text-muted, #888);
+  margin: 0 0 12px 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .nv-sem-panel {
+    padding: 16px;
+  }
+  .nv-sem-link {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+}

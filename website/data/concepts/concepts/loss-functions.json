@@ -1,0 +1,73 @@
+{
+  "id": "loss-functions",
+  "name": "Loss Functions",
+  "slug": "loss-functions",
+  "summary": "Mathematical functions that quantify the difference between predictions and target values.",
+  "definition": "Loss functions measure prediction error. Common choices include cross-entropy for classification, MSE for regression, and contrastive loss for similarity learning.",
+  "aliases": [
+    "objective functions",
+    "cost functions",
+    "error functions"
+  ],
+  "keywords": [
+    "loss",
+    "objective",
+    "error",
+    "cross-entropy",
+    "MSE"
+  ],
+  "sharedKnowledgeDomains": [
+    "optimization"
+  ],
+  "relatedConcepts": [
+    {
+      "concept": "gradient-descent",
+      "type": "uses"
+    }
+  ],
+  "prerequisiteConcepts": [],
+  "artifactReferences": [
+    "artifact-bayes-theorem-comparison-table",
+    "artifact-bayes-theorem-exercise",
+    "artifact-bayes-theorem-explanatory-text",
+    "artifact-bayes-theorem-interactive-visualization",
+    "artifact-bayes-theorem-visual-intuition",
+    "artifact-loss-functions-comparison-table",
+    "artifact-loss-functions-exercise",
+    "artifact-loss-functions-explanatory-text",
+    "artifact-loss-functions-interactive-visualization",
+    "artifact-loss-functions-visual-intuition",
+    "artifact-probability-distributions-comparison-table",
+    "artifact-probability-distributions-exercise",
+    "artifact-probability-distributions-explanatory-text",
+    "artifact-probability-distributions-interactive-visualization",
+    "artifact-probability-distributions-visual-intuition",
+    "artifact-rlhf-concepts-comparison-table",
+    "artifact-rlhf-concepts-exercise",
+    "artifact-rlhf-concepts-explanatory-text",
+    "artifact-rlhf-concepts-interactive-visualization",
+    "artifact-rlhf-concepts-visual-intuition",
+    "artifact-supervised-fine-tuning-comparison-table",
+    "artifact-supervised-fine-tuning-exercise",
+    "artifact-supervised-fine-tuning-explanatory-text",
+    "artifact-supervised-fine-tuning-interactive-visualization",
+    "artifact-supervised-fine-tuning-visual-intuition",
+    "artifact-supervised-learning-comparison-table",
+    "artifact-supervised-learning-exercise",
+    "artifact-supervised-learning-explanatory-text",
+    "artifact-supervised-learning-interactive-visualization",
+    "artifact-supervised-learning-visual-intuition"
+  ],
+  "difficulty": "beginner",
+  "category": "optimization",
+  "canonicalStatus": "Reviewed",
+  "version": "1.0.0",
+  "reviewedBy": "NV-1100-P4 Implementation",
+  "lastReviewed": "2026-06-24",
+  "sourceReferences": [],
+  "examples": [],
+  "counterExamples": [],
+  "commonMisconceptions": [],
+  "recommendedVisualizations": [],
+  "recommendedLabs": []
+}

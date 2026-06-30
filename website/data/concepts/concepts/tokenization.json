@@ -1,0 +1,54 @@
+{
+  "id": "tokenization",
+  "name": "Tokenization",
+  "slug": "tokenization",
+  "summary": "The process of converting text into discrete tokens for model input.",
+  "definition": "Tokenization splits text into subword units (tokens) using algorithms like Byte-Pair Encoding (BPE), WordPiece, or SentencePiece. It bridges human language and model vocabulary.",
+  "aliases": [
+    "text tokenization",
+    "BPE",
+    "WordPiece"
+  ],
+  "keywords": [
+    "tokenization",
+    "BPE",
+    "token",
+    "subword",
+    "vocabulary"
+  ],
+  "sharedKnowledgeDomains": [
+    "llms",
+    "transformers"
+  ],
+  "relatedConcepts": [
+    {
+      "concept": "word-embeddings",
+      "type": "uses"
+    }
+  ],
+  "prerequisiteConcepts": [],
+  "artifactReferences": [
+    "artifact-embedding-models-comparison-table",
+    "artifact-embedding-models-exercise",
+    "artifact-embedding-models-explanatory-text",
+    "artifact-embedding-models-interactive-visualization",
+    "artifact-embedding-models-visual-intuition",
+    "artifact-tokenization-representations-comparison-table",
+    "artifact-tokenization-representations-exercise",
+    "artifact-tokenization-representations-explanatory-text",
+    "artifact-tokenization-representations-interactive-visualization",
+    "artifact-tokenization-representations-visual-intuition"
+  ],
+  "difficulty": "beginner",
+  "category": "nlp",
+  "canonicalStatus": "Reviewed",
+  "version": "1.0.0",
+  "reviewedBy": "NV-1100-P4 Implementation",
+  "lastReviewed": "2026-06-24",
+  "sourceReferences": [],
+  "examples": [],
+  "counterExamples": [],
+  "commonMisconceptions": [],
+  "recommendedVisualizations": [],
+  "recommendedLabs": []
+}

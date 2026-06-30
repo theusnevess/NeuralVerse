@@ -1,0 +1,92 @@
+{
+  "id": "gradient-descent",
+  "name": "Gradient Descent",
+  "slug": "gradient-descent",
+  "summary": "An iterative optimization algorithm that minimizes a loss function by moving in the direction of steepest descent.",
+  "definition": "Gradient descent updates model parameters by subtracting the gradient of the loss function scaled by a learning rate: θ = θ - α∇L(θ).",
+  "aliases": [
+    "steepest descent",
+    "gradient optimization"
+  ],
+  "keywords": [
+    "optimization",
+    "gradient",
+    "learning rate",
+    "loss",
+    "convergence"
+  ],
+  "sharedKnowledgeDomains": [
+    "optimization"
+  ],
+  "relatedConcepts": [
+    {
+      "concept": "linear-models",
+      "type": "uses"
+    },
+    {
+      "concept": "regularization",
+      "type": "supports"
+    },
+    {
+      "concept": "optimizers",
+      "type": "extends"
+    }
+  ],
+  "prerequisiteConcepts": [],
+  "artifactReferences": [
+    "artifact-ai-for-scientific-discovery-comparison-table",
+    "artifact-ai-for-scientific-discovery-exercise",
+    "artifact-ai-for-scientific-discovery-explanatory-text",
+    "artifact-ai-for-scientific-discovery-interactive-visualization",
+    "artifact-ai-for-scientific-discovery-visual-intuition",
+    "artifact-backpropagation-comparison-table",
+    "artifact-backpropagation-exercise",
+    "artifact-backpropagation-explanatory-text",
+    "artifact-backpropagation-interactive-visualization",
+    "artifact-backpropagation-visual-intuition",
+    "artifact-epochs-batches-learning-rate-comparison-table",
+    "artifact-epochs-batches-learning-rate-exercise",
+    "artifact-epochs-batches-learning-rate-explanatory-text",
+    "artifact-epochs-batches-learning-rate-interactive-visualization",
+    "artifact-epochs-batches-learning-rate-visual-intuition",
+    "artifact-expected-value-variance-comparison-table",
+    "artifact-expected-value-variance-exercise",
+    "artifact-expected-value-variance-explanatory-text",
+    "artifact-expected-value-variance-interactive-visualization",
+    "artifact-expected-value-variance-visual-intuition",
+    "artifact-gradient-descent-optimization-comparison-table",
+    "artifact-gradient-descent-optimization-exercise",
+    "artifact-gradient-descent-optimization-explanatory-text",
+    "artifact-gradient-descent-optimization-interactive-visualization",
+    "artifact-gradient-descent-optimization-visual-intuition",
+    "artifact-loss-functions-comparison-table",
+    "artifact-loss-functions-exercise",
+    "artifact-loss-functions-explanatory-text",
+    "artifact-loss-functions-interactive-visualization",
+    "artifact-loss-functions-visual-intuition",
+    "artifact-supervised-learning-comparison-table",
+    "artifact-supervised-learning-exercise",
+    "artifact-supervised-learning-explanatory-text",
+    "artifact-supervised-learning-interactive-visualization",
+    "artifact-supervised-learning-visual-intuition"
+  ],
+  "difficulty": "beginner",
+  "category": "optimization",
+  "canonicalStatus": "Reviewed",
+  "version": "1.0.0",
+  "reviewedBy": "NV-1100-P4 Implementation",
+  "lastReviewed": "2026-06-24",
+  "sourceReferences": [
+    {
+      "id": "ref-gd-0",
+      "title": "An overview of gradient descent optimization algorithms",
+      "type": "article",
+      "description": "Survey of gradient descent variants"
+    }
+  ],
+  "examples": [],
+  "counterExamples": [],
+  "commonMisconceptions": [],
+  "recommendedVisualizations": [],
+  "recommendedLabs": []
+}

@@ -4,7 +4,12 @@
  * Offline, deterministic research mentor for connecting curriculum concepts to
  * historical context, landmark directions, benchmarks, trends, open problems,
  * frontier topics, and confidence-labeled research guidance.
+ *
+ * Uses the shared knowledge repository (NV-1100-P3) for domain data.
+ * Falls back to local defaults if shared data is unavailable.
  */
+
+import { createSharedKnowledgeService } from '../shared-knowledge/shared-knowledge-service.js';
 
 const RESEARCH_INTENT_PATTERNS = {
   historical_context: ['history', 'historical', 'evolved', 'timeline', 'origin', 'milestone'],
@@ -34,49 +39,22 @@ const MODE_LABELS = {
 
 const CONFIDENCE_LEVELS = ['Established', 'Emerging', 'Experimental', 'Speculative'];
 
-const CURATED_RESEARCH_MAP = {
-  attention: {
-    confidence: 'Established',
-    landmarks: [
-      ['Attention Is All You Need', 'Vaswani et al.', '2017', 'Introduced the Transformer architecture and scaled self-attention as a central sequence modeling mechanism.'],
-      ['Neural Machine Translation by Jointly Learning to Align and Translate', 'Bahdanau et al.', '2014', 'Popularized attention for alignment in neural machine translation.']
-    ],
-    benchmarks: ['GLUE', 'SuperGLUE', 'MMLU'],
-    trends: ['efficient attention', 'long-context modeling', 'multimodal attention']
-  },
-  retrieval: {
-    confidence: 'Emerging',
-    landmarks: [
-      ['Dense Passage Retrieval for Open-Domain Question Answering', 'Karpukhin et al.', '2020', 'Advanced dense vector retrieval for open-domain QA.'],
-      ['Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks', 'Lewis et al.', '2020', 'Connected neural retrieval with generation for knowledge-intensive tasks.']
-    ],
-    benchmarks: ['BEIR', 'MS MARCO', 'RAGAS'],
-    trends: ['hybrid retrieval', 'reranking', 'attribution and grounding']
-  },
-  vision: {
-    confidence: 'Established',
-    landmarks: [
-      ['ImageNet Classification with Deep Convolutional Neural Networks', 'Krizhevsky et al.', '2012', 'Demonstrated deep CNN effectiveness at ImageNet scale.'],
-      ['An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale', 'Dosovitskiy et al.', '2020', 'Showed Vision Transformers can compete with CNNs when scaled.']
-    ],
-    benchmarks: ['ImageNet', 'COCO'],
-    trends: ['vision-language models', 'foundation models for perception', 'efficient segmentation']
-  },
-  agents: {
-    confidence: 'Experimental',
-    landmarks: [
-      ['ReAct: Synergizing Reasoning and Acting in Language Models', 'Yao et al.', '2022', 'Combined reasoning traces with action/tool interaction patterns.']
-    ],
-    benchmarks: ['HumanEval', 'agent task suites vary by implementation'],
-    trends: ['tool use', 'memory', 'planning reliability', 'evaluation methodology']
-  }
+const FALLBACK_RESEARCH_DATA = {
+  confidence: 'Emerging',
+  landmarks: [['Curated foundational direction unavailable offline', 'Unknown', 'N/A', 'The agent avoids fabricating papers when offline mappings are incomplete.']],
+  benchmarks: ['domain-specific benchmark varies'],
+  trends: ['evaluation reliability', 'efficiency', 'robustness']
 };
 
 function createResearchStateOfArtAgent() {
   const responseCache = new Map();
+  const sharedKnowledge = (typeof window !== 'undefined' && window.NeuralVerse?.sharedKnowledgeService)
+    ? window.NeuralVerse.sharedKnowledgeService
+    : createSharedKnowledgeService();
 
-  function initialize() {
-    return Promise.resolve({ status: 'ready', modes: Object.keys(MODE_LABELS).length });
+  async function initialize() {
+    await sharedKnowledge.initialize();
+    return { status: 'ready', modes: Object.keys(MODE_LABELS).length };
   }
 
   function canHandle(context) {
@@ -85,6 +63,7 @@ function createResearchStateOfArtAgent() {
 
   async function run(context = {}, options = {}) {
     await initialize();
+    if (!context) context = {};
     const query = context.userQuery || '';
     const mode = options.mode || detectIntent(query);
     const topic = resolveTopic(context, query);
@@ -243,12 +222,17 @@ function createResearchStateOfArtAgent() {
   }
 
   function getDomainData(domain) {
-    return CURATED_RESEARCH_MAP[domain] || {
-      confidence: 'Emerging',
-      landmarks: [['Curated foundational direction unavailable offline', 'Unknown', 'N/A', 'The agent avoids fabricating papers when offline mappings are incomplete.']],
-      benchmarks: ['domain-specific benchmark varies'],
-      trends: ['evaluation reliability', 'efficiency', 'robustness']
-    };
+    const cached = sharedKnowledge.getSyncDomain(domain);
+    if (cached) {
+      const researchData = {
+        confidence: cached.canonicalStatus === 'Reviewed' ? 'Established' : 'Emerging',
+        landmarks: (cached.landmarkReferences || []).map((ref) => [ref.title, ref.authors, ref.year, ref.contribution]),
+        benchmarks: (cached.keywords || []).slice(0, 3),
+        trends: (cached.concepts || []).slice(0, 3)
+      };
+      return researchData;
+    }
+    return FALLBACK_RESEARCH_DATA;
   }
 
   function chooseConfidence(mode, domain, query) {
@@ -261,11 +245,11 @@ function createResearchStateOfArtAgent() {
 
   function resolveDomain(topic, query) {
     const lower = `${topic} ${query}`.toLowerCase();
-    if (lower.includes('attention') || lower.includes('transformer')) return 'attention';
-    if (lower.includes('retrieval') || lower.includes('rag') || lower.includes('ranking')) return 'retrieval';
-    if (lower.includes('vision') || lower.includes('cnn') || lower.includes('image') || lower.includes('segmentation')) return 'vision';
+    if (lower.includes('attention') || lower.includes('transformer')) return 'transformers';
+    if (lower.includes('retrieval') || lower.includes('rag') || lower.includes('ranking')) return 'rag';
+    if (lower.includes('vision') || lower.includes('cnn') || lower.includes('image') || lower.includes('segmentation')) return 'computer-vision';
     if (lower.includes('agent') || lower.includes('tool use') || lower.includes('planning')) return 'agents';
-    return 'general-ai';
+    return 'machine-learning';
   }
 
   function extractComparisonPair(query) {

@@ -1,0 +1,57 @@
+{
+  "id": "data-augmentation",
+  "name": "Data Augmentation",
+  "slug": "data-augmentation",
+  "summary": "Techniques that artificially expand training data by applying transformations to existing samples.",
+  "definition": "Data augmentation creates new training examples by applying random but realistic transformations (rotation, flipping, cropping, color jitter) to existing data.",
+  "aliases": [
+    "augmentation",
+    "data expansion"
+  ],
+  "keywords": [
+    "augmentation",
+    "transformation",
+    "training data",
+    "diversity"
+  ],
+  "sharedKnowledgeDomains": [
+    "deep-learning",
+    "computer-vision"
+  ],
+  "relatedConcepts": [
+    {
+      "concept": "convolution",
+      "type": "supports"
+    }
+  ],
+  "prerequisiteConcepts": [],
+  "artifactReferences": [
+    "artifact-domain-adaptation-comparison-table",
+    "artifact-domain-adaptation-exercise",
+    "artifact-domain-adaptation-explanatory-text",
+    "artifact-domain-adaptation-interactive-visualization",
+    "artifact-domain-adaptation-visual-intuition",
+    "artifact-sampling-bias-comparison-table",
+    "artifact-sampling-bias-exercise",
+    "artifact-sampling-bias-explanatory-text",
+    "artifact-sampling-bias-interactive-visualization",
+    "artifact-sampling-bias-visual-intuition",
+    "artifact-transfer-learning-vision-comparison-table",
+    "artifact-transfer-learning-vision-exercise",
+    "artifact-transfer-learning-vision-explanatory-text",
+    "artifact-transfer-learning-vision-interactive-visualization",
+    "artifact-transfer-learning-vision-visual-intuition"
+  ],
+  "difficulty": "beginner",
+  "category": "deep-learning",
+  "canonicalStatus": "Reviewed",
+  "version": "1.0.0",
+  "reviewedBy": "NV-1100-P4 Implementation",
+  "lastReviewed": "2026-06-24",
+  "sourceReferences": [],
+  "examples": [],
+  "counterExamples": [],
+  "commonMisconceptions": [],
+  "recommendedVisualizations": [],
+  "recommendedLabs": []
+}

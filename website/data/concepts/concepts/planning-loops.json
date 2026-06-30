@@ -1,0 +1,68 @@
+{
+  "id": "planning-loops",
+  "name": "Planning Loops",
+  "slug": "planning-loops",
+  "summary": "Iterative reasoning cycles where agents decompose tasks, execute steps, and evaluate progress.",
+  "definition": "Planning loops enable agents to break complex goals into subtasks, execute them sequentially, evaluate results, and adjust plans based on intermediate outcomes.",
+  "aliases": [
+    "agent planning",
+    "execution loops"
+  ],
+  "keywords": [
+    "planning",
+    "loop",
+    "decomposition",
+    "iteration",
+    "evaluation"
+  ],
+  "sharedKnowledgeDomains": [
+    "agents"
+  ],
+  "relatedConcepts": [
+    {
+      "concept": "react-pattern",
+      "type": "implements"
+    },
+    {
+      "concept": "tool-calling",
+      "type": "uses"
+    }
+  ],
+  "prerequisiteConcepts": [
+    "react-pattern"
+  ],
+  "artifactReferences": [
+    "artifact-agentic-ai-fundamentals-comparison-table",
+    "artifact-agentic-ai-fundamentals-exercise",
+    "artifact-agentic-ai-fundamentals-explanatory-text",
+    "artifact-agentic-ai-fundamentals-interactive-visualization",
+    "artifact-agentic-ai-fundamentals-visual-intuition",
+    "artifact-multi-agent-systems-comparison-table",
+    "artifact-multi-agent-systems-exercise",
+    "artifact-multi-agent-systems-explanatory-text",
+    "artifact-multi-agent-systems-interactive-visualization",
+    "artifact-multi-agent-systems-visual-intuition",
+    "artifact-planning-task-decomposition-comparison-table",
+    "artifact-planning-task-decomposition-exercise",
+    "artifact-planning-task-decomposition-explanatory-text",
+    "artifact-planning-task-decomposition-interactive-visualization",
+    "artifact-planning-task-decomposition-visual-intuition",
+    "artifact-reflection-self-correction-comparison-table",
+    "artifact-reflection-self-correction-exercise",
+    "artifact-reflection-self-correction-explanatory-text",
+    "artifact-reflection-self-correction-interactive-visualization",
+    "artifact-reflection-self-correction-visual-intuition"
+  ],
+  "difficulty": "expert",
+  "category": "agents",
+  "canonicalStatus": "Reviewed",
+  "version": "1.0.0",
+  "reviewedBy": "NV-1100-P4 Implementation",
+  "lastReviewed": "2026-06-24",
+  "sourceReferences": [],
+  "examples": [],
+  "counterExamples": [],
+  "commonMisconceptions": [],
+  "recommendedVisualizations": [],
+  "recommendedLabs": []
+}

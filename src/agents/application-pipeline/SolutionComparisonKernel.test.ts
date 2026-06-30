@@ -394,8 +394,8 @@ describe('Solution Comparison Kernel — Registry', () => {
   });
 
   it('should sort comparisons deterministically', () => {
-    const comp2 = { ...VALID_COMPARISON, comparisonId: 'comp-002', comparisonType: 'architectural' };
-    const comp1 = { ...VALID_COMPARISON, comparisonId: 'comp-001', comparisonType: 'performance' };
+    const comp2 = { ...VALID_COMPARISON, comparisonId: 'comp-002', comparisonType: 'architectural' as const };
+    const comp1 = { ...VALID_COMPARISON, comparisonId: 'comp-001', comparisonType: 'performance' as const };
 
     const registry = composeSolutionComparisonRegistry(
       [VALID_SOLUTION, VALID_SOLUTION_2],
@@ -409,8 +409,8 @@ describe('Solution Comparison Kernel — Registry', () => {
   });
 
   it('should sort alternatives deterministically', () => {
-    const alt2 = { ...VALID_ALTERNATIVE, alternativeId: 'alt-002', alternativeType: 'replacement' };
-    const alt1 = { ...VALID_ALTERNATIVE, alternativeId: 'alt-001', alternativeType: 'complementary' };
+    const alt2 = { ...VALID_ALTERNATIVE, alternativeId: 'alt-002', alternativeType: 'replacement' as const };
+    const alt1 = { ...VALID_ALTERNATIVE, alternativeId: 'alt-001', alternativeType: 'complementary' as const };
 
     const registry = composeSolutionComparisonRegistry(
       [VALID_SOLUTION],
@@ -424,8 +424,8 @@ describe('Solution Comparison Kernel — Registry', () => {
   });
 
   it('should sort dimensions deterministically', () => {
-    const dim2 = { ...VALID_DIMENSION, dimensionId: 'dim-002', dimension: 'latency' };
-    const dim1 = { ...VALID_DIMENSION, dimensionId: 'dim-001', dimension: 'accuracy' };
+    const dim2 = { ...VALID_DIMENSION, dimensionId: 'dim-002', dimension: 'latency' as const };
+    const dim1 = { ...VALID_DIMENSION, dimensionId: 'dim-001', dimension: 'accuracy' as const };
 
     const registry = composeSolutionComparisonRegistry(
       [VALID_SOLUTION],
@@ -645,7 +645,7 @@ describe('Solution Comparison Kernel — Validation', () => {
       registryVersion: '1.0.0',
       compositionVersion: '1.0.0',
       decisions: [],
-      deterministic: false,
+      deterministic: false as true,
       generatedFrom: 'deterministic_solution_comparison_kernel',
       randomUsed: false,
       timeDependency: false,

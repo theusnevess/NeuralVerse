@@ -1,0 +1,90 @@
+{
+  "id": "computer-vision",
+  "title": "Computer Vision",
+  "summary": "Enabling systems to interpret visual data automatically through convolutional neural networks, vision transformers, and object detection architectures.",
+  "concepts": ["convolution", "pooling", "feature extraction", "object detection", "image segmentation", "spatial invariance", "receptive fields", "weight sharing", "data augmentation"],
+  "keywords": ["computer vision", "CNN", "convolution", "pooling", "YOLO", "U-Net", "ViT", "image classification", "object detection", "segmentation"],
+  "historicalContext": "Early computer vision relied on exact pixel matching and geometric transforms, which broke down under lighting or pose variations. This limitation motivated researchers in the 1990s to design convolutional neural networks (CNNs), which share weights across sliding receptive fields to capture translation-invariant patterns like edges and textures.",
+  "landmarkReferences": [
+    {
+      "title": "ImageNet Classification with Deep Convolutional Neural Networks",
+      "authors": "Krizhevsky et al.",
+      "year": "2012",
+      "contribution": "Demonstrated deep CNN effectiveness at ImageNet scale."
+    },
+    {
+      "title": "An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale",
+      "authors": "Dosovitskiy et al.",
+      "year": "2020",
+      "contribution": "Showed Vision Transformers can compete with CNNs when scaled."
+    }
+  ],
+  "industryApplications": ["Edge-based assembly line inspection", "Live video analytics for retail safety", "Autonomous vehicle perception blocks", "Medical imaging", "Quality control"],
+  "commonMisconceptions": [
+    {
+      "trigger": "CNN",
+      "wrong": "Filters in deep CNN layers focus on raw pixel intensities.",
+      "correct": "Filters in deep CNN layers focus on abstract edges and textures, not raw pixel intensities."
+    },
+    {
+      "trigger": "accuracy",
+      "wrong": "High classification accuracy means the model is good at detection.",
+      "correct": "Accuracy measures classification correctness. IoU measures spatial overlap between predicted and ground-truth bounding boxes. A model can have 99% classification accuracy but terrible IoU if its boxes are poorly localized."
+    }
+  ],
+  "analogies": [
+    {
+      "text": "A CNN is like a group of local inspectors scanning an image with magnifying glasses, checking for specific shapes.",
+      "limitations": "Unlike humans, CNNs are highly sensitive to high-frequency noise and lack global conceptual understanding.",
+      "domain": "everyday life"
+    },
+    {
+      "text": "A convolution is like looking through a small magnifying glass that slides across an image. At each position, the magnifying glass summarizes what it sees into a single number.",
+      "limitations": "Real convolutions involve learnable kernel weights and operate across multiple channels simultaneously.",
+      "domain": "everyday life"
+    }
+  ],
+  "curiosityFacts": [
+    "Did you know that the field of computer vision was launched as a summer student project at MIT in 1966? Seymour Papert assigned 'The Summer Vision Project' to construct a visual system that could segment objects from images, thinking it would be solved in a few months.",
+    "CNNs are highly sensitive to imperceptible changes. Adding tiny, adversarial high-frequency noise to an image can cause a network to misclassify a panda as a gibbon with 99% confidence."
+  ],
+  "storySeeds": [
+    "The domain evolved from hand-crafted spatial filters (Sobel, Gabor) to convolutional architectures, and finally to attention-based patch transformers.",
+    "CNNs displaced traditional hand-crafted computer vision pipelines (like SIFT or HOG filters) by automating feature extraction, raising classification accuracies above human levels."
+  ],
+  "assessmentSeeds": [
+    "Compare standard convolutions with depthwise separable convolutions in terms of calculation overhead.",
+    "Why do pooling layers assist in establishing spatial invariance within CNN feature maps?"
+  ],
+  "professionalInsights": [
+    "Employ hardware-accelerated video decoding (e.g., NVIDIA NVDEC) and drop frames dynamically when the analysis queue backs up.",
+    "Observe camera drift (blur, lighting shifts) by monitoring average contrast and brightness parameters in the incoming frame stream.",
+    "An industrial inspection line implemented edge-based vision models. To avoid network latency bottleneck, frames were downsampled on-device and only anomalous frames were uploaded to the cloud repository."
+  ],
+  "recommendedVisualizations": ["cnn-layer-activations", "feature-map-viz", "object-detection-overlay"],
+  "recommendedLabs": ["build-a-cnn-from-scratch", "adversarial-robustness-test"],
+  "relatedArtifacts": [],
+  "relatedConcepts": [
+    { "domain": "deep-learning", "type": "depends_on" },
+    { "domain": "transformers", "type": "extends" },
+    { "domain": "embeddings", "type": "related_to" }
+  ],
+  "lastReviewed": "2026-06-24",
+  "canonicalStatus": "Reviewed",
+  "version": "1.0.0",
+  "reviewedBy": "NV-1100-P3 Implementation",
+  "sourceReferences": [
+    {
+      "id": "ref-computer-vision-0",
+      "title": "ImageNet Classification (Krizhevsky et al.)",
+      "type": "paper",
+      "description": "Deep CNN effectiveness"
+    },
+    {
+      "id": "ref-computer-vision-1",
+      "title": "Vision Transformer (Dosovitskiy et al.)",
+      "type": "paper",
+      "description": "ViT architecture"
+    }
+  ]
+}

@@ -1,7 +1,14 @@
 .opencode/backups/
+node_modules/
 screenshots/
 artifacts/
 scratch/
 final-qa-report.json
 /tmp/neuralverse-*/
 /tmp/neuralverse-full-system-audit/
+
+# Audit-only Playwright harness (D1–D6 master audit). Do not commit.
+playwright.config.js
+playwright-report/
+test-results/
+tests/playwright/

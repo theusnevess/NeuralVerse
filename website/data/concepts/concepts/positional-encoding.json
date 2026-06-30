@@ -1,0 +1,58 @@
+{
+  "id": "positional-encoding",
+  "name": "Positional Encoding",
+  "slug": "positional-encoding",
+  "summary": "Injecting sequence order information into transformer inputs since self-attention is permutation-invariant.",
+  "definition": "Positional encodings are added to token embeddings to provide order information. Common approaches include sinusoidal functions (fixed) and learned embeddings.",
+  "aliases": [
+    "position encoding",
+    "position embeddings"
+  ],
+  "keywords": [
+    "positional",
+    "encoding",
+    "position",
+    "order",
+    "sequence"
+  ],
+  "sharedKnowledgeDomains": [
+    "transformers"
+  ],
+  "relatedConcepts": [
+    {
+      "concept": "transformer-architecture",
+      "type": "uses"
+    },
+    {
+      "concept": "self-attention",
+      "type": "supports"
+    }
+  ],
+  "prerequisiteConcepts": [
+    "self-attention"
+  ],
+  "artifactReferences": [
+    "artifact-positional-encoding-comparison-table",
+    "artifact-positional-encoding-exercise",
+    "artifact-positional-encoding-explanatory-text",
+    "artifact-positional-encoding-interactive-visualization",
+    "artifact-positional-encoding-visual-intuition",
+    "artifact-transformer-overview-comparison-table",
+    "artifact-transformer-overview-exercise",
+    "artifact-transformer-overview-explanatory-text",
+    "artifact-transformer-overview-interactive-visualization",
+    "artifact-transformer-overview-visual-intuition"
+  ],
+  "difficulty": "intermediate",
+  "category": "transformers",
+  "canonicalStatus": "Reviewed",
+  "version": "1.0.0",
+  "reviewedBy": "NV-1100-P4 Implementation",
+  "lastReviewed": "2026-06-24",
+  "sourceReferences": [],
+  "examples": [],
+  "counterExamples": [],
+  "commonMisconceptions": [],
+  "recommendedVisualizations": [],
+  "recommendedLabs": []
+}

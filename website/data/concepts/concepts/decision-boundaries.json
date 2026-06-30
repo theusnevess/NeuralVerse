@@ -1,0 +1,46 @@
+{
+  "id": "decision-boundaries",
+  "name": "Decision Boundaries",
+  "slug": "decision-boundaries",
+  "summary": "The hypersurface that partitions the feature space into regions assigned to different classes.",
+  "definition": "A decision boundary is the set of points where the model's prediction changes from one class to another. Linear models produce linear boundaries; nonlinear models produce complex surfaces.",
+  "aliases": [
+    "classification boundary",
+    "decision surface"
+  ],
+  "keywords": [
+    "boundary",
+    "classification",
+    "separation",
+    "hyperplane"
+  ],
+  "sharedKnowledgeDomains": [
+    "machine-learning"
+  ],
+  "relatedConcepts": [
+    {
+      "concept": "linear-models",
+      "type": "uses"
+    },
+    {
+      "concept": "neural-networks",
+      "type": "extends"
+    }
+  ],
+  "prerequisiteConcepts": [
+    "linear-models"
+  ],
+  "artifactReferences": [],
+  "difficulty": "beginner",
+  "category": "machine-learning",
+  "canonicalStatus": "Reviewed",
+  "version": "1.0.0",
+  "reviewedBy": "NV-1100-P4 Implementation",
+  "lastReviewed": "2026-06-24",
+  "sourceReferences": [],
+  "examples": [],
+  "counterExamples": [],
+  "commonMisconceptions": [],
+  "recommendedVisualizations": [],
+  "recommendedLabs": []
+}

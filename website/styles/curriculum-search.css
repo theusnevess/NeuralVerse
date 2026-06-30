@@ -315,6 +315,30 @@
   border: 1px solid color-mix(in srgb, var(--sys-color-semantic-success) 30%, transparent);
 }
 
+.nv-search-badge[data-type="laboratory"] {
+  background-color: color-mix(in srgb, #06b6d4 15%, transparent);
+  color: #06b6d4;
+  border: 1px solid color-mix(in srgb, #06b6d4 30%, transparent);
+}
+
+.nv-search-badge[data-type="concept"] {
+  background-color: color-mix(in srgb, var(--sys-color-accent-secondary, #a78bfa) 15%, transparent);
+  color: var(--sys-color-accent-secondary, #a78bfa);
+  border: 1px solid color-mix(in srgb, var(--sys-color-accent-secondary, #a78bfa) 30%, transparent);
+}
+
+.nv-search-badge[data-type="shared-knowledge"] {
+  background-color: color-mix(in srgb, var(--sys-color-semantic-info) 15%, transparent);
+  color: var(--sys-color-semantic-info);
+  border: 1px solid color-mix(in srgb, var(--sys-color-semantic-info) 30%, transparent);
+}
+
+.nv-search-badge[data-type="memory"] {
+  background-color: color-mix(in srgb, #a78bfa 15%, transparent);
+  color: #a78bfa;
+  border: 1px solid color-mix(in srgb, #a78bfa 30%, transparent);
+}
+
 .nv-search-item-summary {
   font-size: var(--ref-font-size-200);
   color: var(--nv-search-text-secondary);

@@ -1,4 +1,5 @@
 const CURRICULUM_INDEX_PATH = 'data/curriculum-index.json';
+const CURRICULUM_SHARD_BASE = 'data/curriculum/shards/';
 
 async function fetchJson(path) {
   const response = await fetch(path);
@@ -14,6 +15,14 @@ async function fetchText(path) {
 
 function byId(items, id) {
   return items.find((item) => item.id === id) || null;
+}
+
+function buildIdIndex(items) {
+  const index = Object.create(null);
+  for (let i = 0; i < items.length; i++) {
+    index[items[i].id] = items[i];
+  }
+  return index;
 }
 
 function parseFrontmatter(markdown) {
@@ -73,10 +82,29 @@ export function createCurriculumService(options = {}) {
   const indexPath = options.indexPath || CURRICULUM_INDEX_PATH;
   let indexCache = null;
   const artifactMarkdownCache = new Map();
+  let _pathIndex = null;
+  let _moduleIndex = null;
+  let _lessonIndex = null;
+  let _artifactIndex = null;
 
   async function getIndex() {
-    if (!indexCache) indexCache = await fetchJson(indexPath);
+    if (!indexCache) {
+      indexCache = await fetchJson(indexPath);
+      _buildIndexes();
+    }
     return indexCache;
+  }
+
+  function _buildIndexes() {
+    if (!indexCache) return;
+    _pathIndex = buildIdIndex(indexCache.learningPaths || []);
+    _moduleIndex = buildIdIndex(indexCache.modules || []);
+    _lessonIndex = buildIdIndex(indexCache.lessons || []);
+    _artifactIndex = buildIdIndex(indexCache.artifacts || []);
+  }
+
+  function _ensureIndexSync() {
+    if (indexCache && !_pathIndex) _buildIndexes();
   }
 
   async function getLearningPaths() {
@@ -101,40 +129,55 @@ export function createCurriculumService(options = {}) {
 
   async function getLearningPath(pathId) {
     const index = await getIndex();
+    if (_pathIndex) return _pathIndex[pathId] || null;
     return byId(index.learningPaths, pathId);
   }
 
   async function getModule(moduleId) {
     const index = await getIndex();
+    if (_moduleIndex) return _moduleIndex[moduleId] || null;
     return byId(index.modules, moduleId);
   }
 
   async function getLesson(lessonId) {
     const index = await getIndex();
+    if (_lessonIndex) return _lessonIndex[lessonId] || null;
     return byId(index.lessons, lessonId);
   }
 
   async function getArtifact(artifactId) {
     const index = await getIndex();
+    if (_artifactIndex) return _artifactIndex[artifactId] || null;
     return byId(index.artifacts, artifactId);
   }
 
   async function getModulesForPath(pathId) {
     const [index, learningPath] = await Promise.all([getIndex(), getLearningPath(pathId)]);
     if (!learningPath) return [];
+    if (_moduleIndex) {
+      return learningPath.moduleIds.map((moduleId) => _moduleIndex[moduleId]).filter(Boolean);
+    }
     return learningPath.moduleIds.map((moduleId) => byId(index.modules, moduleId)).filter(Boolean);
   }
 
   async function getLessonsForModule(moduleId) {
     const [index, module] = await Promise.all([getIndex(), getModule(moduleId)]);
     if (!module) return [];
+    if (_lessonIndex) {
+      return module.lessonIds.map((lessonId) => _lessonIndex[lessonId]).filter(Boolean);
+    }
     return module.lessonIds.map((lessonId) => byId(index.lessons, lessonId)).filter(Boolean);
   }
 
   async function getArtifactsForLesson(lessonId) {
     const [index, lesson] = await Promise.all([getIndex(), getLesson(lessonId)]);
     if (!lesson) return [];
-    return orderArtifacts(lesson.artifactIds.map((artifactId) => byId(index.artifacts, artifactId)).filter(Boolean));
+    const artifactLookup = _artifactIndex || index.artifacts;
+    const resolve = (id) => {
+      if (_artifactIndex) return _artifactIndex[id] || null;
+      return byId(index.artifacts, id);
+    };
+    return orderArtifacts(lesson.artifactIds.map((artifactId) => resolve(artifactId)).filter(Boolean));
   }
 
   async function loadArtifactMarkdown(artifactId) {

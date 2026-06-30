@@ -20,7 +20,12 @@
     'nv_agent_panel_collapsed',
     'nv_agent_panel_recent_prompts',
     'nv_favorites_sort',
-    'nv_history_filter'
+    'nv_history_filter',
+    'nv_review_schedule',
+    'nv_review_history',
+    'nv_review_preferences',
+    'nv_answer_verification_history',
+    'nv_answer_verification_items'
   ];
 
   function getAdapter() {
@@ -34,18 +39,39 @@
     return { personalizationKeys, additionalPresent };
   }
 
+  // Keys known to be stored as raw strings (not JSON) by existing controllers.
+  // We must not JSON.parse them or we will corrupt the read.
+  const RAW_STRING_KEYS = new Set([
+    'nv_favorites_sort',
+    'nv_history_filter',
+    'nv_curriculum_workspace_focus_mode',
+    'nv_agent_panel_mode'
+  ]);
+
+  function isRawStringKey(key) {
+    return RAW_STRING_KEYS.has(key);
+  }
+
   function readKey(adapter, key) {
+    const raw = adapter.getItem(key);
+    if (raw === null || raw === undefined) return null;
+    if (isRawStringKey(key)) return raw;
     try {
-      const raw = adapter.getItem(key);
-      return raw ? JSON.parse(raw) : null;
+      return JSON.parse(raw);
     } catch (e) {
-      return null;
+      // Some keys may have been written as raw strings by other controllers.
+      // Fall back to returning the raw value so the backup captures them.
+      return raw;
     }
   }
 
   function writeKey(adapter, key, value) {
     if (value === null || value === undefined) {
       adapter.removeItem(key);
+      return;
+    }
+    if (isRawStringKey(key)) {
+      adapter.setItem(key, String(value));
     } else {
       adapter.setItem(key, JSON.stringify(value));
     }
@@ -57,7 +83,9 @@
 
     for (const key of personalizationKeys) {
       const shortKey = key.replace(PERSONALIZATION_PREFIX, '');
-      state[shortKey] = readKey(adapter, key);
+      const value = readKey(adapter, key);
+      // Dynamic key discovery: any key under the personalization prefix is included.
+      state[shortKey] = value;
     }
 
     for (const key of additionalPresent) {
@@ -88,6 +116,10 @@
     const histFilter = readKey(adapter, 'nv_history_filter');
     if (histFilter !== null) {
       state['history_filter'] = histFilter;
+    }
+    const focusMode = readKey(adapter, 'nv_curriculum_workspace_focus_mode');
+    if (focusMode !== null) {
+      state['focus_mode'] = focusMode;
     }
 
     return state;
@@ -147,19 +179,40 @@
     const state = collectCurrentState(adapter);
     const sections = collectSections(state);
 
+    // Core personalization keys (always present, with defaults for safety)
+    const personalization = {
+      bookmarks: state.bookmarks || [],
+      favorites: state.favorites || [],
+      continue_reading: state.continue_reading || null,
+      recently_visited: state.recently_visited || [],
+      reading_bookmarks: state.reading_bookmarks || {},
+      reading_goals: state.reading_goals || { goalMinutes: 30, completedMinutesToday: 0 },
+      reading_progress_map: state.reading_progress_map || {}
+    };
+
+    // Dynamic discovery: any other nv_personalization_* key in the state is
+    // future-compatible and should be included in the export automatically.
+    const CORE_PERSONALIZATION_KEYS = new Set([
+      'bookmarks', 'favorites', 'continue_reading', 'recently_visited',
+      'reading_bookmarks', 'reading_goals', 'reading_progress_map'
+    ]);
+    for (const key of Object.keys(state)) {
+      if (key.startsWith('__extra__')) continue;
+      if (['notes', 'highlights', 'collections', 'tags', 'progress',
+        'favorites_sort', 'history_filter', 'agent_mode', 'agent_collapsed',
+        'agent_recent_prompts', 'study_queue', 'active_session', 'session_summary',
+        'focus_mode'].indexOf(key) !== -1) continue;
+      if (CORE_PERSONALIZATION_KEYS.has(key)) continue;
+      if (state[key] !== null && state[key] !== undefined) {
+        personalization[key] = state[key];
+      }
+    }
+
     return {
       schemaVersion: 1,
       neuralVerseVersion: '1.0.0',
       exportedAt: new Date().toISOString(),
-      personalization: {
-        bookmarks: state.bookmarks || [],
-        favorites: state.favorites || [],
-        continue_reading: state.continue_reading || null,
-        recently_visited: state.recently_visited || [],
-        reading_bookmarks: state.reading_bookmarks || {},
-        reading_goals: state.reading_goals || { goalMinutes: 30, completedMinutesToday: 0 },
-        reading_progress_map: state.reading_progress_map || {}
-      },
+      personalization,
       study: {
         study_queue: state.study_queue || [],
         active_session: state.active_session || null,
@@ -184,28 +237,60 @@
     };
   }
 
+  // Build a stable identity key for an array item based on the section name.
+  // Some sections don't have a single 'id' field and must dedup on a composite.
+  function identityKey(item, sectionKey) {
+    if (!item || typeof item !== 'object') return JSON.stringify(item);
+    if (item.id) return String(item.id);
+    if (sectionKey === 'highlights') {
+      return (item.resourceId || '') + '::' + (item.anchorId || '');
+    }
+    if (sectionKey === 'collections') {
+      return (item.name || '').toLowerCase();
+    }
+    if (sectionKey === 'study_queue') {
+      return String(item.id || ((item.type || '') + '::' + (item.route || item.title || '')));
+    }
+    if (sectionKey === 'favorites') {
+      return String(item.id || ((item.type || '') + '::' + (item.route || '')));
+    }
+    return JSON.stringify(item);
+  }
+
   function mergeArrays(existing, imported, key) {
-    if (!Array.isArray(imported)) return existing;
-    if (!Array.isArray(existing)) return imported;
+    if (!Array.isArray(imported)) return Array.isArray(existing) ? existing : [];
+    const safeExisting = Array.isArray(existing) ? existing : [];
+
     if (key === 'recently_visited') {
-      const merged = [...existing];
+      const byId = new Map();
+      for (const item of safeExisting) {
+        if (item && item.id) byId.set(String(item.id), item);
+      }
       for (const item of imported) {
-        const idx = merged.findIndex(m => m.id === item.id);
-        if (idx === -1) {
-          merged.push(item);
-        } else {
-          merged[idx] = item;
-        }
+        if (item && item.id) byId.set(String(item.id), item);
       }
-      return merged.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)).slice(0, 50);
+      return Array.from(byId.values())
+        .sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0))
+        .slice(0, 50);
     }
-    const merged = [...existing];
+
+    const seen = new Map();
+    const result = [];
+    for (const item of safeExisting) {
+      const k = identityKey(item, key);
+      if (!seen.has(k)) {
+        seen.set(k, true);
+        result.push(item);
+      }
+    }
     for (const item of imported) {
-      if (!merged.some(m => m.id === item.id)) {
-        merged.push(item);
+      const k = identityKey(item, key);
+      if (!seen.has(k)) {
+        seen.set(k, true);
+        result.push(item);
       }
     }
-    return merged;
+    return result;
   }
 
   function mergeMaps(existing, imported) {
@@ -220,30 +305,69 @@
     return [...new Set([...existing, ...imported])];
   }
 
-  function mergeData(currentState, importData, mode) {
-    const merged = { ...currentState };
+  // Build a blank state with default empty values for all known namespaces.
+  // Used by Replace mode to guarantee absent keys are cleared.
+  function buildEmptyState() {
+    const empty = {};
+    for (const key of KNOWN_NAMESPACES) {
+      if (key === 'reading_goals') {
+        empty[key] = { goalMinutes: 30, completedMinutesToday: 0 };
+      } else if (key === 'continue_reading' || key === 'active_session' || key === 'session_summary') {
+        empty[key] = null;
+      } else if (key === 'notes' || key === 'tags' || key === 'reading_bookmarks' || key === 'reading_progress_map') {
+        empty[key] = {};
+      } else {
+        empty[key] = [];
+      }
+    }
+    empty.favorites_sort = 'alphabetical';
+    empty.history_filter = 'All';
+    empty.agent_mode = 'default';
+    empty.agent_collapsed = [];
+    empty.agent_recent_prompts = [];
+    empty.progress = { records: [] };
+    empty.focus_mode = null;
+    return empty;
+  }
 
+  function mergeData(currentState, importData, mode) {
     if (mode === 'replace') {
+      // Replace: start with a blank state, then apply ONLY imported values.
+      // Any namespace not present in the import is explicitly cleared.
+      const merged = buildEmptyState();
+
       if (importData.personalization) {
-        Object.assign(merged, importData.personalization);
+        const p = importData.personalization;
+        if (p.bookmarks) merged.bookmarks = p.bookmarks;
+        if (p.favorites) merged.favorites = p.favorites;
+        if ('continue_reading' in p) merged.continue_reading = p.continue_reading;
+        if (p.recently_visited) merged.recently_visited = p.recently_visited;
+        if (p.reading_bookmarks) merged.reading_bookmarks = p.reading_bookmarks;
+        if (p.reading_goals) merged.reading_goals = p.reading_goals;
+        if (p.reading_progress_map) merged.reading_progress_map = p.reading_progress_map;
       }
       if (importData.study) {
-        Object.assign(merged, importData.study);
+        const s = importData.study;
+        if (s.study_queue) merged.study_queue = s.study_queue;
+        if ('active_session' in s) merged.active_session = s.active_session;
+        if ('session_summary' in s) merged.session_summary = s.session_summary;
       }
       if (importData.notes) merged.notes = importData.notes;
       if (importData.highlights) merged.highlights = importData.highlights;
       if (importData.collections) merged.collections = importData.collections;
       if (importData.tags) merged.tags = importData.tags;
       if (importData.preferences) {
-        merged.favorites_sort = importData.preferences.favorites_sort || merged.favorites_sort;
-        merged.history_filter = importData.preferences.history_filter || merged.history_filter;
-        merged.agent_mode = importData.preferences.agent_mode || merged.agent_mode;
-        merged.agent_collapsed = importData.preferences.agent_collapsed || merged.agent_collapsed;
-        merged.agent_recent_prompts = importData.preferences.agent_recent_prompts || merged.agent_recent_prompts;
+        if (importData.preferences.favorites_sort) merged.favorites_sort = importData.preferences.favorites_sort;
+        if (importData.preferences.history_filter) merged.history_filter = importData.preferences.history_filter;
+        if (importData.preferences.agent_mode) merged.agent_mode = importData.preferences.agent_mode;
+        if (importData.preferences.agent_collapsed) merged.agent_collapsed = importData.preferences.agent_collapsed;
+        if (importData.preferences.agent_recent_prompts) merged.agent_recent_prompts = importData.preferences.agent_recent_prompts;
       }
       if (importData.progress) merged.progress = importData.progress;
       return merged;
     }
+
+    const merged = { ...currentState };
 
     if (importData.personalization) {
       const p = importData.personalization;

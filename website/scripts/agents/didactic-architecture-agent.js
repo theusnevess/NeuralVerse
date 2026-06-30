@@ -1,11 +1,27 @@
 /**
- * NV-1000-A1 — Didactic Architecture Agent
+ * NV-1000-A1 / NV-1300-D1A/D1B/D1C/D1D — Didactic Architecture Agent
  *
  * The pedagogical orchestrator of NeuralVerse.
  * Interprets existing NV-800 curriculum resources and presents them
  * in the most pedagogically effective way possible.
  *
  * This is a read-only pedagogical layer. It does NOT modify curriculum.
+ *
+ * D1A Evolution: Builds a deterministic pedagogical plan before producing
+ * any didactic response. Integrates composition DAG, instructional layers,
+ * difficulty ladder, and multi-perspective engine.
+ *
+ * D1B Evolution: Adds semantic dependency resolution, example selection,
+ * recap insertion, cross-domain connections, and resource selection.
+ *
+ * D1C Evolution: Adds visualization orchestration, laboratory placement,
+ * media timeline generation, instructional transitions, and density optimization.
+ *
+ * D1D Evolution: Adds evidence tracing, memory & review bridges, semantic
+ * learning bridge, cross-agent collaboration orchestration, and optional
+ * local generative augmentation (P11). The deterministic planner remains
+ * the canonical instructional engine. Generative AI may only enrich the
+ * lesson; it never defines the lesson.
  *
  * 10 Educational Modes:
  * 1. Explain — Structured explanations
@@ -24,6 +40,33 @@ import { createMisconceptionLibrary } from './misconception-library.js';
 import { createAnalogyEngine } from './analogy-engine.js';
 import { createComparisonEngine } from './comparison-engine.js';
 import { createSocraticEngine } from './socratic-engine.js';
+import { createSharedKnowledgeService } from '../shared-knowledge/shared-knowledge-service.js';
+import { createCompositionGraph } from './composition-graph.js';
+import { createInstructionalLayers } from './instructional-layers.js';
+import { createDifficultyLadder } from './difficulty-ladder.js';
+import { createMultiPerspectiveEngine } from './multi-perspective-engine.js';
+import { createPedagogicalPlanner } from './pedagogical-planner.js';
+import { createSemanticDependencyResolver } from './semantic-dependency-resolver.js';
+import { createExampleSelectionEngine } from './example-selection-engine.js';
+import { createExampleRegistry } from './example-registry.js';
+import { createCrossDomainConnector } from './cross-domain-connector.js';
+import { createRecapInserter } from './recap-inserter.js';
+import { createResourceSelector } from './resource-selector.js';
+import { createVisualizationOrchestrator } from './visualization-orchestrator.js';
+import { createLaboratoryPlacer } from './laboratory-placer.js';
+import { createMediaOrchestrator } from './media-orchestrator.js';
+import { createInstructionalTransitionEngine } from './instructional-transition-engine.js';
+import { createMediaDensityOptimizer } from './media-density-optimizer.js';
+import { createEvidenceTracer } from './evidence-tracer.js';
+import { createMemoryReviewBridge } from './memory-review-bridge.js';
+import { createSemanticLearningBridge } from './semantic-learning-bridge.js';
+import { createAgentCollaborationOrchestrator } from './agent-collaboration-orchestrator.js';
+import { createGenerativeAugmenter } from './generative-augmenter.js';
+import { createCognitiveLoadOptimizer } from './cognitive-load-optimizer.js';
+import { createInstructionalPacingEngine } from './instructional-pacing-engine.js';
+import { createLessonComposer } from './lesson-composer.js';
+import { createReadabilityOptimizer } from './readability-optimizer.js';
+import { createAccessibilityPolish } from './accessibility-polish.js';
 
 const EXPLANATION_MODES = [
   { id: 'default', label: 'Default', description: 'Balanced explanation with all framework sections' },
@@ -128,6 +171,88 @@ function createDidacticArchitectureAgent() {
   const analogyEngine = createAnalogyEngine();
   const comparisonEngine = createComparisonEngine();
   const socraticEngine = createSocraticEngine();
+  const sharedKnowledge = (typeof window !== 'undefined' && window.NeuralVerse?.sharedKnowledgeService)
+    ? window.NeuralVerse.sharedKnowledgeService
+    : createSharedKnowledgeService();
+
+  const compositionGraph = createCompositionGraph();
+  const instructionalLayers = createInstructionalLayers();
+  const difficultyLadder = createDifficultyLadder();
+  const multiPerspectiveEngine = createMultiPerspectiveEngine();
+  const semanticResolver = createSemanticDependencyResolver();
+  const exampleEngine = createExampleSelectionEngine();
+  const exampleReg = createExampleRegistry();
+  const crossDomainConnector = createCrossDomainConnector();
+  const recapInserter = createRecapInserter();
+  const resourceSelector = createResourceSelector();
+  const visualizationOrchestrator = createVisualizationOrchestrator();
+  const laboratoryPlacer = createLaboratoryPlacer();
+  const transitionEngine = createInstructionalTransitionEngine();
+  const densityOptimizer = createMediaDensityOptimizer();
+  const mediaOrchestrator = createMediaOrchestrator({
+    visualizationOrchestrator: visualizationOrchestrator,
+    laboratoryPlacer: laboratoryPlacer,
+    transitionEngine: transitionEngine,
+    densityOptimizer: densityOptimizer
+  });
+  const evidenceTracer = createEvidenceTracer();
+  const memoryReviewBridge = createMemoryReviewBridge();
+  const semanticLearningBridge = createSemanticLearningBridge();
+  const agentCollaborationOrchestrator = createAgentCollaborationOrchestrator({
+    agents: {
+      sharedKnowledge: sharedKnowledge,
+      research: (typeof window !== 'undefined' && window.NeuralVerse && window.NeuralVerse.researchStateOfArtAgent) || null,
+      applications: (typeof window !== 'undefined' && window.NeuralVerse && window.NeuralVerse.applicationProfessionalTransferAgent) || null,
+      curiosity: (typeof window !== 'undefined' && window.NeuralVerse && window.NeuralVerse.curiosityEngagementAgent) || null,
+      assessment: (typeof window !== 'undefined' && window.NeuralVerse && window.NeuralVerse.assessmentReinforcementAgent) || null
+    }
+  });
+  const generativeAugmenter = createGenerativeAugmenter({
+    generativeController: (typeof window !== 'undefined' && window.NeuralVerse && window.NeuralVerse.GenerativeController) || null
+  });
+  const cognitiveLoadOptimizer = createCognitiveLoadOptimizer();
+  const instructionalPacingEngine = createInstructionalPacingEngine();
+  const lessonComposer = createLessonComposer();
+  const readabilityOptimizer = createReadabilityOptimizer();
+  const accessibilityPolish = createAccessibilityPolish();
+  const pedagogicalPlanner = createPedagogicalPlanner({
+    compositionGraph: compositionGraph,
+    instructionalLayers: instructionalLayers,
+    difficultyLadder: difficultyLadder,
+    multiPerspectiveEngine: multiPerspectiveEngine,
+    semanticResolver: semanticResolver,
+    exampleEngine: exampleEngine,
+    exampleRegistry: exampleReg,
+    crossDomainConnector: crossDomainConnector,
+    recapInserter: recapInserter,
+    resourceSelector: resourceSelector,
+    mediaOrchestrator: mediaOrchestrator,
+    evidenceTracer: evidenceTracer,
+    memoryReviewBridge: memoryReviewBridge,
+    semanticLearningBridge: semanticLearningBridge,
+    agentCollaborationOrchestrator: agentCollaborationOrchestrator,
+    generativeAugmenter: generativeAugmenter,
+    cognitiveLoadOptimizer: cognitiveLoadOptimizer,
+    instructionalPacingEngine: instructionalPacingEngine,
+    lessonComposer: lessonComposer,
+    readabilityOptimizer: readabilityOptimizer,
+    accessibilityPolish: accessibilityPolish
+  });
+
+  let _sharedKnowledgeReady = false;
+
+  async function initialize() {
+    try {
+      await sharedKnowledge.initialize();
+      _sharedKnowledgeReady = true;
+    } catch {
+      _sharedKnowledgeReady = false;
+    }
+  }
+
+  if (typeof window !== 'undefined') {
+    initialize();
+  }
 
   function canHandle(context) {
     if (!context) return false;
@@ -137,12 +262,105 @@ function createDidacticArchitectureAgent() {
     return explicitMatch || keywordMatch;
   }
 
+  function _buildPlannerInput(context, intent, mode, options) {
+    const query = context.userQuery || '';
+    const topic = extractTopic(context, query);
+    const difficulty = (options && options.difficulty) || 'standard';
+    const perspective = (options && options.perspective) || undefined;
+
+    const availableResources = {
+      concepts: [],
+      artifacts: [],
+      visualizations: [],
+      laboratories: [],
+      sharedKnowledge: []
+    };
+
+    if (context.selectedArtifact) {
+      availableResources.artifacts.push(context.selectedArtifact);
+    }
+    if (context.selectedLesson && context.selectedLesson.artifacts) {
+      for (var a = 0; a < context.selectedLesson.artifacts.length; a++) {
+        availableResources.artifacts.push(context.selectedLesson.artifacts[a]);
+      }
+    }
+
+    if (typeof window !== 'undefined' && window.NeuralVerse) {
+      var vizRegistry = window.NeuralVerse.ParametricRegistry;
+      if (vizRegistry && typeof vizRegistry.getAll === 'function') {
+        var allViz = vizRegistry.getAll();
+        for (var v = 0; v < allViz.length; v++) {
+          if (allViz[v].concepts && allViz[v].concepts.length > 0) {
+            availableResources.visualizations.push(allViz[v]);
+          }
+        }
+      }
+
+      var labRegistry = window.NeuralVerse.LabRegistry;
+      if (labRegistry && typeof labRegistry.getAll === 'function') {
+        var allLabs = labRegistry.getAll();
+        for (var l = 0; l < allLabs.length; l++) {
+          availableResources.laboratories.push(allLabs[l]);
+        }
+      }
+    }
+
+    if (_sharedKnowledgeReady && sharedKnowledge) {
+      var domainData = sharedKnowledge.getSyncDomainByTopic ? sharedKnowledge.getSyncDomainByTopic(topic, query) : null;
+      if (domainData) {
+        availableResources.sharedKnowledge.push(domainData);
+      }
+    }
+
+    return {
+      query: query,
+      intent: intent,
+      mode: mode,
+      topic: topic,
+      difficulty: difficulty,
+      perspective: perspective,
+      availableResources: availableResources,
+      conceptIds: context.conceptIds || []
+    };
+  }
+
+  function _attachPlanMetadata(result, plan) {
+    if (!result || typeof result !== 'object') return result;
+    if (!plan || typeof plan !== 'object') return result;
+
+    result.planId = plan.id || null;
+    result.difficulty = plan.difficulty || 'standard';
+    result.perspective = plan.selectedPerspective || 'intuitive';
+    result.includedLayers = plan.layers ? plan.layers.map(function (l) { return l.id; }) : [];
+    result.omittedLayers = plan.omissions ? plan.omissions.map(function (o) { return o.layerId; }) : [];
+    result.graphValid = plan.graph ? plan.graph.valid : false;
+    result.evidence = plan.evidence || [];
+    result.visualizations = plan.visualizations || [];
+    result.laboratories = plan.laboratories || [];
+    result.mediaTimeline = plan.mediaTimeline || [];
+    result.transitionMap = plan.transitionMap || [];
+    result.densityMetrics = plan.densityMetrics || {};
+    result.evidenceTree = plan.evidenceTree || null;
+    result.evidenceBlocks = plan.evidenceBlocks || [];
+    result.memoryContext = plan.memoryContext || null;
+    result.reviewContext = plan.reviewContext || null;
+    result.semanticContext = plan.semanticContext || null;
+    result.agentContributions = plan.agentContributions || null;
+    result.generatedBlocks = plan.generatedBlocks || [];
+
+    return result;
+  }
+
   function run(context, options = {}) {
     const mode = options.mode || 'default';
     const query = context.userQuery || '';
     const intent = detectIntent(query);
 
     const reasoningStrategy = buildReasoningStrategy(intent, mode, context);
+
+    const plannerInput = _buildPlannerInput(context, intent, mode, options);
+    plannerInput.allowGenerative = options.allowGenerative === true;
+    const plan = pedagogicalPlanner.buildPlan(plannerInput);
 
     let result;
     let effectiveMode = mode;
@@ -197,6 +415,7 @@ function createDidacticArchitectureAgent() {
 
     result.mode = effectiveMode;
     result.reasoningStrategy = reasoningStrategy;
+    result = _attachPlanMetadata(result, plan);
     return result;
   }
 
@@ -374,10 +593,11 @@ function createDidacticArchitectureAgent() {
     const query = context.userQuery || '';
     const topic = extractTopic(context, query);
     const questions = socraticEngine.generate(topic, context);
+    const mainQuestions = Array.isArray(questions.main) ? questions.main.join('\n') : questions.main;
 
     const sections = [
-      { title: 'Let\'s Think Together', content: questions.intro, type: 'text' },
-      { title: 'Guiding Questions', content: questions.main, type: 'socratic-questions' },
+      { title: 'Let\'s Think Together', content: questions.intro || questions.opening, type: 'text' },
+      { title: 'Guiding Questions', content: mainQuestions, type: 'socratic-questions' },
       { title: 'Reflection Prompts', content: questions.reflection, type: 'text' }
     ];
 
@@ -423,6 +643,20 @@ function createDidacticArchitectureAgent() {
       sections.push({ title: 'Alternative Perspectives', content: additionalContent.trim(), type: 'text' });
     }
 
+    if (_sharedKnowledgeReady) {
+      const domainData = sharedKnowledge.getSyncDomainByTopic(topic, query);
+      if (domainData?.analogies?.length > 0) {
+        let sharedContent = '';
+        for (const a of domainData.analogies) {
+          sharedContent += `**${a.domain || 'Domain'} Perspective:**\n\n${a.text}\n\n`;
+          if (a.limitations) {
+            sharedContent += `*Limitations:* ${a.limitations}\n\n`;
+          }
+        }
+        sections.push({ title: 'Shared Knowledge Analogies', content: sharedContent.trim(), type: 'analogy' });
+      }
+    }
+
     sections.push({
       title: 'Available Domains',
       content: `Analogies available for: ${analogyEngine.getAvailableDomains().join(', ')}`,
@@ -445,6 +679,27 @@ function createDidacticArchitectureAgent() {
     const query = context.userQuery || '';
     const topic = extractTopic(context, query);
     const detected = misconceptionLib.detect(topic, query);
+
+    if (_sharedKnowledgeReady) {
+      const domainData = sharedKnowledge.getSyncDomainByTopic(topic, query);
+      if (domainData?.commonMisconceptions?.length > 0) {
+        for (const m of domainData.commonMisconceptions) {
+          const alreadyDetected = detected.some(
+            (d) => d.wrong === m.wrong || d.title === m.trigger
+          );
+          if (!alreadyDetected) {
+            detected.push({
+              title: m.trigger || 'Common Misconception',
+              wrong: m.wrong,
+              correct: m.correct,
+              whyLearnersBelieveIt: 'This is a frequent misunderstanding highlighted in shared domain knowledge.',
+              intuition: m.correct,
+              verificationPrompt: 'Test your understanding against this misconception explicitly.'
+            });
+          }
+        }
+      }
+    }
 
     const sections = [];
 
@@ -498,7 +753,7 @@ function createDidacticArchitectureAgent() {
       `What questions do you still have after learning this?`
     ];
 
-    const selectedPrompts = prompts.sort(() => Math.random() - 0.5).slice(0, 5);
+    const selectedPrompts = prompts.slice(0, 5);
 
     let content = '**Reflection Prompts:**\n\n';
     selectedPrompts.forEach((p, i) => {
@@ -527,7 +782,7 @@ function createDidacticArchitectureAgent() {
     const sections = [];
 
     for (const [domainKey, domain] of Object.entries(KNOWLEDGE_TRANSFER_DOMAINS)) {
-      const description = domain.descriptions[Math.floor(Math.random() * domain.descriptions.length)];
+      const description = domain.descriptions[0];
       sections.push({
         title: domain.label,
         content: `**${topic}** in ${domain.label}:\n\n${description}\n\nThis connection helps you see how abstract concepts translate into practical applications.`,
@@ -674,6 +929,27 @@ function createDidacticArchitectureAgent() {
   function buildMisconceptionsSection(topic, context) {
     const detected = misconceptionLib.detect(topic, context.userQuery || '');
 
+    if (_sharedKnowledgeReady) {
+      const domainData = sharedKnowledge.getSyncDomainByTopic(topic, context.userQuery || '');
+      if (domainData?.commonMisconceptions?.length > 0) {
+        for (const m of domainData.commonMisconceptions) {
+          const alreadyDetected = detected.some(
+            (d) => d.wrong === m.wrong || d.title === m.trigger
+          );
+          if (!alreadyDetected) {
+            detected.push({
+              title: m.trigger || 'Common Misconception',
+              wrong: m.wrong,
+              correct: m.correct,
+              whyLearnersBelieveIt: 'This is a frequent misunderstanding highlighted in shared domain knowledge.',
+              intuition: m.correct,
+              verificationPrompt: 'Test your understanding against this misconception explicitly.'
+            });
+          }
+        }
+      }
+    }
+
     if (detected.length === 0) {
       return {
         title: 'Common Misconceptions',
@@ -799,6 +1075,91 @@ function createDidacticArchitectureAgent() {
     getExplanationModes,
     getModeById,
     getAvailableIntents,
+    getPlanner: function () { return pedagogicalPlanner; },
+    getCompositionGraph: function () { return compositionGraph; },
+    getInstructionalLayers: function () { return instructionalLayers; },
+    getDifficultyLadder: function () { return difficultyLadder; },
+    getMultiPerspectiveEngine: function () { return multiPerspectiveEngine; },
+    getSemanticResolver: function () { return semanticResolver; },
+    getExampleEngine: function () { return exampleEngine; },
+    getExampleRegistry: function () { return exampleReg; },
+    getCrossDomainConnector: function () { return crossDomainConnector; },
+    getRecapInserter: function () { return recapInserter; },
+    getResourceSelector: function () { return resourceSelector; },
+    getVisualizationOrchestrator: function () { return visualizationOrchestrator; },
+    getLaboratoryPlacer: function () { return laboratoryPlacer; },
+    getMediaOrchestrator: function () { return mediaOrchestrator; },
+    getTransitionEngine: function () { return transitionEngine; },
+    getDensityOptimizer: function () { return densityOptimizer; },
+    getMediaPlan: function () {
+      var plan = pedagogicalPlanner.getLastPlan();
+      return plan ? plan.mediaPlan : null;
+    },
+    getVisualizationPlan: function () {
+      var plan = pedagogicalPlanner.getLastPlan();
+      return plan ? plan.visualizations : [];
+    },
+    getLaboratoryPlan: function () {
+      var plan = pedagogicalPlanner.getLastPlan();
+      return plan ? plan.laboratories : [];
+    },
+    getTransitionMap: function () {
+      var plan = pedagogicalPlanner.getLastPlan();
+      return plan ? plan.transitionMap : [];
+    },
+    getLastPlan: function () { return pedagogicalPlanner.getLastPlan(); },
+    getEvidence: function () { return evidenceTracer; },
+    getMemoryContext: function () { return memoryReviewBridge.getMemoryContext(); },
+    getReviewContext: function () { return memoryReviewBridge.getReviewContext(); },
+    getSemanticContext: function () {
+      var plan = pedagogicalPlanner.getLastPlan();
+      return plan ? plan.semanticContext : null;
+    },
+    getAgentContributions: function () {
+      var plan = pedagogicalPlanner.getLastPlan();
+      return plan ? plan.agentContributions : null;
+    },
+    getGeneratedBlocks: function () {
+      var plan = pedagogicalPlanner.getLastPlan();
+      return plan ? (plan.generatedBlocks || []) : [];
+    },
+    getEvidenceTree: function () {
+      var plan = pedagogicalPlanner.getLastPlan();
+      return plan ? plan.evidenceTree : null;
+    },
+    getEvidenceBlocks: function () {
+      var plan = pedagogicalPlanner.getLastPlan();
+      return plan ? (plan.evidenceBlocks || []) : [];
+    },
+    getGenerativeAugmenter: function () { return generativeAugmenter; },
+    getAgentCollaborationOrchestrator: function () { return agentCollaborationOrchestrator; },
+    getSemanticLearningBridge: function () { return semanticLearningBridge; },
+    getMemoryReviewBridge: function () { return memoryReviewBridge; },
+    getLessonOutline: function () {
+      var plan = pedagogicalPlanner.getLastPlan();
+      return plan ? plan.lessonOutline : null;
+    },
+    getLoadMetrics: function () {
+      var plan = pedagogicalPlanner.getLastPlan();
+      return plan ? plan.loadMetrics : null;
+    },
+    getPacingPlan: function () {
+      var plan = pedagogicalPlanner.getLastPlan();
+      return plan ? plan.pacingPlan : null;
+    },
+    getComposition: function () {
+      var plan = pedagogicalPlanner.getLastPlan();
+      return plan ? plan.composition : null;
+    },
+    getAccessibilityReport: function () {
+      var plan = pedagogicalPlanner.getLastPlan();
+      return plan ? plan.accessibilityAnnotations : null;
+    },
+    getCognitiveLoadOptimizer: function () { return cognitiveLoadOptimizer; },
+    getInstructionalPacingEngine: function () { return instructionalPacingEngine; },
+    getLessonComposer: function () { return lessonComposer; },
+    getReadabilityOptimizer: function () { return readabilityOptimizer; },
+    getAccessibilityPolish: function () { return accessibilityPolish; },
     EXPLANATION_MODES,
     INTENT_PATTERNS
   };

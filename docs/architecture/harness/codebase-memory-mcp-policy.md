@@ -2,7 +2,52 @@
 
 ## Status
 
-Experimental candidate. Not installed. Not configured. Policy only.
+Experimental. Configured. Awaiting execution.
+
+- Configuration: present in both `.opencode/opencode.json` and
+  `neuralverse/.opencode/opencode.json` under `mcp.codebase-memory`.
+- Execution: not verified in the current environment. The runtime
+  shell has no Node.js, npm, npx, or bun, so the configured command
+  cannot be launched here. A real OpenCode run in a Node-equipped
+  environment is required to validate the server.
+- Promotion: still requires a pilot that demonstrates real reduction
+  in files inspected, repeated searches, and module discovery cost,
+  without introducing stale-index errors or false confidence.
+
+## Chosen Package
+
+`codebase-memory-mcp@0.8.1` published by `deusdata` on npm. The
+package is the most-downloaded exact-name match for "codebase memory
+mcp" on the npm registry at the time of integration. It is MIT-licensed
+and uses tree-sitter for structural code analysis. There is no
+single "official" Codebase Memory MCP blessed by OpenCode; this
+choice is documented and revisable.
+
+Repository: https://github.com/DeusData/codebase-memory-mcp
+Package: https://www.npmjs.com/package/codebase-memory-mcp
+
+## Configuration
+
+Both opencode.json files declare the same MCP block:
+
+```json
+"mcp": {
+  "codebase-memory": {
+    "type": "local",
+    "command": ["npx", "-y", "codebase-memory-mcp@0.8.1"],
+    "cwd": ".",
+    "enabled": true,
+    "timeout": 15000
+  }
+}
+```
+
+- `type: "local"` — the MCP runs as a child process.
+- `command` — uses `npx -y` to fetch and run the pinned version.
+- `cwd: "."` — the MCP indexes the workspace root.
+- `enabled: true` — OpenCode will attempt to start it.
+- `timeout: 15000` — 15 seconds, well above the 5s default to absorb
+  cold-start indexing for larger codebases.
 
 ## Purpose
 
@@ -10,17 +55,15 @@ Provide a structural code discovery layer for medium and high complexity
 tasks. Help the agent find relevant files, call relationships, and module
 ownership faster than repeated `fd` and `rg` scans.
 
-The candidate is meant to complement, not replace, existing repository
+The MCP is meant to complement, not replace, existing repository
 inspection tools.
 
 ## Intended Position in the Pipeline
 
-The MCP would sit inside the repository discovery stage, not above it.
-
 ```
 Harness Orchestrator
   → Context Governance
-  → Codebase Memory MCP        (experimental)
+  → Codebase Memory MCP        (experimental, optional)
   → Repository Discovery       (fd, rg, ast-grep)
   → Focused Reads
   → Specialist Skills
@@ -28,6 +71,29 @@ Harness Orchestrator
 
 The MCP is a candidate input to discovery. It does not bypass
 context-governance, and it does not replace evidence-first inspection.
+
+## Activation Rules
+
+The orchestrator decides whether to activate the MCP based on task
+class.
+
+Activate for:
+
+- medium or high complexity tasks;
+- architecture exploration;
+- dependency discovery;
+- module ownership questions;
+- cross-file relationships;
+- graph and retrieval systems;
+- large refactors.
+
+Do NOT activate for:
+
+- CSS fixes, spacing, padding, label, or tooltip changes;
+- documentation, copy, spelling, or formatting edits;
+- small UI tweaks;
+- trivial bug fixes;
+- single-line or single-file edits where scope is already known.
 
 ## Rules
 
@@ -37,24 +103,14 @@ context-governance, and it does not replace evidence-first inspection.
   Stale indexes are a real risk and must be caught by direct inspection.
 - It should not be used for small CSS, text, or documentation tasks.
 - It should not be used when the affected area is already known and small.
-- It should be evaluated through a pilot before official adoption.
-- Do not install or configure it without explicit approval.
 
-## When To Consider It
+## Rollback
 
-- Medium or high complexity tasks.
-- Tasks that span multiple modules or directories.
-- Tasks where the agent would otherwise perform several broad searches
-  before locating the right files.
-- Architectural or refactor work that needs ownership context.
-
-## When Not To Use It
-
-- Small, localized, or single-file edits.
-- Pure documentation, label, or copy changes.
-- Read-only audits and dry runs.
-- Configuration-only changes.
-- Tasks that already have a clear, narrow scope.
+To disable the MCP without removing the configuration block, set
+`"enabled": false` in both `mcp.codebase-memory` blocks. To remove
+the MCP entirely, delete the `mcp` object from both `opencode.json`
+files. No application code, no skills, and no documentation depend on
+the MCP being present, so removal is safe.
 
 ## Pilot Criteria
 
@@ -69,7 +125,7 @@ that it:
 - integrates cleanly with OpenCode without breaking the existing
   `harness-orchestrator` workflow.
 
-If any criterion fails, the MCP remains policy-only. Do not paper over
+If any criterion fails, the MCP remains experimental. Do not paper over
 weak results with optimism.
 
 ## Failure Modes To Watch
@@ -82,16 +138,17 @@ weak results with optimism.
 
 ## Reporting
 
-While the MCP remains policy-only, the Harness Pipeline Used summary
-should mention that the Codebase Memory MCP was considered and rejected
-for the current task, with a short reason. This keeps the policy
-visible until the pilot either promotes it or removes it from the
-candidate list.
+While the MCP remains experimental, the `## Harness Pipeline Used`
+summary should state whether the MCP was considered and, if so,
+whether it was activated or skipped. The `## Confidence Assessment`
+should note that MCP output is unverified when it was the primary
+input to a discovery decision.
 
 ## Forbidden
 
-- Installing or configuring the MCP without explicit approval.
 - Treating MCP suggestions as ground truth.
 - Using the MCP for tasks outside its intended scope.
 - Promoting the MCP from experimental to active without passing the
   pilot criteria.
+- Reporting MCP output as "validated" when no `fd`/`rg`/`ast-grep`/
+  focused-read cross-check was run.

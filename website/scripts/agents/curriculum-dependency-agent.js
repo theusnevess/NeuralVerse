@@ -1,10 +1,16 @@
 /**
- * NV-1000-A2 — Curriculum & Dependency Agent
+ * NV-1000-A2 / NV-1300-D3A — Curriculum & Dependency Agent
  *
  * Canonical curriculum intelligence layer.
  * Interprets the NV-800 curriculum graph for prerequisite analysis,
  * dependency traversal, sequencing, learning path recommendations,
  * readiness explanations, and navigation assistance.
+ *
+ * D3A adds structural validation via:
+ * - Curriculum Structure Guardian
+ * - Dependency Graph Validator
+ * - Typed Dependency Engine
+ * - Concept Prerequisite Engine
  *
  * Strictly read-only over existing curriculum data.
  * Never invents relationships or modifies curriculum.
@@ -49,6 +55,110 @@ function createCurriculumDependencyAgent() {
     'Exercise',
     'Comparison Table'
   ];
+
+  // D3A Modules - Lazy initialization
+  let structureGuardian = null;
+  let dependencyGraphValidator = null;
+  let typedDependencyEngine = null;
+  let conceptPrerequisiteEngine = null;
+
+  // D3B Modules - Lazy initialization
+  let goalInterpreter = null;
+  let justificationEngine = null;
+  let depthEngine = null;
+  let priorityEngine = null;
+  let narrativeBuilder = null;
+  let explanationComposer = null;
+
+  // D3C Modules - Lazy initialization
+  let progressionEngine = null;
+  let redundancyEngine = null;
+  let coverageVerifier = null;
+  let unlockMapGenerator = null;
+  let healthAnalyzer = null;
+  let reportComposer = null;
+
+  // D3D Modules - Lazy initialization
+  let unifiedReportComposer = null;
+  let capabilityMatrix = null;
+  let certificationRunner = null;
+  let agentFacade = null;
+
+  function ensureD3AModules() {
+    if (structureGuardian && dependencyGraphValidator && typedDependencyEngine && conceptPrerequisiteEngine) {
+      return;
+    }
+
+    if (typeof window !== 'undefined' && window.NeuralVerse) {
+      structureGuardian = window.NeuralVerse.curriculumStructureGuardian ||
+        (typeof createCurriculumStructureGuardian === 'function' ? createCurriculumStructureGuardian() : null);
+      dependencyGraphValidator = window.NeuralVerse.dependencyGraphValidator ||
+        (typeof createDependencyGraphValidator === 'function' ? createDependencyGraphValidator() : null);
+      typedDependencyEngine = window.NeuralVerse.typedDependencyEngine ||
+        (typeof createTypedDependencyEngine === 'function' ? createTypedDependencyEngine() : null);
+      conceptPrerequisiteEngine = window.NeuralVerse.conceptPrerequisiteEngine ||
+        (typeof createConceptPrerequisiteEngine === 'function' ? createConceptPrerequisiteEngine() : null);
+    }
+  }
+
+  function ensureD3BModules() {
+    if (goalInterpreter && justificationEngine && depthEngine && priorityEngine && narrativeBuilder && explanationComposer) {
+      return;
+    }
+
+    if (typeof window !== 'undefined' && window.NeuralVerse) {
+      goalInterpreter = window.NeuralVerse.goalDependencyInterpreter ||
+        (typeof createGoalDependencyInterpreter === 'function' ? createGoalDependencyInterpreter() : null);
+      justificationEngine = window.NeuralVerse.dependencyJustificationEngine ||
+        (typeof createDependencyJustificationEngine === 'function' ? createDependencyJustificationEngine() : null);
+      depthEngine = window.NeuralVerse.prerequisiteDepthEngine ||
+        (typeof createPrerequisiteDepthEngine === 'function' ? createPrerequisiteDepthEngine() : null);
+      priorityEngine = window.NeuralVerse.goalPriorityEngine ||
+        (typeof createGoalPriorityEngine === 'function' ? createGoalPriorityEngine() : null);
+      narrativeBuilder = window.NeuralVerse.dependencyNarrativeBuilder ||
+        (typeof createDependencyNarrativeBuilder === 'function' ? createDependencyNarrativeBuilder() : null);
+      explanationComposer = window.NeuralVerse.curriculumExplanationComposer ||
+        (typeof createCurriculumExplanationComposer === 'function' ? createCurriculumExplanationComposer() : null);
+    }
+  }
+
+  function ensureD3CModules() {
+    if (progressionEngine && redundancyEngine && coverageVerifier && unlockMapGenerator && healthAnalyzer && reportComposer) {
+      return;
+    }
+
+    if (typeof window !== 'undefined' && window.NeuralVerse) {
+      progressionEngine = window.NeuralVerse.progressionContinuityEngine ||
+        (typeof createProgressionContinuityEngine === 'function' ? createProgressionContinuityEngine() : null);
+      redundancyEngine = window.NeuralVerse.redundancyDetectionEngine ||
+        (typeof createRedundancyDetectionEngine === 'function' ? createRedundancyDetectionEngine() : null);
+      coverageVerifier = window.NeuralVerse.competencyCoverageVerifier ||
+        (typeof createCompetencyCoverageVerifier === 'function' ? createCompetencyCoverageVerifier() : null);
+      unlockMapGenerator = window.NeuralVerse.goalUnlockMapGenerator ||
+        (typeof createGoalUnlockMapGenerator === 'function' ? createGoalUnlockMapGenerator() : null);
+      healthAnalyzer = window.NeuralVerse.curriculumHealthAnalyzer ||
+        (typeof createCurriculumHealthAnalyzer === 'function' ? createCurriculumHealthAnalyzer() : null);
+      reportComposer = window.NeuralVerse.curriculumProgressionReportComposer ||
+        (typeof createCurriculumProgressionReportComposer === 'function' ? createCurriculumProgressionReportComposer() : null);
+    }
+  }
+
+  function ensureD3DModules() {
+    if (unifiedReportComposer && capabilityMatrix && certificationRunner && agentFacade) {
+      return;
+    }
+
+    if (typeof window !== 'undefined' && window.NeuralVerse) {
+      unifiedReportComposer = window.NeuralVerse.unifiedCurriculumReportComposer ||
+        (typeof createUnifiedCurriculumReportComposer === 'function' ? createUnifiedCurriculumReportComposer() : null);
+      capabilityMatrix = window.NeuralVerse.curriculumCapabilityMatrix ||
+        (typeof createCurriculumCapabilityMatrix === 'function' ? createCurriculumCapabilityMatrix() : null);
+      certificationRunner = window.NeuralVerse.curriculumCertificationRunner ||
+        (typeof createCurriculumCertificationRunner === 'function' ? createCurriculumCertificationRunner() : null);
+      agentFacade = window.NeuralVerse.curriculumAgentFacade ||
+        (typeof createCurriculumAgentFacade === 'function' ? createCurriculumAgentFacade() : null);
+    }
+  }
 
   function initialize() {
     if (initializationPromise) return initializationPromise;
@@ -1120,6 +1230,223 @@ function createCurriculumDependencyAgent() {
     return Object.keys(INTENT_PATTERNS);
   }
 
+  // D3A Methods
+  function getStructureGuardian() {
+    ensureD3AModules();
+    return structureGuardian;
+  }
+
+  function getDependencyGraphValidator() {
+    ensureD3AModules();
+    return dependencyGraphValidator;
+  }
+
+  function getTypedDependencyEngine() {
+    ensureD3AModules();
+    return typedDependencyEngine;
+  }
+
+  function getConceptPrerequisiteEngine() {
+    ensureD3AModules();
+    return conceptPrerequisiteEngine;
+  }
+
+  function validateCurriculumStructure() {
+    ensureD3AModules();
+    if (!structureGuardian || !indexCache) {
+      return { valid: false, error: 'Guardian not available or curriculum not loaded' };
+    }
+    return structureGuardian.validateStructure(indexCache);
+  }
+
+  function validateDependencyGraph(graph) {
+    ensureD3AModules();
+    if (!dependencyGraphValidator) {
+      return { valid: false, error: 'Dependency graph validator not available' };
+    }
+    return dependencyGraphValidator.validateGraph(graph);
+  }
+
+  function validateConceptPrerequisites() {
+    ensureD3AModules();
+    if (!conceptPrerequisiteEngine) {
+      return { valid: false, error: 'Concept prerequisite engine not available' };
+    }
+    const concepts = indexCache?.concepts || [];
+    return conceptPrerequisiteEngine.validateConceptPrerequisites(concepts);
+  }
+
+  function getStructureSummary() {
+    ensureD3AModules();
+    if (!structureGuardian || !indexCache) {
+      return null;
+    }
+    return structureGuardian.summarizeStructure(indexCache);
+  }
+
+  // D3B Methods
+  function getGoalInterpreter() {
+    ensureD3BModules();
+    return goalInterpreter;
+  }
+
+  function getJustificationEngine() {
+    ensureD3BModules();
+    return justificationEngine;
+  }
+
+  function getDepthEngine() {
+    ensureD3BModules();
+    return depthEngine;
+  }
+
+  function getPriorityEngine() {
+    ensureD3BModules();
+    return priorityEngine;
+  }
+
+  function getNarrativeBuilder() {
+    ensureD3BModules();
+    return narrativeBuilder;
+  }
+
+  function getExplanationComposer() {
+    ensureD3BModules();
+    return explanationComposer;
+  }
+
+  function interpretGoal(goal) {
+    ensureD3BModules();
+    if (!goalInterpreter || !indexCache) {
+      return { valid: false, error: 'Goal interpreter not available or curriculum not loaded' };
+    }
+    return goalInterpreter.interpretGoal(goal, indexCache);
+  }
+
+  function explainDependencyJustification(source, target) {
+    ensureD3BModules();
+    if (!justificationEngine) {
+      return { valid: false, error: 'Justification engine not available' };
+    }
+    return justificationEngine.explainDependency(source, target, null, indexCache);
+  }
+
+  function composeCurriculumExplanation(goal, context = {}) {
+    ensureD3BModules();
+    if (!explanationComposer) {
+      return { valid: false, error: 'Explanation composer not available' };
+    }
+    return explanationComposer.composeExplanation(goal, context);
+  }
+
+  // D3C Methods
+  function getProgressionContinuityEngine() {
+    ensureD3CModules();
+    return progressionEngine;
+  }
+
+  function getRedundancyDetectionEngine() {
+    ensureD3CModules();
+    return redundancyEngine;
+  }
+
+  function getCoverageVerifier() {
+    ensureD3CModules();
+    return coverageVerifier;
+  }
+
+  function getGoalUnlockMapGenerator() {
+    ensureD3CModules();
+    return unlockMapGenerator;
+  }
+
+  function getCurriculumHealthAnalyzer() {
+    ensureD3CModules();
+    return healthAnalyzer;
+  }
+
+  function getProgressionReportComposer() {
+    ensureD3CModules();
+    return reportComposer;
+  }
+
+  function validateProgression() {
+    ensureD3CModules();
+    if (!progressionEngine || !indexCache) {
+      return { valid: false, error: 'Progression engine not available or curriculum not loaded' };
+    }
+    return progressionEngine.validateProgression(indexCache);
+  }
+
+  function detectRedundancy() {
+    ensureD3CModules();
+    if (!redundancyEngine || !indexCache) {
+      return { valid: false, error: 'Redundancy engine not available or curriculum not loaded' };
+    }
+    return redundancyEngine.summarizeRedundancy(indexCache);
+  }
+
+  function analyzeCurriculumHealth() {
+    ensureD3CModules();
+    if (!healthAnalyzer || !indexCache) {
+      return { valid: false, error: 'Health analyzer not available or curriculum not loaded' };
+    }
+    return healthAnalyzer.analyzeHealth(indexCache);
+  }
+
+  function generateUnlockMap(targetConcept) {
+    ensureD3CModules();
+    if (!unlockMapGenerator || !indexCache) {
+      return { valid: false, error: 'Unlock map generator not available or curriculum not loaded' };
+    }
+    return unlockMapGenerator.generateUnlockMap(targetConcept, indexCache);
+  }
+
+  // D3D Methods
+  function getUnifiedReportComposer() {
+    ensureD3DModules();
+    return unifiedReportComposer;
+  }
+
+  function getCapabilityMatrix() {
+    ensureD3DModules();
+    return capabilityMatrix;
+  }
+
+  function getCertificationRunner() {
+    ensureD3DModules();
+    return certificationRunner;
+  }
+
+  function getCurriculumAgentFacade() {
+    ensureD3DModules();
+    return agentFacade;
+  }
+
+  function composeUnifiedCurriculumReport(input) {
+    ensureD3DModules();
+    if (!unifiedReportComposer) {
+      return { valid: false, error: 'Unified report composer not available' };
+    }
+    return unifiedReportComposer.composeUnifiedReport(input);
+  }
+
+  function runCurriculumCertification(input) {
+    ensureD3DModules();
+    if (!certificationRunner) {
+      return { certified: false, error: 'Certification runner not available' };
+    }
+    return certificationRunner.runCertification(input);
+  }
+
+  function getD3CapabilityMatrix() {
+    ensureD3DModules();
+    if (!capabilityMatrix) {
+      return { valid: false, error: 'Capability matrix not available' };
+    }
+    return capabilityMatrix.buildMatrix();
+  }
+
   return {
     canHandle,
     run,
@@ -1131,7 +1458,45 @@ function createCurriculumDependencyAgent() {
     getCurriculumContext,
     getIndexStats,
     getAvailableIntents,
-    INTENT_PATTERNS
+    INTENT_PATTERNS,
+    // D3A getters
+    getStructureGuardian,
+    getDependencyGraphValidator,
+    getTypedDependencyEngine,
+    getConceptPrerequisiteEngine,
+    validateCurriculumStructure,
+    validateDependencyGraph,
+    validateConceptPrerequisites,
+    getStructureSummary,
+    // D3B getters
+    getGoalInterpreter,
+    getJustificationEngine,
+    getDepthEngine,
+    getPriorityEngine,
+    getNarrativeBuilder,
+    getExplanationComposer,
+    interpretGoal,
+    explainDependencyJustification,
+    composeCurriculumExplanation,
+    // D3C getters
+    getProgressionContinuityEngine,
+    getRedundancyDetectionEngine,
+    getCoverageVerifier,
+    getGoalUnlockMapGenerator,
+    getCurriculumHealthAnalyzer,
+    getProgressionReportComposer,
+    validateProgression,
+    detectRedundancy,
+    analyzeCurriculumHealth,
+    generateUnlockMap,
+    // D3D getters
+    getUnifiedReportComposer,
+    getCapabilityMatrix,
+    getCertificationRunner,
+    getCurriculumAgentFacade,
+    composeUnifiedCurriculumReport,
+    runCurriculumCertification,
+    getD3CapabilityMatrix
   };
 }
 

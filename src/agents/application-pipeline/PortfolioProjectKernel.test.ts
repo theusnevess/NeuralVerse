@@ -390,8 +390,8 @@ describe('Portfolio Project Kernel — Registry', () => {
   });
 
   it('should sort deliverables deterministically', () => {
-    const d2 = { ...VALID_DELIVERABLE, deliverableId: 'del-002', deliverableType: 'documentation' };
-    const d1 = { ...VALID_DELIVERABLE, deliverableId: 'del-001', deliverableType: 'source_code' };
+    const d2 = { ...VALID_DELIVERABLE, deliverableId: 'del-002', deliverableType: 'documentation' as const };
+    const d1 = { ...VALID_DELIVERABLE, deliverableId: 'del-001', deliverableType: 'source_code' as const };
 
     const registry = composePortfolioProjectRegistry(
       [VALID_PROJECT],
@@ -405,8 +405,8 @@ describe('Portfolio Project Kernel — Registry', () => {
   });
 
   it('should sort competencies deterministically', () => {
-    const c2 = { ...VALID_COMPETENCY, competencyId: 'comp-002', competencyType: 'software_engineering' };
-    const c1 = { ...VALID_COMPETENCY, competencyId: 'comp-001', competencyType: 'computer_vision' };
+    const c2 = { ...VALID_COMPETENCY, competencyId: 'comp-002', competencyType: 'software_engineering' as const };
+    const c1 = { ...VALID_COMPETENCY, competencyId: 'comp-001', competencyType: 'computer_vision' as const };
 
     const registry = composePortfolioProjectRegistry(
       [VALID_PROJECT],
@@ -420,8 +420,8 @@ describe('Portfolio Project Kernel — Registry', () => {
   });
 
   it('should sort showcases deterministically', () => {
-    const s2 = { ...VALID_SHOWCASE, showcaseId: 'show-002', showcaseType: 'technical_blog' };
-    const s1 = { ...VALID_SHOWCASE, showcaseId: 'show-001', showcaseType: 'github' };
+    const s2 = { ...VALID_SHOWCASE, showcaseId: 'show-002', showcaseType: 'technical_blog' as const };
+    const s1 = { ...VALID_SHOWCASE, showcaseId: 'show-001', showcaseType: 'github' as const };
 
     const registry = composePortfolioProjectRegistry(
       [VALID_PROJECT],
@@ -616,7 +616,7 @@ describe('Portfolio Project Kernel — Validation', () => {
       registryVersion: '1.0.0',
       compositionVersion: '1.0.0',
       decisions: [],
-      deterministic: false,
+      deterministic: false as true,
       generatedFrom: 'deterministic_portfolio_project_kernel',
       randomUsed: false,
       timeDependency: false,

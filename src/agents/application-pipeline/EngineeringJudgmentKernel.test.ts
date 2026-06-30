@@ -393,8 +393,8 @@ describe('Engineering Judgment Kernel — Registry', () => {
   });
 
   it('should sort pitfalls deterministically', () => {
-    const p2 = { ...VALID_PITFALL, pitfallId: 'pitfall-002', pitfallType: 'insufficient_data' };
-    const p1 = { ...VALID_PITFALL, pitfallId: 'pitfall-001', pitfallType: 'technology_hype' };
+    const p2 = { ...VALID_PITFALL, pitfallId: 'pitfall-002', pitfallType: 'insufficient_data' as const };
+    const p1 = { ...VALID_PITFALL, pitfallId: 'pitfall-001', pitfallType: 'technology_hype' as const };
 
     const registry = composeEngineeringJudgmentRegistry(
       [VALID_MISTAKE],
@@ -408,8 +408,8 @@ describe('Engineering Judgment Kernel — Registry', () => {
   });
 
   it('should sort judgments deterministically', () => {
-    const j2 = { ...VALID_JUDGMENT, judgmentId: 'judgment-002', judgmentType: 'deployment_decision' };
-    const j1 = { ...VALID_JUDGMENT, judgmentId: 'judgment-001', judgmentType: 'architecture_selection' };
+    const j2 = { ...VALID_JUDGMENT, judgmentId: 'judgment-002', judgmentType: 'deployment_decision' as const };
+    const j1 = { ...VALID_JUDGMENT, judgmentId: 'judgment-001', judgmentType: 'architecture_selection' as const };
 
     const registry = composeEngineeringJudgmentRegistry(
       [VALID_MISTAKE],
@@ -423,8 +423,8 @@ describe('Engineering Judgment Kernel — Registry', () => {
   });
 
   it('should sort anti-patterns deterministically', () => {
-    const a2 = { ...VALID_ANTI_PATTERN, antiPatternId: 'ap-002', antiPatternType: 'tight_coupling' };
-    const a1 = { ...VALID_ANTI_PATTERN, antiPatternId: 'ap-001', antiPatternType: 'hidden_complexity' };
+    const a2 = { ...VALID_ANTI_PATTERN, antiPatternId: 'ap-002', antiPatternType: 'tight_coupling' as const };
+    const a1 = { ...VALID_ANTI_PATTERN, antiPatternId: 'ap-001', antiPatternType: 'hidden_complexity' as const };
 
     const registry = composeEngineeringJudgmentRegistry(
       [VALID_MISTAKE],
@@ -629,7 +629,7 @@ describe('Engineering Judgment Kernel — Validation', () => {
       registryVersion: '1.0.0',
       compositionVersion: '1.0.0',
       decisions: [],
-      deterministic: false,
+      deterministic: false as true,
       generatedFrom: 'deterministic_engineering_judgment_kernel',
       randomUsed: false,
       timeDependency: false,

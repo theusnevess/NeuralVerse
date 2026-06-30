@@ -1,0 +1,63 @@
+{
+  "id": "activation-functions",
+  "name": "Activation Functions",
+  "slug": "activation-functions",
+  "summary": "Nonlinear functions applied to neuron outputs to introduce expressiveness into neural networks.",
+  "definition": "Activation functions transform the weighted sum of inputs in a neuron. Common choices include ReLU, sigmoid, tanh, and GeLU. They enable neural networks to learn nonlinear mappings.",
+  "aliases": [
+    "transfer functions",
+    "nonlinearities"
+  ],
+  "keywords": [
+    "activation",
+    "ReLU",
+    "sigmoid",
+    "tanh",
+    "nonlinearity"
+  ],
+  "sharedKnowledgeDomains": [
+    "deep-learning"
+  ],
+  "relatedConcepts": [
+    {
+      "concept": "neural-networks",
+      "type": "uses"
+    },
+    {
+      "concept": "self-attention",
+      "type": "uses"
+    }
+  ],
+  "prerequisiteConcepts": [
+    "neural-networks"
+  ],
+  "artifactReferences": [
+    "artifact-activation-functions-comparison-table",
+    "artifact-activation-functions-exercise",
+    "artifact-activation-functions-explanatory-text",
+    "artifact-activation-functions-interactive-visualization",
+    "artifact-activation-functions-visual-intuition",
+    "artifact-artificial-neural-networks-comparison-table",
+    "artifact-artificial-neural-networks-exercise",
+    "artifact-artificial-neural-networks-explanatory-text",
+    "artifact-artificial-neural-networks-interactive-visualization",
+    "artifact-artificial-neural-networks-visual-intuition",
+    "artifact-forward-propagation-comparison-table",
+    "artifact-forward-propagation-exercise",
+    "artifact-forward-propagation-explanatory-text",
+    "artifact-forward-propagation-interactive-visualization",
+    "artifact-forward-propagation-visual-intuition"
+  ],
+  "difficulty": "beginner",
+  "category": "deep-learning",
+  "canonicalStatus": "Reviewed",
+  "version": "1.0.0",
+  "reviewedBy": "NV-1100-P4 Implementation",
+  "lastReviewed": "2026-06-24",
+  "sourceReferences": [],
+  "examples": [],
+  "counterExamples": [],
+  "commonMisconceptions": [],
+  "recommendedVisualizations": [],
+  "recommendedLabs": []
+}

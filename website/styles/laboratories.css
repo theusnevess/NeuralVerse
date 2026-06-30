@@ -1,0 +1,594 @@
+/**
+ * NV-1100-P7 — Laboratory CSS
+ * Styles for the laboratory system: index, viewer, parameters, visualization.
+ */
+
+:root {
+  --nv-lab-bg: var(--sys-color-surface-primary, #0c1220);
+  --nv-lab-surface: var(--sys-color-surface-secondary, #111827);
+  --nv-lab-surface-hover: var(--sys-color-surface-tertiary, #1a2332);
+  --nv-lab-border: var(--sys-color-border, rgba(138,180,248,0.12));
+  --nv-lab-border-hover: var(--sys-color-border-hover, rgba(138,180,248,0.25));
+  --nv-lab-accent: var(--sys-color-accent-primary, #06b6d4);
+  --nv-lab-accent-dim: rgba(6,182,212,0.15);
+  --nv-lab-text: var(--sys-color-text-primary, #e2e8f0);
+  --nv-lab-text-secondary: var(--sys-color-text-secondary, #94a3b8);
+  --nv-lab-text-muted: var(--sys-color-text-tertiary, #64748b);
+  --nv-lab-radius: 8px;
+  --nv-lab-radius-sm: 4px;
+  --nv-lab-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  --nv-lab-gap: 16px;
+  --nv-lab-gap-sm: 8px;
+  --nv-lab-gap-xs: 4px;
+}
+
+/* ── Laboratory Index ──────────────────────────────────── */
+.nv-lab-index {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.nv-lab-index-header {
+  margin-bottom: 32px;
+}
+
+.nv-lab-index-header h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--nv-lab-text);
+  margin: 0 0 8px 0;
+}
+
+.nv-lab-index-header p {
+  color: var(--nv-lab-text-secondary);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.nv-lab-section-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--nv-lab-text);
+  margin: 0 0 16px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--nv-lab-border);
+}
+
+.nv-lab-recent-section,
+.nv-lab-all-section {
+  margin-bottom: 32px;
+}
+
+.nv-lab-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--nv-lab-gap);
+}
+
+.nv-lab-recent-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: var(--nv-lab-gap-sm);
+}
+
+.nv-lab-card {
+  display: block;
+  background: var(--nv-lab-surface);
+  border: 1px solid var(--nv-lab-border);
+  border-radius: var(--nv-lab-radius);
+  padding: 16px;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.nv-lab-card:hover,
+.nv-lab-card:focus-visible {
+  border-color: var(--nv-lab-accent);
+  box-shadow: 0 0 0 1px var(--nv-lab-accent-dim);
+  outline: none;
+}
+
+.nv-lab-card--recent {
+  padding: 12px;
+  border-left: 3px solid var(--nv-lab-accent);
+}
+
+.nv-lab-card-category {
+  display: inline-block;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--nv-lab-accent);
+  background: var(--nv-lab-accent-dim);
+  padding: 2px 8px;
+  border-radius: var(--nv-lab-radius-sm);
+  margin-bottom: 8px;
+}
+
+.nv-lab-card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--nv-lab-text);
+  margin: 0 0 8px 0;
+}
+
+.nv-lab-card-summary {
+  font-size: 0.85rem;
+  color: var(--nv-lab-text-secondary);
+  margin: 0 0 12px 0;
+  line-height: 1.4;
+}
+
+.nv-lab-card-meta {
+  display: flex;
+  gap: 12px;
+  font-size: 0.75rem;
+  color: var(--nv-lab-text-muted);
+}
+
+.nv-lab-card-time {
+  font-size: 0.75rem;
+  color: var(--nv-lab-text-muted);
+  margin-top: 4px;
+  display: block;
+}
+
+/* ── Laboratory Viewer ─────────────────────────────────── */
+.nv-lab-viewer {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  grid-template-rows: auto 1fr;
+  gap: 0;
+  height: calc(100vh - 80px);
+  overflow: hidden;
+}
+
+.nv-lab-viewer-header {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 24px;
+  background: var(--nv-lab-surface);
+  border-bottom: 1px solid var(--nv-lab-border);
+}
+
+.nv-lab-viewer-header h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--nv-lab-text);
+  margin: 0;
+  flex: 1;
+}
+
+.nv-lab-header-summary {
+  font-size: 0.85rem;
+  color: var(--nv-lab-text-secondary);
+  flex: 2;
+}
+
+.nv-lab-header-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.nv-lab-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: 1px solid var(--nv-lab-border);
+  border-radius: var(--nv-lab-radius-sm);
+  color: var(--nv-lab-text-secondary);
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.nv-lab-back-btn:hover,
+.nv-lab-back-btn:focus-visible {
+  color: var(--nv-lab-text);
+  border-color: var(--nv-lab-accent);
+  outline: none;
+}
+
+.nv-lab-reset-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: 1px solid var(--nv-lab-border);
+  border-radius: var(--nv-lab-radius-sm);
+  color: var(--nv-lab-text-secondary);
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.nv-lab-reset-btn:hover,
+.nv-lab-reset-btn:focus-visible {
+  color: var(--nv-lab-text);
+  border-color: var(--nv-lab-accent);
+  outline: none;
+}
+
+/* ── Parameter Panel ───────────────────────────────────── */
+.nv-lab-parameter-panel {
+  background: var(--nv-lab-surface);
+  border-right: 1px solid var(--nv-lab-border);
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.nv-lab-parameter-panel h3 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--nv-lab-text);
+  margin: 0 0 16px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.nv-lab-param-group {
+  margin-bottom: 16px;
+}
+
+.nv-lab-param-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--nv-lab-text);
+  margin-bottom: 6px;
+}
+
+.nv-lab-param-desc {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--nv-lab-text-muted);
+  margin-top: 2px;
+}
+
+.nv-lab-slider-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nv-lab-slider {
+  flex: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  background: var(--nv-lab-border);
+  border-radius: 2px;
+  outline: none;
+}
+
+.nv-lab-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--nv-lab-accent);
+  cursor: pointer;
+  border: 2px solid var(--nv-lab-surface);
+}
+
+.nv-lab-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--nv-lab-accent);
+  cursor: pointer;
+  border: 2px solid var(--nv-lab-surface);
+}
+
+.nv-lab-slider:focus-visible {
+  outline: 2px solid var(--nv-lab-accent);
+  outline-offset: 2px;
+}
+
+.nv-lab-slider-value {
+  font-size: 0.85rem;
+  font-family: monospace;
+  color: var(--nv-lab-accent);
+  min-width: 48px;
+  text-align: right;
+}
+
+.nv-lab-toggle {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.nv-lab-toggle input {
+  width: 0;
+  height: 0;
+  opacity: 0;
+  position: absolute;
+}
+
+.nv-lab-toggle-track {
+  width: 40px;
+  height: 22px;
+  background: var(--nv-lab-border);
+  border-radius: 11px;
+  position: relative;
+  transition: background 0.2s;
+}
+
+.nv-lab-toggle-track::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--nv-lab-text-secondary);
+  transition: transform 0.2s, background 0.2s;
+}
+
+.nv-lab-toggle input:checked + .nv-lab-toggle-track {
+  background: var(--nv-lab-accent-dim);
+}
+
+.nv-lab-toggle input:checked + .nv-lab-toggle-track::after {
+  transform: translateX(18px);
+  background: var(--nv-lab-accent);
+}
+
+.nv-lab-toggle input:focus-visible + .nv-lab-toggle-track {
+  outline: 2px solid var(--nv-lab-accent);
+  outline-offset: 2px;
+}
+
+.nv-lab-select {
+  width: 100%;
+  padding: 8px 12px;
+  background: var(--nv-lab-bg);
+  border: 1px solid var(--nv-lab-border);
+  border-radius: var(--nv-lab-radius-sm);
+  color: var(--nv-lab-text);
+  font-size: 0.85rem;
+  outline: none;
+  cursor: pointer;
+}
+
+.nv-lab-select:focus-visible {
+  border-color: var(--nv-lab-accent);
+  outline: 2px solid var(--nv-lab-accent);
+  outline-offset: 1px;
+}
+
+.nv-lab-input {
+  width: 100%;
+  padding: 8px 12px;
+  background: var(--nv-lab-bg);
+  border: 1px solid var(--nv-lab-border);
+  border-radius: var(--nv-lab-radius-sm);
+  color: var(--nv-lab-text);
+  font-size: 0.85rem;
+  outline: none;
+}
+
+.nv-lab-input:focus-visible {
+  border-color: var(--nv-lab-accent);
+  outline: 2px solid var(--nv-lab-accent);
+  outline-offset: 1px;
+}
+
+/* ── Visualization Panel ───────────────────────────────── */
+.nv-lab-visualization-panel {
+  padding: 24px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.nv-lab-viz-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--nv-lab-text);
+  margin: 0 0 8px 0;
+}
+
+.nv-lab-viz-description {
+  font-size: 0.85rem;
+  color: var(--nv-lab-text-secondary);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.nv-lab-error {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: rgba(239,68,68,0.1);
+  border: 1px solid rgba(239,68,68,0.3);
+  border-radius: var(--nv-lab-radius);
+  color: #fca5a5;
+}
+
+.nv-lab-error-icon {
+  font-size: 1.5rem;
+}
+
+.nv-lab-error p {
+  margin: 0;
+  font-size: 0.85rem;
+}
+
+/* ── Metadata Bar ──────────────────────────────────────── */
+.nv-lab-metadata {
+  display: flex;
+  gap: 16px;
+  padding: 8px 0;
+  font-size: 0.75rem;
+  color: var(--nv-lab-text-muted);
+}
+
+.nv-lab-meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ── Numeric Summary ───────────────────────────────────── */
+.nv-lab-numeric-summary {
+  width: 100%;
+}
+
+.nv-lab-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+}
+
+.nv-lab-summary-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px;
+  background: var(--nv-lab-bg);
+  border: 1px solid var(--nv-lab-border);
+  border-radius: var(--nv-lab-radius-sm);
+}
+
+.nv-lab-summary-label {
+  font-size: 0.75rem;
+  color: var(--nv-lab-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.nv-lab-summary-value {
+  font-size: 1.1rem;
+  font-family: monospace;
+  font-weight: 600;
+  color: var(--nv-lab-accent);
+}
+
+/* ── Heatmap ───────────────────────────────────────────── */
+.nv-lab-heatmap-grid {
+  display: grid;
+  gap: 2px;
+}
+
+.nv-lab-heatmap-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
+  font-size: 0.7rem;
+  font-family: monospace;
+  color: var(--nv-lab-text);
+  border-radius: 2px;
+  min-height: 36px;
+}
+
+/* ── Table ─────────────────────────────────────────────── */
+.nv-lab-table-wrapper {
+  overflow-x: auto;
+  width: 100%;
+}
+
+.nv-lab-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.nv-lab-table th,
+.nv-lab-table td {
+  padding: 8px 12px;
+  border: 1px solid var(--nv-lab-border);
+  text-align: right;
+  font-family: monospace;
+}
+
+.nv-lab-table th {
+  background: var(--nv-lab-bg);
+  color: var(--nv-lab-text-secondary);
+  font-weight: 600;
+  text-align: center;
+}
+
+.nv-lab-table td {
+  color: var(--nv-lab-text);
+}
+
+/* ── Empty State ───────────────────────────────────────── */
+.nv-lab-empty-params {
+  color: var(--nv-lab-text-muted);
+  font-size: 0.85rem;
+  text-align: center;
+  padding: 24px;
+}
+
+/* ── Responsive ────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .nv-lab-viewer {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto 1fr;
+    height: auto;
+    min-height: calc(100vh - 80px);
+  }
+
+  .nv-lab-parameter-panel {
+    border-right: none;
+    border-bottom: 1px solid var(--nv-lab-border);
+    max-height: 300px;
+  }
+}
+
+@media (max-width: 768px) {
+  .nv-lab-index {
+    padding: 16px;
+  }
+
+  .nv-lab-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .nv-lab-recent-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .nv-lab-viewer-header {
+    flex-wrap: wrap;
+    padding: 12px 16px;
+  }
+
+  .nv-lab-header-summary {
+    flex-basis: 100%;
+    order: 3;
+  }
+
+  .nv-lab-visualization-panel {
+    padding: 16px;
+  }
+
+  .nv-lab-summary-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 390px) {
+  .nv-lab-header-actions {
+    flex-wrap: wrap;
+  }
+
+  .nv-lab-summary-grid {
+    grid-template-columns: 1fr;
+  }
+}

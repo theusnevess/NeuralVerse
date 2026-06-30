@@ -1,0 +1,69 @@
+{
+  "id": "tool-calling",
+  "name": "Tool Calling",
+  "slug": "tool-calling",
+  "summary": "The ability of language model agents to invoke external tools and APIs to extend their capabilities.",
+  "definition": "Tool calling allows agents to format structured requests for external functions (search, calculators, databases) and incorporate the results into their reasoning process.",
+  "aliases": [
+    "function calling",
+    "tool use",
+    "API calling"
+  ],
+  "keywords": [
+    "tool",
+    "calling",
+    "function",
+    "API",
+    "execution"
+  ],
+  "sharedKnowledgeDomains": [
+    "agents"
+  ],
+  "relatedConcepts": [
+    {
+      "concept": "react-pattern",
+      "type": "uses"
+    },
+    {
+      "concept": "agentic-rag",
+      "type": "uses"
+    }
+  ],
+  "prerequisiteConcepts": [
+    "react-pattern"
+  ],
+  "artifactReferences": [
+    "artifact-agentic-ai-fundamentals-comparison-table",
+    "artifact-agentic-ai-fundamentals-exercise",
+    "artifact-agentic-ai-fundamentals-explanatory-text",
+    "artifact-agentic-ai-fundamentals-interactive-visualization",
+    "artifact-agentic-ai-fundamentals-visual-intuition",
+    "artifact-agentic-rag-comparison-table",
+    "artifact-agentic-rag-exercise",
+    "artifact-agentic-rag-explanatory-text",
+    "artifact-agentic-rag-interactive-visualization",
+    "artifact-agentic-rag-visual-intuition",
+    "artifact-multi-agent-systems-comparison-table",
+    "artifact-multi-agent-systems-exercise",
+    "artifact-multi-agent-systems-explanatory-text",
+    "artifact-multi-agent-systems-interactive-visualization",
+    "artifact-multi-agent-systems-visual-intuition",
+    "artifact-tool-calling-comparison-table",
+    "artifact-tool-calling-exercise",
+    "artifact-tool-calling-explanatory-text",
+    "artifact-tool-calling-interactive-visualization",
+    "artifact-tool-calling-visual-intuition"
+  ],
+  "difficulty": "advanced",
+  "category": "agents",
+  "canonicalStatus": "Reviewed",
+  "version": "1.0.0",
+  "reviewedBy": "NV-1100-P4 Implementation",
+  "lastReviewed": "2026-06-24",
+  "sourceReferences": [],
+  "examples": [],
+  "counterExamples": [],
+  "commonMisconceptions": [],
+  "recommendedVisualizations": [],
+  "recommendedLabs": []
+}

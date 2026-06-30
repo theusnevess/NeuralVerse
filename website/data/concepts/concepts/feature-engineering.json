@@ -1,0 +1,75 @@
+{
+  "id": "feature-engineering",
+  "name": "Feature Engineering",
+  "slug": "feature-engineering",
+  "summary": "Creating and selecting input features from raw data to improve model performance.",
+  "definition": "Feature engineering transforms raw data into informative features that better represent the underlying problem to the model, improving predictive accuracy.",
+  "aliases": [
+    "feature creation",
+    "feature extraction",
+    "feature selection"
+  ],
+  "keywords": [
+    "feature",
+    "engineering",
+    "extraction",
+    "selection",
+    "transform"
+  ],
+  "sharedKnowledgeDomains": [
+    "machine-learning"
+  ],
+  "relatedConcepts": [
+    {
+      "concept": "linear-models",
+      "type": "uses"
+    }
+  ],
+  "prerequisiteConcepts": [
+    "linear-models"
+  ],
+  "artifactReferences": [
+    "artifact-color-spaces-comparison-table",
+    "artifact-color-spaces-exercise",
+    "artifact-color-spaces-explanatory-text",
+    "artifact-color-spaces-interactive-visualization",
+    "artifact-color-spaces-visual-intuition",
+    "artifact-correlation-causation-comparison-table",
+    "artifact-correlation-causation-exercise",
+    "artifact-correlation-causation-explanatory-text",
+    "artifact-correlation-causation-interactive-visualization",
+    "artifact-correlation-causation-visual-intuition",
+    "artifact-dimensionality-reduction-comparison-table",
+    "artifact-dimensionality-reduction-exercise",
+    "artifact-dimensionality-reduction-explanatory-text",
+    "artifact-dimensionality-reduction-interactive-visualization",
+    "artifact-dimensionality-reduction-visual-intuition",
+    "artifact-pixel-representation-comparison-table",
+    "artifact-pixel-representation-exercise",
+    "artifact-pixel-representation-explanatory-text",
+    "artifact-pixel-representation-interactive-visualization",
+    "artifact-pixel-representation-visual-intuition",
+    "artifact-random-variables-comparison-table",
+    "artifact-random-variables-exercise",
+    "artifact-random-variables-explanatory-text",
+    "artifact-random-variables-interactive-visualization",
+    "artifact-random-variables-visual-intuition",
+    "artifact-resolution-sampling-resizing-comparison-table",
+    "artifact-resolution-sampling-resizing-exercise",
+    "artifact-resolution-sampling-resizing-explanatory-text",
+    "artifact-resolution-sampling-resizing-interactive-visualization",
+    "artifact-resolution-sampling-resizing-visual-intuition"
+  ],
+  "difficulty": "intermediate",
+  "category": "machine-learning",
+  "canonicalStatus": "Reviewed",
+  "version": "1.0.0",
+  "reviewedBy": "NV-1100-P4 Implementation",
+  "lastReviewed": "2026-06-24",
+  "sourceReferences": [],
+  "examples": [],
+  "counterExamples": [],
+  "commonMisconceptions": [],
+  "recommendedVisualizations": [],
+  "recommendedLabs": []
+}

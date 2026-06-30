@@ -27,6 +27,7 @@ import type {
   IndustryAdoptionProfile,
   LifecycleClassification,
   ReadinessIndicator,
+  TechnologyMaturityDecision,
   TechnologyMaturityTraceDecision,
   TechnologyMaturityTrace,
   TechnologyMaturityRegistry,

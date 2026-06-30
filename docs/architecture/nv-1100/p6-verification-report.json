@@ -1,0 +1,1042 @@
+{
+  "audit": "NV-1100-P6 Answer Verification Validator",
+  "generatedAt": "2026-06-26T23:03:08.208Z",
+  "decision": "READY",
+  "severityCounts": {
+    "critical": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0,
+    "info": 0
+  },
+  "checks": {
+    "total": 65,
+    "passed": 65,
+    "failed": 0
+  },
+  "critical": [],
+  "high": [],
+  "medium": [],
+  "low": [],
+  "info": [],
+  "fixtures": [
+    {
+      "name": "exact text match",
+      "expected": {
+        "status": "match",
+        "matchesExpected": true,
+        "needsRetry": false,
+        "partiallyCheckable": false
+      },
+      "actual": {
+        "status": "match",
+        "matchesExpected": true,
+        "needsRetry": false,
+        "partiallyCheckable": false,
+        "message": "Your answer matches the expected answer.",
+        "details": {
+          "expected": "attention mechanism",
+          "actual": "attention mechanism"
+        },
+        "timestamp": "2026-06-26T23:03:08.205Z"
+      },
+      "ok": true
+    },
+    {
+      "name": "exact text mismatch",
+      "expected": {
+        "status": "no_match",
+        "matchesExpected": false,
+        "needsRetry": true,
+        "partiallyCheckable": false
+      },
+      "actual": {
+        "status": "no_match",
+        "matchesExpected": false,
+        "needsRetry": true,
+        "partiallyCheckable": false,
+        "message": "Your answer does not match the expected answer.",
+        "details": {
+          "expected": "attention mechanism",
+          "actual": "self attention"
+        },
+        "timestamp": "2026-06-26T23:03:08.206Z"
+      },
+      "ok": true
+    },
+    {
+      "name": "case-sensitive mismatch",
+      "expected": {
+        "status": "no_match",
+        "matchesExpected": false,
+        "needsRetry": true,
+        "partiallyCheckable": false
+      },
+      "actual": {
+        "status": "no_match",
+        "matchesExpected": false,
+        "needsRetry": true,
+        "partiallyCheckable": false,
+        "message": "Your answer does not match the expected answer.",
+        "details": {
+          "expected": "B",
+          "actual": "b"
+        },
+        "timestamp": "2026-06-26T23:03:08.206Z"
+      },
+      "ok": true
+    },
+    {
+      "name": "case-insensitive match",
+      "expected": {
+        "status": "match",
+        "matchesExpected": true,
+        "needsRetry": false,
+        "partiallyCheckable": false
+      },
+      "actual": {
+        "status": "match",
+        "matchesExpected": true,
+        "needsRetry": false,
+        "partiallyCheckable": false,
+        "message": "Your answer matches the expected answer.",
+        "details": {
+          "expected": "b",
+          "actual": "b"
+        },
+        "timestamp": "2026-06-26T23:03:08.206Z"
+      },
+      "ok": true
+    },
+    {
+      "name": "accent-insensitive match",
+      "expected": {
+        "status": "match",
+        "matchesExpected": true,
+        "needsRetry": false,
+        "partiallyCheckable": false
+      },
+      "actual": {
+        "status": "match",
+        "matchesExpected": true,
+        "needsRetry": false,
+        "partiallyCheckable": false,
+        "message": "Your answer matches the expected answer.",
+        "details": {
+          "expectedNormalized": "atencao",
+          "actualNormalized": "atencao"
+        },
+        "timestamp": "2026-06-26T23:03:08.206Z"
+      },
+      "ok": true
+    },
+    {
+      "name": "punctuation-insensitive match",
+      "expected": {
+        "status": "match",
+        "matchesExpected": true,
+        "needsRetry": false,
+        "partiallyCheckable": false
+      },
+      "actual": {
+        "status": "match",
+        "matchesExpected": true,
+        "needsRetry": false,
+        "partiallyCheckable": false,
+        "message": "Your answer matches the expected answer.",
+        "details": {
+          "expectedNormalized": "hello world",
+          "actualNormalized": "hello world"
+        },
+        "timestamp": "2026-06-26T23:03:08.206Z"
+      },
+      "ok": true
+    },
+    {
+      "name": "numeric exact match",
+      "expected": {
+        "status": "match",
+        "matchesExpected": true,
+        "needsRetry": false,
+        "partiallyCheckable": false
+      },
+      "actual": {
+        "status": "match",
+        "matchesExpected": true,
+        "needsRetry": false,
+        "partiallyCheckable": false,
+        "message": "Your answer matches the expected answer.",
+        "details": {
+          "expected": 0.75,
+          "actual": 0.75
+        },
+        "timestamp": "2026-06-26T23:03:08.206Z"
+      },
+      "ok": true
+    },
+    {
+      "name": "numeric invalid input",
+      "expected": {
+        "status": "no_match",
+        "matchesExpected": false,
+        "needsRetry": true,
+        "partiallyCheckable": false
+      },
+      "actual": {
+        "status": "no_match",
+        "matchesExpected": false,
+        "needsRetry": true,
+        "partiallyCheckable": false,
+        "message": "Your answer is not a valid number.",
+        "details": {},
+        "timestamp": "2026-06-26T23:03:08.206Z"
+      },
+      "ok": true
+    },
+    {
+      "name": "numeric exact mismatch",
+      "expected": {
+        "status": "no_match",
+        "matchesExpected": false,
+        "needsRetry": true,
+        "partiallyCheckable": false
+      },
+      "actual": {
+        "status": "no_match",
+        "matchesExpected": false,
+        "needsRetry": true,
+        "partiallyCheckable": false,
+        "message": "Your answer does not match the expected answer.",
+        "details": {
+          "expected": 0.75,
+          "actual": 0.76
+        },
+        "timestamp": "2026-06-26T23:03:08.206Z"
+      },
+      "ok": true
+    },
+    {
+      "name": "numeric with comma",
+      "expected": {
+        "status": "match",
+        "matchesExpected": true,
+        "needsRetry": false,
+        "partiallyCheckable": false
+      },
+      "actual": {
+        "status": "match",
+        "matchesExpected": true,
+        "needsRetry": false,
+        "partiallyCheckable": false,
+        "message": "Your answer matches the expected answer.",
+        "details": {
+          "expected": 1000,
+          "actual": 1000
+        },
+        "timestamp": "2026-06-26T23:03:08.206Z"
+      },
+      "ok": true
+    },
+    {
+      "name": "absolute tolerance match",
+      "expected": {
+        "status": "match",
+        "matchesExpected": true,
+        "needsRetry": false,
+        "partiallyCheckable": false
+      },
+      "actual": {
+        "status": "match",
+        "matchesExpected": true,
+        "needsRetry": false,
+        "partiallyCheckable": false,
+        "message": "Your answer matches the expected answer.",
+        "details": {
+          "expected": 0.75,
+          "actual": 0.749,
+          "diff": 0.0010000000000000009,
+          "absoluteTolerance": 0.01,
+          "matchReason": "absolute"
+        },
+        "timestamp": "2026-06-26T23:03:08.206Z"
+      },
+      "ok": true
+    },
+    {
+      "name": "absolute tolerance mismatch",
+      "expected": {
+        "status": "no_match",
+        "matchesExpected": false,
+        "needsRetry": true,
+        "partiallyCheckable": false
+      },
+      "actual": {
+        "status": "no_match",
+        "matchesExpected": false,
+        "needsRetry": true,
+        "partiallyCheckable": false,
+        "message": "Your answer does not match the expected answer within the allowed tolerance.",
+        "details": {
+          "expected": 0.75,
+          "actual": 0.7,
+          "diff": 0.050000000000000044,
+          "absoluteTolerance": 0.01,
+          "matchReason": "none"
+        },
+        "timestamp": "2026-06-26T23:03:08.206Z"
+      },
+      "ok": true
+    },
+    {
+      "name": "relative tolerance match",
+      "expected": {
+        "status": "match",
+        "matchesExpected": true,
+        "needsRetry": false,
+        "partiallyCheckable": false
+      },
+      "actual": {
+        "status": "match",
+        "matchesExpected": true,
+        "needsRetry": false,
+        "partiallyCheckable": false,
+        "message": "Your answer matches the expected answer.",
+        "details": {
+          "expected": 100,
+          "actual": 101,
+          "diff": 1,
+          "relativeTolerance": 0.02,
+          "matchReason": "relative"
+        },
+        "timestamp": "2026-06-26T23:03:08.206Z"
+      },
+      "ok": true
+    },
+    {
+      "name": "relative tolerance zero expected",
+      "expected": {
+        "status": "no_match",
+        "matchesExpected": false,
+        "needsRetry": true,
+        "partiallyCheckable": false
+      },
+      "actual": {
+        "status": "no_match",
+        "matchesExpected": false,
+        "needsRetry": true,
+        "partiallyCheckable": false,
+        "message": "Your answer does not match the expected answer within the allowed tolerance.",
+        "details": {
+          "expected": 0,
+          "actual": 0.5,
+          "diff": 0.5,
+          "relativeTolerance": 0.01,
+          "matchReason": "none"
+        },
+        "timestamp": "2026-06-26T23:03:08.206Z"
+      },
+      "ok": true
+    },
+    {
+      "name": "invalid negative tolerance",
+      "expected": {
+        "status": "invalid",
+        "matchesExpected": false,
+        "needsRetry": false,
+        "partiallyCheckable": false
+      },
+      "actual": {
+        "status": "invalid",
+        "matchesExpected": false,
+        "needsRetry": false,
+        "partiallyCheckable": false,
+        "message": "Invalid absoluteTolerance.",
+        "details": {},
+        "timestamp": "2026-06-26T23:03:08.206Z"
+      },
+      "ok": true
+    },
+    {
+      "name": "multiple choice match",
+      "expected": {
+        "status": "match",
+        "matchesExpected": true,
+        "needsRetry": false,
+        "partiallyCheckable": false
+      },
+      "actual": {
+        "status": "match",
+        "matchesExpected": true,
+        "needsRetry": false,
+        "partiallyCheckable": false,
+        "message": "Your answer matches the expected answer.",
+        "details": {
+          "expected": "B",
+          "actual": "B"
+        },
+        "timestamp": "2026-06-26T23:03:08.206Z"
+      },
+      "ok": true
+    },
+    {
+      "name": "multiple choice mismatch",
+      "expected": {
+        "status": "no_match",
+        "matchesExpected": false,
+        "needsRetry": true,
+        "partiallyCheckable": false
+      },
+      "actual": {
+        "status": "no_match",
+        "matchesExpected": false,
+        "needsRetry": true,
+        "partiallyCheckable": false,
+        "message": "Your answer does not match the expected answer.",
+        "details": {
+          "expected": "B",
+          "actual": "A"
+        },
+        "timestamp": "2026-06-26T23:03:08.206Z"
+      },
+      "ok": true
+    },
+    {
+      "name": "multi-select unordered match",
+      "expected": {
+        "status": "match",
+        "matchesExpected": true,
+        "needsRetry": false,
+        "partiallyCheckable": false
+      },
+      "actual": {
+        "status": "match",
+        "matchesExpected": true,
+        "needsRetry": false,
+        "partiallyCheckable": false,
+        "message": "Your answer matches the expected answer.",
+        "details": {
+          "expected": [
+            "A",
+            "C"
+          ],
+          "actual": [
+            "C",
+            "A"
+          ],
+          "orderSensitive": false
+        },
+        "timestamp": "2026-06-26T23:03:08.207Z"
+      },
+      "ok": true
+    },
+    {
+      "name": "multi-select ordered mismatch",
+      "expected": {
+        "status": "no_match",
+        "matchesExpected": false,
+        "needsRetry": true,
+        "partiallyCheckable": false
+      },
+      "actual": {
+        "status": "no_match",
+        "matchesExpected": false,
+        "needsRetry": true,
+        "partiallyCheckable": false,
+        "message": "Your answer does not match the expected answer.",
+        "details": {
+          "expected": [
+            "A",
+            "C"
+          ],
+          "actual": [
+            "C",
+            "A"
+          ],
+          "orderSensitive": true
+        },
+        "timestamp": "2026-06-26T23:03:08.207Z"
+      },
+      "ok": true
+    },
+    {
+      "name": "multi-select missing one",
+      "expected": {
+        "status": "no_match",
+        "matchesExpected": false,
+        "needsRetry": true,
+        "partiallyCheckable": false
+      },
+      "actual": {
+        "status": "no_match",
+        "matchesExpected": false,
+        "needsRetry": true,
+        "partiallyCheckable": false,
+        "message": "Your answer does not match the expected answer.",
+        "details": {
+          "expected": [
+            "A",
+            "C",
+            "D"
+          ],
+          "actual": [
+            "A",
+            "C"
+          ],
+          "orderSensitive": false
+        },
+        "timestamp": "2026-06-26T23:03:08.207Z"
+      },
+      "ok": true
+    },
+    {
+      "name": "keyword all present",
+      "expected": {
+        "status": "match",
+        "matchesExpected": true,
+        "needsRetry": false,
+        "partiallyCheckable": false
+      },
+      "actual": {
+        "status": "match",
+        "matchesExpected": true,
+        "needsRetry": false,
+        "partiallyCheckable": false,
+        "message": "Your answer matches the expected answer.",
+        "details": {
+          "expectedKeywords": [
+            "query",
+            "key",
+            "value"
+          ],
+          "matchedKeywords": [
+            "query",
+            "key",
+            "value"
+          ],
+          "missingKeywords": [],
+          "minRequired": 3
+        },
+        "timestamp": "2026-06-26T23:03:08.207Z"
+      },
+      "ok": true
+    },
+    {
+      "name": "keyword missing one",
+      "expected": {
+        "status": "partial",
+        "matchesExpected": false,
+        "needsRetry": true,
+        "partiallyCheckable": true
+      },
+      "actual": {
+        "status": "partial",
+        "matchesExpected": false,
+        "needsRetry": true,
+        "partiallyCheckable": true,
+        "message": "Some expected keywords are missing from your answer.",
+        "details": {
+          "expectedKeywords": [
+            "query",
+            "key",
+            "value"
+          ],
+          "matchedKeywords": [
+            "query",
+            "key"
+          ],
+          "missingKeywords": [
+            "value"
+          ],
+          "minRequired": 3
+        },
+        "timestamp": "2026-06-26T23:03:08.207Z"
+      },
+      "ok": true
+    },
+    {
+      "name": "keyword partial allowed",
+      "expected": {
+        "status": "match",
+        "matchesExpected": true,
+        "needsRetry": false,
+        "partiallyCheckable": false
+      },
+      "actual": {
+        "status": "match",
+        "matchesExpected": true,
+        "needsRetry": false,
+        "partiallyCheckable": false,
+        "message": "Your answer matches the expected answer.",
+        "details": {
+          "expectedKeywords": [
+            "attention",
+            "transformer",
+            "softmax"
+          ],
+          "matchedKeywords": [
+            "attention",
+            "softmax"
+          ],
+          "missingKeywords": [
+            "transformer"
+          ],
+          "minRequired": 2
+        },
+        "timestamp": "2026-06-26T23:03:08.207Z"
+      },
+      "ok": true
+    },
+    {
+      "name": "ordered list match",
+      "expected": {
+        "status": "match",
+        "matchesExpected": true,
+        "needsRetry": false,
+        "partiallyCheckable": false
+      },
+      "actual": {
+        "status": "match",
+        "matchesExpected": true,
+        "needsRetry": false,
+        "partiallyCheckable": false,
+        "message": "Your answer matches the expected answer.",
+        "details": {
+          "expected": [
+            "tokenize",
+            "embed",
+            "attend"
+          ],
+          "actual": [
+            "tokenize",
+            "embed",
+            "attend"
+          ]
+        },
+        "timestamp": "2026-06-26T23:03:08.207Z"
+      },
+      "ok": true
+    },
+    {
+      "name": "ordered list mismatch",
+      "expected": {
+        "status": "no_match",
+        "matchesExpected": false,
+        "needsRetry": true,
+        "partiallyCheckable": false
+      },
+      "actual": {
+        "status": "no_match",
+        "matchesExpected": false,
+        "needsRetry": true,
+        "partiallyCheckable": false,
+        "message": "Your answer does not match the expected answer.",
+        "details": {
+          "expected": [
+            "tokenize",
+            "embed",
+            "attend"
+          ],
+          "actual": [
+            "embed",
+            "tokenize",
+            "attend"
+          ]
+        },
+        "timestamp": "2026-06-26T23:03:08.207Z"
+      },
+      "ok": true
+    },
+    {
+      "name": "unordered list match",
+      "expected": {
+        "status": "match",
+        "matchesExpected": true,
+        "needsRetry": false,
+        "partiallyCheckable": false
+      },
+      "actual": {
+        "status": "match",
+        "matchesExpected": true,
+        "needsRetry": false,
+        "partiallyCheckable": false,
+        "message": "Your answer matches the expected answer.",
+        "details": {
+          "expected": [
+            "precision",
+            "recall",
+            "f1"
+          ],
+          "actual": [
+            "f1",
+            "precision",
+            "recall"
+          ]
+        },
+        "timestamp": "2026-06-26T23:03:08.207Z"
+      },
+      "ok": true
+    },
+    {
+      "name": "unordered list mismatch",
+      "expected": {
+        "status": "no_match",
+        "matchesExpected": false,
+        "needsRetry": true,
+        "partiallyCheckable": false
+      },
+      "actual": {
+        "status": "no_match",
+        "matchesExpected": false,
+        "needsRetry": true,
+        "partiallyCheckable": false,
+        "message": "Your answer does not match the expected answer.",
+        "details": {
+          "expected": [
+            "precision",
+            "recall"
+          ],
+          "actual": [
+            "accuracy",
+            "f1"
+          ]
+        },
+        "timestamp": "2026-06-26T23:03:08.207Z"
+      },
+      "ok": true
+    },
+    {
+      "name": "boolean true variants",
+      "expected": {
+        "status": "match",
+        "matchesExpected": true,
+        "needsRetry": false,
+        "partiallyCheckable": false
+      },
+      "actual": {
+        "status": "match",
+        "matchesExpected": true,
+        "needsRetry": false,
+        "partiallyCheckable": false,
+        "message": "Your answer matches the expected answer.",
+        "details": {
+          "expected": true,
+          "actual": true
+        },
+        "timestamp": "2026-06-26T23:03:08.207Z"
+      },
+      "ok": true
+    },
+    {
+      "name": "boolean yes no",
+      "expected": {
+        "status": "match",
+        "matchesExpected": true,
+        "needsRetry": false,
+        "partiallyCheckable": false
+      },
+      "actual": {
+        "status": "match",
+        "matchesExpected": true,
+        "needsRetry": false,
+        "partiallyCheckable": false,
+        "message": "Your answer matches the expected answer.",
+        "details": {
+          "expected": true,
+          "actual": true
+        },
+        "timestamp": "2026-06-26T23:03:08.207Z"
+      },
+      "ok": true
+    },
+    {
+      "name": "boolean false",
+      "expected": {
+        "status": "no_match",
+        "matchesExpected": false,
+        "needsRetry": true,
+        "partiallyCheckable": false
+      },
+      "actual": {
+        "status": "no_match",
+        "matchesExpected": false,
+        "needsRetry": true,
+        "partiallyCheckable": false,
+        "message": "Your answer does not match the expected answer.",
+        "details": {
+          "expected": true,
+          "actual": false
+        },
+        "timestamp": "2026-06-26T23:03:08.207Z"
+      },
+      "ok": true
+    },
+    {
+      "name": "boolean numeric",
+      "expected": {
+        "status": "match",
+        "matchesExpected": true,
+        "needsRetry": false,
+        "partiallyCheckable": false
+      },
+      "actual": {
+        "status": "match",
+        "matchesExpected": true,
+        "needsRetry": false,
+        "partiallyCheckable": false,
+        "message": "Your answer matches the expected answer.",
+        "details": {
+          "expected": true,
+          "actual": true
+        },
+        "timestamp": "2026-06-26T23:03:08.207Z"
+      },
+      "ok": true
+    },
+    {
+      "name": "formula whitespace match",
+      "expected": {
+        "status": "match",
+        "matchesExpected": true,
+        "needsRetry": false,
+        "partiallyCheckable": false
+      },
+      "actual": {
+        "status": "match",
+        "matchesExpected": true,
+        "needsRetry": false,
+        "partiallyCheckable": false,
+        "message": "Your answer matches the expected answer.",
+        "details": {
+          "expectedNormalized": "ymxb",
+          "actualNormalized": "ymxb"
+        },
+        "timestamp": "2026-06-26T23:03:08.207Z"
+      },
+      "ok": true
+    },
+    {
+      "name": "formula mismatch",
+      "expected": {
+        "status": "no_match",
+        "matchesExpected": false,
+        "needsRetry": true,
+        "partiallyCheckable": false
+      },
+      "actual": {
+        "status": "no_match",
+        "matchesExpected": false,
+        "needsRetry": true,
+        "partiallyCheckable": false,
+        "message": "Your answer does not match the expected answer.",
+        "details": {
+          "expectedNormalized": "ymxb",
+          "actualNormalized": "ymx2c"
+        },
+        "timestamp": "2026-06-26T23:03:08.207Z"
+      },
+      "ok": true
+    },
+    {
+      "name": "explanation checklist all match",
+      "expected": {
+        "status": "match",
+        "matchesExpected": true,
+        "needsRetry": false,
+        "partiallyCheckable": false
+      },
+      "actual": {
+        "status": "match",
+        "matchesExpected": true,
+        "needsRetry": false,
+        "partiallyCheckable": false,
+        "message": "Your answer matches the expected answer.",
+        "details": {
+          "expectedCriteria": [
+            "mentions attention weights",
+            "mentions weighted sum"
+          ],
+          "matchedCriteria": [
+            "mentions attention weights",
+            "mentions weighted sum"
+          ],
+          "missingCriteria": []
+        },
+        "timestamp": "2026-06-26T23:03:08.207Z"
+      },
+      "ok": true
+    },
+    {
+      "name": "explanation checklist partial",
+      "expected": {
+        "status": "partial",
+        "matchesExpected": false,
+        "needsRetry": true,
+        "partiallyCheckable": true
+      },
+      "actual": {
+        "status": "partial",
+        "matchesExpected": false,
+        "needsRetry": true,
+        "partiallyCheckable": true,
+        "message": "This answer can only be partially checked automatically. Some criteria are not verifiable by deterministic rules.",
+        "details": {
+          "expectedCriteria": [
+            "mentions attention weights",
+            "mentions weighted sum"
+          ],
+          "matchedCriteria": [
+            "mentions attention weights"
+          ],
+          "missingCriteria": [
+            "mentions weighted sum"
+          ]
+        },
+        "timestamp": "2026-06-26T23:03:08.207Z"
+      },
+      "ok": true
+    },
+    {
+      "name": "explanation checklist none match",
+      "expected": {
+        "status": "no_match",
+        "matchesExpected": false,
+        "needsRetry": true,
+        "partiallyCheckable": false
+      },
+      "actual": {
+        "status": "no_match",
+        "matchesExpected": false,
+        "needsRetry": true,
+        "partiallyCheckable": false,
+        "message": "This answer can only be partially checked automatically. No criteria matched.",
+        "details": {
+          "expectedCriteria": [
+            "mentions attention weights",
+            "mentions weighted sum"
+          ],
+          "matchedCriteria": [],
+          "missingCriteria": [
+            "mentions attention weights",
+            "mentions weighted sum"
+          ]
+        },
+        "timestamp": "2026-06-26T23:03:08.207Z"
+      },
+      "ok": true
+    },
+    {
+      "name": "unsupported type partial",
+      "expected": {
+        "status": "partial",
+        "matchesExpected": false,
+        "needsRetry": false,
+        "partiallyCheckable": true
+      },
+      "actual": {
+        "status": "partial",
+        "matchesExpected": false,
+        "needsRetry": false,
+        "partiallyCheckable": true,
+        "message": "This answer can only be partially checked automatically — verification type is not supported.",
+        "details": {
+          "reason": "unsupported-type",
+          "type": "essay_grading"
+        },
+        "timestamp": "2026-06-26T23:03:08.207Z"
+      },
+      "ok": true
+    },
+    {
+      "name": "malformed item no input",
+      "expected": {
+        "status": "invalid",
+        "matchesExpected": false,
+        "needsRetry": false,
+        "partiallyCheckable": false
+      },
+      "actual": {
+        "status": "invalid",
+        "matchesExpected": false,
+        "needsRetry": false,
+        "partiallyCheckable": false,
+        "message": "Verification input is invalid.",
+        "details": {
+          "reason": "bad-input"
+        },
+        "timestamp": "2026-06-26T23:03:08.207Z"
+      },
+      "ok": true
+    },
+    {
+      "name": "malformed empty type",
+      "expected": {
+        "status": "invalid",
+        "matchesExpected": false,
+        "needsRetry": false,
+        "partiallyCheckable": false
+      },
+      "actual": {
+        "status": "invalid",
+        "matchesExpected": false,
+        "needsRetry": false,
+        "partiallyCheckable": false,
+        "message": "Verification type is missing.",
+        "details": {
+          "reason": "missing-type"
+        },
+        "timestamp": "2026-06-26T23:03:08.207Z"
+      },
+      "ok": true
+    },
+    {
+      "name": "XSS payload in actual",
+      "expected": {
+        "status": "no_match",
+        "matchesExpected": false,
+        "needsRetry": true,
+        "partiallyCheckable": false
+      },
+      "actual": {
+        "status": "no_match",
+        "matchesExpected": false,
+        "needsRetry": true,
+        "partiallyCheckable": false,
+        "message": "Your answer does not match the expected answer.",
+        "details": {
+          "expected": "safe",
+          "actual": "<script>alert(1)</script>"
+        },
+        "timestamp": "2026-06-26T23:03:08.207Z"
+      },
+      "ok": true
+    },
+    {
+      "name": "javascript URL in actual",
+      "expected": {
+        "status": "no_match",
+        "matchesExpected": false,
+        "needsRetry": true,
+        "partiallyCheckable": false
+      },
+      "actual": {
+        "status": "no_match",
+        "matchesExpected": false,
+        "needsRetry": true,
+        "partiallyCheckable": false,
+        "message": "Your answer does not match the expected answer.",
+        "details": {
+          "expected": "safe",
+          "actual": "javascript:alert(1)"
+        },
+        "timestamp": "2026-06-26T23:03:08.207Z"
+      },
+      "ok": true
+    }
+  ],
+  "summary": {
+    "rulesAllPass": true,
+    "xssSafe": true,
+    "noMasteryClaims": true,
+    "sourceFilesValid": true
+  }
+}

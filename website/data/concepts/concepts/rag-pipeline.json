@@ -1,0 +1,110 @@
+{
+  "id": "rag-pipeline",
+  "name": "RAG Pipeline",
+  "slug": "rag-pipeline",
+  "summary": "An architecture that combines document retrieval with language model generation for grounded responses.",
+  "definition": "RAG (Retrieval-Augmented Generation) pipelines retrieve relevant documents from a knowledge base and inject them into the LLM prompt context before generation, grounding responses in factual data.",
+  "aliases": [
+    "retrieval-augmented generation",
+    "RAG system"
+  ],
+  "keywords": [
+    "RAG",
+    "retrieval",
+    "augmented",
+    "generation",
+    "pipeline"
+  ],
+  "sharedKnowledgeDomains": [
+    "rag"
+  ],
+  "relatedConcepts": [
+    {
+      "concept": "dense-retrieval",
+      "type": "uses"
+    },
+    {
+      "concept": "query-routing",
+      "type": "uses"
+    },
+    {
+      "concept": "knowledge-grounding",
+      "type": "uses"
+    }
+  ],
+  "prerequisiteConcepts": [
+    "dense-retrieval",
+    "chunking"
+  ],
+  "artifactReferences": [
+    "artifact-agent-memory-comparison-table",
+    "artifact-agent-memory-exercise",
+    "artifact-agent-memory-explanatory-text",
+    "artifact-agent-memory-interactive-visualization",
+    "artifact-agent-memory-visual-intuition",
+    "artifact-chunking-strategies-comparison-table",
+    "artifact-chunking-strategies-exercise",
+    "artifact-chunking-strategies-explanatory-text",
+    "artifact-chunking-strategies-interactive-visualization",
+    "artifact-chunking-strategies-visual-intuition",
+    "artifact-context-fusion-comparison-table",
+    "artifact-context-fusion-exercise",
+    "artifact-context-fusion-explanatory-text",
+    "artifact-context-fusion-interactive-visualization",
+    "artifact-context-fusion-visual-intuition",
+    "artifact-grounding-verification-strategies-comparison-table",
+    "artifact-grounding-verification-strategies-exercise",
+    "artifact-grounding-verification-strategies-explanatory-text",
+    "artifact-grounding-verification-strategies-interactive-visualization",
+    "artifact-grounding-verification-strategies-visual-intuition",
+    "artifact-hallucinations-reliability-comparison-table",
+    "artifact-hallucinations-reliability-exercise",
+    "artifact-hallucinations-reliability-explanatory-text",
+    "artifact-hallucinations-reliability-interactive-visualization",
+    "artifact-hallucinations-reliability-visual-intuition",
+    "artifact-knowledge-grounding-comparison-table",
+    "artifact-knowledge-grounding-exercise",
+    "artifact-knowledge-grounding-explanatory-text",
+    "artifact-knowledge-grounding-interactive-visualization",
+    "artifact-knowledge-grounding-visual-intuition",
+    "artifact-query-routing-comparison-table",
+    "artifact-query-routing-exercise",
+    "artifact-query-routing-explanatory-text",
+    "artifact-query-routing-interactive-visualization",
+    "artifact-query-routing-visual-intuition",
+    "artifact-rag-evaluation-comparison-table",
+    "artifact-rag-evaluation-exercise",
+    "artifact-rag-evaluation-explanatory-text",
+    "artifact-rag-evaluation-interactive-visualization",
+    "artifact-rag-evaluation-visual-intuition",
+    "artifact-rag-foundations-comparison-table",
+    "artifact-rag-foundations-exercise",
+    "artifact-rag-foundations-explanatory-text",
+    "artifact-rag-foundations-interactive-visualization",
+    "artifact-rag-foundations-visual-intuition",
+    "artifact-retrieval-failure-mitigation-comparison-table",
+    "artifact-retrieval-failure-mitigation-exercise",
+    "artifact-retrieval-failure-mitigation-explanatory-text",
+    "artifact-retrieval-failure-mitigation-interactive-visualization",
+    "artifact-retrieval-failure-mitigation-visual-intuition"
+  ],
+  "difficulty": "advanced",
+  "category": "rag",
+  "canonicalStatus": "Reviewed",
+  "version": "1.0.0",
+  "reviewedBy": "NV-1100-P4 Implementation",
+  "lastReviewed": "2026-06-24",
+  "sourceReferences": [
+    {
+      "id": "ref-rag-0",
+      "title": "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks",
+      "type": "paper",
+      "description": "Lewis et al. 2020"
+    }
+  ],
+  "examples": [],
+  "counterExamples": [],
+  "commonMisconceptions": [],
+  "recommendedVisualizations": [],
+  "recommendedLabs": []
+}

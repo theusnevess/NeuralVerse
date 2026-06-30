@@ -1,0 +1,82 @@
+{
+  "id": "cross-validation",
+  "name": "Cross-Validation",
+  "slug": "cross-validation",
+  "summary": "A technique for estimating model performance by partitioning data into training and validation folds.",
+  "definition": "Cross-validation splits data into K folds, training on K-1 and validating on the remaining fold, rotating through all folds. It provides robust performance estimates.",
+  "aliases": [
+    "k-fold cross-validation",
+    "CV"
+  ],
+  "keywords": [
+    "cross-validation",
+    "folds",
+    "validation",
+    "estimation",
+    "generalization"
+  ],
+  "sharedKnowledgeDomains": [
+    "machine-learning"
+  ],
+  "relatedConcepts": [
+    {
+      "concept": "regularization",
+      "type": "supports"
+    }
+  ],
+  "prerequisiteConcepts": [],
+  "artifactReferences": [
+    "artifact-bayes-theorem-comparison-table",
+    "artifact-bayes-theorem-exercise",
+    "artifact-bayes-theorem-explanatory-text",
+    "artifact-bayes-theorem-interactive-visualization",
+    "artifact-bayes-theorem-visual-intuition",
+    "artifact-bias-variance-tradeoff-comparison-table",
+    "artifact-bias-variance-tradeoff-exercise",
+    "artifact-bias-variance-tradeoff-explanatory-text",
+    "artifact-bias-variance-tradeoff-interactive-visualization",
+    "artifact-bias-variance-tradeoff-visual-intuition",
+    "artifact-correlation-causation-comparison-table",
+    "artifact-correlation-causation-exercise",
+    "artifact-correlation-causation-explanatory-text",
+    "artifact-correlation-causation-interactive-visualization",
+    "artifact-correlation-causation-visual-intuition",
+    "artifact-expected-value-variance-comparison-table",
+    "artifact-expected-value-variance-exercise",
+    "artifact-expected-value-variance-explanatory-text",
+    "artifact-expected-value-variance-interactive-visualization",
+    "artifact-expected-value-variance-visual-intuition",
+    "artifact-overfitting-underfitting-comparison-table",
+    "artifact-overfitting-underfitting-exercise",
+    "artifact-overfitting-underfitting-explanatory-text",
+    "artifact-overfitting-underfitting-interactive-visualization",
+    "artifact-overfitting-underfitting-visual-intuition",
+    "artifact-random-variables-comparison-table",
+    "artifact-random-variables-exercise",
+    "artifact-random-variables-explanatory-text",
+    "artifact-random-variables-interactive-visualization",
+    "artifact-random-variables-visual-intuition",
+    "artifact-sampling-bias-comparison-table",
+    "artifact-sampling-bias-exercise",
+    "artifact-sampling-bias-explanatory-text",
+    "artifact-sampling-bias-interactive-visualization",
+    "artifact-sampling-bias-visual-intuition",
+    "artifact-train-validation-test-split-comparison-table",
+    "artifact-train-validation-test-split-exercise",
+    "artifact-train-validation-test-split-explanatory-text",
+    "artifact-train-validation-test-split-interactive-visualization",
+    "artifact-train-validation-test-split-visual-intuition"
+  ],
+  "difficulty": "intermediate",
+  "category": "statistics",
+  "canonicalStatus": "Reviewed",
+  "version": "1.0.0",
+  "reviewedBy": "NV-1100-P4 Implementation",
+  "lastReviewed": "2026-06-24",
+  "sourceReferences": [],
+  "examples": [],
+  "counterExamples": [],
+  "commonMisconceptions": [],
+  "recommendedVisualizations": [],
+  "recommendedLabs": []
+}

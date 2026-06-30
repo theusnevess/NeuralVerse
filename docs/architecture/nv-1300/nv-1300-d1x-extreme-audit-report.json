@@ -1,0 +1,381 @@
+{
+  "audit": "NV-1300-D1X",
+  "timestamp": "2026-06-26T23:03:07.248Z",
+  "summary": {
+    "critical": 0,
+    "high": 0,
+    "medium": 1,
+    "verdict": "READY"
+  },
+  "architectureMetrics": {
+    "runtimeModulesAudited": 27,
+    "factoriesVerified": 27,
+    "publicApisVerified": 108,
+    "deterministicExecutions": {
+      "planner": 1000,
+      "fullPipeline": 1000,
+      "topicsTested": 10
+    },
+    "evidenceSourcesValidated": [
+      "Concepts",
+      "Artifacts",
+      "Visualizations",
+      "Laboratories",
+      "Shared Knowledge"
+    ],
+    "regressionValidators": {
+      "total": 19,
+      "passed": 19
+    },
+    "performance": {
+      "planner": 0,
+      "dependency": 0.01,
+      "exampleSelection": 0,
+      "mediaOrchestration": 0.01,
+      "evidenceTracing": 0.01,
+      "cognitiveLoad": 0.01,
+      "composition": 0.01,
+      "accessibility": 0.01,
+      "totalPipeline": 0.06
+    }
+  },
+  "sections": {
+    "1": {
+      "name": "Static Runtime Audit",
+      "scanned": 28,
+      "totalForbiddenHits": 0,
+      "status": "PASS"
+    },
+    "2": {
+      "name": "Module Inventory",
+      "expected": 27,
+      "missing": [],
+      "status": "PASS"
+    },
+    "3": {
+      "name": "D1A Planner",
+      "iterations": 1000,
+      "byteIdentical": true,
+      "status": "PASS"
+    },
+    "4": {
+      "name": "Composition DAG",
+      "checks": {
+        "noCycles": true,
+        "noSelfLoops": false,
+        "noDuplicateNodes": true,
+        "deterministicOrder": true,
+        "validGraph": true
+      },
+      "status": "PASS"
+    },
+    "5": {
+      "name": "Instructional Layers",
+      "loaded": true,
+      "status": "PASS"
+    },
+    "7": {
+      "name": "Semantic Dependency",
+      "loaded": true,
+      "status": "PASS"
+    },
+    "8": {
+      "name": "Example Selection",
+      "loaded": true,
+      "status": "PASS"
+    },
+    "9": {
+      "name": "Cross-Domain",
+      "loaded": true,
+      "status": "PASS"
+    },
+    "10": {
+      "name": "Recap Inserter",
+      "loaded": true,
+      "status": "PASS"
+    },
+    "11": {
+      "name": "Resource Selector",
+      "loaded": true,
+      "status": "PASS"
+    },
+    "12": {
+      "name": "Visualization",
+      "loaded": true,
+      "status": "PASS"
+    },
+    "13": {
+      "name": "Laboratory",
+      "loaded": true,
+      "status": "PASS"
+    },
+    "14": {
+      "name": "Media Orchestration",
+      "loaded": true,
+      "status": "PASS"
+    },
+    "15": {
+      "name": "Transition Engine",
+      "loaded": true,
+      "status": "PASS"
+    },
+    "16": {
+      "name": "Evidence Tracer",
+      "loaded": true,
+      "status": "PASS"
+    },
+    "17": {
+      "name": "Memory/Review",
+      "loaded": true,
+      "status": "PASS"
+    },
+    "18": {
+      "name": "Semantic Learning",
+      "loaded": true,
+      "status": "PASS"
+    },
+    "19": {
+      "name": "Agent Collaboration",
+      "loaded": true,
+      "status": "PASS"
+    },
+    "20": {
+      "name": "Generative Augmenter",
+      "loaded": true,
+      "status": "PASS"
+    },
+    "21": {
+      "name": "Cognitive Load",
+      "loaded": true,
+      "status": "PASS"
+    },
+    "22": {
+      "name": "Pacing",
+      "loaded": true,
+      "status": "PASS"
+    },
+    "23": {
+      "name": "Lesson Composer",
+      "loaded": true,
+      "status": "PASS"
+    },
+    "24": {
+      "name": "Readability",
+      "loaded": true,
+      "status": "PASS"
+    },
+    "25": {
+      "name": "Accessibility",
+      "loaded": true,
+      "status": "PASS"
+    },
+    "26": {
+      "name": "Full Pipeline Determinism",
+      "topics": [
+        {
+          "topic": "transformers",
+          "iterations": 100,
+          "byteIdentical": true
+        },
+        {
+          "topic": "embeddings",
+          "iterations": 100,
+          "byteIdentical": true
+        },
+        {
+          "topic": "gradient descent",
+          "iterations": 100,
+          "byteIdentical": true
+        },
+        {
+          "topic": "bayes theorem",
+          "iterations": 100,
+          "byteIdentical": true
+        },
+        {
+          "topic": "pca",
+          "iterations": 100,
+          "byteIdentical": true
+        },
+        {
+          "topic": "attention",
+          "iterations": 100,
+          "byteIdentical": true
+        },
+        {
+          "topic": "linear regression",
+          "iterations": 100,
+          "byteIdentical": true
+        },
+        {
+          "topic": "rag",
+          "iterations": 100,
+          "byteIdentical": true
+        },
+        {
+          "topic": "computer vision",
+          "iterations": 100,
+          "byteIdentical": true
+        },
+        {
+          "topic": "mlops",
+          "iterations": 100,
+          "byteIdentical": true
+        }
+      ],
+      "allIdentical": true,
+      "status": "PASS"
+    },
+    "27": {
+      "name": "Backward Compatibility",
+      "d1aModes": 12,
+      "missing": [],
+      "a1Survivors": [
+        "socratic"
+      ],
+      "a1Missing": [],
+      "status": "PASS"
+    },
+    "28": {
+      "name": "Governance Scan",
+      "forbiddenHits": 0,
+      "status": "PASS"
+    },
+    "29": {
+      "name": "XSS Safety",
+      "payloadsTested": 5,
+      "safe": true,
+      "status": "PASS"
+    },
+    "30": {
+      "name": "Playwright UI Audit",
+      "available": false,
+      "status": "SKIP"
+    },
+    "31": {
+      "name": "Performance Budget",
+      "metrics": {
+        "planner": 0,
+        "dependency": 0.01,
+        "exampleSelection": 0,
+        "mediaOrchestration": 0.01,
+        "evidenceTracing": 0.01,
+        "cognitiveLoad": 0.01,
+        "composition": 0.01,
+        "accessibility": 0.01,
+        "totalPipeline": 0.06
+      },
+      "avgMsPerRun": 0,
+      "status": "PASS"
+    },
+    "32": {
+      "name": "Regression Suite",
+      "validators": [
+        {
+          "validator": "nv-1300-d1a-verify.js",
+          "status": "PASS"
+        },
+        {
+          "validator": "nv-1300-d1b-validator.js",
+          "status": "PASS"
+        },
+        {
+          "validator": "nv-1300-d1b-verify.js",
+          "status": "PASS"
+        },
+        {
+          "validator": "nv-1300-d1a-architecture-validator.js",
+          "status": "PASS"
+        },
+        {
+          "validator": "nv-1300-d1c-validator.js",
+          "status": "PASS"
+        },
+        {
+          "validator": "nv-1300-d1c-verify.js",
+          "status": "PASS"
+        },
+        {
+          "validator": "nv-1300-d1d-validator.js",
+          "status": "PASS"
+        },
+        {
+          "validator": "nv-1300-d1d-verify.js",
+          "status": "PASS"
+        },
+        {
+          "validator": "nv-1300-d1e-validator.js",
+          "status": "PASS"
+        },
+        {
+          "validator": "nv-1300-d1e-verify.js",
+          "status": "PASS"
+        },
+        {
+          "validator": "concept-layer-validator.js",
+          "status": "PASS"
+        },
+        {
+          "validator": "shared-knowledge-validator.js",
+          "status": "PASS"
+        },
+        {
+          "validator": "laboratory-validator.js",
+          "status": "PASS"
+        },
+        {
+          "validator": "visualization-validator.js",
+          "status": "PASS"
+        },
+        {
+          "validator": "review-scheduler-validator.js",
+          "status": "PASS"
+        },
+        {
+          "validator": "memory-validator.js",
+          "status": "PASS"
+        },
+        {
+          "validator": "answer-verification-validator.js",
+          "status": "PASS"
+        },
+        {
+          "validator": "generative-layer-validator.js",
+          "status": "PASS"
+        },
+        {
+          "validator": "nv-1100-p10-scalability-validator.js",
+          "status": "PASS"
+        }
+      ],
+      "allPassed": true,
+      "status": "PASS"
+    },
+    "33": {
+      "name": "Preservation Audit",
+      "status": "PASS",
+      "note": "Read-only audit — no mutations performed"
+    },
+    "6a": {
+      "name": "Difficulty Ladder",
+      "loaded": true,
+      "status": "PASS"
+    },
+    "6b": {
+      "name": "Multi-Perspective",
+      "loaded": true,
+      "status": "PASS"
+    }
+  },
+  "findings": {
+    "critical": [],
+    "high": [],
+    "medium": [
+      {
+        "section": "30",
+        "message": "Playwright unavailable — UI audit skipped (environment block)"
+      }
+    ],
+    "info": []
+  }
+}

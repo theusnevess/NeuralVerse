@@ -33,6 +33,7 @@ import type {
   EngineeringProblemType,
   BusinessValueType,
   ApplicationContextType,
+  UseCaseStatus,
   ApplicationGovernanceStatus,
   ApplicationNode,
   ApplicationArtifactWithUseCases,

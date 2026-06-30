@@ -1184,3 +1184,28 @@
   padding: var(--sys-space-stack-sm, 8px);
   color: var(--sys-color-text-primary, #e2e8f0);
 }
+
+/* =========================================================
+   Agent Panel — Curiosity & Engagement Quick Actions & Cards
+   ========================================================= */
+
+.nv-agent-quick-action-btn--curiosity {
+  border-color: rgba(236, 72, 153, 0.34);
+  background-color: rgba(236, 72, 153, 0.06);
+  color: #f472b6;
+}
+
+.nv-agent-quick-action-btn--curiosity:hover {
+  background-color: rgba(219, 39, 119, 0.16);
+  border-color: rgba(244, 114, 182, 0.74);
+  color: #fdf2f8;
+}
+
+.nv-agent-curiosity-card {
+  border: 1px solid rgba(236, 72, 153, 0.25);
+  background: linear-gradient(135deg, rgba(219, 39, 119, 0.12), rgba(15, 23, 42, 0.45));
+  border-radius: var(--sys-radius-panel, 8px);
+  padding: var(--sys-space-stack-sm, 8px);
+  color: var(--sys-color-text-primary, #e2e8f0);
+  box-shadow: 0 4px 12px rgba(236, 72, 153, 0.05);
+}

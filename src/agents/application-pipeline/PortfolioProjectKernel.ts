@@ -26,6 +26,7 @@ import type {
   ProjectDeliverable,
   CompetencyEvidence,
   PortfolioShowcase,
+  PortfolioProjectDecision,
   PortfolioProjectTraceDecision,
   PortfolioProjectTrace,
   PortfolioProjectRegistry,

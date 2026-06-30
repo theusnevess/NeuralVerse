@@ -28,12 +28,13 @@ Use before audits, refactors, multi-file changes, medium or large tasks, and any
 ## Workflow
 
 1. `git status --short`
-2. `fd` for file discovery.
-3. `rg` for text, symbols, routes, styles, tests, and docs.
-4. `ast-grep` for structural JavaScript or TypeScript searches when useful.
-5. Focused file reads.
-6. `git diff --` after edits.
-7. Targeted validation commands.
+2. **Repository Discovery** — locate code before reading:
+   - `fd` for file discovery by name/pattern.
+   - `rg` for text, symbols, routes, styles, tests, and docs.
+   - `ast-grep` for structural JavaScript or TypeScript searches when useful.
+3. Focused file reads (only after discovery).
+4. `git diff --` after edits.
+5. Targeted validation commands.
 
 ## Forbidden Context Sources
 

@@ -1,0 +1,84 @@
+{
+  "id": "deep-learning",
+  "title": "Deep Learning Fundamentals",
+  "summary": "Stacking multiple layers of artificial neurons to learn hierarchical feature representations directly from raw data, replacing hand-crafted feature engineering.",
+  "concepts": ["neural networks", "backpropagation", "activation functions", "gradient vanishing", "weight initialization", "batch normalization", "dropout", "convolution", "recurrence"],
+  "keywords": ["deep learning", "neural network", "backpropagation", "activation", "ReLU", "sigmoid", "gradient", "PyTorch", "TensorFlow", "GPU"],
+  "historicalContext": "As datasets and image resolutions scaled in the 2000s, shallow models like SVMs stalled because they required manual feature engineering. This limitation led Yann LeCun, Yoshua Bengio, and Geoffrey Hinton to pioneer deep learning—stacking multiple layers of artificial neurons to learn hierarchical feature representations directly from raw data.",
+  "landmarkReferences": [
+    {
+      "title": "ImageNet Classification with Deep Convolutional Neural Networks",
+      "authors": "Krizhevsky et al.",
+      "year": "2012",
+      "contribution": "AlexNet won ImageNet, triggering the deep learning revolution."
+    }
+  ],
+  "industryApplications": ["Large-scale visual inspection", "Real-time document intelligence", "Industrial audio anomaly detection", "Speech recognition", "Natural language processing"],
+  "commonMisconceptions": [
+    {
+      "trigger": "overfit",
+      "wrong": "Overfitting means the model memorized the training data.",
+      "correct": "Overfitting means the model learned patterns specific to the training data that do not generalize to new data. Memorization is one form of overfitting, but overfitting also includes learning spurious correlations, noise patterns, and dataset-specific biases."
+    },
+    {
+      "trigger": "supervised",
+      "wrong": "Self-supervised learning is a form of unsupervised learning.",
+      "correct": "Self-supervised learning generates its own labels from the data structure. It uses supervision signals, just not human-provided labels."
+    }
+  ],
+  "analogies": [
+    {
+      "text": "A neural network is like a factory assembly line. Raw materials (input data) enter at one end, and each station (layer) performs a specific transformation.",
+      "limitations": "Unlike a real factory, neural networks learn their operations automatically.",
+      "domain": "manufacturing"
+    },
+    {
+      "text": "Backpropagation is like a chain of supervisors passing performance reviews backward to update lower-level workers.",
+      "limitations": "Human organizational reviews are subjective, whereas backpropagation uses exact calculus updates.",
+      "domain": "everyday life"
+    }
+  ],
+  "curiosityFacts": [
+    "Did you know that Yann LeCun's early LeNet implementations in the 1990s processed over 10% of all checks written in the United States?",
+    "Neural networks share mathematical similarities with statistical physics. The activation states of neural units can be modeled using the Boltzmann distribution."
+  ],
+  "storySeeds": [
+    "Deep learning represents the shift from hand-crafted features to end-to-end representation learning, changing how computer vision, speech, and translation systems operate.",
+    "Deep learning changed the AI field by replacing hand-crafted features with end-to-end representation learning, allowing models to learn abstract feature hierarchies directly from raw sensory data."
+  ],
+  "assessmentSeeds": [
+    "Explain the purpose of the key, query, and value vectors in self-attention mechanisms.",
+    "Why does initializing weights to zero prevent deep networks from learning distinct features?"
+  ],
+  "professionalInsights": [
+    "Use concurrent model execution instances on a single GPU and implement model parallelization for extremely large model weights.",
+    "A document QA system implemented model quantization (INT8) to deploy vision-language models on edge hardware, reducing GPU memory utilization by 50% with less than 1% degradation."
+  ],
+  "recommendedVisualizations": ["neural-network-architecture", "backpropagation-flow", "activation-function-comparison"],
+  "recommendedLabs": ["build-a-neural-network", "backprop-from-scratch"],
+  "relatedArtifacts": [],
+  "relatedConcepts": [
+    { "domain": "machine-learning", "type": "specializes" },
+    { "domain": "computer-vision", "type": "implements" },
+    { "domain": "transformers", "type": "extends" },
+    { "domain": "optimization", "type": "depends_on" }
+  ],
+  "lastReviewed": "2026-06-24",
+  "canonicalStatus": "Reviewed",
+  "version": "1.0.0",
+  "reviewedBy": "NV-1100-P3 Implementation",
+  "sourceReferences": [
+    {
+      "id": "ref-deep-learning-0",
+      "title": "ImageNet Classification (Krizhevsky et al.)",
+      "type": "paper",
+      "description": "Deep CNN at scale"
+    },
+    {
+      "id": "ref-deep-learning-1",
+      "title": "Deep Learning (Goodfellow et al.)",
+      "type": "book",
+      "description": "Comprehensive deep learning textbook"
+    }
+  ]
+}

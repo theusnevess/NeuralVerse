@@ -1,0 +1,57 @@
+{
+  "id": "data-drift",
+  "name": "Data Drift",
+  "slug": "data-drift",
+  "summary": "Changes in the statistical properties of production input data compared to training data.",
+  "definition": "Data drift occurs when the distribution of incoming data shifts from what the model was trained on, leading to degraded performance. Detected via monitoring input statistics.",
+  "aliases": [
+    "distribution shift",
+    "covariate shift",
+    "concept drift"
+  ],
+  "keywords": [
+    "drift",
+    "distribution",
+    "shift",
+    "monitoring",
+    "statistics"
+  ],
+  "sharedKnowledgeDomains": [
+    "mlops"
+  ],
+  "relatedConcepts": [
+    {
+      "concept": "model-monitoring",
+      "type": "uses"
+    },
+    {
+      "concept": "model-deployment",
+      "type": "supports"
+    }
+  ],
+  "prerequisiteConcepts": [],
+  "artifactReferences": [
+    "artifact-data-drift-and-concept-drift-comparison-table",
+    "artifact-data-drift-and-concept-drift-exercise",
+    "artifact-data-drift-and-concept-drift-explanatory-text",
+    "artifact-data-drift-and-concept-drift-interactive-visualization",
+    "artifact-data-drift-and-concept-drift-visual-intuition",
+    "artifact-model-monitoring-observability-comparison-table",
+    "artifact-model-monitoring-observability-exercise",
+    "artifact-model-monitoring-observability-explanatory-text",
+    "artifact-model-monitoring-observability-interactive-visualization",
+    "artifact-model-monitoring-observability-visual-intuition"
+  ],
+  "difficulty": "advanced",
+  "category": "mlops",
+  "canonicalStatus": "Reviewed",
+  "version": "1.0.0",
+  "reviewedBy": "NV-1100-P4 Implementation",
+  "lastReviewed": "2026-06-24",
+  "sourceReferences": [],
+  "examples": [],
+  "counterExamples": [],
+  "commonMisconceptions": [],
+  "recommendedVisualizations": [],
+  "recommendedLabs": []
+}

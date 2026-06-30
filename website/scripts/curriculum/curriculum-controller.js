@@ -874,6 +874,43 @@ export function createCurriculumController(options = {}) {
 
     const { mainContent, metadataList, artifacts } = layout;
 
+    // NV-1100-P5C: Inject review badge and metadata panel
+    if (typeof window !== 'undefined' && window.NeuralVerse?.reviewBadgeRenderer && window.NeuralVerse?.reviewScheduler) {
+      const r = window.NeuralVerse.reviewBadgeRenderer;
+      const sched = window.NeuralVerse.reviewScheduler;
+      const badgeGroup = r.renderBadgeAndAction(artifactId, 'artifact', sched);
+      if (badgeGroup) {
+        const wrap = el('div', 'nv-review-badge-wrap');
+        wrap.innerHTML = badgeGroup;
+        mainContent.append(wrap.firstElementChild || wrap);
+        // Wire action button
+        const actionBtn = mainContent.querySelector('[data-review-action]');
+        if (actionBtn && !actionBtn.disabled && actionBtn.getAttribute('aria-disabled') !== 'true') {
+          actionBtn.addEventListener('click', (ev) => {
+            ev.preventDefault();
+            try { sched.ensureItem(artifactId, 'artifact'); } catch (e) { /* ignore */ }
+            const ctrl = window.NeuralVerse?.reviewSessionController;
+            if (ctrl) {
+              if (typeof ctrl.hasActiveSession === 'function' && ctrl.hasActiveSession()) ctrl.resumeSession();
+              else ctrl.startSession();
+            }
+          });
+        }
+      }
+      // Metadata panel
+      const metaPanel = r.renderMetadataPanel(artifactId, 'artifact', sched);
+      if (metaPanel) {
+        const wrap2 = el('div', 'nv-review-meta-wrap');
+        wrap2.innerHTML = metaPanel;
+        const panelEl = wrap2.firstElementChild;
+        if (panelEl) {
+          const sidePanel = el('div', 'nv-card nv-review-meta-card');
+          sidePanel.append(panelEl);
+          mainContent.append(sidePanel);
+        }
+      }
+    }
+
     appendMetadataItem(metadataList, 'Type', typeLabel(artifact.type));
     appendMetadataItem(metadataList, 'Status', artifact.canonicalStatus || 'Draft');
     appendMetadataItem(metadataList, 'Duration', artifact.estimatedDuration || 'Not specified');
@@ -1164,6 +1201,10 @@ export function createCurriculumController(options = {}) {
 
     window.NeuralVerse = window.NeuralVerse || {};
     window.NeuralVerse.curriculum = { service, renderCurrentRoute };
+    service.getIndex().then((index) => {
+      window.NeuralVerse.curriculumIndex = index;
+      window.NeuralVerse.contextBuilder?.setCurriculumIndex?.(index);
+    }).catch(() => {});
   }
 
   return { init, renderCurrentRoute };

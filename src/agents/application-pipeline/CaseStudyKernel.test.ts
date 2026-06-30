@@ -393,8 +393,8 @@ describe('Case Study Kernel — Registry', () => {
   });
 
   it('should sort datasets deterministically', () => {
-    const ds2 = { ...VALID_DATASET, datasetId: 'ds-002', datasetRole: 'testing' };
-    const ds1 = { ...VALID_DATASET, datasetId: 'ds-001', datasetRole: 'training' };
+    const ds2 = { ...VALID_DATASET, datasetId: 'ds-002', datasetRole: 'testing' as const };
+    const ds1 = { ...VALID_DATASET, datasetId: 'ds-001', datasetRole: 'training' as const };
 
     const registry = composeCaseStudyRegistry([VALID_CASE_STUDY], [ds2, ds1], [], []);
 
@@ -403,8 +403,8 @@ describe('Case Study Kernel — Registry', () => {
   });
 
   it('should sort decisions deterministically', () => {
-    const dec2 = { ...VALID_DECISION, decisionId: 'dec-002', decisionType: 'deployment_strategy' };
-    const dec1 = { ...VALID_DECISION, decisionId: 'dec-001', decisionType: 'model_selection' };
+    const dec2 = { ...VALID_DECISION, decisionId: 'dec-002', decisionType: 'deployment_strategy' as const };
+    const dec1 = { ...VALID_DECISION, decisionId: 'dec-001', decisionType: 'model_selection' as const };
 
     const registry = composeCaseStudyRegistry([VALID_CASE_STUDY], [], [dec2, dec1], []);
 
@@ -413,8 +413,8 @@ describe('Case Study Kernel — Registry', () => {
   });
 
   it('should sort lessons deterministically', () => {
-    const les2 = { ...VALID_LESSON, lessonId: 'les-002', lessonType: 'scalability' };
-    const les1 = { ...VALID_LESSON, lessonId: 'les-001', lessonType: 'performance' };
+    const les2 = { ...VALID_LESSON, lessonId: 'les-002', lessonType: 'scalability' as const };
+    const les1 = { ...VALID_LESSON, lessonId: 'les-001', lessonType: 'performance' as const };
 
     const registry = composeCaseStudyRegistry([VALID_CASE_STUDY], [], [], [les2, les1]);
 
@@ -604,7 +604,7 @@ describe('Case Study Kernel — Validation', () => {
       registryVersion: '1.0.0',
       compositionVersion: '1.0.0',
       decisions: [],
-      deterministic: false,
+      deterministic: false as true,
       generatedFrom: 'deterministic_case_study_kernel',
       randomUsed: false,
       timeDependency: false,

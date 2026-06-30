@@ -1,0 +1,96 @@
+{
+  "id": "optimization",
+  "title": "Optimization & Training",
+  "summary": "Mathematical optimization techniques for training machine learning models, including gradient descent, regularization, and convergence strategies.",
+  "concepts": ["gradient descent", "learning rate", "regularization", "batch normalization", "dropout", "loss functions", "backpropagation", "convergence", "local minima", "saddle points"],
+  "keywords": ["optimization", "gradient", "SGD", "Adam", "learning rate", "regularization", "loss", "convergence", "backpropagation", "batch norm", "dropout"],
+  "historicalContext": "The backpropagation algorithm was independently discovered multiple times, first by Seppo Linnainmaa in 1970 as a general sensitivity analysis method, before being popularized for neural networks by Rumelhart, Hinton, and Williams in 1986.",
+  "landmarkReferences": [
+    {
+      "title": "Learning Internal Representations by Error Propagation",
+      "authors": "Rumelhart, Hinton, and Williams",
+      "year": "1986",
+      "contribution": "Popularized backpropagation for multi-layer perceptron training."
+    }
+  ],
+  "industryApplications": ["Model training pipelines", "Hyperparameter tuning", "Distributed training", "Model compression", "Transfer learning"],
+  "commonMisconceptions": [
+    {
+      "trigger": "gradient",
+      "wrong": "Gradient descent will always find the optimal solution given enough time.",
+      "correct": "Gradient descent may converge to local minima, saddle points, or oscillate without converging. Learning rate, batch size, optimizer choice, and loss landscape geometry all affect convergence."
+    },
+    {
+      "trigger": "loss",
+      "wrong": "If the loss is decreasing, the model is getting better.",
+      "correct": "Loss and accuracy are related but distinct metrics. Loss can decrease while accuracy plateaus, or loss can increase while accuracy improves (e.g., with label smoothing)."
+    },
+    {
+      "trigger": "dropout",
+      "wrong": "Dropout should be active during inference to add robustness.",
+      "correct": "Dropout is disabled during inference. During training, it randomly zeros activations to prevent co-adaptation. During inference, all neurons are active."
+    },
+    {
+      "trigger": "batch norm",
+      "wrong": "Batch normalization uses the current batch statistics during inference.",
+      "correct": "During inference, batch normalization uses running mean and running variance accumulated during training."
+    },
+    {
+      "trigger": "batch",
+      "wrong": "One batch is one epoch.",
+      "correct": "An epoch is one complete pass through the entire training dataset. A batch (or mini-batch) is a subset of data processed before updating weights."
+    }
+  ],
+  "analogies": [
+    {
+      "text": "Gradient descent is like hiking downhill in thick fog. You can't see the valley floor, but you can feel which direction is steeper under your feet.",
+      "limitations": "Real gradient descent operates in millions of dimensions simultaneously.",
+      "domain": "everyday life"
+    },
+    {
+      "text": "Regularization is like a teacher who limits how many notes a student can take during a lecture. By forcing the student to be selective, the teacher ensures the student focuses on the most important concepts.",
+      "limitations": "Different regularization techniques (L1, L2, dropout, data augmentation) constrain the model in fundamentally different ways.",
+      "domain": "everyday life"
+    },
+    {
+      "text": "Learning rate is like the volume knob on a radio. Turn it too high and the signal is distorted (overshooting). Turn it too low and you can barely hear anything (slow convergence).",
+      "limitations": "Radio volume is linear and independent of content. Learning rate interacts with the loss landscape in complex ways.",
+      "domain": "everyday life"
+    }
+  ],
+  "curiosityFacts": [
+    "Deep neural networks with millions of parameters can generalize well even when they have enough capacity to memorize random labels. This 'benign overfitting' challenges classical statistical bounds.",
+    "The classical bias-variance tradeoff is a useful framework but breaks down with modern deep learning. Double descent phenomena show that very large models can have both low bias AND low variance."
+  ],
+  "storySeeds": [
+    "Deep learning represents the shift from hand-crafted features to end-to-end representation learning, changing how computer vision, speech, and translation systems operate."
+  ],
+  "assessmentSeeds": [
+    "Explain the purpose of the key, query, and value vectors in self-attention mechanisms.",
+    "Why does initializing weights to zero prevent deep networks from learning distinct features?"
+  ],
+  "professionalInsights": [
+    "Optimize batch size and execution concurrency before scaling out cluster instances.",
+    "Track GPU memory utilization and dynamic batch size queues via Prometheus metrics dashboard."
+  ],
+  "recommendedVisualizations": ["loss-landscape-3d", "gradient-flow-diagram", "regularization-effect"],
+  "recommendedLabs": ["gradient-descent-visualizer", "regularization-comparison"],
+  "relatedArtifacts": [],
+  "relatedConcepts": [
+    { "domain": "deep-learning", "type": "related_to" },
+    { "domain": "machine-learning", "type": "related_to" },
+    { "domain": "mlops", "type": "related_to" }
+  ],
+  "lastReviewed": "2026-06-24",
+  "canonicalStatus": "Reviewed",
+  "version": "1.0.0",
+  "reviewedBy": "NV-1100-P3 Implementation",
+  "sourceReferences": [
+    {
+      "id": "ref-optimization-0",
+      "title": "Backpropagation (Rumelhart et al.)",
+      "type": "paper",
+      "description": "Error propagation algorithm"
+    }
+  ]
+}

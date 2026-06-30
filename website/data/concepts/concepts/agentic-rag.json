@@ -1,0 +1,64 @@
+{
+  "id": "agentic-rag",
+  "name": "Agentic RAG",
+  "slug": "agentic-rag",
+  "summary": "RAG systems enhanced with autonomous planning, tool use, and iterative retrieval strategies.",
+  "definition": "Agentic RAG extends basic RAG with agent capabilities: the system can decompose complex queries, iteratively retrieve, evaluate results, and use tools to augment retrieval.",
+  "aliases": [
+    "agent RAG",
+    "agentic retrieval"
+  ],
+  "keywords": [
+    "agentic",
+    "RAG",
+    "agent",
+    "planning",
+    "iterative"
+  ],
+  "sharedKnowledgeDomains": [
+    "rag",
+    "agents"
+  ],
+  "relatedConcepts": [
+    {
+      "concept": "rag-pipeline",
+      "type": "extends"
+    },
+    {
+      "concept": "react-pattern",
+      "type": "uses"
+    },
+    {
+      "concept": "tool-calling",
+      "type": "uses"
+    }
+  ],
+  "prerequisiteConcepts": [
+    "rag-pipeline",
+    "react-pattern"
+  ],
+  "artifactReferences": [
+    "artifact-agentic-rag-comparison-table",
+    "artifact-agentic-rag-exercise",
+    "artifact-agentic-rag-explanatory-text",
+    "artifact-agentic-rag-interactive-visualization",
+    "artifact-agentic-rag-visual-intuition",
+    "artifact-query-routing-comparison-table",
+    "artifact-query-routing-exercise",
+    "artifact-query-routing-explanatory-text",
+    "artifact-query-routing-interactive-visualization",
+    "artifact-query-routing-visual-intuition"
+  ],
+  "difficulty": "expert",
+  "category": "agents",
+  "canonicalStatus": "Reviewed",
+  "version": "1.0.0",
+  "reviewedBy": "NV-1100-P4 Implementation",
+  "lastReviewed": "2026-06-24",
+  "sourceReferences": [],
+  "examples": [],
+  "counterExamples": [],
+  "commonMisconceptions": [],
+  "recommendedVisualizations": [],
+  "recommendedLabs": []
+}

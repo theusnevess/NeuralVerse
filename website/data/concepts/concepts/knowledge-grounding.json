@@ -1,0 +1,84 @@
+{
+  "id": "knowledge-grounding",
+  "name": "Knowledge Grounding",
+  "slug": "knowledge-grounding",
+  "summary": "Ensuring generated responses are supported by retrieved evidence from the knowledge base.",
+  "definition": "Knowledge grounding verifies that LLM outputs are traceable to specific retrieved passages, reducing hallucination and ensuring factual accuracy.",
+  "aliases": [
+    "grounding",
+    "factual grounding",
+    "attribution"
+  ],
+  "keywords": [
+    "grounding",
+    "attribution",
+    "factuality",
+    "evidence",
+    "citation"
+  ],
+  "sharedKnowledgeDomains": [
+    "rag"
+  ],
+  "relatedConcepts": [
+    {
+      "concept": "rag-pipeline",
+      "type": "uses"
+    },
+    {
+      "concept": "agentic-rag",
+      "type": "supports"
+    }
+  ],
+  "prerequisiteConcepts": [
+    "rag-pipeline"
+  ],
+  "artifactReferences": [
+    "artifact-constitutional-ai-comparison-table",
+    "artifact-constitutional-ai-exercise",
+    "artifact-constitutional-ai-explanatory-text",
+    "artifact-constitutional-ai-interactive-visualization",
+    "artifact-constitutional-ai-visual-intuition",
+    "artifact-grounding-verification-strategies-comparison-table",
+    "artifact-grounding-verification-strategies-exercise",
+    "artifact-grounding-verification-strategies-explanatory-text",
+    "artifact-grounding-verification-strategies-interactive-visualization",
+    "artifact-grounding-verification-strategies-visual-intuition",
+    "artifact-guardrail-architectures-comparison-table",
+    "artifact-guardrail-architectures-exercise",
+    "artifact-guardrail-architectures-explanatory-text",
+    "artifact-guardrail-architectures-interactive-visualization",
+    "artifact-guardrail-architectures-visual-intuition",
+    "artifact-hallucination-evaluation-comparison-table",
+    "artifact-hallucination-evaluation-exercise",
+    "artifact-hallucination-evaluation-explanatory-text",
+    "artifact-hallucination-evaluation-interactive-visualization",
+    "artifact-hallucination-evaluation-visual-intuition",
+    "artifact-hallucinations-reliability-comparison-table",
+    "artifact-hallucinations-reliability-exercise",
+    "artifact-hallucinations-reliability-explanatory-text",
+    "artifact-hallucinations-reliability-interactive-visualization",
+    "artifact-hallucinations-reliability-visual-intuition",
+    "artifact-knowledge-grounding-comparison-table",
+    "artifact-knowledge-grounding-exercise",
+    "artifact-knowledge-grounding-explanatory-text",
+    "artifact-knowledge-grounding-interactive-visualization",
+    "artifact-knowledge-grounding-visual-intuition",
+    "artifact-policy-enforcement-output-validation-comparison-table",
+    "artifact-policy-enforcement-output-validation-exercise",
+    "artifact-policy-enforcement-output-validation-explanatory-text",
+    "artifact-policy-enforcement-output-validation-interactive-visualization",
+    "artifact-policy-enforcement-output-validation-visual-intuition"
+  ],
+  "difficulty": "advanced",
+  "category": "rag",
+  "canonicalStatus": "Reviewed",
+  "version": "1.0.0",
+  "reviewedBy": "NV-1100-P4 Implementation",
+  "lastReviewed": "2026-06-24",
+  "sourceReferences": [],
+  "examples": [],
+  "counterExamples": [],
+  "commonMisconceptions": [],
+  "recommendedVisualizations": [],
+  "recommendedLabs": []
+}

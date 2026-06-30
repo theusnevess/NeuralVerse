@@ -1,0 +1,80 @@
+{
+  "id": "image-segmentation",
+  "name": "Image Segmentation",
+  "slug": "image-segmentation",
+  "summary": "Partitioning an image into pixel-level regions belonging to different classes.",
+  "definition": "Image segmentation assigns a class label to every pixel in an image. Semantic segmentation labels classes; instance segmentation distinguishes individual objects.",
+  "aliases": [
+    "segmentation",
+    "semantic segmentation",
+    "instance segmentation"
+  ],
+  "keywords": [
+    "segmentation",
+    "pixel",
+    "semantic",
+    "instance",
+    "U-Net"
+  ],
+  "sharedKnowledgeDomains": [
+    "computer-vision"
+  ],
+  "relatedConcepts": [
+    {
+      "concept": "convolution",
+      "type": "uses"
+    },
+    {
+      "concept": "object-detection",
+      "type": "related_to"
+    }
+  ],
+  "prerequisiteConcepts": [
+    "convolution",
+    "pooling"
+  ],
+  "artifactReferences": [
+    "artifact-encoder-decoder-segmentation-comparison-table",
+    "artifact-encoder-decoder-segmentation-exercise",
+    "artifact-encoder-decoder-segmentation-explanatory-text",
+    "artifact-encoder-decoder-segmentation-interactive-visualization",
+    "artifact-encoder-decoder-segmentation-visual-intuition",
+    "artifact-instance-segmentation-fundamentals-comparison-table",
+    "artifact-instance-segmentation-fundamentals-exercise",
+    "artifact-instance-segmentation-fundamentals-explanatory-text",
+    "artifact-instance-segmentation-fundamentals-interactive-visualization",
+    "artifact-instance-segmentation-fundamentals-visual-intuition",
+    "artifact-pixel-wise-classification-comparison-table",
+    "artifact-pixel-wise-classification-exercise",
+    "artifact-pixel-wise-classification-explanatory-text",
+    "artifact-pixel-wise-classification-interactive-visualization",
+    "artifact-pixel-wise-classification-visual-intuition",
+    "artifact-segmentation-masks-labels-comparison-table",
+    "artifact-segmentation-masks-labels-exercise",
+    "artifact-segmentation-masks-labels-explanatory-text",
+    "artifact-segmentation-masks-labels-interactive-visualization",
+    "artifact-segmentation-masks-labels-visual-intuition",
+    "artifact-semantic-segmentation-fundamentals-comparison-table",
+    "artifact-semantic-segmentation-fundamentals-exercise",
+    "artifact-semantic-segmentation-fundamentals-explanatory-text",
+    "artifact-semantic-segmentation-fundamentals-interactive-visualization",
+    "artifact-semantic-segmentation-fundamentals-visual-intuition",
+    "artifact-unet-vs-maskrcnn-comparison-table",
+    "artifact-unet-vs-maskrcnn-exercise",
+    "artifact-unet-vs-maskrcnn-explanatory-text",
+    "artifact-unet-vs-maskrcnn-interactive-visualization",
+    "artifact-unet-vs-maskrcnn-visual-intuition"
+  ],
+  "difficulty": "advanced",
+  "category": "computer-vision",
+  "canonicalStatus": "Reviewed",
+  "version": "1.0.0",
+  "reviewedBy": "NV-1100-P4 Implementation",
+  "lastReviewed": "2026-06-24",
+  "sourceReferences": [],
+  "examples": [],
+  "counterExamples": [],
+  "commonMisconceptions": [],
+  "recommendedVisualizations": [],
+  "recommendedLabs": []
+}

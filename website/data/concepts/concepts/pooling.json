@@ -1,0 +1,75 @@
+{
+  "id": "pooling",
+  "name": "Pooling",
+  "slug": "pooling",
+  "summary": "Downsampling operations that reduce spatial dimensions while preserving important features.",
+  "definition": "Pooling reduces the spatial size of feature maps by aggregating local regions. Max pooling takes the maximum value; average pooling computes the mean. Pooling introduces translation invariance.",
+  "aliases": [
+    "subsampling",
+    "downsampling",
+    "max pooling",
+    "average pooling"
+  ],
+  "keywords": [
+    "pooling",
+    "max pooling",
+    "average pooling",
+    "subsampling",
+    "invariance"
+  ],
+  "sharedKnowledgeDomains": [
+    "computer-vision"
+  ],
+  "relatedConcepts": [
+    {
+      "concept": "convolution",
+      "type": "supports"
+    },
+    {
+      "concept": "image-segmentation",
+      "type": "uses"
+    }
+  ],
+  "prerequisiteConcepts": [
+    "convolution"
+  ],
+  "artifactReferences": [
+    "artifact-convolutional-neural-networks-comparison-table",
+    "artifact-convolutional-neural-networks-exercise",
+    "artifact-convolutional-neural-networks-explanatory-text",
+    "artifact-convolutional-neural-networks-interactive-visualization",
+    "artifact-convolutional-neural-networks-visual-intuition",
+    "artifact-object-detection-fundamentals-comparison-table",
+    "artifact-object-detection-fundamentals-exercise",
+    "artifact-object-detection-fundamentals-explanatory-text",
+    "artifact-object-detection-fundamentals-interactive-visualization",
+    "artifact-object-detection-fundamentals-visual-intuition",
+    "artifact-pooling-layers-comparison-table",
+    "artifact-pooling-layers-exercise",
+    "artifact-pooling-layers-explanatory-text",
+    "artifact-pooling-layers-interactive-visualization",
+    "artifact-pooling-layers-visual-intuition",
+    "artifact-semantic-segmentation-fundamentals-comparison-table",
+    "artifact-semantic-segmentation-fundamentals-exercise",
+    "artifact-semantic-segmentation-fundamentals-explanatory-text",
+    "artifact-semantic-segmentation-fundamentals-interactive-visualization",
+    "artifact-semantic-segmentation-fundamentals-visual-intuition",
+    "artifact-stride-padding-comparison-table",
+    "artifact-stride-padding-exercise",
+    "artifact-stride-padding-explanatory-text",
+    "artifact-stride-padding-interactive-visualization",
+    "artifact-stride-padding-visual-intuition"
+  ],
+  "difficulty": "intermediate",
+  "category": "computer-vision",
+  "canonicalStatus": "Reviewed",
+  "version": "1.0.0",
+  "reviewedBy": "NV-1100-P4 Implementation",
+  "lastReviewed": "2026-06-24",
+  "sourceReferences": [],
+  "examples": [],
+  "counterExamples": [],
+  "commonMisconceptions": [],
+  "recommendedVisualizations": [],
+  "recommendedLabs": []
+}

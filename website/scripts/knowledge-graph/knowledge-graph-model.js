@@ -148,6 +148,86 @@ export function buildKnowledgeGraphModel(index, options = {}) {
     });
   });
 
+  const conceptNodes = new Map();
+  const conceptService = window.NeuralVerse?.conceptLayerService;
+  if (conceptService) {
+    try {
+      const allConcepts = conceptService.getAllConceptsSync ? conceptService.getAllConceptsSync() : [];
+      (index.artifacts || []).forEach((artifact) => {
+        (artifact.concepts || []).forEach((conceptId) => {
+          const conceptData = allConcepts.find(c => c.id === conceptId);
+          const conceptNodeId = `concept-${conceptId}`;
+          if (!conceptNodes.has(conceptNodeId)) {
+            const conceptNode = {
+              id: conceptNodeId,
+              type: 'concept',
+              typeLabel: 'Concept',
+              title: conceptData ? conceptData.name : conceptId,
+              status: 'Active',
+              route: '#/workspace',
+              lineage: {},
+              metadata: {
+                overview: conceptData ? conceptData.summary || '' : '',
+                definition: conceptData ? conceptData.definition || '' : '',
+                aliases: conceptData ? conceptData.aliases || [] : [],
+                keywords: conceptData ? conceptData.keywords || [] : []
+              }
+            };
+            registerNode(conceptNode);
+            conceptNodes.set(conceptNodeId, conceptData);
+          }
+          addEdge(edges, {
+            id: edgeId('teaches', artifact.id, conceptNodeId),
+            type: 'teaches',
+            source: artifact.id,
+            target: conceptNodeId,
+            label: 'teaches',
+            description: `This artifact teaches the concept ${conceptId}.`
+          });
+        });
+      });
+      conceptNodes.forEach((conceptData, conceptNodeId) => {
+        if (conceptData && conceptData.relatedConcepts) {
+          conceptData.relatedConcepts.forEach((relatedId) => {
+            const relatedNodeId = `concept-${relatedId}`;
+            if (!conceptNodes.has(relatedNodeId)) {
+              const relatedData = allConcepts.find(c => c.id === relatedId);
+              if (relatedData) {
+                const relatedNode = {
+                  id: relatedNodeId,
+                  type: 'concept',
+                  typeLabel: 'Concept',
+                  title: relatedData.name,
+                  status: 'Active',
+                  route: '#/workspace',
+                  lineage: {},
+                  metadata: {
+                    overview: relatedData.summary || '',
+                    definition: relatedData.definition || '',
+                    aliases: relatedData.aliases || [],
+                    keywords: relatedData.keywords || []
+                  }
+                };
+                registerNode(relatedNode);
+                conceptNodes.set(relatedNodeId, relatedData);
+              }
+            }
+            addEdge(edges, {
+              id: edgeId('related_concept', conceptNodeId, relatedNodeId),
+              type: 'related_concept',
+              source: conceptNodeId,
+              target: relatedNodeId,
+              label: 'related to',
+              description: 'This edge exists because the concept layer defines a relationship between these concepts.'
+            });
+          });
+        }
+      });
+    } catch (e) {
+      // Concept layer integration is optional — do not break graph
+    }
+  }
+
   const edgesByNodeId = new Map();
   edges.forEach((edge) => {
     if (!edgesByNodeId.has(edge.source)) edgesByNodeId.set(edge.source, []);

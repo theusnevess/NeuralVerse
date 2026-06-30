@@ -1,0 +1,43 @@
+<div class="nv-stack nv-stack--gap-md nv-generative-page">
+  <header class="nv-page-header">
+    <p class="nv-page-header__eyebrow">Optional Layer</p>
+    <h1>Local Generative Assist</h1>
+    <p>Optional, locally-powered generative assistance for explanations, summaries, and exploration.</p>
+  </header>
+
+  <div class="nv-gen-status-banner" data-gen-status-mount></div>
+
+  <section class="nv-card" aria-labelledby="gen-info-heading">
+    <div class="nv-card__header">
+      <h3 class="nv-card__title" id="gen-info-heading">About This Feature</h3>
+      <span class="nv-badge" data-variant="info">Optional</span>
+    </div>
+    <div class="nv-card__body">
+      <p style="font-size:0.85rem;color:var(--sys-color-text-secondary,#94a3b8);margin:0 0 8px 0;">
+        The Local Generative Layer uses local LLMs (Ollama, llama.cpp, or OpenAI-compatible local servers)
+        to provide optional explanations, summaries, and exploration suggestions.
+      </p>
+      <p style="font-size:0.85rem;color:var(--sys-color-text-secondary,#94a3b8);margin:0 0 8px 0;">
+        <strong>Important:</strong> Generated outputs are non-canonical. Always verify with official NeuralVerse materials.
+        No data leaves your local machine.
+      </p>
+      <p style="font-size:0.85rem;color:var(--sys-color-text-secondary,#94a3b8);margin:0;">
+        This feature is disabled by default. Enable it in <a href="#/settings">Settings</a>.
+      </p>
+    </div>
+  </section>
+
+  <section class="nv-card" aria-labelledby="gen-panel-heading">
+    <div class="nv-card__header">
+      <h3 class="nv-card__title" id="gen-panel-heading">Generative Assist Panel</h3>
+    </div>
+    <div class="nv-card__body" data-gen-panel-mount></div>
+  </section>
+
+  <section class="nv-card" aria-labelledby="gen-audit-heading">
+    <div class="nv-card__header">
+      <h3 class="nv-card__title" id="gen-audit-heading">Audit Log</h3>
+    </div>
+    <div class="nv-card__body" data-gen-audit-mount></div>
+  </section>
+</div>

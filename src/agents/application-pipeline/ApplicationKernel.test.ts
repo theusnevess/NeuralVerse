@@ -393,7 +393,7 @@ describe('Application Kernel — Validation', () => {
       registryVersion: '1.0.0',
       compositionVersion: '1.0.0',
       decisions: [],
-      deterministic: false,
+      deterministic: false as true,
       generatedFrom: 'deterministic_application_kernel',
       randomUsed: false,
       timeDependency: false,

@@ -1,0 +1,244 @@
+/* NV-1100-P5B — Review Session UI styles */
+
+.nv-review-session-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(8, 12, 22, 0.78);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 24px;
+}
+
+.nv-review-session {
+  background: var(--sys-color-bg-elevated, #0e1320);
+  color: var(--sys-color-text-primary, #e6ebf5);
+  border: 1px solid rgba(138, 180, 248, 0.2);
+  border-radius: 10px;
+  padding: 24px;
+  max-width: 720px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
+}
+
+.nv-review-session__title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 12px 0;
+  color: var(--sys-color-text-primary, #e6ebf5);
+}
+
+.nv-review-session__progress {
+  font-size: 0.85rem;
+  color: rgba(230, 235, 245, 0.7);
+  margin: 0 0 6px 0;
+}
+
+.nv-review-session__progress-bar {
+  height: 6px;
+  background: rgba(138, 180, 248, 0.12);
+  border-radius: 3px;
+  overflow: hidden;
+  margin: 0 0 16px 0;
+}
+
+.nv-review-session__progress-fill {
+  height: 100%;
+  background: var(--sys-color-accent-primary, #4dabf7);
+  width: 0%;
+  transition: width 0.2s ease;
+}
+
+.nv-review-session__item-meta {
+  font-size: 0.8rem;
+  color: rgba(230, 235, 245, 0.6);
+  margin: 0 0 16px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.nv-review-session__block {
+  background: rgba(13, 17, 28, 0.6);
+  border: 1px solid rgba(138, 180, 248, 0.15);
+  border-radius: 6px;
+  padding: 16px;
+  margin: 0 0 16px 0;
+}
+
+.nv-review-session__label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: rgba(230, 235, 245, 0.6);
+  margin: 0 0 8px 0;
+}
+
+.nv-review-session__prompt-text,
+.nv-review-session__answer-text {
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 0;
+  color: var(--sys-color-text-primary, #e6ebf5);
+}
+
+.nv-review-session__answer {
+  border-color: rgba(105, 218, 138, 0.3);
+}
+
+.nv-review-session__grade {
+  margin: 0 0 16px 0;
+}
+
+.nv-review-session__quality-label {
+  font-size: 0.85rem;
+  margin: 0 0 12px 0;
+  color: rgba(230, 235, 245, 0.8);
+}
+
+.nv-review-session__quality-group {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 8px;
+  margin: 0 0 12px 0;
+}
+
+.nv-review-session__quality-btn {
+  font-size: 0.85rem;
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.nv-review-session__quality-btn[aria-pressed="true"] {
+  background: var(--sys-color-accent-primary, #4dabf7);
+  color: #0e1320;
+  border-color: var(--sys-color-accent-primary, #4dabf7);
+}
+
+.nv-review-session__quality-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.nv-review-session__actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  border-top: 1px solid rgba(138, 180, 248, 0.12);
+  padding-top: 16px;
+}
+
+.nv-review-session__complete {
+  text-align: center;
+  padding: 24px 0;
+}
+
+.nv-review-session__complete-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 16px 0;
+  color: var(--sys-color-text-primary, #e6ebf5);
+}
+
+.nv-review-session__complete-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 24px 0;
+  text-align: left;
+  display: inline-block;
+}
+
+.nv-review-session__complete-list li {
+  padding: 4px 0;
+  color: rgba(230, 235, 245, 0.85);
+}
+
+.nv-review-session-confirm {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--sys-color-bg-elevated, #0e1320);
+  border: 1px solid rgba(138, 180, 248, 0.3);
+  border-radius: 8px;
+  padding: 20px;
+  max-width: 360px;
+  width: 90%;
+  z-index: 10001;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+}
+
+.nv-review-session-confirm h3 {
+  margin: 0 0 8px 0;
+  font-size: 1rem;
+}
+
+.nv-review-session-confirm p {
+  margin: 0 0 16px 0;
+  color: rgba(230, 235, 245, 0.85);
+  font-size: 0.9rem;
+}
+
+@media (max-width: 480px) {
+  .nv-review-session-overlay {
+    padding: 8px;
+  }
+  .nv-review-session {
+    padding: 16px;
+  }
+  .nv-review-session__quality-group {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nv-review-session__progress-fill {
+    transition: none;
+  }
+}
+
+/* Reset confirmation dialog (settings page) */
+.nv-reset-confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(8, 12, 22, 0.78);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 24px;
+}
+
+.nv-reset-confirm-dialog {
+  background: var(--sys-color-bg-elevated, #0e1320);
+  color: var(--sys-color-text-primary, #e6ebf5);
+  border: 1px solid rgba(138, 180, 248, 0.3);
+  border-radius: 8px;
+  padding: 20px;
+  max-width: 420px;
+  width: 100%;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+}
+
+.nv-reset-confirm-dialog h3 {
+  margin: 0 0 12px 0;
+  font-size: 1rem;
+}
+
+.nv-reset-confirm-dialog p {
+  margin: 0 0 16px 0;
+  color: rgba(230, 235, 245, 0.85);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.nv-reset-confirm-dialog .nv-cluster {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}

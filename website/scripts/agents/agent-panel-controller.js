@@ -104,10 +104,10 @@ const OBSIDIAN_ACTIONS = [
   { id: 'recommend-tags', label: 'Recommend Tags', prompt: 'Recommend tags for this concept' },
   { id: 'organize-collections', label: 'Organize Collections', prompt: 'Organize collections for this concept' },
   { id: 'build-concept-map', label: 'Build Concept Map', prompt: 'Build concept map for this concept' },
-  { id: 'explore-neighbor-concepts', label: 'Explore Neighbor Concepts', prompt: 'Explore neighbor concepts for this concept' },
+  { id: 'explore-neighbor-concepts', label: 'Explore Neighbor Concepts', prompt: 'Explore knowledge gaps for this concept' },
   { id: 'refine-note', label: 'Refine Note', prompt: 'Refine note for this concept' },
   { id: 'split-into-atomic-notes', label: 'Split Into Atomic Notes', prompt: 'Split into atomic notes for this concept' },
-  { id: 'plan-knowledge-review', label: 'Plan Knowledge Review', prompt: 'Plan knowledge review for this concept' },
+  { id: 'plan-knowledge-review', label: 'Plan Knowledge Review', prompt: 'Plan a periodic review session for this concept' },
   { id: 'obsidian-strategy', label: 'Obsidian Strategy', prompt: 'Provide Obsidian strategy for this concept' }
 ];
 
@@ -171,6 +171,10 @@ function createAgentPanelController(options = {}) {
   function init() {
     injectPanelMarkup();
     if (!panelElement) return;
+    if (panelElement.getAttribute('aria-hidden') !== 'false') {
+      panelElement.inert = true;
+      panelElement.setAttribute('inert', '');
+    }
     bindEvents();
     renderAgentList();
     restoreMode();
@@ -196,6 +200,8 @@ function createAgentPanelController(options = {}) {
     panel.setAttribute('role', 'complementary');
     panel.setAttribute('aria-label', 'Didactic Agent Assist');
     panel.setAttribute('aria-hidden', 'true');
+    panel.inert = true;
+    panel.setAttribute('inert', '');
 
     panel.innerHTML = `
       <div class="nv-agent-panel__header">
@@ -338,7 +344,7 @@ function createAgentPanelController(options = {}) {
         <div class="nv-agent-panel__quick-actions-label">Curiosity Actions</div>
         <div class="nv-agent-panel__quick-actions-grid">
           ${CURIOSITY_ACTIONS.map(a => `
-            <button class="nv-agent-quick-action-btn nv-agent-quick-action-btn--narrative nv-agent-quick-action-btn--curiosity" data-quick-action="${a.id}" data-prompt="${a.prompt}" type="button" aria-label="${a.label}">
+            <button class="nv-agent-quick-action-btn nv-agent-quick-action-btn--curiosity" data-quick-action="${a.id}" data-prompt="${a.prompt}" type="button" aria-label="${a.label}">
               ${a.label}
             </button>
           `).join('')}
@@ -1003,6 +1009,8 @@ function createAgentPanelController(options = {}) {
     isOpen = true;
     panelElement.classList.add('nv-agent-panel--open');
     panelElement.setAttribute('aria-hidden', 'false');
+    panelElement.inert = false;
+    panelElement.removeAttribute('inert');
     document.querySelector('#nv-agent-trigger')?.setAttribute('aria-expanded', 'true');
     updateContextDisplay();
 
@@ -1015,6 +1023,8 @@ function createAgentPanelController(options = {}) {
     isOpen = false;
     panelElement.classList.remove('nv-agent-panel--open');
     panelElement.setAttribute('aria-hidden', 'true');
+    panelElement.inert = true;
+    panelElement.setAttribute('inert', '');
     document.querySelector('#nv-agent-trigger')?.setAttribute('aria-expanded', 'false');
 
     const triggerBtn = document.querySelector('#nv-agent-trigger');

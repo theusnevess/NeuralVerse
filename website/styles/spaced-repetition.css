@@ -1,0 +1,90 @@
+/* NV-1100-P5 — Spaced Repetition Dashboard Styles */
+
+.nv-review-dashboard {
+  padding: var(--sys-space-stack-md, 16px);
+}
+
+.nv-review-dashboard__metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: var(--sys-space-stack-sm, 12px);
+  margin: 0 0 var(--sys-space-stack-md, 16px) 0;
+}
+
+.nv-review-dashboard__metric {
+  background: rgba(13, 17, 28, 0.6);
+  border: 1px solid rgba(138, 180, 248, 0.15);
+  border-radius: 6px;
+  padding: 12px;
+}
+
+.nv-review-dashboard__metric dt {
+  font-size: 0.75rem;
+  color: rgba(230, 235, 245, 0.7);
+  margin: 0 0 4px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.nv-review-dashboard__metric dd {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--sys-color-text-primary, #e6ebf5);
+}
+
+.nv-review-dashboard__next,
+.nv-review-dashboard__upcoming {
+  margin: 0 0 var(--sys-space-stack-md, 16px) 0;
+}
+
+.nv-review-dashboard__next-title,
+.nv-review-dashboard__upcoming-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: rgba(230, 235, 245, 0.85);
+  margin: 0 0 6px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.nv-review-dashboard__upcoming ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nv-review-dashboard__upcoming li {
+  padding: 4px 0;
+  font-size: 0.9rem;
+  color: rgba(230, 235, 245, 0.85);
+}
+
+.nv-review-dashboard__actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.nv-review-dashboard__empty {
+  margin-top: 12px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  background: rgba(13, 17, 28, 0.6);
+  border: 1px solid rgba(138, 180, 248, 0.15);
+  font-size: 0.9rem;
+  color: rgba(230, 235, 245, 0.7);
+}
+
+/* Review status badges in learning workspace */
+[data-review-status="due-today"] {
+  color: var(--sys-color-accent-primary, #4dabf7);
+}
+
+[data-review-status="overdue"] {
+  color: #ff6b6b;
+}
+
+[data-review-status="reviewed-today"] {
+  color: #51cf66;
+}

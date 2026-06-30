@@ -350,8 +350,8 @@ describe('Visual Asset Kernel — Registry', () => {
   });
 
   it('should sort relationships deterministically', () => {
-    const r2 = { ...VALID_RELATIONSHIP, relationshipId: 'rel-002', relationshipType: 'knowledge' };
-    const r1 = { ...VALID_RELATIONSHIP, relationshipId: 'rel-001', relationshipType: 'architecture' };
+    const r2 = { ...VALID_RELATIONSHIP, relationshipId: 'rel-002', relationshipType: 'knowledge' as const };
+    const r1 = { ...VALID_RELATIONSHIP, relationshipId: 'rel-001', relationshipType: 'architecture' as const };
 
     const registry = composeVisualAssetRegistry(
       [VALID_ASSET],
@@ -364,8 +364,8 @@ describe('Visual Asset Kernel — Registry', () => {
   });
 
   it('should sort governance deterministically', () => {
-    const g2 = { ...VALID_GOVERNANCE, governanceId: 'gov-002', governanceLevel: 'approved' };
-    const g1 = { ...VALID_GOVERNANCE, governanceId: 'gov-001', governanceLevel: 'canonical' };
+    const g2 = { ...VALID_GOVERNANCE, governanceId: 'gov-002', governanceLevel: 'approved' as const };
+    const g1 = { ...VALID_GOVERNANCE, governanceId: 'gov-001', governanceLevel: 'canonical' as const };
 
     const registry = composeVisualAssetRegistry(
       [VALID_ASSET],
@@ -557,7 +557,7 @@ describe('Visual Asset Kernel — Validation', () => {
       registryVersion: '1.0.0',
       compositionVersion: '1.0.0',
       decisions: [],
-      deterministic: false,
+      deterministic: false as true,
       generatedFrom: 'deterministic_visual_asset_kernel',
       randomUsed: false,
       timeDependency: false,

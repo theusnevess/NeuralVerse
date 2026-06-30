@@ -1,0 +1,67 @@
+{
+  "id": "agents",
+  "title": "AI Agents & Agentic Systems",
+  "summary": "Autonomous systems that combine reasoning traces with action/tool interaction patterns to solve multi-step problems through planning, execution, and observation loops.",
+  "concepts": ["ReAct pattern", "tool calling", "planning loops", "memory systems", "multi-agent orchestration", "sandboxing", "execution safety", "goal-directed behavior"],
+  "keywords": ["agents", "ReAct", "tool use", "planning", "autonomous", "multi-agent", "orchestration", "LangGraph", "AutoGPT", "BabyAGI"],
+  "historicalContext": "Early LLM integrations were passive, answering queries in a single turn without the ability to plan, use tools, or correct errors. This limitation motivated Yao et al. in 2022 to introduce the ReAct (Reason + Act) paradigm—allowing models to generate reasoning traces, choose tools, and observe environment outputs iteratively to solve complex tasks.",
+  "landmarkReferences": [
+    {
+      "title": "ReAct: Synergizing Reasoning and Acting in Language Models",
+      "authors": "Yao et al.",
+      "year": "2022",
+      "contribution": "Combined reasoning traces with action/tool interaction patterns."
+    }
+  ],
+  "industryApplications": ["Autonomous developer workspaces", "Complex data analysis workflows", "Automated ticketing and triage engines", "Code generation and debugging", "Process automation"],
+  "commonMisconceptions": [
+    {
+      "trigger": "agent",
+      "wrong": "Agents are inherently reliable decision makers for multi-step goals.",
+      "correct": "Agents lack genuine intuition; they act based on prompt instructions and statistical next-token predictions, making them prone to looping without continuous feedback safeguards."
+    }
+  ],
+  "analogies": [
+    {
+      "text": "An agent loop is like an engineer sitting at a terminal, running a command, reading the error, and correcting their code before running it again.",
+      "limitations": "Engineers understand the target goal, whereas agent systems execute token predictions without conscious intent."
+    }
+  ],
+  "curiosityFacts": [
+    "Did you know that the ReAct loop was inspired by human cognitive behaviors? We write down intermediate steps (thoughts) and run commands (actions) when solving math problems.",
+    "In 1950, Alan Turing described the 'Turing Test,' but he also envisioned an agentic structure where programs could modify their own instructions based on feedback."
+  ],
+  "storySeeds": [
+    "The domain transitioned from passive text prediction models to active decision-making loops that interact with external operating systems and APIs.",
+    "Agent systems transformed passive text prediction APIs into active software systems that plan, interact with databases, and correct their own errors."
+  ],
+  "assessmentSeeds": [
+    "Contrast the planning behavior of a ReAct agent loop with linear directed acyclic graph (DAG) routing.",
+    "What security risks arise when giving LLM agents direct tool access without sandboxing?"
+  ],
+  "professionalInsights": [
+    "Isolate tool execution in self-contained worker pools and use asynchronous queues to manage long-running planning steps.",
+    "Audit agent traces to monitor step execution count, token usage, tool errors, and flag infinite execution loops in production.",
+    "An operations automation agent was modified from a free-form ReAct model to a structured routing graph. This reduced task failure rates from 30% to less than 2% by restricting tool paths."
+  ],
+  "recommendedVisualizations": ["agent-loop-diagram", "tool-calling-flow"],
+  "recommendedLabs": ["build-a-react-agent", "multi-agent-orchestration"],
+  "relatedArtifacts": [],
+  "relatedConcepts": [
+    { "domain": "llms", "type": "depends_on" },
+    { "domain": "rag", "type": "uses" },
+    { "domain": "transformers", "type": "uses" }
+  ],
+  "lastReviewed": "2026-06-24",
+  "canonicalStatus": "Reviewed",
+  "version": "1.0.0",
+  "reviewedBy": "NV-1100-P3 Implementation",
+  "sourceReferences": [
+    {
+      "id": "ref-agents-0",
+      "title": "ReAct (Yao et al.)",
+      "type": "paper",
+      "description": "Reasoning and acting paradigm"
+    }
+  ]
+}

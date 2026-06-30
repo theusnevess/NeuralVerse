@@ -1,0 +1,57 @@
+{
+  "validator": "NV-1300-D1A-F1-Planner-Responsibility",
+  "timestamp": "2026-06-26T00:00:00.000Z",
+  "module": "pedagogical-planner.js",
+  "responsibilities": {
+    "planner": {
+      "allowed": [
+        "buildPlan — main orchestration entry point",
+        "validatePlan — plan structural validation",
+        "explainPlan — human-readable plan explanation",
+        "getLastPlan — accessor for last generated plan",
+        "_generatePlanId — deterministic plan ID generation",
+        "_detectConceptIds — input concept ID extraction",
+        "_detectAvailableResources — input resource extraction",
+        "_layerIncluded — plan query helper",
+        "_buildInvalidPlan — invalid plan fallback builder"
+      ],
+      "internal": [
+        "_detectMathContent — input content classification (simple keyword check)",
+        "_buildEvidence — evidence aggregation from resources (orchestration)",
+        "_buildSectionsFromLayers — section construction from layer results (orchestration)"
+      ],
+      "delegated": [
+        "multiPerspectiveEngine.selectPerspective — perspective selection",
+        "instructionalLayers.selectLayers — layer selection",
+        "difficultyLadder.applyPreset — difficulty preset application",
+        "multiPerspectiveEngine.applyPerspective — perspective application",
+        "compositionGraph.buildFromSections — graph building",
+        "compositionGraph.topologicalSort — graph sorting",
+        "semanticResolver.buildDependencyChain — dependency chain construction",
+        "semanticResolver.detectMissingDependencies — missing prerequisite detection",
+        "recapInserter.insertRecaps — recap insertion",
+        "exampleEngine.selectBestExamples — example selection and ranking",
+        "resourceSelector.buildResourceBundle — resource bundle construction",
+        "crossDomainConnector.rankConnections — cross-domain connection ranking"
+      ]
+    },
+    "forbidden": [
+      "resolve dependencies internally — delegated to semanticResolver",
+      "rank examples — delegated to exampleEngine",
+      "insert recaps — delegated to recapInserter",
+      "discover cross-domain links — delegated to crossDomainConnector",
+      "select laboratories — delegated to resourceSelector",
+      "select visualizations — delegated to resourceSelector",
+      "build transitions — not implemented (future module)"
+    ]
+  },
+  "metrics": {
+    "totalFunctions": 13,
+    "orchestrationFunctions": 9,
+    "internalLogicFunctions": 3,
+    "delegatedCalls": 12,
+    "internalLogicPercentage": 23,
+    "delegatedLogicPercentage": 77,
+    "verdict": "PLANNER IS ORCHESTRATION-ONLY"
+  }
+}

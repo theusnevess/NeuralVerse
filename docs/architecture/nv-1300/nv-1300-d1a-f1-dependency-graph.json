@@ -1,0 +1,178 @@
+{
+  "validator": "NV-1300-D1A-F1-Dependency-Graph",
+  "timestamp": "2026-06-26T00:00:00.000Z",
+  "modules": {
+    "didactic-architecture-agent.js": {
+      "type": "orchestrator",
+      "imports": [
+        "misconception-library.js",
+        "analogy-engine.js",
+        "comparison-engine.js",
+        "socratic-engine.js",
+        "shared-knowledge-service.js",
+        "composition-graph.js",
+        "instructional-layers.js",
+        "difficulty-ladder.js",
+        "multi-perspective-engine.js",
+        "pedagogical-planner.js",
+        "semantic-dependency-resolver.js",
+        "example-selection-engine.js",
+        "example-registry.js",
+        "cross-domain-connector.js",
+        "recap-inserter.js",
+        "resource-selector.js"
+      ],
+      "dependencyInjection": false,
+      "instantiates": [
+        "createMisconceptionLibrary",
+        "createAnalogyEngine",
+        "createComparisonEngine",
+        "createSocraticEngine",
+        "createSharedKnowledgeService",
+        "createCompositionGraph",
+        "createInstructionalLayers",
+        "createDifficultyLadder",
+        "createMultiPerspectiveEngine",
+        "createSemanticDependencyResolver",
+        "createExampleSelectionEngine",
+        "createExampleRegistry",
+        "createCrossDomainConnector",
+        "createRecapInserter",
+        "createResourceSelector",
+        "createPedagogicalPlanner"
+      ],
+      "codeLines": 876,
+      "fanOut": 16,
+      "fanIn": 0
+    },
+    "pedagogical-planner.js": {
+      "type": "orchestration-layer",
+      "imports": [],
+      "dependencyInjection": true,
+      "injectedDependencies": [
+        "compositionGraph",
+        "instructionalLayers",
+        "difficultyLadder",
+        "multiPerspectiveEngine",
+        "semanticResolver",
+        "exampleEngine",
+        "exampleRegistry",
+        "crossDomainConnector",
+        "recapInserter",
+        "resourceSelector"
+      ],
+      "codeLines": 510,
+      "fanOut": 10,
+      "fanIn": 1
+    },
+    "composition-graph.js": {
+      "type": "module",
+      "imports": [],
+      "dependencyInjection": false,
+      "windowDependencies": [],
+      "codeLines": 239,
+      "fanOut": 0,
+      "fanIn": 1
+    },
+    "instructional-layers.js": {
+      "type": "module",
+      "imports": [],
+      "dependencyInjection": false,
+      "windowDependencies": [],
+      "codeLines": 308,
+      "fanOut": 0,
+      "fanIn": 1
+    },
+    "difficulty-ladder.js": {
+      "type": "module",
+      "imports": [],
+      "dependencyInjection": false,
+      "windowDependencies": [],
+      "codeLines": 255,
+      "fanOut": 0,
+      "fanIn": 1
+    },
+    "multi-perspective-engine.js": {
+      "type": "module",
+      "imports": [],
+      "dependencyInjection": false,
+      "windowDependencies": [],
+      "codeLines": 334,
+      "fanOut": 0,
+      "fanIn": 1
+    },
+    "semantic-dependency-resolver.js": {
+      "type": "module",
+      "imports": [],
+      "dependencyInjection": false,
+      "windowDependencies": ["SemanticEngine", "conceptLayerService"],
+      "codeLines": 288,
+      "fanOut": 2,
+      "fanIn": 1
+    },
+    "example-selection-engine.js": {
+      "type": "module",
+      "imports": [],
+      "dependencyInjection": false,
+      "windowDependencies": ["createExampleRegistry", "SemanticEngine"],
+      "codeLines": 269,
+      "fanOut": 2,
+      "fanIn": 1
+    },
+    "example-registry.js": {
+      "type": "data-module",
+      "imports": [],
+      "dependencyInjection": false,
+      "windowDependencies": [],
+      "codeLines": 331,
+      "fanOut": 0,
+      "fanIn": 1
+    },
+    "cross-domain-connector.js": {
+      "type": "data-module",
+      "imports": [],
+      "dependencyInjection": false,
+      "windowDependencies": [],
+      "codeLines": 270,
+      "fanOut": 0,
+      "fanIn": 1
+    },
+    "recap-inserter.js": {
+      "type": "module",
+      "imports": [],
+      "dependencyInjection": false,
+      "windowDependencies": ["createSemanticDependencyResolver", "SemanticEngine"],
+      "codeLines": 185,
+      "fanOut": 2,
+      "fanIn": 1
+    },
+    "resource-selector.js": {
+      "type": "module",
+      "imports": [],
+      "dependencyInjection": false,
+      "windowDependencies": ["conceptLayerService", "sharedKnowledgeService", "ParametricRegistry", "LabRegistry", "SemanticEngine"],
+      "codeLines": 212,
+      "fanOut": 5,
+      "fanIn": 1
+    }
+  },
+  "dependencyInjectionReport": {
+    "totalModules": 12,
+    "modulesWithDI": 1,
+    "modulesWithWindowAccess": 5,
+    "modulesFullyStandalone": 6,
+    "diCoverage": "8.3%",
+    "windowAccessCoverage": "41.7%",
+    "assessment": "pedagogical-planner.js correctly uses DI for all 10 D1A/D1B dependencies. Other modules access runtime services via window.NeuralVerse (acceptable for browser environment)."
+  },
+  "architectureMetrics": {
+    "moduleCount": 12,
+    "dependencyCount": 16,
+    "averageFanIn": 0.83,
+    "averageFanOut": 1.67,
+    "plannerCoupling": "LOW — receives 10 dependencies via DI, no internal imports",
+    "registryCoupling": "LOW — standalone data module, no dependencies",
+    "maximumDependencyDepth": 2,
+    "criticalPath": "agent → planner → modules"
+  }
+}

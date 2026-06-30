@@ -470,8 +470,8 @@ describe('System Architecture Kernel — Registry', () => {
   });
 
   it('should sort constraints deterministically', () => {
-    const const2 = { ...VALID_CONSTRAINT, constraintId: 'const-002', constraintType: 'throughput' };
-    const const1 = { ...VALID_CONSTRAINT, constraintId: 'const-001', constraintType: 'latency' };
+    const const2 = { ...VALID_CONSTRAINT, constraintId: 'const-002', constraintType: 'throughput' as const };
+    const const1 = { ...VALID_CONSTRAINT, constraintId: 'const-001', constraintType: 'latency' as const };
 
     const registry = composeArchitectureRegistry([VALID_ARCHITECTURE], [], [], [const2, const1]);
 
@@ -704,7 +704,7 @@ describe('System Architecture Kernel — Validation', () => {
       registryVersion: '1.0.0',
       compositionVersion: '1.0.0',
       decisions: [],
-      deterministic: false,
+      deterministic: false as true,
       generatedFrom: 'deterministic_architecture_kernel',
       randomUsed: false,
       timeDependency: false,

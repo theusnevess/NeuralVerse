@@ -1,3 +1,31 @@
 {
-  "$schema": "https://opencode.ai/config.json"
+  "$schema": "https://opencode.ai/config.json",
+  "plugin": [
+    "./.opencode/plugin/harness-guard.ts"
+  ],
+  "mcp": {
+    "codebase-memory": {
+      "type": "local",
+      "command": ["npx", "-y", "codebase-memory-mcp@0.8.1"],
+      "cwd": ".",
+      "enabled": true,
+      "timeout": 15000
+    }
+  },
+  "instructions": [
+    "HARD ENFORCEMENT (do not summarize away): A plugin named harness-guard gates all file-mutation tools (edit, write, patch, multiedit) and destructive bash commands. The gate is closed at the start of every turn. You MUST call the custom tool `harness_activate` as the very first tool call of every response — including pure Q&A — with task_classification, cost_level, skills_planned, and context_scope. Skipping it is not a soft failure: the plugin will throw before your edit/write tools run.",
+    "MIRROR AGENTS.md: The NeuralVerse Agentic Development Harness is the development system. Local instructions, bounded context, task-specific skills, validation, documentation, git hygiene, and persistent memory form the system. The model is not the system.",
+    "ADAPTIVE PIPELINE: Orchestrator (always first) -> Context Governance -> Token Economy Auditor (medium/high only) -> Repository Discovery (Codebase Memory MCP [experimental, optional] -> fd -> rg -> ast-grep, locate before reading) -> Specialist Skills (3-5, never all) -> Implementation (smallest safe change) -> Validation (real commands, real output) -> Documentation (only if decisions changed) -> Git Hygiene.",
+    "REPORT FORMAT: When files are modified, end the response with the exact block `## Harness Pipeline Used` containing: task classification, cost level, skills activated, skills skipped (with reason), context scope, repository discovery commands, validation results, documentation/memory decision, git hygiene.",
+    "CODEBASE MEMORY MCP (EXPERIMENTAL): A local MCP server named `codebase-memory` is configured. It is an experimental structural discovery accelerator. It sits AFTER context-governance and BEFORE `fd`/`rg`/`ast-grep`/focused reads. Its output is a hint, never evidence. Every suggestion it produces must be verified through repository inspection. Do not activate it for trivial CSS, text, or documentation tasks. Activation is decided by the orchestrator based on task class. See `docs/architecture/harness/codebase-memory-mcp-policy.md`.",
+    "CLASSIFICATION DISCIPLINE: trivial = single-line, no architecture impact. small = 1-2 files. medium = 3-8 files. large = 9+ files. audit = repo-wide. cost level is independent and reflects token/effort cost.",
+    "NO BROAD REWRITES. NO NEW DEPS WITHOUT EXPLICIT APPROVAL. NO COMMITS WITHOUT EXPLICIT REQUEST. NO TOOLS/MCPs/PLUGINS WITHOUT MEASURABLE VALUE.",
+    "FORBIDDEN: Skipping harness_activate, editing without the gate open, claiming validation without running commands, omitting the Harness Pipeline Used summary, activating every skill by default, reading the whole repository, bypassing the orchestrator, treating MCP suggestions as ground truth.",
+    "READING ORDER: AGENTS.md -> .opencode/BOOTSTRAP.md -> .opencode/skills/harness-orchestrator/SKILL.md -> .opencode/skills/context-governance/SKILL.md -> .opencode/skills/pipeline-gatekeeper/SKILL.md -> relevant specialist skills. Cite files using path:line when describing findings."
+  ],
+  "skills": {
+    "paths": [
+      "./.opencode/skills"
+    ]
+  }
 }

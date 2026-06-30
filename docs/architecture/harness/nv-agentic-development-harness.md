@@ -152,20 +152,52 @@ required follow-up is stated. If it is below 60, the task is not
 presented as complete. See
 `.opencode/skills/confidence-engineering/SKILL.md`.
 
-### Codebase Memory MCP — Experimental Candidate
+### Codebase Memory MCP — Experimental, Configured
 
-An MCP-based structural code discovery layer is on the candidate
-list. Its intended position is inside the repository discovery stage,
-after context governance and before `fd`, `rg`, `ast-grep`, and
-focused reads.
+The MCP is now configured in both `.opencode/opencode.json` files
+under `mcp.codebase-memory`. The package is
+`codebase-memory-mcp@0.8.1` (publisher: `deusdata`). It is the
+most-downloaded exact-name match for "codebase memory mcp" on the npm
+registry. License: MIT. There is no single "official" Codebase
+Memory MCP blessed by OpenCode; this choice is documented and
+revisable.
 
-The candidate is policy-only at this stage. It is not installed and
-not configured. It must not replace `fd`, `rg`, `ast-grep`, or focused
-reads, and its output must be verified with repository evidence. It
-will be promoted only after a pilot that demonstrates real reduction
-in files inspected, repeated searches, and module discovery cost,
-without introducing stale-index errors or false confidence. See
-`docs/architecture/harness/codebase-memory-mcp-policy.md`.
+Intended position in the pipeline:
+
+```
+Harness Orchestrator
+  → Context Governance
+  → Codebase Memory MCP        (experimental, optional)
+  → Repository Discovery       (fd, rg, ast-grep)
+  → Focused Reads
+  → Specialist Skills
+```
+
+The MCP is a discovery accelerator. It is not an evidence source.
+Every recommendation it produces must be confirmed through
+`fd` → `rg` → `ast-grep` → focused reads. It must never replace
+those tools.
+
+Execution has not been verified in the current environment. The
+runtime shell has no Node.js, npm, npx, or bun, so the configured
+`npx -y codebase-memory-mcp@0.8.1` command cannot be launched here.
+A real OpenCode run in a Node-equipped environment is required to
+validate that the server starts, that the LLM can call it, and
+that the pilot criteria in the policy file are met before the MCP
+leaves the experimental status.
+
+Activation is decided by the orchestrator based on task class:
+
+- Activated for medium/high complexity tasks, architecture
+  exploration, dependency discovery, module ownership questions,
+  cross-file relationships, graph and retrieval systems, and large
+  refactors.
+- Not activated for CSS, text, documentation, small UI tweaks, or
+  trivial bug fixes.
+
+See `docs/architecture/harness/codebase-memory-mcp-policy.md` for
+the full policy, pilot criteria, rollback procedure, and failure
+modes.
 
 ### Headroom — Deferred
 

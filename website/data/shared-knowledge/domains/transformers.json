@@ -1,0 +1,85 @@
+{
+  "id": "transformers",
+  "title": "Transformers & Attention Mechanisms",
+  "summary": "The Transformer architecture and self-attention mechanisms form the backbone of modern language models, vision transformers, and multimodal systems.",
+  "concepts": ["self-attention", "multi-head attention", "positional encoding", "layer normalization", "feed-forward networks", "causal masking", "key-value caching", "encoder-decoder architecture"],
+  "keywords": ["transformer", "attention", "self-attention", "encoder", "decoder", "BERT", "GPT", "T5", "seq2seq", "parallelization"],
+  "historicalContext": "Recurrent Neural Networks (RNNs) processed text word-by-word, which created a bottleneck since long-term context was lost over long sequences, and training could not be parallelized. This motivated Google researchers in 2017 to invent the Transformer architecture, using self-attention to process entire sequences simultaneously and capture context regardless of distance.",
+  "landmarkReferences": [
+    {
+      "title": "Attention Is All You Need",
+      "authors": "Vaswani et al.",
+      "year": "2017",
+      "contribution": "Introduced the Transformer architecture and scaled self-attention as a central sequence modeling mechanism."
+    },
+    {
+      "title": "Neural Machine Translation by Jointly Learning to Align and Translate",
+      "authors": "Bahdanau et al.",
+      "year": "2014",
+      "contribution": "Popularized attention for alignment in neural machine translation."
+    }
+  ],
+  "industryApplications": ["Context-aware enterprise copilots", "Structured metadata extraction", "Automated customer support agents", "Neural machine translation", "Text summarization", "Code generation"],
+  "commonMisconceptions": [
+    {
+      "trigger": "attention",
+      "wrong": "The attention mechanism gives the model memory of all previous tokens.",
+      "correct": "Attention computes weighted relationships between tokens in the current context window. It is a dynamic weighting mechanism, not a persistent memory store. Outside the context window, information is inaccessible."
+    }
+  ],
+  "analogies": [
+    {
+      "text": "Self-attention is like a cocktail party where every guest listens to every conversation and focuses only on people speaking about relevant topics.",
+      "limitations": "Cocktail guests have conscious intentions, whereas attention heads operate via matrix transformations.",
+      "domain": "everyday life"
+    },
+    {
+      "text": "A transformer is like a committee meeting where every participant can talk to every other participant simultaneously. Instead of passing messages in a chain (like RNNs), each participant broadcasts their perspective and everyone else decides how much attention to pay to each broadcast.",
+      "limitations": "The committee analogy captures parallel attention but undersells the mathematical machinery of query-key-value computations and multi-head attention.",
+      "domain": "everyday life"
+    }
+  ],
+  "curiosityFacts": [
+    "Did you know that the self-attention mechanism was originally designed for neural machine translation, not general generative modeling? Its breakthrough was letting models translate words without respecting sequential order.",
+    "The Transformer architecture emerged at Google in 2017 because the team was frustrated by recurrent network training speeds."
+  ],
+  "storySeeds": [
+    "The field shifted from local statistical language patterns (n-grams) to continuous dense embeddings, culminating in unified generative transformer models.",
+    "Transformers displaced recurrent networks by parallelizing sequence training, enabling researchers to scale models to billions of parameters and terabytes of text."
+  ],
+  "assessmentSeeds": [
+    "Contrast temperature scaling with top-k filtering during text generation decoding.",
+    "What are the advantages of tokenization strategies like Byte-Pair Encoding compared to word-level models?"
+  ],
+  "professionalInsights": [
+    "Deploy vLLM with PagedAttention to maximize GPU memory efficiency and enable continuous batching for high concurrent traffic.",
+    "Monitor token throughput (tokens/sec), generation latency, cost metrics, and detect semantic drift or policy violations in user prompts."
+  ],
+  "recommendedVisualizations": ["attention-weight-heatmap", "transformer-block-diagram", "multi-head-attention-split"],
+  "recommendedLabs": ["build-a-transformer-from-scratch", "attention-visualization-playground"],
+  "relatedArtifacts": [],
+  "relatedConcepts": [
+    { "domain": "embeddings", "type": "depends_on" },
+    { "domain": "rag", "type": "uses" },
+    { "domain": "agents", "type": "uses" },
+    { "domain": "llms", "type": "generalizes" }
+  ],
+  "lastReviewed": "2026-06-24",
+  "canonicalStatus": "Reviewed",
+  "version": "1.0.0",
+  "reviewedBy": "NV-1100-P3 Implementation",
+  "sourceReferences": [
+    {
+      "id": "ref-transformers-0",
+      "title": "Attention Is All You Need",
+      "type": "paper",
+      "description": "Foundational transformer architecture paper"
+    },
+    {
+      "id": "ref-transformers-1",
+      "title": "Deep Learning (Goodfellow et al.)",
+      "type": "book",
+      "description": "Comprehensive deep learning textbook"
+    }
+  ]
+}

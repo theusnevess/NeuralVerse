@@ -27,6 +27,7 @@ import type {
   ProductionConstraint,
   DeploymentProfile,
   MonitoringRequirement,
+  MLOpsDecision,
   MLOpsTraceDecision,
   MLOpsTrace,
   MLOpsRegistry,

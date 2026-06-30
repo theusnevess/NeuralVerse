@@ -350,8 +350,8 @@ describe('Laboratory Integration Kernel — Registry', () => {
   });
 
   it('should sort evidence deterministically', () => {
-    const ev2 = { ...VALID_EVIDENCE, evidenceId: 'ev-002', evidenceType: 'measurement' };
-    const ev1 = { ...VALID_EVIDENCE, evidenceId: 'ev-001', evidenceType: 'visualization' };
+    const ev2 = { ...VALID_EVIDENCE, evidenceId: 'ev-002', evidenceType: 'measurement' as const };
+    const ev1 = { ...VALID_EVIDENCE, evidenceId: 'ev-001', evidenceType: 'visualization' as const };
 
     const registry = composeLaboratoryIntegrationRegistry([VALID_INTEGRATION], [ev2, ev1], []);
 
@@ -568,7 +568,7 @@ describe('Laboratory Integration Kernel — Validation', () => {
       registryVersion: '1.0.0',
       compositionVersion: '1.0.0',
       decisions: [],
-      deterministic: false,
+      deterministic: false as true,
       generatedFrom: 'deterministic_laboratory_integration_kernel',
       randomUsed: false,
       timeDependency: false,

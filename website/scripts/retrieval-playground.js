@@ -573,9 +573,10 @@
     const description = getReferenceDescription(reference);
     const isPinned = pinnedReferences.includes(reference.id);
     const panelIcon = iconPath || getDiscoveryIconPath({ ref: reference, reason: reasonLabel, category, isPinned });
-    const previewId = `discovery-preview-${String(reference.id).replace(/[^a-zA-Z0-9_-]/g, "-")}`;
+    const uid = `${variant}-${discoveryPanelPayloads.size}`;
+    const previewId = `discovery-preview-${String(reference.id).replace(/[^a-zA-Z0-9_-]/g, "-")}-${uid}`;
     const actionSet = new Set(actions);
-    const panelId = `discovery-card-${String(reference.id).replace(/[^a-zA-Z0-9_-]/g, "-")}-${variant}-${discoveryPanelPayloads.size}`;
+    const panelId = `discovery-card-${String(reference.id).replace(/[^a-zA-Z0-9_-]/g, "-")}-${uid}`;
     discoveryPanelPayloads.set(panelId, {
       variant,
       reference: {
@@ -596,8 +597,9 @@
       previewId
     });
 
+    const titleId = `discovery-title-${escapeHtml(reference.id)}-${uid}`;
     const fallbackHtml = `
-      <article class="nv-discovery-panel nv-discovery-panel--${variant}" data-ref-id="${escapeHtml(reference.id)}" data-preview-ref="${escapeHtml(reference.id)}" tabindex="0" aria-labelledby="discovery-title-${escapeHtml(reference.id)}">
+      <article class="nv-discovery-panel nv-discovery-panel--${variant}" data-ref-id="${escapeHtml(reference.id)}" data-preview-ref="${escapeHtml(reference.id)}" tabindex="0" aria-labelledby="${titleId}">
         <div class="nv-discovery-panel__icon">
           ${renderScientificIcon(panelIcon)}
         </div>
@@ -606,7 +608,7 @@
             <span class="nv-badge" data-variant="info">${escapeHtml(reference.type || "reference")}</span>
             <span class="nv-discovery-panel__reason">${escapeHtml(reasonLabel)}</span>
           </div>
-          <h4 class="nv-discovery-panel__title" id="discovery-title-${escapeHtml(reference.id)}">${escapeHtml(reference.title)}</h4>
+          <h4 class="nv-discovery-panel__title" id="${titleId}">${escapeHtml(reference.title)}</h4>
           ${showDescription && variant !== "compact" && description ? `<p class="nv-discovery-panel__description">${escapeHtml(description)}</p>` : ""}
           <div class="nv-discovery-panel__metrics" aria-label="Recommendation metrics">
             <span>${relCount} relationship${relCount === 1 ? "" : "s"}</span>
@@ -2658,10 +2660,12 @@
   }
 
   // Helper: Add knowledge trail event log
+  let _trailCounter = 0;
   function addTrailEvent(type, label, metadata = null) {
     const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    _trailCounter += 1;
     const event = {
-      id: 'trail_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+      id: 'trail_' + Date.now() + '_' + _trailCounter.toString(36),
       type,
       label,
       timestamp,

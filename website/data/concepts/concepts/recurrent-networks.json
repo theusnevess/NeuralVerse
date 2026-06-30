@@ -1,0 +1,62 @@
+{
+  "id": "recurrent-networks",
+  "name": "Recurrent Neural Networks",
+  "slug": "recurrent-networks",
+  "summary": "Neural networks with recurrent connections that process sequential data by maintaining hidden state.",
+  "definition": "RNNs process sequences by maintaining a hidden state that is updated at each timestep. The hidden state captures information from previous elements in the sequence, enabling temporal modeling.",
+  "aliases": [
+    "RNN",
+    "recurrent networks",
+    "LSTM",
+    "GRU"
+  ],
+  "keywords": [
+    "RNN",
+    "sequence",
+    "hidden state",
+    "temporal",
+    "LSTM",
+    "GRU"
+  ],
+  "sharedKnowledgeDomains": [
+    "deep-learning"
+  ],
+  "relatedConcepts": [
+    {
+      "concept": "neural-networks",
+      "type": "specializes"
+    },
+    {
+      "concept": "self-attention",
+      "type": "contrasts"
+    },
+    {
+      "concept": "backpropagation",
+      "type": "uses"
+    }
+  ],
+  "prerequisiteConcepts": [
+    "neural-networks",
+    "backpropagation"
+  ],
+  "artifactReferences": [],
+  "difficulty": "intermediate",
+  "category": "nlp",
+  "canonicalStatus": "Reviewed",
+  "version": "1.0.0",
+  "reviewedBy": "NV-1100-P4 Implementation",
+  "lastReviewed": "2026-06-24",
+  "sourceReferences": [
+    {
+      "id": "ref-rnn-0",
+      "title": "Long Short-Term Memory",
+      "type": "paper",
+      "description": "Hochreiter & Schmidhuber 1997"
+    }
+  ],
+  "examples": [],
+  "counterExamples": [],
+  "commonMisconceptions": [],
+  "recommendedVisualizations": [],
+  "recommendedLabs": []
+}

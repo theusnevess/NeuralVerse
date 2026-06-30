@@ -95,9 +95,15 @@ export function createContentController(options = {}) {
       renderFromRoute(event.detail?.route || window.location.hash);
     });
 
+    window.addEventListener("nv:routerendered", (event) => {
+      if (event.detail?.routeId === "content") {
+        renderFromRoute(window.location.hash);
+      }
+    });
+
     // Handle initial navigation if the page is loaded directly with a content hash
     const currentRoute = window.navigationState?.state?.currentRoute || window.navigationState?.getCurrentRoute?.();
-    if (currentRoute && currentRoute.id === 'content') {
+    if (currentRoute && (currentRoute.id === 'content' || currentRoute.id === 'content-detail')) {
       setTimeout(() => {
         renderFromRoute(window.location.hash);
       }, 50);

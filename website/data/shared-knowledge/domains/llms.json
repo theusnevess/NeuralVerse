@@ -1,0 +1,79 @@
+{
+  "id": "llms",
+  "title": "Large Language Models",
+  "summary": "Massive transformer-based models trained on extensive text corpora that generate, analyze, and manipulate natural language through autoregressive token prediction.",
+  "concepts": ["autoregressive decoding", "causal masking", "tokenization", "BPE", "temperature scaling", "top-k sampling", "prompt engineering", "instruction tuning", "RLHF", "KV caching"],
+  "keywords": ["LLM", "GPT", "BERT", "language model", "text generation", "prompt", "tokenization", "fine-tuning", "instruction tuning", "RLHF"],
+  "historicalContext": "Recurrent Neural Networks (RNNs) processed text word-by-word, which created a bottleneck since long-term context was lost over long sequences. This motivated Google researchers in 2017 to invent the Transformer architecture, using self-attention to process entire sequences simultaneously. Subsequent scaling led to large language models with emergent capabilities.",
+  "landmarkReferences": [
+    {
+      "title": "Language Models are Unsupervised Multitask Learners",
+      "authors": "Radford et al. (OpenAI)",
+      "year": "2019",
+      "contribution": "GPT-2 demonstrated that scaling language models yields zero-shot task capabilities."
+    },
+    {
+      "title": "Language Models are Few-Shot Learners",
+      "authors": "Brown et al. (OpenAI)",
+      "year": "2020",
+      "contribution": "GPT-3 showed emergent in-context learning with 175B parameters."
+    }
+  ],
+  "industryApplications": ["Context-aware enterprise copilots", "Structured metadata extraction", "Automated customer support agents", "Code generation", "Content creation", "Translation"],
+  "commonMisconceptions": [
+    {
+      "trigger": "LLM",
+      "wrong": "Language models perform complex multi-step logical reasoning reliably in a single forward pass.",
+      "correct": "Language models predict the next token based on statistical co-occurrences. Multi-step reasoning requires explicit step-by-step guidance or chain-of-thought prompting."
+    }
+  ],
+  "analogies": [
+    {
+      "text": "Self-attention is like a cocktail party where every guest listens to every conversation and focuses only on people speaking about relevant topics.",
+      "limitations": "Cocktail guests have conscious intentions, whereas attention heads operate via matrix transformations."
+    }
+  ],
+  "curiosityFacts": [
+    "Language models do not possess an active reasoning mind; they predict the next token based on statistical co-occurrences, yet this simple next-token objective yields complex emergent capabilities.",
+    "High-dimensional word embeddings connect to geometry. In vector spaces, semantic relations behave like physical directions."
+  ],
+  "storySeeds": [
+    "The field shifted from local statistical language patterns (n-grams) to continuous dense embeddings, culminating in unified generative transformer models.",
+    "Transformers displaced recurrent networks by parallelizing sequence training, enabling researchers to scale models to billions of parameters and terabytes of text."
+  ],
+  "assessmentSeeds": [
+    "Contrast temperature scaling with top-k filtering during text generation decoding.",
+    "What are the advantages of tokenization strategies like Byte-Pair Encoding compared to word-level models?"
+  ],
+  "professionalInsights": [
+    "Deploy vLLM with PagedAttention to maximize GPU memory efficiency and enable continuous batching for high concurrent traffic.",
+    "Monitor token throughput (tokens/sec), generation latency, cost metrics, and detect semantic drift.",
+    "An enterprise copilot team migrated from commercial APIs to a self-hosted 8x7B Mixture-of-Experts model. By using vLLM, they reduced per-query latency by 40% and gained absolute data privacy."
+  ],
+  "recommendedVisualizations": ["transformer-block-diagram", "tokenization-process", "attention-heatmap"],
+  "recommendedLabs": ["build-a-text-generator", "prompt-engineering-playground"],
+  "relatedArtifacts": [],
+  "relatedConcepts": [
+    { "domain": "transformers", "type": "depends_on" },
+    { "domain": "rag", "type": "uses" },
+    { "domain": "agents", "type": "implements" }
+  ],
+  "lastReviewed": "2026-06-24",
+  "canonicalStatus": "Reviewed",
+  "version": "1.0.0",
+  "reviewedBy": "NV-1100-P3 Implementation",
+  "sourceReferences": [
+    {
+      "id": "ref-llms-0",
+      "title": "Language Models are Few-Shot Learners (Brown et al.)",
+      "type": "paper",
+      "description": "GPT-3 scaling"
+    },
+    {
+      "id": "ref-llms-1",
+      "title": "BERT (Devlin et al.)",
+      "type": "paper",
+      "description": "Bidirectional encoder representations"
+    }
+  ]
+}

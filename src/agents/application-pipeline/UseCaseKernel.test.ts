@@ -505,7 +505,7 @@ describe('Use Case Kernel — Validation', () => {
       registryVersion: '1.0.0',
       compositionVersion: '1.0.0',
       decisions: [],
-      deterministic: false,
+      deterministic: false as true,
       generatedFrom: 'deterministic_use_case_kernel',
       randomUsed: false,
       timeDependency: false,

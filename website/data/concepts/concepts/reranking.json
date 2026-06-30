@@ -1,0 +1,53 @@
+{
+  "id": "reranking",
+  "name": "Reranking",
+  "slug": "reranking",
+  "summary": "Re-ordering initial retrieval results using a more computationally expensive scoring model.",
+  "definition": "Reranking takes the top-K candidates from an initial retrieval stage and re-scores them using a cross-encoder or more sophisticated model to improve precision.",
+  "aliases": [
+    "cross-encoder reranking",
+    "second-stage ranking"
+  ],
+  "keywords": [
+    "reranking",
+    "cross-encoder",
+    "re-ranking",
+    "precision"
+  ],
+  "sharedKnowledgeDomains": [
+    "rag"
+  ],
+  "relatedConcepts": [
+    {
+      "concept": "dense-retrieval",
+      "type": "extends"
+    },
+    {
+      "concept": "vector-similarity",
+      "type": "uses"
+    }
+  ],
+  "prerequisiteConcepts": [
+    "dense-retrieval",
+    "vector-similarity"
+  ],
+  "artifactReferences": [
+    "artifact-reranking-comparison-table",
+    "artifact-reranking-exercise",
+    "artifact-reranking-explanatory-text",
+    "artifact-reranking-interactive-visualization",
+    "artifact-reranking-visual-intuition"
+  ],
+  "difficulty": "advanced",
+  "category": "retrieval",
+  "canonicalStatus": "Reviewed",
+  "version": "1.0.0",
+  "reviewedBy": "NV-1100-P4 Implementation",
+  "lastReviewed": "2026-06-24",
+  "sourceReferences": [],
+  "examples": [],
+  "counterExamples": [],
+  "commonMisconceptions": [],
+  "recommendedVisualizations": [],
+  "recommendedLabs": []
+}

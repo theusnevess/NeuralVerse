@@ -1,0 +1,79 @@
+{
+  "validator": "NV-1300-D1A-F1-Architecture-Metrics",
+  "timestamp": "2026-06-26T00:00:00.000Z",
+  "scope": "D1A/D1B Didactic Architecture Modules",
+  "metrics": {
+    "moduleCount": 12,
+    "dependencyCount": 16,
+    "averageFanIn": 0.83,
+    "averageFanOut": 1.67,
+    "plannerCoupling": "LOW",
+    "registryCoupling": "LOW",
+    "maximumDependencyDepth": 2
+  },
+  "moduleBreakdown": {
+    "D1A_modules": {
+      "count": 6,
+      "files": [
+        "didactic-architecture-agent.js",
+        "pedagogical-planner.js",
+        "composition-graph.js",
+        "instructional-layers.js",
+        "difficulty-ladder.js",
+        "multi-perspective-engine.js"
+      ],
+      "totalCodeLines": 2522,
+      "averageCodeLines": 420
+    },
+    "D1B_modules": {
+      "count": 6,
+      "files": [
+        "semantic-dependency-resolver.js",
+        "example-selection-engine.js",
+        "example-registry.js",
+        "cross-domain-connector.js",
+        "recap-inserter.js",
+        "resource-selector.js"
+      ],
+      "totalCodeLines": 1555,
+      "averageCodeLines": 259
+    },
+    "new_module_F1": {
+      "count": 2,
+      "files": [
+        "governance-tokenizer.js",
+        "example-provider.js"
+      ],
+      "totalCodeLines": 168,
+      "averageCodeLines": 84
+    }
+  },
+  "couplingAnalysis": {
+    "planner": {
+      "imports": 0,
+      "diDependencies": 10,
+      "windowDependencies": 0,
+      "assessment": "EXCELLENT — pure orchestration, all dependencies injected"
+    },
+    "agent": {
+      "imports": 16,
+      "diDependencies": 0,
+      "windowDependencies": 3,
+      "assessment": "ACCEPTABLE — composition root, instantiates all modules"
+    },
+    "standalone_modules": {
+      "count": 10,
+      "averageWindowDependencies": 1.1,
+      "assessment": "ACCEPTABLE — runtime services accessed via window.NeuralVerse"
+    }
+  },
+  "qualityIndicators": {
+    "noGodObjects": true,
+    "singleResponsibility": true,
+    "dependencyInversion": true,
+    "openClosedPrinciple": true,
+    "plannerIsOrchestrationOnly": true,
+    "noCircularDependencies": true,
+    "backwardCompatibilityPreserved": true
+  }
+}

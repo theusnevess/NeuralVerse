@@ -1,0 +1,82 @@
+{
+  "id": "embeddings",
+  "title": "Embeddings & Vector Representations",
+  "summary": "Dense vector representations that capture semantic relationships between words, sentences, and documents in continuous vector spaces.",
+  "concepts": ["word embeddings", "dense retrieval", "vector spaces", "cosine similarity", "embedding models", "semantic search", "dimensionality reduction"],
+  "keywords": ["embedding", "vector", "Word2Vec", "semantic", "dense", "representation", "cosine similarity", "ANN", "HNSW"],
+  "historicalContext": "Before embeddings, NLP relied on sparse bag-of-words representations that lost semantic relationships. Word2Vec (2013) demonstrated that dense vector representations could capture semantic relationships algebraically (King - Man + Woman = Queen), launching the modern embeddings era.",
+  "landmarkReferences": [
+    {
+      "title": "Efficient Estimation of Word Representations in Vector Space",
+      "authors": "Mikolov et al.",
+      "year": "2013",
+      "contribution": "Introduced Word2Vec, demonstrating that dense vector representations capture semantic relationships."
+    },
+    {
+      "title": "Dense Passage Retrieval for Open-Domain Question Answering",
+      "authors": "Karpukhin et al.",
+      "year": "2020",
+      "contribution": "Advanced dense vector retrieval for open-domain QA."
+    }
+  ],
+  "industryApplications": ["Semantic search engines", "Recommendation systems", "RAG pipelines", "Duplicate detection", "Clustering and classification", "Anomaly detection"],
+  "commonMisconceptions": [
+    {
+      "trigger": "embedding",
+      "wrong": "Embeddings store the original data in a compressed format.",
+      "correct": "Embeddings are dense vector representations that capture semantic relationships. They do not store the original data — they encode patterns and relationships. Retrieval finds similar patterns, not exact copies."
+    }
+  ],
+  "analogies": [
+    {
+      "text": "An embedding is like a GPS coordinate for meaning. Just as GPS coordinates place cities in a 2D space where nearby coordinates mean geographically close cities, embeddings place words in a high-dimensional space where nearby vectors mean semantically similar words.",
+      "limitations": "GPS coordinates are 2D and interpretable. Embeddings operate in hundreds or thousands of dimensions, and individual dimensions are not human-interpretable.",
+      "domain": "transportation"
+    },
+    {
+      "text": "An embedding is like a library classification system. Books about similar topics get similar call numbers.",
+      "limitations": "Library classification is designed by humans with explicit rules. Embeddings are learned from data and may capture relationships that are not obvious to humans.",
+      "domain": "libraries"
+    }
+  ],
+  "curiosityFacts": [
+    "High-dimensional word embeddings connect to geometry. In vector spaces, semantic relations behave like physical directions: subtracting 'Man' from 'King' and adding 'Woman' yields a vector closest to 'Queen'.",
+    "Vector searches in RAG databases share mathematical foundations with molecular biology: searching for similar embeddings uses the same cosine similarity formulas used to compare DNA sequences."
+  ],
+  "storySeeds": [
+    "The transition from sparse bag-of-words to dense embeddings fundamentally changed how machines understand language meaning."
+  ],
+  "assessmentSeeds": [
+    "Under what system demands would you recommend dense vector search over traditional keyword index searches?",
+    "Why is chunk segmentation strategy crucial to the reliability of prompt injections in RAG pipelines?"
+  ],
+  "professionalInsights": [
+    "Bypasses vocabulary limitations of traditional keyword matching.",
+    "Sensitive to embedding quality and out-of-domain terms."
+  ],
+  "recommendedVisualizations": ["embedding-space-3d", "semantic-similarity-matrix"],
+  "recommendedLabs": ["build-word-vectors", "embedding-visualization"],
+  "relatedArtifacts": [],
+  "relatedConcepts": [
+    { "domain": "rag", "type": "depends_on" },
+    { "domain": "transformers", "type": "related_to" }
+  ],
+  "lastReviewed": "2026-06-24",
+  "canonicalStatus": "Reviewed",
+  "version": "1.0.0",
+  "reviewedBy": "NV-1100-P3 Implementation",
+  "sourceReferences": [
+    {
+      "id": "ref-embeddings-0",
+      "title": "Word2Vec (Mikolov et al.)",
+      "type": "paper",
+      "description": "Word embedding representations"
+    },
+    {
+      "id": "ref-embeddings-1",
+      "title": "DPR (Karpukhin et al.)",
+      "type": "paper",
+      "description": "Dense passage retrieval"
+    }
+  ]
+}

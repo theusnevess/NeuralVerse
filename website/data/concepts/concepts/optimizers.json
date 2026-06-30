@@ -1,0 +1,65 @@
+{
+  "id": "optimizers",
+  "name": "Optimizers",
+  "slug": "optimizers",
+  "summary": "Algorithms that update model parameters to minimize the loss function.",
+  "definition": "Optimizers extend basic gradient descent with adaptive learning rates, momentum, and other mechanisms. SGD, Adam, RMSprop, and AdamW are widely used.",
+  "aliases": [
+    "optimization algorithms",
+    "gradient optimizers"
+  ],
+  "keywords": [
+    "optimizer",
+    "Adam",
+    "SGD",
+    "momentum",
+    "adaptive"
+  ],
+  "sharedKnowledgeDomains": [
+    "optimization"
+  ],
+  "relatedConcepts": [
+    {
+      "concept": "gradient-descent",
+      "type": "extends"
+    },
+    {
+      "concept": "learning-rate-scheduling",
+      "type": "uses"
+    }
+  ],
+  "prerequisiteConcepts": [
+    "gradient-descent"
+  ],
+  "artifactReferences": [
+    "artifact-ai-for-scientific-discovery-comparison-table",
+    "artifact-ai-for-scientific-discovery-exercise",
+    "artifact-ai-for-scientific-discovery-explanatory-text",
+    "artifact-ai-for-scientific-discovery-interactive-visualization",
+    "artifact-ai-for-scientific-discovery-visual-intuition",
+    "artifact-gradient-descent-optimization-comparison-table",
+    "artifact-gradient-descent-optimization-exercise",
+    "artifact-gradient-descent-optimization-explanatory-text",
+    "artifact-gradient-descent-optimization-interactive-visualization",
+    "artifact-gradient-descent-optimization-visual-intuition"
+  ],
+  "difficulty": "intermediate",
+  "category": "optimization",
+  "canonicalStatus": "Reviewed",
+  "version": "1.0.0",
+  "reviewedBy": "NV-1100-P4 Implementation",
+  "lastReviewed": "2026-06-24",
+  "sourceReferences": [
+    {
+      "id": "ref-opt-0",
+      "title": "Adam: A Method for Stochastic Optimization",
+      "type": "paper",
+      "description": "Kingma & Ba 2014"
+    }
+  ],
+  "examples": [],
+  "counterExamples": [],
+  "commonMisconceptions": [],
+  "recommendedVisualizations": [],
+  "recommendedLabs": []
+}

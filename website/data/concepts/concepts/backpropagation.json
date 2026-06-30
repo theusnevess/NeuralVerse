@@ -1,0 +1,65 @@
+{
+  "id": "backpropagation",
+  "name": "Backpropagation",
+  "slug": "backpropagation",
+  "summary": "An algorithm for computing gradients of the loss with respect to each weight using the chain rule.",
+  "definition": "Backpropagation efficiently computes the gradient of the loss function with respect to each weight by propagating errors backward through the network using the chain rule of calculus.",
+  "aliases": [
+    "backward propagation",
+    "reverse-mode autodiff"
+  ],
+  "keywords": [
+    "backpropagation",
+    "gradient",
+    "chain rule",
+    "training",
+    "weights"
+  ],
+  "sharedKnowledgeDomains": [
+    "deep-learning",
+    "optimization"
+  ],
+  "relatedConcepts": [
+    {
+      "concept": "neural-networks",
+      "type": "uses"
+    },
+    {
+      "concept": "gradient-descent",
+      "type": "implements"
+    },
+    {
+      "concept": "recurrent-networks",
+      "type": "uses"
+    }
+  ],
+  "prerequisiteConcepts": [
+    "neural-networks"
+  ],
+  "artifactReferences": [
+    "artifact-backpropagation-comparison-table",
+    "artifact-backpropagation-exercise",
+    "artifact-backpropagation-explanatory-text",
+    "artifact-backpropagation-interactive-visualization",
+    "artifact-backpropagation-visual-intuition"
+  ],
+  "difficulty": "intermediate",
+  "category": "deep-learning",
+  "canonicalStatus": "Reviewed",
+  "version": "1.0.0",
+  "reviewedBy": "NV-1100-P4 Implementation",
+  "lastReviewed": "2026-06-24",
+  "sourceReferences": [
+    {
+      "id": "ref-bp-0",
+      "title": "Learning representations by back-propagating errors",
+      "type": "paper",
+      "description": "Rumelhart, Hinton, Williams 1986"
+    }
+  ],
+  "examples": [],
+  "counterExamples": [],
+  "commonMisconceptions": [],
+  "recommendedVisualizations": [],
+  "recommendedLabs": []
+}

@@ -36,6 +36,17 @@ const ROUTES = [
     isImplemented: true
   },
   {
+    id: 'retrieval-playground',
+    path: '#/retrieval',
+    pattern: /^#\/retrieval$/,
+    label: 'Retrieval Playground',
+    title: 'Retrieval Workspace',
+    description: 'Explore references, relationships, search results, and evidence compilation.',
+    region: 'R3 Workspace',
+    navigationGroup: 'primary',
+    isImplemented: true
+  },
+  {
     id: 'learning-path',
     path: '#/learning/:pathId/module/:moduleId',
     pattern: /^#\/learning\/([^/]+)\/module\/([^/]+)$/,
@@ -154,7 +165,7 @@ const ROUTES = [
     description: 'Reading environment for academic publications.',
     region: 'R3 Workspace',
     navigationGroup: 'primary',
-    isImplemented: false
+    isImplemented: true
   },
   {
     id: 'content',
@@ -174,6 +185,94 @@ const ROUTES = [
     label: 'Settings',
     title: 'Settings',
     description: 'Adjust your workspace preferences.',
+    region: 'R3 Workspace',
+    navigationGroup: 'secondary',
+    isImplemented: true
+  },
+  {
+    id: 'laboratory-detail',
+    path: '#/laboratory/:slug',
+    pattern: /^#\/laboratory\/([a-z0-9-]+)$/,
+    label: 'Laboratory',
+    title: 'Interactive Laboratory',
+    description: 'Execute a deterministic educational experiment.',
+    region: 'R3 Workspace',
+    navigationGroup: 'primary',
+    isImplemented: true
+  },
+  {
+    id: 'laboratory',
+    path: '#/laboratory',
+    pattern: /^#\/laboratory$/,
+    label: 'Laboratories',
+    title: 'Laboratories',
+    description: 'Browse and launch interactive educational experiments.',
+    region: 'R3 Workspace',
+    navigationGroup: 'primary',
+    isImplemented: true
+  },
+  {
+    id: 'memory-detail',
+    path: '#/memory/:memoryId',
+    pattern: /^#\/memory\/([a-zA-Z0-9_-]+)$/,
+    label: 'Memory',
+    title: 'Memory Detail',
+    description: 'View or edit a stored memory.',
+    region: 'R3 Workspace',
+    navigationGroup: 'primary',
+    isImplemented: true
+  },
+  {
+    id: 'memory',
+    path: '#/memory',
+    pattern: /^#\/memory$/,
+    label: 'Memory',
+    title: 'Memory',
+    description: 'Organize your learning notes, bookmarks, and study context.',
+    region: 'R3 Workspace',
+    navigationGroup: 'primary',
+    isImplemented: true
+  },
+  {
+    id: 'semantic-learning',
+    path: '#/semantic-learning',
+    pattern: /^#\/semantic-learning$/,
+    label: 'Semantic',
+    title: 'Semantic Learning Intelligence',
+    description: 'Deterministic concept recommendations and traversal.',
+    region: 'R3 Workspace',
+    navigationGroup: 'primary',
+    isImplemented: true
+  },
+  {
+    id: 'visualization-detail',
+    path: '#/visualizations/:slug',
+    pattern: /^#\/visualizations\/([a-z0-9-]+)$/,
+    label: 'Visualization',
+    title: 'Interactive Visualization',
+    description: 'Explore a deterministic parametric visualization.',
+    region: 'R3 Workspace',
+    navigationGroup: 'primary',
+    isImplemented: true
+  },
+  {
+    id: 'visualizations',
+    path: '#/visualizations',
+    pattern: /^#\/visualizations$/,
+    label: 'Visualizations',
+    title: 'Parametric Visualizations',
+    description: 'Deterministic interactive mathematical and scientific visualizations.',
+    region: 'R3 Workspace',
+    navigationGroup: 'primary',
+    isImplemented: true
+  },
+  {
+    id: 'generative-layer',
+    path: '#/generative-layer',
+    pattern: /^#\/generative-layer$/,
+    label: 'Generative Assist',
+    title: 'Local Generative Assist',
+    description: 'Optional local generative assistance using local LLMs.',
     region: 'R3 Workspace',
     navigationGroup: 'secondary',
     isImplemented: true

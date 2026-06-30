@@ -1,0 +1,78 @@
+{
+  "id": "linear-models",
+  "name": "Linear Models",
+  "slug": "linear-models",
+  "summary": "Parametric models that learn a linear combination of input features to make predictions.",
+  "definition": "A linear model computes output as a weighted sum of input features plus a bias term: y = w₁x₁ + w₂x₂ + ... + b. These models form the foundation of classical machine learning.",
+  "aliases": [
+    "linear classifiers",
+    "linear regression",
+    "linear estimators"
+  ],
+  "keywords": [
+    "linear",
+    "regression",
+    "classification",
+    "weights",
+    "bias"
+  ],
+  "sharedKnowledgeDomains": [
+    "machine-learning"
+  ],
+  "relatedConcepts": [
+    {
+      "concept": "gradient-descent",
+      "type": "depends_on"
+    },
+    {
+      "concept": "decision-boundaries",
+      "type": "related_to"
+    },
+    {
+      "concept": "regularization",
+      "type": "uses"
+    }
+  ],
+  "prerequisiteConcepts": [],
+  "artifactReferences": [
+    "artifact-linear-transformations-comparison-table",
+    "artifact-linear-transformations-exercise",
+    "artifact-linear-transformations-explanatory-text",
+    "artifact-linear-transformations-interactive-visualization",
+    "artifact-linear-transformations-visual-intuition",
+    "artifact-matrix-multiplication-comparison-table",
+    "artifact-matrix-multiplication-exercise",
+    "artifact-matrix-multiplication-explanatory-text",
+    "artifact-matrix-multiplication-interactive-visualization",
+    "artifact-matrix-multiplication-visual-intuition",
+    "artifact-scalars-vectors-matrices-tensors-comparison-table",
+    "artifact-scalars-vectors-matrices-tensors-exercise",
+    "artifact-scalars-vectors-matrices-tensors-explanatory-text",
+    "artifact-scalars-vectors-matrices-tensors-interactive-visualization",
+    "artifact-scalars-vectors-matrices-tensors-visual-intuition",
+    "artifact-vector-spaces-comparison-table",
+    "artifact-vector-spaces-exercise",
+    "artifact-vector-spaces-explanatory-text",
+    "artifact-vector-spaces-interactive-visualization",
+    "artifact-vector-spaces-visual-intuition"
+  ],
+  "difficulty": "beginner",
+  "category": "machine-learning",
+  "canonicalStatus": "Reviewed",
+  "version": "1.0.0",
+  "reviewedBy": "NV-1100-P4 Implementation",
+  "lastReviewed": "2026-06-24",
+  "sourceReferences": [
+    {
+      "id": "ref-linear-0",
+      "title": "The Elements of Statistical Learning",
+      "type": "book",
+      "description": "Comprehensive ML textbook covering linear methods"
+    }
+  ],
+  "examples": [],
+  "counterExamples": [],
+  "commonMisconceptions": [],
+  "recommendedVisualizations": [],
+  "recommendedLabs": []
+}

@@ -1,0 +1,116 @@
+{
+  "version": "1.1.0",
+  "schemaVersion": "2.0",
+  "lastUpdated": "2026-06-24",
+  "schema": "shared-knowledge",
+  "description": "Canonical knowledge repository for NeuralVerse. Single source of truth for domain-specific educational content used by all didactic agents.",
+  "governance": {
+    "status": "active",
+    "owner": "NV-1100 Governance",
+    "lastReviewed": "2026-06-24",
+    "reviewPolicy": "Quarterly governance review with schema version bumps on breaking changes",
+    "schemaVersion": "2.0",
+    "requiredFields": ["id", "title", "summary", "concepts", "keywords", "historicalContext"],
+    "governanceFields": ["version", "reviewedBy", "sourceReferences", "relatedConcepts", "lastReviewed", "canonicalStatus"],
+    "validRelationTypes": ["depends_on", "extends", "contrasts", "uses", "implements", "supports", "generalizes", "specializes", "related_to"],
+    "validSourceTypes": ["paper", "book", "documentation", "benchmark", "course", "article", "standard", "internal"],
+    "validStatuses": ["Draft", "Reviewed"],
+    "versionFormat": "semver"
+  },
+  "domains": [
+    {
+      "id": "machine-learning",
+      "file": "domains/machine-learning.json",
+      "title": "Machine Learning Foundations",
+      "agents": ["A5", "A6", "A7", "A8", "A9", "A10"]
+    },
+    {
+      "id": "deep-learning",
+      "file": "domains/deep-learning.json",
+      "title": "Deep Learning Fundamentals",
+      "agents": ["A5", "A6", "A7", "A8", "A9", "A10"]
+    },
+    {
+      "id": "computer-vision",
+      "file": "domains/cv.json",
+      "title": "Computer Vision",
+      "agents": ["A5", "A6", "A7", "A8", "A9", "A10"]
+    },
+    {
+      "id": "llms",
+      "file": "domains/llms.json",
+      "title": "Large Language Models",
+      "agents": ["A5", "A6", "A7", "A8", "A9", "A10"]
+    },
+    {
+      "id": "rag",
+      "file": "domains/rag.json",
+      "title": "Retrieval-Augmented Generation",
+      "agents": ["A5", "A6", "A7", "A8", "A9", "A10"]
+    },
+    {
+      "id": "agents",
+      "file": "domains/agents.json",
+      "title": "AI Agents & Agentic Systems",
+      "agents": ["A5", "A6", "A7", "A8", "A9", "A10"]
+    },
+    {
+      "id": "mlops",
+      "file": "domains/mlops.json",
+      "title": "MLOps & ML Systems Engineering",
+      "agents": ["A5", "A6", "A7", "A8", "A9", "A10"]
+    },
+    {
+      "id": "transformers",
+      "file": "domains/transformers.json",
+      "title": "Transformers & Attention Mechanisms",
+      "agents": ["A5", "A1", "A9", "A10"]
+    },
+    {
+      "id": "embeddings",
+      "file": "domains/embeddings.json",
+      "title": "Embeddings & Vector Representations",
+      "agents": ["A5", "A1", "A9", "A10"]
+    },
+    {
+      "id": "optimization",
+      "file": "domains/optimization.json",
+      "title": "Optimization & Training",
+      "agents": ["A5", "A1", "A9", "A10"]
+    }
+  ],
+  "agentMapping": {
+    "A1": ["transformers", "embeddings", "optimization"],
+    "A5": ["machine-learning", "deep-learning", "computer-vision", "llms", "rag", "agents", "mlops", "transformers", "embeddings", "optimization"],
+    "A6": ["machine-learning", "deep-learning", "computer-vision", "llms", "rag", "agents", "mlops"],
+    "A7": ["machine-learning", "deep-learning", "computer-vision", "llms", "rag", "agents", "mlops"],
+    "A8": ["machine-learning", "deep-learning", "computer-vision", "llms", "rag", "agents", "mlops"],
+    "A9": ["machine-learning", "deep-learning", "computer-vision", "llms", "rag", "agents", "mlops", "transformers", "embeddings", "optimization"],
+    "A10": ["machine-learning", "deep-learning", "computer-vision", "llms", "rag", "agents", "mlops", "transformers", "embeddings", "optimization"]
+  },
+  "schemaFields": [
+    "id",
+    "title",
+    "summary",
+    "concepts",
+    "keywords",
+    "historicalContext",
+    "landmarkReferences",
+    "industryApplications",
+    "commonMisconceptions",
+    "analogies",
+    "curiosityFacts",
+    "storySeeds",
+    "assessmentSeeds",
+    "professionalInsights",
+    "recommendedVisualizations",
+    "recommendedLabs",
+    "relatedArtifacts",
+    "relatedConcepts",
+    "lastReviewed",
+    "canonicalStatus",
+    "version",
+    "reviewedBy",
+    "sourceReferences"
+  ]
+}

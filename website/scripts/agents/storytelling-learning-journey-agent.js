@@ -5,18 +5,28 @@
  * cross-lesson continuity, and motivational guidance without curriculum mutation.
  */
 
+import { createSharedKnowledgeService } from '../shared-knowledge/shared-knowledge-service.js';
+
 const NARRATIVE_INTENT_PATTERNS = {
   origin_story: ['origin', 'why invented', 'history', 'how emerged', 'who created'],
-  learning_journey: ['journey', 'learning path', 'conceptual progression', 'intermediate', 'frontier'],
-  problem_driven: ['problem', 'challenge', 'failed approach', 'limitation', 'engineering challenge'],
+  learning_journey: ['learning journey', 'learning path', 'conceptual progression', 'intermediate', 'frontier'],
   concept_timeline: ['timeline', 'chronological', 'stages', 'evolution timeline'],
+  problem_driven: ['problem', 'challenge', 'failed approach', 'limitation', 'engineering challenge'],
   human_perspective: ['human', 'practitioner', 'researcher perspective'],
-  cross_lesson: ['connect previous', 'lesson build', 'dependencies', 'dependency'],
+  cross_lesson: ['connect previous', 'previous lesson', 'lesson build', 'dependencies', 'dependency'],
   mental_model: ['mental model', 'analogy', 'metaphor', 'library system'],
-  scientific_journey: ['scientific evolution', 'field evolved', 'symbolic ai', 'hand-crafted'],
-  motivation_relevance: ['why learn', 'matters', 'opportunities', 'practical questions'],
-  personalized_orientation: ['orient next', 'completed', 'next major leap']
+  scientific_journey: ['scientific journey', 'scientific evolution', 'field evolved', 'symbolic ai', 'hand-crafted'],
+  motivation_relevance: ['why learn', 'why does', 'matter', 'opportunities', 'practical questions'],
+  personalized_orientation: ['orient my', 'orient next', 'completed', 'next major leap']
 };
+
+const FABRICATION_PATTERNS = [
+  /invent.*(historical|anecdote|story|researcher|scientist|discovery)/i,
+  /make up.*(quote|researcher|story|anecdote)/i,
+  /fictional.*origin.*real|present.*fictional.*real/i,
+  /pretend.*(paper|study|research|experiment).*exist/i,
+  /dramatic.*(lab|discovery|experiment|breakthrough).*scene/i
+];
 
 const MODE_LABELS = {
   origin_story: 'Origin Story',
@@ -31,324 +41,85 @@ const MODE_LABELS = {
   personalized_orientation: 'Personalized Learning Orientation'
 };
 
-const CURATED_NARRATIVE_MAP = {
-  'machine-learning': {
-    domainName: 'Machine Learning',
-    origin: `
-In the mid-20th century, traditional programmers had to hardcode every logical rule to solve problems (Symbolic AI). However, tasks like handwriting recognition proved too complex for rule-based programming because variations were infinite. This limitation motivated Arthur Samuel and other pioneers in the 1950s to invent machine learning—a paradigm where computers adjust parameters based on data to learn rules automatically.
+const FALLBACK_NARRATIVE_DATA = {
+  domainName: 'Systems Engineering Foundations',
+  origin: `
+Traditional software modularity concepts emerged in the 1960s to address the spaghetti-code software crisis. The introduction of structured interfaces allowed engineers to decouple execution paths, transforming programming into a repeatable engineering discipline.
 `,
-    journey: `
-1. **Foundations**: Statistical estimation and linear regression models.
-2. **Intermediate**: Support Vector Machines and kernel space mapping.
-3. **Current**: Decoupled decision boundaries and gradient updates.
-4. **Advanced**: Feature space representations in deep architectures.
+  journey: `
+1. **Foundations**: Monolithic program routines.
+2. **Intermediate**: Structured subroutines and local function calls.
+3. **Current**: Decoupled component interfaces.
+4. **Advanced**: Event-driven microservice meshes.
 `,
-    problem: `
-- **Challenge**: Programming complex visual character recognition.
-- **Failed Approach**: Writing thousands of manual if-else conditional branches.
-- **Key Insight**: Model the problem as optimization over a parameterized mathematical boundary.
-- **New Solution**: Stochastic gradient descent tuning model coefficients.
+  problem: `
+- **Challenge**: Building scalable systems that can be updated concurrently.
+- **Failed Approach**: Compiling all systems into a single tight global binary.
+- **Key Insight**: Program to abstract interfaces instead of concrete classes.
+- **New Solution**: Decoupled dynamic dependencies.
 `,
-    timeline: `
-- **1950s**: Arthur Samuel coined "Machine Learning" and built checker-playing models.
-- **1960s**: Development of simple linear classifiers (Perceptrons).
-- **1980s**: Multi-layer training breakthroughs using backpropagation.
-- **2000s**: SVMs and kernel tricks dominate tabular datasets.
+  timeline: `
+- **1968**: NATO Conference defines the term "Software Engineering".
+- **1972**: David Parnas introduces criteria for modular software partition.
+- **1994**: Design Patterns book formalizes decoupling structures.
 `,
-    human: `
-When practitioners design machine learning solutions, they think like statistical investigators. They do not assume a fixed, correct mathematical program; instead, they examine data distributions, identify biases, and let optimization algorithms discover coefficients.
+  human: `
+Systems architects view applications as sets of interacting nodes. They measure dependency coupling densities and prioritize interface stability above all.
 `,
-    continuity: `
-Today's linear boundaries lesson builds on coordinate system projections. Understanding hyperplane projections prepares you for high-dimensional support vector machines in the next lesson.
+  continuity: `
+Decoupled interfaces build on functions and subroutines. Understanding this prepares you for dependency injection frameworks in the next lesson.
 `,
-    mental: `
-- **Metaphor**: A decision boundary is like a fence built on a coordinate landscape, separating apples from oranges.
-- **Limitations**: In high-dimensional spaces, boundaries are complex manifolds that cannot be visualized like a simple 2D fence.
+  mental: `
+- **Metaphor**: Decoupled components are like standardized wall plugs; any appliance fitting the plug can draw power without knowing the plant source.
+- **Limitations**: Real interfaces have state transitions and network failures that simpler wall plugs do not model.
 `,
-    science: `
-The field transitioned from manually engineered statistical tests to parametric models that adjust internal coefficients automatically, laying the foundation for modern artificial intelligence systems.
+  science: `
+Systems engineering transitioned from static compiled structures to modular architectures, and finally to decentralized, containerized environments.
 `,
-    motivation: `
-Learning machine learning principles empowers you to solve prediction tasks where explicit rules are impossible to write. It enables software to adapt to live telemetry and data changes in production.
+  motivation: `
+Mastering component decoupling ensures your systems remain modular, testable, and maintainable over decades of service.
 `,
-    orientation: `
-You have examined linear decision boundaries. This connects naturally to support vector machines. The next major conceptual leap is optimizing margin widths.
+  orientation: `
+You have analyzed interface decoupling. This connects to dependency injection. The next major conceptual leap is service discovery.
 `
-  },
-  'deep-learning': {
-    domainName: 'Deep Learning',
-    origin: `
-As datasets and image resolutions scaled in the 2000s, shallow models like SVMs stalled because they required manual feature engineering (e.g. Sobel filters). This limitation led Yann LeCun, Yoshua Bengio, and Geoffrey Hinton to pioneer deep learning—stacking multiple layers of artificial neurons to learn hierarchical feature representations directly from raw data.
-`,
-    journey: `
-1. **Foundations**: Feedforward Multi-Layer Perceptrons.
-2. **Intermediate**: Backpropagation and activation mathematics.
-3. **Current**: Layered activations and gradient propagation.
-4. **Advanced**: Transformer blocks and self-attention dynamics.
-`,
-    problem: `
-- **Challenge**: Automatically extracting abstract features from high-dimensional inputs.
-- **Failed Approach**: Designing manual feature extractors like SIFT or HOG.
-- **Key Insight**: Build nested mathematical transformations that compose low-level patterns into high-level features.
-- **New Solution**: Backpropagating errors through deep layered networks.
-`,
-    timeline: `
-- **1986**: Backpropagation popularized for multi-layer perceptron training.
-- **1998**: LeNet architecture establishes convolutional pipelines.
-- **2012**: AlexNet wins ImageNet, triggering the deep learning revolution.
-- **2017**: Transformer architecture emerges, replacing recurrent architectures.
-`,
-    human: `
-Deep learning engineers visualize models as computational graphs where information flows forward and gradients flow backward. They focus on gradient health, monitoring activations to prevent vanishing or exploding gradients.
-`,
-    continuity: `
-Deep learning builds directly on multi-layer perceptron units. In the next modules, you will explore convolutions and temporal recurrences.
-`,
-    mental: `
-- **Metaphor**: Backpropagation is like a chain of supervisors passing performance reviews backward to update lower-level workers.
-- **Limitations**: The brain uses local, biological updates, whereas backpropagation uses centralized, exact mathematical chain rule computations.
-`,
-    science: `
-Deep learning represents the shift from hand-crafted features to end-to-end representation learning, changing how computer vision, speech, and translation systems operate.
-`,
-    motivation: `
-Deep learning allows you to process high-dimensional unstructured data (images, audio, text) directly, bypassing manual processing pipelines.
-`,
-    orientation: `
-You have studied activation dynamics. This connects naturally to backpropagation algorithms. The next major conceptual leap is optimization convergence.
-`
-  },
-  'computer-vision': {
-    domainName: 'Computer Vision',
-    origin: `
-Early computer vision relied on exact pixel matching and geometric transforms, which broke down under lighting or pose variations. This limitation motivated researchers in the 1990s to design convolutional neural networks (CNNs), which share weights across sliding receptive fields to capture translation-invariant patterns like edges and textures.
-`,
-    journey: `
-1. **Foundations**: Hand-crafted filters (Sobel, Canny).
-2. **Intermediate**: Convolution layers and feature maps.
-3. **Current**: Spatial pooling and weight sharing.
-4. **Advanced**: Vision Transformers (ViT) and patch-based self-attention.
-`,
-    problem: `
-- **Challenge**: Recognizing objects in images under arbitrary scaling and translations.
-- **Failed Approach**: Designing templates for every possible spatial configuration.
-- **Key Insight**: Slide local filters across the image plane to extract invariant features.
-- **New Solution**: Stacking convolution and pooling layers in hierarchical networks.
-`,
-    timeline: `
-- **1980**: Neocognitron architecture introduces spatial invariance ideas.
-- **1998**: LeNet-5 establishes convolutional networks for handwriting checks.
-- **2012**: AlexNet demonstrates massive scalability using GPUs.
-- **2020**: Vision Transformers (ViT) apply self-attention directly to image patches.
-`,
-    human: `
-Vision researchers think in terms of spatial receptive fields. They map how deep layers build abstract representations, tracing the network's gaze back to raw pixels.
-`,
-    continuity: `
-Convolutional layers build on basic spatial filters. This prepares you for deep residual connections and multi-scale object detection modules.
-`,
-    mental: `
-- **Metaphor**: A CNN is like a group of local inspectors scanning an image with magnifying glasses, checking for specific shapes.
-- **Limitations**: Unlike humans, CNNs are highly sensitive to high-frequency noise and lack global conceptual understanding.
-`,
-    science: `
-The domain evolved from hand-crafted spatial filters (Sobel, Gabor) to convolutional architectures, and finally to attention-based patch transformers.
-`,
-    motivation: `
-Understanding computer vision enables systems to interpret visual data automatically, powering robotics, medical imaging, and automated driving.
-`,
-    orientation: `
-You have analyzed spatial convolutions. This connects to pooling layers. The next major conceptual leap is downsampling feature dimensions.
-`
-  },
-  'llms': {
-    domainName: 'Large Language Models',
-    origin: `
-Recurrent Neural Networks (RNNs) processed text word-by-word, which created a bottleneck since long-term context was lost over long sequences, and training could not be parallelized. This motivated Google researchers in 2017 to invent the Transformer architecture, using self-attention to process entire sequences simultaneously and capture context regardless of distance.
-`,
-    journey: `
-1. **Foundations**: N-gram models and statistical language representations.
-2. **Intermediate**: Word Embeddings (Word2Vec) and Recurrent Networks.
-3. **Current**: Attention mechanisms and Transformer blocks.
-4. **Advanced**: Prompt engineering, instruction tuning, and agent loops.
-`,
-    problem: `
-- **Challenge**: Capturing dependencies between words in long sentences.
-- **Failed Approach**: Sequential recurrent state updates (LSTMs).
-- **Key Insight**: Let every word dynamically look at and weigh every other word in the sequence.
-- **New Solution**: Multi-Head Self-Attention layers optimized on massive text corpora.
-`,
-    timeline: `
-- **2013**: Word2Vec captures semantic relations as vector directions.
-- **2017**: Transformer paper ("Attention is All You Need") published.
-- **2018**: BERT (Encoder) and GPT-1 (Decoder) show scaling properties.
-- **2020**: GPT-3 demonstrates zero-shot and few-shot capabilities.
-`,
-    human: `
-LLM engineers evaluate model performance in terms of token probability distributions. They design optimization pipelines that predict the next token while monitoring vocabulary limits.
-`,
-    continuity: `
-Today's attention mechanism lesson extends the feedforward concepts we studied earlier. This leads directly to causal masking in generative decoders.
-`,
-    mental: `
-- **Metaphor**: Self-attention is like a cocktail party where every guest listens to every conversation and focuses only on people speaking about relevant topics.
-- **Limitations**: Transformers process tokens based on statistics, lacking a persistent internal world model or conscious logic.
-`,
-    science: `
-The field shifted from local statistical language patterns (n-grams) to continuous dense embeddings, culminating in unified generative transformer models.
-`,
-    motivation: `
-Mastering LLM architecture allows you to build systems that analyze, summarize, and generate natural language at scale.
-`,
-    orientation: `
-You have completed the self-attention block. This connects to causal masking. The next major conceptual leap is autoregressive decoding.
-`
-  },
-  'rag': {
-    domainName: 'Retrieval-Augmented Generation',
-    origin: `
-Large Language Models, while fluent, frequently hallucinate facts when queried on dynamic or private data, and retraining them is prohibitively expensive. This limitation led Patrick Lewis and Meta researchers in 2020 to introduce Retrieval-Augmented Generation (RAG)—coupling a parametric generator (LLM) with a non-parametric retriever (vector database) to fetch factual context before generation.
-`,
-    journey: `
-1. **Foundations**: Keyword searches and database indexing.
-2. **Intermediate**: Embedding generation and vector spaces.
-3. **Current**: Hybrid search and retriever integration.
-4. **Advanced**: Agentic retrieval, active routing, and query rewriting.
-`,
-    problem: `
-- **Challenge**: Grounding LLM responses in external, factual documents.
-- **Failed Approach**: Fine-tuning models on rapidly changing documentation.
-- **Key Insight**: Inject retrieved, relevant text snippets directly into the prompt template.
-- **New Solution**: Encoding documents into dense vector spaces and matching query embeddings in real time.
-`,
-    timeline: `
-- **2020**: Meta researchers publish the canonical RAG architecture paper.
-- **2021**: Hierarchical vector indexes (HNSW) enable low-latency searches.
-- **2022**: Advanced retrieval strategies (reranking, metadata filters) enter production.
-- **2024**: Agentic RAG structures emerge, allowing iterative retrieval cycles.
-`,
-    human: `
-RAG practitioners design search systems that optimize search relevance and retrieval precision. They balance the trade-offs of embedding model costs against exact keyword matching.
-`,
-    continuity: `
-Our retrieval lesson builds on dense embedding representations. It prepares you for query translation and reranking optimizations in the next lesson.
-`,
-    mental: `
-- **Metaphor**: RAG is like an open-book exam where the student (LLM) looks up relevant pages in a textbook (Vector Database) before writing an answer.
-- **Limitations**: If the textbook contains incorrect information or the index points to the wrong page, the student will write an incorrect answer.
-`,
-    science: `
-RAG represents the shift from parametric-only model generation to hybrid systems combining static knowledge weights with dynamic retrieval databases.
-`,
-    motivation: `
-Building RAG architectures enables you to deploy LLMs in production environments that require strict factual correctness and access to private databases.
-`,
-    orientation: `
-You have analyzed basic vector retrieval. This connects to reranking layers. The next major conceptual leap is query classification.
-`
-  },
-  'agents': {
-    domainName: 'AI Agents',
-    origin: `
-Early LLM integrations were passive, answering queries in a single turn without the ability to plan, use tools, or correct errors. This limitation motivated Yao et al. in 2022 to introduce the ReAct (Reason + Act) paradigm—allowing models to generate reasoning traces, choose tools, and observe environment outputs iteratively to solve complex tasks.
-`,
-    journey: `
-1. **Foundations**: Simple chatbot single-turn templates.
-2. **Intermediate**: Tool calling APIs and system prompts.
-3. **Current**: ReAct loop architectures and planning steps.
-4. **Advanced**: Multi-agent orchestration and autonomous coding graphs.
-`,
-    problem: `
-- **Challenge**: Enabling language models to execute multi-step reasoning workflows autonomously.
-- **Failed Approach**: Writing complex hardcoded logic loops around prompt responses.
-- **Key Insight**: Let the model generate both the next thinking step and the tool call parameters.
-- **New Solution**: Implementing reasoning-execution loops like ReAct and Plan-and-Solve.
-`,
-    timeline: `
-- **2022**: ReAct paper demonstrates how reasoning traces improve tool calling success.
-- **2023**: AutoGPT and BabyAGI spark interest in autonomous agent loops.
-- **2023**: Tool Use APIs are natively integrated into LLM provider backends.
-- **2024**: Multi-agent frameworks (LangGraph, Autogen) model complex graph flows.
-`,
-    human: `
-Agent engineers design systems with clean interfaces, sandboxed environments, and feedback loops. They monitor token cost, trace planning cycles, and set up guardrails against infinite execution loops.
-`,
-    continuity: `
-Agent loops extend the core capabilities of LLMs. In the next section, you will examine multi-agent delegation architectures.
-`,
-    mental: `
-- **Metaphor**: An agent loop is like an engineer sitting at a terminal, running a command, reading the error, and correcting their code before running it again.
-- **Limitations**: Agents lack genuine intuition; they act based on prompt instructions and statistical next-token predictions, making them prone to looping.
-`,
-    science: `
-The domain transitioned from passive text prediction models to active decision-making loops that interact with external operating systems and APIs.
-`,
-    motivation: `
-Developing agentic architectures allows you to automate complex, multi-step engineering tasks that require tool interaction and self-correction.
-`,
-    orientation: `
-You have examined reasoning loops. This connects to tool calling interfaces. The next major conceptual leap is persistent state memory.
-`
-  },
-  'mlops': {
-    domainName: 'MLOps',
-    origin: `
-Historically, models were developed in Jupyter notebooks, but frequently failed in production because of environment changes, distribution drift, or lack of automated testing. This disconnect motivated engineers to establish MLOps—combining software engineering (DevOps) and machine learning to build continuous training, deployment, and monitoring systems.
-`,
-    journey: `
-1. **Foundations**: Notebooks and manual deployments.
-2. **Intermediate**: Dockerization and versioning datasets.
-3. **Current**: Continuous training and automated pipelines.
-4. **Advanced**: Feature stores and edge model registries.
-`,
-    problem: `
-- **Challenge**: Deploying models to production environments reliably while keeping them aligned with incoming data.
-- **Failed Approach**: Copying model weight files manually to production servers.
-- **Key Insight**: Treat machine learning assets (data, code, hyperparameters) as version-controlled resources.
-- **New Solution**: Continuous integration and automated retraining pipelines.
-`,
-    timeline: `
-- **2015**: Google paper ("Hidden Technical Debt in Machine Learning Systems") published.
-- **2018**: MLflow and DVC emerge to track experiments and version datasets.
-- **2020**: Focus shifts to online monitoring (data drift, bias tests).
-- **2022**: Feature stores unify training and inference data paths.
-`,
-    human: `
-MLOps engineers evaluate models through system health parameters like latency, throughput, and distribution stability. They automate workflows to ensure models remain reliable.
-`,
-    continuity: `
-Today's pipeline lesson builds on model deployment. In the next lesson, we will look at model registration and rollback policies.
-`,
-    mental: `
-- **Metaphor**: An MLOps pipeline is like an automated water treatment plant, constantly checking water quality (Data Drift) and adjusting filters (Retraining) automatically.
-- **Limitations**: Automated pipelines can trigger expensive retraining loops on corrupted inputs if validation rules are poorly configured.
-`,
-    science: `
-The discipline shifted from manual, experimental notebooks to structured, automated systems engineering lifecycles.
-`,
-    motivation: `
-Understanding MLOps ensures your machine learning solutions remain stable, operational, and accurate in production.
-`,
-    orientation: `
-You have completed the pipeline design block. This connects to model monitoring. The next major conceptual leap is data validation rules.
-`
-  }
 };
 
 function createStorytellingLearningJourneyAgent() {
   const responseCache = new Map();
+  const sharedKnowledge = createSharedKnowledgeService();
 
-  function initialize() {
-    return Promise.resolve({ status: 'ready', modes: Object.keys(MODE_LABELS).length });
+  async function initialize() {
+    await sharedKnowledge.initialize();
+    return { status: 'ready', modes: Object.keys(MODE_LABELS).length };
   }
 
   function canHandle(context) {
     return Boolean(context?.userQuery || context?.selectedArtifact || context?.selectedLesson);
   }
 
+  function checkFabricationRequest(query) {
+    return FABRICATION_PATTERNS.some((pattern) => pattern.test(query));
+  }
+
+  function buildRefusalResponse(reason) {
+    return {
+      type: 'governed-refusal',
+      agentId: 'storytelling-learning-journey',
+      agentName: 'Storytelling & Learning Journey Agent',
+      reason: `I cannot fabricate historical content. ${reason}`,
+      notice: 'This request was blocked by historical integrity guardrails. Only factual, documented narratives are provided.',
+      timestamp: new Date().toISOString(),
+      status: 'refused'
+    };
+  }
+
   async function run(context = {}, options = {}) {
     await initialize();
+    if (!context) context = {};
     const query = context.userQuery || '';
+    if (checkFabricationRequest(query)) {
+      return buildRefusalResponse('The agent only presents historically documented events without invented anecdotes, quotes, or discovery scenes.');
+    }
     const mode = options.mode || detectIntent(query);
     const topic = resolveTopic(context, query);
     const domain = resolveDomain(topic, query);
@@ -499,48 +270,25 @@ function createStorytellingLearningJourneyAgent() {
   }
 
   function getDomainData(domain) {
-    return CURATED_NARRATIVE_MAP[domain] || {
-      domainName: 'Systems Engineering Foundations',
-      origin: `
-Traditional software modularity concepts emerged in the 1960s to address the spaghetti-code software crisis. The introduction of structured interfaces allowed engineers to decouple execution paths, transforming programming into a repeatable engineering discipline.
-`,
-      journey: `
-1. **Foundations**: Monolithic program routines.
-2. **Intermediate**: Structured subroutines and local function calls.
-3. **Current**: Decoupled component interfaces.
-4. **Advanced**: Event-driven microservice meshes.
-`,
-      problem: `
-- **Challenge**: Building scalable systems that can be updated concurrently.
-- **Failed Approach**: Compiling all systems into a single tight global binary.
-- **Key Insight**: Program to abstract interfaces instead of concrete classes.
-- **New Solution**: Decoupled dynamic dependencies.
-`,
-      timeline: `
-- **1968**: NATO Conference defines the term "Software Engineering".
-- **1972**: David Parnas introduces criteria for modular software partition.
-- **1994**: Design Patterns book formalizes decoupling structures.
-`,
-      human: `
-Systems architects view applications as sets of interacting nodes. They measure dependency coupling densities and prioritize interface stability above all.
-`,
-      continuity: `
-Decoupled interfaces build on functions and subroutines. Understanding this prepares you for dependency injection frameworks in the next lesson.
-`,
-      mental: `
-- **Metaphor**: Decoupled components are like standardized wall plugs; any appliance fitting the plug can draw power without knowing the plant source.
-- **Limitations**: Real interfaces have state transitions and network failures that simpler wall plugs do not model.
-`,
-      science: `
-Systems engineering transitioned from static compiled structures to modular architectures, and finally to decentralized, containerized environments.
-`,
-      motivation: `
-Mastering component decoupling ensures your systems remain modular, testable, and maintainable over decades of service.
-`,
-      orientation: `
-You have analyzed interface decoupling. This connects to dependency injection. The next major conceptual leap is service discovery.
-`
-    };
+    const sharedDomain = sharedKnowledge.getSyncDomain(domain);
+    if (sharedDomain) {
+      return {
+        domainName: sharedDomain.title,
+        origin: sharedDomain.historicalContext || '',
+        journey: `1. **Foundations**: Core concepts in ${sharedDomain.title}\n2. **Intermediate**: Advanced techniques\n3. **Current**: Modern implementations\n4. **Advanced**: Research frontiers`,
+        problem: `- **Challenge**: Understanding ${sharedDomain.title}\n- **Key Insight**: Build intuitive understanding`,
+        timeline: (sharedDomain.landmarkReferences || []).map((r) => `- **${r.year}**: ${r.title} — ${r.contribution}`).join('\n'),
+        human: `Practitioners in ${sharedDomain.title} think systematically about trade-offs.`,
+        continuity: `${sharedDomain.title} builds on foundational concepts.`,
+        mental: (sharedDomain.analogies || []).length > 0
+          ? `- **Metaphor**: ${sharedDomain.analogies[0].text}\n- **Limitations**: ${sharedDomain.analogies[0].limitations}`
+          : `- **Metaphor**: Understanding ${sharedDomain.title} is like learning a new language — start with fundamentals, then build fluency.`,
+        science: sharedDomain.summary || '',
+        motivation: `Mastering ${sharedDomain.title} enables complex problem solving.`,
+        orientation: `You have explored ${sharedDomain.title}. Next: apply in practice.`
+      };
+    }
+    return FALLBACK_NARRATIVE_DATA;
   }
 
   function resolveDomain(topic, query) {

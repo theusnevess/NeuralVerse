@@ -1,0 +1,53 @@
+{
+  "id": "learning-rate-scheduling",
+  "name": "Learning Rate Scheduling",
+  "slug": "learning-rate-scheduling",
+  "summary": "Strategies that adjust the learning rate during training to improve convergence.",
+  "definition": "Learning rate scheduling modifies the learning rate over time. Strategies include step decay, cosine annealing, warmup schedules, and reduce-on-plateau.",
+  "aliases": [
+    "LR scheduling",
+    "learning rate decay"
+  ],
+  "keywords": [
+    "learning rate",
+    "schedule",
+    "decay",
+    "warmup",
+    "cosine"
+  ],
+  "sharedKnowledgeDomains": [
+    "optimization"
+  ],
+  "relatedConcepts": [
+    {
+      "concept": "gradient-descent",
+      "type": "supports"
+    },
+    {
+      "concept": "optimizers",
+      "type": "uses"
+    }
+  ],
+  "prerequisiteConcepts": [
+    "gradient-descent"
+  ],
+  "artifactReferences": [
+    "artifact-epochs-batches-learning-rate-comparison-table",
+    "artifact-epochs-batches-learning-rate-exercise",
+    "artifact-epochs-batches-learning-rate-explanatory-text",
+    "artifact-epochs-batches-learning-rate-interactive-visualization",
+    "artifact-epochs-batches-learning-rate-visual-intuition"
+  ],
+  "difficulty": "intermediate",
+  "category": "optimization",
+  "canonicalStatus": "Reviewed",
+  "version": "1.0.0",
+  "reviewedBy": "NV-1100-P4 Implementation",
+  "lastReviewed": "2026-06-24",
+  "sourceReferences": [],
+  "examples": [],
+  "counterExamples": [],
+  "commonMisconceptions": [],
+  "recommendedVisualizations": [],
+  "recommendedLabs": []
+}

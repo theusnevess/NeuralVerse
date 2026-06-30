@@ -1,0 +1,73 @@
+{
+  "id": "machine-learning",
+  "title": "Machine Learning Foundations",
+  "summary": "The foundational paradigm where computers adjust parameters based on data to learn rules automatically, replacing hand-coded logic with optimization-driven learning.",
+  "concepts": ["supervised learning", "unsupervised learning", "linear models", "decision boundaries", "regularization", "bias-variance tradeoff", "feature engineering", "cross-validation", "overfitting"],
+  "keywords": ["machine learning", "regression", "classification", "SVM", "decision tree", "random forest", "linear model", "logistic regression", "feature", "prediction"],
+  "historicalContext": "In the mid-20th century, traditional programmers had to hardcode every logical rule to solve problems (Symbolic AI). However, tasks like handwriting recognition proved too complex for rule-based programming because variations were infinite. This limitation motivated Arthur Samuel and other pioneers in the 1950s to invent machine learning—a paradigm where computers adjust parameters based on data to learn rules automatically.",
+  "landmarkReferences": [
+    {
+      "title": "Perceptrons",
+      "authors": "Minsky and Papert",
+      "year": "1969",
+      "contribution": "Mathematically proved that a single-layer perceptron could not compute the simple XOR function."
+    }
+  ],
+  "industryApplications": ["Fraud detection pipelines", "E-commerce recommendation systems", "Predictive maintenance for manufacturing", "Customer churn prediction", "Risk assessment"],
+  "commonMisconceptions": [
+    {
+      "trigger": "overfit",
+      "wrong": "Higher training performance always translates to better real-world deployment outcomes.",
+      "correct": "Overfitting means the model learned patterns specific to the training data that do not generalize to new data. Understanding the nuance helps choose the right mitigation strategy."
+    }
+  ],
+  "analogies": [
+    {
+      "text": "Overfitting is like memorizing answers to a specific exam instead of understanding the subject. You'll ace that exact exam but fail any variation.",
+      "limitations": "Overfitting is more nuanced than simple memorization — it includes learning spurious correlations that happen to work on training data.",
+      "domain": "everyday life"
+    }
+  ],
+  "curiosityFacts": [
+    "Did you know that Arthur Samuel's checker-playing program in 1959 defeated the Connecticut state checkers champion? It was one of the earliest demonstrations of machine learning self-improvement.",
+    "In 1969, Marvin Minsky and Seymour Papert published the book Perceptrons, which mathematically proved that a single-layer perceptron could not compute the simple XOR function. This contributed to the first 'AI Winter.'"
+  ],
+  "storySeeds": [
+    "The field transitioned from manually engineered statistical tests to parametric models that adjust internal coefficients automatically, laying the foundation for modern artificial intelligence systems.",
+    "Machine learning changed the software landscape by shifting the programming paradigm from writing explicit procedural rules to optimizing parameters from data."
+  ],
+  "assessmentSeeds": [
+    "Explain how decision tree boundaries differ from logistic regression boundaries in your own words.",
+    "Why is regularizing feature weights beneficial when dealing with highly correlated inputs?"
+  ],
+  "professionalInsights": [
+    "Implement offline sharding of feature tables and read-through caching for high-concurrency real-time lookups.",
+    "Monitor prediction drift using population stability index (PSI) and feature distributions."
+  ],
+  "recommendedVisualizations": ["decision-boundary-viz", "bias-variance-tradeoff-chart"],
+  "recommendedLabs": ["linear-regression-playground", "decision-boundary-explorer"],
+  "relatedArtifacts": [],
+  "relatedConcepts": [
+    { "domain": "deep-learning", "type": "generalizes" },
+    { "domain": "optimization", "type": "depends_on" },
+    { "domain": "mlops", "type": "related_to" }
+  ],
+  "lastReviewed": "2026-06-24",
+  "canonicalStatus": "Reviewed",
+  "version": "1.0.0",
+  "reviewedBy": "NV-1100-P3 Implementation",
+  "sourceReferences": [
+    {
+      "id": "ref-machine-learning-0",
+      "title": "Perceptrons (Minsky & Papert)",
+      "type": "paper",
+      "description": "Foundational ML limitations analysis"
+    },
+    {
+      "id": "ref-machine-learning-1",
+      "title": "The Elements of Statistical Learning",
+      "type": "book",
+      "description": "Comprehensive ML textbook"
+    }
+  ]
+}

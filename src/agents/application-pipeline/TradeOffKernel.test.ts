@@ -356,8 +356,8 @@ describe('Trade-Off Kernel — Registry', () => {
   });
 
   it('should sort dimensions deterministically', () => {
-    const dim2 = { ...VALID_DIMENSION, dimensionId: 'dim-002', dimension: 'latency' };
-    const dim1 = { ...VALID_DIMENSION, dimensionId: 'dim-001', dimension: 'accuracy' };
+    const dim2 = { ...VALID_DIMENSION, dimensionId: 'dim-002', dimension: 'latency' as const };
+    const dim1 = { ...VALID_DIMENSION, dimensionId: 'dim-001', dimension: 'accuracy' as const };
 
     const registry = composeTradeOffRegistry([VALID_TRADE_OFF], [dim2, dim1], []);
 
@@ -590,7 +590,7 @@ describe('Trade-Off Kernel — Validation', () => {
       registryVersion: '1.0.0',
       compositionVersion: '1.0.0',
       decisions: [],
-      deterministic: false,
+      deterministic: false as true,
       generatedFrom: 'deterministic_trade_off_kernel',
       randomUsed: false,
       timeDependency: false,

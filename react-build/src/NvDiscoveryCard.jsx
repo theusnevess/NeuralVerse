@@ -33,6 +33,7 @@ export function NvDiscoveryCard({ data = {}, callbacks = {} }) {
   } = data
   const actionSet = new Set(actions)
   const refId = reference.id || ''
+  const titleId = `dtitle-${previewId || refId}`
   const title = reference.title || 'Untitled reference'
   const type = reference.type || 'reference'
   const { onAction } = callbacks
@@ -63,7 +64,7 @@ export function NvDiscoveryCard({ data = {}, callbacks = {} }) {
       data-ref-id={refId}
       data-preview-ref={refId}
       tabIndex={0}
-      aria-labelledby={`discovery-title-${refId}`}
+      aria-labelledby={titleId}
       onClick={(event) => {
         if (event.target.closest('button')) return
         openPanel()
@@ -78,7 +79,7 @@ export function NvDiscoveryCard({ data = {}, callbacks = {} }) {
           <NvBadge variant="info">{type}</NvBadge>
           <span className="nv-discovery-panel__reason">{reasonLabel}</span>
         </div>
-        <h4 className="nv-discovery-panel__title" id={`discovery-title-${refId}`}>{title}</h4>
+        <h4 className="nv-discovery-panel__title" id={titleId}>{title}</h4>
         {showDescription && variant !== 'compact' && description && (
           <p className="nv-discovery-panel__description">{description}</p>
         )}

@@ -17,6 +17,7 @@ Do not use for trivial one-file edits unless classification is unclear.
 
 ## Core Rules
 
+- The Orchestrator is **always the entry point**, even for trivial tasks. It classifies and decides what to skip — it must never be skipped itself.
 - Do not start by editing files.
 - Classify the task before activating specialist skills.
 - Activate only the skills needed for the task; target 3 to 5 skills for most medium or large tasks.
@@ -42,10 +43,45 @@ Keep the flat skill directory layout for OpenCode compatibility; use the taxonom
 
 ## Workflow
 
+### Pipeline Diagram
+
+```
+Task
+        │
+        ▼
+Harness Orchestrator
+        │
+        ├───────────────┐
+        │               │
+        ▼               ▼
+Context          Token Economy
+Governance         Auditor
+        │               │
+        └───────┬───────┘
+                ▼
+     Repository Discovery
+         (fd → rg → ast-grep)
+                ▼
+       Specialist Skills
+                ▼
+         Implementation
+                ▼
+          Validation
+                ▼
+    Documentation (if needed)
+                ▼
+          Git Hygiene
+```
+
+The Harness follows an adaptive pipeline rather than a fixed sequence.
+The Orchestrator dynamically selects the minimum workflow required.
+
+### Steps
+
 1. Inspect `git status --short`.
 2. Define task class, cost level, and affected scope.
 3. Select the minimal specialist skill set from the activation matrix.
-4. Locate before reading; confirm before editing; inspect before refactoring.
+4. Repository Discovery: `fd` → `rg` → `ast-grep` (locate before reading).
 5. Apply the smallest safe change.
 6. Run focused validation.
 7. Report changed files, commands, validation, and remaining risks.
@@ -55,6 +91,22 @@ Keep the flat skill directory layout for OpenCode compatibility; use the taxonom
 ### Architecture or structural change
 
 Use: `architecture-review`, `typescript-expert`, `testing-and-debugging`, `documentation-maintainer`, `git-hygiene`.
+
+### When architecture-review is used
+
+Include only when:
+- New modules or boundaries are created
+- Cross-cutting changes affect multiple systems
+- Architectural guidance is being updated
+
+Do NOT include for:
+- CSS changes
+- Text/label updates
+- Tooltip fixes
+- Padding adjustments
+- Single-file edits
+
+Who decides: the Orchestrator, based on task classification.
 
 ### UI polish or visual refinement
 
@@ -85,6 +137,15 @@ Use: `documentation-maintainer`, `architecture-review` when architecture is affe
 ### OpenCode, skill, MCP, permission, or agent configuration
 
 Use: `customize-opencode`, `documentation-maintainer`, `obsidian-memory-maintainer` for durable decisions, `git-hygiene`.
+
+## Conditional Skills
+
+Some skills are not always activated but should be flagged as available:
+
+- `playwright-qa` — activate when: UI changes, responsive fixes, route validation, browser behavior. Mark as "conditional" in dry runs; activate when implementation occurs.
+- `testing-and-debugging` — activate when: bug reproduction is needed before fixing.
+- `graph-polish` — activate when: graph structure or rendering logic changes.
+- `performance-optimization` — activate when: rendering cost, graph scale, or interaction smoothness is part of the task.
 
 ## Validation
 
