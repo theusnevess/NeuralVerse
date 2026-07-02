@@ -23,6 +23,10 @@ import { createAssessmentReinforcementAgent } from "./agents/assessment-reinforc
 import { createObsidianKnowledgeGovernanceAgent } from "./agents/obsidian-knowledge-governance-agent.js?v=1";
 import { createStorytellingLearningJourneyAgent } from "./agents/storytelling-learning-journey-agent.js?v=1";
 import { createCuriosityEngagementAgent } from "./agents/curiosity-engagement-agent.js?v=1";
+import { createAgentEvidenceAdapter } from "./agents/agent-evidence-adapter.js?v=1";
+import { createCopilotRuntimeBridge } from "./agents/copilot-runtime-bridge.js?v=1";
+import "./agents/agent-tools.js?v=1";
+import "./agents/agentic-loop.js?v=1";
 import { createAgentPanelController } from "./agents/agent-panel-controller.js?v=1";
 
 window.NV_DEBUG = window.NV_DEBUG || false;
@@ -226,11 +230,146 @@ document.addEventListener("DOMContentLoaded", () => {
     orchestrator.registerRealAgent('curiosity-engagement', curiosityAgent);
   }
 
+  /* =========================================================
+     Floating Action Button — Draggable
+     Pointer-based drag (mouse + touch + pen) with boundary
+     clamping, optional edge snap, and position persistence.
+     ========================================================= */
+
+  function makeFloatingButtonDraggable(el, options = {}) {
+    if (!el) return;
+    const storageKey = options.storageKey || 'neuralverse.fab.position';
+    const dragThreshold = options.dragThreshold ?? 4;
+    const edgeSnap = options.edgeSnap ?? true;
+    const margin = options.margin ?? 12;
+    const size = el.getBoundingClientRect().width || 48;
+
+    function applyPosition(x, y) {
+      el.style.left = `${x}px`;
+      el.style.top = `${y}px`;
+      el.style.right = 'auto';
+      el.style.bottom = 'auto';
+    }
+
+    function clampToViewport(x, y) {
+      const maxX = Math.max(margin, window.innerWidth - size - margin);
+      const maxY = Math.max(margin, window.innerHeight - size - margin);
+      return {
+        x: Math.min(Math.max(margin, x), maxX),
+        y: Math.min(Math.max(margin, y), maxY)
+      };
+    }
+
+    function snapToEdge(x, y) {
+      const midX = window.innerWidth / 2;
+      return { x: x < midX ? margin : window.innerWidth - size - margin, y };
+    }
+
+    function persist(x, y) {
+      try {
+        localStorage.setItem(storageKey, JSON.stringify({ x, y }));
+      } catch (e) { /* ignore quota / privacy mode */ }
+    }
+
+    function restore() {
+      try {
+        const raw = localStorage.getItem(storageKey);
+        if (!raw) return false;
+        const { x, y } = JSON.parse(raw);
+        if (typeof x === 'number' && typeof y === 'number') {
+          const c = clampToViewport(x, y);
+          applyPosition(c.x, c.y);
+          return true;
+        }
+      } catch (e) { /* ignore */ }
+      return false;
+    }
+
+    if (!restore()) {
+      const rect = el.getBoundingClientRect();
+      const fallbackX = Math.max(margin, window.innerWidth - size - margin - 20);
+      const fallbackY = Math.max(margin, window.innerHeight - size - margin - 20);
+      applyPosition(rect.left || fallbackX, rect.top || fallbackY);
+    }
+
+    let dragState = null;
+
+    function onPointerDown(e) {
+      if (e.button !== undefined && e.button !== 0) return;
+      delete el.dataset.dragMoved;
+      const rect = el.getBoundingClientRect();
+      dragState = {
+        pointerId: e.pointerId,
+        startX: e.clientX,
+        startY: e.clientY,
+        originLeft: rect.left,
+        originTop: rect.top,
+        moved: false
+      };
+      el.classList.add('nv-agent-trigger--dragging');
+      document.addEventListener('pointermove', onPointerMove);
+      document.addEventListener('pointerup', onPointerUp);
+      document.addEventListener('pointercancel', onPointerCancel);
+    }
+
+    function onPointerMove(e) {
+      if (!dragState || e.pointerId !== dragState.pointerId) return;
+      const dx = e.clientX - dragState.startX;
+      const dy = e.clientY - dragState.startY;
+      if (!dragState.moved) {
+        if (Math.abs(dx) < dragThreshold && Math.abs(dy) < dragThreshold) return;
+        dragState.moved = true;
+      }
+      const next = clampToViewport(dragState.originLeft + dx, dragState.originTop + dy);
+      applyPosition(next.x, next.y);
+    }
+
+    function endDrag(e) {
+      if (!dragState || (e && e.pointerId !== dragState.pointerId)) return;
+      const wasMoved = dragState.moved;
+      el.classList.remove('nv-agent-trigger--dragging');
+      document.removeEventListener('pointermove', onPointerMove);
+      document.removeEventListener('pointerup', onPointerUp);
+      document.removeEventListener('pointercancel', onPointerCancel);
+      dragState = null;
+
+      if (!wasMoved) return;
+
+      const rect = el.getBoundingClientRect();
+      let { x, y } = clampToViewport(rect.left, rect.top);
+      if (edgeSnap) {
+        const snapped = snapToEdge(x, y);
+        x = snapped.x;
+      }
+      const c = clampToViewport(x, y);
+      applyPosition(c.x, c.y);
+      persist(c.x, c.y);
+      el.dataset.dragMoved = '1';
+    }
+
+    function onPointerUp(e) { endDrag(e); }
+    function onPointerCancel(e) { endDrag(e); }
+
+    el.addEventListener('pointerdown', onPointerDown);
+  }
+
   // Bind agent trigger button
   const agentTrigger = document.querySelector('#nv-agent-trigger');
   if (agentTrigger) {
+    // Move FAB out of <header> to avoid `contain: paint` clipping
+    // when the user drags it outside the header bounds.
+    if (agentTrigger.parentElement !== document.body) {
+      document.body.appendChild(agentTrigger);
+    }
     agentTrigger.addEventListener('click', () => {
+      if (agentTrigger.dataset.dragMoved === '1') {
+        delete agentTrigger.dataset.dragMoved;
+        return;
+      }
       agentPanelController.togglePanel();
+    });
+    makeFloatingButtonDraggable(agentTrigger, {
+      storageKey: 'neuralverse.ai.fab.position'
     });
   }
 

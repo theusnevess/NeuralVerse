@@ -76,28 +76,470 @@ class ViewController {
     this.routeTransitionCleanup = null;
     this.templates = {
       home: `
-        <div class="nv-stack nv-stack--gap-md nv-hero-observatory">
-          <header class="nv-stack nv-stack--gap-xs">
-            <h1 class="nv-sr-only">NeuralVerse Home</h1>
-          </header>
-          <div class="nv-panel">
-            <div class="nv-empty-state nv-hero-brand-lockup">
-              <div class="nv-empty-state__visual nv-brand-home-visual" aria-hidden="true">
-                <img src="assets/brand/neuralverse-lockup.png" alt="">
+<section class="nv-home nv-home-v3" data-home-root>
+  <!-- Hero Section with Composition Layout -->
+  <section class="nv-home-hero" aria-labelledby="home-v3-title">
+    <div class="nv-hero-content">
+      <div class="nv-observatory-badge">
+        <span class="nv-badge-dot"></span>
+        <span class="nv-badge-text">Platform Registry v3.0 // Active Observatory</span>
+      </div>
+      
+      <h1 id="home-v3-title" class="nv-hero-title">
+        A Governed Knowledge Observatory for AI Engineering.
+      </h1>
+      
+      <p class="nv-hero-subtitle">
+        NeuralVerse turns AI research, curriculum, and engineering into a structured topology. Track concepts, deploy interactive laboratories, and compound knowledge in a local-first workspace.
+      </p>
+      
+      <div class="nv-hero-actions" aria-label="Primary actions">
+        <a href="#/learning" class="nv-button" data-variant="primary">Start Learning</a>
+        <a href="#/retrieval-playground" class="nv-button" data-variant="ghost">Inspect the Graph</a>
+      </div>
+
+      <!-- Telemetry Metrics Grid -->
+      <div class="nv-hero-telemetry" aria-label="Observatory status metrics">
+        <div class="nv-telemetry-item">
+          <span class="nv-telemetry-value">8,000+</span>
+          <span class="nv-telemetry-label">Canonical Concepts</span>
+        </div>
+        <div class="nv-telemetry-item">
+          <span class="nv-telemetry-value">120</span>
+          <span class="nv-telemetry-label">Interactive Labs</span>
+        </div>
+        <div class="nv-telemetry-item">
+          <span class="nv-telemetry-value">2,500+</span>
+          <span class="nv-telemetry-label">Research Papers</span>
+        </div>
+        <div class="nv-telemetry-item">
+          <span class="nv-telemetry-value">38</span>
+          <span class="nv-telemetry-label">Learning Paths</span>
+        </div>
+        <div class="nv-telemetry-item">
+          <span class="nv-telemetry-value">80</span>
+          <span class="nv-telemetry-label">Engineering Projects</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Living Scientific Visualization -->
+    <div class="nv-hero-visual" aria-hidden="true">
+      <div class="nv-visual-container">
+        <!-- Grid overlay -->
+        <div class="nv-visual-grid-overlay"></div>
+        <svg viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg" class="nv-topology-svg">
+          <defs>
+            <radialGradient id="node-glow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="var(--sys-color-accent-primary)" stop-opacity="0.4"/>
+              <stop offset="100%" stop-color="var(--sys-color-accent-primary)" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          
+          <!-- Outer orbital ring -->
+          <circle cx="250" cy="250" r="210" stroke="var(--sys-color-border-subtle)" stroke-width="1" stroke-dasharray="3 9" />
+          <circle cx="250" cy="250" r="150" stroke="var(--sys-color-border-subtle)" stroke-width="1" />
+          <circle cx="250" cy="250" r="90" stroke="var(--sys-color-border-subtle)" stroke-width="1" stroke-dasharray="2 4" />
+          
+          <!-- Crosshair guides -->
+          <line x1="250" y1="20" x2="250" y2="480" stroke="var(--sys-color-border-subtle)" stroke-width="0.5" stroke-opacity="0.5" />
+          <line x1="20" y1="250" x2="480" y2="250" stroke="var(--sys-color-border-subtle)" stroke-width="0.5" stroke-opacity="0.5" />
+          
+          <!-- Connection lines -->
+          <path d="M250 250 L140 140 M250 250 L380 180 M250 250 L320 350 M250 250 L120 320" stroke="var(--sys-color-accent-primary)" stroke-opacity="0.15" stroke-width="1.5" />
+          <path d="M140 140 L380 180 L320 350 L120 320 Z" stroke="var(--sys-color-accent-primary)" stroke-opacity="0.08" stroke-width="1" stroke-dasharray="4 4" />
+          
+          <!-- Moving signal pulses along orbital lines -->
+          <circle r="4" fill="var(--sys-color-accent-primary)" class="nv-pulse-node">
+            <animateMotion path="M140 140 L380 180 L320 350 L120 320 Z" dur="18s" repeatCount="indefinite" />
+          </circle>
+
+          <!-- Core System Node -->
+          <g class="nv-graph-node" transform="translate(250, 250)">
+            <circle r="18" fill="url(#node-glow)" />
+            <circle r="8" fill="var(--sys-color-accent-primary)" />
+            <circle r="14" stroke="var(--sys-color-accent-primary)" stroke-opacity="0.3" stroke-width="1" />
+          </g>
+          
+          <!-- Satellite Node A -->
+          <g class="nv-graph-node" transform="translate(140, 140)">
+            <circle r="10" fill="url(#node-glow)" />
+            <circle r="5" fill="var(--sys-color-accent-primary)" />
+            <text x="12" y="4" fill="var(--sys-color-text-secondary)" font-family="var(--sys-font-code-family)" font-size="8" letter-spacing="0.05em">NV.AGENTS</text>
+          </g>
+          
+          <!-- Satellite Node B -->
+          <g class="nv-graph-node" transform="translate(380, 180)">
+            <circle r="10" fill="url(#node-glow)" />
+            <circle r="5" fill="var(--sys-color-accent-primary)" />
+            <text x="12" y="4" fill="var(--sys-color-text-secondary)" font-family="var(--sys-font-code-family)" font-size="8" letter-spacing="0.05em">NV.LABS</text>
+          </g>
+          
+          <!-- Satellite Node C -->
+          <g class="nv-graph-node" transform="translate(320, 350)">
+            <circle r="10" fill="url(#node-glow)" />
+            <circle r="5" fill="var(--sys-color-accent-primary)" />
+            <text x="12" y="4" fill="var(--sys-color-text-secondary)" font-family="var(--sys-font-code-family)" font-size="8" letter-spacing="0.05em">NV.GRAPH</text>
+          </g>
+          
+          <!-- Satellite Node D -->
+          <g class="nv-graph-node" transform="translate(120, 320)">
+            <circle r="10" fill="url(#node-glow)" />
+            <circle r="5" fill="var(--sys-color-accent-primary)" />
+            <text x="-65" y="4" fill="var(--sys-color-text-secondary)" font-family="var(--sys-font-code-family)" font-size="8" letter-spacing="0.05em">NV.MEM</text>
+          </g>
+
+          <!-- Constellation hints -->
+          <circle cx="210" cy="180" r="1.5" fill="var(--sys-color-text-muted)" opacity="0.3" />
+          <circle cx="340" cy="120" r="2.5" fill="var(--sys-color-text-muted)" opacity="0.4" />
+          <circle cx="290" cy="300" r="1.5" fill="var(--sys-color-text-muted)" opacity="0.3" />
+          <circle cx="160" cy="270" r="2" fill="var(--sys-color-text-muted)" opacity="0.3" />
+          
+          <!-- Scientific coordinates telemetry -->
+          <text x="15" y="485" fill="var(--sys-color-text-muted)" font-family="var(--sys-font-code-family)" font-size="8" opacity="0.5">LATENCY: 12ms</text>
+          <text x="400" y="485" fill="var(--sys-color-text-muted)" font-family="var(--sys-font-code-family)" font-size="8" opacity="0.5" text-anchor="end">AZIMUTH: 184.22</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- Continuity Console Strip (Onboarding / active session telemetry) -->
+  <section class="nv-observatory-console-strip" aria-label="Observatory Session Continuity">
+    <!-- Onboarding State -->
+    <div class="nv-console-onboarding" data-home-onboarding>
+      <div class="nv-console-panel">
+        <div class="nv-console-header">
+          <span class="nv-console-dot nv-console-dot--standby"></span>
+          <span class="nv-console-title">Observatory Status: Standby</span>
+        </div>
+        <p class="nv-console-text">Begin with a structured learning path, or open the workspace to resume active state memory tracking.</p>
+        <div class="nv-console-actions">
+          <a href="#/learning" class="nv-button" data-variant="secondary">Explore Paths</a>
+          <a href="#/workspace" class="nv-button" data-variant="ghost">Open Workspace</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Session State -->
+    <div class="nv-console-session" data-home-session hidden>
+      <div class="nv-console-panel">
+        <div class="nv-console-header">
+          <span class="nv-console-dot nv-console-dot--active"></span>
+          <span class="nv-console-title">Observatory Status: Active Session</span>
+        </div>
+        
+        <div class="nv-console-grid">
+          <!-- Continue Card -->
+          <div class="nv-console-card" data-workspace-continue hidden>
+            <span class="nv-card-eyebrow">CONTINUE FOCUS</span>
+            <h2 class="nv-card-title">Resume Active Unit</h2>
+            <dl class="nv-card-meta">
+              <div class="nv-meta-row"><dt>Path</dt><dd data-workspace-continue-path>None</dd></div>
+              <div class="nv-meta-row"><dt>Module</dt><dd data-workspace-continue-module>None</dd></div>
+              <div class="nv-meta-row"><dt>Content</dt><dd data-workspace-continue-content>None</dd></div>
+            </dl>
+            <div class="nv-card-actions">
+              <a class="nv-button" data-variant="primary" href="#/content" data-workspace-continue-action>Resume</a>
+            </div>
+          </div>
+
+          <!-- Last Opened Card -->
+          <div class="nv-console-card" data-workspace-last-opened hidden>
+            <span class="nv-card-eyebrow">LAST OPENED</span>
+            <h2 class="nv-card-title" data-workspace-last-opened-title>None</h2>
+            <dl class="nv-card-meta">
+              <div class="nv-meta-row"><dt>Module</dt><dd data-workspace-last-opened-module>None</dd></div>
+              <div class="nv-meta-row"><dt>Path</dt><dd data-workspace-last-opened-path>None</dd></div>
+              <div class="nv-meta-row"><dt>Timestamp</dt><dd data-workspace-last-opened-time>None</dd></div>
+            </dl>
+            <div class="nv-card-actions">
+              <a class="nv-button" data-variant="secondary" href="#/content" data-workspace-last-opened-action>Open Again</a>
+            </div>
+          </div>
+
+          <!-- Progress Panel -->
+          <div class="nv-console-progress">
+            <span class="nv-card-eyebrow">TELEMETRY SUMMARY</span>
+            <h2 class="nv-card-title">Learning Continuity</h2>
+            <dl class="nv-card-meta">
+              <div class="nv-meta-row"><dt>Path</dt><dd data-workspace-orientation-path>—</dd></div>
+              <div class="nv-meta-row"><dt>Module</dt><dd data-workspace-orientation-module>—</dd></div>
+              <div class="nv-meta-row"><dt>Content</dt><dd data-workspace-orientation-content>—</dd></div>
+              <div class="nv-meta-row"><dt>Progress</dt><dd data-workspace-path-summary-progress>—</dd></div>
+              <div class="nv-meta-row"><dt>Status</dt><dd data-workspace-path-summary-status>—</dd></div>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stage 1: Scientific Vision -->
+  <section class="nv-observatory-section nv-section-vision" aria-labelledby="vision-title">
+    <div class="nv-section-grid">
+      <div class="nv-section-copy">
+        <p class="nv-section-kicker">01 // Scientific Vision</p>
+        <h2 id="vision-title" class="nv-section-title">An Operating System for AI Engineering.</h2>
+        <p class="nv-section-text">
+          Traditional learning systems present AI as a sequence of videos or code templates. NeuralVerse conceptualizes machine learning as a governed topological tree of competencies. By treating models as transparent structures, the platform enables engineers to observe, parameterize, and verify state-of-the-art networks deterministically.
+        </p>
+      </div>
+      <div class="nv-section-illustration">
+        <svg viewBox="0 0 400 240" fill="none" xmlns="http://www.w3.org/2000/svg" class="nv-diagram-svg">
+          <rect width="400" height="240" rx="12" fill="var(--sys-color-surface-base)" stroke="var(--sys-color-border-subtle)" />
+          <!-- Instrument ticks -->
+          <line x1="20" y1="20" x2="30" y2="20" stroke="var(--sys-color-accent-primary)" stroke-width="1.5" />
+          <line x1="20" y1="20" x2="20" y2="30" stroke="var(--sys-color-accent-primary)" stroke-width="1.5" />
+          
+          <line x1="380" y1="220" x2="370" y2="220" stroke="var(--sys-color-accent-primary)" stroke-width="1.5" />
+          <line x1="380" y1="220" x2="380" y2="210" stroke="var(--sys-color-accent-primary)" stroke-width="1.5" />
+
+          <!-- Block A: Didactic Orchestrator -->
+          <rect x="40" y="45" width="120" height="40" rx="4" fill="var(--sys-color-surface-raised)" stroke="var(--sys-color-border-subtle)" />
+          <text x="100" y="69" fill="var(--sys-color-text-primary)" font-family="var(--sys-font-code-family)" font-size="10" text-anchor="middle">Didactic Orchestrator</text>
+          
+          <!-- Block B: Agent Registry -->
+          <rect x="240" y="45" width="120" height="40" rx="4" fill="var(--sys-color-surface-raised)" stroke="var(--sys-color-border-subtle)" />
+          <text x="300" y="69" fill="var(--sys-color-text-primary)" font-family="var(--sys-font-code-family)" font-size="10" text-anchor="middle">Agent Registry</text>
+
+          <!-- Block C: Evidence Trail -->
+          <rect x="140" y="145" width="120" height="40" rx="4" fill="var(--sys-color-surface-raised)" stroke="var(--sys-color-border-subtle)" />
+          <text x="200" y="169" fill="var(--sys-color-text-primary)" font-family="var(--sys-font-code-family)" font-size="10" text-anchor="middle">Evidence System</text>
+
+          <!-- Connectors -->
+          <path d="M160 65 L240 65" stroke="var(--sys-color-accent-primary)" stroke-dasharray="3 3" />
+          <path d="M100 85 L100 120 L140 165" stroke="var(--sys-color-accent-primary)" stroke-opacity="0.6" />
+          <path d="M300 85 L300 120 L260 165" stroke="var(--sys-color-accent-primary)" stroke-opacity="0.6" />
+          
+          <circle cx="200" cy="65" r="3" fill="var(--sys-color-accent-primary)" />
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stage 2: Knowledge Observatory -->
+  <section class="nv-observatory-section nv-section-observatory" aria-labelledby="observatory-title">
+    <div class="nv-section-grid nv-grid-reverse">
+      <div class="nv-section-copy">
+        <p class="nv-section-kicker">02 // Knowledge Observatory</p>
+        <h2 id="observatory-title" class="nv-section-title">Not a Course List. A Map of Understanding.</h2>
+        <p class="nv-section-text">
+          Courses structure learning linearly, creating knowledge silos. NeuralVerse projects curriculum modules into a comprehensive knowledge graph. As you explore concepts (such as Vector Embeddings or Sparse Representation), the platform traces parent requirements and child dependents, mapping your progress dynamically.
+        </p>
+      </div>
+      <div class="nv-section-illustration">
+        <div class="nv-concept-atlas">
+          <div class="nv-atlas-halo"></div>
+          <div class="nv-atlas-grid"></div>
+          <div class="nv-atlas-node nv-atlas-node--active" style="top: 25%; left: 30%;">
+            <span class="nv-atlas-label">Embeddings</span>
+          </div>
+          <div class="nv-atlas-node" style="top: 50%; left: 50%;">
+            <span class="nv-atlas-label">Attention</span>
+          </div>
+          <div class="nv-atlas-node" style="top: 75%; left: 25%;">
+            <span class="nv-atlas-label">Retrieval</span>
+          </div>
+          <div class="nv-atlas-node" style="top: 40%; left: 75%;">
+            <span class="nv-atlas-label">Evaluation</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stage 3 & 4: Learning Graph & Research (Editorial Panels) -->
+  <section class="nv-observatory-section nv-section-panels" aria-labelledby="panels-title">
+    <p class="nv-section-kicker">03 & 04 // Mathematical Grounding & Genealogy</p>
+    <h2 id="panels-title" class="nv-section-title nv-title-center">Built for Rigorous Development.</h2>
+    
+    <!-- 2+1 Editorial layout -->
+    <div class="nv-editorial-layout">
+      <!-- Row 1: Two cards -->
+      <div class="nv-panel-row">
+        <article class="nv-scientific-panel">
+          <div class="nv-panel-header">
+            <span class="nv-panel-idx">GEN-01</span>
+            <h3>Traceable Knowledge</h3>
+          </div>
+          <div class="nv-panel-visual">
+            <svg viewBox="0 0 100 40" fill="none" class="nv-mini-svg">
+              <circle cx="20" cy="20" r="4" fill="var(--sys-color-accent-primary)" />
+              <circle cx="50" cy="20" r="4" fill="var(--sys-color-accent-primary)" />
+              <circle cx="80" cy="20" r="4" fill="var(--sys-color-accent-primary)" />
+              <line x1="24" y1="20" x2="46" y2="20" stroke="var(--sys-color-accent-primary)" stroke-dasharray="2 2" />
+              <line x1="54" y1="20" x2="76" y2="20" stroke="var(--sys-color-accent-primary)" />
+            </svg>
+          </div>
+          <p class="nv-panel-desc">All concepts, verified answers, and agent evaluations reference peer-reviewed research papers and documentation. No raw claims without evidence.</p>
+        </article>
+
+        <article class="nv-scientific-panel">
+          <div class="nv-panel-header">
+            <span class="nv-panel-idx">GEN-02</span>
+            <h3>Reproducible Labs</h3>
+          </div>
+          <div class="nv-panel-visual">
+            <svg viewBox="0 0 100 40" fill="none" class="nv-mini-svg">
+              <rect x="10" y="10" width="20" height="20" fill="none" stroke="var(--sys-color-accent-primary)" stroke-width="1.5"/>
+              <path d="M40 20 L60 20" stroke="var(--sys-color-accent-primary)" stroke-width="1.5" />
+              <rect x="70" y="10" width="20" height="20" fill="var(--sys-color-accent-primary)" opacity="0.4" stroke="var(--sys-color-accent-primary)" stroke-width="1.5"/>
+            </svg>
+          </div>
+          <p class="nv-panel-desc">Interactive model simulators run in sandboxed JavaScript loops locally. Play with hyperparameters and immediately see analytical evaluations.</p>
+        </article>
+      </div>
+
+      <!-- Row 2: Large feature card -->
+      <article class="nv-scientific-panel nv-panel-featured">
+        <div class="nv-featured-grid">
+          <div class="nv-featured-copy">
+            <span class="nv-panel-idx">GEN-03</span>
+            <h3>Cumulative Research Trails</h3>
+            <p class="nv-panel-desc">
+              NeuralVerse connects your learning sessions to a semantic database. When you review concepts or execute labs, a structured memory graph grows locally on your browser. Your notes, bookmarks, and evaluations compound over time, providing a traceable path to AI mastery.
+            </p>
+          </div>
+          <div class="nv-featured-visual">
+            <svg viewBox="0 0 200 120" fill="none" class="nv-medium-svg">
+              <circle cx="100" cy="60" r="45" stroke="var(--sys-color-border-subtle)" stroke-width="1" />
+              <circle cx="100" cy="60" r="25" stroke="var(--sys-color-border-subtle)" stroke-width="1" stroke-dasharray="2 4" />
+              <!-- Web of nodes -->
+              <g fill="var(--sys-color-accent-primary)">
+                <circle cx="100" cy="15" r="4" />
+                <circle cx="145" cy="60" r="4" />
+                <circle cx="100" cy="105" r="4" />
+                <circle cx="55" cy="60" r="4" />
+                <circle cx="100" cy="60" r="5" />
+              </g>
+              <line x1="100" y1="19" x2="100" y2="55" stroke="var(--sys-color-accent-primary)" stroke-opacity="0.4" />
+              <line x1="141" y1="60" x2="105" y2="60" stroke="var(--sys-color-accent-primary)" stroke-opacity="0.4" />
+              <line x1="100" y1="101" x2="100" y2="65" stroke="var(--sys-color-accent-primary)" stroke-opacity="0.4" />
+              <line x1="59" y1="60" x2="95" y2="60" stroke="var(--sys-color-accent-primary)" stroke-opacity="0.4" />
+            </svg>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- Stage 5 & 6: Laboratories & Applications -->
+  <section class="nv-observatory-section nv-section-labs" aria-labelledby="labs-title">
+    <div class="nv-section-grid">
+      <div class="nv-section-copy">
+        <p class="nv-section-kicker">05 & 06 // Laboratories & Transfer</p>
+        <h2 id="labs-title" class="nv-section-title">Deterministic Local Experimentation.</h2>
+        <p class="nv-section-text">
+          Run neural nets, calculate cosine similarities, construct decision boundaries, or visualize embedding projections without external servers. NeuralVerse hosts local laboratory instruments where mathematical theories become interactively inspectable.
+        </p>
+        <div class="nv-lab-metrics">
+          <div class="nv-metric-item">
+            <span class="nv-metric-no">12+</span>
+            <span class="nv-metric-txt">Interactive Simulators</span>
+          </div>
+          <div class="nv-metric-item">
+            <span class="nv-metric-no">100%</span>
+            <span class="nv-metric-txt">Local Execution</span>
+          </div>
+        </div>
+      </div>
+      <div class="nv-section-illustration">
+        <div class="nv-observatory-console">
+          <div class="nv-console-screen">
+            <div class="nv-screen-header">
+              <span class="nv-screen-title">COSINE_SIMILARITY_ENGINE</span>
+              <span class="nv-screen-status">READY</span>
+            </div>
+            <div class="nv-screen-body">
+              <div class="nv-vector-graph">
+                <!-- Simple coordinate system -->
+                <line x1="10" y1="90" x2="90" y2="90" stroke="var(--sys-color-border-subtle)" stroke-width="1"/>
+                <line x1="10" y1="10" x2="10" y2="90" stroke="var(--sys-color-border-subtle)" stroke-width="1"/>
+                <!-- Vectors -->
+                <line x1="10" y1="90" x2="60" y2="30" stroke="var(--sys-color-accent-primary)" stroke-width="2" marker-end="url(#arrow)"/>
+                <line x1="10" y1="90" x2="80" y2="70" stroke="var(--sys-color-accent-primary)" stroke-width="2" stroke-opacity="0.5"/>
+                <!-- Angle arc -->
+                <path d="M 30 80 A 20 20 0 0 0 25 70" fill="none" stroke="var(--sys-color-accent-primary)" stroke-width="1" />
               </div>
-              <p class="nv-empty-state__message">
-                NeuralVerse is an advanced agentic scientific platform designed to orchestrate reinforcement learning pipelines, cognitive modeling tasks, and specialized deep learning paths.
-              </p>
-              <div class="nv-empty-state__actions">
-                <a href="#/learning" class="nv-button" data-variant="primary">View Learning Paths</a>
+              <div class="nv-vector-data">
+                <span class="nv-data-label">VEC_A: [0.82, 0.57]</span>
+                <span class="nv-data-label">VEC_B: [0.94, 0.12]</span>
+                <span class="nv-data-value">SIMILARITY: 0.884</span>
               </div>
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stage 7 & 8: Projects & Curriculum -->
+  <section class="nv-observatory-section nv-section-curriculum" aria-labelledby="curriculum-title">
+    <div class="nv-section-grid nv-grid-reverse">
+      <div class="nv-section-copy">
+        <p class="nv-section-kicker">07 & 08 // Projects & Syllabus</p>
+        <h2 id="curriculum-title" class="nv-section-title">An Structured Path to Mastery.</h2>
+        <p class="nv-section-text">
+          Progress from the foundations of machine learning up to frontier autonomous systems. The curriculum is mapped as modular competencies, requiring you to write code, solve mathematical challenges, and build actual pipelines to progress.
+        </p>
+      </div>
+      <div class="nv-section-illustration">
+        <div class="nv-curriculum-roadmap">
+          <div class="nv-roadmap-line"></div>
+          
+          <div class="nv-roadmap-checkpoint">
+            <span class="nv-cp-dot nv-cp-dot--completed"></span>
+            <div class="nv-cp-content">
+              <h4>01 // Classical Foundations</h4>
+              <p>Bayesian classification, dimensionality reduction, SVMs</p>
+            </div>
+          </div>
+          
+          <div class="nv-roadmap-checkpoint">
+            <span class="nv-cp-dot nv-cp-dot--active"></span>
+            <div class="nv-cp-content">
+              <h4>02 // Vector Representation</h4>
+              <p>Cosine distance, dense index structures, semantic search</p>
+            </div>
+          </div>
+          
+          <div class="nv-roadmap-checkpoint">
+            <span class="nv-cp-dot"></span>
+            <div class="nv-cp-content">
+              <h4>03 // RAG Systems</h4>
+              <p>Chunking strategies, metadata filtering, verification</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stage 9 & 10: Evidence & Start Learning (CTA Terminal) -->
+  <section class="nv-observatory-section nv-section-cta" aria-labelledby="cta-title">
+    <div class="nv-cta-terminal">
+      <div class="nv-terminal-header">
+        <span class="nv-terminal-status-dot"></span>
+        <h2 id="cta-title">INITIATE OBSERVATORY ACCESS</h2>
+      </div>
+      <p class="nv-terminal-desc">
+        Begin your exploration of governed machine learning. Access the curriculum, open laboratories, and build your private local knowledge repository.
+      </p>
+      <div class="nv-terminal-actions">
+        <a href="#/learning" class="nv-button" data-variant="primary">Start Learning</a>
+        <a href="#/workspace" class="nv-button" data-variant="ghost">Open Workspace</a>
+      </div>
+      <div class="nv-terminal-footer">
+        <span>SECURITY_LEVEL: VERIFIED</span>
+        <span>DATABASE_STATUS: PERSISTED_LOCAL</span>
+      </div>
+    </div>
+  </section>
+</section>
       `,
       learning: `
         <div class="nv-stack nv-stack--gap-md">
-          <div class="nv-stack nv-stack--gap-md" data-curriculum-root>
+          <div class="nv-stack nv-stack--gap-md">
             <h1 class="nv-sr-only">Learning Paths</h1>
           </div>
         </div>

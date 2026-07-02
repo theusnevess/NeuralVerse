@@ -452,10 +452,17 @@ function runSourceChecks() {
   }
   for (const f of files.filter(x => x.endsWith('.js'))) {
     try {
-      require('child_process').execSync(`node --check ${f}`, { cwd: REPO, stdio: 'pipe' });
+      const full = path.join(REPO, f);
+      const tempFile = full.replace(/\.js$/, '.mjs');
+      fs.copyFileSync(full, tempFile);
+      try {
+        require('child_process').execSync(`node --check ${JSON.stringify(tempFile)}`, { stdio: 'pipe' });
+      } finally {
+        try { fs.unlinkSync(tempFile); } catch (e) {}
+      }
       pass('static', `Syntax OK: ${f}`);
     } catch (e) {
-      fail('critical', 'static', `Syntax error in ${f}`);
+      fail('critical', 'static', `Syntax error in ${f}: ${e.message}`);
     }
   }
 }

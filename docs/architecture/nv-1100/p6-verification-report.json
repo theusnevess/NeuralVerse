@@ -1,6 +1,6 @@
 {
   "audit": "NV-1100-P6 Answer Verification Validator",
-  "generatedAt": "2026-06-26T23:03:08.208Z",
+  "generatedAt": "2026-06-30T17:28:01.293Z",
   "decision": "READY",
   "severityCounts": {
     "critical": 0,
@@ -38,7 +38,7 @@
           "expected": "attention mechanism",
           "actual": "attention mechanism"
         },
-        "timestamp": "2026-06-26T23:03:08.205Z"
+        "timestamp": "2026-06-30T17:28:01.290Z"
       },
       "ok": true
     },
@@ -60,7 +60,7 @@
           "expected": "attention mechanism",
           "actual": "self attention"
         },
-        "timestamp": "2026-06-26T23:03:08.206Z"
+        "timestamp": "2026-06-30T17:28:01.290Z"
       },
       "ok": true
     },
@@ -82,7 +82,7 @@
           "expected": "B",
           "actual": "b"
         },
-        "timestamp": "2026-06-26T23:03:08.206Z"
+        "timestamp": "2026-06-30T17:28:01.290Z"
       },
       "ok": true
     },
@@ -104,7 +104,7 @@
           "expected": "b",
           "actual": "b"
         },
-        "timestamp": "2026-06-26T23:03:08.206Z"
+        "timestamp": "2026-06-30T17:28:01.290Z"
       },
       "ok": true
     },
@@ -126,7 +126,7 @@
           "expectedNormalized": "atencao",
           "actualNormalized": "atencao"
         },
-        "timestamp": "2026-06-26T23:03:08.206Z"
+        "timestamp": "2026-06-30T17:28:01.290Z"
       },
       "ok": true
     },
@@ -148,7 +148,7 @@
           "expectedNormalized": "hello world",
           "actualNormalized": "hello world"
         },
-        "timestamp": "2026-06-26T23:03:08.206Z"
+        "timestamp": "2026-06-30T17:28:01.291Z"
       },
       "ok": true
     },
@@ -170,7 +170,7 @@
           "expected": 0.75,
           "actual": 0.75
         },
-        "timestamp": "2026-06-26T23:03:08.206Z"
+        "timestamp": "2026-06-30T17:28:01.291Z"
       },
       "ok": true
     },
@@ -189,7 +189,7 @@
         "partiallyCheckable": false,
         "message": "Your answer is not a valid number.",
         "details": {},
-        "timestamp": "2026-06-26T23:03:08.206Z"
+        "timestamp": "2026-06-30T17:28:01.291Z"
       },
       "ok": true
     },
@@ -211,7 +211,7 @@
           "expected": 0.75,
           "actual": 0.76
         },
-        "timestamp": "2026-06-26T23:03:08.206Z"
+        "timestamp": "2026-06-30T17:28:01.291Z"
       },
       "ok": true
     },
@@ -233,7 +233,7 @@
           "expected": 1000,
           "actual": 1000
         },
-        "timestamp": "2026-06-26T23:03:08.206Z"
+        "timestamp": "2026-06-30T17:28:01.291Z"
       },
       "ok": true
     },
@@ -258,7 +258,7 @@
           "absoluteTolerance": 0.01,
           "matchReason": "absolute"
         },
-        "timestamp": "2026-06-26T23:03:08.206Z"
+        "timestamp": "2026-06-30T17:28:01.291Z"
       },
       "ok": true
     },
@@ -283,7 +283,7 @@
           "absoluteTolerance": 0.01,
           "matchReason": "none"
         },
-        "timestamp": "2026-06-26T23:03:08.206Z"
+        "timestamp": "2026-06-30T17:28:01.291Z"
       },
       "ok": true
     },
@@ -308,7 +308,7 @@
           "relativeTolerance": 0.02,
           "matchReason": "relative"
         },
-        "timestamp": "2026-06-26T23:03:08.206Z"
+        "timestamp": "2026-06-30T17:28:01.291Z"
       },
       "ok": true
     },
@@ -333,7 +333,7 @@
           "relativeTolerance": 0.01,
           "matchReason": "none"
         },
-        "timestamp": "2026-06-26T23:03:08.206Z"
+        "timestamp": "2026-06-30T17:28:01.291Z"
       },
       "ok": true
     },
@@ -352,7 +352,7 @@
         "partiallyCheckable": false,
         "message": "Invalid absoluteTolerance.",
         "details": {},
-        "timestamp": "2026-06-26T23:03:08.206Z"
+        "timestamp": "2026-06-30T17:28:01.291Z"
       },
       "ok": true
     },
@@ -374,7 +374,7 @@
           "expected": "B",
           "actual": "B"
         },
-        "timestamp": "2026-06-26T23:03:08.206Z"
+        "timestamp": "2026-06-30T17:28:01.291Z"
       },
       "ok": true
     },
@@ -396,7 +396,7 @@
           "expected": "B",
           "actual": "A"
         },
-        "timestamp": "2026-06-26T23:03:08.206Z"
+        "timestamp": "2026-06-30T17:28:01.291Z"
       },
       "ok": true
     },
@@ -425,7 +425,7 @@
           ],
           "orderSensitive": false
         },
-        "timestamp": "2026-06-26T23:03:08.207Z"
+        "timestamp": "2026-06-30T17:28:01.292Z"
       },
       "ok": true
     },
@@ -454,7 +454,7 @@
           ],
           "orderSensitive": true
         },
-        "timestamp": "2026-06-26T23:03:08.207Z"
+        "timestamp": "2026-06-30T17:28:01.292Z"
       },
       "ok": true
     },
@@ -484,7 +484,7 @@
           ],
           "orderSensitive": false
         },
-        "timestamp": "2026-06-26T23:03:08.207Z"
+        "timestamp": "2026-06-30T17:28:01.292Z"
       },
       "ok": true
     },
@@ -516,7 +516,7 @@
           "missingKeywords": [],
           "minRequired": 3
         },
-        "timestamp": "2026-06-26T23:03:08.207Z"
+        "timestamp": "2026-06-30T17:28:01.292Z"
       },
       "ok": true
     },
@@ -549,7 +549,7 @@
           ],
           "minRequired": 3
         },
-        "timestamp": "2026-06-26T23:03:08.207Z"
+        "timestamp": "2026-06-30T17:28:01.292Z"
       },
       "ok": true
     },
@@ -582,7 +582,7 @@
           ],
           "minRequired": 2
         },
-        "timestamp": "2026-06-26T23:03:08.207Z"
+        "timestamp": "2026-06-30T17:28:01.292Z"
       },
       "ok": true
     },
@@ -612,7 +612,7 @@
             "attend"
           ]
         },
-        "timestamp": "2026-06-26T23:03:08.207Z"
+        "timestamp": "2026-06-30T17:28:01.292Z"
       },
       "ok": true
     },
@@ -642,7 +642,7 @@
             "attend"
           ]
         },
-        "timestamp": "2026-06-26T23:03:08.207Z"
+        "timestamp": "2026-06-30T17:28:01.292Z"
       },
       "ok": true
     },
@@ -672,7 +672,7 @@
             "recall"
           ]
         },
-        "timestamp": "2026-06-26T23:03:08.207Z"
+        "timestamp": "2026-06-30T17:28:01.292Z"
       },
       "ok": true
     },
@@ -700,7 +700,7 @@
             "f1"
           ]
         },
-        "timestamp": "2026-06-26T23:03:08.207Z"
+        "timestamp": "2026-06-30T17:28:01.292Z"
       },
       "ok": true
     },
@@ -722,7 +722,7 @@
           "expected": true,
           "actual": true
         },
-        "timestamp": "2026-06-26T23:03:08.207Z"
+        "timestamp": "2026-06-30T17:28:01.292Z"
       },
       "ok": true
     },
@@ -744,7 +744,7 @@
           "expected": true,
           "actual": true
         },
-        "timestamp": "2026-06-26T23:03:08.207Z"
+        "timestamp": "2026-06-30T17:28:01.292Z"
       },
       "ok": true
     },
@@ -766,7 +766,7 @@
           "expected": true,
           "actual": false
         },
-        "timestamp": "2026-06-26T23:03:08.207Z"
+        "timestamp": "2026-06-30T17:28:01.292Z"
       },
       "ok": true
     },
@@ -788,7 +788,7 @@
           "expected": true,
           "actual": true
         },
-        "timestamp": "2026-06-26T23:03:08.207Z"
+        "timestamp": "2026-06-30T17:28:01.292Z"
       },
       "ok": true
     },
@@ -810,7 +810,7 @@
           "expectedNormalized": "ymxb",
           "actualNormalized": "ymxb"
         },
-        "timestamp": "2026-06-26T23:03:08.207Z"
+        "timestamp": "2026-06-30T17:28:01.292Z"
       },
       "ok": true
     },
@@ -832,7 +832,7 @@
           "expectedNormalized": "ymxb",
           "actualNormalized": "ymx2c"
         },
-        "timestamp": "2026-06-26T23:03:08.207Z"
+        "timestamp": "2026-06-30T17:28:01.292Z"
       },
       "ok": true
     },
@@ -861,7 +861,7 @@
           ],
           "missingCriteria": []
         },
-        "timestamp": "2026-06-26T23:03:08.207Z"
+        "timestamp": "2026-06-30T17:28:01.293Z"
       },
       "ok": true
     },
@@ -891,7 +891,7 @@
             "mentions weighted sum"
           ]
         },
-        "timestamp": "2026-06-26T23:03:08.207Z"
+        "timestamp": "2026-06-30T17:28:01.293Z"
       },
       "ok": true
     },
@@ -920,7 +920,7 @@
             "mentions weighted sum"
           ]
         },
-        "timestamp": "2026-06-26T23:03:08.207Z"
+        "timestamp": "2026-06-30T17:28:01.293Z"
       },
       "ok": true
     },
@@ -942,7 +942,7 @@
           "reason": "unsupported-type",
           "type": "essay_grading"
         },
-        "timestamp": "2026-06-26T23:03:08.207Z"
+        "timestamp": "2026-06-30T17:28:01.293Z"
       },
       "ok": true
     },
@@ -963,7 +963,7 @@
         "details": {
           "reason": "bad-input"
         },
-        "timestamp": "2026-06-26T23:03:08.207Z"
+        "timestamp": "2026-06-30T17:28:01.293Z"
       },
       "ok": true
     },
@@ -984,7 +984,7 @@
         "details": {
           "reason": "missing-type"
         },
-        "timestamp": "2026-06-26T23:03:08.207Z"
+        "timestamp": "2026-06-30T17:28:01.293Z"
       },
       "ok": true
     },
@@ -1006,7 +1006,7 @@
           "expected": "safe",
           "actual": "<script>alert(1)</script>"
         },
-        "timestamp": "2026-06-26T23:03:08.207Z"
+        "timestamp": "2026-06-30T17:28:01.293Z"
       },
       "ok": true
     },
@@ -1028,7 +1028,7 @@
           "expected": "safe",
           "actual": "javascript:alert(1)"
         },
-        "timestamp": "2026-06-26T23:03:08.207Z"
+        "timestamp": "2026-06-30T17:28:01.293Z"
       },
       "ok": true
     }

@@ -164,5 +164,3 @@ if (typeof module !== 'undefined' && module.exports) {
     hasForbiddenTerm: hasForbiddenTerm
   };
 }
-
-export { tokenizeSource, stripComments, hasForbiddenPattern, hasForbiddenTerm };

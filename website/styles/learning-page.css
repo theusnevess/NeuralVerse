@@ -1,0 +1,670 @@
+/* =========================================================
+   Learning Workspace — Phase 3 Premium Polish
+   Hero · Roadmap · Philosophy · Workflow · Future Content
+   ========================================================= */
+
+[data-learning-content][hidden],
+[data-learning-metrics][hidden],
+[data-learning-filters][hidden],
+[data-learning-empty][hidden],
+. nv-competency-roadmap[hidden],
+.nv-philosophy[hidden],
+.nv-workflow[hidden],
+.nv-future-content[hidden] {
+  display: none !important;
+}
+
+body:has(.nv-learning-hero) [data-workspace-empty-state] {
+  display: none !important;
+}
+
+/* ── Hero ────────────────────────────────────────────── */
+
+.nv-learning-hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-block-size: clamp(34rem, 72vh, 46rem);
+  padding: clamp(3.5rem, 7vw, 6rem) clamp(var(--sys-space-inset-md), 5vw, var(--sys-space-inset-xl)) clamp(1.75rem, 3.5vw, 2.5rem);
+  overflow: hidden;
+  isolation: isolate;
+  gap: clamp(2rem, 4vw, 3rem);
+}
+
+.nv-learning-hero__ambient {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  display: grid;
+  place-items: center;
+}
+
+.nv-learning-hero__glow {
+  inline-size: 70%;
+  block-size: 50%;
+  border-radius: 50%;
+  filter: blur(120px);
+  background: radial-gradient(circle, color-mix(in srgb, var(--sys-color-accent-primary) 7%, transparent) 0%, transparent 70%);
+  opacity: 0.7;
+  animation: nv-hero-ambient-in 1.6s var(--motion-easing-decelerate, ease-out) 0.1s both;
+}
+
+@keyframes nv-hero-ambient-in {
+  from { opacity: 0; }
+  to { opacity: 0.7; }
+}
+
+.nv-learning-hero__content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-inline-size: 44rem;
+  gap: 1.25rem;
+  z-index: 1;
+}
+
+.nv-learning-hero__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  color: var(--sys-color-accent-primary);
+  font-family: var(--sys-font-code-family);
+  font-size: 0.6875rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 500;
+  opacity: 0;
+  animation: nv-hero-fade-up 0.7s var(--motion-easing-decelerate, ease-out) 0.15s forwards;
+}
+
+.nv-learning-hero__eyebrow-mark {
+  display: inline-block;
+  inline-size: 1.5rem;
+  block-size: 1px;
+  background: currentColor;
+  opacity: 0.6;
+}
+
+.nv-learning-hero__title {
+  margin: 0;
+  font-family: var(--sys-font-display-family);
+  font-size: clamp(2.25rem, 4.6vw, 3.5rem);
+  font-weight: 600;
+  line-height: 1.04;
+  letter-spacing: -0.025em;
+  color: var(--sys-color-text-primary);
+  text-wrap: balance;
+  opacity: 0;
+  animation: nv-hero-fade-up 0.8s var(--motion-easing-decelerate, ease-out) 0.3s forwards;
+}
+
+.nv-learning-hero__subtitle {
+  margin: 0;
+  max-inline-size: 42ch;
+  color: color-mix(in srgb, var(--sys-color-text-secondary) 88%, var(--sys-color-text-primary));
+  font-size: clamp(0.9375rem, 1.05vw, 1.0625rem);
+  line-height: 1.55;
+  letter-spacing: 0.002em;
+  opacity: 0;
+  animation: nv-hero-fade-up 0.8s var(--motion-easing-decelerate, ease-out) 0.45s forwards;
+}
+
+.nv-learning-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.625rem;
+  margin-block-start: 0.75rem;
+  opacity: 0;
+  animation: nv-hero-fade-up 0.8s var(--motion-easing-decelerate, ease-out) 0.6s forwards;
+}
+
+.nv-learning-hero__actions .nv-button--primary {
+  min-inline-size: 10.5rem;
+  transition: transform 0.2s var(--motion-easing-standard, ease), box-shadow 0.2s var(--motion-easing-standard, ease);
+}
+
+.nv-learning-hero__actions .nv-button--primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px color-mix(in srgb, var(--sys-color-accent-primary) 18%, transparent);
+}
+
+.nv-learning-hero__actions .nv-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+@keyframes nv-hero-fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Blueprint — sits BELOW CTAs, never behind typography */
+.nv-learning-hero__blueprint {
+  position: relative;
+  inline-size: 100%;
+  max-inline-size: 32rem;
+  margin-block-start: 0.25rem;
+  display: grid;
+  place-items: center;
+  color: var(--sys-color-accent-primary);
+  opacity: 0;
+  animation: nv-hero-fade-in 1.2s var(--motion-easing-decelerate, ease-out) 0.9s forwards;
+  z-index: 0;
+}
+
+.nv-curriculum-blueprint {
+  inline-size: 100%;
+  block-size: auto;
+  color: inherit;
+}
+
+.nv-bp-node--focus {
+  filter: drop-shadow(0 0 4px color-mix(in srgb, var(--sys-color-accent-primary) 50%, transparent));
+}
+
+@keyframes nv-hero-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nv-learning-hero__constellation,
+  .nv-learning-hero__ambient,
+  .nv-learning-hero__glow,
+  .nv-learning-hero__eyebrow,
+  .nv-learning-hero__title,
+  .nv-learning-hero__subtitle,
+  .nv-learning-hero__actions,
+  .nv-learning-hero__blueprint {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  .nv-bp-node--focus {
+    animation: none;
+  }
+}
+
+/* ── Section shared ────────────────────────────────────── */
+
+.nv-learning-section {
+  padding-block: clamp(3.5rem, 6vw, 5.5rem);
+  padding-inline: clamp(var(--sys-space-inset-md), 5vw, var(--sys-space-inset-xl));
+  max-inline-size: 78rem;
+  margin-inline: auto;
+  position: relative;
+}
+
+.nv-learning-section + .nv-learning-section::before {
+  content: "";
+  position: absolute;
+  inset-block-start: clamp(1.5rem, 2.5vw, 2rem);
+  inset-inline-start: 50%;
+  transform: translateX(-50%);
+  inline-size: clamp(2.5rem, 6vw, 4.5rem);
+  block-size: 1px;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--sys-color-accent-primary) 35%, transparent), transparent);
+  opacity: 0.6;
+}
+
+.nv-learning-section__header {
+  max-inline-size: 38rem;
+  margin: 0 auto clamp(2.5rem, 4vw, 3.5rem);
+  text-align: center;
+}
+
+.nv-learning-section__eyebrow {
+  margin: 0;
+  color: var(--sys-color-accent-primary);
+  font-family: var(--sys-font-code-family);
+  font-size: 0.6875rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 500;
+  margin-block-end: 0.875rem;
+}
+
+.nv-learning-section__title {
+  margin: 0;
+  font-family: var(--sys-font-display-family);
+  font-size: clamp(1.5rem, 2.2vw, 1.875rem);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.018em;
+  color: var(--sys-color-text-primary);
+}
+
+.nv-learning-section__description {
+  margin: 0.75rem auto 0;
+  max-inline-size: 46ch;
+  color: color-mix(in srgb, var(--sys-color-text-secondary) 88%, transparent);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+}
+
+/* ── Competency Roadmap ───────────────────────────────── */
+
+.nv-roadmap-track {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  max-inline-size: 46rem;
+  margin-inline: auto;
+}
+
+.nv-roadmap-track::before {
+  content: "";
+  position: absolute;
+  left: 0.4375rem;
+  top: 1rem;
+  bottom: 1rem;
+  inline-size: 1px;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    color-mix(in srgb, var(--sys-color-accent-primary) 22%, transparent) 8%,
+    color-mix(in srgb, var(--sys-color-accent-primary) 20%, transparent) 50%,
+    color-mix(in srgb, var(--sys-color-accent-primary) 14%, transparent) 92%,
+    transparent 100%
+  );
+}
+
+.nv-roadmap-node {
+  display: grid;
+  grid-template-columns: 1.25rem 1fr;
+  gap: 1.5rem;
+  padding-block: 1.625rem;
+  position: relative;
+}
+
+.nv-roadmap-node + .nv-roadmap-node {
+  border-top: 1px solid color-mix(in srgb, var(--sys-color-border-subtle) 30%, transparent);
+}
+
+.nv-roadmap-node__indicator {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-block-start: 0.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.nv-roadmap-node__dot {
+  display: block;
+  inline-size: 0.4375rem;
+  block-size: 0.4375rem;
+  border-radius: 50%;
+  background: var(--sys-color-accent-primary);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--sys-color-accent-primary) 8%, transparent);
+  transition: box-shadow 0.3s var(--motion-easing-standard, ease);
+}
+
+.nv-roadmap-node:hover .nv-roadmap-node__dot {
+  box-shadow: 0 0 0 5px color-mix(in srgb, var(--sys-color-accent-primary) 14%, transparent);
+}
+
+.nv-roadmap-node__body {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-areas:
+    "index title"
+    "index desc"
+    "index status";
+  column-gap: 1.25rem;
+  row-gap: 0.5rem;
+  align-items: start;
+}
+
+.nv-roadmap-node__index {
+  grid-area: index;
+  font-family: var(--sys-font-code-family);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: color-mix(in srgb, var(--sys-color-accent-primary) 55%, var(--sys-color-text-tertiary));
+  letter-spacing: 0.1em;
+  padding-block-start: 0.2rem;
+  align-self: start;
+}
+
+.nv-roadmap-node__title {
+  grid-area: title;
+  margin: 0;
+  font-family: var(--sys-font-display-family);
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--sys-color-text-primary);
+  letter-spacing: -0.008em;
+}
+
+.nv-roadmap-node__desc {
+  grid-area: desc;
+  margin: 0;
+  color: color-mix(in srgb, var(--sys-color-text-secondary) 90%, transparent);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  max-inline-size: 48ch;
+}
+
+.nv-roadmap-node__status {
+  grid-area: status;
+  display: inline-block;
+  padding: 0.1875rem 0.5625rem;
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--sys-color-accent-primary) 8%, transparent);
+  color: color-mix(in srgb, var(--sys-color-accent-primary) 85%, var(--sys-color-text-primary));
+  font-family: var(--sys-font-code-family);
+  font-size: 0.625rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  width: fit-content;
+  margin-block-start: 0.25rem;
+}
+
+@media (max-width: 48rem) {
+  .nv-roadmap-track::before {
+    left: 0.375rem;
+  }
+  .nv-roadmap-node {
+    grid-template-columns: 1rem 1fr;
+    gap: 1rem;
+    padding-block: 1.375rem;
+  }
+  .nv-roadmap-node__body {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "index"
+      "title"
+      "desc"
+      "status";
+    row-gap: 0.375rem;
+  }
+}
+
+/* ── Learning Philosophy ──────────────────────────────── */
+
+.nv-philosophy-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.nv-philosophy-card {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 1rem;
+  padding: 1.625rem 1.625rem 1.5rem;
+  border: 1px solid color-mix(in srgb, var(--sys-color-border-subtle) 70%, transparent);
+  border-radius: 12px;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--sys-color-text-primary) 2.5%, transparent),
+      transparent 60%
+    ),
+    color-mix(in srgb, var(--sys-color-surface-raised) 60%, transparent);
+  transition: border-color 0.3s var(--motion-easing-standard, ease),
+              background 0.3s var(--motion-easing-standard, ease),
+              transform 0.3s var(--motion-easing-standard, ease);
+  position: relative;
+}
+
+.nv-philosophy-card:hover {
+  border-color: color-mix(in srgb, var(--sys-color-accent-primary) 22%, var(--sys-color-border-subtle));
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--sys-color-text-primary) 4%, transparent),
+      transparent 60%
+    ),
+    color-mix(in srgb, var(--sys-color-surface-raised) 75%, transparent);
+  transform: translateY(-1px);
+}
+
+.nv-philosophy-card__icon {
+  inline-size: 1.5rem;
+  block-size: 1.5rem;
+  color: color-mix(in srgb, var(--sys-color-accent-primary) 65%, var(--sys-color-text-secondary));
+  transition: color 0.3s var(--motion-easing-standard, ease);
+}
+
+.nv-philosophy-card:hover .nv-philosophy-card__icon {
+  color: var(--sys-color-accent-primary);
+}
+
+.nv-philosophy-card__icon svg {
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.nv-philosophy-card__title {
+  margin: 0;
+  font-family: var(--sys-font-display-family);
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--sys-color-text-primary);
+  letter-spacing: -0.005em;
+}
+
+.nv-philosophy-card__text {
+  margin: 0;
+  color: color-mix(in srgb, var(--sys-color-text-secondary) 92%, transparent);
+  font-size: 0.9rem;
+  line-height: 1.55;
+  max-inline-size: 38ch;
+}
+
+@media (max-width: 48rem) {
+  .nv-philosophy-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Study Workflow ───────────────────────────────────── */
+
+.nv-workflow-steps {
+  display: grid;
+  gap: 0;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  max-inline-size: 50rem;
+  margin-inline: auto;
+}
+
+.nv-workflow-step {
+  display: grid;
+  grid-template-columns: 2.5rem 1fr 7rem;
+  gap: 1.5rem;
+  align-items: stretch;
+  padding: 1.375rem 0;
+  border-top: 1px solid color-mix(in srgb, var(--sys-color-border-subtle) 35%, transparent);
+  transition: background 0.3s var(--motion-easing-standard, ease);
+}
+
+.nv-workflow-step:last-child {
+  border-bottom: 1px solid color-mix(in srgb, var(--sys-color-border-subtle) 35%, transparent);
+}
+
+.nv-workflow-step:hover {
+  background: color-mix(in srgb, var(--sys-color-accent-primary) 2.5%, transparent);
+}
+
+.nv-workflow-step__index {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.nv-workflow-step__number {
+  font-family: var(--sys-font-code-family);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: color-mix(in srgb, var(--sys-color-accent-primary) 55%, var(--sys-color-text-tertiary));
+  letter-spacing: 0.1em;
+  padding-block-start: 0.25rem;
+}
+
+.nv-workflow-step__line {
+  display: none;
+}
+
+.nv-workflow-step__body {
+  display: grid;
+  gap: 0.375rem;
+  align-content: center;
+}
+
+.nv-workflow-step__title {
+  margin: 0;
+  font-family: var(--sys-font-display-family);
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--sys-color-text-primary);
+  letter-spacing: -0.005em;
+}
+
+.nv-workflow-step__desc {
+  margin: 0;
+  color: color-mix(in srgb, var(--sys-color-text-secondary) 90%, transparent);
+  font-size: 0.9rem;
+  line-height: 1.55;
+  max-inline-size: 48ch;
+}
+
+.nv-workflow-step__meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 0.25rem;
+  white-space: nowrap;
+}
+
+.nv-workflow-step__time {
+  font-family: var(--sys-font-code-family);
+  font-size: 0.75rem;
+  color: var(--sys-color-accent-primary);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.nv-workflow-step__label {
+  font-family: var(--sys-font-code-family);
+  font-size: 0.625rem;
+  color: color-mix(in srgb, var(--sys-color-text-tertiary) 75%, transparent);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+@media (max-width: 48rem) {
+  .nv-workflow-step {
+    grid-template-columns: 2rem 1fr;
+    padding: 1.125rem 0;
+    gap: 0.875rem;
+  }
+  .nv-workflow-step__meta {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.75rem;
+    padding-block-start: 0.5rem;
+    margin-block-start: 0.375rem;
+    border-top: 1px dashed color-mix(in srgb, var(--sys-color-border-subtle) 50%, transparent);
+  }
+}
+
+/* ── Future Content ───────────────────────────────────── */
+
+.nv-future-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.nv-future-card {
+  display: grid;
+  gap: 0.875rem;
+  padding: 1.5rem 1.5rem 1.375rem;
+  border: 1px dashed color-mix(in srgb, var(--sys-color-border-subtle) 80%, transparent);
+  border-radius: 12px;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--sys-color-text-primary) 1.5%, transparent),
+      transparent 50%
+    ),
+    color-mix(in srgb, var(--sys-color-surface-raised) 40%, transparent);
+  opacity: 0.78;
+  transition: opacity 0.3s var(--motion-easing-standard, ease),
+              border-color 0.3s var(--motion-easing-standard, ease),
+              background 0.3s var(--motion-easing-standard, ease);
+}
+
+.nv-future-card:hover {
+  opacity: 1;
+  border-color: color-mix(in srgb, var(--sys-color-accent-primary) 22%, var(--sys-color-border-subtle));
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--sys-color-text-primary) 3%, transparent),
+      transparent 50%
+    ),
+    color-mix(in srgb, var(--sys-color-surface-raised) 55%, transparent);
+}
+
+.nv-future-card__icon {
+  inline-size: 1.375rem;
+  block-size: 1.375rem;
+  color: color-mix(in srgb, var(--sys-color-accent-primary) 55%, var(--sys-color-text-secondary));
+  transition: color 0.3s var(--motion-easing-standard, ease);
+}
+
+.nv-future-card:hover .nv-future-card__icon {
+  color: var(--sys-color-accent-primary);
+}
+
+.nv-future-card__icon svg {
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.nv-future-card__title {
+  margin: 0;
+  font-family: var(--sys-font-display-family);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--sys-color-text-primary);
+  letter-spacing: -0.003em;
+}
+
+.nv-future-card__desc {
+  margin: 0;
+  color: color-mix(in srgb, var(--sys-color-text-secondary) 88%, transparent);
+  font-size: 0.85rem;
+  line-height: 1.55;
+  max-inline-size: 36ch;
+}
+
+@media (max-width: 48rem) {
+  .nv-future-grid {
+    grid-template-columns: 1fr;
+  }
+}

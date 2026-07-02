@@ -1,10 +1,10 @@
 {
   "audit": "NV-1300-D2X",
-  "timestamp": "2026-06-26T23:03:09.078Z",
+  "timestamp": "2026-06-30T17:28:02.815Z",
   "summary": {
     "critical": 0,
     "high": 0,
-    "medium": 2,
+    "medium": 1,
     "verdict": "READY"
   },
   "architectureMetrics": {
@@ -18,11 +18,11 @@
     "performance": {
       "planner": 0.01,
       "strategy": 0.01,
-      "ranking": 0,
+      "ranking": 0.01,
       "claims": 0.01,
       "consensus": 0,
       "report": 0.01,
-      "pipeline": 0.04
+      "pipeline": 0.05
     }
   },
   "sections": {
@@ -201,11 +201,11 @@
       "metrics": {
         "planner": 0.01,
         "strategy": 0.01,
-        "ranking": 0,
+        "ranking": 0.01,
         "claims": 0.01,
         "consensus": 0,
         "report": 0.01,
-        "pipeline": 0.04
+        "pipeline": 0.05
       },
       "status": "PASS"
     },
@@ -266,9 +266,9 @@
     },
     "44": {
       "name": "Screenshots",
-      "available": false,
+      "available": true,
       "count": 0,
-      "status": "SKIP"
+      "status": "PENDING"
     }
   },
   "findings": {
@@ -278,10 +278,6 @@
       {
         "section": "28",
         "message": "Responsive audit requires Playwright — environment block"
-      },
-      {
-        "section": "44",
-        "message": "Playwright unavailable — screenshots skipped (environment block)"
       }
     ]
   }

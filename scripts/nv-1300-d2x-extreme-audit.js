@@ -149,8 +149,14 @@ function section3Syntax() {
   const results = [];
   for (const mod of D2_MODULES) {
     const filePath = path.join(BASE, mod + '.js');
+    const tempFile = filePath.replace(/\.js$/, '.mjs');
     try {
-      execSync('node --check ' + JSON.stringify(filePath), { stdio: 'pipe' });
+      fs.copyFileSync(filePath, tempFile);
+      try {
+        execSync('node --check ' + JSON.stringify(tempFile), { stdio: 'pipe' });
+      } finally {
+        try { fs.unlinkSync(tempFile); } catch (e) {}
+      }
       results.push({ module: mod, status: 'PASS' });
     } catch (e) {
       results.push({ module: mod, status: 'FAIL', error: e.message.substring(0, 100) });

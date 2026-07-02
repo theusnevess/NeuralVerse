@@ -1,6 +1,6 @@
 {
   "audit": "NV-1100-P5 Spaced Repetition Engine Validator",
-  "generatedAt": "2026-06-26T23:03:07.737Z",
+  "generatedAt": "2026-06-30T17:27:59.777Z",
   "decision": "READY",
   "severityCounts": {
     "critical": 0,

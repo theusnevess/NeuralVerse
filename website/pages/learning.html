@@ -1,11 +1,356 @@
-<!-- Learning Path View - rendered from the canonical NV-800 curriculum index -->
-<section class="nv-learning-page">
-  <div class="nv-stack nv-stack--gap-md" data-curriculum-root>
-    <h1 class="nv-sr-only">Learning Paths</h1>
+<!-- Learning Workspace — Phase 3 Premium Polish -->
+<section class="nv-learning-page" data-learning-page>
+
+  <!-- HERO — Knowledge Observatory -->
+  <div class="nv-learning-hero" data-learning-hero>
+    <div class="nv-learning-hero__ambient" aria-hidden="true">
+      <div class="nv-learning-hero__glow"></div>
+    </div>
+
+    <div class="nv-learning-hero__content">
+      <p class="nv-learning-hero__eyebrow">
+        <span class="nv-learning-hero__eyebrow-mark" aria-hidden="true"></span>
+        <span>Curriculum</span>
+      </p>
+      <h1 class="nv-learning-hero__title">Your Learning Journey</h1>
+      <p class="nv-learning-hero__subtitle">
+        Structured paths through AI research, machine learning foundations, and advanced topics.
+        From fundamentals to frontier — at your own pace.
+      </p>
+
+      <div class="nv-learning-hero__actions">
+        <button type="button" class="nv-button nv-button--primary" disabled aria-describedby="hero-action-note">
+          Explore Curriculum
+        </button>
+        <button type="button" class="nv-button nv-button--ghost" disabled>
+          Open Knowledge Base
+        </button>
+      </div>
+      <p class="nv-sr-only" id="hero-action-note">Actions will be available once curriculum content is added.</p>
+    </div>
+
+    <!-- Blueprint — minimal measurement, sits below CTAs, never behind typography -->
+    <div class="nv-learning-hero__blueprint" aria-hidden="true">
+      <svg viewBox="0 0 480 96" fill="none" xmlns="http://www.w3.org/2000/svg" class="nv-curriculum-blueprint" preserveAspectRatio="xMidYMid meet">
+        <!-- Left + right measurement caps -->
+        <line x1="14" y1="38" x2="14" y2="58" stroke="currentColor" stroke-width="0.4" opacity="0.5"/>
+        <line x1="466" y1="38" x2="466" y2="58" stroke="currentColor" stroke-width="0.4" opacity="0.5"/>
+
+        <!-- Horizontal baseline -->
+        <line x1="14" y1="48" x2="466" y2="48" stroke="currentColor" stroke-width="0.4" opacity="0.35"/>
+
+        <!-- Stage ticks — quiet, evenly spaced -->
+        <g stroke="currentColor" stroke-linecap="round">
+          <line x1="60"  y1="45" x2="60"  y2="51" stroke-width="0.5" opacity="0.45"/>
+          <line x1="130" y1="45" x2="130" y2="51" stroke-width="0.5" opacity="0.45"/>
+          <line x1="200" y1="45" x2="200" y2="51" stroke-width="0.5" opacity="0.45"/>
+          <line x1="270" y1="44" x2="270" y2="52" stroke-width="0.7" opacity="0.9"/>
+          <line x1="340" y1="45" x2="340" y2="51" stroke-width="0.5" opacity="0.45"/>
+          <line x1="410" y1="45" x2="410" y2="51" stroke-width="0.5" opacity="0.45"/>
+        </g>
+
+        <!-- Current focus — single dot, the only saturated mark -->
+        <circle class="nv-bp-node--focus" cx="270" cy="48" r="2.4" fill="currentColor" opacity="0.9"/>
+
+        <!-- Single label, far from typography -->
+        <text x="14" y="76" font-size="6" font-family="ui-monospace, 'JetBrains Mono', monospace" fill="currentColor" letter-spacing="0.22em" opacity="0.5">CURRICULUM · NV-01</text>
+        <text x="466" y="76" text-anchor="end" font-size="6" font-family="ui-monospace, 'JetBrains Mono', monospace" fill="currentColor" letter-spacing="0.22em" opacity="0.5">FOUNDATIONS → FRONTIER</text>
+      </svg>
+    </div>
   </div>
 
-  <div class="nv-empty-state" data-learning-empty hidden>
-    <p>No learning paths are available.</p>
+  <!-- COMPETENCY ROADMAP -->
+  <section class="nv-learning-section nv-competency-roadmap" aria-labelledby="competency-title">
+    <header class="nv-learning-section__header">
+      <p class="nv-learning-section__eyebrow">Competency Roadmap</p>
+      <h2 id="competency-title" class="nv-learning-section__title">What You Will Master</h2>
+      <p class="nv-learning-section__description">
+        A structured progression from foundational concepts to advanced research methodologies.
+      </p>
+    </header>
+
+    <ol class="nv-roadmap-track" role="list">
+      <li class="nv-roadmap-node">
+        <div class="nv-roadmap-node__indicator" aria-hidden="true">
+          <span class="nv-roadmap-node__dot"></span>
+        </div>
+        <div class="nv-roadmap-node__body">
+          <span class="nv-roadmap-node__index">01</span>
+          <h3 class="nv-roadmap-node__title">Foundations</h3>
+          <p class="nv-roadmap-node__desc">Linear algebra, probability, and optimization fundamentals.</p>
+          <span class="nv-roadmap-node__status">Prerequisites</span>
+        </div>
+      </li>
+
+      <li class="nv-roadmap-node">
+        <div class="nv-roadmap-node__indicator" aria-hidden="true">
+          <span class="nv-roadmap-node__dot"></span>
+        </div>
+        <div class="nv-roadmap-node__body">
+          <span class="nv-roadmap-node__index">02</span>
+          <h3 class="nv-roadmap-node__title">Classical ML</h3>
+          <p class="nv-roadmap-node__desc">Supervised, unsupervised, and ensemble methods.</p>
+          <span class="nv-roadmap-node__status">Core</span>
+        </div>
+      </li>
+
+      <li class="nv-roadmap-node">
+        <div class="nv-roadmap-node__indicator" aria-hidden="true">
+          <span class="nv-roadmap-node__dot"></span>
+        </div>
+        <div class="nv-roadmap-node__body">
+          <span class="nv-roadmap-node__index">03</span>
+          <h3 class="nv-roadmap-node__title">Deep Learning</h3>
+          <p class="nv-roadmap-node__desc">Neural architectures, training dynamics, regularization.</p>
+          <span class="nv-roadmap-node__status">Core</span>
+        </div>
+      </li>
+
+      <li class="nv-roadmap-node">
+        <div class="nv-roadmap-node__indicator" aria-hidden="true">
+          <span class="nv-roadmap-node__dot"></span>
+        </div>
+        <div class="nv-roadmap-node__body">
+          <span class="nv-roadmap-node__index">04</span>
+          <h3 class="nv-roadmap-node__title">Transformers &amp; LLMs</h3>
+          <p class="nv-roadmap-node__desc">Attention mechanisms, language models, fine-tuning.</p>
+          <span class="nv-roadmap-node__status">Advanced</span>
+        </div>
+      </li>
+
+      <li class="nv-roadmap-node">
+        <div class="nv-roadmap-node__indicator" aria-hidden="true">
+          <span class="nv-roadmap-node__dot"></span>
+        </div>
+        <div class="nv-roadmap-node__body">
+          <span class="nv-roadmap-node__index">05</span>
+          <h3 class="nv-roadmap-node__title">Research Methods</h3>
+          <p class="nv-roadmap-node__desc">Experimental design, ablation studies, reproducibility.</p>
+          <span class="nv-roadmap-node__status">Frontier</span>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- LEARNING PHILOSOPHY -->
+  <section class="nv-learning-section nv-philosophy" aria-labelledby="philosophy-title">
+    <header class="nv-learning-section__header">
+      <p class="nv-learning-section__eyebrow">Learning Philosophy</p>
+      <h2 id="philosophy-title" class="nv-learning-section__title">How You Will Learn</h2>
+    </header>
+
+    <div class="nv-philosophy-grid">
+      <article class="nv-philosophy-card">
+        <div class="nv-philosophy-card__icon" aria-hidden="true">
+          <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="16" cy="16" r="11" stroke-dasharray="1 3"/>
+            <circle cx="16" cy="16" r="5"/>
+            <circle cx="16" cy="16" r="1.5" fill="currentColor" stroke="none"/>
+          </svg>
+        </div>
+        <h3 class="nv-philosophy-card__title">Structured Progression</h3>
+        <p class="nv-philosophy-card__text">
+          Each path builds on explicit prerequisites — connected through a deterministic dependency graph, not random exploration.
+        </p>
+      </article>
+
+      <article class="nv-philosophy-card">
+        <div class="nv-philosophy-card__icon" aria-hidden="true">
+          <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="5" y="6" width="22" height="20" rx="1.5"/>
+            <line x1="5" y1="11" x2="27" y2="11"/>
+            <line x1="9" y1="17" x2="23" y2="17"/>
+            <line x1="9" y1="21" x2="19" y2="21"/>
+          </svg>
+        </div>
+        <h3 class="nv-philosophy-card__title">Deep Reading</h3>
+        <p class="nv-philosophy-card__text">
+          Curated readings with estimated time. No skimming — each module demands focused engagement with primary material.
+        </p>
+      </article>
+
+      <article class="nv-philosophy-card">
+        <div class="nv-philosophy-card__icon" aria-hidden="true">
+          <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 11 L16 6 L27 11 L27 21 L16 26 L5 21 Z"/>
+            <path d="M5 11 L16 16 L27 11"/>
+            <line x1="16" y1="16" x2="16" y2="26"/>
+          </svg>
+        </div>
+        <h3 class="nv-philosophy-card__title">Spaced Repetition</h3>
+        <p class="nv-philosophy-card__text">
+          Review sessions resurface concepts at optimal intervals — strengthening long-term recall without cramming.
+        </p>
+      </article>
+
+      <article class="nv-philosophy-card">
+        <div class="nv-philosophy-card__icon" aria-hidden="true">
+          <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="9" cy="11" r="3.2"/>
+            <circle cx="23" cy="11" r="3.2"/>
+            <circle cx="16" cy="22" r="3.2"/>
+            <line x1="11.5" y1="13" x2="14" y2="19.5" stroke-dasharray="1 2"/>
+            <line x1="20.5" y1="13" x2="18" y2="19.5" stroke-dasharray="1 2"/>
+          </svg>
+        </div>
+        <h3 class="nv-philosophy-card__title">Knowledge Synthesis</h3>
+        <p class="nv-philosophy-card__text">
+          Cross-linked concepts compound — connecting ideas across domains accelerates understanding of each.
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <!-- STUDY WORKFLOW -->
+  <section class="nv-learning-section nv-workflow" aria-labelledby="workflow-title">
+    <header class="nv-learning-section__header">
+      <p class="nv-learning-section__eyebrow">Study Workflow</p>
+      <h2 id="workflow-title" class="nv-learning-section__title">Suggested Approach</h2>
+      <p class="nv-learning-section__description">
+        A recommended sequence for progressing through curriculum content.
+      </p>
+    </header>
+
+    <ol class="nv-workflow-steps" role="list">
+      <li class="nv-workflow-step">
+        <div class="nv-workflow-step__index" aria-hidden="true">
+          <span class="nv-workflow-step__number">01</span>
+          <span class="nv-workflow-step__line"></span>
+        </div>
+        <div class="nv-workflow-step__body">
+          <h3 class="nv-workflow-step__title">Select a Learning Path</h3>
+          <p class="nv-workflow-step__desc">Choose a curriculum route aligned with your research goals or skill gaps.</p>
+        </div>
+        <div class="nv-workflow-step__meta">
+          <span class="nv-workflow-step__time">~2 min</span>
+          <span class="nv-workflow-step__label">Decision</span>
+        </div>
+      </li>
+
+      <li class="nv-workflow-step">
+        <div class="nv-workflow-step__index" aria-hidden="true">
+          <span class="nv-workflow-step__number">02</span>
+          <span class="nv-workflow-step__line"></span>
+        </div>
+        <div class="nv-workflow-step__body">
+          <h3 class="nv-workflow-step__title">Read Core Material</h3>
+          <p class="nv-workflow-step__desc">Engage with curated readings. Each item has an estimated reading time for planning.</p>
+        </div>
+        <div class="nv-workflow-step__meta">
+          <span class="nv-workflow-step__time">15–45 min</span>
+          <span class="nv-workflow-step__label">Per module</span>
+        </div>
+      </li>
+
+      <li class="nv-workflow-step">
+        <div class="nv-workflow-step__index" aria-hidden="true">
+          <span class="nv-workflow-step__number">03</span>
+          <span class="nv-workflow-step__line"></span>
+        </div>
+        <div class="nv-workflow-step__body">
+          <h3 class="nv-workflow-step__title">Review &amp; Verify</h3>
+          <p class="nv-workflow-step__desc">Spaced repetition sessions reinforce key concepts at optimal intervals.</p>
+        </div>
+        <div class="nv-workflow-step__meta">
+          <span class="nv-workflow-step__time">5–10 min</span>
+          <span class="nv-workflow-step__label">Per review</span>
+        </div>
+      </li>
+
+      <li class="nv-workflow-step">
+        <div class="nv-workflow-step__index" aria-hidden="true">
+          <span class="nv-workflow-step__number">04</span>
+        </div>
+        <div class="nv-workflow-step__body">
+          <h3 class="nv-workflow-step__title">Advance to Next Module</h3>
+          <p class="nv-workflow-step__desc">Progress unlocks when prerequisites are satisfied. No skipping ahead.</p>
+        </div>
+        <div class="nv-workflow-step__meta">
+          <span class="nv-workflow-step__time">Gated</span>
+          <span class="nv-workflow-step__label">Progression</span>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- FUTURE CONTENT -->
+  <section class="nv-learning-section nv-future-content" aria-labelledby="future-title">
+    <header class="nv-learning-section__header">
+      <p class="nv-learning-section__eyebrow">Coming Soon</p>
+      <h2 id="future-title" class="nv-learning-section__title">What Will Appear Here</h2>
+    </header>
+
+    <div class="nv-future-grid">
+      <article class="nv-future-card">
+        <div class="nv-future-card__icon" aria-hidden="true">
+          <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 8 L16 4 L27 8 L27 24 L16 28 L5 24 Z"/>
+            <line x1="5" y1="8" x2="27" y2="8"/>
+            <line x1="16" y1="4" x2="16" y2="28"/>
+            <line x1="10" y1="14" x2="22" y2="14"/>
+            <line x1="10" y1="18" x2="20" y2="18"/>
+          </svg>
+        </div>
+        <h3 class="nv-future-card__title">Learning Paths</h3>
+        <p class="nv-future-card__desc">Curated progressions through AI research topics with explicit prerequisites and completion estimates.</p>
+      </article>
+
+      <article class="nv-future-card">
+        <div class="nv-future-card__icon" aria-hidden="true">
+          <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="6" y="4" width="20" height="24" rx="1.5"/>
+            <line x1="10" y1="10" x2="22" y2="10"/>
+            <line x1="10" y1="14" x2="22" y2="14"/>
+            <line x1="10" y1="18" x2="18" y2="18"/>
+            <line x1="10" y1="22" x2="15" y2="22"/>
+          </svg>
+        </div>
+        <h3 class="nv-future-card__title">Module Content</h3>
+        <p class="nv-future-card__desc">Deep readings with time estimates, cross-referenced concepts, and structured knowledge extraction.</p>
+      </article>
+
+      <article class="nv-future-card">
+        <div class="nv-future-card__icon" aria-hidden="true">
+          <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="5,24 11,17 16,20 22,11 27,14"/>
+            <line x1="5" y1="28" x2="27" y2="28"/>
+            <circle cx="11" cy="17" r="1" fill="currentColor" stroke="none"/>
+            <circle cx="16" cy="20" r="1" fill="currentColor" stroke="none"/>
+            <circle cx="22" cy="11" r="1" fill="currentColor" stroke="none"/>
+          </svg>
+        </div>
+        <h3 class="nv-future-card__title">Progress Tracking</h3>
+        <p class="nv-future-card__desc">Visual dashboards for completion rates, reading velocity, and competency advancement across all paths.</p>
+      </article>
+
+      <article class="nv-future-card">
+        <div class="nv-future-card__icon" aria-hidden="true">
+          <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="16" cy="16" r="12"/>
+            <polyline points="16,8 16,16 21,19"/>
+          </svg>
+        </div>
+        <h3 class="nv-future-card__title">Review Sessions</h3>
+        <p class="nv-future-card__desc">Spaced repetition reviews scheduled at scientifically optimal intervals for long-term retention.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- Dynamic content — learning paths render here -->
+  <div class="nv-stack nv-stack--gap-md" data-learning-content hidden>
+    <div class="nv-page-header">
+      <p class="nv-page-header__eyebrow">Curriculum</p>
+      <h1 class="nv-page-header__title">Learning Paths</h1>
+      <p class="nv-page-header__description">Structured progressions through curated research and applied knowledge.</p>
+    </div>
+    <div class="nv-curriculum-stats" data-learning-metrics hidden></div>
+    <div class="nv-curriculum-filter" data-learning-filters hidden>
+      <button type="button" class="nv-button nv-button--sm nv-curriculum-filter__button" data-filter="all" aria-pressed="true">All</button>
+      <button type="button" class="nv-button nv-button--sm nv-curriculum-filter__button" data-filter="reviewed" aria-pressed="false">Reviewed</button>
+      <button type="button" class="nv-button nv-button--sm nv-curriculum-filter__button" data-filter="draft" aria-pressed="false">Draft</button>
+    </div>
+    <div class="nv-learning-path-list" data-learning-path-list></div>
+    <div class="nv-module-list" data-module-list></div>
   </div>
 
   <p class="nv-sr-only" aria-live="polite" data-learning-live></p>

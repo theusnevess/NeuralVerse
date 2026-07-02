@@ -1,10 +1,10 @@
 {
   "audit": "NV-1300-D1X",
-  "timestamp": "2026-06-26T23:03:07.248Z",
+  "timestamp": "2026-06-30T17:27:58.422Z",
   "summary": {
     "critical": 0,
     "high": 0,
-    "medium": 1,
+    "medium": 0,
     "verdict": "READY"
   },
   "architectureMetrics": {
@@ -28,15 +28,15 @@
       "passed": 19
     },
     "performance": {
-      "planner": 0,
+      "planner": 0.03,
       "dependency": 0.01,
       "exampleSelection": 0,
-      "mediaOrchestration": 0.01,
-      "evidenceTracing": 0.01,
+      "mediaOrchestration": 0.02,
+      "evidenceTracing": 0.02,
       "cognitiveLoad": 0.01,
       "composition": 0.01,
       "accessibility": 0.01,
-      "totalPipeline": 0.06
+      "totalPipeline": 0.11
     }
   },
   "sections": {
@@ -249,23 +249,23 @@
     },
     "30": {
       "name": "Playwright UI Audit",
-      "available": false,
-      "status": "SKIP"
+      "available": true,
+      "status": "PENDING"
     },
     "31": {
       "name": "Performance Budget",
       "metrics": {
-        "planner": 0,
+        "planner": 0.03,
         "dependency": 0.01,
         "exampleSelection": 0,
-        "mediaOrchestration": 0.01,
-        "evidenceTracing": 0.01,
+        "mediaOrchestration": 0.02,
+        "evidenceTracing": 0.02,
         "cognitiveLoad": 0.01,
         "composition": 0.01,
         "accessibility": 0.01,
-        "totalPipeline": 0.06
+        "totalPipeline": 0.11
       },
-      "avgMsPerRun": 0,
+      "avgMsPerRun": 0.03,
       "status": "PASS"
     },
     "32": {
@@ -370,12 +370,7 @@
   "findings": {
     "critical": [],
     "high": [],
-    "medium": [
-      {
-        "section": "30",
-        "message": "Playwright unavailable — UI audit skipped (environment block)"
-      }
-    ],
+    "medium": [],
     "info": []
   }
 }

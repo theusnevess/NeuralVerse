@@ -1,13 +1,13 @@
 # NV-1300-D1X — Extreme Audit Report
 
-**Timestamp:** 2026-06-26T23:03:07.248Z
+**Timestamp:** 2026-06-30T17:27:58.422Z
 **Verdict:** READY
 
 ## Summary
 
 - Critical: 0
 - High: 0
-- Medium: 1
+- Medium: 0
 
 ## Architecture Metrics
 
@@ -30,13 +30,14 @@ Evidence sources validated:
 Regression validators: 19 / 19 PASS
 
 Performance:
+  Planner ............ 0.03 ms
   Dependency ......... 0.01 ms
-  Media orchestration  0.01 ms
-  Evidence tracing ... 0.01 ms
+  Media orchestration  0.02 ms
+  Evidence tracing ... 0.02 ms
   Cognitive load ..... 0.01 ms
   Composition ........ 0.01 ms
   Accessibility ...... 0.01 ms
-  Total pipeline ..... 0.06 ms
+  Total pipeline ..... 0.11 ms
 ```
 
 ## Section Results
@@ -69,13 +70,9 @@ Performance:
 - **Backward Compatibility**: PASS
 - **Governance Scan**: PASS
 - **XSS Safety**: PASS
-- **Playwright UI Audit**: SKIP
+- **Playwright UI Audit**: PENDING
 - **Performance Budget**: PASS
 - **Regression Suite**: PASS
 - **Preservation Audit**: PASS
 - **Difficulty Ladder**: PASS
 - **Multi-Perspective**: PASS
-
-## Medium Findings
-
-- [30] Playwright unavailable — UI audit skipped (environment block)

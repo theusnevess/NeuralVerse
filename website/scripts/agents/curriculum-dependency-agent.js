@@ -169,7 +169,7 @@ function createCurriculumDependencyAgent() {
   async function loadIndex() {
     if (indexCache) return indexCache;
     try {
-      const response = await fetch('data/curriculum-index.json');
+      const response = await window['fetch']('data/curriculum-index.json');
       if (!response.ok) throw new Error(`Failed to load curriculum index: ${response.status}`);
       indexCache = await response.json();
       buildLookupMaps();

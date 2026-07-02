@@ -1,0 +1,930 @@
+/* NeuralVerse Home Redesign — flag-ship scientific observatory front door. */
+
+.nv-home-v3 {
+  --home-max: 76rem;
+  --home-line: color-mix(in srgb, var(--sys-color-accent-primary) 15%, transparent);
+  --home-muted: color-mix(in srgb, var(--sys-color-text-secondary) 80%, var(--sys-color-text-primary));
+  display: flex;
+  flex-direction: column;
+  gap: clamp(4rem, 8vw, 8rem);
+  color: var(--sys-color-text-primary);
+  background: transparent;
+  font-family: var(--ref-font-family-primary);
+  padding-block-end: 6rem;
+  overflow-x: hidden;
+}
+
+/* Typography elements */
+.nv-home-v3 a {
+  text-decoration: none;
+}
+
+.nv-home-v3 h1, 
+.nv-home-v3 h2, 
+.nv-home-v3 h3, 
+.nv-home-v3 h4 {
+  color: var(--sys-color-text-primary);
+  margin: 0;
+}
+
+/* --- Hero Section --- */
+.nv-home-hero {
+  position: relative;
+  min-block-size: calc(100vh - 5rem);
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: clamp(2rem, 4vw, 5rem);
+  align-items: center;
+  max-inline-size: var(--home-max);
+  margin-inline: auto;
+  padding: clamp(5rem, 8vw, 9rem) clamp(1.25rem, 5vw, 5rem) clamp(2rem, 4vw, 4rem);
+  isolation: isolate;
+}
+
+.nv-hero-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+
+/* Badge style */
+.nv-observatory-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.4rem 0.8rem;
+  background: color-mix(in srgb, var(--sys-color-surface-raised) 50%, transparent);
+  border: 1px solid var(--home-line);
+  border-radius: 99px;
+  backdrop-filter: blur(8px);
+}
+
+.nv-badge-dot {
+  inline-size: 6px;
+  block-size: 6px;
+  border-radius: 50%;
+  background-color: var(--sys-color-accent-primary);
+  box-shadow: 0 0 8px var(--sys-color-accent-primary);
+  animation: nv-dot-blink 2s infinite ease-in-out;
+}
+
+.nv-badge-text {
+  font-family: var(--ref-font-family-monospace);
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  color: var(--sys-color-accent-primary);
+  text-transform: uppercase;
+}
+
+.nv-hero-title {
+  font-family: var(--ref-font-family-display);
+  font-size: clamp(2.4rem, 5vw, 3.8rem);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+  max-inline-size: 20ch;
+}
+
+.nv-hero-subtitle {
+  font-size: clamp(0.95rem, 1.5vw, 1.15rem);
+  line-height: 1.6;
+  color: var(--sys-color-text-secondary);
+  max-inline-size: 45ch;
+  margin: 0;
+}
+
+.nv-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-block-start: 0.5rem;
+}
+
+/* Telemetry Grid */
+.nv-hero-telemetry {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(6.5rem, 1fr));
+  gap: 1.25rem;
+  inline-size: 100%;
+  margin-block-start: 2rem;
+  padding-block-start: 1.5rem;
+  border-block-start: 1px dashed var(--home-line);
+}
+
+.nv-telemetry-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.nv-telemetry-value {
+  font-family: var(--ref-font-family-display);
+  font-size: clamp(1.25rem, 2vw, 1.6rem);
+  font-weight: 600;
+  color: var(--sys-color-text-primary);
+}
+
+.nv-telemetry-label {
+  font-family: var(--ref-font-family-monospace);
+  font-size: 0.625rem;
+  letter-spacing: 0.08em;
+  color: var(--sys-color-text-muted);
+  text-transform: uppercase;
+}
+
+/* Hero visual topology map */
+.nv-hero-visual {
+  position: relative;
+  display: grid;
+  place-items: center;
+  inline-size: 100%;
+  aspect-ratio: 1;
+}
+
+.nv-visual-container {
+  position: relative;
+  inline-size: min(100%, 28rem);
+  aspect-ratio: 1;
+  border: 1px solid var(--home-line);
+  border-radius: var(--sys-premium-radius-panel);
+  background: 
+    radial-gradient(circle at center, color-mix(in srgb, var(--sys-color-accent-primary) 8%, transparent) 0%, transparent 70%),
+    var(--sys-premium-surface);
+  box-shadow: var(--sys-premium-shadow-card);
+  overflow: hidden;
+}
+
+.nv-visual-grid-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: 
+    linear-gradient(to right, var(--home-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--home-line) 1px, transparent 1px);
+  background-size: 20px 20px;
+  opacity: 0.15;
+}
+
+.nv-topology-svg {
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.nv-graph-node {
+  transition: transform 0.3s var(--motion-easing-standard);
+  cursor: crosshair;
+}
+
+.nv-graph-node:hover {
+  transform: scale(1.2) translate(var(--tx, 0), var(--ty, 0));
+}
+
+.nv-graph-node:hover text {
+  fill: var(--sys-color-accent-primary);
+}
+
+/* --- Console Strip (Onboarding / Continuity) --- */
+.nv-observatory-console-strip {
+  max-inline-size: var(--home-max);
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 5vw, 5rem);
+  inline-size: 100%;
+}
+
+.nv-console-panel {
+  background: var(--sys-premium-surface);
+  border: 1px solid var(--sys-premium-border);
+  border-radius: var(--sys-premium-radius-panel);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  box-shadow: var(--sys-premium-shadow-card);
+  position: relative;
+}
+
+.nv-console-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-block-end: 1px solid var(--home-line);
+  padding-block-end: 0.75rem;
+}
+
+.nv-console-dot {
+  inline-size: 8px;
+  block-size: 8px;
+  border-radius: 50%;
+}
+
+.nv-console-dot--standby {
+  background-color: var(--sys-color-text-muted);
+  box-shadow: 0 0 6px var(--sys-color-text-muted);
+}
+
+.nv-console-dot--active {
+  background-color: var(--sys-color-accent-primary);
+  box-shadow: 0 0 10px var(--sys-color-accent-primary);
+  animation: nv-dot-blink 1.5s infinite ease-in-out;
+}
+
+.nv-console-title {
+  font-family: var(--ref-font-family-monospace);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sys-color-text-secondary);
+}
+
+.nv-console-text {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--sys-color-text-secondary);
+  max-inline-size: 60ch;
+  margin: 0;
+}
+
+.nv-console-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+/* Continuity Session Grid */
+.nv-console-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+  gap: 1.5rem;
+}
+
+.nv-console-card, 
+.nv-console-progress {
+  background: color-mix(in srgb, var(--sys-color-surface-base) 40%, transparent);
+  border: 1px solid var(--home-line);
+  border-radius: var(--sys-premium-radius-card);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  position: relative;
+}
+
+.nv-card-eyebrow {
+  font-family: var(--ref-font-family-monospace);
+  font-size: 0.625rem;
+  letter-spacing: 0.1em;
+  color: var(--sys-color-accent-primary);
+}
+
+.nv-card-title {
+  font-size: 1.1rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--sys-color-text-primary);
+}
+
+.nv-card-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.nv-meta-row {
+  display: flex;
+  justify-content: space-between;
+  border-block-end: 1px solid color-mix(in srgb, var(--home-line) 50%, transparent);
+  padding-block-end: 0.25rem;
+}
+
+.nv-meta-row dt {
+  font-family: var(--ref-font-family-monospace);
+  font-size: 0.65rem;
+  color: var(--sys-color-text-muted);
+  text-transform: uppercase;
+}
+
+.nv-meta-row dd {
+  font-size: 0.75rem;
+  color: var(--sys-color-text-secondary);
+  margin: 0;
+}
+
+.nv-card-actions {
+  margin-block-start: auto;
+  padding-block-start: 0.5rem;
+}
+
+/* --- Scientific Panels & Sections --- */
+.nv-observatory-section {
+  max-inline-size: var(--home-max);
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 5vw, 5rem);
+  inline-size: 100%;
+}
+
+.nv-section-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2.5rem, 6vw, 6rem);
+  align-items: center;
+}
+
+.nv-grid-reverse {
+  direction: ltr;
+}
+
+.nv-grid-reverse > :first-child {
+  order: 2;
+}
+
+.nv-section-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.25rem;
+}
+
+.nv-section-kicker {
+  font-family: var(--ref-font-family-monospace);
+  font-size: 0.6875rem;
+  letter-spacing: 0.16em;
+  color: var(--sys-color-accent-primary);
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.nv-section-title {
+  font-family: var(--ref-font-family-display);
+  font-size: clamp(1.8rem, 3.2vw, 2.6rem);
+  font-weight: 550;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+}
+
+.nv-title-center {
+  text-align: center;
+  margin-inline: auto;
+  margin-block-end: 3rem;
+  max-inline-size: 20ch;
+}
+
+.nv-section-text {
+  font-size: clamp(0.9rem, 1.4vw, 1.05rem);
+  line-height: 1.6;
+  color: var(--sys-color-text-secondary);
+  margin: 0;
+}
+
+/* SVGs & Illustrations */
+.nv-section-illustration {
+  display: grid;
+  place-items: center;
+  inline-size: 100%;
+}
+
+.nv-diagram-svg {
+  inline-size: 100%;
+  max-inline-size: 26rem;
+  border-radius: var(--sys-premium-radius-card);
+  box-shadow: var(--sys-premium-shadow-card);
+}
+
+/* Concept Atlas custom visualizer */
+.nv-concept-atlas {
+  position: relative;
+  inline-size: min(100%, 25rem);
+  aspect-ratio: 1;
+  border: 1px solid var(--home-line);
+  border-radius: 50%;
+  background: 
+    radial-gradient(circle at center, color-mix(in srgb, var(--sys-color-accent-primary) 6%, transparent) 0%, transparent 65%),
+    var(--sys-premium-surface);
+  box-shadow: var(--sys-premium-shadow-card);
+  overflow: hidden;
+}
+
+.nv-atlas-halo {
+  position: absolute;
+  inset: 15%;
+  border: 1px dashed var(--home-line);
+  border-radius: 50%;
+  animation: nv-home-v3-spin 80s linear infinite;
+}
+
+.nv-atlas-grid {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    radial-gradient(var(--home-line) 1px, transparent 1px),
+    radial-gradient(var(--home-line) 1.5px, transparent 1.5px);
+  background-size: 30px 30px;
+  background-position: 0 0, 15px 15px;
+  opacity: 0.2;
+}
+
+.nv-atlas-node {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.35rem 0.65rem;
+  background: var(--sys-color-surface-base);
+  border: 1px solid var(--sys-color-border-subtle);
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: all 0.25s var(--motion-easing-standard);
+}
+
+.nv-atlas-node::before {
+  content: "";
+  inline-size: 5px;
+  block-size: 5px;
+  border-radius: 50%;
+  background-color: var(--sys-color-text-muted);
+  margin-inline-end: 0.4rem;
+}
+
+.nv-atlas-node--active {
+  border-color: var(--sys-color-accent-primary);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--sys-color-accent-primary) 30%, transparent);
+}
+
+.nv-atlas-node--active::before {
+  background-color: var(--sys-color-accent-primary);
+  box-shadow: 0 0 6px var(--sys-color-accent-primary);
+}
+
+.nv-atlas-label {
+  font-family: var(--ref-font-family-monospace);
+  font-size: 0.625rem;
+  letter-spacing: 0.04em;
+  color: var(--sys-color-text-primary);
+  text-transform: uppercase;
+}
+
+/* --- Stage 3 & 4: Scientific Cards / Panels --- */
+.nv-editorial-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  inline-size: 100%;
+}
+
+.nv-panel-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.nv-scientific-panel {
+  background: var(--sys-premium-surface);
+  border: 1px solid var(--sys-premium-border);
+  border-radius: var(--sys-premium-radius-card);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  box-shadow: var(--sys-premium-shadow-card);
+  transition: border-color 0.25s var(--motion-easing-standard);
+}
+
+.nv-scientific-panel:hover {
+  border-color: color-mix(in srgb, var(--sys-color-accent-primary) 40%, var(--sys-premium-border));
+}
+
+.nv-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nv-panel-idx {
+  font-family: var(--ref-font-family-monospace);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  color: var(--sys-color-accent-primary);
+}
+
+.nv-scientific-panel h3 {
+  font-size: 1.25rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+.nv-panel-visual {
+  block-size: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  border-block: 1px solid var(--home-line);
+  padding-block: 0.5rem;
+}
+
+.nv-mini-svg {
+  block-size: 100%;
+  inline-size: auto;
+}
+
+.nv-panel-desc {
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--sys-color-text-secondary);
+  margin: 0;
+}
+
+/* Featured large card */
+.nv-panel-featured {
+  padding: 2.5rem;
+}
+
+.nv-featured-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 2rem;
+  align-items: center;
+}
+
+.nv-featured-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.nv-featured-copy h3 {
+  font-size: 1.5rem;
+  font-weight: 550;
+  letter-spacing: -0.03em;
+}
+
+.nv-featured-visual {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.nv-medium-svg {
+  inline-size: 100%;
+  max-block-size: 120px;
+}
+
+/* --- Stage 5 & 6: Laboratories / Consoles --- */
+.nv-lab-metrics {
+  display: flex;
+  gap: 2rem;
+  margin-block-start: 1rem;
+  padding-block-start: 1rem;
+  border-block-start: 1px dashed var(--home-line);
+}
+
+.nv-metric-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.nv-metric-no {
+  font-family: var(--ref-font-family-display);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--sys-color-accent-primary);
+}
+
+.nv-metric-txt {
+  font-family: var(--ref-font-family-monospace);
+  font-size: 0.625rem;
+  color: var(--sys-color-text-muted);
+  text-transform: uppercase;
+}
+
+.nv-observatory-console {
+  inline-size: 100%;
+  max-inline-size: 26rem;
+  background-color: var(--sys-color-surface-base);
+  border: 1px solid var(--sys-color-border-subtle);
+  border-radius: var(--sys-premium-radius-card);
+  padding: 0.75rem;
+  box-shadow: var(--sys-premium-shadow-card);
+}
+
+.nv-console-screen {
+  background-color: #0b0f14;
+  border: 1px solid #14202c;
+  border-radius: 4px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  position: relative;
+}
+
+.nv-screen-header {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--ref-font-family-monospace);
+  font-size: 0.65rem;
+  color: var(--sys-color-text-muted);
+  border-block-end: 1px solid #14202c;
+  padding-block-end: 0.5rem;
+}
+
+.nv-screen-status {
+  color: var(--sys-color-accent-primary);
+}
+
+.nv-screen-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  align-items: center;
+}
+
+.nv-vector-graph {
+  aspect-ratio: 1;
+  border: 1px solid #14202c;
+  background-color: #080c10;
+  position: relative;
+}
+
+.nv-vector-graph svg,
+.nv-vector-graph::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.nv-vector-graph svg {
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.nv-vector-data {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.nv-data-label {
+  font-family: var(--ref-font-family-monospace);
+  font-size: 0.625rem;
+  color: var(--sys-color-text-secondary);
+}
+
+.nv-data-value {
+  font-family: var(--ref-font-family-monospace);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--sys-color-accent-primary);
+  margin-block-start: 0.25rem;
+}
+
+/* --- Stage 7 & 8: Projects & Curriculum Roadmap --- */
+.nv-curriculum-roadmap {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  position: relative;
+  inline-size: 100%;
+  max-inline-size: 26rem;
+  padding-inline-start: 1.5rem;
+}
+
+.nv-roadmap-line {
+  position: absolute;
+  inset-inline-start: 3px;
+  inset-block: 0.5rem;
+  inline-size: 2px;
+  background: var(--home-line);
+}
+
+.nv-roadmap-checkpoint {
+  position: relative;
+  display: flex;
+  gap: 1.25rem;
+}
+
+.nv-cp-dot {
+  position: absolute;
+  inset-inline-start: -1.5rem;
+  inset-block-start: 0.35rem;
+  inline-size: 8px;
+  block-size: 8px;
+  border-radius: 50%;
+  background: var(--sys-color-surface-base);
+  border: 2px solid var(--sys-color-border-subtle);
+  z-index: 2;
+}
+
+.nv-cp-dot--completed {
+  background: var(--sys-color-accent-primary);
+  border-color: var(--sys-color-accent-primary);
+}
+
+.nv-cp-dot--active {
+  background: var(--sys-color-accent-primary);
+  border-color: var(--sys-color-accent-primary);
+  box-shadow: 0 0 8px var(--sys-color-accent-primary);
+  animation: nv-dot-blink 2s infinite ease-in-out;
+}
+
+.nv-cp-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.nv-cp-content h4 {
+  font-family: var(--ref-font-family-monospace);
+  font-size: 0.8125rem;
+  letter-spacing: 0.04em;
+  color: var(--sys-color-text-primary);
+}
+
+.nv-cp-content p {
+  font-size: 0.8125rem;
+  color: var(--sys-color-text-secondary);
+  margin: 0;
+}
+
+/* --- Stage 9 & 10: Call to Action Terminal --- */
+.nv-section-cta {
+  padding-block: clamp(4rem, 8vw, 8rem);
+}
+
+.nv-cta-terminal {
+  background-color: var(--sys-premium-surface);
+  border: 1px solid var(--sys-premium-border);
+  border-radius: var(--sys-premium-radius-panel);
+  padding: 3rem clamp(1.5rem, 5vw, 4rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1.5rem;
+  max-inline-size: 46rem;
+  margin-inline: auto;
+  box-shadow: var(--sys-premium-shadow-card);
+  position: relative;
+}
+
+.nv-terminal-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.nv-terminal-status-dot {
+  inline-size: 8px;
+  block-size: 8px;
+  border-radius: 50%;
+  background-color: var(--sys-color-accent-primary);
+  box-shadow: 0 0 8px var(--sys-color-accent-primary);
+  animation: nv-dot-blink 1.5s infinite ease-in-out;
+}
+
+.nv-cta-terminal h2 {
+  font-family: var(--ref-font-family-monospace);
+  font-size: 0.875rem;
+  letter-spacing: 0.16em;
+  color: var(--sys-color-text-primary);
+}
+
+.nv-terminal-desc {
+  font-size: clamp(0.95rem, 1.5vw, 1.15rem);
+  line-height: 1.6;
+  color: var(--sys-color-text-secondary);
+  max-inline-size: 40ch;
+  margin: 0;
+}
+
+.nv-terminal-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.nv-terminal-footer {
+  display: flex;
+  justify-content: space-between;
+  inline-size: 100%;
+  margin-block-start: 1.5rem;
+  padding-block-start: 1rem;
+  border-block-start: 1px solid var(--home-line);
+  font-family: var(--ref-font-family-monospace);
+  font-size: 0.625rem;
+  color: var(--sys-color-text-muted);
+  letter-spacing: 0.05em;
+}
+
+/* Keyframes */
+@keyframes nv-dot-blink {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+@keyframes nv-home-v3-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* --- Media Queries --- */
+@media (max-width: 64rem) {
+  .nv-home-hero {
+    grid-template-columns: 1fr;
+    min-block-size: auto;
+    padding-block: 6rem 4rem;
+    text-align: center;
+  }
+  
+  .nv-hero-content {
+    align-items: center;
+  }
+  
+  .nv-hero-title {
+    margin-inline: auto;
+  }
+  
+  .nv-hero-subtitle {
+    margin-inline: auto;
+  }
+
+  .nv-hero-actions {
+    justify-content: center;
+  }
+
+  .nv-hero-visual {
+    margin-inline: auto;
+    max-inline-size: 24rem;
+  }
+
+  .nv-section-grid {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  .nv-grid-reverse > :first-child {
+    order: unset;
+  }
+
+  .nv-section-copy {
+    align-items: center;
+    text-align: center;
+  }
+
+  .nv-section-text {
+    margin-inline: auto;
+  }
+
+  .nv-panel-row {
+    grid-template-columns: 1fr;
+  }
+
+  .nv-featured-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    text-align: center;
+  }
+
+  .nv-featured-visual {
+    margin-inline: auto;
+  }
+
+  .nv-curriculum-roadmap {
+    margin-inline: auto;
+  }
+}
+
+@media (max-width: 48rem) {
+  .nv-home-v3 {
+    gap: 4rem;
+  }
+
+  .nv-terminal-actions {
+    flex-direction: column;
+    inline-size: 100%;
+  }
+
+  .nv-terminal-actions .nv-button {
+    inline-size: 100%;
+    justify-content: center;
+  }
+
+  .nv-console-actions {
+    flex-direction: column;
+    inline-size: 100%;
+  }
+
+  .nv-console-actions .nv-button {
+    inline-size: 100%;
+    justify-content: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nv-badge-dot,
+  .nv-console-dot--active,
+  .nv-cp-dot--active,
+  .nv-terminal-status-dot,
+  .nv-atlas-halo {
+    animation: none;
+  }
+}

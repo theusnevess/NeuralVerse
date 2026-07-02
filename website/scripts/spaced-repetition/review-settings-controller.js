@@ -79,6 +79,7 @@ export function createReviewSettingsController(options) {
 
   function showResetConfirm() {
     if (!root || !scheduler) return;
+    const previouslyFocused = document.activeElement;
     const overlay = el('div', {
       class: 'nv-reset-confirm-overlay',
       role: 'alertdialog',
@@ -102,10 +103,29 @@ export function createReviewSettingsController(options) {
     function close() {
       if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
       document.removeEventListener('keydown', onKey, true);
+      if (previouslyFocused && typeof previouslyFocused.focus === 'function') {
+        try { previouslyFocused.focus(); } catch (e) {}
+      }
     }
     function onKey(e) {
       if (e.key === 'Escape') { e.preventDefault(); close(); }
       else if (e.key === 'Enter') { e.preventDefault(); doReset(); }
+      else if (e.key === 'Tab') {
+        const focusable = [cancelBtn, resetBtn];
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        const activeIsInDialog = overlay.contains(document.activeElement);
+        if (!activeIsInDialog) {
+          e.preventDefault();
+          first.focus();
+        } else if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
     }
     function doReset() {
       // Snapshot unrelated personalization keys to verify they survive

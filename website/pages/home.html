@@ -1,19 +1,284 @@
-<div class="nv-stack nv-stack--gap-md nv-hero-observatory">
-  <header class="nv-stack nv-stack--gap-xs">
-    <h1 class="nv-sr-only">NeuralVerse Home</h1>
-  </header>
-
-  <div class="nv-panel">
-    <div class="nv-empty-state nv-hero-brand-lockup">
-      <div class="nv-empty-state__visual nv-brand-home-visual" aria-hidden="true">
-        <img src="assets/brand/neuralverse-lockup.png" alt="">
+<section class="nv-home nv-home-v3" data-home-root>
+  <!-- 1. Hero Section -->
+  <section class="nv-home-hero" aria-labelledby="home-v3-title">
+    <div class="nv-hero-content">
+      <div class="nv-observatory-badge">
+        <span class="nv-badge-dot"></span>
+        <span class="nv-badge-text">Platform Registry v3.0 // Active Observatory</span>
       </div>
-      <p class="nv-empty-state__message">
-        NeuralVerse is an advanced agentic scientific platform designed to orchestrate reinforcement learning pipelines, cognitive modeling tasks, and specialized deep learning paths.
+      
+      <h1 id="home-v3-title" class="nv-hero-title">
+        A Governed Knowledge Observatory.
+      </h1>
+      
+      <p class="nv-hero-subtitle">
+        NeuralVerse is a local-first workspace mapping machine learning research, competencies, and laboratories into a unified topological architecture.
       </p>
-      <div class="nv-empty-state__actions">
-        <a href="#/learning" class="nv-button" data-variant="primary">View Learning Paths</a>
+      
+      <div class="nv-hero-actions" aria-label="Primary actions">
+        <a href="#/learning" class="nv-button" data-variant="primary">Start Learning</a>
+        <a href="#/workspace" class="nv-button" data-variant="ghost">Open Workspace</a>
       </div>
     </div>
+
+    <!-- Living Scientific Visualization -->
+    <div class="nv-hero-visual" aria-hidden="true">
+      <div class="nv-visual-container">
+        <div class="nv-visual-grid-overlay"></div>
+        <svg viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg" class="nv-topology-svg">
+          <defs>
+            <radialGradient id="observatory-glow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="var(--sys-color-accent-primary)" stop-opacity="0.3"/>
+              <stop offset="100%" stop-color="var(--sys-color-accent-primary)" stop-opacity="0"/>
+            </radialGradient>
+            <linearGradient id="orbit-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="var(--sys-color-accent-primary)" stop-opacity="0.5"/>
+              <stop offset="100%" stop-color="var(--sys-color-border-subtle)" stop-opacity="0.1"/>
+            </linearGradient>
+          </defs>
+          
+          <!-- Concentric orbital lenses -->
+          <circle cx="250" cy="250" r="220" stroke="var(--sys-color-border-subtle)" stroke-width="1" />
+          <circle cx="250" cy="250" r="180" stroke="var(--sys-color-border-subtle)" stroke-width="0.75" stroke-dasharray="4 8" />
+          <circle cx="250" cy="250" r="130" stroke="var(--sys-color-border-subtle)" stroke-width="1" />
+          <circle cx="250" cy="250" r="70" stroke="var(--sys-color-border-subtle)" stroke-width="0.75" stroke-dasharray="2 4" />
+          
+          <!-- Coordinate Axes -->
+          <line x1="250" y1="10" x2="250" y2="490" stroke="var(--sys-color-border-subtle)" stroke-width="0.5" stroke-opacity="0.3" />
+          <line x1="10" y1="250" x2="490" y2="250" stroke="var(--sys-color-border-subtle)" stroke-width="0.5" stroke-opacity="0.3" />
+          
+          <!-- Orbital lines & ticks -->
+          <path d="M 250 30 A 220 220 0 0 1 470 250" stroke="url(#orbit-grad)" stroke-width="1.5" stroke-linecap="round" />
+          <path d="M 250 470 A 220 220 0 0 1 30 250" stroke="url(#orbit-grad)" stroke-width="1.5" stroke-opacity="0.5" stroke-linecap="round" />
+          
+          <!-- Glowing lens center core -->
+          <circle cx="250" cy="250" r="45" fill="url(#observatory-glow)" />
+          <circle cx="250" cy="250" r="12" fill="var(--sys-color-accent-primary)" />
+          <circle cx="250" cy="250" r="22" stroke="var(--sys-color-accent-primary)" stroke-width="1" stroke-opacity="0.5" />
+          
+          <!-- Outer ticks -->
+          <line x1="250" y1="30" x2="250" y2="20" stroke="var(--sys-color-accent-primary)" stroke-width="1.5" />
+          <line x1="250" y1="470" x2="250" y2="480" stroke="var(--sys-color-accent-primary)" stroke-width="1.5" />
+          <line x1="30" y1="250" x2="20" y2="250" stroke="var(--sys-color-accent-primary)" stroke-width="1.5" />
+          <line x1="470" y1="250" x2="480" y2="250" stroke="var(--sys-color-accent-primary)" stroke-width="1.5" />
+          
+          <!-- Floating system markers with labels -->
+          <g transform="translate(110, 150)">
+            <circle r="4" fill="var(--sys-color-accent-primary)" />
+            <text x="10" y="4" fill="var(--sys-color-text-secondary)" font-family="var(--sys-font-code-family)" font-size="7" letter-spacing="0.08em">SYS_REF // A1</text>
+          </g>
+          <g transform="translate(380, 360)">
+            <circle r="4" fill="var(--sys-color-accent-primary)" />
+            <text x="10" y="4" fill="var(--sys-color-text-secondary)" font-family="var(--sys-font-code-family)" font-size="7" letter-spacing="0.08em">OBS_TGT // B4</text>
+          </g>
+          
+          <text x="35" y="465" fill="var(--sys-color-text-muted)" font-family="var(--sys-font-code-family)" font-size="7" opacity="0.4">AZIMUTH // 278.4</text>
+          <text x="465" y="465" fill="var(--sys-color-text-muted)" font-family="var(--sys-font-code-family)" font-size="7" opacity="0.4" text-anchor="end">ELEVATION // 42.1</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. Platform Pillars Section -->
+  <section class="nv-home-pillars" aria-label="Platform Pillars">
+    <div class="nv-pillars-grid">
+      <article class="nv-pillar-card">
+        <span class="nv-pillar-idx">01 // LEARNING</span>
+        <h3>Learning</h3>
+        <p>A structured topological path from classical ML to autonomous agents.</p>
+      </article>
+
+      <article class="nv-pillar-card">
+        <span class="nv-pillar-idx">02 // RESEARCH</span>
+        <h3>Research</h3>
+        <p>Traceable, peer-reviewed knowledge trails mapping the genealogy of intelligence.</p>
+      </article>
+
+      <article class="nv-pillar-card">
+        <span class="nv-pillar-idx">03 // LABORATORIES</span>
+        <h3>Laboratories</h3>
+        <p>Local mathematical simulators and sandbox instruments running in real-time.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- 3. Interactive Showcase Section -->
+  <section class="nv-home-showcase" aria-labelledby="showcase-title">
+    <div class="nv-showcase-container">
+      <div class="nv-showcase-copy">
+        <span class="nv-section-kicker">INTERACTIVE SHOWCASE</span>
+        <h2 id="showcase-title" class="nv-section-title">Topological Alignment Engine</h2>
+        <p class="nv-section-text">
+          Interact with the vector space projection. Moving the query node dynamically recalculates the topological proximity to three core ML competencies in real-time.
+        </p>
+      </div>
+
+      <div class="nv-showcase-interactive-panel">
+        <!-- The vector grid -->
+        <div class="nv-showcase-grid-interactive" style="position: relative; width: 100%; aspect-ratio: 1.2; border: 1px solid var(--sys-premium-border); border-radius: var(--sys-premium-radius-panel); background: var(--sys-premium-surface); overflow: hidden; cursor: crosshair;">
+          <div class="nv-visual-grid-overlay" style="position: absolute; inset: 0; pointer-events: none; opacity: 0.1; background-size: 20px 20px; background-image: linear-gradient(to right, var(--sys-color-border-subtle) 1px, transparent 1px), linear-gradient(to bottom, var(--sys-color-border-subtle) 1px, transparent 1px);"></div>
+          
+          <svg viewBox="0 0 400 333" fill="none" style="width: 100%; height: 100%; position: absolute; inset: 0; pointer-events: none;">
+            <!-- Target A: Embeddings -->
+            <g transform="translate(120, 100)">
+              <circle r="20" fill="var(--sys-color-accent-primary)" fill-opacity="0.05" stroke="var(--sys-color-accent-primary)" stroke-opacity="0.3" stroke-width="1" />
+              <circle r="4" fill="var(--sys-color-accent-primary)" />
+              <text x="12" y="4" fill="var(--sys-color-text-primary)" font-family="var(--ref-font-family-monospace)" font-size="8" letter-spacing="0.05em">EMBEDDINGS</text>
+            </g>
+
+            <!-- Target B: Self-Attention -->
+            <g transform="translate(320, 80)">
+              <circle r="20" fill="var(--sys-color-accent-primary)" fill-opacity="0.05" stroke="var(--sys-color-accent-primary)" stroke-opacity="0.3" stroke-width="1" />
+              <circle r="4" fill="var(--sys-color-accent-primary)" />
+              <text x="12" y="4" fill="var(--sys-color-text-primary)" font-family="var(--ref-font-family-monospace)" font-size="8" letter-spacing="0.05em">SELF-ATTENTION</text>
+            </g>
+
+            <!-- Target C: Agentic RAG -->
+            <g transform="translate(200, 260)">
+              <circle r="20" fill="var(--sys-color-accent-primary)" fill-opacity="0.05" stroke="var(--sys-color-accent-primary)" stroke-opacity="0.3" stroke-width="1" />
+              <circle r="4" fill="var(--sys-color-accent-primary)" />
+              <text x="12" y="4" fill="var(--sys-color-text-primary)" font-family="var(--ref-font-family-monospace)" font-size="8" letter-spacing="0.05em">AGENTIC RAG</text>
+            </g>
+
+            <!-- Dashed connectors that dynamically update -->
+            <line id="line-embeddings" x1="200" y1="166" x2="120" y2="100" stroke="var(--sys-color-accent-primary)" stroke-dasharray="3 3" stroke-opacity="0.5" stroke-width="1" />
+            <line id="line-attention" x1="200" y1="166" x2="320" y2="80" stroke="var(--sys-color-accent-primary)" stroke-dasharray="3 3" stroke-opacity="0.5" stroke-width="1" />
+            <line id="line-rag" x1="200" y1="166" x2="200" y2="260" stroke="var(--sys-color-accent-primary)" stroke-dasharray="3 3" stroke-opacity="0.5" stroke-width="1" />
+          </svg>
+
+          <!-- Interactive cursor handler -->
+          <div class="nv-showcase-cursor" style="position: absolute; width: 14px; height: 14px; transform: translate(-50%, -50%); border-radius: 50%; background: var(--sys-color-accent-primary); box-shadow: 0 0 10px var(--sys-color-accent-primary); pointer-events: none; left: 50%; top: 50%;"></div>
+        </div>
+
+        <!-- Dynamic similarity readout -->
+        <div class="nv-showcase-telemetry">
+          <div class="nv-showcase-metric">
+            <span class="nv-metric-label">PROXIMITY_EMBEDDINGS</span>
+            <div class="nv-metric-progress">
+              <div class="nv-metric-bar" data-bar="embeddings"></div>
+            </div>
+            <span class="nv-metric-val" data-metric="embeddings">0.000</span>
+          </div>
+
+          <div class="nv-showcase-metric">
+            <span class="nv-metric-label">PROXIMITY_SELF_ATTENTION</span>
+            <div class="nv-metric-progress">
+              <div class="nv-metric-bar" data-bar="attention"></div>
+            </div>
+            <span class="nv-metric-val" data-metric="attention">0.000</span>
+          </div>
+
+          <div class="nv-showcase-metric">
+            <span class="nv-metric-label">PROXIMITY_AGENTIC_RAG</span>
+            <div class="nv-metric-progress">
+              <div class="nv-metric-bar" data-bar="rag"></div>
+            </div>
+            <span class="nv-metric-val" data-metric="rag">0.000</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Philosophy Section -->
+  <section class="nv-home-philosophy" aria-labelledby="philosophy-title">
+    <div class="nv-philosophy-header">
+      <span class="nv-section-kicker">PLATFORM PRINCIPLES</span>
+      <h2 id="philosophy-title" class="nv-section-title">The Observatory Axioms</h2>
+    </div>
+    
+    <div class="nv-philosophy-grid">
+      <div class="nv-philosophy-item">
+        <h3>Local-First Verification</h3>
+        <p>All computations, models, and progress tracking run locally within the browser sandbox. Your telemetry and knowledge graphs remain yours.</p>
+      </div>
+
+      <div class="nv-philosophy-item">
+        <h3>Topological Mapping</h3>
+        <p>We reject linear syllabus structures. Learning is a directed graph where competencies form prerequisite and dependent relationships.</p>
+      </div>
+
+      <div class="nv-philosophy-item">
+        <h3>Empirical Grounding</h3>
+        <p>Concepts must connect to code, and code must connect to peer-reviewed evidence. Speculation is replaced by interactive verification.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Final CTA Section -->
+  <section class="nv-home-cta" aria-labelledby="final-cta-title">
+    <div class="nv-cta-terminal">
+      <div class="nv-terminal-header">
+        <span class="nv-terminal-status-dot"></span>
+        <h2 id="final-cta-title">INITIATE OBSERVATORY ACCESS</h2>
+      </div>
+      <p class="nv-terminal-desc">
+        Enter the observatory. Access the curriculum, open laboratories, and build your private local knowledge repository.
+      </p>
+      <div class="nv-terminal-actions">
+        <a href="#/learning" class="nv-button" data-variant="primary">Start Learning</a>
+        <a href="#/workspace" class="nv-button" data-variant="ghost">Open Workspace</a>
+      </div>
+      <div class="nv-terminal-footer">
+        <span>SECURITY_LEVEL: VERIFIED</span>
+        <span>DATABASE_STATUS: PERSISTED_LOCAL</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Hidden Session Continuity Parity Containers -->
+  <div style="display: none;" aria-hidden="true">
+    <div data-home-onboarding>
+      <a href="#/learning" data-variant="secondary"></a>
+      <a href="#/workspace" data-variant="ghost"></a>
+    </div>
+    <div data-home-session>
+      <div data-workspace-continue>
+        <span data-workspace-continue-path></span>
+        <span data-workspace-continue-module></span>
+        <span data-workspace-continue-content></span>
+        <a data-workspace-continue-action></a>
+      </div>
+      <div data-workspace-last-opened>
+        <span data-workspace-last-opened-title></span>
+        <span data-workspace-last-opened-module></span>
+        <span data-workspace-last-opened-path></span>
+        <span data-workspace-last-opened-time></span>
+        <a data-workspace-last-opened-action></a>
+      </div>
+      <span data-workspace-context-path></span>
+      <span data-workspace-context-module></span>
+      <span data-workspace-context-content></span>
+      <span data-workspace-context-last-opened></span>
+      <span data-workspace-context-progress></span>
+      <span data-workspace-progress-path></span>
+      <span data-workspace-progress-module></span>
+      <span data-workspace-progress-content-status></span>
+      <span data-workspace-progress-count></span>
+      <span data-workspace-focus-path></span>
+      <span data-workspace-focus-module></span>
+      <span data-workspace-focus-content></span>
+      <span data-workspace-next-content></span>
+      <span data-workspace-remaining-items></span>
+      <span data-workspace-remaining-reading-time></span>
+      <a data-workspace-next-content-action></a>
+      <span data-workspace-orientation-path></span>
+      <span data-workspace-orientation-module></span>
+      <span data-workspace-orientation-content></span>
+      <span data-workspace-path-summary-progress></span>
+      <span data-workspace-path-summary-completed></span>
+      <span data-workspace-path-summary-remaining></span>
+      <span data-workspace-path-summary-reading></span>
+      <span data-workspace-path-summary-remaining-reading></span>
+      <span data-workspace-path-summary-status></span>
+      <span data-workspace-module-summary-progress></span>
+      <span data-workspace-module-summary-completed></span>
+      <span data-workspace-module-summary-remaining></span>
+      <span data-workspace-module-summary-reading></span>
+      <span data-workspace-module-summary-remaining-reading></span>
+      <span data-workspace-module-summary-status></span>
+      <span data-workspace-position-content></span>
+      <span data-workspace-position-module></span>
+    </div>
   </div>
-</div>
+</section>

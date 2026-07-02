@@ -372,7 +372,13 @@ function runSourceChecks() {
 
 function execSyncCheck(file) {
   const { execSync } = require('child_process');
-  execSync(`node --check ${JSON.stringify(file)}`, { stdio: 'pipe' });
+  const tempFile = file.replace(/\.js$/, '.mjs');
+  fs.copyFileSync(file, tempFile);
+  try {
+    execSync(`node --check ${JSON.stringify(tempFile)}`, { stdio: 'pipe' });
+  } finally {
+    try { fs.unlinkSync(tempFile); } catch (e) {}
+  }
 }
 
 // =====================================================================
