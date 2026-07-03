@@ -126,22 +126,26 @@ function renderFilterableCollection(items, renderItem, emptyMessage, className =
     empty.hidden = visible.length > 0;
   }
 
-  ['All', 'Reviewed', 'Draft'].forEach((label) => {
-    const button = el('button', 'nv-button nv-curriculum-filter__button', label);
-    button.type = 'button';
-    button.dataset.variant = label === 'All' ? 'primary' : 'secondary';
-    button.setAttribute('aria-pressed', String(label === 'All'));
-    button.addEventListener('click', () => {
-      controls.querySelectorAll('button').forEach((candidate) => {
-        candidate.dataset.variant = 'secondary';
-        candidate.setAttribute('aria-pressed', 'false');
+  if (items.length > 0) {
+    ['All', 'Reviewed', 'Draft'].forEach((label) => {
+      const button = el('button', 'nv-button nv-curriculum-filter__button', label);
+      button.type = 'button';
+      button.dataset.variant = label === 'All' ? 'primary' : 'secondary';
+      button.setAttribute('aria-pressed', String(label === 'All'));
+      button.addEventListener('click', () => {
+        controls.querySelectorAll('button').forEach((candidate) => {
+          candidate.dataset.variant = 'secondary';
+          candidate.setAttribute('aria-pressed', 'false');
+        });
+        button.dataset.variant = 'primary';
+        button.setAttribute('aria-pressed', 'true');
+        paint(label);
       });
-      button.dataset.variant = 'primary';
-      button.setAttribute('aria-pressed', 'true');
-      paint(label);
+      controls.append(button);
     });
-    controls.append(button);
-  });
+  } else {
+    controls.hidden = true;
+  }
 
   paint();
   wrapper.append(controls, list, empty);
@@ -313,6 +317,362 @@ function markdownToHtml(markdown) {
   return html.join('');
 }
 
+const CURRICULUM_MODULES = [
+  { index: 0, label: 'Foundations', subtitle: 'Mathematical & Computational Base', description: 'Linear algebra, probability, and programming fundamentals.', prereqs: [], unlocks: [1] },
+  { index: 1, label: 'Classical ML & Signal Processing', subtitle: 'Statistical Learning', description: 'Regression, classification, feature engineering, and signal analysis.', prereqs: [0], unlocks: [2] },
+  { index: 2, label: 'Deep Learning & Foundation Models', subtitle: 'Neural Network Architectures', description: 'Representation learning, transformers, and large-scale pretraining.', prereqs: [1], unlocks: [3, 4] },
+  { index: 3, label: '3D Vision & Neural SLAM', subtitle: 'Spatial Intelligence', description: 'Depth estimation, point clouds, and simultaneous localization.', prereqs: [2], unlocks: [4] },
+  { index: 4, label: 'Robotics, Edge AI & Autonomous Systems', subtitle: 'Embodied Intelligence', description: 'Perception-action loops, embedded inference, and autonomous control.', prereqs: [2, 3], unlocks: [5] },
+  { index: 5, label: 'MLOps & Production Engineering', subtitle: 'Systems at Scale', description: 'Deployment pipelines, monitoring, and production reliability.', prereqs: [4], unlocks: [] },
+];
+
+function renderCurriculumConstellation() {
+  const section = el('section', 'nv-curriculum-constellation-section');
+  section.setAttribute('aria-labelledby', 'constellation-title');
+
+  const header = el('div', 'nv-curriculum-constellation__header');
+  const overline = el('p', 'nv-curriculum-constellation__overline', 'CURRICULUM MAP');
+  const title = el('h2', 'nv-curriculum-constellation__title', 'Six modules. One engineering path.');
+  header.append(overline, title);
+
+  const canvas = el('div', 'nv-curriculum-constellation__canvas');
+  canvas.setAttribute('role', 'list');
+  canvas.setAttribute('aria-label', 'Curriculum modules — click to select, hover to explore dependencies');
+
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.classList.add('nv-curriculum-constellation__lines');
+  svg.setAttribute('aria-hidden', 'true');
+  svg.setAttribute('viewBox', '0 0 1000 400');
+  svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+
+  const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+
+  const grad = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
+  grad.id = 'conn-grad';
+  const stop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+  stop1.setAttribute('offset', '0%');
+  stop1.setAttribute('stop-color', 'var(--sys-color-accent-primary)');
+  stop1.setAttribute('stop-opacity', '0.18');
+  const stop2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+  stop2.setAttribute('offset', '50%');
+  stop2.setAttribute('stop-color', 'var(--sys-color-accent-primary)');
+  stop2.setAttribute('stop-opacity', '0.35');
+  const stop3 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+  stop3.setAttribute('offset', '100%');
+  stop3.setAttribute('stop-color', 'var(--sys-color-accent-primary)');
+  stop3.setAttribute('stop-opacity', '0.18');
+  grad.append(stop1, stop2, stop3);
+  defs.append(grad);
+
+  const flowGrad = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
+  flowGrad.id = 'flow-grad';
+  const fs1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+  fs1.setAttribute('offset', '0%');
+  fs1.setAttribute('stop-color', 'var(--sys-color-accent-primary)');
+  fs1.setAttribute('stop-opacity', '0.08');
+  const fs2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+  fs2.setAttribute('offset', '100%');
+  fs2.setAttribute('stop-color', 'var(--sys-color-accent-primary)');
+  fs2.setAttribute('stop-opacity', '0.28');
+  flowGrad.append(fs1, fs2);
+  defs.append(flowGrad);
+
+
+
+  svg.append(defs);
+
+  const hubX = 500;
+  const hubY = 200;
+  const outerPositions = CURRICULUM_MODULES.map((_, i) => {
+    const angle = (Math.PI * 2 * i) / CURRICULUM_MODULES.length - Math.PI / 2;
+    const rx = 380;
+    const ry = 160;
+    return { x: hubX + rx * Math.cos(angle), y: hubY + ry * Math.sin(angle) };
+  });
+
+  const arcPaths = [];
+  for (let i = 0; i < CURRICULUM_MODULES.length - 1; i++) {
+    const from = outerPositions[i];
+    const to = outerPositions[i + 1];
+    const midX = (from.x + to.x) / 2;
+    const midY = (from.y + to.y) / 2 - 30;
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', `M ${from.x} ${from.y} Q ${midX} ${midY} ${to.x} ${to.y}`);
+    path.setAttribute('fill', 'none');
+    path.setAttribute('stroke', 'url(#flow-grad)');
+    path.setAttribute('stroke-width', '1');
+    path.dataset.from = String(i);
+    path.dataset.to = String(i + 1);
+
+    arcPaths.push(path);
+    svg.append(path);
+  }
+
+  const hubDot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+  hubDot.setAttribute('cx', hubX);
+  hubDot.setAttribute('cy', hubY);
+  hubDot.setAttribute('r', '2');
+  hubDot.setAttribute('fill', 'none');
+  hubDot.setAttribute('stroke', 'var(--sys-color-accent-primary)');
+  hubDot.setAttribute('stroke-width', '0.5');
+  hubDot.setAttribute('stroke-dasharray', '4 4');
+  hubDot.setAttribute('opacity', '0.25');
+  svg.append(hubDot);
+
+  const radialLines = [];
+  for (let i = 0; i < outerPositions.length; i++) {
+    const pos = outerPositions[i];
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('x1', hubX);
+    line.setAttribute('y1', hubY);
+    line.setAttribute('x2', pos.x);
+    line.setAttribute('y2', pos.y);
+    line.setAttribute('stroke', 'var(--sys-color-accent-primary)');
+    line.setAttribute('stroke-width', '0.5');
+    line.setAttribute('stroke-dasharray', '3 6');
+    line.setAttribute('opacity', '0.12');
+    line.dataset.index = String(i);
+    radialLines.push(line);
+    svg.append(line);
+  }
+
+  canvas.append(svg);
+
+  let selectedIndex = null;
+  let hoveredIndex = null;
+
+
+
+  function clearSelection() {
+    selectedIndex = null;
+    canvas.classList.remove('nv-curriculum-constellation__canvas--has-selection');
+    canvas.querySelectorAll('.nv-curriculum-constellation__node--selected').forEach((n) => {
+      n.classList.remove('nv-curriculum-constellation__node--selected');
+      n.setAttribute('aria-pressed', 'false');
+    });
+    canvas.querySelectorAll('.nv-curriculum-constellation__node--prereq').forEach((n) => {
+      n.classList.remove('nv-curriculum-constellation__node--prereq');
+    });
+    canvas.querySelectorAll('.nv-curriculum-constellation__node--successor').forEach((n) => {
+      n.classList.remove('nv-curriculum-constellation__node--successor');
+    });
+    canvas.querySelectorAll('.nv-curriculum-constellation__node--unrelated').forEach((n) => {
+      n.classList.remove('nv-curriculum-constellation__node--unrelated');
+    });
+    arcPaths.forEach((p) => {
+      p.classList.remove('nv-curriculum-constellation__line--connected');
+      p.classList.remove('nv-curriculum-constellation__line--prereq');
+      p.classList.remove('nv-curriculum-constellation__line--successor');
+    });
+    radialLines.forEach((l) => l.classList.remove('nv-curriculum-constellation__line--connected'));
+    updateProgressionInfo(null);
+  }
+
+  function selectNode(index) {
+    if (selectedIndex === index) {
+      clearSelection();
+      return;
+    }
+    clearSelection();
+    selectedIndex = index;
+    canvas.classList.add('nv-curriculum-constellation__canvas--has-selection');
+
+    const mod = CURRICULUM_MODULES[index];
+
+    canvas.querySelectorAll('.nv-curriculum-constellation__node').forEach((n) => {
+      const ni = parseInt(n.dataset.index, 10);
+      if (ni === index) {
+        n.classList.add('nv-curriculum-constellation__node--selected');
+        n.setAttribute('aria-pressed', 'true');
+      } else if (mod.prereqs.includes(ni)) {
+        n.classList.add('nv-curriculum-constellation__node--prereq');
+      } else if (mod.unlocks.includes(ni)) {
+        n.classList.add('nv-curriculum-constellation__node--successor');
+      } else {
+        n.classList.add('nv-curriculum-constellation__node--unrelated');
+      }
+    });
+
+    arcPaths.forEach((p) => {
+      const from = parseInt(p.dataset.from, 10);
+      const to = parseInt(p.dataset.to, 10);
+      if (mod.prereqs.includes(from) && to === index) {
+        p.classList.add('nv-curriculum-constellation__line--prereq');
+      } else if (from === index && mod.unlocks.includes(to)) {
+        p.classList.add('nv-curriculum-constellation__line--successor');
+      } else if (from === index || to === index) {
+        p.classList.add('nv-curriculum-constellation__line--connected');
+      }
+    });
+
+    const radial = radialLines[index];
+    if (radial) radial.classList.add('nv-curriculum-constellation__line--connected');
+
+    updateProgressionInfo(index);
+  }
+
+  function highlightProgression(index) {
+    const mod = CURRICULUM_MODULES[index];
+
+    canvas.querySelectorAll('.nv-curriculum-constellation__node').forEach((n) => {
+      const ni = parseInt(n.dataset.index, 10);
+      if (ni === index) return;
+      if (mod.prereqs.includes(ni)) {
+        n.classList.add('nv-curriculum-constellation__node--prereq');
+      } else if (mod.unlocks.includes(ni)) {
+        n.classList.add('nv-curriculum-constellation__node--successor');
+      } else {
+        n.classList.add('nv-curriculum-constellation__node--unrelated');
+      }
+    });
+
+    arcPaths.forEach((p) => {
+      const from = parseInt(p.dataset.from, 10);
+      const to = parseInt(p.dataset.to, 10);
+      if (mod.prereqs.includes(from) && to === index) {
+        p.classList.add('nv-curriculum-constellation__line--prereq');
+      } else if (from === index && mod.unlocks.includes(to)) {
+        p.classList.add('nv-curriculum-constellation__line--successor');
+      } else if (from === index || to === index) {
+        p.classList.add('nv-curriculum-constellation__line--connected');
+      }
+    });
+
+    const radial = radialLines[index];
+    if (radial) radial.classList.add('nv-curriculum-constellation__line--connected');
+  }
+
+  function resetHighlights() {
+    if (selectedIndex !== null) return;
+    canvas.querySelectorAll('.nv-curriculum-constellation__node--prereq, .nv-curriculum-constellation__node--successor, .nv-curriculum-constellation__node--unrelated').forEach((n) => {
+      n.classList.remove('nv-curriculum-constellation__node--prereq', 'nv-curriculum-constellation__node--successor', 'nv-curriculum-constellation__node--unrelated');
+    });
+    arcPaths.forEach((p) => {
+      p.classList.remove('nv-curriculum-constellation__line--connected', 'nv-curriculum-constellation__line--prereq', 'nv-curriculum-constellation__line--successor');
+    });
+    radialLines.forEach((l) => l.classList.remove('nv-curriculum-constellation__line--connected'));
+    updateProgressionInfo(null);
+  }
+
+  function updateProgressionInfo(index) {
+    const infoEl = canvas.querySelector('.nv-curriculum-constellation__progression-info');
+    if (!infoEl) return;
+
+    if (index === null) {
+      infoEl.hidden = true;
+      infoEl.innerHTML = '';
+      return;
+    }
+
+    const mod = CURRICULUM_MODULES[index];
+    infoEl.hidden = false;
+    infoEl.innerHTML = '';
+
+    if (mod.prereqs.length > 0) {
+      const prereqBlock = el('div', 'nv-curriculum-constellation__progression-group');
+      const prereqLabel = el('span', 'nv-curriculum-constellation__progression-label', 'Prerequisites');
+      const prereqList = el('span', 'nv-curriculum-constellation__progression-list');
+      mod.prereqs.forEach((pi, idx) => {
+        if (idx > 0) prereqList.append(el('span', 'nv-curriculum-constellation__progression-sep', ' / '));
+        prereqList.append(el('span', 'nv-curriculum-constellation__progression-item', CURRICULUM_MODULES[pi].label));
+      });
+      prereqBlock.append(prereqLabel, prereqList);
+      infoEl.append(prereqBlock);
+    }
+
+    if (mod.unlocks.length > 0) {
+      const unlockBlock = el('div', 'nv-curriculum-constellation__progression-group');
+      const unlockLabel = el('span', 'nv-curriculum-constellation__progression-label', 'Unlocks');
+      const unlockList = el('span', 'nv-curriculum-constellation__progression-list');
+      mod.unlocks.forEach((ui, idx) => {
+        if (idx > 0) unlockList.append(el('span', 'nv-curriculum-constellation__progression-sep', ' / '));
+        unlockList.append(el('span', 'nv-curriculum-constellation__progression-item', CURRICULUM_MODULES[ui].label));
+      });
+      unlockBlock.append(unlockLabel, unlockList);
+      infoEl.append(unlockBlock);
+    }
+
+    if (mod.prereqs.length === 0 && mod.unlocks.length === 0) {
+      const standalone = el('span', 'nv-curriculum-constellation__progression-standalone', 'Entry point — no prerequisites');
+      infoEl.append(standalone);
+    }
+  }
+
+  CURRICULUM_MODULES.forEach((mod, i) => {
+    const pos = outerPositions[i];
+    const pctX = (pos.x / 1000) * 100;
+    const pctY = (pos.y / 400) * 100;
+
+    const node = el('div', 'nv-curriculum-constellation__node');
+    node.setAttribute('role', 'listitem');
+    node.setAttribute('tabindex', '0');
+    node.setAttribute('aria-label', `Module ${mod.index}: ${mod.label} — ${mod.subtitle}`);
+    node.setAttribute('aria-pressed', 'false');
+    node.dataset.index = String(i);
+    node.style.left = `${pctX}%`;
+    node.style.top = `${pctY}%`;
+    node.style.setProperty('--node-index', i);
+
+
+
+    const ring = el('span', 'nv-curriculum-constellation__node-ring');
+    ring.setAttribute('aria-hidden', 'true');
+
+    const core = el('span', 'nv-curriculum-constellation__node-core');
+    core.setAttribute('aria-hidden', 'true');
+
+    const number = el('span', 'nv-curriculum-constellation__node-number', String(mod.index));
+    number.setAttribute('aria-hidden', 'true');
+
+    const label = el('span', 'nv-curriculum-constellation__node-label', mod.label);
+
+    const subtitle = el('span', 'nv-curriculum-constellation__node-subtitle', mod.subtitle);
+    subtitle.setAttribute('aria-hidden', 'true');
+
+    const description = el('span', 'nv-curriculum-constellation__node-description', mod.description);
+    description.setAttribute('aria-hidden', 'true');
+
+    const textWrap = el('div', 'nv-curriculum-constellation__node-info');
+    textWrap.append(label, subtitle, description);
+
+    node.append(ring, core, number, textWrap);
+
+    node.addEventListener('mouseenter', () => {
+      hoveredIndex = i;
+      if (selectedIndex === null) highlightProgression(i);
+    });
+    node.addEventListener('mouseleave', () => {
+      hoveredIndex = null;
+      if (selectedIndex === null) resetHighlights();
+    });
+    node.addEventListener('click', () => selectNode(i));
+    node.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        selectNode(i);
+      }
+    });
+
+    canvas.append(node);
+  });
+
+  const progressionInfo = el('div', 'nv-curriculum-constellation__progression-info');
+  progressionInfo.setAttribute('aria-live', 'polite');
+  progressionInfo.hidden = true;
+  canvas.append(progressionInfo);
+
+  canvas.addEventListener('click', (e) => {
+    if (e.target === canvas || e.target === svg) {
+      clearSelection();
+    }
+  });
+
+  const caption = el('p', 'nv-curriculum-constellation__caption', 'Hover to explore dependencies. Click to inspect a module.');
+
+  section.append(header, canvas, caption);
+  return section;
+}
+
 function setWorkspace(title, description) {
   const workspace = window.NeuralVerse?.workspace || window.NeuralVerse?.workspaceState;
   if (workspace && typeof workspace.setState === 'function') {
@@ -371,19 +731,20 @@ export function createCurriculumController(options = {}) {
     container.innerHTML = '';
 
     const header = el('header', 'nv-curriculum-hero');
-    const eyebrow = el('span', 'nv-badge', 'NV-800 Curriculum');
-    eyebrow.dataset.variant = 'info';
     if (breadcrumbItems.length) header.append(breadcrumbs(breadcrumbItems));
-    header.append(eyebrow, el('h1', '', title));
+    header.append(el('h1', '', title));
     if (description) header.append(el('p', 'nv-muted', description));
     if (stats.length) {
-      const statGrid = el('dl', 'nv-curriculum-stats');
-      stats.forEach((stat) => {
-        const item = el('div', 'nv-curriculum-stat');
-        item.append(el('dt', '', stat.label), el('dd', '', stat.value));
-        statGrid.append(item);
-      });
-      header.append(statGrid);
+      const allZero = stats.every((stat) => stat.value === '0');
+      if (!allZero) {
+        const statGrid = el('dl', 'nv-curriculum-stats');
+        stats.forEach((stat) => {
+          const item = el('div', 'nv-curriculum-stat');
+          item.append(el('dt', '', stat.label), el('dd', '', stat.value));
+          statGrid.append(item);
+        });
+        header.append(statGrid);
+      }
     }
 
     const body = el('div', 'nv-stack nv-stack--gap-lg');
@@ -409,22 +770,153 @@ export function createCurriculumController(options = {}) {
     setWorkspace('Learning Paths', `${paths.length} canonical learning paths available.`);
   }
 
-  async function renderModulesIndex() {
-    const modules = await service.getModules();
-    const reviewedCount = modules.filter((module) => module.canonicalStatus === 'Reviewed').length;
-    const body = renderShell('Modules', 'Canonical NV-800 modules across all learning paths.', [
-      { label: 'Modules' },
-    ], [
+  function renderModulesHero(modules, reviewedCount) {
+    const container = target();
+    if (!container) return null;
+    container.innerHTML = '';
+
+    const hero = el('section', 'nv-modules-hero');
+    hero.setAttribute('aria-labelledby', 'modules-hero-title');
+
+    const ambient = el('div', 'nv-modules-hero__ambient', '');
+    ambient.setAttribute('aria-hidden', 'true');
+
+    const copy = el('div', 'nv-modules-hero__copy');
+    const kicker = el('p', 'nv-modules-hero__kicker', 'CURRICULUM');
+    const title = el('h1', 'nv-modules-hero__title', 'Explore the AI Engineering Journey');
+    const subtitle = el('p', 'nv-modules-hero__subtitle', 'The complete curriculum — from foundations to autonomous agents — organized as a structured learning path through the core disciplines of AI engineering.');
+
+    const actions = el('div', 'nv-modules-hero__actions');
+    const primaryCta = el('a', 'nv-button', 'Browse Roadmap');
+    primaryCta.dataset.variant = 'primary';
+    primaryCta.href = '#/learning';
+    const secondaryCta = el('a', 'nv-button', 'Explore Learning Paths');
+    secondaryCta.dataset.variant = 'secondary';
+    secondaryCta.href = '#/learning';
+    actions.append(primaryCta, secondaryCta);
+
+    copy.append(kicker, title, subtitle, actions);
+
+    const illustration = el('div', 'nv-modules-hero__illustration', '');
+    illustration.setAttribute('aria-hidden', 'true');
+
+    const core = el('div', 'nv-modules-hero__core', '');
+    core.textContent = 'Curriculum';
+
+    const orbitRing = el('span', 'nv-modules-hero__ring nv-modules-hero__ring--outer', '');
+    const orbitRingInner = el('span', 'nv-modules-hero__ring nv-modules-hero__ring--inner', '');
+
+    const nodeData = [
+      { label: 'Foundations', cls: 'nv-modules-hero__node--a' },
+      { label: 'ML', cls: 'nv-modules-hero__node--b' },
+      { label: 'Deep Learning', cls: 'nv-modules-hero__node--c' },
+      { label: 'NLP', cls: 'nv-modules-hero__node--d' },
+      { label: 'Agents', cls: 'nv-modules-hero__node--e' },
+      { label: 'MLOps', cls: 'nv-modules-hero__node--f' },
+    ];
+    const nodes = nodeData.map((n) => {
+      const node = el('span', `nv-modules-hero__node ${n.cls}`, '');
+      node.textContent = n.label;
+      return node;
+    });
+
+    const beamA = el('span', 'nv-modules-hero__beam nv-modules-hero__beam--a', '');
+    const beamB = el('span', 'nv-modules-hero__beam nv-modules-hero__beam--b', '');
+    const beamC = el('span', 'nv-modules-hero__beam nv-modules-hero__beam--c', '');
+
+    illustration.append(orbitRing, orbitRingInner, core, beamA, beamB, beamC, ...nodes);
+
+    hero.append(ambient, copy, illustration);
+
+    const stats = [
       { label: 'Modules', value: String(modules.length) },
       { label: 'Reviewed', value: String(reviewedCount) },
       { label: 'Draft', value: String(modules.length - reviewedCount) },
-    ]);
+    ];
+    const allZero = stats.every((s) => s.value === '0');
+
+    const body = el('div', 'nv-stack nv-stack--gap-lg');
+    container.append(hero, body);
+
+    if (!allZero) {
+      const statGrid = el('dl', 'nv-curriculum-stats');
+      stats.forEach((stat) => {
+        const item = el('div', 'nv-curriculum-stat');
+        item.append(el('dt', '', stat.label), el('dd', '', stat.value));
+        statGrid.append(item);
+      });
+      body.append(statGrid);
+    }
+
+    return body;
+  }
+
+  function renderModulesEmptyState() {
+    const section = el('section', 'nv-modules-empty');
+    section.setAttribute('aria-label', 'Curriculum initializing');
+
+    const illustration = el('div', 'nv-modules-empty__illustration', '');
+    illustration.setAttribute('aria-hidden', 'true');
+    const crystal = el('div', 'nv-modules-empty__crystal', '');
+    const ring = el('span', 'nv-modules-empty__ring', '');
+    illustration.append(crystal, ring);
+
+    const copy = el('div', 'nv-modules-empty__copy');
+    const heading = el('h2', 'nv-modules-empty__title', 'The curriculum is being assembled.');
+    const desc = el('p', 'nv-modules-empty__desc', 'Canonical modules are being registered. Once the curriculum index is populated, the full learning structure will appear here.');
+    const cta = el('a', 'nv-button', 'View Curriculum Roadmap');
+    cta.dataset.variant = 'secondary';
+    cta.href = '#/learning';
+    copy.append(heading, desc, cta);
+
+    section.append(illustration, copy);
+    return section;
+  }
+
+  function renderModulesPlaceholders() {
+    const grid = el('div', 'nv-modules-placeholder-grid');
+    const placeholders = [
+      { index: '0', title: 'Data Science Foundations', status: 'Preparing...' },
+      { index: '1', title: 'Machine Learning', status: 'Preparing...' },
+      { index: '2', title: 'Deep Learning', status: 'Preparing...' },
+      { index: '3', title: 'Natural Language Processing', status: 'Preparing...' },
+      { index: '4', title: 'AI Agents & Orchestration', status: 'Preparing...' },
+      { index: '5', title: 'MLOps & Deployment', status: 'Preparing...' },
+    ];
+    placeholders.forEach((p) => {
+      const card = el('article', 'nv-modules-placeholder');
+      const header = el('div', 'nv-modules-placeholder__header');
+      const index = el('span', 'nv-modules-placeholder__index', p.index);
+      const status = el('span', 'nv-modules-placeholder__status', p.status);
+      header.append(index, status);
+      const title = el('h3', 'nv-modules-placeholder__title', p.title);
+      const bar = el('div', 'nv-modules-placeholder__bar');
+      bar.setAttribute('aria-hidden', 'true');
+      card.append(header, title, bar);
+      grid.append(card);
+    });
+    return grid;
+  }
+
+  async function renderModulesIndex() {
+    const modules = await service.getModules();
+    const reviewedCount = modules.filter((module) => module.canonicalStatus === 'Reviewed').length;
+    const body = renderModulesHero(modules, reviewedCount);
     if (!body) return;
-    body.append(renderFilterableCollection(modules, (module) => card(module.title, module.aim || module.overview, `#/modules/${module.id}`, module.canonicalStatus, [
-      meta('Lessons', String(module.lessonIds.length)),
-      meta('Artifacts', String(module.artifactScope.length)),
-      meta('Type', module.type),
-    ], { kind: 'module', kicker: 'Module' }), 'No modules found.'));
+
+    body.append(renderCurriculumConstellation());
+
+    if (modules.length === 0) {
+      body.append(renderModulesEmptyState());
+      body.append(renderModulesPlaceholders());
+    } else {
+      body.append(renderFilterableCollection(modules, (module) => card(module.title, module.aim || module.overview, `#/modules/${module.id}`, module.canonicalStatus, [
+        meta('Lessons', String(module.lessonIds.length)),
+        meta('Artifacts', String(module.artifactScope.length)),
+        meta('Type', module.type),
+      ], { kind: 'module', kicker: 'Module' }), 'No modules found. The curriculum index is currently empty. Once canonical modules are registered, they will appear here as the main learning structure of NeuralVerse.'));
+    }
+
     setWorkspace('Modules', `${modules.length} canonical modules available.`);
   }
 

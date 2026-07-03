@@ -283,9 +283,12 @@
   border-inline-start: var(--ref-border-width-emphasis) solid var(--sys-color-accent-primary);
 }
 
-.nv-curriculum-loading,
-.nv-curriculum-empty {
+.nv-curriculum-loading {
   min-block-size: 16rem;
+}
+
+.nv-curriculum-empty {
+  min-block-size: 8rem;
 }
 
 .nv-curriculum-skeleton {
@@ -1516,5 +1519,1123 @@ body:has(.nv-learning-hero) [data-workspace-empty-state] {
   .nv-lesson-workspace__outline-summary {
     cursor: default;
     pointer-events: none;
+  }
+}
+
+/* =========================================================
+   Modules Page — Premium Hero
+   ========================================================= */
+
+.nv-modules-hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(18rem, 0.55fr) minmax(22rem, 1.45fr);
+  align-items: center;
+  gap: clamp(2.5rem, 6vw, 6rem);
+  min-block-size: clamp(34rem, 72vh, 46rem);
+  padding: clamp(3.5rem, 7vw, 6rem) clamp(var(--sys-space-inset-md), 4vw, var(--sys-space-inset-xl));
+  border: var(--sys-border-subtle) solid var(--sys-premium-border);
+  border-radius: var(--sys-premium-radius-card);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* Ambient background */
+.nv-modules-hero__ambient {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      ellipse 70% 55% at 22% 38%,
+      color-mix(in srgb, var(--sys-color-accent-primary) 10%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse 55% 50% at 78% 58%,
+      color-mix(in srgb, var(--sys-color-accent-primary) 6%, transparent),
+      transparent 65%
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--sys-color-text-primary) 4%, transparent),
+      transparent 50%
+    ),
+    var(--sys-premium-surface);
+  filter: blur(0px);
+  animation: nv-modules-hero-ambient-in 1.8s var(--motion-easing-decelerate, ease-out) both;
+}
+
+@keyframes nv-modules-hero-ambient-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Copy section */
+.nv-modules-hero__copy {
+  position: relative;
+  display: grid;
+  gap: clamp(0.85rem, 1.6vw, 1.35rem);
+  align-content: center;
+  max-inline-size: 36rem;
+  z-index: 1;
+}
+
+.nv-modules-hero__kicker {
+  margin: 0;
+  color: var(--sys-color-accent-primary);
+  font-family: var(--sys-font-code-family);
+  font-size: 0.6875rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 500;
+  opacity: 0;
+  animation: nv-modules-hero-fade-up 0.7s var(--motion-easing-decelerate, ease-out) 0.15s forwards;
+}
+
+.nv-modules-hero__title {
+  margin: 0;
+  font-family: var(--sys-font-display-family);
+  font-size: clamp(2.25rem, 4.6vw, 3.5rem);
+  font-weight: 640;
+  line-height: 1.02;
+  letter-spacing: -0.048em;
+  color: var(--sys-color-text-primary);
+  text-wrap: balance;
+  opacity: 0;
+  animation: nv-modules-hero-fade-up 0.8s var(--motion-easing-decelerate, ease-out) 0.3s forwards;
+}
+
+.nv-modules-hero__subtitle {
+  margin: 0;
+  max-inline-size: 38ch;
+  color: color-mix(in srgb, var(--sys-color-text-secondary) 88%, var(--sys-color-text-primary));
+  font-size: clamp(0.9375rem, 1.05vw, 1.0625rem);
+  line-height: 1.6;
+  letter-spacing: 0.002em;
+  opacity: 0;
+  animation: nv-modules-hero-fade-up 0.8s var(--motion-easing-decelerate, ease-out) 0.45s forwards;
+}
+
+.nv-modules-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-block-start: 0.25rem;
+  opacity: 0;
+  animation: nv-modules-hero-fade-up 0.8s var(--motion-easing-decelerate, ease-out) 0.6s forwards;
+}
+
+.nv-modules-hero__actions .nv-button--primary {
+  min-inline-size: 10rem;
+  transition: transform 0.2s var(--motion-easing-standard), box-shadow 0.2s var(--motion-easing-standard);
+}
+
+.nv-modules-hero__actions .nv-button--primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--sys-color-accent-primary) 20%, transparent);
+}
+
+@keyframes nv-modules-hero-fade-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Illustration — orbital constellation */
+.nv-modules-hero__illustration {
+  position: relative;
+  aspect-ratio: 1.1;
+  min-block-size: clamp(22rem, 38vw, 32rem);
+  border-radius: 2.5rem;
+  background:
+    linear-gradient(90deg, transparent 0 calc(50% - 0.5px), color-mix(in srgb, var(--sys-color-text-primary) 4%, transparent) calc(50% - 0.5px) calc(50% + 0.5px), transparent calc(50% + 0.5px)),
+    linear-gradient(0deg, transparent 0 calc(50% - 0.5px), color-mix(in srgb, var(--sys-color-text-primary) 3%, transparent) calc(50% - 0.5px) calc(50% + 0.5px), transparent calc(50% + 0.5px)),
+    radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--sys-color-accent-primary) 12%, transparent), transparent 22%),
+    radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--sys-color-text-primary) 4%, transparent), transparent 55%);
+  overflow: hidden;
+  opacity: 0;
+  animation: nv-modules-illustration-in 1.6s var(--motion-easing-decelerate, ease-out) 0.2s forwards;
+}
+
+@keyframes nv-modules-illustration-in {
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.nv-modules-hero__ring {
+  position: absolute;
+  border: 1px solid color-mix(in srgb, var(--sys-color-accent-primary) 18%, transparent);
+  border-radius: 50%;
+}
+
+.nv-modules-hero__ring--outer {
+  inset: 14%;
+  animation: nv-modules-orbit-drift 52s linear infinite, nv-modules-breathe 12s ease-in-out infinite;
+}
+
+.nv-modules-hero__ring--inner {
+  inset: 28%;
+  border-style: dashed;
+  opacity: 0.65;
+  animation: nv-modules-orbit-drift 64s linear infinite reverse, nv-modules-breathe 14s ease-in-out infinite;
+}
+
+@keyframes nv-modules-orbit-drift {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes nv-modules-breathe {
+  0%, 100% { opacity: 0.65; }
+  50% { opacity: 1; }
+}
+
+.nv-modules-hero__core {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  inline-size: clamp(7rem, 14vw, 11rem);
+  aspect-ratio: 1;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  font-family: var(--sys-font-display-family);
+  font-size: clamp(0.875rem, 1.5vw, 1.25rem);
+  font-weight: 650;
+  letter-spacing: -0.04em;
+  text-align: center;
+  color: var(--sys-color-text-primary);
+  background: color-mix(in srgb, var(--sys-color-surface-raised) 80%, transparent);
+  border: 1px solid color-mix(in srgb, var(--sys-color-accent-primary) 22%, var(--sys-color-border-subtle));
+  box-shadow:
+    0 28px 80px rgb(0 0 0 / 0.28),
+    inset 0 0 48px color-mix(in srgb, var(--sys-color-accent-primary) 8%, transparent);
+  transform: translate(-50%, -50%);
+  backdrop-filter: blur(18px);
+  z-index: 2;
+}
+
+.nv-modules-hero__beam {
+  position: absolute;
+  inset-inline-start: 50%;
+  inset-block-start: 50%;
+  inline-size: 38%;
+  block-size: 1px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--sys-color-accent-primary) 44%, transparent), transparent 78%);
+  transform-origin: left center;
+  opacity: 0.5;
+  animation: nv-modules-signal 9s ease-in-out infinite;
+}
+
+.nv-modules-hero__beam--a { transform: rotate(28deg); }
+.nv-modules-hero__beam--b { transform: rotate(148deg); animation-delay: 0.9s; }
+.nv-modules-hero__beam--c { transform: rotate(268deg); animation-delay: 1.6s; }
+
+@keyframes nv-modules-signal {
+  0%, 100% { opacity: 0.22; }
+  50% { opacity: 0.58; }
+}
+
+.nv-modules-hero__node {
+  position: absolute;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  min-inline-size: 6.5rem;
+  padding: 0.55rem 0.75rem;
+  border-radius: 0.85rem;
+  font-family: var(--sys-font-code-family);
+  font-size: 0.625rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sys-color-text-primary);
+  background: color-mix(in srgb, var(--sys-color-surface-raised) 78%, transparent);
+  border: 1px solid color-mix(in srgb, var(--sys-color-accent-primary) 20%, var(--sys-color-border-subtle));
+  box-shadow: 0 18px 58px rgb(0 0 0 / 0.24);
+  backdrop-filter: blur(18px);
+  transition: transform 180ms var(--motion-easing-standard), border-color 180ms var(--motion-easing-standard), box-shadow 180ms var(--motion-easing-standard);
+}
+
+.nv-modules-hero__node:hover {
+  transform: translateY(-2px) scale(1.01);
+  border-color: color-mix(in srgb, var(--sys-color-accent-primary) 60%, white);
+  box-shadow: 0 18px 52px rgb(0 0 0 / 0.28);
+}
+
+.nv-modules-hero__node--a { inset-block-start: 11%; inset-inline-start: 8%; animation: nv-modules-float 17s ease-in-out infinite; }
+.nv-modules-hero__node--b { inset-block-start: 15%; inset-inline-end: 7%; animation: nv-modules-float 18s ease-in-out infinite reverse; }
+.nv-modules-hero__node--c { inset-block: 44% auto; inset-inline-end: 2%; animation: nv-modules-float 16.5s ease-in-out infinite; }
+.nv-modules-hero__node--d { inset-block: 44% auto; inset-inline-start: 4%; animation: nv-modules-float 19s ease-in-out infinite reverse; }
+.nv-modules-hero__node--e { inset-block-end: 11%; inset-inline-end: 16%; animation: nv-modules-float 17.5s ease-in-out infinite; }
+.nv-modules-hero__node--f { inset-block-end: 16%; inset-inline-start: 6%; animation: nv-modules-float 20s ease-in-out infinite reverse; }
+
+@keyframes nv-modules-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+/* Modules Empty State */
+.nv-modules-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  padding: clamp(3rem, 6vw, 5rem) var(--sys-space-inset-lg);
+}
+
+.nv-modules-empty__illustration {
+  position: relative;
+  inline-size: clamp(7rem, 14vw, 10rem);
+  block-size: clamp(7rem, 14vw, 10rem);
+}
+
+.nv-modules-empty__crystal {
+  position: absolute;
+  inset: 15%;
+  border-radius: 1.25rem;
+  background:
+    conic-gradient(
+      from 45deg,
+      color-mix(in srgb, var(--sys-color-accent-primary) 14%, transparent),
+      color-mix(in srgb, var(--sys-color-accent-primary) 4%, transparent),
+      color-mix(in srgb, var(--sys-color-accent-primary) 14%, transparent),
+      color-mix(in srgb, var(--sys-color-accent-primary) 4%, transparent)
+    );
+  border: 1px solid color-mix(in srgb, var(--sys-color-accent-primary) 20%, var(--sys-color-border-subtle));
+  box-shadow:
+    0 16px 48px rgb(0 0 0 / 0.18),
+    inset 0 0 28px color-mix(in srgb, var(--sys-color-accent-primary) 6%, transparent);
+  animation: nv-modules-crystal-rotate 24s linear infinite, nv-modules-crystal-breathe 8s ease-in-out infinite;
+}
+
+.nv-modules-empty__ring {
+  position: absolute;
+  inset: 0;
+  border: 1px dashed color-mix(in srgb, var(--sys-color-accent-primary) 22%, transparent);
+  border-radius: 50%;
+  animation: nv-modules-orbit-drift 38s linear infinite;
+}
+
+@keyframes nv-modules-crystal-rotate {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes nv-modules-crystal-breathe {
+  0%, 100% { opacity: 0.75; box-shadow: 0 16px 48px rgb(0 0 0 / 0.18), inset 0 0 28px color-mix(in srgb, var(--sys-color-accent-primary) 6%, transparent); }
+  50% { opacity: 1; box-shadow: 0 20px 56px rgb(0 0 0 / 0.22), inset 0 0 36px color-mix(in srgb, var(--sys-color-accent-primary) 10%, transparent); }
+}
+
+.nv-modules-empty__copy {
+  display: grid;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.nv-modules-empty__title {
+  margin: 0;
+  font-family: var(--sys-font-display-family);
+  font-size: clamp(1.35rem, 2.4vw, 1.75rem);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--sys-color-text-primary);
+}
+
+.nv-modules-empty__desc {
+  margin: 0;
+  max-inline-size: 44ch;
+  color: var(--sys-color-text-secondary);
+  font-size: clamp(0.875rem, 1vw, 0.95rem);
+  line-height: 1.6;
+}
+
+/* Module Placeholder Cards */
+.nv-modules-placeholder-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr));
+  gap: var(--sys-space-stack-md);
+  padding: var(--sys-space-inset-md);
+}
+
+.nv-modules-placeholder {
+  display: grid;
+  gap: var(--sys-space-stack-xs);
+  padding: var(--sys-space-inset-md);
+  border: 1px dashed color-mix(in srgb, var(--sys-color-border-subtle) 60%, transparent);
+  border-radius: var(--sys-radius-surface);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--sys-color-text-primary) 2%, transparent),
+      transparent 40%
+    ),
+    color-mix(in srgb, var(--sys-color-surface-raised) 40%, transparent);
+  opacity: 0.6;
+}
+
+.nv-modules-placeholder__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nv-modules-placeholder__index {
+  font-family: var(--sys-font-code-family);
+  font-size: 0.625rem;
+  font-weight: 500;
+  color: var(--sys-color-accent-primary);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.nv-modules-placeholder__status {
+  font-family: var(--sys-font-code-family);
+  font-size: 0.6rem;
+  color: var(--sys-color-text-muted);
+  letter-spacing: 0.08em;
+}
+
+.nv-modules-placeholder__title {
+  margin: 0;
+  font-family: var(--sys-font-display-family);
+  font-size: var(--ref-font-size-500);
+  font-weight: 500;
+  color: var(--sys-color-text-secondary);
+}
+
+.nv-modules-placeholder__bar {
+  block-size: 3px;
+  border-radius: 2px;
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--sys-color-accent-primary) 18%, transparent) 0%,
+    color-mix(in srgb, var(--sys-color-accent-primary) 6%, transparent) 60%,
+    transparent 100%
+  );
+  margin-block-start: var(--sys-space-stack-xs);
+}
+
+/* =========================================================
+   Curriculum Constellation — Phase 3 Interactive Instrument
+   ========================================================= */
+
+.nv-curriculum-constellation-section {
+  --constellation-glow-sm: 0 0 8px color-mix(in srgb, var(--sys-color-accent-primary) 28%, transparent);
+  --constellation-glow-md: 0 0 16px color-mix(in srgb, var(--sys-color-accent-primary) 60%, transparent);
+  --constellation-glow-lg: 0 0 24px color-mix(in srgb, var(--sys-color-accent-primary) 22%, transparent);
+  position: relative;
+  padding: clamp(3.5rem, 7vw, 6rem) clamp(var(--sys-space-inset-md), 4vw, var(--sys-space-inset-xl));
+  border: var(--sys-border-subtle) solid var(--sys-premium-border);
+  border-radius: var(--sys-premium-radius-card);
+  background:
+    radial-gradient(
+      ellipse 60% 50% at 50% 50%,
+      color-mix(in srgb, var(--sys-color-accent-primary) 4%, transparent),
+      transparent 70%
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--sys-color-text-primary) 3%, transparent),
+      transparent 45%
+    ),
+    var(--sys-premium-surface);
+  overflow: hidden;
+}
+
+.nv-curriculum-constellation__header {
+  text-align: center;
+  max-inline-size: 42rem;
+  margin: 0 auto clamp(2rem, 4vw, 3.5rem);
+}
+
+.nv-curriculum-constellation__overline {
+  margin: 0 0 0.875rem;
+  color: var(--sys-color-accent-primary);
+  font-family: var(--sys-font-code-family);
+  font-size: 0.6875rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.nv-curriculum-constellation__title {
+  margin: 0;
+  font-family: var(--sys-font-display-family);
+  font-size: clamp(1.5rem, 2.6vw, 2rem);
+  font-weight: 640;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  color: var(--sys-color-text-primary);
+  text-wrap: balance;
+}
+
+.nv-curriculum-constellation__canvas {
+  position: relative;
+  inline-size: 100%;
+  max-inline-size: 72rem;
+  margin: 0 auto;
+  aspect-ratio: 2.5 / 1;
+  min-block-size: 22rem;
+}
+
+.nv-curriculum-constellation__lines {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  pointer-events: none;
+  z-index: 0;
+  transition: opacity 0.15s var(--motion-easing-standard, ease);
+}
+
+.nv-curriculum-constellation__line--connected {
+  opacity: 1;
+  stroke-width: 1.5;
+}
+
+/* ── Node Base ────────────────────────────────────────── */
+
+.nv-curriculum-constellation__node {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  z-index: 1;
+  outline: none;
+  transition: transform 0.15s var(--motion-easing-standard, ease),
+              opacity 0.2s var(--motion-easing-standard, ease);
+}
+
+/* ── Node: Hover ──────────────────────────────────────── */
+
+.nv-curriculum-constellation__node:hover {
+  transform: translate(-50%, -50%) translateY(-3px);
+}
+
+.nv-curriculum-constellation__node:hover .nv-curriculum-constellation__node-ring {
+  border-color: color-mix(in srgb, var(--sys-color-accent-primary) 50%, transparent);
+  box-shadow: var(--constellation-glow-lg);
+}
+
+.nv-curriculum-constellation__node:hover .nv-curriculum-constellation__node-core {
+  transform: scale(1.25);
+  box-shadow: var(--constellation-glow-md);
+}
+
+.nv-curriculum-constellation__node:hover .nv-curriculum-constellation__node-label {
+  color: var(--sys-color-text-primary);
+}
+
+.nv-curriculum-constellation__node:hover .nv-curriculum-constellation__node-subtitle {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.nv-curriculum-constellation__node:hover .nv-curriculum-constellation__node-description {
+  opacity: 0.8;
+}
+
+/* ── Node: Focus ──────────────────────────────────────── */
+
+.nv-curriculum-constellation__node:focus-visible {
+  transform: translate(-50%, -50%) translateY(-3px);
+}
+
+.nv-curriculum-constellation__node:focus-visible .nv-curriculum-constellation__node-ring {
+  border-color: color-mix(in srgb, var(--sys-color-accent-primary) 60%, transparent);
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--sys-color-accent-primary) 12%, transparent),
+    var(--constellation-glow-lg);
+}
+
+.nv-curriculum-constellation__node:focus-visible .nv-curriculum-constellation__node-core {
+  transform: scale(1.25);
+  box-shadow: var(--constellation-glow-md);
+}
+
+.nv-curriculum-constellation__node:focus-visible .nv-curriculum-constellation__node-label {
+  color: var(--sys-color-text-primary);
+}
+
+.nv-curriculum-constellation__node:focus-visible .nv-curriculum-constellation__node-subtitle {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.nv-curriculum-constellation__node:focus-visible .nv-curriculum-constellation__node-description {
+  opacity: 0.8;
+}
+
+/* ── Node: Selected ───────────────────────────────────── */
+
+.nv-curriculum-constellation__node--selected {
+  transform: translate(-50%, -50%) translateY(-3px);
+  z-index: 3;
+}
+
+.nv-curriculum-constellation__node--selected .nv-curriculum-constellation__node-ring {
+  border-color: var(--sys-color-accent-primary);
+  box-shadow: 0 0 32px color-mix(in srgb, var(--sys-color-accent-primary) 30%, transparent);
+}
+
+.nv-curriculum-constellation__node--selected .nv-curriculum-constellation__node-core {
+  transform: scale(1.35);
+  box-shadow: 0 0 20px color-mix(in srgb, var(--sys-color-accent-primary) 70%, transparent);
+}
+
+.nv-curriculum-constellation__node--selected .nv-curriculum-constellation__node-number {
+  background: var(--sys-color-accent-primary);
+  border-color: var(--sys-color-accent-primary);
+  color: var(--sys-color-text-inverse);
+}
+
+.nv-curriculum-constellation__node--selected .nv-curriculum-constellation__node-label {
+  color: var(--sys-color-text-primary);
+  font-weight: 600;
+}
+
+.nv-curriculum-constellation__node--selected .nv-curriculum-constellation__node-subtitle {
+  opacity: 1;
+  transform: translateY(0);
+  color: var(--sys-color-accent-primary);
+}
+
+.nv-curriculum-constellation__node--selected .nv-curriculum-constellation__node-description {
+  opacity: 1;
+}
+
+/* ── Canvas: Has Selection — Dim Unselected ───────────── */
+
+.nv-curriculum-constellation__canvas--has-selection .nv-curriculum-constellation__node:not(.nv-curriculum-constellation__node--selected):not(.nv-curriculum-constellation__node--prereq):not(.nv-curriculum-constellation__node--successor) {
+  opacity: 0.3;
+}
+
+.nv-curriculum-constellation__canvas--has-selection .nv-curriculum-constellation__node:not(.nv-curriculum-constellation__node--selected):not(.nv-curriculum-constellation__node--prereq):not(.nv-curriculum-constellation__node--successor):hover,
+.nv-curriculum-constellation__canvas--has-selection .nv-curriculum-constellation__node:not(.nv-curriculum-constellation__node--selected):not(.nv-curriculum-constellation__node--prereq):not(.nv-curriculum-constellation__node--successor):focus-visible {
+  opacity: 0.5;
+}
+
+.nv-curriculum-constellation__canvas--has-selection .nv-curriculum-constellation__lines path:not(.nv-curriculum-constellation__line--connected):not(.nv-curriculum-constellation__line--prereq):not(.nv-curriculum-constellation__line--successor) {
+  opacity: 0.04;
+}
+
+.nv-curriculum-constellation__canvas--has-selection .nv-curriculum-constellation__lines line:not(.nv-curriculum-constellation__line--connected) {
+  opacity: 0.03;
+}
+
+/* ── Node: Prerequisite (hover/selected context) ──────── */
+
+.nv-curriculum-constellation__node--prereq {
+  opacity: 0.6;
+}
+
+.nv-curriculum-constellation__node--prereq .nv-curriculum-constellation__node-ring {
+  border-color: color-mix(in srgb, var(--sys-color-accent-primary) 25%, transparent);
+}
+
+.nv-curriculum-constellation__node--prereq .nv-curriculum-constellation__node-core {
+  box-shadow: 0 0 6px color-mix(in srgb, var(--sys-color-accent-primary) 20%, transparent);
+}
+
+.nv-curriculum-constellation__node--prereq .nv-curriculum-constellation__node-number {
+  border-color: color-mix(in srgb, var(--sys-color-accent-primary) 30%, var(--sys-color-border-subtle));
+}
+
+/* ── Node: Successor (hover/selected context) ─────────── */
+
+.nv-curriculum-constellation__node--successor {
+  opacity: 0.7;
+}
+
+.nv-curriculum-constellation__node--successor .nv-curriculum-constellation__node-ring {
+  border-color: color-mix(in srgb, var(--sys-color-accent-primary) 30%, transparent);
+}
+
+.nv-curriculum-constellation__node--successor .nv-curriculum-constellation__node-core {
+  box-shadow: 0 0 8px color-mix(in srgb, var(--sys-color-accent-primary) 25%, transparent);
+}
+
+/* ── Node: Unrelated (hover/selected context) ─────────── */
+
+.nv-curriculum-constellation__node--unrelated {
+  opacity: 0.3;
+}
+
+/* ── Line: Prerequisite connection ────────────────────── */
+
+.nv-curriculum-constellation__line--prereq {
+  stroke: var(--sys-color-accent-primary);
+  stroke-width: 1.5;
+  opacity: 0.5;
+}
+
+/* ── Line: Successor connection ───────────────────────── */
+
+.nv-curriculum-constellation__line--successor {
+  stroke: var(--sys-color-accent-primary);
+  stroke-width: 1.5;
+  opacity: 0.6;
+  stroke-dasharray: none;
+}
+
+/* ── Progression Info Panel ───────────────────────────── */
+
+.nv-curriculum-constellation__progression-info {
+  position: absolute;
+  bottom: 0.75rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 1.5rem;
+  padding: 0.625rem 1rem;
+  border-radius: var(--sys-radius-surface);
+  background: color-mix(in srgb, var(--sys-color-surface-raised) 92%, transparent);
+  border: var(--sys-border-subtle) solid var(--sys-premium-border);
+  font-family: var(--sys-font-code-family);
+  font-size: 0.625rem;
+  color: var(--sys-color-text-secondary);
+  white-space: nowrap;
+  z-index: 5;
+  opacity: 0;
+  transition: opacity 0.15s var(--motion-easing-standard, ease);
+  pointer-events: none;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.nv-curriculum-constellation__progression-info:not([hidden]) {
+  opacity: 1;
+}
+
+.nv-curriculum-constellation__progression-group {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.nv-curriculum-constellation__progression-label {
+  color: var(--sys-color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.nv-curriculum-constellation__progression-item {
+  color: var(--sys-color-accent-primary);
+}
+
+.nv-curriculum-constellation__progression-sep {
+  color: var(--sys-color-text-muted);
+  opacity: 0.5;
+}
+
+.nv-curriculum-constellation__progression-standalone {
+  color: var(--sys-color-text-muted);
+  font-style: italic;
+}
+
+/* ── Future States (structural only) ─────────────────── */
+
+.nv-curriculum-constellation__node--locked {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.nv-curriculum-constellation__node--completed .nv-curriculum-constellation__node-core {
+  background: var(--sys-color-semantic-success);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--sys-color-semantic-success) 35%, transparent);
+}
+
+.nv-curriculum-constellation__node--current .nv-curriculum-constellation__node-ring {
+  border-style: dashed;
+  animation: nv-constellation-pulse 3s var(--motion-easing-standard, ease) infinite;
+}
+
+@keyframes nv-constellation-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 transparent; }
+  50% { box-shadow: 0 0 18px color-mix(in srgb, var(--sys-color-accent-primary) 25%, transparent); }
+}
+
+/* ── Node Ring ────────────────────────────────────────── */
+
+.nv-curriculum-constellation__node-ring {
+  position: absolute;
+  inline-size: 3.75rem;
+  block-size: 3.75rem;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--sys-color-accent-primary) 15%, transparent);
+  transition: border-color 0.15s var(--motion-easing-standard, ease),
+              box-shadow 0.15s var(--motion-easing-standard, ease),
+              border-style 0.15s var(--motion-easing-standard, ease);
+}
+
+/* ── Node Core ────────────────────────────────────────── */
+
+.nv-curriculum-constellation__node-core {
+  position: absolute;
+  inline-size: 0.5rem;
+  block-size: 0.5rem;
+  border-radius: 50%;
+  background: var(--sys-color-accent-primary);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--sys-color-accent-primary) 30%, transparent);
+  transition: transform 0.15s var(--motion-easing-standard, ease),
+              box-shadow 0.15s var(--motion-easing-standard, ease),
+              background 0.15s var(--motion-easing-standard, ease);
+}
+
+/* ── Node Number ──────────────────────────────────────── */
+
+.nv-curriculum-constellation__node-number {
+  position: absolute;
+  inline-size: 1.5rem;
+  block-size: 1.5rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--sys-color-surface-raised) 85%, transparent);
+  border: 1px solid color-mix(in srgb, var(--sys-color-accent-primary) 20%, var(--sys-color-border-subtle));
+  font-family: var(--sys-font-code-family);
+  font-size: 0.625rem;
+  font-weight: 600;
+  color: var(--sys-color-accent-primary);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  transition: background 0.15s var(--motion-easing-standard, ease),
+              border-color 0.15s var(--motion-easing-standard, ease),
+              color 0.15s var(--motion-easing-standard, ease);
+}
+
+/* ── Node Label ───────────────────────────────────────── */
+
+.nv-curriculum-constellation__node-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.125rem;
+}
+
+.nv-curriculum-constellation__node-label {
+  position: relative;
+  max-inline-size: 9rem;
+  text-align: center;
+  font-family: var(--sys-font-code-family);
+  font-size: 0.625rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--sys-color-text-secondary);
+  line-height: 1.4;
+  transition: color 0.15s var(--motion-easing-standard, ease),
+              font-weight 0.15s var(--motion-easing-standard, ease);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Node Subtitle ────────────────────────────────────── */
+
+.nv-curriculum-constellation__node-subtitle {
+  position: relative;
+  max-inline-size: 10rem;
+  text-align: center;
+  font-family: var(--sys-font-display-family);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: var(--sys-color-text-secondary);
+  line-height: 1.3;
+  opacity: 0;
+  transform: translateY(-2px);
+  transition: opacity 0.15s var(--motion-easing-standard, ease),
+              transform 0.15s var(--motion-easing-standard, ease),
+              color 0.15s var(--motion-easing-standard, ease);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Node Description ─────────────────────────────────── */
+
+.nv-curriculum-constellation__node-description {
+  position: relative;
+  max-inline-size: 12rem;
+  text-align: center;
+  font-family: var(--sys-font-code-family);
+  font-size: 0.5625rem;
+  color: var(--sys-color-text-muted);
+  line-height: 1.45;
+  opacity: 0;
+  transition: opacity 0.15s var(--motion-easing-standard, ease);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Caption ──────────────────────────────────────────── */
+
+.nv-curriculum-constellation__caption {
+  text-align: center;
+  max-inline-size: 48ch;
+  margin: clamp(1.5rem, 3vw, 2.5rem) auto 0;
+  color: var(--sys-color-text-muted);
+  font-family: var(--sys-font-code-family);
+  font-size: var(--sys-font-caption-size);
+  letter-spacing: 0.02em;
+  transition: opacity 0.15s var(--motion-easing-standard, ease);
+}
+
+/* ── Tablet ───────────────────────────────────────────── */
+
+@media (max-width: 64rem) {
+  .nv-curriculum-constellation__canvas {
+    aspect-ratio: 2.2 / 1;
+    min-block-size: 18rem;
+  }
+  .nv-curriculum-constellation__node-label {
+    max-inline-size: 7rem;
+    font-size: 0.5625rem;
+  }
+  .nv-curriculum-constellation__node-subtitle {
+    max-inline-size: 8rem;
+    font-size: 0.625rem;
+  }
+  .nv-curriculum-constellation__node-description {
+    max-inline-size: 10rem;
+  }
+}
+
+/* ── Mobile ───────────────────────────────────────────── */
+
+@media (max-width: 48rem) {
+  .nv-curriculum-constellation__canvas {
+    aspect-ratio: auto;
+    min-block-size: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    padding-block: 1rem;
+  }
+
+  .nv-curriculum-constellation__lines {
+    display: none;
+  }
+
+  .nv-curriculum-constellation__node {
+    position: relative;
+    transform: none;
+    flex-direction: row;
+    gap: 1rem;
+    width: 100%;
+    max-width: 28rem;
+    padding: 0.875rem 1rem;
+    border: var(--sys-border-subtle) solid var(--sys-premium-border);
+    border-radius: var(--sys-radius-surface);
+    background: color-mix(in srgb, var(--sys-color-surface-raised) 60%, transparent);
+    margin-bottom: 0.5rem;
+    align-items: center;
+  }
+
+  .nv-curriculum-constellation__node:hover,
+  .nv-curriculum-constellation__node:focus-visible {
+    transform: none;
+    border-color: color-mix(in srgb, var(--sys-color-accent-primary) 30%, var(--sys-color-border-subtle));
+  }
+
+  .nv-curriculum-constellation__node--selected {
+    transform: none;
+    border-color: var(--sys-color-accent-primary);
+    background: color-mix(in srgb, var(--sys-color-accent-primary) 6%, var(--sys-color-surface-raised));
+  }
+
+  .nv-curriculum-constellation__canvas--has-selection .nv-curriculum-constellation__node:not(.nv-curriculum-constellation__node--selected):not(.nv-curriculum-constellation__node--prereq):not(.nv-curriculum-constellation__node--successor) {
+    opacity: 0.3;
+  }
+
+  .nv-curriculum-constellation__progression-info {
+    position: static;
+    transform: none;
+    flex-direction: column;
+    gap: 0.375rem;
+    white-space: normal;
+    margin-top: 0.75rem;
+    max-width: 28rem;
+    width: 100%;
+  }
+
+  .nv-curriculum-constellation__node-ring {
+    position: static;
+    inline-size: 2.5rem;
+    block-size: 2.5rem;
+    flex-shrink: 0;
+    border-color: color-mix(in srgb, var(--sys-color-accent-primary) 20%, transparent);
+  }
+
+  .nv-curriculum-constellation__node-core {
+    position: absolute;
+    top: 50%;
+    left: 1rem;
+    transform: translate(0, -50%);
+  }
+
+  .nv-curriculum-constellation__node:hover .nv-curriculum-constellation__node-core,
+  .nv-curriculum-constellation__node:focus-visible .nv-curriculum-constellation__node-core {
+    transform: translate(0, -50%) scale(1.15);
+  }
+
+  .nv-curriculum-constellation__node--selected .nv-curriculum-constellation__node-core {
+    transform: translate(0, -50%) scale(1.25);
+  }
+
+  .nv-curriculum-constellation__node-number {
+    position: absolute;
+    top: 50%;
+    left: 1rem;
+    transform: translate(0, -50%);
+  }
+
+  .nv-curriculum-constellation__node-label {
+    position: static;
+    max-inline-size: none;
+    text-align: left;
+    font-size: 0.6875rem;
+    white-space: normal;
+    overflow: visible;
+  }
+
+  .nv-curriculum-constellation__node-subtitle {
+    position: static;
+    max-inline-size: none;
+    text-align: left;
+    font-size: 0.625rem;
+    white-space: normal;
+    overflow: visible;
+    opacity: 0.7;
+    transform: none;
+  }
+
+  .nv-curriculum-constellation__node-description {
+    position: static;
+    max-inline-size: none;
+    text-align: left;
+    font-size: 0.5625rem;
+    white-space: normal;
+    overflow: visible;
+    opacity: 0.6;
+  }
+
+  .nv-curriculum-constellation__node-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    min-width: 0;
+  }
+
+  .nv-curriculum-constellation__caption {
+    margin-top: 1.5rem;
+  }
+}
+
+/* ── Reduced Motion ───────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .nv-curriculum-constellation__node,
+  .nv-curriculum-constellation__node:hover,
+  .nv-curriculum-constellation__node:focus-visible,
+  .nv-curriculum-constellation__node--selected {
+    transform: none;
+  }
+  .nv-curriculum-constellation__node:hover .nv-curriculum-constellation__node-core,
+  .nv-curriculum-constellation__node:focus-visible .nv-curriculum-constellation__node-core,
+  .nv-curriculum-constellation__node--selected .nv-curriculum-constellation__node-core {
+    transform: none;
+  }
+  .nv-curriculum-constellation__node:hover .nv-curriculum-constellation__node-subtitle,
+  .nv-curriculum-constellation__node:focus-visible .nv-curriculum-constellation__node-subtitle,
+  .nv-curriculum-constellation__node--selected .nv-curriculum-constellation__node-subtitle {
+    transform: none;
+  }
+  .nv-curriculum-constellation__node--current .nv-curriculum-constellation__node-ring {
+    animation: none;
+  }
+  .nv-curriculum-constellation__lines path,
+  .nv-curriculum-constellation__lines line {
+    transition: none;
+  }
+}
+
+/* ── Responsive — Sections ──────────────────────────── */
+
+@media (max-width: 64rem) {
+  .nv-modules-hero {
+    grid-template-columns: 1fr;
+    min-block-size: auto;
+    padding-block: clamp(2rem, 4vw, 3.5rem);
+    text-align: center;
+  }
+
+  .nv-modules-hero__copy {
+    align-items: center;
+  }
+
+  .nv-modules-hero__subtitle {
+    max-inline-size: 48ch;
+  }
+
+  .nv-modules-hero__actions {
+    justify-content: center;
+  }
+
+  .nv-modules-hero__illustration {
+    inline-size: min(24rem, 80%);
+    block-size: auto;
+    margin-inline: auto;
+  }
+}
+
+@media (max-width: 48rem) {
+  .nv-modules-hero {
+    padding: var(--sys-space-inset-md);
+    gap: 1.5rem;
+  }
+
+  .nv-modules-hero__illustration {
+    inline-size: min(20rem, 90%);
+    min-block-size: 16rem;
+  }
+
+  .nv-modules-hero__node {
+    min-inline-size: 5rem;
+    font-size: 0.55rem;
+    padding: 0.4rem 0.6rem;
+  }
+
+  .nv-modules-hero__core {
+    inline-size: clamp(5rem, 18vw, 7rem);
+  }
+
+  .nv-modules-empty {
+    padding: clamp(2rem, 5vw, 3rem) var(--sys-space-inset-md);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nv-modules-hero__ambient,
+  .nv-modules-hero__kicker,
+  .nv-modules-hero__title,
+  .nv-modules-hero__subtitle,
+  .nv-modules-hero__actions,
+  .nv-modules-hero__illustration,
+  .nv-modules-hero__ring,
+  .nv-modules-hero__beam,
+  .nv-modules-hero__node,
+  .nv-modules-empty__crystal,
+  .nv-modules-empty__ring {
+    animation: none !important;
+    opacity: 1;
+    transform: none;
   }
 }
