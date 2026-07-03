@@ -438,34 +438,23 @@ export function createCurriculumSearchController(options = {}) {
     if (!resultsContainer) return;
     resultsContainer.innerHTML = `
       <div class="nv-search-empty">
-        <div class="nv-search-empty-icon">⚠️</div>
-        <div class="nv-search-empty-title">No results found</div>
-        <div class="nv-search-empty-text">We couldn't find any curriculum matches. Please check spelling or try other keywords.</div>
+        <div class="nv-search-empty-icon">\u{1F50D}</div>
+        <div class="nv-search-empty-title">No matching content found.</div>
+        <div class="nv-search-empty-text">Try another keyword.</div>
         <div class="nv-search-empty-suggestions">
-          <div class="nv-search-suggest-title">Try searching for:</div>
-          <ul class="nv-search-suggest-list">
-            <li class="nv-search-suggest-item"><button class="nv-search-suggest-btn" type="button">embeddings</button></li>
-            <li class="nv-search-suggest-item"><button class="nv-search-suggest-btn" type="button">transformer</button></li>
-            <li class="nv-search-suggest-item"><button class="nv-search-suggest-btn" type="button">reranking</button></li>
-            <li class="nv-search-suggest-item"><button class="nv-search-suggest-btn" type="button">guardrail</button></li>
-            <li class="nv-search-suggest-item"><button class="nv-search-suggest-btn" type="button">MLOps</button></li>
-          </ul>
+          <a href="#/learning" class="nv-search-suggest-btn" data-nv-close-search>Browse Learning Paths</a>
         </div>
       </div>
     `;
 
-    // Add click listeners to suggestions
-    const suggestionBtns = resultsContainer.querySelectorAll('.nv-search-suggest-btn');
-    suggestionBtns.forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const keyword = e.target.textContent;
-        if (input) {
-          input.value = keyword;
-          input.focus();
-          performSearch(keyword);
-        }
+    const browseLink = resultsContainer.querySelector('[data-nv-close-search]');
+    if (browseLink) {
+      browseLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        closeModal();
+        window.location.hash = '#/learning';
       });
-    });
+    }
   }
 
   function performSearch(query) {
@@ -779,6 +768,19 @@ export function createCurriculumSearchController(options = {}) {
     }, 200); // 200ms debounce
   }
 
+  function updateFilterCount() {
+    const countEl = root.querySelector('[data-filters-count]');
+    if (!countEl) return;
+    const count = [bookmarkedFilter, notesFilter, recentFilter, collectionFilter]
+      .filter(f => f && f.checked).length;
+    if (count > 0) {
+      countEl.textContent = count;
+      countEl.style.display = 'inline';
+    } else {
+      countEl.style.display = 'none';
+    }
+  }
+
   function init() {
     if (!modal) {
       console.warn('Search modal DOM element not found. Search integration skipped.');
@@ -818,8 +820,57 @@ export function createCurriculumSearchController(options = {}) {
     filters.forEach(filter => {
       if (filter) {
         filter.addEventListener('change', () => {
+          updateFilterCount();
           performSearch(input ? input.value : '');
         });
+      }
+    });
+
+    // Filter dropdown toggle
+    const filtersTrigger = root.querySelector('[data-filters-trigger]');
+    const filtersPanel = root.querySelector('[data-filters-panel]');
+    if (filtersTrigger && filtersPanel) {
+      filtersTrigger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const expanded = filtersTrigger.getAttribute('aria-expanded') === 'true';
+        closeAllSearchPopovers();
+        if (!expanded) {
+          filtersPanel.style.display = 'block';
+          filtersTrigger.setAttribute('aria-expanded', 'true');
+        }
+      });
+    }
+
+    // Help popover toggle
+    const helpTrigger = root.querySelector('[data-help-trigger]');
+    const helpPanel = root.querySelector('[data-help-panel]');
+    if (helpTrigger && helpPanel) {
+      helpTrigger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const expanded = helpTrigger.getAttribute('aria-expanded') === 'true';
+        closeAllSearchPopovers();
+        if (!expanded) {
+          helpPanel.style.display = 'block';
+          helpTrigger.setAttribute('aria-expanded', 'true');
+        }
+      });
+    }
+
+    function closeAllSearchPopovers() {
+      if (filtersPanel) filtersPanel.style.display = 'none';
+      if (filtersTrigger) filtersTrigger.setAttribute('aria-expanded', 'false');
+      if (helpPanel) helpPanel.style.display = 'none';
+      if (helpTrigger) helpTrigger.setAttribute('aria-expanded', 'false');
+    }
+
+    document.addEventListener('click', (e) => {
+      if (!modal.contains(e.target)) return;
+      const isFilterTrigger = e.target.closest('[data-filters-trigger]');
+      const isFilterPanel = e.target.closest('[data-filters-panel]');
+      const isHelpTrigger = e.target.closest('[data-help-trigger]');
+      const isHelpPanel = e.target.closest('[data-help-panel]');
+      if (!isFilterTrigger && !isFilterPanel && !isHelpTrigger && !isHelpPanel) {
+        closeAllSearchPopovers();
       }
     });
 

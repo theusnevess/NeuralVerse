@@ -235,6 +235,14 @@
   border-radius: var(--ctx-workspace-radius);
 }
 
+.nv-main-workspace[data-workspace-active-view="home"] {
+  padding-inline: 0;
+}
+
+.nv-main-workspace[data-workspace-active-view="home"] + .nv-context-panel {
+  display: none;
+}
+
 .nv-learning-page,
 .nv-modules-page,
 .nv-content-page,

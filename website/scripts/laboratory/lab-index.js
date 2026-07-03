@@ -6,18 +6,7 @@
 (function () {
   'use strict';
 
-  var LAB_FILES = [
-    'data/laboratories/linear-regression-lab.js',
-    'data/laboratories/logistic-regression-lab.js',
-    'data/laboratories/gradient-descent-lab.js',
-    'data/laboratories/kmeans-clustering-lab.js',
-    'data/laboratories/pca-projection-lab.js',
-    'data/laboratories/embedding-similarity-lab.js',
-    'data/laboratories/cosine-similarity-lab.js',
-    'data/laboratories/bayes-rule-lab.js',
-    'data/laboratories/precision-recall-lab.js',
-    'data/laboratories/transformer-attention-lab.js'
-  ];
+  var LAB_FILES = [];
 
   var loaded = false;
   var loading = false;

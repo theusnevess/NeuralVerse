@@ -108,15 +108,19 @@
       var stats = retrieval && typeof retrieval.getStats === 'function' ? retrieval.getStats() : { total: 0, byType: {}, pinned: 0, archived: 0 };
       var allCollections = collectionsMod && typeof collectionsMod.getAll === 'function' ? collectionsMod.getAll() : [];
 
-      var html = '<div class="nv-memory-dashboard" role="main" aria-label="Memory Dashboard">';
-      html += '<div class="nv-memory-dashboard-header">';
-      html += '<h1 class="nv-memory-title">Memory System</h1>';
-      html += '<div class="nv-memory-actions">';
+      var html = '<div class="nv-memory-app" role="main" aria-label="Memory Dashboard">';
+      html += '<header class="nv-memory-app__header">';
+      html += '<div class="nv-memory-app__title">';
+      html += '<p class="nv-page-section__eyebrow">Memory</p>';
+      html += '<h1>Your study context, organized.</h1>';
+      html += '<p>Notes, bookmarks, highlights, and study state — surfaced when it matters, never lost in a feed.</p>';
+      html += '</div>';
+      html += '<div class="nv-memory-app__actions">';
       html += '<button class="nv-memory-btn nv-memory-btn-primary" data-action="create" aria-label="Create new memory">+ New Memory</button>';
       html += '<button class="nv-memory-btn nv-memory-btn-secondary" data-action="import" aria-label="Import memory data">Import</button>';
       html += '<button class="nv-memory-btn nv-memory-btn-secondary" data-action="export" aria-label="Export memory data">Export</button>';
       html += '</div>';
-      html += '</div>';
+      html += '</header>';
 
       html += '<div class="nv-memory-stats" role="region" aria-label="Memory statistics">';
       html += '<div class="nv-memory-stat-card"><span class="nv-memory-stat-value">' + stats.total + '</span><span class="nv-memory-stat-label">Total</span></div>';

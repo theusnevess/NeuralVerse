@@ -1,211 +1,265 @@
-<div class="nv-stack nv-stack--gap-md nv-settings-page">
-  <header class="nv-page-header">
-    <p class="nv-page-header__eyebrow">Configuration</p>
-    <h1>Settings</h1>
-    <p>Configure your workspace preferences and manage your data.</p>
+<div class="nv-settings-page">
+  <header class="nv-page-section__header nv-settings-hero" style="max-inline-size: 58rem; margin-inline: 0; text-align: start; margin-block-end: var(--sys-space-stack-xl);">
+    <p class="nv-page-section__eyebrow">Settings</p>
+    <h1>Preferences</h1>
+    <p>Manage the controls that shape your NeuralVerse experience.</p>
   </header>
 
-  <div data-persistence-warning></div>
-
-  <div data-persistence-root class="nv-stack nv-stack--gap-lg">
-
-    <!-- Export Card -->
-    <section class="nv-card" aria-labelledby="persistence-export-heading">
-      <div class="nv-card__header">
-        <h3 id="persistence-export-heading" class="nv-card__title">Export Personal Data</h3>
-        <span class="nv-badge" data-variant="info">Backup</span>
+  <div data-persistence-root data-gen-settings-root class="nv-settings-layout">
+    <section class="nv-settings-section" aria-labelledby="settings-general-heading">
+      <div class="nv-settings-section__header">
+        <h2 id="settings-general-heading"><span aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M8 2l5 6-5 6-5-6 5-6z"/></svg></span> General</h2>
+        <p>Everyday workspace preferences.</p>
       </div>
-      <p class="nv-card__description">Export your complete NeuralVerse personalization state to a local backup file.</p>
-      <div class="nv-card__body">
-        <div class="nv-stack nv-stack--gap-sm">
-          <p class="nv-muted nv-card__meta">Current data sections:</p>
-          <div class="nv-cluster nv-cluster--gap-xs" data-current-data-grid></div>
-        </div>
-      </div>
-      <div class="nv-card__footer">
-        <button type="button" class="nv-button" data-variant="primary" data-action="export" aria-label="Export personal data to backup file">
-          Export Personal Data
-        </button>
-        <div class="nv-persistence-status" data-status="export-status" role="status" aria-live="polite" style="display: none;"></div>
+      <div class="nv-settings-card nv-settings-card--empty">
+        <p>Your workspace is using the recommended defaults.</p>
       </div>
     </section>
 
-    <!-- Import Card -->
-    <section class="nv-card" aria-labelledby="persistence-import-heading">
-      <div class="nv-card__header">
-        <h3 id="persistence-import-heading" class="nv-card__title">Import Backup</h3>
-        <span class="nv-badge" data-variant="info">Restore</span>
+    <section class="nv-settings-section" aria-labelledby="settings-learning-heading">
+      <div class="nv-settings-section__header">
+        <h2 id="settings-learning-heading"><span aria-hidden="true"><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="5"/><path d="M8 3v5l3 2"/></svg></span> Learning</h2>
+        <p>Review queue defaults.</p>
       </div>
-      <p class="nv-card__description">Restore a previously exported NeuralVerse backup file.</p>
-      <div class="nv-card__body">
-        <div class="nv-stack nv-stack--gap-md">
 
-          <!-- Import Strategy -->
-          <fieldset class="nv-persistence-fieldset" aria-label="Import strategy">
-            <legend class="nv-persistence-fieldset__legend">Import Strategy</legend>
-            <div class="nv-stack nv-stack--gap-xs">
-              <label class="nv-radio-label">
-                <input type="radio" class="nv-radio" name="nv-import-mode" value="merge" checked>
-                <span class="nv-radio-label__text">
-                  <strong>Merge with existing data</strong>
-                  <span class="nv-muted">Preserve existing data. Imported values override conflicts.</span>
-                </span>
-              </label>
-              <label class="nv-radio-label">
-                <input type="radio" class="nv-radio" name="nv-import-mode" value="replace">
-                <span class="nv-radio-label__text">
-                  <strong>Replace existing data</strong>
-                  <span class="nv-muted">Delete current personalization and use imported data as source of truth.</span>
-                </span>
-              </label>
+      <div class="nv-settings-card">
+        <div class="nv-settings-grid">
+          <div class="nv-settings-field">
+            <label class="nv-settings-label" for="nv-review-daily-limit">Daily review limit</label>
+            <input class="nv-settings-input nv-settings-input--compact" type="number" id="nv-review-daily-limit" min="1" max="1000" value="50" data-review-pref="dailyLimit" aria-describedby="nv-review-daily-limit-help">
+            <p id="nv-review-daily-limit-help" class="nv-settings-helper">1-1000 items per session.</p>
+          </div>
+
+          <label class="nv-settings-toggle">
+            <span>
+              <span class="nv-settings-label">Show overdue first</span>
+            </span>
+            <input type="checkbox" id="nv-review-show-overdue" data-review-pref="showOverdueFirst">
+            <span class="nv-settings-toggle__track" aria-hidden="true"><span></span></span>
+          </label>
+
+          <label class="nv-settings-toggle">
+            <span>
+              <span class="nv-settings-label">Include curriculum artifacts</span>
+            </span>
+            <input type="checkbox" id="nv-review-include-artifacts" data-review-pref="includeArtifacts">
+            <span class="nv-settings-toggle__track" aria-hidden="true"><span></span></span>
+          </label>
+
+          <label class="nv-settings-toggle">
+            <span>
+              <span class="nv-settings-label">Include flashcards</span>
+            </span>
+            <input type="checkbox" id="nv-review-include-flashcards" data-review-pref="includeFlashcards">
+            <span class="nv-settings-toggle__track" aria-hidden="true"><span></span></span>
+          </label>
+        </div>
+      </div>
+    </section>
+
+    <section class="nv-settings-section" aria-labelledby="settings-data-heading">
+      <div class="nv-settings-section__header">
+        <h2 id="settings-data-heading"><span aria-hidden="true"><svg viewBox="0 0 16 16"><rect x="3" y="3" width="10" height="10" rx="2"/><path d="M5 6h6M5 9h6"/></svg></span> Data</h2>
+        <p>Backups and restore controls.</p>
+      </div>
+
+      <div class="nv-settings-section__content">
+        <div data-persistence-warning></div>
+
+        <div class="nv-settings-card">
+          <div class="nv-settings-actions-list">
+            <div class="nv-settings-action-row">
+              <div>
+                <h3>Export backup</h3>
+                <p>Save a local copy.</p>
+                <details class="nv-settings-mini-disclosure">
+                  <summary>Current data</summary>
+                  <div class="nv-settings-data-sections" data-current-data-grid aria-label="Current data sections"></div>
+                </details>
+              </div>
+              <button type="button" class="nv-button" data-variant="primary" data-action="export" aria-label="Export personal data to backup file">
+                Export Backup
+              </button>
+              <div class="nv-persistence-status" data-status="export-status" role="status" aria-live="polite" style="display: none;"></div>
             </div>
-          </fieldset>
 
-          <!-- File Selection -->
-          <div class="nv-stack nv-stack--gap-xs">
-            <label class="nv-button nv-button--file-label" for="nv-backup-file-input">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="16" height="16">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
-              </svg>
-              Choose Backup
-            </label>
-            <input type="file" id="nv-backup-file-input" class="nv-sr-only" accept=".json" data-file-input aria-describedby="nv-file-help">
-            <p id="nv-file-help" class="nv-muted nv-persistence-hint">Accepts .json files exported from NeuralVerse.</p>
+            <div class="nv-settings-action-row nv-settings-action-row--stacked">
+              <div>
+                <h3>Import backup</h3>
+                <p>Restore a JSON backup.</p>
+              </div>
+
+              <details class="nv-settings-mini-disclosure">
+                <summary>Import strategy</summary>
+                <fieldset class="nv-persistence-fieldset" aria-label="Import strategy">
+                  <legend class="nv-persistence-fieldset__legend">Import strategy</legend>
+                  <label class="nv-radio-label">
+                    <input type="radio" class="nv-radio" name="nv-import-mode" value="merge" checked>
+                    <span class="nv-radio-label__text">
+                      <strong>Merge</strong>
+                      <span class="nv-muted">Imported values override conflicts.</span>
+                    </span>
+                  </label>
+                  <label class="nv-radio-label">
+                    <input type="radio" class="nv-radio" name="nv-import-mode" value="replace">
+                    <span class="nv-radio-label__text">
+                      <strong>Replace</strong>
+                      <span class="nv-muted">Current personalization is replaced.</span>
+                    </span>
+                  </label>
+                </fieldset>
+              </details>
+
+              <div class="nv-settings-file-row">
+                <label class="nv-button nv-button--file-label" for="nv-backup-file-input">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="16" height="16">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+                  </svg>
+                  Choose Backup
+                </label>
+                <input type="file" id="nv-backup-file-input" class="nv-settings-file-input" accept=".json" data-file-input aria-describedby="nv-file-help">
+                <p id="nv-file-help" class="nv-settings-helper">JSON backups only.</p>
+              </div>
+
+              <div data-import-preview></div>
+
+              <div class="nv-card__footer">
+                <button type="button" class="nv-button" data-variant="primary" data-import-confirm disabled aria-label="Confirm import">
+                  Import
+                </button>
+                <div class="nv-persistence-status" data-status="import-status" role="status" aria-live="polite" style="display: none;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="nv-settings-section" aria-labelledby="settings-advanced-heading">
+      <div class="nv-settings-section__header">
+        <h2 id="settings-advanced-heading"><span aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M8 2l6 11H2L8 2z"/><path d="M8 6v3"/></svg></span> Advanced</h2>
+        <p>Local model controls.</p>
+      </div>
+
+      <details class="nv-settings-disclosure">
+        <summary>
+          <span>Only open if needed</span>
+          <span class="nv-settings-disclosure__hint">Advanced</span>
+        </summary>
+
+        <div class="nv-settings-card nv-settings-card--advanced">
+          <div class="nv-gen-settings__warning">
+            Requires a local LLM server. Cloud endpoints are not supported.
           </div>
 
-          <!-- Preview -->
-          <div data-import-preview></div>
+          <div class="nv-gen-settings nv-settings-grid" data-gen-settings-controls>
+            <label class="nv-settings-toggle nv-settings-toggle--full">
+              <span>
+                <span class="nv-settings-label">Enable local generative layer</span>
+              </span>
+              <input type="checkbox" data-gen-setting="enabled">
+              <span class="nv-settings-toggle__track" aria-hidden="true"><span></span></span>
+            </label>
 
-          <!-- Import Confirm -->
-          <div class="nv-card__footer">
-            <button type="button" class="nv-button" data-variant="primary" data-import-confirm disabled aria-label="Confirm import">
-              Import
+            <div class="nv-settings-field">
+              <label class="nv-settings-label" for="gen-setting-provider">Provider</label>
+              <select id="gen-setting-provider" class="nv-settings-select" data-gen-setting="provider">
+                <option value="ollama">Ollama (Local)</option>
+                <option value="llamacpp">llama.cpp</option>
+                <option value="openai-local">OpenAI-Compatible Local</option>
+              </select>
+            </div>
+
+            <div class="nv-settings-field">
+              <label class="nv-settings-label" for="gen-setting-endpoint">Endpoint URL</label>
+              <input type="url" id="gen-setting-endpoint" class="nv-settings-input" data-gen-setting="endpoint" value="http://localhost:11434" placeholder="http://localhost:11434">
+            </div>
+
+            <div class="nv-settings-field">
+              <label class="nv-settings-label" for="gen-setting-model">Selected model</label>
+              <input type="text" id="gen-setting-model" class="nv-settings-input" data-gen-setting="selectedModel" placeholder="Model name">
+            </div>
+
+            <div class="nv-settings-field">
+              <label class="nv-settings-label" for="gen-setting-privacy">Privacy level</label>
+              <select id="gen-setting-privacy" class="nv-settings-select" data-gen-setting="privacyLevel">
+                <option value="none">No context</option>
+                <option value="current_artifact_only" selected>Current artifact only</option>
+                <option value="curriculum_context">Curriculum context</option>
+                <option value="semantic_context">Semantic context</option>
+                <option value="include_user_memory">Include user memory</option>
+                <option value="include_review_state">Include review state</option>
+              </select>
+            </div>
+
+            <div class="nv-settings-field">
+              <label class="nv-settings-label" for="gen-setting-maxtokens">Default max tokens</label>
+              <input type="number" id="gen-setting-maxtokens" class="nv-settings-input" data-gen-setting="maxTokens" value="800" min="100" max="4096">
+            </div>
+
+            <div class="nv-settings-field">
+              <label class="nv-settings-label" for="gen-setting-temp">Default temperature</label>
+              <input type="number" id="gen-setting-temp" class="nv-settings-input" data-gen-setting="temperature" value="0.2" min="0" max="2" step="0.1">
+            </div>
+
+            <label class="nv-settings-toggle nv-settings-toggle--full">
+              <span>
+                <span class="nv-settings-label">Include memory context</span>
+              </span>
+              <input type="checkbox" data-gen-setting="includeMemoryContext">
+              <span class="nv-settings-toggle__track" aria-hidden="true"><span></span></span>
+            </label>
+
+            <label class="nv-settings-toggle nv-settings-toggle--full">
+              <span>
+                <span class="nv-settings-label">Include review context</span>
+              </span>
+              <input type="checkbox" data-gen-setting="includeReviewContext">
+              <span class="nv-settings-toggle__track" aria-hidden="true"><span></span></span>
+            </label>
+          </div>
+
+          <div class="nv-card__footer nv-card__footer--advanced">
+            <button type="button" class="nv-button" data-variant="secondary" data-gen-action="test-connection" aria-label="Test connection to local model endpoint">
+              Test Connection
             </button>
-            <div class="nv-persistence-status" data-status="import-status" role="status" aria-live="polite" style="display: none;"></div>
+            <div class="nv-persistence-status" data-status="gen-settings-status" role="status" aria-live="polite" style="display: none;"></div>
           </div>
         </div>
-      </div>
+      </details>
     </section>
 
-    <!-- Review Preferences -->
-    <section class="nv-card" aria-labelledby="review-prefs-heading">
-      <div class="nv-card__header">
-        <h3 id="review-prefs-heading" class="nv-card__title">Review Preferences</h3>
-        <span class="nv-badge" data-variant="info">Spaced Repetition</span>
+    <section class="nv-settings-section nv-settings-section--danger" aria-labelledby="settings-danger-heading">
+      <div class="nv-settings-section__header">
+        <h2 id="settings-danger-heading"><span aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M8 2l6 12H2L8 2z"/><path d="M8 6v4M8 12h.01"/></svg></span> Danger Zone</h2>
+        <p>Destructive local actions.</p>
       </div>
-      <p class="nv-card__description">Configure your spaced repetition review behavior. All values are stored locally; nothing is sent to a server.</p>
-      <div class="nv-card__body">
-        <div class="nv-stack nv-stack--gap-sm">
-          <div class="nv-cluster nv-cluster--gap-sm" style="justify-content: space-between; align-items: center;">
-            <label for="nv-review-daily-limit" style="margin: 0;">Daily review limit</label>
-            <input type="number" id="nv-review-daily-limit" min="1" max="1000" value="50" data-review-pref="dailyLimit" style="width: 100px;" aria-describedby="nv-review-daily-limit-help">
-          </div>
-          <p id="nv-review-daily-limit-help" class="nv-muted" style="font-size: 0.75rem; margin: 0;">Maximum items per review session (1–1000).</p>
 
-          <div class="nv-cluster nv-cluster--gap-sm" style="justify-content: space-between; align-items: center;">
-            <label for="nv-review-show-overdue" style="margin: 0;">Show overdue first</label>
-            <input type="checkbox" id="nv-review-show-overdue" data-review-pref="showOverdueFirst" aria-describedby="nv-review-show-overdue-help">
+      <details class="nv-danger-zone">
+        <summary>Show destructive actions</summary>
+        <div class="nv-danger-zone__content nv-danger-zone__content--stacked">
+          <div class="nv-settings-action-row">
+            <div>
+              <h3>Reset review schedule</h3>
+              <p>Removes scheduled reviews and review history.</p>
+            </div>
+            <button type="button" class="nv-button" data-variant="danger" data-review-action="reset" aria-label="Reset review schedule and history">
+              Reset Review Schedule
+            </button>
+            <div class="nv-persistence-status" data-status="review-reset-status" role="status" aria-live="polite" style="display: none;"></div>
           </div>
-          <p id="nv-review-show-overdue-help" class="nv-muted" style="font-size: 0.75rem; margin: 0;">Prioritize overdue items at the top of the review queue.</p>
 
-          <div class="nv-cluster nv-cluster--gap-sm" style="justify-content: space-between; align-items: center;">
-            <label for="nv-review-include-artifacts" style="margin: 0;">Include curriculum artifacts</label>
-            <input type="checkbox" id="nv-review-include-artifacts" data-review-pref="includeArtifacts" aria-describedby="nv-review-include-artifacts-help">
+          <div class="nv-settings-action-row">
+            <div>
+              <h3>Clear audit log</h3>
+              <p>Removes local generation audit entries.</p>
+            </div>
+            <button type="button" class="nv-button" data-variant="danger" data-gen-action="clear-audit-log" aria-label="Clear generation audit log">
+              Clear Audit Log
+            </button>
           </div>
-          <p id="nv-review-include-artifacts-help" class="nv-muted" style="font-size: 0.75rem; margin: 0;">Schedule reviews of curriculum artifacts.</p>
-
-          <div class="nv-cluster nv-cluster--gap-sm" style="justify-content: space-between; align-items: center;">
-            <label for="nv-review-include-flashcards" style="margin: 0;">Include flashcards</label>
-            <input type="checkbox" id="nv-review-include-flashcards" data-review-pref="includeFlashcards" aria-describedby="nv-review-include-flashcards-help">
-          </div>
-          <p id="nv-review-include-flashcards-help" class="nv-muted" style="font-size: 0.75rem; margin: 0;">Schedule reviews of flashcards.</p>
         </div>
-      </div>
-      <div class="nv-card__footer">
-        <button type="button" class="nv-button" data-variant="danger" data-review-action="reset" aria-label="Reset review schedule and history">
-          Reset Review Schedule
-        </button>
-        <div class="nv-persistence-status" data-status="review-reset-status" role="status" aria-live="polite" style="display: none;"></div>
-      </div>
+      </details>
     </section>
-
-    <section class="nv-card" aria-labelledby="gen-settings-heading" data-gen-settings-root>
-      <div class="nv-card__header">
-        <h3 class="nv-card__title" id="gen-settings-heading">Optional Local Generative Layer</h3>
-        <span class="nv-badge" data-variant="info">Optional</span>
-      </div>
-      <p class="nv-card__description">
-        Configure optional local generative assistance. All processing stays on your machine.
-        No data is sent to external services.
-      </p>
-      <div class="nv-card__body">
-        <div class="nv-gen-settings__warning">
-          ⚠️ This feature requires a local LLM server (Ollama, llama.cpp, or compatible).
-          No cloud endpoints are allowed. All generation is local and non-canonical.
-        </div>
-        <div class="nv-gen-settings" data-gen-settings-controls>
-          <div class="nv-settings-field">
-            <label class="nv-settings-label">
-              <input type="checkbox" data-gen-setting="enabled"> Enable Local Generative Layer
-            </label>
-          </div>
-          <div class="nv-settings-field">
-            <label class="nv-settings-label" for="gen-setting-provider">Provider</label>
-            <select id="gen-setting-provider" class="nv-settings-select" data-gen-setting="provider">
-              <option value="ollama">Ollama (Local)</option>
-              <option value="llamacpp">llama.cpp</option>
-              <option value="openai-local">OpenAI-Compatible Local</option>
-            </select>
-          </div>
-          <div class="nv-settings-field">
-            <label class="nv-settings-label" for="gen-setting-endpoint">Endpoint URL</label>
-            <input type="url" id="gen-setting-endpoint" class="nv-settings-input" data-gen-setting="endpoint" value="http://localhost:11434" placeholder="http://localhost:11434">
-          </div>
-          <div class="nv-settings-field">
-            <label class="nv-settings-label" for="gen-setting-model">Selected Model</label>
-            <input type="text" id="gen-setting-model" class="nv-settings-input" data-gen-setting="selectedModel" placeholder="Model name (e.g., qwen3-coder-next)">
-          </div>
-          <div class="nv-settings-field">
-            <label class="nv-settings-label" for="gen-setting-privacy">Privacy Level</label>
-            <select id="gen-setting-privacy" class="nv-settings-select" data-gen-setting="privacyLevel">
-              <option value="none">No context</option>
-              <option value="current_artifact_only" selected>Current artifact only</option>
-              <option value="curriculum_context">Curriculum context</option>
-              <option value="semantic_context">Semantic context</option>
-              <option value="include_user_memory">Include user memory</option>
-              <option value="include_review_state">Include review state</option>
-            </select>
-          </div>
-          <div class="nv-settings-field">
-            <label class="nv-settings-label" for="gen-setting-maxtokens">Default Max Tokens</label>
-            <input type="number" id="gen-setting-maxtokens" class="nv-settings-input" data-gen-setting="maxTokens" value="800" min="100" max="4096">
-          </div>
-          <div class="nv-settings-field">
-            <label class="nv-settings-label" for="gen-setting-temp">Default Temperature</label>
-            <input type="number" id="gen-setting-temp" class="nv-settings-input" data-gen-setting="temperature" value="0.2" min="0" max="2" step="0.1">
-          </div>
-          <div class="nv-settings-field">
-            <label class="nv-settings-label">
-              <input type="checkbox" data-gen-setting="includeMemoryContext"> Include Memory Context
-            </label>
-          </div>
-          <div class="nv-settings-field">
-            <label class="nv-settings-label">
-              <input type="checkbox" data-gen-setting="includeReviewContext"> Include Review Context
-            </label>
-          </div>
-        </div>
-      </div>
-      <div class="nv-card__footer">
-        <button type="button" class="nv-button" data-variant="secondary" data-gen-action="test-connection" aria-label="Test connection to local model endpoint">
-          Test Connection
-        </button>
-        <button type="button" class="nv-button" data-variant="danger" data-gen-action="clear-audit-log" aria-label="Clear generation audit log">
-          Clear Audit Log
-        </button>
-        <div class="nv-persistence-status" data-status="gen-settings-status" role="status" aria-live="polite" style="display: none;"></div>
-      </div>
-    </section>
-
   </div>
 </div>

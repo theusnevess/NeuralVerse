@@ -132,6 +132,10 @@ export function createLearningController(options = {}) {
   const progressService = options.progressService || createProgressService();
 
   const elements = {
+    hero: root.querySelector("[data-learning-hero]"),
+    content: root.querySelector("[data-learning-content]"),
+    metrics: root.querySelector("[data-learning-metrics]"),
+    filters: root.querySelector("[data-learning-filters]"),
     pathList: root.querySelector("[data-learning-path-list]"),
     moduleList: root.querySelector("[data-module-list]"),
     learningEmpty: root.querySelector("[data-learning-empty]"),
@@ -139,12 +143,71 @@ export function createLearningController(options = {}) {
     liveRegion: root.querySelector("[data-learning-live]"),
   };
 
+  function setZeroState(isEmpty) {
+    if (elements.hero) {
+      elements.hero.hidden = !isEmpty;
+    }
+    if (elements.content) {
+      elements.content.hidden = isEmpty;
+    }
+    if (elements.metrics) {
+      elements.metrics.hidden = isEmpty;
+    }
+    if (elements.filters) {
+      elements.filters.hidden = isEmpty;
+    }
+    if (elements.learningEmpty) {
+      elements.learningEmpty.hidden = true;
+    }
+    // Hide placeholder sections when real content exists
+    const placeholderSections = root.querySelectorAll('.nv-competency-roadmap, .nv-philosophy, .nv-workflow, .nv-future-content');
+    placeholderSections.forEach((section) => {
+      section.hidden = !isEmpty;
+    });
+  }
+
+  function renderMetrics(paths, modules, contentIndex, progressRecords) {
+    if (!elements.metrics) return;
+
+    const totalModules = modules.length;
+    const totalContent = contentIndex.length;
+    const completedContent = contentIndex.filter((item) =>
+      progressRecords.some(
+        (r) => r.entityId === item.id && r.entityType === "content-item" && r.status === "completed"
+      )
+    ).length;
+
+    elements.metrics.innerHTML = "";
+    elements.metrics.hidden = false;
+
+    const stats = [
+      { label: "Paths", value: String(paths.length) },
+      { label: "Modules", value: String(totalModules) },
+      { label: "Content", value: String(totalContent) },
+      { label: "Completed", value: String(completedContent) },
+    ];
+
+    stats.forEach(({ label, value }) => {
+      const stat = document.createElement("dl");
+      stat.className = "nv-curriculum-stat";
+      stat.innerHTML = `<dt>${label}</dt><dd>${value}</dd>`;
+      elements.metrics.append(stat);
+    });
+  }
+
   async function renderLearningPaths(paths) {
     if (!elements.pathList) {
       return;
     }
 
     elements.pathList.innerHTML = "";
+
+    if (!paths.length) {
+      setZeroState(true);
+      return;
+    }
+
+    setZeroState(false);
 
     let modules = [];
     let contentIndex = [];
@@ -157,6 +220,8 @@ export function createLearningController(options = {}) {
     } catch (error) {
       console.error("Failed to load metrics data for learning paths", error);
     }
+
+    renderMetrics(paths, modules, contentIndex, progressRecords);
 
     if (!elements.pathList || !elements.pathList.isConnected) {
       return;
@@ -306,10 +371,6 @@ export function createLearningController(options = {}) {
       }
     });
 
-    if (elements.learningEmpty) {
-      elements.learningEmpty.hidden = paths.length > 0;
-    }
-
     // Trigger progress update for newly created DOM nodes
     window.dispatchEvent(new CustomEvent("nv:learningrendered"));
   }
@@ -453,6 +514,10 @@ export function createLearningController(options = {}) {
   }
 
   async function init() {
+    elements.hero = root.querySelector("[data-learning-hero]");
+    elements.content = root.querySelector("[data-learning-content]");
+    elements.metrics = root.querySelector("[data-learning-metrics]");
+    elements.filters = root.querySelector("[data-learning-filters]");
     elements.pathList = root.querySelector("[data-learning-path-list]");
     elements.moduleList = root.querySelector("[data-module-list]");
     elements.learningEmpty = root.querySelector("[data-learning-empty]");

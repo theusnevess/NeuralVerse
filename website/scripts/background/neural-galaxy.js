@@ -11,27 +11,27 @@
   var TARGET_FPS = 24;
   var FRAME_INTERVAL = 1000 / TARGET_FPS;
   var MAX_DPR = 2;
-  var CONNECTION_UPDATE_MS = 260;
+  var CONNECTION_UPDATE_MS = 460;
   var RESIZE_DEBOUNCE_MS = 180;
   var MAX_DEGREE = 2;
-  var CONNECTED_NODE_TARGET = 0.28;
-  var MAX_PULSES = 2;
-  var PULSE_MIN_MS = 6000;
-  var PULSE_MAX_MS = 14000;
-  var PULSE_DURATION_MIN_MS = 700;
-  var PULSE_DURATION_MAX_MS = 1100;
+  var CONNECTED_NODE_TARGET = 0.18;
+  var MAX_PULSES = 1;
+  var PULSE_MIN_MS = 12000;
+  var PULSE_MAX_MS = 24000;
+  var PULSE_DURATION_MIN_MS = 1200;
+  var PULSE_DURATION_MAX_MS = 1700;
 
   var PROFILE = {
-    landing: { density: 1.08, opacity: 1.05, motion: 0.52, maxDistance: 104 },
-    home: { density: 1.00, opacity: 0.94, motion: 0.46, maxDistance: 98 },
-    learning: { density: 1.00, opacity: 0.94, motion: 0.46, maxDistance: 98 },
-    modules: { density: 1.00, opacity: 0.94, motion: 0.46, maxDistance: 98 },
-    content: { density: 1.00, opacity: 0.94, motion: 0.46, maxDistance: 98 },
-    workspace: { density: 1.00, opacity: 0.94, motion: 0.46, maxDistance: 98 },
-    retrieval: { density: 1.00, opacity: 0.94, motion: 0.46, maxDistance: 98 },
-    presentation: { density: 1.00, opacity: 0.94, motion: 0.46, maxDistance: 98 },
-    settings: { density: 1.00, opacity: 0.94, motion: 0.46, maxDistance: 98 },
-    default: { density: 1.00, opacity: 0.94, motion: 0.46, maxDistance: 98 }
+    landing: { density: 0.78, opacity: 0.64, motion: 0.34, maxDistance: 86 },
+    home: { density: 0.66, opacity: 1.08, motion: 0.28, maxDistance: 78 },
+    learning: { density: 0.78, opacity: 0.62, motion: 0.34, maxDistance: 86 },
+    modules: { density: 0.78, opacity: 0.62, motion: 0.34, maxDistance: 86 },
+    content: { density: 0.78, opacity: 0.62, motion: 0.34, maxDistance: 86 },
+    workspace: { density: 0.76, opacity: 0.60, motion: 0.32, maxDistance: 84 },
+    retrieval: { density: 0.74, opacity: 0.58, motion: 0.32, maxDistance: 82 },
+    presentation: { density: 0.74, opacity: 0.58, motion: 0.30, maxDistance: 82 },
+    settings: { density: 0.66, opacity: 0.48, motion: 0.26, maxDistance: 76 },
+    default: { density: 0.76, opacity: 0.60, motion: 0.32, maxDistance: 84 }
   };
 
   var MIN_BY_WIDTH = [
@@ -155,25 +155,25 @@
     var layer = layerForRoll(random());
     var radiusRoll = random();
     var radius;
-    if (radiusRoll < 0.7) radius = 0.7 + random() * 0.4;
-    else if (radiusRoll < 0.95) radius = 1.1 + random() * 0.6;
-    else radius = 1.8 + random() * 0.6;
+    if (radiusRoll < 0.78) radius = 0.55 + random() * 0.28;
+    else if (radiusRoll < 0.97) radius = 0.82 + random() * 0.42;
+    else radius = 1.28 + random() * 0.36;
 
     var speedBase;
     var alpha;
     var sizeScale;
     if (layer === 'far') {
-      speedBase = 0.015 + random() * 0.02;
-      alpha = 0.12 + random() * 0.08;
-      sizeScale = 0.9;
+      speedBase = 0.009 + random() * 0.014;
+      alpha = 0.092 + random() * 0.066;
+      sizeScale = 0.82;
     } else if (layer === 'mid') {
-      speedBase = 0.025 + random() * 0.03;
-      alpha = 0.22 + random() * 0.12;
-      sizeScale = 1;
+      speedBase = 0.014 + random() * 0.02;
+      alpha = 0.152 + random() * 0.106;
+      sizeScale = 0.92;
     } else {
-      speedBase = 0.04 + random() * 0.04;
-      alpha = 0.38 + random() * 0.18;
-      sizeScale = 1.08;
+      speedBase = 0.024 + random() * 0.024;
+      alpha = 0.257 + random() * 0.145;
+      sizeScale = 1;
     }
 
     var angle = random() * Math.PI * 2;
@@ -184,12 +184,12 @@
       y: random() * height,
       vx: Math.cos(angle) * speed,
       vy: Math.sin(angle) * speed,
-      radius: Math.min(2.6, radius * sizeScale),
+      radius: Math.min(1.65, radius * sizeScale),
       layer: layer,
       alpha: alpha,
       phase: random() * Math.PI * 2,
-      phaseSpeed: 0.00035 + random() * 0.00085,
-      driftAmplitude: 0.8 + random() * 2.8,
+      phaseSpeed: 0.00018 + random() * 0.00042,
+      driftAmplitude: 0.45 + random() * 1.7,
       degree: 0
     };
   }
@@ -296,8 +296,8 @@
       edge.from.degree++;
       edge.to.degree++;
       var fade = 1 - edge.distance / maxDistance;
-      edge.alpha = (0.06 + fade * 0.10) * profileConfig.opacity;
-      edge.width = 0.35 + fade * 0.3;
+      edge.alpha = (0.059 + fade * 0.099) * profileConfig.opacity;
+      edge.width = 0.37 + fade * 0.27;
       edges.push(edge);
     }
     updateState();
@@ -324,8 +324,8 @@
 
   function drawBase() {
     var gradient = ctx.createRadialGradient(width * 0.52, height * 0.32, 0, width * 0.52, height * 0.32, Math.max(width, height) * 0.9);
-    gradient.addColorStop(0, 'rgba(8, 35, 52, 0.08)');
-    gradient.addColorStop(0.52, 'rgba(5, 12, 20, 0.03)');
+    gradient.addColorStop(0, 'rgba(8, 35, 52, 0.045)');
+    gradient.addColorStop(0.52, 'rgba(5, 12, 20, 0.018)');
     gradient.addColorStop(1, 'rgba(5, 8, 13, 0)');
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, width, height);
@@ -359,14 +359,14 @@
       var e = p.edge;
       var x = e.from.x + (e.to.x - e.from.x) * progress;
       var y = e.from.y + (e.to.y - e.from.y) * progress;
-      var alpha = Math.sin(progress * Math.PI) * 0.36 * profileConfig.opacity;
+      var alpha = Math.sin(progress * Math.PI) * 0.16 * profileConfig.opacity;
       ctx.beginPath();
-      ctx.arc(x, y, 1.7, 0, Math.PI * 2);
+      ctx.arc(x, y, 1.05, 0, Math.PI * 2);
       ctx.fillStyle = 'rgba(116, 216, 238, ' + alpha.toFixed(4) + ')';
       ctx.fill();
       ctx.beginPath();
-      ctx.arc(x, y, 3.8, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(72, 171, 210, ' + (alpha * 0.18).toFixed(4) + ')';
+      ctx.arc(x, y, 2.4, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(72, 171, 210, ' + (alpha * 0.12).toFixed(4) + ')';
       ctx.fill();
     }
     ctx.restore();
@@ -377,7 +377,7 @@
     ctx.save();
     for (var i = 0; i < nodes.length; i++) {
       var n = nodes[i];
-      var breath = 0.84 + Math.sin(time * 0.001 + n.phase) * 0.16;
+      var breath = 0.9 + Math.sin(time * 0.00045 + n.phase) * 0.1;
       var alpha = n.alpha * profileConfig.opacity * breath;
       ctx.beginPath();
       ctx.arc(n.x, n.y, n.radius, 0, Math.PI * 2);

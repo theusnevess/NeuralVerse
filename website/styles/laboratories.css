@@ -24,26 +24,32 @@
 
 /* ── Laboratory Index ──────────────────────────────────── */
 .nv-lab-index {
-  padding: 24px;
-  max-width: 1200px;
+  padding: clamp(2rem, 4vw, 3rem) clamp(var(--sys-space-inset-md), 5vw, var(--sys-space-inset-xl));
+  max-width: 78rem;
   margin: 0 auto;
 }
 
 .nv-lab-index-header {
-  margin-bottom: 32px;
+  margin-bottom: var(--sys-space-stack-xl);
+  text-align: start;
 }
 
-.nv-lab-index-header h2 {
-  font-size: 1.5rem;
+.nv-lab-index-header h1 {
+  font-family: var(--sys-font-display-family, var(--sys-font-body-family));
+  font-size: clamp(1.625rem, 2.4vw, 2rem);
   font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
   color: var(--nv-lab-text);
-  margin: 0 0 8px 0;
+  margin: 0;
 }
 
 .nv-lab-index-header p {
   color: var(--nv-lab-text-secondary);
-  margin: 0;
-  line-height: 1.5;
+  margin: 0.75rem 0 0;
+  max-inline-size: 50ch;
+  line-height: 1.6;
+  font-size: 0.9375rem;
 }
 
 .nv-lab-section-title {
@@ -351,20 +357,30 @@
 }
 
 .nv-lab-select {
-  width: 100%;
-  padding: 8px 12px;
-  background: var(--nv-lab-bg);
-  border: 1px solid var(--nv-lab-border);
-  border-radius: var(--nv-lab-radius-sm);
-  color: var(--nv-lab-text);
-  font-size: 0.85rem;
+  min-block-size: 2.25rem;
+  padding: 0 var(--sys-space-inset-sm);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--sys-color-text-primary) 3%, transparent),
+      transparent
+    ),
+    var(--sys-premium-surface-quiet);
+  border: var(--sys-border-subtle) solid var(--sys-premium-border);
+  border-radius: var(--sys-radius-control);
+  color: var(--sys-color-text-primary);
+  font-family: var(--sys-font-body-family);
+  font-size: 0.8125rem;
   outline: none;
   cursor: pointer;
+  transition:
+    border-color var(--motion-duration-hover) var(--motion-easing-standard),
+    background-color var(--motion-duration-hover) var(--motion-easing-standard);
 }
 
 .nv-lab-select:focus-visible {
-  border-color: var(--nv-lab-accent);
-  outline: 2px solid var(--nv-lab-accent);
+  border-color: color-mix(in srgb, var(--sys-color-accent-primary) 38%, transparent);
+  outline: 3px solid color-mix(in srgb, var(--sys-color-accent-primary) 24%, transparent);
   outline-offset: 1px;
 }
 

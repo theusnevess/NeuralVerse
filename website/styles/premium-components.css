@@ -473,3 +473,772 @@
     transform: none;
   }
 }
+
+/* =========================================================
+   NV-600.9 Global Page Hero (Visual Language v2)
+   Reusable premium hero pattern.
+   The Learning page uses .nv-learning-hero (its own variant).
+   New pages (Home, Settings, future pages) should use .nv-page-hero.
+   ========================================================= */
+
+.nv-page-hero {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-block-size: 78vh;
+  padding: clamp(var(--sys-space-inset-lg), 6vw, var(--sys-space-inset-xl));
+  overflow: hidden;
+  isolation: isolate;
+  text-align: center;
+}
+
+.nv-page-hero--compact {
+  min-block-size: 56vh;
+}
+
+.nv-page-hero__ambient {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+}
+
+.nv-page-hero__glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0;
+  animation: nv-page-ambient-in 1.6s var(--motion-easing-decelerate) 0.2s forwards;
+}
+
+.nv-page-hero__glow--a {
+  inline-size: 60%;
+  block-size: 60%;
+  inset-block-start: 10%;
+  inset-inline-start: 20%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--sys-color-accent-primary) 12%, transparent) 0%, transparent 70%);
+  animation-delay: 0.3s;
+}
+
+.nv-page-hero__glow--b {
+  inline-size: 40%;
+  block-size: 40%;
+  inset-block-end: 15%;
+  inset-inline-end: 25%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--sys-color-accent-primary) 8%, transparent) 0%, transparent 70%);
+  animation-delay: 0.5s;
+}
+
+.nv-page-hero__glow--c {
+  inline-size: 30%;
+  block-size: 30%;
+  inset-block-start: 40%;
+  inset-inline-start: 60%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--sys-color-accent-primary) 6%, transparent) 0%, transparent 70%);
+  animation-delay: 0.7s;
+}
+
+@keyframes nv-page-ambient-in {
+  to { opacity: 1; }
+}
+
+.nv-page-hero__field {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  z-index: -1;
+  pointer-events: none;
+  color: var(--sys-color-accent-primary);
+  opacity: 0;
+  animation: nv-page-constellation-in 1.4s var(--motion-easing-decelerate) 0.1s forwards;
+}
+
+.nv-page-hero__field svg {
+  inline-size: clamp(320px, 56vw, 620px);
+  block-size: clamp(320px, 56vw, 620px);
+  opacity: 0.78;
+}
+
+@keyframes nv-page-constellation-in {
+  from { opacity: 0; transform: scale(0.94); }
+  to { opacity: 0.78; transform: scale(1); }
+}
+
+.nv-page-hero__content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-inline-size: 44rem;
+  gap: var(--sys-space-stack-md);
+}
+
+.nv-page-hero__eyebrow {
+  margin: 0;
+  color: var(--sys-color-accent-primary);
+  font-family: var(--sys-font-code-family);
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0;
+  animation: nv-page-hero-text-in 0.7s var(--motion-easing-decelerate) 0.4s forwards;
+}
+
+.nv-page-hero__title {
+  margin: 0;
+  max-inline-size: 18ch;
+  font-family: var(--sys-font-display-family);
+  font-size: clamp(2.125rem, 4vw, 3.25rem);
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: var(--sys-color-text-primary);
+  opacity: 0;
+  animation: nv-page-hero-text-in 0.7s var(--motion-easing-decelerate) 0.5s forwards;
+}
+
+.nv-page-hero__subtitle {
+  margin: 0;
+  max-inline-size: 42ch;
+  color: color-mix(in srgb, var(--sys-color-text-secondary) 88%, var(--sys-color-text-primary));
+  font-size: clamp(0.9375rem, 1.1vw, 1.0625rem);
+  line-height: 1.6;
+  letter-spacing: 0.005em;
+  opacity: 0;
+  animation: nv-page-hero-text-in 0.7s var(--motion-easing-decelerate) 0.6s forwards;
+}
+
+.nv-page-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-block-start: 1rem;
+  opacity: 0;
+  animation: nv-page-hero-text-in 0.7s var(--motion-easing-decelerate) 0.75s forwards;
+}
+
+.nv-page-hero__actions .nv-button[data-variant="primary"] {
+  min-inline-size: 11rem;
+  transition: transform 0.2s var(--motion-easing-standard), box-shadow 0.2s var(--motion-easing-standard);
+}
+
+.nv-page-hero__actions .nv-button[data-variant="primary"]:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--sys-color-accent-primary) 20%, transparent);
+}
+
+.nv-page-hero__actions .nv-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+@keyframes nv-page-hero-text-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nv-page-hero__field,
+  .nv-page-hero__ambient,
+  .nv-page-hero__glow,
+  .nv-page-hero__eyebrow,
+  .nv-page-hero__title,
+  .nv-page-hero__subtitle,
+  .nv-page-hero__actions {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (max-width: 48rem) {
+  .nv-page-hero {
+    min-block-size: 64vh;
+    padding: var(--sys-space-inset-md);
+  }
+  .nv-page-hero--compact {
+    min-block-size: 44vh;
+  }
+  .nv-page-hero__actions {
+    flex-direction: column;
+    align-items: stretch;
+    inline-size: 100%;
+    max-inline-size: 20rem;
+  }
+  .nv-page-hero__actions .nv-button {
+    inline-size: 100%;
+  }
+}
+
+/* =========================================================
+   NV-600.9 Global Page Section
+   Reusable section header pattern.
+   Use: <section class="nv-page-section">
+          <header class="nv-page-section__header">
+            <p class="nv-page-section__eyebrow">Eyebrow</p>
+            <h2 class="nv-page-section__title">Title</h2>
+            <p class="nv-page-section__description">Description</p>
+          </header>
+          <div class="nv-page-section__body">...</div>
+        </section>
+   ========================================================= */
+
+.nv-page-section {
+  padding: clamp(3.5rem, 7vw, 6rem) clamp(var(--sys-space-inset-md), 5vw, var(--sys-space-inset-xl));
+  max-inline-size: 78rem;
+  margin-inline: auto;
+}
+
+.nv-page-section--tight {
+  padding: clamp(2.5rem, 5vw, 4rem) clamp(var(--sys-space-inset-md), 5vw, var(--sys-space-inset-xl));
+}
+
+.nv-page-section--flush {
+  padding: 0 clamp(var(--sys-space-inset-md), 5vw, var(--sys-space-inset-xl));
+  max-inline-size: 78rem;
+  margin-inline: auto;
+}
+
+.nv-page-section__header {
+  max-inline-size: 42rem;
+  margin: 0 auto var(--sys-space-stack-xl);
+  text-align: center;
+}
+
+.nv-page-section--start .nv-page-section__header {
+  margin-inline: 0;
+  text-align: start;
+}
+
+.nv-page-section__eyebrow {
+  margin: 0;
+  color: var(--sys-color-accent-primary);
+  font-family: var(--sys-font-code-family);
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-block-end: 0.75rem;
+}
+
+.nv-page-section__title {
+  margin: 0;
+  font-family: var(--sys-font-display-family);
+  font-size: clamp(1.625rem, 2.4vw, 2rem);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  color: var(--sys-color-text-primary);
+}
+
+.nv-page-section__description {
+  margin: 0.875rem 0 0;
+  max-inline-size: 50ch;
+  margin-inline: auto;
+  color: color-mix(in srgb, var(--sys-color-text-secondary) 90%, transparent);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+}
+
+.nv-page-section--start .nv-page-section__description {
+  margin-inline: 0;
+}
+
+/* =========================================================
+   NV-600.9 Global Feature Card
+   Reusable feature card with icon + title + body.
+   ========================================================= */
+
+.nv-feature-grid {
+  display: grid;
+  gap: var(--sys-space-stack-md);
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+}
+
+.nv-feature-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sys-space-stack-sm);
+  padding: var(--sys-space-inset-lg);
+  border: var(--sys-border-subtle) solid var(--sys-premium-border);
+  border-radius: var(--sys-premium-radius-card);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--sys-color-text-primary) 3%, transparent),
+      transparent 42%
+    ),
+    var(--sys-premium-surface);
+  box-shadow: var(--sys-premium-shadow-card);
+  transition:
+    border-color var(--motion-duration-hover) var(--motion-easing-standard),
+    background-color var(--motion-duration-hover) var(--motion-easing-standard),
+    transform var(--motion-duration-hover) var(--motion-easing-standard),
+    box-shadow var(--motion-duration-hover) var(--motion-easing-standard);
+}
+
+.nv-feature-card::before {
+  content: "";
+  position: absolute;
+  inset-block-start: var(--sys-space-inset-md);
+  inset-inline-start: 0;
+  block-size: calc(100% - var(--sys-space-inset-md) * 2);
+  inline-size: 1.5px;
+  border-radius: var(--ref-radius-round);
+  background: var(--sys-color-accent-primary);
+  opacity: 0;
+  transition: opacity var(--motion-duration-hover) var(--motion-easing-standard);
+}
+
+.nv-feature-card:hover {
+  border-color: var(--sys-premium-border-strong);
+  transform: translateY(calc(var(--ref-space-100) * -0.25));
+}
+
+.nv-feature-card:hover::before {
+  opacity: 0.7;
+}
+
+.nv-feature-card__icon {
+  display: inline-grid;
+  place-items: center;
+  inline-size: 2.25rem;
+  block-size: 2.25rem;
+  border-radius: var(--sys-radius-control);
+  background: color-mix(in srgb, var(--sys-color-accent-primary) 10%, transparent);
+  border: var(--sys-border-subtle) solid color-mix(in srgb, var(--sys-color-accent-primary) 24%, transparent);
+  color: var(--sys-color-accent-primary);
+  transition:
+    background-color var(--motion-duration-hover) var(--motion-easing-standard),
+    border-color var(--motion-duration-hover) var(--motion-easing-standard);
+}
+
+.nv-feature-card:hover .nv-feature-card__icon {
+  background: color-mix(in srgb, var(--sys-color-accent-primary) 18%, transparent);
+}
+
+.nv-feature-card__icon svg {
+  inline-size: 1.125rem;
+  block-size: 1.125rem;
+}
+
+.nv-feature-card__title {
+  margin: 0;
+  font-family: var(--sys-font-display-family);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: var(--sys-line-height-tight);
+  color: var(--sys-color-text-primary);
+}
+
+.nv-feature-card__text {
+  margin: 0;
+  color: var(--sys-color-text-secondary);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  max-inline-size: 38ch;
+}
+
+/* =========================================================
+   NV-600.9 Compact Horizontal Feature Row
+   Used in dense feature lists (icon + title + text in one row).
+   ========================================================= */
+
+.nv-feature-row {
+  display: grid;
+  grid-template-columns: 2.25rem 1fr;
+  gap: var(--sys-space-inline-md);
+  align-items: start;
+  padding-block: var(--sys-space-stack-sm);
+  border-block-end: var(--sys-border-subtle) solid var(--sys-premium-border);
+}
+
+.nv-feature-row:last-child {
+  border-block-end: none;
+}
+
+.nv-feature-row__icon {
+  display: inline-grid;
+  place-items: center;
+  inline-size: 2.25rem;
+  block-size: 2.25rem;
+  border-radius: var(--sys-radius-control);
+  background: color-mix(in srgb, var(--sys-color-accent-primary) 10%, transparent);
+  border: var(--sys-border-subtle) solid color-mix(in srgb, var(--sys-color-accent-primary) 24%, transparent);
+  color: var(--sys-color-accent-primary);
+}
+
+.nv-feature-row__icon svg {
+  inline-size: 1.125rem;
+  block-size: 1.125rem;
+}
+
+.nv-feature-row__body {
+  display: grid;
+  gap: var(--sys-space-stack-xs);
+}
+
+.nv-feature-row__title {
+  margin: 0;
+  font-family: var(--sys-font-display-family);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  color: var(--sys-color-text-primary);
+  line-height: var(--sys-line-height-tight);
+}
+
+.nv-feature-row__text {
+  margin: 0;
+  color: var(--sys-color-text-secondary);
+  font-size: 0.875rem;
+  line-height: 1.55;
+}
+
+/* =========================================================
+   NV-600.9 Constellation SVG node/ring motion
+   Reusable for the global page hero field.
+   ========================================================= */
+
+.nv-page-hero__field .nv-orbit {
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+.nv-page-hero__field .nv-orbit--1 { animation: nv-page-orbit-spin 180s linear infinite; }
+.nv-page-hero__field .nv-orbit--2 { animation: nv-page-orbit-spin 140s linear infinite reverse; }
+.nv-page-hero__field .nv-orbit--3 { animation: nv-page-orbit-spin 100s linear infinite; }
+.nv-page-hero__field .nv-orbit--4 { animation: nv-page-orbit-spin 60s linear infinite reverse; }
+
+@keyframes nv-page-orbit-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.nv-page-hero__field .nv-node--primary {
+  animation: nv-page-node-breathe 5s ease-in-out infinite;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+.nv-page-hero__field .nv-node--primary:nth-of-type(4n+1) { animation-delay: 0s; }
+.nv-page-hero__field .nv-node--primary:nth-of-type(4n+2) { animation-delay: 1.25s; }
+.nv-page-hero__field .nv-node--primary:nth-of-type(4n+3) { animation-delay: 2.5s; }
+.nv-page-hero__field .nv-node--primary:nth-of-type(4n+4) { animation-delay: 3.75s; }
+
+.nv-page-hero__field .nv-node--secondary {
+  animation: nv-page-node-fade 7s ease-in-out infinite;
+}
+
+.nv-page-hero__field .nv-node--tertiary {
+  animation: nv-page-node-fade 4s ease-in-out infinite;
+}
+
+@keyframes nv-page-node-breathe {
+  0%, 100% { opacity: 0.22; }
+  50% { opacity: 0.4; }
+}
+
+@keyframes nv-page-node-fade {
+  0%, 100% { opacity: 0.12; }
+  50% { opacity: 0.25; }
+}
+
+.nv-page-hero__field .nv-link--primary {
+  animation: nv-page-link-pulse 6s ease-in-out infinite;
+}
+
+@keyframes nv-page-link-pulse {
+  0%, 100% { opacity: 0.1; }
+  50% { opacity: 0.22; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nv-page-hero__field .nv-orbit,
+  .nv-page-hero__field .nv-node,
+  .nv-page-hero__field .nv-link--primary {
+    animation: none;
+  }
+}
+
+/* =========================================================
+   NV-600.9 Premium Footnote / Page Footer
+   A subtle closing band for major pages.
+   ========================================================= */
+
+.nv-page-footnote {
+  max-inline-size: 78rem;
+  margin-inline: auto;
+  padding: clamp(2.5rem, 5vw, 4rem) clamp(var(--sys-space-inset-md), 5vw, var(--sys-space-inset-xl));
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--sys-space-inline-md);
+  border-block-start: var(--sys-border-subtle) solid var(--sys-premium-border);
+}
+
+.nv-page-footnote__line {
+  margin: 0;
+  color: var(--sys-color-text-secondary);
+  font-size: 0.8125rem;
+  letter-spacing: var(--ref-font-tracking-wide);
+  text-transform: uppercase;
+  font-family: var(--sys-font-code-family);
+}
+
+.nv-page-footnote__meta {
+  margin: 0;
+  color: var(--sys-color-text-muted);
+  font-size: 0.75rem;
+  font-family: var(--sys-font-code-family);
+  letter-spacing: var(--ref-font-tracking-wide);
+}
+
+/* =========================================================
+   NV-600.9 Shell Polish — Global Header, Nav Rail, Context Panel, Footer
+   Tightens the visual language of the persistent shell so every page
+   inherits the same premium quality.
+   ========================================================= */
+
+/* Global header — premium accent line and brand-mark polish */
+.nv-global-header {
+  position: relative;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--sys-color-text-primary) 3%, transparent),
+      transparent 60%
+    ),
+    var(--ctx-shell-header-surface);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.nv-global-header::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: -1px;
+  block-size: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in srgb, var(--sys-color-accent-primary) 24%, transparent) 18%,
+    color-mix(in srgb, var(--sys-color-accent-primary) 38%, transparent) 50%,
+    color-mix(in srgb, var(--sys-color-accent-primary) 24%, transparent) 82%,
+    transparent 100%
+  );
+  pointer-events: none;
+  opacity: 0.55;
+}
+
+.nv-header-brand-mark {
+  border-radius: var(--sys-radius-control);
+  filter: brightness(1.04) saturate(1.02);
+  transition: opacity var(--motion-duration-hover) var(--motion-easing-standard);
+}
+
+.nv-header-brand:hover .nv-header-brand-mark {
+  opacity: 0.92;
+}
+
+/* Global search trigger — tighter, more premium */
+.nv-global-search-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sys-space-inline-sm);
+  padding: 0.5rem 0.875rem;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--sys-color-text-primary) 3%, transparent),
+      transparent
+    ),
+    color-mix(in srgb, var(--sys-color-surface-raised) 70%, transparent);
+  border: 1px solid color-mix(in srgb, var(--sys-color-accent-primary) 14%, var(--sys-color-border-subtle));
+  border-radius: var(--sys-radius-control);
+  color: var(--sys-color-text-secondary);
+  font-family: var(--sys-font-body-family);
+  font-size: 0.8125rem;
+  cursor: pointer;
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--sys-color-text-primary) 4%, transparent);
+  transition:
+    border-color var(--motion-duration-hover) var(--motion-easing-standard),
+    color var(--motion-duration-hover) var(--motion-easing-standard),
+    background-color var(--motion-duration-hover) var(--motion-easing-standard),
+    box-shadow var(--motion-duration-hover) var(--motion-easing-standard);
+}
+
+.nv-global-search-trigger:hover,
+.nv-global-search-trigger:focus-visible {
+  border-color: color-mix(in srgb, var(--sys-color-accent-primary) 38%, transparent);
+  color: var(--sys-color-text-primary);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--sys-color-accent-primary) 6%, transparent),
+      transparent
+    ),
+    color-mix(in srgb, var(--sys-color-surface-raised) 78%, transparent);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--sys-color-text-primary) 5%, transparent),
+    0 0 0 3px color-mix(in srgb, var(--sys-color-accent-primary) 12%, transparent);
+  outline: none;
+}
+
+.nv-global-search-trigger .nv-search-icon {
+  inline-size: 1rem;
+  block-size: 1rem;
+  opacity: 0.65;
+  transition: opacity var(--motion-duration-hover) var(--motion-easing-standard), color var(--motion-duration-hover) var(--motion-easing-standard);
+}
+
+.nv-global-search-trigger:hover .nv-search-icon,
+.nv-global-search-trigger:focus-visible .nv-search-icon {
+  opacity: 1;
+  color: var(--sys-color-accent-primary);
+}
+
+.nv-global-search-trigger .nv-search-placeholder {
+  user-select: none;
+}
+
+.nv-global-search-trigger .nv-search-kbd {
+  font-family: var(--sys-font-code-family);
+  font-size: 0.6875rem;
+  background-color: color-mix(in srgb, var(--sys-color-text-primary) 6%, transparent);
+  border: 1px solid color-mix(in srgb, var(--sys-color-text-primary) 12%, transparent);
+  border-radius: var(--ref-radius-subtle);
+  padding: 1px 5px;
+  color: var(--sys-color-text-secondary);
+  letter-spacing: 0.04em;
+  user-select: none;
+}
+
+/* Navigation rail — active indicator and better hover */
+.nv-navigation-rail {
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--sys-color-text-primary) 2%, transparent),
+      transparent 24%
+    ),
+    var(--ctx-nav-rail-surface);
+}
+
+.nv-nav-item {
+  position: relative;
+  isolation: isolate;
+  transition:
+    background-color var(--motion-duration-hover) var(--motion-easing-standard),
+    color var(--motion-duration-hover) var(--motion-easing-standard);
+}
+
+.nv-nav-item::before {
+  content: "";
+  position: absolute;
+  inset-block: 18%;
+  inset-inline-start: 0;
+  inline-size: 2px;
+  border-radius: var(--ref-radius-round);
+  background: var(--sys-color-accent-primary);
+  transform: scaleY(0);
+  transform-origin: center;
+  opacity: 0;
+  transition:
+    transform var(--motion-duration-state) var(--motion-easing-standard),
+    opacity var(--motion-duration-state) var(--motion-easing-standard);
+}
+
+.nv-nav-item[aria-current="page"]::before,
+.nv-nav-item[aria-current="page"]:hover::before {
+  transform: scaleY(1);
+  opacity: 0.85;
+}
+
+.nv-nav-item[aria-current="page"] {
+  background-color: color-mix(in srgb, var(--sys-color-accent-primary) 9%, var(--sys-color-surface-raised));
+  color: var(--sys-color-accent-primary);
+  font-weight: var(--ref-font-weight-semibold);
+}
+
+.nv-nav-item:hover {
+  background-color: color-mix(in srgb, var(--sys-color-text-primary) 5%, transparent);
+  color: var(--sys-color-text-primary);
+}
+
+.nv-nav-item[aria-current="page"]:hover {
+  background-color: color-mix(in srgb, var(--sys-color-accent-primary) 14%, var(--sys-color-surface-raised));
+}
+
+.nv-nav-item .nv-nav-icon {
+  transition: opacity var(--motion-duration-hover) var(--motion-easing-standard), color var(--motion-duration-hover) var(--motion-easing-standard);
+}
+
+.nv-nav-item:hover .nv-nav-icon {
+  opacity: 1;
+}
+
+.nv-nav-brand {
+  opacity: 0.78;
+  transition: opacity var(--motion-duration-hover) var(--motion-easing-standard);
+}
+
+.nv-nav-brand:hover {
+  opacity: 1;
+}
+
+/* Context panel — premium header & empty state */
+.nv-context-panel {
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--sys-color-text-primary) 2%, transparent),
+      transparent 18%
+    ),
+    var(--ctx-context-panel-surface);
+}
+
+.nv-context-header {
+  padding-block: var(--sys-space-stack-xs);
+  border-block-end: var(--sys-border-subtle) solid var(--sys-premium-border);
+  margin-block-end: var(--sys-space-stack-sm);
+}
+
+.nv-context-title {
+  margin: 0;
+  font-family: var(--sys-font-code-family);
+  font-size: 0.7rem;
+  font-weight: var(--ref-font-weight-medium);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--sys-color-accent-primary);
+}
+
+.nv-context-onboarding {
+  font-size: 0.8125rem;
+  color: var(--sys-color-text-secondary);
+  line-height: 1.6;
+  padding: var(--sys-space-stack-sm) 0;
+}
+
+/* Status footer — premium thin band */
+.nv-status-footer {
+  background:
+    linear-gradient(
+      0deg,
+      color-mix(in srgb, var(--sys-color-text-primary) 2%, transparent),
+      transparent 100%
+    ),
+    var(--ctx-shell-header-surface);
+  border-block-start: var(--sys-border-subtle) solid var(--sys-color-border-subtle);
+  color: var(--sys-color-text-muted);
+  font-family: var(--sys-font-code-family);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}

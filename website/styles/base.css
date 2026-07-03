@@ -237,7 +237,44 @@ table {
 }
 
 /* =========================================================
-   11. Motion Baseline
+   11. Scrollbar — Custom, Subtle, Scientific
+   Source: Visual Language v2
+   Token-only — no hardcoded colors.
+   ========================================================= */
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--sys-color-text-primary) 18%, transparent) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: color-mix(in srgb, var(--sys-color-text-primary) 14%, transparent);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  border-radius: var(--ref-radius-round);
+  transition: background-color var(--motion-duration-hover) var(--motion-easing-standard);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: color-mix(in srgb, var(--sys-color-accent-primary) 36%, transparent);
+  background-clip: padding-box;
+}
+
+*::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* =========================================================
+   12. Motion Baseline
    Source: NV-016 Motion System, NV-017 Accessibility System
    sys.motion.intensity.* / sys.a11y.motion.*
    ========================================================= */

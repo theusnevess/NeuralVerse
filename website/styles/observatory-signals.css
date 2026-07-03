@@ -1,100 +1,15 @@
-/**
- * NeuralVerse Semantic Field — NV-600.9-R7
- * ==========================================
- * Living Semantic Atmosphere — Home Hero Background
- *
- * Replaces the old "Semantic Observatory" illustration with
- * a distributed field of micro nodes, tiny clusters, and
- * barely-visible edges. The field should feel like a quiet
- * research network — not like an illustration.
- *
- * Core principle: Less artwork. More atmosphere.
- */
+/* =====================================================================
+   observatory-signals.css — RETIRED (NV-Visual-Language-v2)
+   =====================================================================
+   The "Living Semantic Atmosphere" semantic-field rules were coupled to
+   the old home page surface (.nv-workspace__surface) and the inline
+   .nv-home-observatory-illustration. Both of those have been replaced by
+   the new flagship home (nv-page-hero + constellation) in v2.
 
-/* Root-level CSS custom properties for the semantic field */
-:root {
-  --nv-semantic-node-color: #1e2c3e;
-  --nv-semantic-edge-color: #0e7490;
-  --nv-semantic-signal-color: #06b6d4;
-  --nv-semantic-field-opacity: 0.48;
-  --nv-semantic-field-bg-darken: 0.04;
-}
+   All rules in this file were dormant in v2 (selectors no longer match)
+   and have been intentionally removed.
 
-/* Darken the home workspace surface slightly for "deep research lab" feel */
-.nv-main-workspace[data-workspace-active-view="home"] .nv-workspace__surface {
-  position: relative;
-  overflow: hidden;
-  isolation: isolate;
-  background-color: color-mix(
-    in srgb,
-    var(--nv-canvas-base) calc(var(--nv-semantic-field-bg-darken) * 100%),
-    transparent
-  ) !important;
-}
-
-/* All content above the semantic field must be on z-index 1 */
-.nv-main-workspace[data-workspace-active-view="home"] .nv-workspace__surface > :not(.nv-home-observatory-illustration) {
-  position: relative;
-  z-index: 1;
-}
-
-/* The semantic field container — absolutely positioned over the workspace surface */
-.nv-main-workspace[data-workspace-active-view="home"] .nv-home-observatory-illustration {
-  position: absolute;
-  inset-block-start: 0;
-  inset-inline-end: 0;
-  z-index: 0;
-  display: block;
-  inline-size: min(78%, 68rem);
-  block-size: 100%;
-  opacity: var(--nv-semantic-field-opacity);
-  pointer-events: none;
-  user-select: none;
-  transform: translate3d(0, 0, 0);
-
-  /* Edge fade: the field blends into the left content area naturally */
-  mask-image:
-    linear-gradient(90deg, transparent 0%, transparent 12%, black 28%, black 94%, transparent 100%),
-    linear-gradient(180deg, transparent 0%, black 4%, black 94%, transparent 100%);
-  mask-composite: intersect;
-}
-
-/* SVG fills the container */
-.nv-home-observatory-illustration svg {
-  display: block;
-  inline-size: 100%;
-  block-size: 100%;
-  overflow: visible;
-}
-
-/* No large radial glows or blobs — only the semantic field */
-
-/* Tablet: reduce density mask and opacity */
-@media (max-width: 1023px) {
-  .nv-main-workspace[data-workspace-active-view="home"] .nv-home-observatory-illustration {
-    inline-size: min(52%, 32rem);
-    opacity: calc(var(--nv-semantic-field-opacity) * 0.7);
-    mask-image:
-      linear-gradient(90deg, transparent 0%, transparent 8%, black 22%, black 96%, transparent 100%),
-      linear-gradient(180deg, transparent 0%, black 6%, black 92%, transparent 100%);
-    mask-composite: intersect;
-  }
-
-  :root {
-    --nv-semantic-field-opacity: 0.34;
-  }
-}
-
-/* Mobile: hide most structures, keep only subtle hint */
-@media (max-width: 767px) {
-  .nv-main-workspace[data-workspace-active-view="home"] .nv-home-observatory-illustration {
-    display: none;
-  }
-}
-
-/* Reduced motion — SVG handles its own animation via embedded prefers-reduced-motion */
-@media (prefers-reduced-motion: reduce) {
-  .nv-home-observatory-illustration {
-    opacity: 0.3;
-  }
-}
+   The file is preserved as an empty stub to keep the historical filename
+   stable in case external references depend on it. New visual atmosphere
+   work belongs in background.css + premium-components.css.
+   ===================================================================== */

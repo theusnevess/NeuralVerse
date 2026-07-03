@@ -1,16 +1,1 @@
-[
-  {
-    "id": "ai-engineering",
-    "title": "AI Engineering",
-    "description": "A structured roadmap for building practical AI engineering foundations.",
-    "moduleIds": [
-      "foundations",
-      "classical-machine-learning",
-      "deep-learning",
-      "computer-vision",
-      "mlops"
-    ],
-    "order": 0,
-    "status": "active"
-  }
-]
+[]

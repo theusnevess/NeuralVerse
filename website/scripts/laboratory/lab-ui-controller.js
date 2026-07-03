@@ -263,9 +263,10 @@
 
       var html = '';
 
-      html += '<header class="nv-lab-index-header">';
-      html += '<h1>Interactive Laboratories</h1>';
-      html += '<p>Browse and launch deterministic educational experiments. All execution happens locally in your browser.</p>';
+      html += '<header class="nv-page-section__header nv-lab-index-header">';
+      html += '<p class="nv-page-section__eyebrow">Laboratories</p>';
+      html += '<h1>Interactive experiments.</h1>';
+      html += '<p>Deterministic, local-first simulations — from linear regression to transformer attention. Pause, replay, and export at any point.</p>';
       html += '</header>';
 
       if (recent && recent.length > 0) {

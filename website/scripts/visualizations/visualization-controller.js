@@ -96,9 +96,10 @@
       var categories = registry.getCategories();
 
       var html = '<div class="nv-pviz-page">';
-      html += '<header class="nv-pviz-page-header">';
-      html += '<h1 class="nv-pviz-page-title">Parametric Visualizations</h1>';
-      html += '<p class="nv-pviz-page-subtitle">Deterministic, interactive mathematical and scientific visualizations</p>';
+      html += '<header class="nv-page-section__header nv-pviz-page-header">';
+      html += '<p class="nv-page-section__eyebrow">Visualizations</p>';
+      html += '<h1>Parametric, deterministic charts.</h1>';
+      html += '<p>Visualize the underlying mathematics — every chart re-derives from a saved parameter set, perfect for inspecting and explaining.</p>';
       html += '</header>';
 
       html += ui.renderCategoryFilter(categories);

@@ -1389,10 +1389,10 @@
 
     container.innerHTML = `
       <div class="nv-stack nv-stack--gap-md nv-workspace-dashboard">
-        <header class="nv-curriculum-hero">
-          <span class="nv-badge" data-variant="info">Active Learning Workspace</span>
-          <h1>Personalized Learning & Study Dashboard</h1>
-          <p class="nv-muted">Review study sessions, learning queue, favorites, bookmarks, and collections.</p>
+        <header class="nv-page-section__header nv-curriculum-hero">
+          <p class="nv-page-section__eyebrow">Workspace</p>
+          <h1>Your daily research dashboard.</h1>
+          <p>Due reviews, recent laboratories, pinned memories, and personalized recommendations — assembled at the start of every session.</p>
         </header>
 
         <div id="session-summary-banner-container">

@@ -1,23 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Semantic Learning Intelligence — NeuralVerse</title>
-</head>
-<body>
-  <main class="nv-main-content" id="semantic-learning-root" role="main">
-    <div class="nv-sem-page">
-      <h1>Semantic Learning Intelligence</h1>
-      <p class="nv-sem-page-desc">Deterministic recommendations based on concept relationships. No learner inference.</p>
-      <div id="semantic-concept-selector" class="nv-sem-selector">
-        <label for="concept-select" class="nv-sem-label">Select a concept:</label>
-        <select id="concept-select" class="nv-sem-select" aria-label="Select concept to explore">
-          <option value="">— Choose a concept —</option>
-        </select>
-      </div>
-      <div id="semantic-results" class="nv-sem-results"></div>
+<section class="nv-semantic-page" data-semantic-root>
+  <header class="nv-page-section__header" style="text-align: start; margin-inline: 0;">
+    <p class="nv-page-section__eyebrow">Semantic Learning</p>
+    <h1>Concept intelligence.</h1>
+    <p>Deterministic recommendations based on concept relationships. No learner inference, no opaque ranking — every suggestion traces back to the curriculum graph.</p>
+  </header>
+
+  <div class="nv-sem-page">
+    <div id="semantic-concept-selector" class="nv-sem-selector">
+      <label for="concept-select" class="nv-sem-label">Select a concept:</label>
+      <select id="concept-select" class="nv-sem-select" aria-label="Select concept to explore">
+        <option value="">— Choose a concept —</option>
+      </select>
     </div>
-  </main>
-</body>
-</html>
+    <div id="semantic-results" class="nv-sem-results"></div>
+  </div>
+</section>

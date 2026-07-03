@@ -104,6 +104,9 @@ export function createWorkspaceController(options = {}) {
 
   function getElements() {
     return {
+      homeOnboarding: root.querySelector("[data-home-onboarding]"),
+      homeSession: root.querySelector("[data-home-session]"),
+
       continueCard: root.querySelector("[data-workspace-continue]"),
       continuePath: root.querySelector("[data-workspace-continue-path]"),
       continueModule: root.querySelector("[data-workspace-continue-module]"),
@@ -267,6 +270,9 @@ export function createWorkspaceController(options = {}) {
     const elements = getElements();
 
     if (!context) {
+      if (elements.homeOnboarding) elements.homeOnboarding.hidden = false;
+      if (elements.homeSession) elements.homeSession.hidden = true;
+
       if (elements.continueCard) elements.continueCard.hidden = true;
       if (elements.lastOpenedCard) elements.lastOpenedCard.hidden = true;
 
@@ -325,6 +331,9 @@ export function createWorkspaceController(options = {}) {
 
       return;
     }
+
+    if (elements.homeOnboarding) elements.homeOnboarding.hidden = true;
+    if (elements.homeSession) elements.homeSession.hidden = false;
 
     const {
       record,

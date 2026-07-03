@@ -114,13 +114,20 @@ export function createBreadcrumbsController(options = {}) {
     const pathTarget = getPathTarget();
     const moduleTarget = getModuleTarget();
     const contentTarget = getContentTarget();
+    const onboardingTarget = root.querySelector("[data-context-onboarding]");
+    const detailsTarget = root.querySelector("[data-context-details]");
     const liveRegion = getLiveRegion();
 
     if (routeTypeTarget) routeTypeTarget.textContent = routeType;
     if (depthTarget) depthTarget.textContent = String(depth);
-    if (pathTarget) pathTarget.textContent = path?.title || "None";
-    if (moduleTarget) moduleTarget.textContent = module?.title || "None";
-    if (contentTarget) contentTarget.textContent = content?.title || "None";
+
+    const hasContext = !!(path || module || content);
+    if (onboardingTarget) onboardingTarget.hidden = hasContext;
+    if (detailsTarget) detailsTarget.hidden = !hasContext;
+
+    if (pathTarget) pathTarget.textContent = path?.title || "—";
+    if (moduleTarget) moduleTarget.textContent = module?.title || "—";
+    if (contentTarget) contentTarget.textContent = content?.title || "—";
     markContextPanelUpdated();
 
     if (liveRegion) {
