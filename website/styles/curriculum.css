@@ -1531,10 +1531,10 @@ body:has(.nv-learning-hero) [data-workspace-empty-state] {
   display: grid;
   grid-template-columns: minmax(18rem, 0.55fr) minmax(22rem, 1.45fr);
   align-items: center;
-  gap: clamp(2.5rem, 6vw, 6rem);
-  min-block-size: clamp(34rem, 72vh, 46rem);
-  padding: clamp(3.5rem, 7vw, 6rem) clamp(var(--sys-space-inset-md), 4vw, var(--sys-space-inset-xl));
-  border: var(--sys-border-subtle) solid var(--sys-premium-border);
+  gap: clamp(2.75rem, 6vw, 5.75rem);
+  min-block-size: clamp(32rem, 70vh, 44rem);
+  padding: clamp(3.25rem, 6.5vw, 5.75rem) clamp(var(--sys-space-inset-md), 4vw, var(--sys-space-inset-xl));
+  border: var(--sys-border-subtle) solid color-mix(in srgb, var(--sys-premium-border) 82%, transparent);
   border-radius: var(--sys-premium-radius-card);
   overflow: hidden;
   isolation: isolate;
@@ -1549,21 +1549,20 @@ body:has(.nv-learning-hero) [data-workspace-empty-state] {
   background:
     radial-gradient(
       ellipse 70% 55% at 22% 38%,
-      color-mix(in srgb, var(--sys-color-accent-primary) 10%, transparent),
+      color-mix(in srgb, var(--sys-color-accent-primary) 7%, transparent),
       transparent 70%
     ),
     radial-gradient(
       ellipse 55% 50% at 78% 58%,
-      color-mix(in srgb, var(--sys-color-accent-primary) 6%, transparent),
+      color-mix(in srgb, var(--sys-color-accent-primary) 4%, transparent),
       transparent 65%
     ),
     linear-gradient(
       180deg,
-      color-mix(in srgb, var(--sys-color-text-primary) 4%, transparent),
+      color-mix(in srgb, var(--sys-color-text-primary) 3%, transparent),
       transparent 50%
     ),
     var(--sys-premium-surface);
-  filter: blur(0px);
   animation: nv-modules-hero-ambient-in 1.8s var(--motion-easing-decelerate, ease-out) both;
 }
 
@@ -1576,7 +1575,7 @@ body:has(.nv-learning-hero) [data-workspace-empty-state] {
 .nv-modules-hero__copy {
   position: relative;
   display: grid;
-  gap: clamp(0.85rem, 1.6vw, 1.35rem);
+  gap: clamp(0.85rem, 1.55vw, 1.22rem);
   align-content: center;
   max-inline-size: 36rem;
   z-index: 1;
@@ -1599,8 +1598,8 @@ body:has(.nv-learning-hero) [data-workspace-empty-state] {
   font-family: var(--sys-font-display-family);
   font-size: clamp(2.25rem, 4.6vw, 3.5rem);
   font-weight: 640;
-  line-height: 1.02;
-  letter-spacing: -0.048em;
+  line-height: 0.98;
+  letter-spacing: -0.052em;
   color: var(--sys-color-text-primary);
   text-wrap: balance;
   opacity: 0;
@@ -1609,10 +1608,10 @@ body:has(.nv-learning-hero) [data-workspace-empty-state] {
 
 .nv-modules-hero__subtitle {
   margin: 0;
-  max-inline-size: 38ch;
+  max-inline-size: 31ch;
   color: color-mix(in srgb, var(--sys-color-text-secondary) 88%, var(--sys-color-text-primary));
   font-size: clamp(0.9375rem, 1.05vw, 1.0625rem);
-  line-height: 1.6;
+  line-height: 1.62;
   letter-spacing: 0.002em;
   opacity: 0;
   animation: nv-modules-hero-fade-up 0.8s var(--motion-easing-decelerate, ease-out) 0.45s forwards;
@@ -1627,14 +1626,14 @@ body:has(.nv-learning-hero) [data-workspace-empty-state] {
   animation: nv-modules-hero-fade-up 0.8s var(--motion-easing-decelerate, ease-out) 0.6s forwards;
 }
 
-.nv-modules-hero__actions .nv-button--primary {
+.nv-modules-hero__actions .nv-button[data-variant="primary"] {
   min-inline-size: 10rem;
   transition: transform 0.2s var(--motion-easing-standard), box-shadow 0.2s var(--motion-easing-standard);
 }
 
-.nv-modules-hero__actions .nv-button--primary:hover:not(:disabled) {
+.nv-modules-hero__actions .nv-button[data-variant="primary"]:hover:not(:disabled) {
   transform: translateY(-1px);
-  box-shadow: 0 8px 24px color-mix(in srgb, var(--sys-color-accent-primary) 20%, transparent);
+  box-shadow: 0 8px 22px color-mix(in srgb, var(--sys-color-accent-primary) 14%, transparent);
 }
 
 @keyframes nv-modules-hero-fade-up {
@@ -1647,12 +1646,12 @@ body:has(.nv-learning-hero) [data-workspace-empty-state] {
   position: relative;
   aspect-ratio: 1.1;
   min-block-size: clamp(22rem, 38vw, 32rem);
-  border-radius: 2.5rem;
+  border-radius: 2.75rem;
   background:
-    linear-gradient(90deg, transparent 0 calc(50% - 0.5px), color-mix(in srgb, var(--sys-color-text-primary) 4%, transparent) calc(50% - 0.5px) calc(50% + 0.5px), transparent calc(50% + 0.5px)),
-    linear-gradient(0deg, transparent 0 calc(50% - 0.5px), color-mix(in srgb, var(--sys-color-text-primary) 3%, transparent) calc(50% - 0.5px) calc(50% + 0.5px), transparent calc(50% + 0.5px)),
-    radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--sys-color-accent-primary) 12%, transparent), transparent 22%),
-    radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--sys-color-text-primary) 4%, transparent), transparent 55%);
+    linear-gradient(90deg, transparent 0 calc(50% - 0.5px), color-mix(in srgb, var(--sys-color-text-primary) 3%, transparent) calc(50% - 0.5px) calc(50% + 0.5px), transparent calc(50% + 0.5px)),
+    linear-gradient(0deg, transparent 0 calc(50% - 0.5px), color-mix(in srgb, var(--sys-color-text-primary) 2%, transparent) calc(50% - 0.5px) calc(50% + 0.5px), transparent calc(50% + 0.5px)),
+    radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--sys-color-accent-primary) 8%, transparent), transparent 24%),
+    radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--sys-color-text-primary) 3%, transparent), transparent 58%);
   overflow: hidden;
   opacity: 0;
   animation: nv-modules-illustration-in 1.6s var(--motion-easing-decelerate, ease-out) 0.2s forwards;
@@ -1665,20 +1664,20 @@ body:has(.nv-learning-hero) [data-workspace-empty-state] {
 
 .nv-modules-hero__ring {
   position: absolute;
-  border: 1px solid color-mix(in srgb, var(--sys-color-accent-primary) 18%, transparent);
+  border: 1px solid color-mix(in srgb, var(--sys-color-accent-primary) 14%, transparent);
   border-radius: 50%;
 }
 
 .nv-modules-hero__ring--outer {
   inset: 14%;
-  animation: nv-modules-orbit-drift 52s linear infinite, nv-modules-breathe 12s ease-in-out infinite;
+  animation: nv-modules-orbit-drift 72s linear infinite, nv-modules-breathe 18s ease-in-out infinite;
 }
 
 .nv-modules-hero__ring--inner {
   inset: 28%;
   border-style: dashed;
-  opacity: 0.65;
-  animation: nv-modules-orbit-drift 64s linear infinite reverse, nv-modules-breathe 14s ease-in-out infinite;
+  opacity: 0.52;
+  animation: nv-modules-orbit-drift 88s linear infinite reverse, nv-modules-breathe 20s ease-in-out infinite;
 }
 
 @keyframes nv-modules-orbit-drift {
@@ -1686,8 +1685,8 @@ body:has(.nv-learning-hero) [data-workspace-empty-state] {
 }
 
 @keyframes nv-modules-breathe {
-  0%, 100% { opacity: 0.65; }
-  50% { opacity: 1; }
+  0%, 100% { opacity: 0.48; }
+  50% { opacity: 0.82; }
 }
 
 .nv-modules-hero__core {
@@ -1707,8 +1706,8 @@ body:has(.nv-learning-hero) [data-workspace-empty-state] {
   background: color-mix(in srgb, var(--sys-color-surface-raised) 80%, transparent);
   border: 1px solid color-mix(in srgb, var(--sys-color-accent-primary) 22%, var(--sys-color-border-subtle));
   box-shadow:
-    0 28px 80px rgb(0 0 0 / 0.28),
-    inset 0 0 48px color-mix(in srgb, var(--sys-color-accent-primary) 8%, transparent);
+    0 28px 78px rgb(0 0 0 / 0.24),
+    inset 0 0 44px color-mix(in srgb, var(--sys-color-accent-primary) 6%, transparent);
   transform: translate(-50%, -50%);
   backdrop-filter: blur(18px);
   z-index: 2;
@@ -1720,10 +1719,10 @@ body:has(.nv-learning-hero) [data-workspace-empty-state] {
   inset-block-start: 50%;
   inline-size: 38%;
   block-size: 1px;
-  background: linear-gradient(90deg, color-mix(in srgb, var(--sys-color-accent-primary) 44%, transparent), transparent 78%);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--sys-color-accent-primary) 28%, transparent), transparent 78%);
   transform-origin: left center;
-  opacity: 0.5;
-  animation: nv-modules-signal 9s ease-in-out infinite;
+  opacity: 0.34;
+  animation: nv-modules-signal 14s ease-in-out infinite;
 }
 
 .nv-modules-hero__beam--a { transform: rotate(28deg); }
@@ -1731,8 +1730,8 @@ body:has(.nv-learning-hero) [data-workspace-empty-state] {
 .nv-modules-hero__beam--c { transform: rotate(268deg); animation-delay: 1.6s; }
 
 @keyframes nv-modules-signal {
-  0%, 100% { opacity: 0.22; }
-  50% { opacity: 0.58; }
+  0%, 100% { opacity: 0.14; }
+  50% { opacity: 0.38; }
 }
 
 .nv-modules-hero__node {
@@ -1747,18 +1746,11 @@ body:has(.nv-learning-hero) [data-workspace-empty-state] {
   font-size: 0.625rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--sys-color-text-primary);
+  color: color-mix(in srgb, var(--sys-color-text-primary) 88%, transparent);
   background: color-mix(in srgb, var(--sys-color-surface-raised) 78%, transparent);
-  border: 1px solid color-mix(in srgb, var(--sys-color-accent-primary) 20%, var(--sys-color-border-subtle));
-  box-shadow: 0 18px 58px rgb(0 0 0 / 0.24);
+  border: 1px solid color-mix(in srgb, var(--sys-color-accent-primary) 16%, var(--sys-color-border-subtle));
+  box-shadow: 0 16px 52px rgb(0 0 0 / 0.2);
   backdrop-filter: blur(18px);
-  transition: transform 180ms var(--motion-easing-standard), border-color 180ms var(--motion-easing-standard), box-shadow 180ms var(--motion-easing-standard);
-}
-
-.nv-modules-hero__node:hover {
-  transform: translateY(-2px) scale(1.01);
-  border-color: color-mix(in srgb, var(--sys-color-accent-primary) 60%, white);
-  box-shadow: 0 18px 52px rgb(0 0 0 / 0.28);
 }
 
 .nv-modules-hero__node--a { inset-block-start: 11%; inset-inline-start: 8%; animation: nv-modules-float 17s ease-in-out infinite; }
@@ -1770,7 +1762,7 @@ body:has(.nv-learning-hero) [data-workspace-empty-state] {
 
 @keyframes nv-modules-float {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
+  50% { transform: translateY(-4px); }
 }
 
 /* Modules Empty State */
@@ -1921,22 +1913,22 @@ body:has(.nv-learning-hero) [data-workspace-empty-state] {
    ========================================================= */
 
 .nv-curriculum-constellation-section {
-  --constellation-glow-sm: 0 0 8px color-mix(in srgb, var(--sys-color-accent-primary) 28%, transparent);
-  --constellation-glow-md: 0 0 16px color-mix(in srgb, var(--sys-color-accent-primary) 60%, transparent);
-  --constellation-glow-lg: 0 0 24px color-mix(in srgb, var(--sys-color-accent-primary) 22%, transparent);
+  --constellation-glow-sm: 0 0 8px color-mix(in srgb, var(--sys-color-accent-primary) 20%, transparent);
+  --constellation-glow-md: 0 0 14px color-mix(in srgb, var(--sys-color-accent-primary) 42%, transparent);
+  --constellation-glow-lg: 0 0 22px color-mix(in srgb, var(--sys-color-accent-primary) 16%, transparent);
   position: relative;
-  padding: clamp(3.5rem, 7vw, 6rem) clamp(var(--sys-space-inset-md), 4vw, var(--sys-space-inset-xl));
-  border: var(--sys-border-subtle) solid var(--sys-premium-border);
+  padding: clamp(3.25rem, 6.5vw, 5.5rem) clamp(var(--sys-space-inset-md), 4vw, var(--sys-space-inset-xl));
+  border: var(--sys-border-subtle) solid color-mix(in srgb, var(--sys-premium-border) 82%, transparent);
   border-radius: var(--sys-premium-radius-card);
   background:
     radial-gradient(
       ellipse 60% 50% at 50% 50%,
-      color-mix(in srgb, var(--sys-color-accent-primary) 4%, transparent),
+      color-mix(in srgb, var(--sys-color-accent-primary) 3%, transparent),
       transparent 70%
     ),
     linear-gradient(
       180deg,
-      color-mix(in srgb, var(--sys-color-text-primary) 3%, transparent),
+      color-mix(in srgb, var(--sys-color-text-primary) 2.5%, transparent),
       transparent 45%
     ),
     var(--sys-premium-surface);
@@ -1986,12 +1978,12 @@ body:has(.nv-learning-hero) [data-workspace-empty-state] {
   block-size: 100%;
   pointer-events: none;
   z-index: 0;
-  transition: opacity 0.15s var(--motion-easing-standard, ease);
+  transition: opacity 0.22s var(--motion-easing-standard, ease);
 }
 
 .nv-curriculum-constellation__line--connected {
   opacity: 1;
-  stroke-width: 1.5;
+  stroke-width: 1.1;
 }
 
 /* ── Node Base ────────────────────────────────────────── */
@@ -2006,14 +1998,13 @@ body:has(.nv-learning-hero) [data-workspace-empty-state] {
   cursor: pointer;
   z-index: 1;
   outline: none;
-  transition: transform 0.15s var(--motion-easing-standard, ease),
-              opacity 0.2s var(--motion-easing-standard, ease);
+  transition: transform 0.22s var(--motion-easing-standard, ease);
 }
 
 /* ── Node: Hover ──────────────────────────────────────── */
 
 .nv-curriculum-constellation__node:hover {
-  transform: translate(-50%, -50%) translateY(-3px);
+  transform: translate(-50%, -50%) translateY(-2px);
 }
 
 .nv-curriculum-constellation__node:hover .nv-curriculum-constellation__node-ring {
@@ -2022,7 +2013,7 @@ body:has(.nv-learning-hero) [data-workspace-empty-state] {
 }
 
 .nv-curriculum-constellation__node:hover .nv-curriculum-constellation__node-core {
-  transform: scale(1.25);
+  transform: scale(1.16);
   box-shadow: var(--constellation-glow-md);
 }
 
@@ -2041,10 +2032,12 @@ body:has(.nv-learning-hero) [data-workspace-empty-state] {
 
 /* ── Node: Focus ──────────────────────────────────────── */
 
+.nv-curriculum-constellation__node:focus,
 .nv-curriculum-constellation__node:focus-visible {
-  transform: translate(-50%, -50%) translateY(-3px);
+  transform: translate(-50%, -50%) translateY(-2px);
 }
 
+.nv-curriculum-constellation__node:focus .nv-curriculum-constellation__node-ring,
 .nv-curriculum-constellation__node:focus-visible .nv-curriculum-constellation__node-ring {
   border-color: color-mix(in srgb, var(--sys-color-accent-primary) 60%, transparent);
   box-shadow:
@@ -2052,20 +2045,24 @@ body:has(.nv-learning-hero) [data-workspace-empty-state] {
     var(--constellation-glow-lg);
 }
 
+.nv-curriculum-constellation__node:focus .nv-curriculum-constellation__node-core,
 .nv-curriculum-constellation__node:focus-visible .nv-curriculum-constellation__node-core {
-  transform: scale(1.25);
+  transform: scale(1.16);
   box-shadow: var(--constellation-glow-md);
 }
 
+.nv-curriculum-constellation__node:focus .nv-curriculum-constellation__node-label,
 .nv-curriculum-constellation__node:focus-visible .nv-curriculum-constellation__node-label {
   color: var(--sys-color-text-primary);
 }
 
+.nv-curriculum-constellation__node:focus .nv-curriculum-constellation__node-subtitle,
 .nv-curriculum-constellation__node:focus-visible .nv-curriculum-constellation__node-subtitle {
   opacity: 1;
   transform: translateY(0);
 }
 
+.nv-curriculum-constellation__node:focus .nv-curriculum-constellation__node-description,
 .nv-curriculum-constellation__node:focus-visible .nv-curriculum-constellation__node-description {
   opacity: 0.8;
 }
@@ -2073,18 +2070,18 @@ body:has(.nv-learning-hero) [data-workspace-empty-state] {
 /* ── Node: Selected ───────────────────────────────────── */
 
 .nv-curriculum-constellation__node--selected {
-  transform: translate(-50%, -50%) translateY(-3px);
+  transform: translate(-50%, -50%) translateY(-2px);
   z-index: 3;
 }
 
 .nv-curriculum-constellation__node--selected .nv-curriculum-constellation__node-ring {
   border-color: var(--sys-color-accent-primary);
-  box-shadow: 0 0 32px color-mix(in srgb, var(--sys-color-accent-primary) 30%, transparent);
+  box-shadow: 0 0 24px color-mix(in srgb, var(--sys-color-accent-primary) 22%, transparent);
 }
 
 .nv-curriculum-constellation__node--selected .nv-curriculum-constellation__node-core {
-  transform: scale(1.35);
-  box-shadow: 0 0 20px color-mix(in srgb, var(--sys-color-accent-primary) 70%, transparent);
+  transform: scale(1.24);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--sys-color-accent-primary) 52%, transparent);
 }
 
 .nv-curriculum-constellation__node--selected .nv-curriculum-constellation__node-number {
@@ -2138,7 +2135,7 @@ body:has(.nv-learning-hero) [data-workspace-empty-state] {
 }
 
 .nv-curriculum-constellation__node--prereq .nv-curriculum-constellation__node-core {
-  box-shadow: 0 0 6px color-mix(in srgb, var(--sys-color-accent-primary) 20%, transparent);
+  box-shadow: 0 0 6px color-mix(in srgb, var(--sys-color-accent-primary) 16%, transparent);
 }
 
 .nv-curriculum-constellation__node--prereq .nv-curriculum-constellation__node-number {
@@ -2156,7 +2153,7 @@ body:has(.nv-learning-hero) [data-workspace-empty-state] {
 }
 
 .nv-curriculum-constellation__node--successor .nv-curriculum-constellation__node-core {
-  box-shadow: 0 0 8px color-mix(in srgb, var(--sys-color-accent-primary) 25%, transparent);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--sys-color-accent-primary) 18%, transparent);
 }
 
 /* ── Node: Unrelated (hover/selected context) ─────────── */
@@ -2169,16 +2166,16 @@ body:has(.nv-learning-hero) [data-workspace-empty-state] {
 
 .nv-curriculum-constellation__line--prereq {
   stroke: var(--sys-color-accent-primary);
-  stroke-width: 1.5;
-  opacity: 0.5;
+  stroke-width: 1.1;
+  opacity: 0.42;
 }
 
 /* ── Line: Successor connection ───────────────────────── */
 
 .nv-curriculum-constellation__line--successor {
   stroke: var(--sys-color-accent-primary);
-  stroke-width: 1.5;
-  opacity: 0.6;
+  stroke-width: 1.1;
+  opacity: 0.5;
   stroke-dasharray: none;
 }
 
@@ -2190,7 +2187,10 @@ body:has(.nv-learning-hero) [data-workspace-empty-state] {
   left: 50%;
   transform: translateX(-50%);
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 1.5rem;
+  max-inline-size: calc(100% - 2rem);
   padding: 0.625rem 1rem;
   border-radius: var(--sys-radius-surface);
   background: color-mix(in srgb, var(--sys-color-surface-raised) 92%, transparent);
@@ -2201,10 +2201,14 @@ body:has(.nv-learning-hero) [data-workspace-empty-state] {
   white-space: nowrap;
   z-index: 5;
   opacity: 0;
-  transition: opacity 0.15s var(--motion-easing-standard, ease);
+  transition: opacity 0.22s var(--motion-easing-standard, ease);
   pointer-events: none;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
+}
+
+.nv-curriculum-constellation__progression-info[hidden] {
+  display: none;
 }
 
 .nv-curriculum-constellation__progression-info:not([hidden]) {
@@ -2267,9 +2271,9 @@ body:has(.nv-learning-hero) [data-workspace-empty-state] {
   block-size: 3.75rem;
   border-radius: 50%;
   border: 1px solid color-mix(in srgb, var(--sys-color-accent-primary) 15%, transparent);
-  transition: border-color 0.15s var(--motion-easing-standard, ease),
-              box-shadow 0.15s var(--motion-easing-standard, ease),
-              border-style 0.15s var(--motion-easing-standard, ease);
+  transition: border-color 0.22s var(--motion-easing-standard, ease),
+              box-shadow 0.22s var(--motion-easing-standard, ease),
+              border-style 0.22s var(--motion-easing-standard, ease);
 }
 
 /* ── Node Core ────────────────────────────────────────── */
@@ -2280,10 +2284,10 @@ body:has(.nv-learning-hero) [data-workspace-empty-state] {
   block-size: 0.5rem;
   border-radius: 50%;
   background: var(--sys-color-accent-primary);
-  box-shadow: 0 0 8px color-mix(in srgb, var(--sys-color-accent-primary) 30%, transparent);
-  transition: transform 0.15s var(--motion-easing-standard, ease),
-              box-shadow 0.15s var(--motion-easing-standard, ease),
-              background 0.15s var(--motion-easing-standard, ease);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--sys-color-accent-primary) 22%, transparent);
+  transition: transform 0.22s var(--motion-easing-standard, ease),
+              box-shadow 0.22s var(--motion-easing-standard, ease),
+              background 0.22s var(--motion-easing-standard, ease);
 }
 
 /* ── Node Number ──────────────────────────────────────── */
@@ -2305,9 +2309,9 @@ body:has(.nv-learning-hero) [data-workspace-empty-state] {
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 2;
-  transition: background 0.15s var(--motion-easing-standard, ease),
-              border-color 0.15s var(--motion-easing-standard, ease),
-              color 0.15s var(--motion-easing-standard, ease);
+  transition: background 0.22s var(--motion-easing-standard, ease),
+              border-color 0.22s var(--motion-easing-standard, ease),
+              color 0.22s var(--motion-easing-standard, ease);
 }
 
 /* ── Node Label ───────────────────────────────────────── */
@@ -2329,8 +2333,8 @@ body:has(.nv-learning-hero) [data-workspace-empty-state] {
   text-transform: uppercase;
   color: var(--sys-color-text-secondary);
   line-height: 1.4;
-  transition: color 0.15s var(--motion-easing-standard, ease),
-              font-weight 0.15s var(--motion-easing-standard, ease);
+  transition: color 0.22s var(--motion-easing-standard, ease),
+              font-weight 0.22s var(--motion-easing-standard, ease);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -2349,9 +2353,8 @@ body:has(.nv-learning-hero) [data-workspace-empty-state] {
   line-height: 1.3;
   opacity: 0;
   transform: translateY(-2px);
-  transition: opacity 0.15s var(--motion-easing-standard, ease),
-              transform 0.15s var(--motion-easing-standard, ease),
-              color 0.15s var(--motion-easing-standard, ease);
+  transition: transform 0.22s var(--motion-easing-standard, ease),
+              color 0.22s var(--motion-easing-standard, ease);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -2368,10 +2371,82 @@ body:has(.nv-learning-hero) [data-workspace-empty-state] {
   color: var(--sys-color-text-muted);
   line-height: 1.45;
   opacity: 0;
-  transition: opacity 0.15s var(--motion-easing-standard, ease);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+/* ── Progression Info — Objective + Scope ────────────── */
+
+.nv-curriculum-constellation__progression-text {
+  color: var(--sys-color-text-secondary);
+}
+
+/* ── Knowledge Topology — Domain Layer ───────────────── */
+
+.nv-curriculum-constellation__domains {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.nv-curriculum-constellation__domain {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  opacity: 0;
+  transition: opacity 0.3s var(--motion-easing-standard, ease);
+}
+
+.nv-curriculum-constellation__domain-halo {
+  position: absolute;
+  width: 5rem;
+  height: 5rem;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--sys-color-accent-primary) 4%, transparent) 0%,
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.3s var(--motion-easing-standard, ease);
+}
+
+.nv-curriculum-constellation__domain-label {
+  font-family: var(--sys-font-code-family);
+  font-size: 0.5rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--sys-color-text-muted);
+  opacity: 0.35;
+  white-space: nowrap;
+  transition: opacity 0.3s var(--motion-easing-standard, ease),
+              color 0.3s var(--motion-easing-standard, ease);
+}
+
+/* ── Domain: Active (relevant to selected module) ────── */
+
+.nv-curriculum-constellation__domain--active {
+  opacity: 1;
+}
+
+.nv-curriculum-constellation__domain--active .nv-curriculum-constellation__domain-halo {
+  opacity: 1;
+}
+
+.nv-curriculum-constellation__domain--active .nv-curriculum-constellation__domain-label {
+  opacity: 0.7;
+  color: var(--sys-color-accent-primary);
+}
+
+/* ── Domain: Inactive (not relevant) ─────────────────── */
+
+.nv-curriculum-constellation__domain--inactive {
+  opacity: 0;
 }
 
 /* ── Caption ──────────────────────────────────────────── */
@@ -2440,6 +2515,7 @@ body:has(.nv-learning-hero) [data-workspace-empty-state] {
   }
 
   .nv-curriculum-constellation__node:hover,
+  .nv-curriculum-constellation__node:focus,
   .nv-curriculum-constellation__node:focus-visible {
     transform: none;
     border-color: color-mix(in srgb, var(--sys-color-accent-primary) 30%, var(--sys-color-border-subtle));
@@ -2482,6 +2558,7 @@ body:has(.nv-learning-hero) [data-workspace-empty-state] {
   }
 
   .nv-curriculum-constellation__node:hover .nv-curriculum-constellation__node-core,
+  .nv-curriculum-constellation__node:focus .nv-curriculum-constellation__node-core,
   .nv-curriculum-constellation__node:focus-visible .nv-curriculum-constellation__node-core {
     transform: translate(0, -50%) scale(1.15);
   }
@@ -2537,6 +2614,10 @@ body:has(.nv-learning-hero) [data-workspace-empty-state] {
   .nv-curriculum-constellation__caption {
     margin-top: 1.5rem;
   }
+
+  .nv-curriculum-constellation__domains {
+    display: none;
+  }
 }
 
 /* ── Reduced Motion ───────────────────────────────────── */
@@ -2563,6 +2644,11 @@ body:has(.nv-learning-hero) [data-workspace-empty-state] {
   }
   .nv-curriculum-constellation__lines path,
   .nv-curriculum-constellation__lines line {
+    transition: none;
+  }
+  .nv-curriculum-constellation__domain,
+  .nv-curriculum-constellation__domain-halo,
+  .nv-curriculum-constellation__domain-label {
     transition: none;
   }
 }
@@ -2637,5 +2723,558 @@ body:has(.nv-learning-hero) [data-workspace-empty-state] {
     animation: none !important;
     opacity: 1;
     transform: none;
+  }
+}
+
+/* =========================================================
+   Modules Page — NV-210 Canonical Control Tower
+   ========================================================= */
+
+body:has(.nv-modules-control) .nv-main-workspace {
+  background: transparent;
+}
+
+body:has(.nv-modules-control) .nv-modules-page {
+  inline-size: min(100%, 42rem);
+  max-inline-size: 42rem;
+  margin-inline: auto;
+}
+
+.nv-modules-control {
+  display: grid;
+  gap: 0;
+  max-inline-size: 42rem;
+  margin-inline: auto;
+  padding-block-end: clamp(4.8rem, 5.7vw, 5.1rem);
+  background: transparent;
+}
+
+.nv-modules-control__region {
+  position: relative;
+  inline-size: 100%;
+  max-inline-size: 42rem;
+  margin-inline: auto;
+  padding: clamp(4.5rem, 8vw, 7rem) 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+}
+
+.nv-modules-control__region + .nv-modules-control__region {
+  margin-block-start: 0;
+}
+
+.nv-modules-control__region::after {
+  display: none;
+}
+
+.nv-modules-control__region + .nv-modules-control__region::before {
+  content: "";
+  display: block;
+  position: static;
+  inline-size: clamp(2.5rem, 6vw, 4.5rem);
+  block-size: 1px;
+  margin: 0 auto clamp(2rem, 4vw, 3rem);
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--sys-color-accent-primary) 35%, transparent), transparent);
+  opacity: 0.65;
+}
+
+.nv-modules-control__region--global {
+  display: grid;
+  place-items: center;
+  grid-template-columns: 1fr;
+  min-block-size: clamp(18rem, 31vw, 21.5rem);
+  padding-block: clamp(2rem, 5vw, 3.25rem);
+  text-align: center;
+  isolation: isolate;
+}
+
+.nv-modules-control__region--global::before {
+  content: "";
+  display: block;
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 45% at 50% 42%, color-mix(in srgb, var(--sys-color-accent-primary) 5%, transparent), transparent 68%),
+    linear-gradient(180deg, transparent, color-mix(in srgb, black 22%, transparent));
+  pointer-events: none;
+  z-index: -1;
+}
+
+.nv-modules-control__intro {
+  display: grid;
+  grid-column: 1;
+  grid-row: 1;
+  justify-items: center;
+  gap: var(--ref-space-300);
+  max-inline-size: 46rem;
+  margin-inline: auto;
+}
+
+.nv-modules-control__intro::before,
+.nv-modules-control__section-head::before,
+.nv-modules-control__region--interpretation > .nv-modules-control__eyebrow::before,
+.nv-modules-control__region--planning > .nv-modules-control__eyebrow::before {
+  content: "";
+  display: block;
+  inline-size: 2rem;
+  block-size: 1px;
+  margin: 0 auto 0.8rem;
+  background: var(--sys-color-accent-primary);
+  opacity: 0.36;
+}
+
+.nv-modules-control__eyebrow {
+  margin: 0;
+  color: var(--sys-color-accent-primary);
+  font-family: var(--sys-font-code-family);
+  font-size: 0.58rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.nv-modules-control__title,
+.nv-modules-control__section-title {
+  margin: 0;
+  color: var(--sys-color-text-primary);
+  font-family: var(--sys-font-display-family);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.nv-modules-control__title {
+  max-inline-size: none;
+  font-size: clamp(2.65rem, 5vw, 4rem);
+  line-height: 1;
+  letter-spacing: -0.035em;
+}
+
+.nv-modules-control__lead,
+.nv-modules-control__text {
+  margin: 0;
+  color: color-mix(in srgb, var(--sys-color-text-secondary) 90%, transparent);
+  line-height: 1.58;
+  text-wrap: pretty;
+}
+
+.nv-modules-control__lead {
+  max-inline-size: 34ch;
+  margin-inline: auto;
+  font-size: clamp(0.92rem, 1.2vw, 1rem);
+  line-height: 1.6;
+}
+
+.nv-modules-control__topology {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  inline-size: min(24rem, 66vw);
+  aspect-ratio: 1;
+  min-block-size: auto;
+  border-radius: 50%;
+  opacity: 0.07;
+  transform: translate(-50%, -50%);
+  z-index: -1;
+}
+
+.nv-modules-control__topology-ring,
+.nv-modules-control__topology-axis {
+  position: absolute;
+  inset: 50%;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.nv-modules-control__topology-ring--outer {
+  inline-size: 92%;
+  block-size: 92%;
+  border: 1px solid color-mix(in srgb, var(--sys-color-accent-primary) 18%, transparent);
+}
+
+.nv-modules-control__topology-ring--middle {
+  inline-size: 64%;
+  block-size: 64%;
+  border: 1px dashed color-mix(in srgb, var(--sys-color-text-primary) 10%, transparent);
+}
+
+.nv-modules-control__topology-ring--inner {
+  inline-size: 31%;
+  block-size: 31%;
+  border: 1px solid color-mix(in srgb, var(--sys-color-accent-primary) 28%, transparent);
+  background: radial-gradient(circle, color-mix(in srgb, var(--sys-color-accent-primary) 9%, transparent), transparent 72%);
+}
+
+.nv-modules-control__topology-axis {
+  inline-size: 92%;
+  block-size: 1px;
+  border-radius: 0;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--sys-color-accent-primary) 26%, transparent), transparent);
+}
+
+.nv-modules-control__topology-node {
+  position: absolute;
+  inset: 50%;
+  display: grid;
+  place-items: center;
+  inline-size: 2rem;
+  block-size: 2rem;
+  border: 1px solid color-mix(in srgb, var(--sys-color-accent-primary) 30%, var(--sys-color-border-subtle));
+  border-radius: 999px;
+  color: color-mix(in srgb, var(--sys-color-text-primary) 86%, transparent);
+  background: color-mix(in srgb, var(--sys-color-surface-raised) 58%, transparent);
+  transform: translate(-50%, -50%) rotate(var(--node-angle)) translateX(7.1rem) rotate(calc(var(--node-angle) * -1));
+}
+
+.nv-modules-control__topology-number {
+  font-family: var(--sys-font-code-family);
+  font-size: 0.62rem;
+  font-weight: 700;
+}
+
+.nv-modules-control__region--curriculum {
+  padding-block-start: clamp(1.5rem, 3vw, 2.35rem);
+}
+
+.nv-modules-control__section-head {
+  display: grid;
+  justify-items: center;
+  max-inline-size: 42rem;
+  margin: 0 auto clamp(1.25rem, 2.5vw, 1.8rem);
+  text-align: center;
+}
+
+.nv-modules-control__section-title {
+  max-inline-size: 42rem;
+  font-size: clamp(1.45rem, 2.4vw, 2rem);
+  line-height: 1.18;
+}
+
+.nv-modules-control__curriculum-map {
+  max-inline-size: 52rem;
+  margin-inline: auto;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.nv-modules-control__matrix {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  max-inline-size: 36rem;
+  margin-inline: auto;
+}
+
+.nv-modules-control__matrix::before {
+  content: "";
+  position: absolute;
+  inset-block: 0.95rem;
+  inset-inline-start: 0.5625rem;
+  inline-size: 1px;
+  block-size: auto;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    color-mix(in srgb, var(--sys-color-accent-primary) 20%, transparent) 8%,
+    color-mix(in srgb, var(--sys-color-accent-primary) 18%, transparent) 50%,
+    color-mix(in srgb, var(--sys-color-accent-primary) 12%, transparent) 92%,
+    transparent 100%
+  );
+  opacity: 0.72;
+  pointer-events: none;
+}
+
+.nv-modules-control__matrix-node {
+  position: relative;
+  display: grid;
+  grid-template-columns: 0.9rem auto minmax(0, 1fr);
+  grid-template-areas: "dot number label";
+  column-gap: 0.85rem;
+  row-gap: 0.5rem;
+  align-items: start;
+  min-block-size: 0;
+  padding: 0.86rem 0;
+  border: 0;
+  border-block-start: 1px solid color-mix(in srgb, var(--sys-color-border-subtle) 20%, transparent);
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+  box-shadow: none;
+  text-align: left;
+  transform: none;
+  transition:
+    border-color var(--motion-duration-sm, 160ms) var(--motion-easing-standard, ease),
+    color var(--motion-duration-sm, 160ms) var(--motion-easing-standard, ease);
+}
+
+.nv-modules-control__matrix-node:first-child {
+  border-block-start: 0;
+}
+
+.nv-modules-control__matrix-node::before {
+  content: "";
+  grid-area: dot;
+  justify-self: center;
+  align-self: start;
+  inline-size: 0.4rem;
+  block-size: 0.4rem;
+  margin-block-start: 0.4rem;
+  border-radius: 999px;
+  background: var(--sys-color-accent-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--sys-color-accent-primary) 7%, transparent);
+  transition:
+    transform var(--motion-duration-sm, 160ms) var(--motion-easing-standard, ease),
+    box-shadow var(--motion-duration-sm, 160ms) var(--motion-easing-standard, ease);
+}
+
+.nv-modules-control__matrix-node:hover,
+.nv-modules-control__matrix-node:focus-visible,
+.nv-modules-control__matrix-node[aria-selected="true"] {
+  border-color: color-mix(in srgb, var(--sys-color-border-subtle) 30%, transparent);
+  background: transparent;
+  box-shadow: none;
+  transform: none;
+}
+
+.nv-modules-control__matrix-node[aria-selected="true"] {
+  border-block-start-color: color-mix(in srgb, var(--sys-color-accent-primary) 28%, transparent);
+}
+
+.nv-modules-control__matrix-node[aria-selected="true"]::before {
+  transform: scale(1.18);
+  box-shadow:
+    0 0 0 5px color-mix(in srgb, var(--sys-color-accent-primary) 12%, transparent),
+    0 0 16px color-mix(in srgb, var(--sys-color-accent-primary) 35%, transparent);
+}
+
+.nv-modules-control__matrix-node:focus-visible {
+  outline: 1px solid color-mix(in srgb, var(--sys-color-accent-primary) 45%, transparent);
+  outline-offset: 0.25rem;
+}
+
+.nv-modules-control__matrix-number {
+  grid-area: number;
+  inline-size: auto;
+  block-size: auto;
+  padding-block-start: 0.15rem;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: color-mix(in srgb, var(--sys-color-accent-primary) 55%, var(--sys-color-text-tertiary));
+  font-family: var(--sys-font-code-family);
+  font-size: 0.58rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  opacity: 0.76;
+}
+
+.nv-modules-control__matrix-label {
+  grid-area: label;
+  color: var(--sys-color-text-primary);
+  font-family: var(--sys-font-display-family);
+  font-size: clamp(0.93rem, 1.7vw, 1.02rem);
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.005em;
+}
+
+.nv-modules-control__matrix-node[aria-selected="true"] .nv-modules-control__matrix-label {
+  color: color-mix(in srgb, var(--sys-color-text-primary) 96%, var(--sys-color-accent-primary));
+}
+
+.nv-modules-control__region--interpretation {
+  padding-block: clamp(2rem, 3.7vw, 2.8rem);
+  text-align: center;
+}
+
+.nv-modules-control__region--planning {
+  display: block;
+  padding-block: clamp(1.8rem, 3.4vw, 2.55rem) 0;
+  text-align: center;
+}
+
+.nv-modules-control__region--interpretation > .nv-modules-control__eyebrow,
+.nv-modules-control__region--planning > .nv-modules-control__eyebrow {
+  font-size: 0.62rem;
+}
+
+.nv-modules-control__region--interpretation > .nv-modules-control__text,
+.nv-modules-control__region--planning > .nv-modules-control__text {
+  max-inline-size: 42ch;
+  margin-inline: auto;
+  font-size: 0.9rem;
+  line-height: 1.58;
+}
+
+.nv-modules-control__inspection {
+  display: grid;
+  grid-template-columns: 3.2rem minmax(0, 1fr);
+  grid-template-areas: "number list";
+  gap: 0.35rem 1.1rem;
+  max-inline-size: 36rem;
+  margin: clamp(1.1rem, 2vw, 1.5rem) auto 0;
+  padding-block: 1rem;
+  border-block: 1px solid color-mix(in srgb, var(--sys-color-border-subtle) 36%, transparent);
+  text-align: left;
+}
+
+.nv-modules-control__inspection-number {
+  grid-area: number;
+  align-self: start;
+  justify-self: center;
+  display: grid;
+  place-items: center;
+  inline-size: 2.75rem;
+  block-size: 2.75rem;
+  border: 1px solid color-mix(in srgb, var(--sys-color-accent-primary) 35%, var(--sys-color-border-subtle));
+  border-radius: 999px;
+  color: var(--sys-color-text-primary);
+  font-family: var(--sys-font-display-family);
+  font-size: 0.92rem;
+  font-weight: 600;
+  box-shadow: inset 0 0 28px color-mix(in srgb, var(--sys-color-accent-primary) 10%, transparent);
+}
+
+.nv-modules-control__inspection-list {
+  grid-area: list;
+  display: grid;
+  gap: 0;
+  margin: 0;
+}
+
+.nv-modules-control__inspection-row {
+  display: grid;
+  grid-template-columns: minmax(5.6rem, 0.26fr) minmax(0, 1fr);
+  gap: 1rem;
+  padding-block: 0.48rem;
+  border-block-start: 1px solid color-mix(in srgb, var(--sys-color-border-subtle) 30%, transparent);
+}
+
+.nv-modules-control__inspection-row:first-child {
+  border-block-start: 0;
+}
+
+.nv-modules-control__inspection-label {
+  color: var(--sys-color-accent-primary);
+  font-family: var(--sys-font-code-family);
+  font-size: 0.52rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.nv-modules-control__inspection-value {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin: 0;
+}
+
+.nv-modules-control__inspection-chip,
+.nv-modules-control__inspection-muted {
+  color: color-mix(in srgb, var(--sys-color-text-secondary) 96%, transparent);
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+
+.nv-modules-control__inspection-chip + .nv-modules-control__inspection-chip::before {
+  content: "/";
+  margin-inline-end: 0.45rem;
+  color: color-mix(in srgb, var(--sys-color-text-muted) 70%, transparent);
+}
+
+.nv-modules-control__region--planning > .nv-modules-control__section-title {
+  font-size: clamp(1.35rem, 2.5vw, 1.75rem);
+}
+
+.nv-modules-control__readiness-line {
+  max-inline-size: 36rem;
+  margin: 1rem auto 0;
+  color: color-mix(in srgb, var(--sys-color-text-secondary) 90%, transparent);
+  font-size: 0.86rem;
+  line-height: 1.55;
+  text-align: center;
+}
+
+.nv-modules-control__decisions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--ref-space-300);
+  margin-block-start: 1rem;
+}
+
+.nv-modules-control__decisions .nv-button {
+  min-inline-size: 12rem;
+}
+
+.nv-modules-control__compact-handoff {
+  margin: 0.9rem auto 0;
+  color: color-mix(in srgb, var(--sys-color-text-muted) 78%, transparent);
+  font-size: 0.78rem;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.nv-modules-control__compact-handoff a {
+  color: color-mix(in srgb, var(--sys-color-text-secondary) 88%, transparent);
+  text-decoration: none;
+}
+
+.nv-modules-control__compact-handoff a:hover,
+.nv-modules-control__compact-handoff a:focus-visible {
+  color: var(--sys-color-accent-primary);
+}
+
+@media (max-width: 64rem) {
+  body:has(.nv-modules-control) .nv-modules-page,
+  .nv-modules-control,
+  .nv-modules-control__region {
+    max-inline-size: 100%;
+  }
+}
+
+@media (max-width: 48rem) {
+  .nv-modules-control {
+    padding-block-end: 8rem;
+  }
+
+  .nv-modules-control__region {
+    padding-block: clamp(1.85rem, 8.8vw, 2.8rem);
+  }
+
+  .nv-modules-control__region--global {
+    min-block-size: clamp(15.75rem, 54vh, 20.75rem);
+  }
+
+  .nv-modules-control__matrix-node {
+    grid-template-columns: 0.9rem auto minmax(0, 1fr);
+    grid-template-areas: "dot number label";
+    padding-block: 0.9rem;
+  }
+
+  .nv-modules-control__inspection {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "number"
+      "list";
+    justify-items: center;
+    text-align: left;
+  }
+
+  .nv-modules-control__inspection-list {
+    inline-size: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nv-modules-control__matrix-node,
+  .nv-modules-control__matrix-node::before {
+    transition: none;
   }
 }

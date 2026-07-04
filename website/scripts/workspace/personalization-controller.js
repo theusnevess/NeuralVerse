@@ -184,8 +184,8 @@
     const goalText = summary.goalMinutes ? `${summary.goalMinutes}m` : 'None';
 
     modal.innerHTML = `
-      <h2 style="margin: 0; font-size: var(--ref-font-size-600); color: var(--sys-color-accent-primary);">Study Session Ended</h2>
-      <p class="nv-muted">Congratulations on wrapping up your active study session!</p>
+      <h2 style="margin: 0; font-size: var(--ref-font-size-600); color: var(--sys-color-accent-primary);">Session Complete</h2>
+      <p class="nv-muted">Here's a summary of your study session.</p>
 
       <div class="nv-summary-stat-grid">
         <div class="nv-summary-stat-card">
@@ -194,28 +194,26 @@
         </div>
         <div class="nv-summary-stat-card">
           <div class="nv-summary-stat-value">${goalText}</div>
-          <div class="nv-summary-stat-label">Session Goal</div>
+          <div class="nv-summary-stat-label">Goal</div>
         </div>
         <div class="nv-summary-stat-card">
           <div class="nv-summary-stat-value">${summary.visitedCount}</div>
-          <div class="nv-summary-stat-label">Visited Items</div>
+          <div class="nv-summary-stat-label">Items Visited</div>
         </div>
         <div class="nv-summary-stat-card">
           <div class="nv-summary-stat-value">${summary.notesCount}</div>
-          <div class="nv-summary-stat-label">Notes Taken</div>
+          <div class="nv-summary-stat-label">Notes</div>
         </div>
       </div>
 
-      <div class="nv-stack nv-stack--gap-xs" style="border-top: 1px solid var(--sys-color-border-subtle); padding-top: var(--sys-space-stack-sm);">
-        <h3 style="margin: 0; font-size: 0.85rem;">Session Details</h3>
-        <ul style="padding-left: var(--sys-space-stack-md); margin: 0; font-size: 0.75rem; color: var(--sys-color-text-secondary);">
-          <li>Completed ${summary.completedCount} learning items.</li>
-          <li>Added ${summary.bookmarksCount} reading bookmarks.</li>
-        </ul>
+      <div class="nv-stack nv-stack--gap-xs" style="border-block-start: var(--sys-border-subtle) solid var(--sys-color-border-subtle); padding-block-start: var(--sys-space-stack-sm);">
+        <p class="nv-muted" style="font-size: var(--sys-font-caption-size); margin: 0;">
+          Completed ${summary.completedCount} learning items. Added ${summary.bookmarksCount} bookmarks.
+        </p>
       </div>
 
-      <div class="nv-cluster" style="justify-content: flex-end; margin-top: var(--sys-space-stack-sm);">
-        <button class="nv-button nv-button--primary" id="nv-summary-close-btn" type="button">Close</button>
+      <div class="nv-cluster" style="justify-content: flex-end;">
+        <button class="nv-button" id="nv-summary-close-btn" type="button">Close</button>
       </div>
     `;
 
@@ -1016,31 +1014,35 @@
     if (lastSession) {
       const formattedTime = formatSecondsToTimer(lastSession.durationSeconds);
       sessionSummaryHtml = `
-        <div class="nv-panel nv-stack nv-stack--gap-sm" id="dashboard-session-summary-card" style="border-color: var(--sys-color-accent-primary);">
-          <div class="nv-cluster" style="justify-content: space-between; width: 100%;">
-            <h3 style="margin: 0; color: var(--sys-color-accent-primary);">Last Study Session Performance</h3>
-            <button id="dismiss-summary-btn" class="nv-button nv-button--icon-only" style="padding: 2px 6px;">×</button>
+        <article class="nv-card nv-card--primary" style="border-color: var(--sys-color-accent-primary);">
+          <header class="nv-card__header" style="justify-content: space-between;">
+            <h3 class="nv-card__title" style="color: var(--sys-color-accent-primary);">Last Session</h3>
+            <button id="dismiss-summary-btn" class="nv-button" data-variant="ghost" style="padding: 2px 6px; min-block-size: unset;">Dismiss</button>
+          </header>
+          <div class="nv-card__body">
+            <p class="nv-muted" style="font-size: var(--sys-font-caption-size); margin: 0;">
+              Ended at ${new Date(lastSession.endTime).toLocaleTimeString()}
+            </p>
+            <div class="nv-summary-stat-grid" style="margin-block-start: var(--sys-space-stack-sm);">
+              <div class="nv-summary-stat-card">
+                <div class="nv-summary-stat-value">${formattedTime}</div>
+                <div class="nv-summary-stat-label">Duration</div>
+              </div>
+              <div class="nv-summary-stat-card">
+                <div class="nv-summary-stat-value">${lastSession.visitedCount}</div>
+                <div class="nv-summary-stat-label">Visited</div>
+              </div>
+              <div class="nv-summary-stat-card">
+                <div class="nv-summary-stat-value">${lastSession.notesCount}</div>
+                <div class="nv-summary-stat-label">Notes</div>
+              </div>
+              <div class="nv-summary-stat-card">
+                <div class="nv-summary-stat-value">${lastSession.completedCount}</div>
+                <div class="nv-summary-stat-label">Completed</div>
+              </div>
+            </div>
           </div>
-          <p class="nv-muted">Here are your metrics from the study session that ended at ${new Date(lastSession.endTime).toLocaleTimeString()}:</p>
-          <div class="nv-summary-stat-grid" style="margin-block: 5px;">
-            <div class="nv-summary-stat-card">
-              <div class="nv-summary-stat-value">${formattedTime}</div>
-              <div class="nv-summary-stat-label">Duration</div>
-            </div>
-            <div class="nv-summary-stat-card">
-              <div class="nv-summary-stat-value">${lastSession.visitedCount}</div>
-              <div class="nv-summary-stat-label">Visited</div>
-            </div>
-            <div class="nv-summary-stat-card">
-              <div class="nv-summary-stat-value">${lastSession.notesCount}</div>
-              <div class="nv-summary-stat-label">Notes</div>
-            </div>
-            <div class="nv-summary-stat-card">
-              <div class="nv-summary-stat-value">${lastSession.completedCount}</div>
-              <div class="nv-summary-stat-label">Completed</div>
-            </div>
-          </div>
-        </div>
+        </article>
       `;
     }
 
@@ -1050,76 +1052,84 @@
 
     if (activeSession) {
       sessionControlsHtml = `
-        <div class="nv-panel nv-stack nv-stack--gap-sm">
-          <h3>Active Study Session</h3>
-          <div class="nv-cluster" style="justify-content: space-between; gap: var(--sys-space-stack-sm);">
-            <div class="nv-stack nv-stack--gap-xs">
-              <span class="nv-session-timer" id="dashboard-session-timer">00:00</span>
-              <span class="nv-muted" style="font-size: 0.7rem;">Session running...</span>
+        <article class="nv-card nv-card--primary nv-card--session-active">
+          <header class="nv-card__header">
+            <h3 class="nv-card__title">Current Session</h3>
+          </header>
+          <div class="nv-card__body">
+            <div class="nv-cluster" style="justify-content: space-between; align-items: center;">
+              <div class="nv-cluster" style="gap: var(--sys-space-inline-sm); align-items: center;">
+                <span class="nv-session-timer" id="dashboard-session-timer">00:00</span>
+                <span class="nv-workspace-session-status">${activeSession.paused ? 'Paused' : 'Running'}</span>
+              </div>
+              <div class="nv-cluster nv-cluster--gap-xs">
+                <button class="nv-button" id="dashboard-session-pause-btn" data-variant="secondary">${activeSession.paused ? 'Resume' : 'Pause'}</button>
+                <button class="nv-button nv-button--primary" id="dashboard-session-end-btn">End Session</button>
+              </div>
             </div>
-            <div class="nv-cluster nv-cluster--gap-xs">
-              <button class="nv-button" id="dashboard-session-pause-btn" data-variant="secondary">${activeSession.paused ? 'Resume' : 'Pause'}</button>
-              <button class="nv-button nv-button--primary" id="dashboard-session-end-btn">End Session</button>
-            </div>
-          </div>
 
-          <div class="nv-goal-widget nv-stack nv-stack--gap-xs" style="margin-top: 10px;">
-            <div class="nv-cluster" style="justify-content: space-between; font-size: 0.75rem;">
-              <span>Daily Reading Goal Progress</span>
-              <strong>${goals.completedMinutesToday} / ${goals.goalMinutes} min (${goalProgressPct}%)</strong>
-            </div>
-            <div class="nv-goal-progress-bar">
-              <div class="nv-goal-progress-fill" style="width: ${goalProgressPct}%;"></div>
+            <div class="nv-goal-widget" style="margin-block-start: var(--sys-space-stack-sm);">
+              <div class="nv-cluster" style="justify-content: space-between; font-size: var(--sys-font-caption-size);">
+                <span>Daily Goal</span>
+                <strong>${goals.completedMinutesToday} / ${goals.goalMinutes} min</strong>
+              </div>
+              <div class="nv-goal-progress-bar">
+                <div class="nv-goal-progress-fill" style="width: ${goalProgressPct}%;"></div>
+              </div>
             </div>
           </div>
-        </div>
+        </article>
       `;
     } else {
       sessionControlsHtml = `
-        <div class="nv-panel nv-stack nv-stack--gap-sm">
-          <h3>Start Study Session</h3>
-          <p class="nv-muted" style="font-size: 0.75rem;">Set a target and initiate a focused learning session. The session status will persist across navigation.</p>
-          <div class="nv-cluster nv-cluster--gap-xs" style="align-items: flex-end;">
-            <div class="nv-stack nv-stack--gap-xs" style="flex: 1;">
-              <label style="font-size: 0.7rem; font-weight: bold;">Select Goal Time:</label>
-              <select class="nv-input" id="session-goal-select" style="padding: var(--sys-space-stack-xs);">
-                <option value="15">15 Minutes</option>
-                <option value="30" selected>30 Minutes</option>
-                <option value="60">60 Minutes</option>
-                <option value="custom">Custom Minutes...</option>
-              </select>
+        <article class="nv-card nv-card--primary">
+          <header class="nv-card__header">
+            <h3 class="nv-card__title">Start Study Session</h3>
+          </header>
+          <div class="nv-card__body">
+            <div class="nv-workspace-session-launcher">
+              <div class="nv-cluster" style="align-items: center; gap: var(--sys-space-inline-md);">
+                <div class="nv-workspace-session-launcher__goal">
+                  <label class="nv-workspace-session-launcher__label" for="session-goal-select">Goal</label>
+                  <select class="nv-input nv-workspace-session-launcher__select" id="session-goal-select">
+                    <option value="15">15 minutes</option>
+                    <option value="30" selected>30 minutes</option>
+                    <option value="60">60 minutes</option>
+                    <option value="custom">Custom...</option>
+                  </select>
+                  <input type="number" class="nv-input nv-workspace-session-launcher__custom" id="session-goal-custom" placeholder="min" aria-label="Custom goal minutes" min="1" value="45" hidden />
+                </div>
+                <button class="nv-button nv-button--primary nv-workspace-session-launcher__cta" id="dashboard-session-start-btn">Start Session</button>
+              </div>
             </div>
-            <input type="number" class="nv-input" id="session-goal-custom" placeholder="Minutes" style="display:none; width: 80px; padding: var(--sys-space-stack-xs);" min="1" value="45" />
-            <button class="nv-button nv-button--primary" id="dashboard-session-start-btn">Start Session</button>
-          </div>
 
-          <div class="nv-goal-widget nv-stack nv-stack--gap-xs" style="margin-top: 10px;">
-            <div class="nv-cluster" style="justify-content: space-between; font-size: 0.75rem;">
-              <span>Daily Reading Goal Progress</span>
-              <strong>${goals.completedMinutesToday} / ${goals.goalMinutes} min (${goalProgressPct}%)</strong>
-            </div>
-            <div class="nv-goal-progress-bar">
-              <div class="nv-goal-progress-fill" style="width: ${goalProgressPct}%;"></div>
-            </div>
-            <div class="nv-cluster" style="justify-content: space-between; align-items: center; margin-top: 5px;">
-              <button class="nv-button" id="reset-goal-btn" data-variant="secondary" style="padding: 2px 6px; font-size: 0.65rem;">Reset Goal Progress</button>
-              <span class="nv-muted" style="font-size: 0.65rem;">Updates automatically as you study.</span>
+            <div class="nv-goal-widget" style="margin-block-start: var(--sys-space-stack-sm);">
+              <div class="nv-cluster" style="justify-content: space-between; font-size: var(--sys-font-caption-size);">
+                <span>Daily Goal</span>
+                <strong>${goals.completedMinutesToday} / ${goals.goalMinutes} min</strong>
+              </div>
+              <div class="nv-goal-progress-bar">
+                <div class="nv-goal-progress-fill" style="width: ${goalProgressPct}%;"></div>
+              </div>
+              <div class="nv-cluster" style="justify-content: flex-end; align-items: center; margin-block-start: var(--sys-space-stack-xs);">
+                <button class="nv-button" id="reset-goal-btn" data-variant="ghost">Reset Progress</button>
+              </div>
             </div>
           </div>
-        </div>
+        </article>
       `;
     }
 
     // 3. Study Queue Panel
     let queueHtml = '';
     if (queue.length === 0) {
-      queueHtml = `<p class="nv-muted">Your study queue is currently empty.</p>`;
+      queueHtml = `<p class="nv-workspace-empty-state">Your study queue is empty. Add items from learning paths.</p>`;
     } else {
       queueHtml = `
-        <div class="nv-stack nv-stack--gap-sm">
+        <div class="nv-stack nv-stack--gap-xs">
           <ul class="nv-queue-list">
             ${queue.map((item, index) => {
-              const startNextBtn = index === 0 ? `<button class="nv-button nv-button--primary nv-queue-start-btn" data-id="${item.id}" data-route="${item.route}" style="padding: 2px 6px; font-size: 0.65rem; min-block-size: unset;">Start Next</button>` : '';
+              const startNextBtn = index === 0 ? `<button class="nv-button nv-button--primary nv-queue-start-btn" data-id="${item.id}" data-route="${item.route}" style="padding: 2px 6px; font-size: 0.65rem; min-block-size: unset;">Start</button>` : '';
               return `
                 <li class="nv-queue-item">
                   <div class="nv-queue-item__details">
@@ -1139,7 +1149,7 @@
             }).join('')}
           </ul>
           <div class="nv-cluster" style="justify-content: flex-end;">
-            <button id="clear-queue-btn" class="nv-button" data-variant="secondary">Clear Queue</button>
+            <button id="clear-queue-btn" class="nv-button" data-variant="ghost">Clear Queue</button>
           </div>
         </div>
       `;
@@ -1148,7 +1158,7 @@
     // 4. Favorites Panel (Categorized & Sorted)
     let favoritesHtml = '';
     if (favorites.length === 0) {
-      favoritesHtml = `<p class="nv-muted">No favorited items yet.</p>`;
+      favoritesHtml = `<p class="nv-workspace-empty-state">Your saved references will appear here. Star items to collect them.</p>`;
     } else {
       const activeSort = localStorage.getItem('nv_favorites_sort') || 'alphabetical';
       let sortedFavorites = [...favorites];
@@ -1178,9 +1188,9 @@
       });
 
       favoritesHtml = `
-        <div class="nv-stack nv-stack--gap-sm">
-          <div class="nv-cluster" style="justify-content: space-between; align-items: center; border-bottom: 1px dashed var(--sys-color-border-subtle); padding-bottom: 8px;">
-            <span style="font-size: 0.75rem; font-weight: bold;">Sort Favorites:</span>
+        <div class="nv-stack nv-stack--gap-xs">
+          <div class="nv-cluster" style="justify-content: space-between; align-items: center; margin-block-end: var(--sys-space-stack-sm);">
+            <label for="fav-sort-select" style="font-size: var(--sys-font-caption-size); font-weight: var(--ref-font-weight-medium); color: var(--sys-color-text-secondary);">Sort:</label>
             <select class="nv-input" id="fav-sort-select" style="padding: 2px 6px; font-size: 0.7rem; width: auto;">
               <option value="alphabetical" ${activeSort === 'alphabetical' ? 'selected' : ''}>A-Z</option>
               <option value="alphabetical-desc" ${activeSort === 'alphabetical-desc' ? 'selected' : ''}>Z-A</option>
@@ -1193,11 +1203,11 @@
             if (list.length === 0) return '';
             return `
               <div class="nv-stack nv-stack--gap-xs">
-                <h5 style="margin: 0; font-size: 0.75rem; color: var(--sys-color-accent-primary); text-transform: uppercase;">${type}s</h5>
-                <ul class="nv-dashboard-list nv-stack nv-stack--gap-xs">
+                <h4 style="margin: 0; font-size: var(--ref-font-size-200); color: var(--sys-color-accent-primary); text-transform: uppercase; letter-spacing: var(--ref-font-tracking-wide);">${type}s</h4>
+                <ul class="nv-dashboard-list">
                   ${list.map(f => `
-                    <li class="nv-dashboard-list-item nv-cluster" style="justify-content: space-between;">
-                      <a href="${f.route}" class="nv-dashboard-list-item__title">★ ${f.title}</a>
+                    <li class="nv-dashboard-list-item">
+                      <a href="${f.route}" class="nv-dashboard-list-item__title" style="min-inline-size: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${f.title}</a>
                       <button class="nv-button nv-button--icon-only nv-fav-toggle-btn" data-id="${f.id}" style="padding: 2px 6px;">×</button>
                     </li>
                   `).join('')}
@@ -1218,27 +1228,27 @@
     }
 
     if (filteredHistory.length === 0) {
-      historyHtml = `<p class="nv-muted">No history found for filter "${activeFilter}".</p>`;
+      historyHtml = `<p class="nv-workspace-empty-state">Your exploration history will appear here.</p>`;
     } else {
       historyHtml = `
-        <div class="nv-stack nv-stack--gap-sm">
-          <div class="nv-cluster" style="gap: 4px; border-bottom: 1px dashed var(--sys-color-border-subtle); padding-bottom: 8px;">
+        <div class="nv-stack nv-stack--gap-xs">
+          <div class="nv-cluster" style="gap: 4px; margin-block-end: var(--sys-space-stack-sm);">
             ${['All', 'Learning Path', 'Module', 'Lesson', 'Artifact'].map(f => {
-              const active = activeFilter === f ? 'data-variant="primary"' : 'data-variant="secondary"';
+              const active = activeFilter === f ? 'data-variant="primary"' : 'data-variant="ghost"';
               return `<button class="nv-button nv-history-filter-btn" data-filter="${f}" ${active} style="padding: 2px 6px; font-size: 0.65rem; min-block-size: unset;">${f}s</button>`;
             }).join('')}
           </div>
 
-          <ul class="nv-dashboard-list nv-stack nv-stack--gap-xs">
+          <ul class="nv-dashboard-list">
             ${filteredHistory.map(h => {
               const href = getRoute(h.id, h.type, h.lineage);
               const badgeVariant = h.canonicalStatus === 'Reviewed' ? 'success' : 'neutral';
               const formattedDate = new Date(h.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ' ' + new Date(h.timestamp).toLocaleDateString([], { month: 'short', day: 'numeric' });
-              const revisits = h.revisitCount > 1 ? ` <span class="nv-badge" data-variant="info" style="font-size: 0.55rem; padding: 1px 3px;">revisited x${h.revisitCount}</span>` : '';
+              const revisits = h.revisitCount > 1 ? ` <span class="nv-badge" data-variant="info" style="font-size: 0.55rem; padding: 1px 3px;">×${h.revisitCount}</span>` : '';
               return `
-                <li class="nv-dashboard-list-item nv-cluster" style="justify-content: space-between;">
-                  <div class="nv-stack nv-stack--gap-xs">
-                    <a href="${href}" class="nv-dashboard-list-item__title">⏱ ${h.title}${revisits}</a>
+                <li class="nv-dashboard-list-item">
+                  <div class="nv-stack nv-stack--gap-xs" style="min-inline-size: 0;">
+                    <a href="${href}" class="nv-dashboard-list-item__title">${h.title}${revisits}</a>
                     <span class="nv-muted" style="font-size: 0.65rem;">
                       ${formattedDate} — ${h.type}
                     </span>
@@ -1253,14 +1263,19 @@
     }
 
     // Continue Reading Slots
-    let continueReadingHtml = `
-      <div class="nv-empty-state" style="padding: var(--sys-space-stack-sm);">
-        <p class="nv-empty-state__message">No learning session started yet.</p>
-        <a href="#/learning" class="nv-button" data-variant="primary">Start Learning</a>
-      </div>
-    `;
-
-    if (continueReading) {
+    let continueReadingHtml = '';
+    if (!continueReading) {
+      continueReadingHtml = `
+        <article class="nv-card nv-card--secondary">
+          <header class="nv-card__header">
+            <h3 class="nv-card__title">Continue Reading</h3>
+          </header>
+          <div class="nv-card__body">
+            <p class="nv-workspace-empty-state">Your reading progress will resume here. <a href="#/learning">Start learning</a></p>
+          </div>
+        </article>
+      `;
+    } else {
       let targetItem = null;
       let resumeHref = '#/learning';
       if (continueReading.artifact) {
@@ -1284,31 +1299,31 @@
         if (mins > 0 && mins < 60) timeLabel = `${mins}m ago`;
         else if (mins >= 60) timeLabel = `${Math.floor(mins / 60)}h ago`;
 
-        continueReadingHtml = `
-          <div class="nv-continue-reading-banner nv-cluster">
-            <div class="nv-continue-reading-banner__content nv-stack nv-stack--gap-xs">
-              <span class="nv-curriculum-card__kicker">Continue Reading</span>
-              <h3 class="nv-continue-reading-banner__title">${targetItem.title}</h3>
-              <span class="nv-muted">Last opened ${timeLabel}</span>
-            </div>
-            <a href="${resumeHref}" class="nv-button" data-variant="primary">Resume →</a>
+      continueReadingHtml = `
+        <article class="nv-card nv-card--secondary nv-continue-reading-banner" style="background: transparent; border: none; box-shadow: none; padding-block: var(--ref-space-300); opacity: 0.88;">
+          <div class="nv-continue-reading-banner__content">
+            <span class="nv-page-section__eyebrow" style="font-size: var(--ref-font-size-100);">Continue Reading</span>
+            <h3 class="nv-continue-reading-banner__title" style="font-size: 0.9375rem;">${targetItem.title}</h3>
+            <span class="nv-muted" style="font-size: var(--sys-font-caption-size); opacity: 0.6;">Last opened ${timeLabel}</span>
           </div>
-        `;
+          <a href="${resumeHref}" class="nv-button" data-variant="primary">Resume</a>
+        </article>
+      `;
       }
     }
 
     let bookmarksHtml = '';
     if (bookmarks.length === 0) {
-      bookmarksHtml = `<p class="nv-muted">No bookmarks added yet.</p>`;
+      bookmarksHtml = `<p class="nv-workspace-empty-state">Bookmarks created while studying will appear here.</p>`;
     } else {
       bookmarksHtml = `
-        <ul class="nv-dashboard-list nv-stack nv-stack--gap-xs">
+        <ul class="nv-dashboard-list">
           ${bookmarks.map(b => {
             const href = getRoute(b.id, b.type, b.lineage);
             return `
-              <li class="nv-dashboard-list-item nv-cluster">
-                <div class="nv-stack nv-stack--gap-xs">
-                  <a href="${href}" class="nv-dashboard-list-item__title">★ ${b.title}</a>
+              <li class="nv-dashboard-list-item">
+                <div class="nv-stack nv-stack--gap-xs" style="min-inline-size: 0;">
+                  <a href="${href}" class="nv-dashboard-list-item__title">${b.title}</a>
                   <span class="nv-muted" style="font-size: 0.65rem;">${b.type}</span>
                 </div>
                 <button class="nv-button nv-button--icon-only nv-bookmark-delete-btn" data-id="${b.id}" style="padding: 2px 6px;">×</button>
@@ -1321,17 +1336,17 @@
 
     let collectionsHtml = '';
     if (collections.length === 0) {
-      collectionsHtml = `<p class="nv-muted">No collections created yet.</p>`;
+      collectionsHtml = `<p class="nv-workspace-empty-state">Organize resources into collections as you explore.</p>`;
     } else {
       collectionsHtml = `
-        <div class="nv-grid nv-grid--cols-2" style="gap: var(--sys-space-stack-sm);">
+        <div class="nv-stack nv-stack--gap-xs">
           ${collections.map(c => `
-            <div class="nv-panel nv-dashboard-collection-card nv-stack nv-stack--gap-sm">
+            <div class="nv-dashboard-collection-card nv-stack nv-stack--gap-xs">
               <div class="nv-cluster" style="justify-content: space-between; width: 100%;">
-                <h4 style="margin: 0;">${c.name}</h4>
+                <h4 style="margin: 0; font-size: var(--sys-font-body-size); font-weight: var(--ref-font-weight-semibold);">${c.name}</h4>
                 <button class="nv-button nv-button--icon-only nv-collection-delete-btn" data-name="${c.name}" style="padding: 2px 6px;">×</button>
               </div>
-              <ul class="nv-stack nv-stack--gap-xs" style="margin: 0; padding-left: 12px; font-size: var(--sys-font-caption-size);">
+              <ul class="nv-stack nv-stack--gap-xs" style="margin: 0; padding-inline-start: var(--ref-space-300); font-size: var(--sys-font-caption-size);">
                 ${c.resources.length === 0 ? '<li class="nv-muted">Empty</li>' : c.resources.map(r => `
                   <li><a href="${getRoute(r.id, r.type)}" class="nv-muted-link">${r.title}</a></li>
                 `).join('')}
@@ -1345,21 +1360,21 @@
     let notesHtml = '';
     const notesKeys = Object.keys(notes);
     if (notesKeys.length === 0) {
-      notesHtml = `<p class="nv-muted">No notes created yet.</p>`;
+      notesHtml = `<p class="nv-workspace-empty-state">Your notes and thoughts will be collected here.</p>`;
     } else {
       notesHtml = `
-        <div class="nv-stack nv-stack--gap-sm">
+        <div class="nv-stack nv-stack--gap-xs">
           ${notesKeys.map(key => {
             const note = notes[key];
             const details = getResourceDetails(key, index);
             const href = details ? getRoute(key, details.type, details.lineage) : '#/learning';
             return `
-              <div class="nv-panel nv-stack nv-stack--gap-xs">
+              <div class="nv-dashboard-collection-card nv-stack nv-stack--gap-xs">
                 <div class="nv-cluster" style="justify-content: space-between; width: 100%;">
-                  <a href="${href}" style="font-weight: var(--ref-font-weight-semibold);">${note.title || 'Untitled note'}</a>
+                  <a href="${href}" style="font-weight: var(--ref-font-weight-semibold); text-decoration: none; color: var(--sys-color-text-primary);">${note.title || 'Untitled note'}</a>
                   <span class="nv-badge" data-variant="info">${note.type}</span>
                 </div>
-                <p class="nv-muted" style="margin: var(--sys-space-stack-xs) 0; font-size: var(--sys-font-caption-size); white-space: pre-wrap;">${note.text}</p>
+                <p class="nv-muted" style="margin: 0; font-size: var(--sys-font-caption-size); white-space: pre-wrap; overflow: hidden; text-overflow: ellipsis; max-block-size: 3em;">${note.text}</p>
               </div>
             `;
           }).join('')}
@@ -1369,17 +1384,17 @@
 
     let highlightsHtml = '';
     if (highlights.length === 0) {
-      highlightsHtml = `<p class="nv-muted">No highlights added yet.</p>`;
+      highlightsHtml = `<p class="nv-workspace-empty-state">Marked passages from your reading will appear here.</p>`;
     } else {
       highlightsHtml = `
-        <ul class="nv-dashboard-list nv-stack nv-stack--gap-xs">
+        <ul class="nv-dashboard-list">
           ${highlights.map(h => {
             const details = getResourceDetails(h.resourceId, index);
             const href = details ? getRoute(h.resourceId, details.type, details.lineage) : '#/learning';
             return `
-              <li class="nv-dashboard-list-item nv-cluster" style="justify-content: space-between;">
-                <a href="${href}" class="nv-dashboard-list-item__title">🖍 Highlight in ${details?.title || 'Resource'}</a>
-                <span class="nv-badge nv-highlight-badge--${h.color}">${h.color}</span>
+              <li class="nv-dashboard-list-item">
+                <a href="${href}" class="nv-dashboard-list-item__title" style="min-inline-size: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${details?.title || 'Resource'}</a>
+                <span class="nv-highlight-badge--${h.color}">${h.color}</span>
               </li>
             `;
           }).join('')}
@@ -1388,78 +1403,31 @@
     }
 
     container.innerHTML = `
-      <div class="nv-stack nv-stack--gap-md nv-workspace-dashboard">
-        <header class="nv-page-section__header nv-curriculum-hero">
+      <div class="nv-workspace-dashboard">
+        <header class="nv-page-section__header nv-workspace-header">
           <p class="nv-page-section__eyebrow">Workspace</p>
-          <h1>Your daily research dashboard.</h1>
-          <p>Due reviews, recent laboratories, pinned memories, and personalized recommendations — assembled at the start of every session.</p>
         </header>
 
         <div id="session-summary-banner-container">
           ${sessionSummaryHtml}
         </div>
 
-        <div class="nv-grid nv-grid--cols-3" style="align-items: start; gap: var(--sys-space-stack-md);">
-          <!-- Left Main Column (Study Session, Study Queue, Favorites, Collections, Notes) -->
-          <div class="nv-stack nv-stack--gap-md" style="grid-column: span 2;">
-            <div id="session-controls-container">
-              ${sessionControlsHtml}
-            </div>
+        <!-- ═══════════════════════════════════════════════════
+             SECTION 1 — WORKSPACE
+             Review Dashboard (protagonist) + Current Session
+             ═══════════════════════════════════════════════════ -->
+        <section class="nv-workspace-section" aria-label="Workspace">
+          <h2 class="nv-workspace-section__title">Workspace</h2>
 
-            <div class="nv-panel nv-stack nv-stack--gap-sm">
-              <h3>Study Queue</h3>
-              ${queueHtml}
-            </div>
-
-            <div class="nv-panel nv-stack nv-stack--gap-sm">
-              <h3>Favorites</h3>
-              ${favoritesHtml}
-            </div>
-
-            <div class="nv-panel nv-stack nv-stack--gap-sm">
-              <h3>Recently Visited History</h3>
-              <div class="nv-cluster" style="justify-content: space-between; width: 100%;">
-                <span>Chronological Exploration Log</span>
-                <button id="clear-history-btn" class="nv-button" data-variant="secondary">Clear History</button>
-              </div>
-              ${historyHtml}
-            </div>
-
-            <div id="continue-reading-container">
-              ${continueReadingHtml}
-            </div>
-
-            <div class="nv-panel nv-stack nv-stack--gap-sm">
-              <h3>Study Collections</h3>
-              <div class="nv-cluster nv-cluster--gap-xs">
-                <input id="dashboard-col-input" class="nv-input" placeholder="Create collection name..." style="flex: 1;" />
-                <button id="dashboard-col-btn" class="nv-button" data-variant="primary">Create</button>
-              </div>
-              ${collectionsHtml}
-            </div>
-
-            <div class="nv-panel nv-stack nv-stack--gap-sm">
-              <h3>Personal Notes</h3>
-              ${notesHtml}
-            </div>
-
-            <div class="nv-panel nv-stack nv-stack--gap-sm">
-              <h3>Reading Highlights</h3>
-              ${highlightsHtml}
-            </div>
-          </div>
-
-          <!-- Right Sidebar Column (Stats, Bookmarks) -->
-          <div class="nv-stack nv-stack--gap-md">
-            <article class="nv-card nv-review-dashboard" data-review-dashboard aria-label="Today's Reviews" data-review-launch>
+          <div class="nv-workspace-section__grid">
+            <article class="nv-card nv-review-dashboard nv-card--primary" data-review-dashboard aria-label="Today's Reviews" data-review-launch>
               <header class="nv-card__header">
-                <h2 class="nv-card__title">Today's Reviews</h2>
-                <p class="nv-card__subtitle">Spaced repetition (SM-2) — deterministic, local-first</p>
+                <h3 class="nv-card__title">Today's Reviews</h3>
               </header>
               <div class="nv-card__body">
-                <dl class="nv-review-dashboard__metrics" aria-label="Review summary">
+                <dl class="nv-review-dashboard__metrics nv-review-dashboard__metrics--hero" aria-label="Review summary">
                   <div class="nv-review-dashboard__metric">
-                    <dt>Due today</dt>
+                    <dt>Due Today</dt>
                     <dd data-review-dashboard-due-today>0</dd>
                   </div>
                   <div class="nv-review-dashboard__metric">
@@ -1467,152 +1435,211 @@
                     <dd data-review-dashboard-overdue>0</dd>
                   </div>
                   <div class="nv-review-dashboard__metric">
-                    <dt>Completed today</dt>
+                    <dt>Completed</dt>
                     <dd data-review-dashboard-reviewed-today>0</dd>
                   </div>
                 </dl>
                 <div class="nv-review-dashboard__next">
-                  <h3 class="nv-review-dashboard__next-title">Next scheduled review</h3>
+                  <h4 class="nv-review-dashboard__next-title">Next scheduled review</h4>
                   <p>
                     <strong data-review-dashboard-next-item>Nothing scheduled</strong>
                     <span class="nv-muted" data-review-dashboard-next-time>—</span>
                   </p>
                 </div>
                 <div class="nv-review-dashboard__upcoming">
-                  <h3 class="nv-review-dashboard__upcoming-title">Upcoming</h3>
+                  <h4 class="nv-review-dashboard__upcoming-title">Upcoming</h4>
                   <ul data-review-dashboard-upcoming aria-label="Upcoming reviews"></ul>
                 </div>
                 <div class="nv-review-dashboard__due-list" data-review-due-list-section>
-                  <h3 class="nv-review-dashboard__due-list-title">Artifacts due for review</h3>
+                  <h4 class="nv-review-dashboard__due-list-title">Artifacts due for review</h4>
                   <div data-review-due-list-mount></div>
                 </div>
                 <div class="nv-review-dashboard__actions">
                   <button type="button" class="nv-button" data-variant="primary" data-review-dashboard-start aria-label="Start review session">Start Review</button>
                   <button type="button" class="nv-button" data-variant="secondary" data-review-dashboard-continue aria-label="Continue review session">Continue</button>
-                  <button type="button" class="nv-button" data-variant="ghost" data-review-dashboard-skip aria-label="Skip current review">Skip</button>
                 </div>
                 <p class="nv-review-dashboard__empty" data-review-dashboard-empty hidden>All caught up.</p>
               </div>
             </article>
-            <div class="nv-panel nv-stack nv-stack--gap-sm">
+
+            <div class="nv-stack nv-stack--gap-md">
+              <div id="session-controls-container">
+                ${sessionControlsHtml}
+              </div>
+
+              <div id="continue-reading-container">
+                ${continueReadingHtml}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════════════════
+             SECTION 2 — PERSONAL KNOWLEDGE
+             Bookmarks, Pinned Memories, Notes, Highlights, Collections
+             ═══════════════════════════════════════════════════ -->
+        <section class="nv-workspace-section" aria-label="Personal Knowledge">
+          <h2 class="nv-workspace-section__title">Personal Knowledge</h2>
+
+          <div class="nv-workspace-section__grid nv-workspace-section__grid--three">
+            <article class="nv-card nv-card--secondary">
               <header class="nv-card__header">
-                <h2 class="nv-card__title">Today's Reviews</h2>
-                <p class="nv-card__subtitle">Spaced repetition (SM-2) — deterministic, local-first</p>
+                <h3 class="nv-card__title">Bookmarks</h3>
               </header>
               <div class="nv-card__body">
-                <dl class="nv-review-dashboard__metrics" aria-label="Review summary">
-                  <div class="nv-review-dashboard__metric">
-                    <dt>Due today</dt>
-                    <dd data-review-dashboard-due-today>0</dd>
-                  </div>
-                  <div class="nv-review-dashboard__metric">
-                    <dt>Overdue</dt>
-                    <dd data-review-dashboard-overdue>0</dd>
-                  </div>
-                  <div class="nv-review-dashboard__metric">
-                    <dt>Completed today</dt>
-                    <dd data-review-dashboard-reviewed-today>0</dd>
-                  </div>
-                </dl>
-                <div class="nv-review-dashboard__next">
-                  <h3 class="nv-review-dashboard__next-title">Next scheduled review</h3>
-                  <p>
-                    <strong data-review-dashboard-next-item>Nothing scheduled</strong>
-                    <span class="nv-muted" data-review-dashboard-next-time>—</span>
-                  </p>
-                </div>
-                <div class="nv-review-dashboard__upcoming">
-                  <h3 class="nv-review-dashboard__upcoming-title">Upcoming</h3>
-                  <ul data-review-dashboard-upcoming aria-label="Upcoming reviews"></ul>
-                </div>
-                <div class="nv-review-dashboard__actions">
-                  <button type="button" class="nv-button" data-variant="primary" data-review-dashboard-start aria-label="Start review session">Start Review</button>
-                  <button type="button" class="nv-button" data-variant="secondary" data-review-dashboard-continue aria-label="Continue review session">Continue</button>
-                  <button type="button" class="nv-button" data-variant="ghost" data-review-dashboard-skip aria-label="Skip current review">Skip</button>
-                </div>
-                <p class="nv-review-dashboard__empty" data-review-dashboard-empty hidden>All caught up.</p>
+                ${bookmarksHtml}
               </div>
             </article>
-            <div class="nv-panel nv-stack nv-stack--gap-sm">
-              <h3>Personal Metrics</h3>
-              <dl class="nv-curriculum-stats" style="grid-template-columns: repeat(2, 1fr); gap: var(--sys-space-stack-sm);">
-                <div class="nv-curriculum-stat">
-                  <dt>Favorites</dt>
-                  <dd>${favorites.length}</dd>
-                </div>
-                <div class="nv-curriculum-stat">
-                  <dt>In Queue</dt>
-                  <dd>${queue.length}</dd>
-                </div>
-                <div class="nv-curriculum-stat">
-                  <dt>Bookmarks</dt>
-                  <dd>${stats.bookmarksCount}</dd>
-                </div>
-                <div class="nv-curriculum-stat">
-                  <dt>Notes</dt>
-                  <dd>${stats.notesCount}</dd>
-                </div>
-                <div class="nv-curriculum-stat">
-                  <dt>Collections</dt>
-                  <dd>${stats.collectionsCount}</dd>
-                </div>
-                <div class="nv-curriculum-stat">
-                  <dt>Highlights</dt>
-                  <dd>${stats.highlightsCount}</dd>
-                </div>
-              </dl>
-              <div style="border-top: 1px solid var(--sys-color-border-subtle); padding-top: var(--sys-space-stack-sm); font-size: var(--sys-font-caption-size);">
-                <span class="nv-muted">Activity: ${stats.reviewedCount} Reviewed, ${stats.draftCount} Draft resources visited.</span>
-              </div>
-            </div>
 
-            <div class="nv-panel nv-stack nv-stack--gap-sm">
-              <h3>Bookmarks Quick List</h3>
-              ${bookmarksHtml}
-            </div>
-
-            <div class="nv-panel nv-stack nv-stack--gap-sm">
-              <h3>Quick Search Filters</h3>
-              <p class="nv-muted" style="font-size: var(--sys-font-caption-size);">Use global search shortcut <kbd class="nv-search-kbd">Ctrl+K</kbd> to access bookmark filters.</p>
-            </div>
-
-            <article class="nv-card" data-pinned-memories-card aria-label="Pinned Memories">
+            <article class="nv-card nv-card--secondary" data-pinned-memories-card aria-label="Pinned Memories">
               <header class="nv-card__header">
-                <h2 class="nv-card__title">Pinned Memories</h2>
-                <p class="nv-card__subtitle">Your most important notes and bookmarks</p>
+                <h3 class="nv-card__title">Pinned Memories</h3>
               </header>
               <div class="nv-card__body" data-pinned-memories-mount>
-                <p class="nv-muted">No pinned memories yet.</p>
+                <p class="nv-workspace-empty-state">Your pinned memories will appear here. <a href="#/memory">Create one</a></p>
               </div>
             </article>
-            <article class="nv-card" data-semantic-suggestions-card aria-label="Semantic Suggestions">
+
+            <article class="nv-card nv-card--secondary">
               <header class="nv-card__header">
-                <h2 class="nv-card__title">Semantic Suggestions</h2>
-                <p class="nv-card__subtitle">Deterministic concept recommendations</p>
+                <h3 class="nv-card__title">Notes</h3>
               </header>
-              <div class="nv-card__body" data-semantic-suggestions-mount>
-                <p class="nv-muted">No semantic context available.</p>
+              <div class="nv-card__body">
+                ${notesHtml}
               </div>
             </article>
-            <article class="nv-card" data-recent-viz-card aria-label="Recent Visualizations">
+
+            <article class="nv-card nv-card--secondary">
               <header class="nv-card__header">
-                <h2 class="nv-card__title">Recent Visualizations</h2>
-                <p class="nv-card__subtitle">Parametric visualizations — deterministic, local-first</p>
+                <h3 class="nv-card__title">Highlights</h3>
               </header>
-              <div class="nv-card__body" data-recent-viz-mount>
-                <p class="nv-muted">No visualizations visited yet. <a href="#/visualizations">Browse visualizations</a></p>
+              <div class="nv-card__body">
+                ${highlightsHtml}
               </div>
             </article>
-            <article class="nv-card" data-pinned-viz-card aria-label="Pinned Visualizations">
+
+            <article class="nv-card nv-card--secondary">
               <header class="nv-card__header">
-                <h2 class="nv-card__title">Pinned Visualizations</h2>
-                <p class="nv-card__subtitle">Your favorite parametric visualizations</p>
+                <h3 class="nv-card__title">Collections</h3>
               </header>
-              <div class="nv-card__body" data-pinned-viz-mount>
-                <p class="nv-muted">No pinned visualizations yet. <a href="#/visualizations">Explore visualizations</a></p>
+              <div class="nv-card__body">
+                <div class="nv-cluster nv-cluster--gap-xs" style="margin-block-end: var(--sys-space-stack-sm);">
+                  <input id="dashboard-col-input" class="nv-input" placeholder="Create collection name..." aria-label="Collection name" />
+                  <button id="dashboard-col-btn" class="nv-button" data-variant="primary">Create</button>
+                </div>
+                ${collectionsHtml}
+              </div>
+            </article>
+
+            <article class="nv-card nv-card--passive">
+              <header class="nv-card__header">
+                <h3 class="nv-card__title">Study Queue</h3>
+              </header>
+              <div class="nv-card__body">
+                ${queueHtml}
               </div>
             </article>
           </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════════════════
+             SECTION 3 — DISCOVERY
+             Semantic Suggestions, Visualizations, History
+             ═══════════════════════════════════════════════════ -->
+        <section class="nv-workspace-section" aria-label="Discovery">
+          <h2 class="nv-workspace-section__title">Discovery</h2>
+
+          <div class="nv-workspace-section__grid nv-workspace-section__grid--three">
+            <article class="nv-card nv-card--secondary nv-card--wide" data-semantic-suggestions-card aria-label="Semantic Suggestions">
+              <header class="nv-card__header">
+                <h3 class="nv-card__title">Semantic Suggestions</h3>
+              </header>
+              <div class="nv-card__body" data-semantic-suggestions-mount>
+                <p class="nv-workspace-empty-state">Semantic connections will emerge as you explore.</p>
+              </div>
+            </article>
+
+            <article class="nv-card nv-card--secondary" data-recent-viz-card aria-label="Recent Visualizations">
+              <header class="nv-card__header">
+                <h3 class="nv-card__title">Recent Visualizations</h3>
+              </header>
+              <div class="nv-card__body" data-recent-viz-mount>
+                <p class="nv-workspace-empty-state">Embeddings, attention maps, and decision boundaries will appear here. <a href="#/visualizations">Browse</a></p>
+              </div>
+            </article>
+
+            <article class="nv-card nv-card--secondary" data-pinned-viz-card aria-label="Pinned Visualizations">
+              <header class="nv-card__header">
+                <h3 class="nv-card__title">Pinned Visualizations</h3>
+              </header>
+              <div class="nv-card__body" data-pinned-viz-mount>
+                <p class="nv-workspace-empty-state">Your saved parametric visualizations will be collected here. <a href="#/visualizations">Explore</a></p>
+              </div>
+            </article>
+
+            <article class="nv-card nv-card--secondary" data-recent-labs-card aria-label="Recent Laboratories">
+              <header class="nv-card__header">
+                <h3 class="nv-card__title">Recent Laboratories</h3>
+              </header>
+              <div class="nv-card__body" data-recent-labs-mount>
+                <p class="nv-workspace-empty-state">Your recent laboratories will appear here. <a href="#/laboratory">Browse laboratories</a></p>
+              </div>
+            </article>
+
+            <article class="nv-card nv-card--secondary">
+              <header class="nv-card__header">
+                <h3 class="nv-card__title">History</h3>
+              </header>
+              <div class="nv-card__body">
+                <div class="nv-cluster" style="justify-content: space-between; margin-block-end: var(--sys-space-stack-sm);">
+                  <span class="nv-workspace-section__subtitle">Chronological Exploration Log</span>
+                  <button id="clear-history-btn" class="nv-button" data-variant="ghost">Clear</button>
+                </div>
+                ${historyHtml}
+              </div>
+            </article>
+
+            <article class="nv-card nv-card--passive">
+              <header class="nv-card__header">
+                <h3 class="nv-card__title">Quick Filters</h3>
+              </header>
+              <div class="nv-card__body">
+                <p class="nv-workspace-empty-state">Use <kbd class="nv-search-kbd">Ctrl+K</kbd> to search bookmarks and resources.</p>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════════════════
+             STATS STRIP
+             ═══════════════════════════════════════════════════ -->
+        <div class="nv-workspace-stats-strip">
+          <dl class="nv-workspace-stats-strip__list">
+            <div class="nv-workspace-stats-strip__item">
+              <dt>Favorites</dt>
+              <dd>${favorites.length}</dd>
+            </div>
+            <div class="nv-workspace-stats-strip__item">
+              <dt>Bookmarks</dt>
+              <dd>${stats.bookmarksCount}</dd>
+            </div>
+            <div class="nv-workspace-stats-strip__item">
+              <dt>Notes</dt>
+              <dd>${stats.notesCount}</dd>
+            </div>
+            <div class="nv-workspace-stats-strip__item">
+              <dt>Highlights</dt>
+              <dd>${stats.highlightsCount}</dd>
+            </div>
+            <div class="nv-workspace-stats-strip__item">
+              <dt>Collections</dt>
+              <dd>${stats.collectionsCount}</dd>
+            </div>
+            <div class="nv-workspace-stats-strip__item">
+              <dt>Queue</dt>
+              <dd>${queue.length}</dd>
+            </div>
+          </dl>
         </div>
       </div>
     `;
@@ -1682,9 +1709,9 @@
     if (goalSelect && customGoalInput) {
       goalSelect.addEventListener('change', () => {
         if (goalSelect.value === 'custom') {
-          customGoalInput.style.display = 'inline-block';
+          customGoalInput.hidden = false;
         } else {
-          customGoalInput.style.display = 'none';
+          customGoalInput.hidden = true;
         }
       });
     }
@@ -1848,15 +1875,13 @@
   });
 
   // Bind to Router Events
-  window.addEventListener('hashchange', () => {
-    trackNavigation();
-    setTimeout(() => {
+    window.addEventListener('hashchange', () => {
+      trackNavigation();
       const service = window.NeuralVerse.PersonalizationService;
       if (service && service.getActiveSession()) {
         updateSessionTimerUI();
       }
-    }, 150);
-  });
+    });
 
   window.addEventListener('load', trackNavigation);
 

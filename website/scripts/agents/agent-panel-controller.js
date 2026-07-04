@@ -883,7 +883,7 @@ function createAgentPanelController(options = {}) {
         <ul id="nv-copilot-history-list" class="nv-copilot__history-list" data-copilot-history-list style="display: none;"></ul>
       </div>
 
-      <input type="hidden" id="nv-agent-select" value="">
+      <input type="hidden" id="nv-agent-select" value="" aria-label="Selected AI copilot agent">
     `;
 
     document.body.appendChild(panel);

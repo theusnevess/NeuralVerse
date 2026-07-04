@@ -540,6 +540,16 @@ export function createWorkspaceController(options = {}) {
     }
   }
 
+  function renderWorkspaceSections() {
+    renderReviewDashboard();
+    wireReviewLaunchers();
+    renderRecentLabs();
+    renderPinnedMemories();
+    renderSemanticSuggestions();
+    renderRecentVisualizations();
+    renderPinnedVisualizations();
+  }
+
   async function init() {
     if (navigationState) {
       navigationState.subscribe((navState) => handleRouteChange(navState));
@@ -555,36 +565,13 @@ export function createWorkspaceController(options = {}) {
       console.error("Workspace continuity failed to render.", error);
     });
 
-    renderReviewDashboard();
-    wireReviewLaunchers();
-    renderRecentLabs();
-    setTimeout(wireReviewLaunchers, 250);
-    setTimeout(wireReviewLaunchers, 800);
-    setTimeout(wireReviewLaunchers, 1500);
+    renderWorkspaceSections();
 
     window.addEventListener('nv:routerendered', (e) => {
       const routeId = e.detail?.routeId;
       if (routeId === 'workspace') {
         renderContinuity().catch(console.error);
-        renderReviewDashboard();
-        wireReviewLaunchers();
-        renderRecentLabs();
-        renderPinnedMemories();
-        renderSemanticSuggestions();
-        renderRecentVisualizations();
-        renderPinnedVisualizations();
-        setTimeout(wireReviewLaunchers, 250);
-        setTimeout(wireReviewLaunchers, 800);
-        setTimeout(renderRecentLabs, 250);
-        setTimeout(renderRecentLabs, 800);
-        setTimeout(renderPinnedMemories, 250);
-        setTimeout(renderPinnedMemories, 800);
-        setTimeout(renderSemanticSuggestions, 250);
-        setTimeout(renderSemanticSuggestions, 800);
-        setTimeout(renderRecentVisualizations, 250);
-        setTimeout(renderRecentVisualizations, 800);
-        setTimeout(renderPinnedVisualizations, 250);
-        setTimeout(renderPinnedVisualizations, 800);
+        renderWorkspaceSections();
       }
     });
 
@@ -592,14 +579,12 @@ export function createWorkspaceController(options = {}) {
       renderContinuity().catch(console.error);
       renderReviewDashboard();
       wireReviewLaunchers();
-      setTimeout(wireReviewLaunchers, 250);
     });
 
     window.addEventListener("nv:progressupdated", () => {
       renderContinuity().catch(console.error);
       renderReviewDashboard();
       wireReviewLaunchers();
-      setTimeout(wireReviewLaunchers, 250);
     });
 
     window.addEventListener("nv:reviewupdated", () => {
@@ -638,18 +623,7 @@ export function createWorkspaceController(options = {}) {
       renderReviewDashboard();
     });
 
-    // Deferred render on idle for non-critical sections
-    if (typeof requestIdleCallback !== 'undefined') {
-      requestIdleCallback(function () {
-        renderDirty();
-      });
-    }
-
-    // Polling fallback: the personalization controller renders asynchronously
-    // and may complete after the workspace controller init. Re-render after a
-    // short delay to ensure the dashboard is updated.
-    setTimeout(renderReviewDashboard, 250);
-    setTimeout(renderReviewDashboard, 800);
+    renderDirty();
   }
 
   function renderReviewDashboard() {
@@ -743,18 +717,19 @@ export function createWorkspaceController(options = {}) {
       return;
     }
 
-    var html = '<div style="display:flex;flex-direction:column;gap:8px;">';
+    var html = '<div class="nv-workspace-card-list">';
     recent.slice(0, 5).forEach(function (r) {
       var lab = registry.get(r.labId);
-      html += '<a href="#/laboratory/' + (lab ? lab.slug : r.labId) + '" ';
-      html += 'class="nv-lab-card nv-lab-card--recent" style="display:block;text-decoration:none;color:inherit;">';
-      html += '<h4 class="nv-lab-card-title" style="margin:0 0 4px 0;font-size:0.9rem;">' + (r.title || r.labId) + '</h4>';
-      html += '<span class="nv-lab-card-time">Last opened: ' + (r.lastOpened ? new Intl.DateTimeFormat(undefined, { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(r.lastOpened)) : 'Never') + '</span>';
+      var labId = lab ? lab.slug : r.labId;
+      html += '<a href="#/laboratory/' + encodeURIComponent(labId) + '" ';
+      html += 'class="nv-lab-card nv-lab-card--recent nv-workspace-card-list__item">';
+      html += '<h4 class="nv-lab-card-title nv-workspace-card-list__title">' + escapeWorkspaceHtml(r.title || r.labId) + '</h4>';
+      html += '<span class="nv-lab-card-time">Last opened: ' + escapeWorkspaceHtml(r.lastOpened ? new Intl.DateTimeFormat(undefined, { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(r.lastOpened)) : 'Never') + '</span>';
       html += '</a>';
     });
     html += '</div>';
     if (recent.length > 5) {
-      html += '<a href="#/laboratory" style="display:block;margin-top:8px;font-size:0.8rem;color:var(--sys-color-accent-primary);text-decoration:none;">View all laboratories</a>';
+      html += '<a href="#/laboratory" class="nv-workspace-card-list__more">View all laboratories</a>';
     }
     mount.innerHTML = html;
   }
@@ -771,21 +746,21 @@ export function createWorkspaceController(options = {}) {
 
     var pinned = memoryRegistry.getPinned ? memoryRegistry.getPinned() : [];
     if (!pinned || pinned.length === 0) {
-      mount.innerHTML = '<p class="nv-muted" style="font-size:0.85rem;">No pinned memories. <a href="#/memory">Create one</a></p>';
+      mount.innerHTML = '<p class="nv-muted nv-workspace-card-list__empty">No pinned memories. <a href="#/memory">Create one</a></p>';
       return;
     }
 
-    var html = '<div style="display:flex;flex-direction:column;gap:8px;">';
+    var html = '<div class="nv-workspace-card-list">';
     pinned.slice(0, 5).forEach(function (mem) {
-      html += '<a href="#/memory/' + mem.id + '" ';
-      html += 'class="nv-memory-card" style="display:block;text-decoration:none;color:inherit;padding:12px;">';
-      html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">';
-      html += '<span class="nv-memory-type-badge" data-type="' + (mem.type || 'note') + '">' + (mem.type || 'note') + '</span>';
-      html += '<span style="color:var(--sys-color-accent-primary);font-size:0.75rem;">&#x1F4CC;</span>';
+      html += '<a href="#/memory/' + encodeURIComponent(mem.id) + '" ';
+      html += 'class="nv-memory-card nv-workspace-card-list__item">';
+      html += '<div class="nv-workspace-card-list__meta-row">';
+      html += '<span class="nv-memory-type-badge" data-type="' + escapeWorkspaceHtml(mem.type || 'note') + '">' + escapeWorkspaceHtml(mem.type || 'note') + '</span>';
+      html += '<span class="nv-workspace-card-list__pin" aria-hidden="true">&#9733;</span>';
       html += '</div>';
-      html += '<h4 style="margin:0 0 4px 0;font-size:0.9rem;font-weight:600;color:var(--sys-color-text-primary);">' + (mem.title || 'Untitled') + '</h4>';
+      html += '<h4 class="nv-workspace-card-list__title">' + escapeWorkspaceHtml(mem.title || 'Untitled') + '</h4>';
       if (mem.summary) {
-        html += '<p style="margin:0;font-size:0.8rem;color:var(--sys-color-text-secondary);">' + mem.summary.substring(0, 100) + '</p>';
+        html += '<p class="nv-workspace-card-list__summary">' + escapeWorkspaceHtml(mem.summary.substring(0, 100)) + '</p>';
       }
       html += '</a>';
     });
@@ -810,33 +785,33 @@ export function createWorkspaceController(options = {}) {
     var conceptId = recentConcepts.length > 0 ? recentConcepts[0] : null;
 
     if (!conceptId) {
-      mount.innerHTML = '<p class="nv-muted" style="font-size:0.85rem;">No semantic context available. <a href="#/semantic-learning">Explore concepts</a></p>';
+      mount.innerHTML = '<p class="nv-muted nv-workspace-card-list__empty">No semantic context available. <a href="#/semantic-learning">Explore concepts</a></p>';
       return;
     }
 
     var concept = engine.getConcept(conceptId);
     if (!concept) {
-      mount.innerHTML = '<p class="nv-muted" style="font-size:0.85rem;">Concept not found. <a href="#/semantic-learning">Explore concepts</a></p>';
+      mount.innerHTML = '<p class="nv-muted nv-workspace-card-list__empty">Concept not found. <a href="#/semantic-learning">Explore concepts</a></p>';
       return;
     }
 
     var recommendations = recs.getRecommendations(conceptId);
-    var html = '<div style="display:flex;flex-direction:column;gap:8px;">';
-    html += '<p style="font-size:0.85rem;color:var(--sys-color-text-secondary, #999);margin:0;">Context: <strong>' + (concept.name || conceptId) + '</strong></p>';
+    var html = '<div class="nv-workspace-card-list">';
+    html += '<p class="nv-workspace-card-list__summary">Context: <strong>' + escapeWorkspaceHtml(concept.name || conceptId) + '</strong></p>';
 
     // Related concepts (max 3)
     if (recommendations.categories.relatedConcepts && recommendations.categories.relatedConcepts.length > 0) {
-      html += '<div style="font-size:0.8rem;color:var(--sys-color-text-secondary, #999);margin-top:4px;">Related:</div>';
+      html += '<div class="nv-workspace-card-list__label">Related:</div>';
       recommendations.categories.relatedConcepts.slice(0, 3).forEach(function (item) {
-        html += '<a href="#/knowledge-graph?focus=' + encodeURIComponent(item.id) + '" style="display:block;font-size:0.85rem;color:var(--sys-color-accent-primary, #06b6d4);text-decoration:none;padding:4px 0;">' + (item.name || item.id) + '</a>';
+        html += '<a href="#/knowledge-graph?focus=' + encodeURIComponent(item.id) + '" class="nv-workspace-card-list__link">' + escapeWorkspaceHtml(item.name || item.id) + '</a>';
       });
     }
 
     // Suggested labs (max 2)
     if (recommendations.categories.relatedLabs && recommendations.categories.relatedLabs.length > 0) {
-      html += '<div style="font-size:0.8rem;color:var(--sys-color-text-secondary, #999);margin-top:8px;">Labs:</div>';
+      html += '<div class="nv-workspace-card-list__label">Labs:</div>';
       recommendations.categories.relatedLabs.slice(0, 2).forEach(function (item) {
-        html += '<a href="#/laboratory/' + encodeURIComponent(item.slug || item.id) + '" style="display:block;font-size:0.85rem;color:var(--sys-color-accent-primary, #06b6d4);text-decoration:none;padding:4px 0;">' + (item.name || item.id) + '</a>';
+        html += '<a href="#/laboratory/' + encodeURIComponent(item.slug || item.id) + '" class="nv-workspace-card-list__link">' + escapeWorkspaceHtml(item.name || item.id) + '</a>';
       });
     }
 
@@ -859,13 +834,13 @@ export function createWorkspaceController(options = {}) {
 
     var storage = window.NeuralVerse?.VizStateStorage;
     if (!storage) {
-      mount.innerHTML = '<p class="nv-muted" style="font-size:0.85rem;">Visualization system not available. <a href="#/visualizations">Browse visualizations</a></p>';
+      mount.innerHTML = '<p class="nv-muted nv-workspace-card-list__empty">Visualization system not available. <a href="#/visualizations">Browse visualizations</a></p>';
       return;
     }
 
     var recent = storage.getRecent();
     if (!recent || recent.length === 0) {
-      mount.innerHTML = '<p class="nv-muted" style="font-size:0.85rem;">No visualizations visited yet. <a href="#/visualizations">Browse visualizations</a></p>';
+      mount.innerHTML = '<p class="nv-muted nv-workspace-card-list__empty">No visualizations visited yet. <a href="#/visualizations">Browse visualizations</a></p>';
       return;
     }
 
@@ -878,7 +853,7 @@ export function createWorkspaceController(options = {}) {
     });
     html += '</div>';
     if (recent.length > 5) {
-      html += '<a href="#/visualizations" style="display:block;margin-top:8px;font-size:0.8rem;color:var(--sys-color-accent-primary, #06b6d4);text-decoration:none;">View all visualizations</a>';
+      html += '<a href="#/visualizations" class="nv-workspace-card-list__more">View all visualizations</a>';
     }
     mount.innerHTML = html;
   }
@@ -896,7 +871,7 @@ export function createWorkspaceController(options = {}) {
 
     var favorites = storage.loadFavorites();
     if (!favorites || favorites.length === 0) {
-      mount.innerHTML = '<p class="nv-muted" style="font-size:0.85rem;">No pinned visualizations yet. <a href="#/visualizations">Explore visualizations</a></p>';
+      mount.innerHTML = '<p class="nv-muted nv-workspace-card-list__empty">No pinned visualizations yet. <a href="#/visualizations">Explore visualizations</a></p>';
       return;
     }
 
@@ -911,7 +886,7 @@ export function createWorkspaceController(options = {}) {
     });
     html += '</div>';
     if (favorites.length > 5) {
-      html += '<a href="#/visualizations" style="display:block;margin-top:8px;font-size:0.8rem;color:var(--sys-color-accent-primary, #06b6d4);text-decoration:none;">View all visualizations</a>';
+      html += '<a href="#/visualizations" class="nv-workspace-card-list__more">View all visualizations</a>';
     }
     mount.innerHTML = html;
   }

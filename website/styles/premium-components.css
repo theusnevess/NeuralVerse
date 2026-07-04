@@ -59,7 +59,12 @@
 .discovery-card:hover {
   border-color: var(--sys-premium-border-strong);
   background-color: var(--sys-premium-surface-hover);
-  transform: translateY(calc(var(--ref-space-100) * -0.25));
+  transform: translateY(calc(var(--ref-space-100) * -0.125));
+}
+
+.nv-card--primary:hover {
+  border-color: color-mix(in srgb, var(--sys-color-accent-primary) 28%, var(--sys-premium-border-strong));
+  transform: none;
 }
 
 .nv-card,

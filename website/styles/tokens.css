@@ -581,6 +581,41 @@
 }
 
 /* =========================================================
+   Workspace Surface Hierarchy (3-level)
+   Primary   — protagonist cards (Review Dashboard, Session)
+   Secondary — supporting cards (Queue, Collections, Notes)
+   Passive   — tertiary cards (Filters, Suggestions)
+   ========================================================= */
+
+:root {
+  --ws-surface-primary:     var(--sys-color-surface-raised);
+  --ws-surface-primary-border: color-mix(in srgb, var(--sys-color-accent-primary) 20%, var(--sys-color-border-subtle));
+  --ws-surface-primary-shadow: var(--ref-shadow-soft);
+
+  --ws-surface-secondary:   var(--sys-color-surface-card);
+  --ws-surface-secondary-border: var(--sys-color-border-subtle);
+  --ws-surface-secondary-shadow: var(--ref-shadow-subtle);
+
+  --ws-surface-passive:     var(--sys-color-surface-muted);
+  --ws-surface-passive-border: color-mix(in srgb, var(--sys-color-border-subtle) 50%, transparent);
+  --ws-surface-passive-shadow: none;
+
+  --ws-section-gap:         var(--ref-space-800);
+  --ws-card-gap:            var(--ref-space-300);
+  --ws-card-padding:        var(--sys-space-inset-md);
+  --ws-card-padding-lg:     var(--sys-space-inset-lg);
+
+  --ws-section-title-size:  var(--ref-font-size-200);
+  --ws-section-title-weight: var(--ref-font-weight-semibold);
+  --ws-section-title-tracking: var(--ref-font-tracking-wide);
+
+  --ws-stat-value-size:     var(--ref-font-size-700);
+  --ws-stat-label-size:     var(--ref-font-size-200);
+
+  --ws-hero-padding-block:  var(--ref-space-600);
+}
+
+/* =========================================================
    Context Tokens — Context Panel
    Source: T4_CONTEXT_TOKEN_CATALOG.md / NV-012
    ========================================================= */

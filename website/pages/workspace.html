@@ -1,14 +1,10 @@
 <div id="nv-workspace-content-body" class="nv-stack nv-stack--gap-md">
-  <header class="nv-page-section__header nv-workspace-header" style="text-align: start; margin-inline: 0;">
-    <p class="nv-page-section__eyebrow">Workspace</p>
-    <h1>Your daily research dashboard.</h1>
-    <p>Due reviews, recent laboratories, pinned memories, and personalized recommendations — assembled at the start of every session.</p>
+  <header class="nv-workspace-header">
+    <h1 class="nv-workspace-header__title">Workspace</h1>
   </header>
-  <h1 class="nv-sr-only">Personalized Learning & Study Dashboard</h1>
-  <article class="nv-card nv-review-dashboard" data-review-dashboard aria-label="Today's Reviews">
+  <article class="nv-card nv-card--primary nv-card--hero nv-review-dashboard" data-review-dashboard aria-label="Today's Reviews">
     <header class="nv-card__header">
       <h2 class="nv-card__title">Today's Reviews</h2>
-      <p class="nv-card__subtitle">Spaced repetition (SM-2) — deterministic, local-first</p>
     </header>
     <div class="nv-card__body">
       <dl class="nv-review-dashboard__metrics" aria-label="Review summary">
@@ -39,7 +35,6 @@
       <div class="nv-review-dashboard__actions">
         <button type="button" class="nv-button" data-variant="primary" data-review-dashboard-start aria-label="Start review session">Start Review</button>
         <button type="button" class="nv-button" data-variant="secondary" data-review-dashboard-continue aria-label="Continue review session">Continue</button>
-        <button type="button" class="nv-button" data-variant="ghost" data-review-dashboard-skip aria-label="Skip current review">Skip</button>
       </div>
       <p class="nv-review-dashboard__empty" data-review-dashboard-empty hidden>All caught up.</p>
     </div>
@@ -47,50 +42,41 @@
   <article class="nv-card" data-recent-labs-card aria-label="Recent Laboratories">
     <header class="nv-card__header">
       <h2 class="nv-card__title">Recent Laboratories</h2>
-      <p class="nv-card__subtitle">Interactive experiments — deterministic, local-first</p>
     </header>
     <div class="nv-card__body" data-recent-labs-mount>
-      <p class="nv-muted">No laboratories visited yet.</p>
+      <p class="nv-workspace-empty-state">Your recent laboratories will appear here. <a href="#/laboratory">Browse laboratories</a></p>
     </div>
   </article>
   <article class="nv-card" data-pinned-memories-card aria-label="Pinned Memories">
     <header class="nv-card__header">
       <h2 class="nv-card__title">Pinned Memories</h2>
-      <p class="nv-card__subtitle">Your most important notes and bookmarks</p>
     </header>
     <div class="nv-card__body" data-pinned-memories-mount>
-      <p class="nv-muted">No pinned memories yet.</p>
+      <p class="nv-workspace-empty-state">No pinned memories yet. <a href="#/memory">Create one</a></p>
     </div>
   </article>
-  <article class="nv-card" data-semantic-suggestions-card aria-label="Semantic Suggestions">
+  <article class="nv-card nv-card--wide" data-semantic-suggestions-card aria-label="Semantic Suggestions">
     <header class="nv-card__header">
       <h2 class="nv-card__title">Semantic Suggestions</h2>
-      <p class="nv-card__subtitle">Deterministic concept recommendations</p>
     </header>
     <div class="nv-card__body" data-semantic-suggestions-mount>
-      <p class="nv-muted">No semantic context available.</p>
+      <p class="nv-workspace-empty-state">Semantic connections will emerge as you explore.</p>
     </div>
   </article>
   <article class="nv-card" data-recent-viz-card aria-label="Recent Visualizations">
     <header class="nv-card__header">
       <h2 class="nv-card__title">Recent Visualizations</h2>
-      <p class="nv-card__subtitle">Parametric visualizations — deterministic, local-first</p>
     </header>
     <div class="nv-card__body" data-recent-viz-mount>
-      <p class="nv-muted">No visualizations visited yet. <a href="#/visualizations">Browse visualizations</a></p>
+      <p class="nv-workspace-empty-state">Embeddings, attention maps, and decision boundaries will appear here. <a href="#/visualizations">Browse</a></p>
     </div>
   </article>
   <article class="nv-card" data-pinned-viz-card aria-label="Pinned Visualizations">
     <header class="nv-card__header">
       <h2 class="nv-card__title">Pinned Visualizations</h2>
-      <p class="nv-card__subtitle">Your favorite parametric visualizations</p>
     </header>
     <div class="nv-card__body" data-pinned-viz-mount>
-      <p class="nv-muted">No pinned visualizations yet. <a href="#/visualizations">Explore visualizations</a></p>
+      <p class="nv-workspace-empty-state">Your saved parametric visualizations will be collected here. <a href="#/visualizations">Explore</a></p>
     </div>
   </article>
-  <div class="nv-search-loading">
-    <div class="nv-search-loading-spinner"></div>
-    <div class="nv-search-loading-text">Loading personalization dashboard...</div>
-  </div>
 </div>
