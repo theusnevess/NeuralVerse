@@ -1,52 +1,10 @@
-<!-- nv-breadcrumbs is owned by the shell index.html (NV-101-M2) -->
+<!-- Content — Standalone Reference Library -->
 <section class="nv-content-page" aria-labelledby="content-page-title">
-  <h1 id="content-page-title" class="nv-sr-only">Content Viewer</h1>
-
-<section class="nv-progress-panel" aria-labelledby="content-progress-title">
-    <h2 id="content-progress-title">Content Progress</h2>
-
-    <div class="nv-progress-summary">
-      <span>Status:</span>
-      <strong data-progress-content-status>not started</strong>
-    </div>
-
-    <div class="nv-progress-summary">
-      <span>Completed at:</span>
-      <strong data-progress-completed-at>Not completed</strong>
-    </div>
-
-    <label class="nv-progress-meter-label" for="content-progress-meter">
-      Progress:
-      <span data-progress-content-value>0%</span>
-    </label>
-
-    <progress
-      id="content-progress-meter"
-      class="nv-progress-meter"
-      value="0"
-      max="100"
-      role="progressbar"
-      aria-label="Current content progress"
-      aria-valuemin="0"
-      aria-valuemax="100"
-      aria-valuenow="0"
-      data-progress-content-meter
-    ></progress>
-
-    <button
-      class="nv-button"
-      type="button"
-      data-progress-complete-content
-    >
-      Mark as Completed
-    </button>
-
-    <p class="nv-sr-only" aria-live="polite" data-progress-live></p>
-  </section>
+  <h1 id="content-page-title" class="nv-sr-only">Reference Library</h1>
 
   <div data-content-viewer>
     <section class="nv-empty-state" aria-live="polite">
-      <p>No content selected.</p>
+      <p>Loading content...</p>
     </section>
   </div>
 

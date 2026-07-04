@@ -1,1 +1,29 @@
-[]
+[
+  {
+    "id": "foundations-intro",
+    "type": "Guide",
+    "title": "Foundations Introduction",
+    "description": "Why mathematics, statistics, and programming form the base for AI engineering.",
+    "source": "content/modules/module-00-foundations/index.md",
+    "estimatedReadingTime": 3,
+    "order": 1
+  },
+  {
+    "id": "classical-ml-overview",
+    "type": "Guide",
+    "title": "Classical Machine Learning Overview",
+    "description": "Supervised learning, unsupervised learning, features, and evaluation fundamentals.",
+    "source": "content/modules/module-01-classical-ml/index.md",
+    "estimatedReadingTime": 3,
+    "order": 2
+  },
+  {
+    "id": "deep-learning-basics",
+    "type": "Guide",
+    "title": "Deep Learning Basics",
+    "description": "Neural networks, backpropagation, and representation learning.",
+    "source": "content/modules/module-02-deep-learning/index.md",
+    "estimatedReadingTime": 3,
+    "order": 3
+  }
+]

@@ -22,7 +22,7 @@ function getRouteLabel(routeType, parts = []) {
     home: "Home",
     learning: "Learning Paths",
     module: "Modules",
-    content: "Content",
+    content: "Reference Library",
     workspace: "Workspace",
     "retrieval-playground": "Retrieval Playground",
     settings: "Settings",
@@ -165,21 +165,34 @@ export function createBreadcrumbsController(options = {}) {
 
     const crumbs = [];
 
-    if (path) {
-      crumbs.push(createCrumb(path.title, `#/learning`, !module && !content));
-    }
+    if (routeType === "content" && !contentId) {
+      crumbs.push(createCrumb("Home", "#/", false));
+      crumbs.push(createCrumb("Reference Library", "#/content", true));
+    } else if (routeType === "content" && contentId) {
+      crumbs.push(createCrumb("Home", "#/", false));
+      crumbs.push(createCrumb("Reference Library", "#/content", false));
+      if (content) {
+        crumbs.push(createCrumb(content.title, `#/content/${content.id}`, true));
+      } else {
+        crumbs.push(createCrumb("Article", `#/content/${contentId}`, true));
+      }
+    } else {
+      if (path) {
+        crumbs.push(createCrumb(path.title, `#/learning`, !module && !content));
+      }
 
-    if (module) {
-      crumbs.push(createCrumb(module.title, `#/modules`, !content));
-    }
+      if (module) {
+        crumbs.push(createCrumb(module.title, `#/modules`, !content));
+      }
 
-    if (content) {
-      crumbs.push(createCrumb(content.title, `#/content/${content.id}`, true));
-    }
+      if (content) {
+        crumbs.push(createCrumb(content.title, `#/content/${content.id}`, true));
+      }
 
-    if (!path && routeType !== "home") {
-      const href = routeType === "unknown" ? `#/${parts.join("/")}` : `#/${routeType}`;
-      crumbs.push(createCrumb(getRouteLabel(routeType, parts), href, true));
+      if (!path && routeType !== "home") {
+        const href = routeType === "unknown" ? `#/${parts.join("/")}` : `#/${routeType}`;
+        crumbs.push(createCrumb(getRouteLabel(routeType, parts), href, true));
+      }
     }
 
     renderBreadcrumbs(crumbs);

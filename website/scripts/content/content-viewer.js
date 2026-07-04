@@ -17,60 +17,6 @@ function renderParagraph(lines) {
   return `<p>${renderInlineMarkdown(lines.join(" "))}</p>`;
 }
 
-function getScheduler() {
-  if (typeof window === 'undefined') return null;
-  return window.NeuralVerse?.reviewScheduler || null;
-}
-
-function renderReviewBadgeGroup(artifactId, type) {
-  const renderer = typeof window !== 'undefined' ? window.NeuralVerse?.reviewBadgeRenderer : null;
-  const scheduler = getScheduler();
-  if (!renderer || !scheduler) return '';
-  if (typeof renderer.renderBadgeAndAction === 'function') {
-    try {
-      return renderer.renderBadgeAndAction(artifactId, type || 'artifact', scheduler);
-    } catch (e) { return ''; }
-  }
-  return '';
-}
-
-function renderReviewMetadataPanel(artifactId, type) {
-  const renderer = typeof window !== 'undefined' ? window.NeuralVerse?.reviewBadgeRenderer : null;
-  const scheduler = getScheduler();
-  if (!renderer || !scheduler) return '';
-  if (typeof renderer.renderMetadataPanel === 'function') {
-    try {
-      return renderer.renderMetadataPanel(artifactId, type || 'artifact', scheduler);
-    } catch (e) { return ''; }
-  }
-  return '';
-}
-
-function wireReviewAction(target) {
-  if (!target) return;
-  const actionBtn = target.querySelector('[data-review-action]');
-  if (!actionBtn || actionBtn.dataset.reviewWired === '1') return;
-  if (actionBtn.disabled || actionBtn.getAttribute('aria-disabled') === 'true') return;
-  actionBtn.dataset.reviewWired = '1';
-  actionBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    const scheduler = getScheduler();
-    const ctrl = window.NeuralVerse?.reviewSessionController;
-    if (!scheduler || !ctrl) return;
-    const targetId = actionBtn.getAttribute('data-review-target-id');
-    const targetType = actionBtn.getAttribute('data-review-target-type') || 'artifact';
-    if (!targetId) return;
-    // Ensure the item is in the schedule (idempotent)
-    try { scheduler.ensureItem(targetId, targetType); } catch (err) { /* ignore */ }
-    // Check for an unfinished session
-    if (typeof ctrl.hasActiveSession === 'function' && ctrl.hasActiveSession()) {
-      ctrl.resumeSession();
-    } else {
-      ctrl.startSession();
-    }
-  });
-}
-
 export function renderMarkdown(markdown) {
   const lines = String(markdown || "").split(/\r?\n/);
   const html = [];
@@ -167,63 +113,126 @@ export function renderMarkdown(markdown) {
 }
 
 export function renderContentViewer(target, content) {
-  if (!target) {
-    return;
-  }
+  if (!target) return;
 
   const { metadata, markdown } = content;
-  const artifactId = metadata.id || metadata.slug || '';
-  const reviewBadge = renderReviewBadgeGroup(artifactId, 'artifact');
-  const reviewMeta = renderReviewMetadataPanel(artifactId, 'artifact');
 
   target.innerHTML = `
     <article class="nv-content-viewer" aria-labelledby="content-viewer-title">
       <header class="nv-content-viewer__header">
-        <h1 id="content-viewer-title">${escapeHtml(metadata.title)}</h1>
-        ${reviewBadge}
-
+        <p class="nv-content-viewer__back">
+          <a href="#/content" aria-label="Return to Reference Library">Library</a>
+        </p>
+        <h2 id="content-viewer-title">${escapeHtml(metadata.title)}</h2>
         <dl class="nv-content-meta" aria-label="Content metadata">
           <div>
             <dt>Type</dt>
             <dd>${escapeHtml(metadata.type)}</dd>
           </div>
           <div>
-            <dt>Estimated reading time</dt>
+            <dt>Reading time</dt>
             <dd>${escapeHtml(metadata.estimatedReadingTime)} min</dd>
-          </div>
-          <div>
-            <dt>Source</dt>
-            <dd><code>${escapeHtml(metadata.source)}</code></dd>
           </div>
         </dl>
       </header>
 
-      ${reviewMeta}
-
       <div class="nv-markdown-content">
         ${renderMarkdown(markdown)}
       </div>
+
+      <footer class="nv-content-viewer__footer">
+        <a href="#/content" class="nv-button" data-variant="secondary">Back to Library</a>
+      </footer>
     </article>
   `;
-  wireReviewAction(target);
 }
 
-export function renderContentEmptyState(target, message = "No content selected.") {
-  if (!target) {
+export function renderContentLibrary(target, items) {
+  if (!target) return;
+
+  if (!items || items.length === 0) {
+    renderLibraryEmptyState(target);
     return;
   }
 
+  const entries = items
+    .sort((a, b) => (a.order || 0) - (b.order || 0))
+    .map(item => {
+      const num = String(item.order || 1).padStart(2, '0');
+      return `
+        <a href="#/content/${escapeHtml(item.id)}" class="nv-editorial-entry" aria-label="Read ${escapeHtml(item.title)}">
+          <span class="nv-editorial-entry__num" aria-hidden="true">${num}</span>
+          <div class="nv-editorial-entry__content">
+            <span class="nv-editorial-entry__meta">${escapeHtml(item.type)}<span class="nv-editorial-entry__sep" aria-hidden="true">&middot;</span>${escapeHtml(item.estimatedReadingTime)} min read</span>
+            <h3 class="nv-editorial-entry__title">${escapeHtml(item.title)}</h3>
+            <p class="nv-editorial-entry__desc">${escapeHtml(item.description || '')}</p>
+          </div>
+        </a>
+      `;
+    })
+    .join('');
+
   target.innerHTML = `
-    <section class="nv-empty-state" aria-live="polite">
-      <p>${escapeHtml(message)}</p>
+    <section class="nv-editorial-library" aria-labelledby="content-library-title">
+      <header class="nv-editorial-library__hero">
+        <span class="nv-editorial-library__kicker">Reference Library</span>
+        <h2 id="content-library-title" class="nv-editorial-library__title">Technical Reference & Guides</h2>
+        <p class="nv-editorial-library__subtitle">
+          Standalone reference material for AI engineering study.
+          Curated guides covering foundations, classical ML, and deep learning fundamentals.
+        </p>
+      </header>
+      <div class="nv-editorial-library__list" role="list">
+        ${entries}
+      </div>
+    </section>
+  `;
+}
+
+export function renderLibraryEmptyState(target) {
+  if (!target) return;
+
+  target.innerHTML = `
+    <section class="nv-empty-state nv-content-empty" aria-live="polite">
+      <div class="nv-empty-state__icon" aria-hidden="true">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/>
+        </svg>
+      </div>
+      <h3 class="nv-empty-state__title">Reference Library</h3>
+      <p class="nv-empty-state__description">No reference material is available yet.</p>
+      <div class="nv-empty-state__actions">
+        <a href="#/modules" class="nv-button" data-variant="primary">Browse Modules</a>
+        <a href="#/learning" class="nv-button" data-variant="secondary">Open Learning</a>
+      </div>
+    </section>
+  `;
+}
+
+export function renderReaderEmptyState(target) {
+  if (!target) return;
+
+  target.innerHTML = `
+    <section class="nv-empty-state nv-content-empty" aria-live="polite">
+      <div class="nv-empty-state__icon" aria-hidden="true">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+      </div>
+      <h3 class="nv-empty-state__title">Content not found</h3>
+      <p class="nv-empty-state__description">The requested reference could not be located.</p>
+      <div class="nv-empty-state__actions">
+        <a href="#/content" class="nv-button" data-variant="primary">Return to Library</a>
+        <a href="#/modules" class="nv-button" data-variant="secondary">Browse Modules</a>
+      </div>
     </section>
   `;
 }
 
 export function renderContentLoadingState(target) {
-  if (!target) {
-    return;
-  }
+  if (!target) return;
 
   target.innerHTML = `
     <section class="nv-empty-state" aria-live="polite">
