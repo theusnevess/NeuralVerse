@@ -77,7 +77,15 @@
         for (var i = 0; i < xs.length; i++) {
           points.push({ x: xs[i], y: m * xs[i] + b });
         }
-        yLabel = 'y = ' + m + 'x + ' + b;
+        // No yLabel — formula belongs in header, not canvas
+        // Explanatory annotations — teach the concept
+        if (b !== 0) {
+          annotations.push({ x: 0, y: b, label: 'y-intercept = ' + b.toFixed(1) });
+        }
+        if (m !== 0) {
+          var refX = Math.min(3, xMax * 0.6);
+          annotations.push({ x: refX, y: m * refX + b, label: 'slope = ' + m.toFixed(1) });
+        }
         break;
       }
 
@@ -92,7 +100,19 @@
           var xv = xsQ[qi];
           points.push({ x: xv, y: a * xv * xv + b2 * xv + c });
         }
-        yLabel = 'y = ' + a + 'x² + ' + b2 + 'x + ' + c;
+        // No yLabel — formula belongs in header
+        // Rich annotations — the complete mathematical picture
+        var vertexX = -b2 / (2 * a);
+        var vertexY = a * vertexX * vertexX + b2 * vertexX + c;
+        if (vertexX >= xMinQ && vertexX <= xMaxQ) {
+          annotations.push({ x: vertexX, y: vertexY, label: 'vertex (' + vertexX.toFixed(1) + ', ' + vertexY.toFixed(1) + ')' });
+        }
+        // Y-intercept
+        if (c !== 0) {
+          annotations.push({ x: 0, y: c, label: 'y-intercept = ' + c.toFixed(1) });
+        }
+        // Concavity
+        annotations.push({ x: xMaxQ * 0.85, y: a * (xMaxQ * 0.85) * (xMaxQ * 0.85) + b2 * (xMaxQ * 0.85) + c, label: a > 0 ? 'concave up' : 'concave down' });
         break;
       }
 
@@ -105,7 +125,9 @@
           var sigmoid = 1 / (1 + Math.exp(-k * (xv2 - x0)));
           points.push({ x: xv2, y: sigmoid });
         }
-        yLabel = 'σ(x) = 1/(1+e^(-' + k + '(x-' + x0 + ')))';
+        // No yLabel — formula belongs in header
+        // Inflection point — where the curve transitions
+        annotations.push({ x: x0, y: 0.5, label: 'inflection at x₀=' + x0.toFixed(1) });
         break;
       }
 
@@ -116,7 +138,11 @@
           var xv3 = xsR[ri];
           points.push({ x: xv3, y: Math.max(0, xv3 - threshold) });
         }
-        yLabel = 'ReLU(x) = max(0, x - ' + threshold + ')';
+        // No yLabel — formula belongs in header
+        // Threshold annotation
+        if (threshold !== 0) {
+          annotations.push({ x: threshold, y: 0, label: 'Threshold: ' + threshold.toFixed(1) });
+        }
         break;
       }
 
@@ -145,7 +171,7 @@
           points.push({ x: gi, y: loss });
         }
         xLabel = 'Step';
-        yLabel = 'Loss (' + lossType + ')';
+        // No yLabel — formula belongs in header
         break;
       }
 
@@ -165,7 +191,7 @@
           series.push(lrSeries);
         }
         xLabel = 'Step';
-        yLabel = 'Loss';
+        // No yLabel — formula belongs in header
         return {
           type: 'multi-line',
           title: title,
@@ -237,7 +263,11 @@
           var pdf = (1 / (stdDev * Math.sqrt(2 * Math.PI))) * Math.exp(expArg);
           points.push({ x: xv4, y: pdf });
         }
-        yLabel = 'PDF (μ=' + mean + ', σ=' + stdDev + ')';
+        // No yLabel — formula belongs in header
+        // Annotations — teach the concept
+        var peakY = (1 / (stdDev * Math.sqrt(2 * Math.PI)));
+        annotations.push({ x: mean, y: peakY, label: 'μ = ' + mean.toFixed(1) + ' (mean)' });
+        annotations.push({ x: mean + stdDev, y: peakY * Math.exp(-0.5), label: 'σ = ' + stdDev.toFixed(1) + ' (spread)' });
         break;
       }
 
@@ -253,7 +283,10 @@
           var yLC = L / (1 + Math.exp(-k2 * (xv5 - x0LC)));
           points.push({ x: xv5, y: yLC });
         }
-        yLabel = 'P(t) = ' + L + '/(1+e^(-' + k2 + '(t-' + x0LC + ')))';
+        // No yLabel — formula belongs in header
+        // Annotations — teach the concept
+        annotations.push({ x: x0LC, y: L / 2, label: 'midpoint = ' + x0LC.toFixed(1) });
+        annotations.push({ x: xMaxLC * 0.7, y: L * 0.92, label: 'K = ' + L.toFixed(0) + ' (capacity)' });
         break;
       }
 
