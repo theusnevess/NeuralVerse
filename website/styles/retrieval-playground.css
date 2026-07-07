@@ -517,38 +517,39 @@
 }
 
 .graph-node-core {
-  fill: var(--sys-color-background-base);
-  stroke: var(--sys-color-border-strong);
-  stroke-width: 1.2px;
+  fill: #0c1018;
+  stroke: #2a4a5a;
+  stroke-width: 1px;
   transform-box: fill-box;
   transform-origin: center;
   transition: fill 160ms ease, stroke 160ms ease, stroke-width 160ms ease, filter 160ms ease, opacity 160ms ease;
 }
 
 .graph-node-aura {
-  fill: color-mix(in srgb, var(--sys-color-accent-primary) 10%, transparent);
+  fill: rgba(42, 102, 128, 0.08);
   opacity: 0;
   pointer-events: none;
   transition: opacity 160ms ease, r 160ms ease;
 }
 
 .graph-node-tier-hub .graph-node-core {
-  stroke-width: 1.8px;
-  filter: drop-shadow(0 0 5px color-mix(in srgb, var(--sys-color-accent-primary) 32%, transparent));
+  stroke-width: 1.5px;
+  stroke: #3a6a82;
+  filter: drop-shadow(0 0 4px rgba(42, 102, 128, 0.22));
 }
 
 .graph-node-tier-hub .graph-node-aura,
 .graph-node.selected .graph-node-aura,
 .graph-node.neighbor-hop-1 .graph-node-aura {
-  opacity: 0.52;
+  opacity: 0.42;
 }
 
 .graph-node-tier-connected .graph-node-core {
-  stroke-width: 1.35px;
+  stroke-width: 1.2px;
 }
 
 .graph-node-tier-inactive .graph-node-core {
-  opacity: 0.78;
+  opacity: 0.68;
 }
 
 .graph-node-cue {
@@ -558,28 +559,28 @@
 .graph-node--paper .graph-node-core,
 .graph-node--repository .graph-node-core,
 .graph-node--notes .graph-node-core {
-  fill: var(--sys-color-accent-primary);
-  stroke: color-mix(in srgb, var(--sys-color-accent-primary) 22%, transparent);
+  fill: #1a3040;
+  stroke: #3a7a96;
   stroke-width: 0.75px;
 }
 
 .graph-node--repository .graph-node-core {
-  fill: color-mix(in srgb, var(--sys-color-accent-primary) 82%, var(--sys-color-background-base));
+  fill: #142838;
 }
 
 .graph-node--notes .graph-node-core {
-  fill: color-mix(in srgb, var(--sys-color-accent-primary) 68%, var(--sys-color-text-secondary));
+  fill: #122028;
 }
 
 .graph-node text {
-  fill: var(--sys-color-text-secondary);
+  fill: #6a7a86;
   font-family: var(--sys-font-body-family);
   font-size: 0.54rem;
   font-weight: var(--ref-font-weight-regular);
   letter-spacing: 0.02em;
   pointer-events: none;
   paint-order: stroke;
-  stroke: var(--sys-color-background-base);
+  stroke: #030608;
   stroke-width: 1.15px;
   stroke-linejoin: round;
   text-shadow: none;
@@ -599,78 +600,78 @@
 
 .graph-node:hover .graph-node-core,
 .graph-node:focus-visible .graph-node-core {
-  transform: scale(1.25);
-  filter: drop-shadow(0 0 6px var(--sys-color-accent-primary)) !important;
+  transform: scale(1.15);
+  filter: drop-shadow(0 0 3px rgba(42, 102, 128, 0.3)) !important;
 }
 
 .graph-node.selected .graph-node-core {
-  stroke: var(--sys-color-text-primary);
+  stroke: #5eaacc;
   stroke-width: 1.5px;
-  filter: drop-shadow(0 0 8px var(--sys-color-accent-primary));
+  filter: drop-shadow(0 0 4px rgba(42, 102, 128, 0.35));
 }
 
 .graph-node.selected text {
-  fill: var(--sys-color-text-primary);
+  fill: #c0d8e8;
   font-weight: var(--ref-font-weight-regular);
   font-size: 0.6rem;
 }
 
 .graph-node.neighbor-hop-1 .graph-node-core {
-  stroke: var(--sys-color-text-primary);
+  stroke: #8ab0c8;
   stroke-width: 1px;
 }
 
 .graph-node.neighbor-hop-1 text {
-  fill: var(--sys-color-text-primary);
+  fill: #a0b8c8;
   font-weight: var(--ref-font-weight-regular);
 }
 
 .graph-node.neighbor-hop-2 .graph-node-core {
-  stroke: color-mix(in srgb, var(--sys-color-border-strong) 40%, transparent);
+  stroke: #2a4a5a;
   stroke-width: 0.6px;
 }
 
 .graph-node.neighbor-hop-2 {
-  opacity: 0.38;
+  opacity: 0.35;
 }
 
-/* Obsidian-style interactive network highlight */
+/* Scientific-style interactive network highlight */
 .graph-world.has-hovered-node .graph-node {
   transition: opacity 160ms ease, transform 160ms ease;
 }
 .graph-world.has-hovered-node .graph-node:not(.is-hovered):not(.hover-neighbor) {
-  opacity: 0.12 !important;
+  opacity: 0.1 !important;
 }
 .graph-world.has-hovered-node .graph-node:not(.is-hovered):not(.hover-neighbor) text {
-  opacity: 0 !important; /* Hide non-neighbor text labels to keep space clean */
+  opacity: 0 !important;
 }
 .graph-world.has-hovered-node .graph-link {
   transition: stroke-opacity 160ms ease, stroke-width 160ms ease;
 }
 .graph-world.has-hovered-node .graph-link:not(.hover-active) {
-  stroke-opacity: 0.015 !important;
+  stroke-opacity: 0.012 !important;
 }
 
 .graph-node.is-hovered .graph-node-core {
-  transform: scale(1.3);
-  filter: drop-shadow(0 0 8px var(--sys-color-accent-primary)) !important;
-  stroke: var(--sys-color-accent-primary) !important;
+  transform: scale(1.2);
+  filter: drop-shadow(0 0 4px rgba(42, 102, 128, 0.35)) !important;
+  stroke: #4a8aaa !important;
 }
 
 .graph-node.hover-neighbor .graph-node-core {
-  transform: scale(1.15);
-  stroke: var(--sys-color-text-primary) !important;
+  transform: scale(1.1);
+  stroke: #8ab0c8 !important;
 }
 
 .graph-link.hover-active {
-  stroke: var(--sys-color-accent-primary) !important;
-  stroke-opacity: 0.88 !important;
-  stroke-width: calc(var(--link-width, 1px) + 0.8px) !important;
+  stroke: #4a8aaa !important;
+  stroke-opacity: 0.78 !important;
+  stroke-width: calc(var(--link-width, 1px) + 0.6px) !important;
 }
 
 .graph-node.pinned .graph-node-core {
-  stroke: var(--sys-color-accent-primary);
-  stroke-width: 2.2px;
+  stroke: #4a8aaa;
+  stroke-width: 2px;
 }
 
 .graph-node-mark {
@@ -679,18 +680,18 @@
 }
 
 .graph-node-mark--pinned {
-  stroke: var(--sys-color-text-primary);
+  stroke: #a0b8c8;
   stroke-width: 1.4px;
   stroke-linecap: round;
   stroke-linejoin: round;
-  opacity: 0.86;
+  opacity: 0.78;
 }
 
 .graph-node-mark--evidence {
-  fill: var(--sys-color-accent-primary);
-  stroke: var(--sys-color-accent-primary);
+  fill: #4a8aaa;
+  stroke: #4a8aaa;
   stroke-width: 0.8px;
-  opacity: 0.58;
+  opacity: 0.5;
 }
 
 .graph-node.distant {

@@ -6161,8 +6161,55 @@
   window.addEventListener('nv:routerendered', (e) => {
     if (e.detail?.routeId === "retrieval-playground") {
       initPlayground();
+      consumeSemanticContext();
     }
   });
+
+  // Consume semantic context from URL or sessionStorage
+  function consumeSemanticContext() {
+    const SemanticContext = window.NeuralVerse?.SemanticContext;
+    if (!SemanticContext) return;
+
+    // Check URL for query parameter
+    const urlQuery = SemanticContext.getParamFromHash('q');
+    if (urlQuery) {
+      const searchInput = document.getElementById("playground-search-input");
+      if (searchInput) {
+        searchInput.value = urlQuery;
+        if (typeof window.runSearch === 'function') {
+          window.runSearch(urlQuery);
+        }
+      }
+      return;
+    }
+
+    // Check sessionStorage for semantic context
+    const ctx = SemanticContext.getActiveContext();
+    if (ctx && ctx.name) {
+      const searchInput = document.getElementById("playground-search-input");
+      if (searchInput) {
+        searchInput.value = ctx.name;
+        if (typeof window.runSearch === 'function') {
+          window.runSearch(ctx.name);
+        }
+      }
+    }
+  }
+
+  // Subscribe to live semantic context updates
+  function handleSemanticContextUpdate(e) {
+    const ctx = e && e.detail;
+    if (!ctx || !ctx.name) return;
+    const searchInput = document.getElementById("playground-search-input");
+    if (searchInput && document.visibilityState === 'visible') {
+      searchInput.value = ctx.name;
+      if (typeof window.runSearch === 'function') {
+        window.runSearch(ctx.name);
+      }
+    }
+  }
+
+  window.addEventListener('nv:semantic-concept-selected', handleSemanticContextUpdate);
 
   // Subscribe to navigation route changes (legacy fallback/refreshes)
   if (window.navigationState) {
