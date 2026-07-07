@@ -716,8 +716,20 @@ export function createKnowledgeGraphController(options = {}) {
     }
   }
 
+  function handleSemanticContext(e) {
+    const ctx = e && e.detail;
+    if (!ctx || !ctx.conceptId) return;
+    const node = graph.nodeById.get(ctx.conceptId);
+    if (node) {
+      state.selectedNodeId = node.id;
+      state.mode = node.type;
+      applyCurrentRender();
+    }
+  }
+
   function init() {
     window.addEventListener('nv:routerendered', () => renderCurrentRoute());
+    window.addEventListener('nv:semantic-concept-selected', handleSemanticContext);
     window.addEventListener('keydown', handleKeyDown);
     renderCurrentRoute();
   }

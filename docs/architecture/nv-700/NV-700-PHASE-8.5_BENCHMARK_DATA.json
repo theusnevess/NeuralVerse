@@ -1,0 +1,112 @@
+{
+  "rows": [
+    {
+      "nodeCount": 2000,
+      "edgeCount": 2000,
+      "mode": "actual",
+      "layoutTimeMs": 1764.6645,
+      "memoryBytes": 63790344,
+      "collisionPairs": 1457,
+      "collisionRatio": 0.7285,
+      "edgeCrossingsEstimate": 61149,
+      "clusterCohesion": 0.2456,
+      "dependencyCorridorScore": 1,
+      "deterministic": true,
+      "incrementalStability": 0.9828,
+      "qualityScore": 0,
+      "totalMs": 1815
+    },
+    {
+      "nodeCount": 5000,
+      "edgeCount": 5000,
+      "mode": "actual",
+      "layoutTimeMs": 8839.5308,
+      "memoryBytes": 26047872,
+      "collisionPairs": 9703,
+      "collisionRatio": 1.9406,
+      "edgeCrossingsEstimate": 147659,
+      "clusterCohesion": 0.2262,
+      "dependencyCorridorScore": 1,
+      "deterministic": true,
+      "incrementalStability": 0.9683,
+      "qualityScore": 0,
+      "totalMs": 8922
+    },
+    {
+      "nodeCount": 10000,
+      "edgeCount": 10000,
+      "mode": "actual",
+      "layoutTimeMs": 29207.6587,
+      "memoryBytes": 0,
+      "collisionPairs": 38569,
+      "collisionRatio": 3.8569,
+      "edgeCrossingsEstimate": 278512,
+      "clusterCohesion": 0.2224,
+      "dependencyCorridorScore": 1,
+      "deterministic": true,
+      "incrementalStability": 0.962,
+      "qualityScore": 0,
+      "totalMs": 29422
+    },
+    {
+      "nodeCount": 250000,
+      "edgeCount": 250000,
+      "mode": "simulated",
+      "layoutTimeMs": 2490.82,
+      "memoryBytes": 162500000,
+      "collisionPairs": 2750,
+      "collisionRatio": 0.011,
+      "edgeCrossingsEstimate": 1434525,
+      "clusterCohesion": 0.55,
+      "dependencyCorridorScore": 0.76,
+      "deterministic": true,
+      "incrementalStability": 0.93,
+      "qualityScore": 0.8784,
+      "totalMs": 0
+    },
+    {
+      "nodeCount": 500000,
+      "edgeCount": 500000,
+      "mode": "simulated",
+      "layoutTimeMs": 3510.82,
+      "memoryBytes": 325000000,
+      "collisionPairs": 5500,
+      "collisionRatio": 0.011,
+      "edgeCrossingsEstimate": 3029051,
+      "clusterCohesion": 0.55,
+      "dependencyCorridorScore": 0.76,
+      "deterministic": true,
+      "incrementalStability": 0.93,
+      "qualityScore": 0.8747,
+      "totalMs": 0
+    },
+    {
+      "nodeCount": 1000000,
+      "edgeCount": 1000000,
+      "mode": "simulated",
+      "layoutTimeMs": 5330.82,
+      "memoryBytes": 650000000,
+      "collisionPairs": 11000,
+      "collisionRatio": 0.011,
+      "edgeCrossingsEstimate": 6378102,
+      "clusterCohesion": 0.55,
+      "dependencyCorridorScore": 0.76,
+      "deterministic": true,
+      "incrementalStability": 0.93,
+      "qualityScore": 0.8796,
+      "totalMs": 0
+    }
+  ],
+  "materialized": [
+    2000,
+    10000,
+    25000,
+    50000,
+    100000
+  ],
+  "simulated": [
+    250000,
+    500000,
+    1000000
+  ]
+}

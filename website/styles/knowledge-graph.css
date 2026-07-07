@@ -3,23 +3,811 @@
    ============================================================================= */
 
 :root {
-  --nv-atlas-bg: #06060a;
-  --nv-card-bg: rgba(255, 255, 255, 0.015);
-  --nv-card-border: rgba(255, 255, 255, 0.05);
-  --nv-card-hover-bg: rgba(255, 255, 255, 0.035);
-  --nv-text-primary: #e2e8f0;
-  --nv-text-secondary: #94a3b8;
-  --nv-text-muted: #475569;
+  --nv-atlas-bg: #030608;
+  --nv-card-bg: rgba(255, 255, 255, 0.012);
+  --nv-card-border: rgba(255, 255, 255, 0.04);
+  --nv-card-hover-bg: rgba(255, 255, 255, 0.028);
+  --nv-text-primary: #c0d0d8;
+  --nv-text-secondary: #6a7a86;
+  --nv-text-muted: #3a4a56;
 
   /* Restrained scientific accent colors */
-  --nv-accent-path: #89b4fa;
-  --nv-accent-path-rgb: 137, 180, 250;
-  --nv-accent-module: #a6e3a1;
-  --nv-accent-module-rgb: 166, 227, 161;
-  --nv-accent-lesson: #f9e2af;
-  --nv-accent-lesson-rgb: 249, 226, 175;
-  --nv-accent-artifact: #cba6f7;
-  --nv-accent-artifact-rgb: 203, 166, 247;
+  --nv-accent-path: #3a7a96;
+  --nv-accent-path-rgb: 58, 122, 150;
+  --nv-accent-module: #4a9a7a;
+  --nv-accent-module-rgb: 74, 154, 122;
+  --nv-accent-lesson: #9a8a5a;
+  --nv-accent-lesson-rgb: 154, 138, 90;
+  --nv-accent-artifact: #6a5a8a;
+  --nv-accent-artifact-rgb: 106, 90, 138;
+}
+
+/* ── Canonical NV-700 Atlas browser host ─────────────────────────────────── */
+.nv-atlas-route {
+  min-block-size: calc(100vh - 180px);
+}
+
+.nv-atlas-browser-host {
+  min-block-size: calc(100vh - 188px);
+}
+
+.nv-atlas-page {
+  display: grid;
+  grid-template-rows: auto minmax(440px, 1fr) auto auto;
+  gap: 14px;
+  min-block-size: calc(100vh - 188px);
+}
+
+.nv-atlas-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 8px 18px;
+  padding-block: 2px 8px;
+  border-block-end: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.nv-atlas-eyebrow {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: #67e8f9;
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.25em;
+  line-height: 1;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.nv-atlas-title {
+  margin: 0;
+  color: #f8fafc;
+  font-size: clamp(2rem, 4vw, 3.7rem);
+  font-weight: 650;
+  letter-spacing: 0;
+  line-height: 0.94;
+}
+
+.nv-atlas-copy {
+  margin: 0;
+  max-inline-size: 46rem;
+  color: rgba(203, 213, 225, 0.72);
+  font-size: clamp(0.88rem, 1.1vw, 1rem);
+  line-height: 1.6;
+}
+
+.nv-atlas-actions {
+  grid-row: 2 / span 2;
+  grid-column: 2;
+  display: flex;
+  justify-content: end;
+}
+
+.nv-atlas-reset {
+  min-block-size: 2.1rem;
+  padding: 0 0.8rem;
+  border: 1px solid rgba(103, 232, 249, 0.18);
+  border-radius: 3px;
+  background: rgba(15, 23, 42, 0.72);
+  color: rgba(226, 232, 240, 0.88);
+  font: inherit;
+  font-size: 0.78rem;
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+.nv-atlas-reset:hover,
+.nv-atlas-reset:focus-visible {
+  border-color: rgba(103, 232, 249, 0.48);
+  color: #f8fafc;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.24);
+}
+
+.nv-atlas-canvas-frame {
+  position: relative;
+  min-block-size: min(68vh, 720px);
+  overflow: hidden;
+  border: 1px solid rgba(103, 232, 249, 0.1);
+  border-radius: 3px;
+  background: radial-gradient(ellipse at 50% 38%, rgba(15, 35, 60, 0.55) 0%, rgba(4, 8, 16, 0.95) 72%, #03060a 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(15, 23, 42, 0.7),
+    inset 0 0 80px rgba(56, 189, 248, 0.025),
+    0 24px 80px rgba(0, 0, 0, 0.32),
+    0 1px 2px rgba(0, 0, 0, 0.2);
+  touch-action: none;
+  isolation: isolate;
+}
+
+.nv-atlas-canvas-frame::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(to bottom, rgba(125, 211, 252, 0.035) 0%, transparent 8%, transparent 92%, rgba(125, 211, 252, 0.025) 100%),
+    linear-gradient(90deg, rgba(125, 211, 252, 0.025) 0%, transparent 5%, transparent 95%, rgba(125, 211, 252, 0.02) 100%);
+  z-index: 1;
+}
+
+.nv-atlas-canvas-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border: 1px solid rgba(125, 211, 252, 0.05);
+  border-radius: 3px;
+  box-shadow:
+    inset 0 0 60px rgba(56, 189, 248, 0.03),
+    inset 0 0 0 0.5px rgba(125, 211, 252, 0.06);
+  z-index: 2;
+}
+
+.nv-atlas-canvas-frame canvas {
+  inline-size: 100%;
+  block-size: 100%;
+  cursor: grab;
+  touch-action: none;
+  position: relative;
+  z-index: 0;
+}
+
+.nv-atlas-canvas-frame canvas:active {
+  cursor: grabbing;
+}
+
+.nv-atlas-canvas-frame canvas:focus-visible {
+  outline: 2px solid rgba(103, 232, 249, 0.72);
+  outline-offset: -4px;
+}
+
+.nv-atlas-selection-readout {
+  min-block-size: 1.4rem;
+  margin: 0;
+  color: rgba(148, 163, 184, 0.8);
+  font-size: 0.75rem;
+  line-height: 1.5;
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: 0.02em;
+}
+
+.nv-atlas-orientation {
+  display: grid;
+  grid-template-columns: max-content 1fr max-content;
+  align-items: center;
+  gap: 0.75rem 1.5rem;
+  padding: 0.65rem 1rem;
+  border: 1px solid rgba(103, 232, 249, 0.1);
+  border-radius: 3px;
+  background: linear-gradient(90deg, rgba(15, 23, 42, 0.75) 0%, rgba(8, 12, 22, 0.6) 100%);
+  box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.6);
+  font-size: 0.82rem;
+  color: #e2e8f0;
+}
+
+.nv-atlas-orientation-eyebrow {
+  color: #67e8f9;
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.nv-atlas-orientation-value {
+  color: #f8fafc;
+  font-weight: 500;
+  font-size: 0.92rem;
+  letter-spacing: -0.005em;
+  transition: color 240ms ease;
+}
+
+.nv-atlas-orientation-value[data-atlas-orientation-state="continent"] {
+  color: #bae6fd;
+}
+
+.nv-atlas-orientation-value[data-atlas-orientation-state="entity"] {
+  color: #fef3c7;
+}
+
+.nv-atlas-orientation-hint {
+  color: rgba(148, 163, 184, 0.7);
+  font-size: 0.75rem;
+  text-align: right;
+  font-style: italic;
+  letter-spacing: 0.01em;
+}
+
+.nv-atlas-legend {
+  display: none;
+}
+
+.nv-atlas-context-readout {
+  margin-block-start: 1rem;
+  padding-block-start: 1rem;
+  border-block-start: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.nv-atlas-context-readout h3 {
+  margin: 0 0 0.45rem;
+  color: #e2e8f0;
+  font-size: 1.1rem;
+  line-height: 1.25;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.nv-atlas-context-readout p {
+  margin: 0;
+  color: rgba(203, 213, 225, 0.68);
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+.nv-atlas-context-header {
+  margin-block-end: 0.85rem;
+  padding-block-end: 0.85rem;
+  border-block-end: 1px solid rgba(103, 232, 249, 0.12);
+}
+
+.nv-atlas-context-eyebrow {
+  margin: 0 0 0.35rem;
+  color: #67e8f9;
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.nv-atlas-context-heading {
+  margin: 0;
+  color: #f8fafc;
+  font-size: 1.2rem;
+  line-height: 1.2;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.nv-atlas-context-role {
+  margin: 0.35rem 0 0;
+  color: rgba(186, 230, 253, 0.85);
+  font-size: 0.82rem;
+  font-style: italic;
+  letter-spacing: 0.01em;
+}
+
+.nv-atlas-context-why,
+.nv-atlas-context-guidance,
+.nv-atlas-context-cartography {
+  margin-block-start: 1rem;
+  padding-block-start: 0.85rem;
+  border-block-start: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.nv-atlas-context-why h4,
+.nv-atlas-context-guidance h4,
+.nv-atlas-context-cartography h4 {
+  margin: 0 0 0.5rem;
+  color: rgba(186, 230, 253, 0.85);
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.nv-atlas-context-why-copy {
+  margin: 0;
+  color: rgba(226, 232, 240, 0.85);
+  font-size: 0.88rem;
+  line-height: 1.5;
+  font-style: italic;
+}
+
+.nv-atlas-context-suggestions h5::before {
+  content: "→  ";
+  color: rgba(125, 211, 252, 0.7);
+  font-weight: 500;
+}
+
+.nv-atlas-context-suggestions ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.4rem;
+  counter-reset: suggestion-counter;
+}
+
+.nv-atlas-context-suggestion {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr) max-content;
+  gap: 0.55rem;
+  align-items: center;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid rgba(125, 211, 252, 0.18);
+  border-radius: 6px;
+  background: linear-gradient(90deg, rgba(15, 35, 60, 0.5) 0%, rgba(8, 12, 22, 0.4) 100%);
+  color: #e2e8f0;
+  font-size: 0.82rem;
+  counter-increment: suggestion-counter;
+  position: relative;
+}
+
+.nv-atlas-context-suggestion::before {
+  content: counter(suggestion-counter) ".";
+  color: rgba(125, 211, 252, 0.8);
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.78rem;
+  font-weight: 500;
+}
+
+.nv-atlas-context-suggestion-label {
+  color: #f0f9ff;
+  font-weight: 500;
+}
+
+.nv-atlas-context-suggestion-meta {
+  color: rgba(148, 163, 184, 0.85);
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.7rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.nv-atlas-context-identity,
+.nv-atlas-context-cartography dl {
+  margin: 0 0 1rem;
+  padding: 0;
+  display: grid;
+  grid-template-columns: minmax(110px, max-content) 1fr;
+  gap: 0.3rem 1rem;
+}
+
+.nv-atlas-context-identity dt,
+.nv-atlas-context-cartography dt {
+  margin: 0;
+  color: rgba(148, 163, 184, 0.65);
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  align-self: center;
+  font-weight: 500;
+}
+
+.nv-atlas-context-identity dd,
+.nv-atlas-context-cartography dd {
+  margin: 0;
+  color: #e2e8f0;
+  font-size: 0.86rem;
+  line-height: 1.4;
+}
+
+.nv-atlas-context-relations,
+.nv-atlas-context-cartography {
+  margin-block-start: 1rem;
+  padding-block-start: 1rem;
+  border-block-start: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+.nv-atlas-context-relations h4,
+.nv-atlas-context-cartography h4 {
+  margin: 0 0 0.6rem;
+  color: rgba(186, 230, 253, 0.85);
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.nv-atlas-context-summary {
+  margin: 0 0 0.75rem;
+  color: rgba(203, 213, 225, 0.78);
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+.nv-atlas-context-group {
+  margin-block-end: 0.75rem;
+}
+
+.nv-atlas-context-group h5 {
+  margin: 0 0 0.4rem;
+  color: rgba(148, 163, 184, 0.85);
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.nv-atlas-context-group ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.nv-atlas-context-group li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) max-content max-content;
+  gap: 0.6rem;
+  align-items: center;
+  padding: 0.4rem 0.55rem;
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  border-radius: 6px;
+  background: rgba(15, 23, 42, 0.45);
+  color: #cbd5e1;
+  font-size: 0.8rem;
+}
+
+.nv-atlas-context-relationship-type {
+  color: #e0f2fe;
+  font-weight: 500;
+}
+
+.nv-atlas-context-relationship-category {
+  color: rgba(125, 211, 252, 0.85);
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.nv-atlas-context-category-epistemic { color: rgba(148, 163, 184, 0.85); }
+.nv-atlas-context-category-structural { color: rgba(125, 211, 252, 0.9); }
+.nv-atlas-context-category-pedagogical { color: rgba(134, 239, 172, 0.9); }
+.nv-atlas-context-category-engineering { color: rgba(110, 231, 183, 0.9); }
+.nv-atlas-context-category-evidentiary { color: rgba(254, 215, 170, 0.9); }
+.nv-atlas-context-category-temporal { color: rgba(221, 214, 254, 0.9); }
+.nv-atlas-context-category-inferential { color: rgba(153, 246, 228, 0.9); }
+
+.nv-atlas-context-relationship-weight {
+  color: rgba(148, 163, 184, 0.85);
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.7rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.nv-atlas-context-overflow {
+  color: rgba(148, 163, 184, 0.7);
+  font-style: italic;
+  text-align: center;
+  font-size: 0.78rem;
+}
+
+.nv-atlas-context-guidance-banner {
+  margin-block-end: 0.85rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid rgba(125, 211, 252, 0.25);
+  border-radius: 6px;
+  background: linear-gradient(90deg, rgba(15, 35, 60, 0.6) 0%, rgba(8, 12, 22, 0.4) 100%);
+  color: #bae6fd;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  font-style: italic;
+}
+
+.nv-atlas-context-journey {
+  margin-block-end: 0.85rem;
+  padding-block-end: 0.85rem;
+  border-block-end: 1px solid rgba(103, 232, 249, 0.14);
+}
+
+.nv-atlas-journey-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-block-end: 0.4rem;
+}
+
+.nv-atlas-journey-label {
+  color: #67e8f9;
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.nv-atlas-journey-progress {
+  color: rgba(148, 163, 184, 0.7);
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.62rem;
+}
+
+.nv-atlas-journey-bar {
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(148, 163, 184, 0.15);
+  overflow: hidden;
+  margin-block-end: 0.4rem;
+}
+
+.nv-atlas-journey-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #67e8f9 0%, #22d3ee 100%);
+  transition: width 0.3s ease;
+}
+
+.nv-atlas-journey-next {
+  margin: 0;
+  color: rgba(203, 213, 225, 0.78);
+  font-size: 0.8rem;
+  font-style: italic;
+}
+
+.nv-atlas-context-landmark {
+  margin-block-start: 1rem;
+  padding-block-start: 1rem;
+  border-block-start: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+.nv-atlas-context-landmark h4 {
+  margin: 0 0 0.6rem;
+  color: rgba(186, 230, 253, 0.85);
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.nv-atlas-landmark-items {
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: minmax(110px, max-content) 1fr;
+  gap: 0.3rem 1rem;
+}
+
+.nv-atlas-landmark-items dt {
+  margin: 0;
+  color: rgba(148, 163, 184, 0.65);
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  align-self: center;
+  font-weight: 500;
+}
+
+.nv-atlas-landmark-items dd {
+  margin: 0;
+  color: #e2e8f0;
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+.nv-atlas-context-candidate {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr) max-content;
+  gap: 0.55rem;
+  align-items: center;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid rgba(125, 211, 252, 0.18);
+  border-radius: 6px;
+  background: linear-gradient(90deg, rgba(15, 35, 60, 0.5) 0%, rgba(8, 12, 22, 0.4) 100%);
+  color: #e2e8f0;
+  font-size: 0.82rem;
+  counter-increment: suggestion-counter;
+  position: relative;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.nv-atlas-context-candidate:hover {
+  border-color: rgba(125, 211, 252, 0.4);
+  background: linear-gradient(90deg, rgba(20, 45, 80, 0.6) 0%, rgba(12, 18, 32, 0.5) 100%);
+}
+
+.nv-atlas-context-candidate:active {
+  border-color: rgba(125, 211, 252, 0.55);
+}
+
+.nv-atlas-context-candidate:focus-visible {
+  outline: 2px solid rgba(103, 232, 249, 0.72);
+  outline-offset: 2px;
+}
+
+.nv-atlas-context-candidate::before {
+  content: counter(suggestion-counter) ".";
+  color: rgba(125, 211, 252, 0.8);
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.78rem;
+  font-weight: 500;
+}
+
+.nv-atlas-context-candidate-label {
+  color: #f0f9ff;
+  font-weight: 500;
+}
+
+.nv-atlas-context-candidate-reason {
+  color: rgba(148, 163, 184, 0.78);
+  font-size: 0.76rem;
+  font-style: italic;
+}
+
+.nv-atlas-context-candidate-score {
+  color: rgba(148, 163, 184, 0.85);
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.7rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.nv-atlas-context-breadcrumbs {
+  margin-block-start: 1rem;
+  padding-block-start: 1rem;
+  border-block-start: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+.nv-atlas-context-breadcrumbs h4 {
+  margin: 0 0 0.6rem;
+  color: rgba(186, 230, 253, 0.85);
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.nv-atlas-breadcrumb-trail {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  align-items: center;
+}
+
+.nv-atlas-breadcrumb-item {
+  color: rgba(203, 213, 225, 0.78);
+  font-size: 0.78rem;
+  padding: 0.2rem 0.45rem;
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  border-radius: 4px;
+  background: rgba(15, 23, 42, 0.45);
+}
+
+.nv-atlas-breadcrumb-item + .nv-atlas-breadcrumb-item::before {
+  content: "→";
+  color: rgba(125, 211, 252, 0.5);
+  margin-right: 0.3rem;
+  font-size: 0.7rem;
+}
+
+.nv-atlas-breadcrumb-meta {
+  margin: 0.4rem 0 0;
+  color: rgba(148, 163, 184, 0.65);
+  font-size: 0.72rem;
+  font-style: italic;
+}
+
+.nv-atlas-onboarding-intro {
+  margin: 0 0 1rem;
+  color: rgba(203, 213, 225, 0.82);
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+.nv-atlas-onboarding-journeys {
+  margin-block-start: 1rem;
+  padding-block-start: 1rem;
+  border-block-start: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+.nv-atlas-onboarding-journeys h4 {
+  margin: 0 0 0.4rem;
+  color: rgba(186, 230, 253, 0.9);
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.66rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.nv-atlas-onboarding-hint {
+  margin: 0 0 0.6rem;
+  color: rgba(148, 163, 184, 0.6);
+  font-size: 0.75rem;
+  font-style: italic;
+}
+
+.nv-atlas-onboarding-journey-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.nv-atlas-onboarding-journey-list li {
+  padding: 0.4rem 0.6rem;
+  border: 1px solid rgba(103, 232, 249, 0.15);
+  border-radius: 6px;
+  background: rgba(15, 23, 42, 0.45);
+  color: #bae6fd;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.nv-atlas-onboarding-journey-list li:hover {
+  border-color: rgba(103, 232, 249, 0.45);
+  background: rgba(15, 35, 60, 0.7);
+}
+
+.nv-atlas-onboarding-journey-list li:active {
+  border-color: rgba(103, 232, 249, 0.6);
+  background: rgba(20, 40, 70, 0.8);
+}
+
+.nv-atlas-onboarding-journey-list li:focus-visible {
+  outline: 2px solid rgba(103, 232, 249, 0.72);
+  outline-offset: 2px;
+}
+
+.nv-main-workspace[data-workspace-active-view="knowledge-graph"] .nv-breadcrumbs {
+  margin-block-end: 12px;
+}
+
+.nv-main-workspace[data-workspace-active-view="knowledge-graph"] [data-workspace-empty-state] {
+  display: none !important;
+}
+
+@media (max-width: 1100px) {
+  .nv-context-panel {
+    inline-size: 17rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .nv-atlas-page {
+    grid-template-rows: auto minmax(500px, 1fr) auto;
+    min-block-size: auto;
+  }
+
+  .nv-atlas-header {
+    grid-template-columns: 1fr;
+  }
+
+  .nv-atlas-actions {
+    grid-row: auto;
+    grid-column: auto;
+    justify-content: start;
+  }
+
+  .nv-atlas-canvas-frame {
+    min-block-size: min(64vh, 620px);
+  }
+}
+
+@media (max-width: 480px) {
+  .nv-atlas-route,
+  .nv-atlas-browser-host {
+    min-block-size: auto;
+  }
+
+  .nv-atlas-page {
+    gap: 12px;
+  }
+
+  .nv-atlas-copy {
+    font-size: 0.86rem;
+  }
+
+  .nv-atlas-canvas-frame {
+    min-block-size: 58vh;
+  }
 }
 
 /* ── Container & Layout ──────────────────────────────────────────────────── */
@@ -182,6 +970,15 @@
 }
 
 /* ── Staged Atlas Canvas ─────────────────────────────────────────────────── */
+.nv-atlas-browser-host {
+  min-height: min(72vh, 760px);
+}
+
+.nv-atlas-browser-host > canvas {
+  min-height: min(72vh, 760px);
+  background: var(--nv-atlas-bg);
+}
+
 .nv-kg-canvas-wrap {
   border: 1px solid rgba(255, 255, 255, 0.04);
   border-radius: 16px;
@@ -873,5 +1670,570 @@
   .nv-kg-card {
     transition: none !important;
     animation: none !important;
+  }
+}
+
+/* ── NV-700 Phase 13.5 — Hover Tooltip ────────────────────────────────────── */
+
+.nv-atlas-hover-tooltip {
+  position: fixed;
+  z-index: 9999;
+  pointer-events: none;
+  padding: 0.35rem 0.6rem;
+  border: 1px solid rgba(103, 232, 249, 0.25);
+  border-radius: 6px;
+  background: rgba(8, 12, 22, 0.92);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: #e2e8f0;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.12s ease;
+}
+
+.nv-atlas-hover-tooltip[data-visible="true"] {
+  opacity: 1;
+}
+
+.nv-atlas-hover-tooltip-label {
+  font-weight: 500;
+  color: #f0f9ff;
+}
+
+.nv-atlas-hover-tooltip-domain {
+  margin-inline-start: 0.4rem;
+  color: rgba(148, 163, 184, 0.78);
+  font-size: 0.72rem;
+}
+
+/* ── NV-700 Phase 13.5 — Skip Link ────────────────────────────────────────── */
+
+.nv-atlas-skip-link {
+  position: absolute;
+  inset-block-start: -100%;
+  inset-inline-start: 0;
+  z-index: 10000;
+  padding: 0.5rem 1rem;
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid rgba(103, 232, 249, 0.4);
+  border-radius: 0 0 6px 0;
+  color: #bae6fd;
+  font-size: 0.82rem;
+  text-decoration: none;
+  transition: inset-block-start 0.15s ease;
+}
+
+.nv-atlas-skip-link:focus {
+  inset-block-start: 0;
+  outline: 2px solid rgba(103, 232, 249, 0.72);
+  outline-offset: 2px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   NV-700 PHASE 14 — Product Experience Refinement
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Canvas cursor states ──────────────────────────────────────────────────── */
+
+.nv-atlas-canvas-frame canvas {
+  cursor: grab;
+}
+
+.nv-atlas-canvas-frame canvas:active,
+.nv-atlas-canvas-frame canvas[data-dragging-viewport="true"] {
+  cursor: grabbing;
+}
+
+.nv-atlas-canvas-frame canvas[data-hovering-node="true"]:not([data-dragging-viewport="true"]) {
+  cursor: pointer;
+}
+
+/* ── Selection animation ───────────────────────────────────────────────────── */
+
+@keyframes nv-atlas-node-select-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(103, 232, 249, 0.5); }
+  70% { box-shadow: 0 0 0 8px rgba(103, 232, 249, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(103, 232, 249, 0); }
+}
+
+.nv-atlas-context-heading {
+  animation: nv-atlas-node-select-pulse 0.4s ease-out;
+}
+
+/* ── Context panel hierarchy refinement ─────────────────────────────────────── */
+
+.nv-atlas-context-readout {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(103, 232, 249, 0.2) transparent;
+}
+
+.nv-atlas-context-readout::-webkit-scrollbar {
+  width: 4px;
+}
+
+.nv-atlas-context-readout::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.nv-atlas-context-readout::-webkit-scrollbar-thumb {
+  background: rgba(103, 232, 249, 0.2);
+  border-radius: 2px;
+}
+
+.nv-atlas-context-why-copy {
+  position: relative;
+  padding-inline-start: 0.75rem;
+  border-inline-start: 2px solid rgba(103, 232, 249, 0.3);
+}
+
+.nv-atlas-context-group h5 {
+  margin: 0 0 0.4rem;
+  color: rgba(186, 230, 253, 0.85);
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.nv-atlas-context-group ul,
+.nv-atlas-context-group ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.3rem;
+}
+
+.nv-atlas-context-relationship-type {
+  color: #e2e8f0;
+  font-weight: 500;
+}
+
+.nv-atlas-context-relationship-category {
+  font-size: 0.72rem;
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.nv-atlas-context-category-structural {
+  background: rgba(103, 232, 249, 0.12);
+  color: #67e8f9;
+}
+
+.nv-atlas-context-category-engineering {
+  background: rgba(166, 227, 161, 0.12);
+  color: #a6e3a1;
+}
+
+.nv-atlas-context-category-scientific {
+  background: rgba(249, 226, 175, 0.12);
+  color: #f9e2af;
+}
+
+.nv-atlas-context-category-epistemic {
+  background: rgba(203, 166, 247, 0.12);
+  color: #cba6f7;
+}
+
+.nv-atlas-context-relationship-weight {
+  margin-inline-start: auto;
+  color: rgba(148, 163, 184, 0.75);
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.7rem;
+}
+
+/* ── Journey cards refinement ───────────────────────────────────────────────── */
+
+.nv-atlas-context-journey {
+  margin-block-start: 0.85rem;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid rgba(103, 232, 249, 0.18);
+  border-radius: 8px;
+  background: linear-gradient(135deg, rgba(15, 35, 60, 0.5) 0%, rgba(8, 12, 22, 0.4) 100%);
+}
+
+.nv-atlas-journey-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-block-end: 0.5rem;
+}
+
+.nv-atlas-journey-label {
+  color: #f0f9ff;
+  font-weight: 500;
+  font-size: 0.82rem;
+}
+
+.nv-atlas-journey-progress {
+  color: rgba(148, 163, 184, 0.75);
+  font-size: 0.72rem;
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  white-space: nowrap;
+}
+
+.nv-atlas-journey-bar {
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(15, 23, 42, 0.6);
+  overflow: hidden;
+  margin-block-end: 0.5rem;
+}
+
+.nv-atlas-journey-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #67e8f9, #89b4fa);
+  transition: width 0.3s ease;
+}
+
+.nv-atlas-journey-next {
+  margin: 0;
+  color: rgba(186, 230, 253, 0.75);
+  font-size: 0.76rem;
+  font-style: italic;
+}
+
+.nv-atlas-journey-next::before {
+  content: "→ ";
+  color: rgba(103, 232, 249, 0.6);
+}
+
+/* ── Landmark narrative refinement ─────────────────────────────────────────── */
+
+.nv-atlas-context-landmark {
+  margin-block-start: 0.85rem;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid rgba(249, 226, 175, 0.15);
+  border-radius: 8px;
+  background: linear-gradient(135deg, rgba(40, 30, 15, 0.3) 0%, rgba(8, 12, 22, 0.3) 100%);
+}
+
+.nv-atlas-context-landmark h4 {
+  margin: 0 0 0.5rem;
+  color: rgba(249, 226, 175, 0.9);
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.nv-atlas-landmark-items {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.3rem 0.75rem;
+}
+
+.nv-atlas-landmark-items dt {
+  color: rgba(148, 163, 184, 0.75);
+  font-size: 0.72rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.nv-atlas-landmark-items dd {
+  margin: 0;
+  color: #e2e8f0;
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+/* ── Breadcrumb trail refinement ───────────────────────────────────────────── */
+
+.nv-atlas-breadcrumb-trail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nv-atlas-breadcrumb-item {
+  padding: 0.15rem 0.45rem;
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  border-radius: 4px;
+  background: rgba(15, 23, 42, 0.4);
+  color: rgba(203, 213, 225, 0.75);
+  font-size: 0.72rem;
+}
+
+.nv-atlas-breadcrumb-item:not(:last-child)::after {
+  content: " →";
+  color: rgba(103, 232, 249, 0.4);
+  margin-inline-start: 0.25rem;
+}
+
+.nv-atlas-breadcrumb-meta {
+  margin: 0.4rem 0 0;
+  color: rgba(148, 163, 184, 0.65);
+  font-size: 0.72rem;
+  font-style: italic;
+}
+
+/* ── Identity & cartography refinement ─────────────────────────────────────── */
+
+.nv-atlas-context-identity,
+.nv-atlas-context-cartography dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.25rem 0.75rem;
+}
+
+.nv-atlas-context-identity dt,
+.nv-atlas-context-cartography dt {
+  color: rgba(148, 163, 184, 0.65);
+  font-size: 0.72rem;
+  font-weight: 500;
+}
+
+.nv-atlas-context-identity dd,
+.nv-atlas-context-cartography dd {
+  margin: 0;
+  color: rgba(226, 232, 224, 0.85);
+  font-size: 0.78rem;
+}
+
+/* ── Guided message banner ─────────────────────────────────────────────────── */
+
+.nv-atlas-context-guidance-banner {
+  margin-block-end: 0.75rem;
+  padding: 0.5rem 0.7rem;
+  border: 1px solid rgba(103, 232, 249, 0.18);
+  border-radius: 3px;
+  background: linear-gradient(90deg, rgba(15, 35, 60, 0.5) 0%, rgba(8, 12, 22, 0.3) 100%);
+  color: #bae6fd;
+  font-size: 0.78rem;
+  font-style: italic;
+}
+
+/* ── Onboarding journey list interactivity ─────────────────────────────────── */
+
+.nv-atlas-onboarding-journey-list li {
+  position: relative;
+  padding-inline-end: 1.5rem;
+}
+
+.nv-atlas-onboarding-journey-list li::after {
+  content: "→";
+  position: absolute;
+  inset-inline-end: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(103, 232, 249, 0.4);
+  font-size: 0.82rem;
+  transition: color 0.15s ease, inset-inline-end 0.15s ease;
+}
+
+.nv-atlas-onboarding-journey-list li:hover::after {
+  color: rgba(103, 232, 249, 0.8);
+  inset-inline-end: 0.35rem;
+}
+
+/* ── Candidate interactivity refinement ────────────────────────────────────── */
+
+.nv-atlas-context-candidate {
+  position: relative;
+  padding-inline-end: 2rem;
+}
+
+.nv-atlas-context-candidate::after {
+  content: "→";
+  position: absolute;
+  inset-inline-end: 0.6rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(125, 211, 252, 0.4);
+  font-size: 0.82rem;
+  transition: color 0.15s ease, inset-inline-end 0.15s ease;
+}
+
+.nv-atlas-context-candidate:hover::after {
+  color: rgba(125, 211, 252, 0.8);
+  inset-inline-end: 0.45rem;
+}
+
+/* ── Reset button refinement ───────────────────────────────────────────────── */
+
+.nv-atlas-reset {
+  position: relative;
+  overflow: hidden;
+}
+
+.nv-atlas-reset::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(103, 232, 249, 0.1), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+}
+
+.nv-atlas-reset:hover::before {
+  transform: translateX(100%);
+}
+
+/* ── Canvas frame subtle animation ─────────────────────────────────────────── */
+
+.nv-atlas-canvas-frame {
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.nv-atlas-canvas-frame:hover {
+  border-color: rgba(103, 232, 249, 0.15);
+}
+
+/* ── Orientation strip refinement ──────────────────────────────────────────── */
+
+.nv-atlas-orientation {
+  transition: border-color 0.3s ease, background 0.3s ease;
+}
+
+.nv-atlas-orientation-value {
+  transition: color 0.2s ease;
+}
+
+/* ── Selection readout refinement ──────────────────────────────────────────── */
+
+.nv-atlas-selection-readout {
+  transition: color 0.2s ease;
+  min-block-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+}
+
+/* ── Mobile experience improvements ────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .nv-atlas-page {
+    grid-template-rows: auto minmax(400px, 1fr) auto auto;
+  }
+
+  .nv-atlas-header {
+    padding-block: 0 6px;
+  }
+
+  .nv-atlas-title {
+    font-size: clamp(1.6rem, 6vw, 2.4rem);
+  }
+
+  .nv-atlas-copy {
+    font-size: 0.8rem;
+    line-height: 1.5;
+  }
+
+  .nv-atlas-canvas-frame {
+    min-block-size: min(55vh, 500px);
+    border-radius: 2px;
+  }
+
+  .nv-atlas-orientation {
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
+    text-align: center;
+    padding: 0.5rem 0.75rem;
+  }
+
+  .nv-atlas-orientation-hint {
+    text-align: center;
+    font-size: 0.7rem;
+  }
+
+  .nv-atlas-context-readout {
+    font-size: 0.8rem;
+  }
+
+  .nv-atlas-onboarding-journey-list li {
+    padding: 0.45rem 0.6rem;
+    font-size: 0.82rem;
+  }
+
+  .nv-atlas-context-candidate {
+    padding: 0.45rem 0.6rem;
+  }
+
+  .nv-atlas-context-journey {
+    padding: 0.45rem 0.6rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .nv-atlas-page {
+    grid-template-rows: auto minmax(350px, 1fr) auto auto;
+    gap: 10px;
+  }
+
+  .nv-atlas-canvas-frame {
+    min-block-size: min(50vh, 420px);
+  }
+
+  .nv-atlas-onboarding-intro {
+    font-size: 0.8rem;
+  }
+
+  .nv-atlas-onboarding-journey-list li {
+    padding: 0.4rem 0.5rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* ── Reduced motion support ────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .nv-atlas-canvas-frame,
+  .nv-atlas-orientation,
+  .nv-atlas-reset,
+  .nv-atlas-context-candidate,
+  .nv-atlas-onboarding-journey-list li,
+  .nv-atlas-journey-bar-fill,
+  .nv-atlas-context-heading {
+    transition: none !important;
+    animation: none !important;
+  }
+
+  .nv-atlas-context-candidate::after,
+  .nv-atlas-onboarding-journey-list li::after {
+    transition: none !important;
+  }
+}
+
+/* ── High contrast mode support ────────────────────────────────────────────── */
+
+@media (forced-colors: active) {
+  .nv-atlas-canvas-frame {
+    border: 2px solid ButtonText;
+  }
+
+  .nv-atlas-reset {
+    border: 1px solid ButtonText;
+  }
+
+  .nv-atlas-context-candidate {
+    border: 1px solid ButtonText;
+  }
+
+  .nv-atlas-onboarding-journey-list li {
+    border: 1px solid ButtonText;
+  }
+
+  .nv-atlas-context-journey {
+    border: 1px solid ButtonText;
+  }
+
+  .nv-atlas-context-landmark {
+    border: 1px solid ButtonText;
   }
 }
