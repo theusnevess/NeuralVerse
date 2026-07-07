@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "vite build",
+    "build:atlas": "vite build --config atlas.vite.config.js",
     "build:watch": "vite build --watch",
     "dev": "vite"
   },

@@ -13,7 +13,13 @@ function getRouteType(parts) {
   if (parts[0] === "content") return "content";
   if (parts[0] === "workspace") return "workspace";
   if (parts[0] === "retrieval-playground") return "retrieval-playground";
+  if (parts[0] === "knowledge-graph") return "knowledge-graph";
   if (parts[0] === "settings") return "settings";
+  if (parts[0] === "memory") return "memory";
+  if (parts[0] === "laboratory") return "laboratory";
+  if (parts[0] === "visualizations") return "visualizations";
+  if (parts[0] === "semantic-learning") return "semantic-learning";
+  if (parts[0] === "generative-layer") return "generative-layer";
   return "unknown";
 }
 
@@ -25,7 +31,13 @@ function getRouteLabel(routeType, parts = []) {
     content: "Reference Library",
     workspace: "Workspace",
     "retrieval-playground": "Retrieval Playground",
+    "knowledge-graph": "Atlas",
     settings: "Settings",
+    memory: "Memory",
+    laboratory: "Laboratory",
+    visualizations: "Visualizations",
+    "semantic-learning": "Semantic Learning",
+    "generative-layer": "Generative Assist",
     unknown: "Not Found",
   };
   return labels[routeType] || parts[0] || "Not Found";

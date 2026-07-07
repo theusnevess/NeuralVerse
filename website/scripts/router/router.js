@@ -388,9 +388,8 @@ class ViewController {
         </div>
       `,
       'knowledge-graph': `
-        <div class="nv-stack nv-stack--gap-md">
+        <div class="nv-stack nv-stack--gap-md nv-atlas-route" data-atlas-route>
           <div class="nv-stack nv-stack--gap-md" data-knowledge-graph-root>
-            <h1 class="nv-sr-only">Knowledge Graph</h1>
           </div>
         </div>
       `,
@@ -1073,7 +1072,7 @@ class ViewController {
       if (dirPath.startsWith('//')) {
         dirPath = '/' + dirPath.replace(/^\/+/, '');
       }
-      const response = await fetch(`${dirPath}pages/${viewId}.html?v=11`);
+      const response = await fetch(`${dirPath}pages/${viewId}.html?v=12`);
       if (response.ok) {
         const html = await response.text();
         this.container.innerHTML = html;

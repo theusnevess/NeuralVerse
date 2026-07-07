@@ -8,6 +8,7 @@
     "rewriteRelativeImportExtensions": true
   },
   "include": [
+    "src/atlas/**/*.ts",
     "src/agents/**/*.ts",
     "src/retrieval/**/*.ts",
     "src/ai/**/*.ts"

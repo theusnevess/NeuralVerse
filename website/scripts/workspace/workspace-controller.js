@@ -444,6 +444,26 @@ export function createWorkspaceController(options = {}) {
       status = 'idle';
     } else if (routeId === 'workspace') {
       status = 'active';
+    } else if (routeId === 'knowledge-graph') {
+      status = 'active';
+    } else if (routeId === 'memory' || routeId === 'memory-detail') {
+      status = 'active';
+    } else if (routeId === 'learning' || routeId.startsWith('learning')) {
+      status = 'active';
+    } else if (routeId === 'modules') {
+      status = 'active';
+    } else if (routeId === 'content' || routeId === 'content-detail') {
+      status = 'active';
+    } else if (routeId === 'laboratory' || routeId === 'laboratory-detail') {
+      status = 'active';
+    } else if (routeId === 'visualizations' || routeId === 'visualization-detail') {
+      status = 'active';
+    } else if (routeId === 'retrieval-playground') {
+      status = 'active';
+    } else if (routeId === 'semantic-learning') {
+      status = 'active';
+    } else if (routeId === 'generative-layer') {
+      status = 'active';
     } else if (routeId === 'not-found') {
       routeId = 'unavailable';
       status = 'empty';
@@ -614,6 +634,15 @@ export function createWorkspaceController(options = {}) {
 
     window.addEventListener("nv:memory_updated", () => {
       renderPinnedMemories();
+      renderSemanticSuggestions();
+    });
+
+    // NV-1100-P9: Re-render semantic suggestions when semantic context changes
+    window.addEventListener("nv:semantic-concept-selected", () => {
+      renderSemanticSuggestions();
+    });
+
+    window.addEventListener("nv:semantic-context-updated", () => {
       renderSemanticSuggestions();
     });
 

@@ -236,7 +236,7 @@ const ROUTES = [
   {
     id: 'semantic-learning',
     path: '#/semantic-learning',
-    pattern: /^#\/semantic-learning$/,
+    pattern: /^#\/semantic-learning(?:\?.*)?$/,
     label: 'Semantic',
     title: 'Semantic Learning Intelligence',
     description: 'Deterministic concept recommendations and traversal.',

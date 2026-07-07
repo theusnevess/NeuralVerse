@@ -1,13 +1,13 @@
 import { createCurriculumController } from "./curriculum/curriculum-controller.js?v=1";
 import { createContentController } from "./content/content-controller.js?v=9";
 import { createProgressController } from "./progress/progress-controller.js?v=9";
-import { createWorkspaceController } from "./workspace/workspace-controller.js?v=11";
+import { createWorkspaceController } from "./workspace/workspace-controller.js?v=12";
 import { installSpacedRepetition } from "./spaced-repetition/index.js?v=2";
 import { createReviewSettingsController } from "./spaced-repetition/review-settings-controller.js?v=1";
 import { installAnswerVerification } from "./answer-verification/index.js?v=2";
-import { createBreadcrumbsController } from "./navigation/breadcrumbs-controller.js?v=10";
+import { createBreadcrumbsController } from "./navigation/breadcrumbs-controller.js?v=11";
 import { createCurriculumSearchController } from "./curriculum/curriculum-search.js?v=14";
-import { createKnowledgeGraphController } from "./knowledge-graph/knowledge-graph-controller.js?v=1";
+import { createKnowledgeGraphController } from "./knowledge-graph/atlas-browser-controller.js?v=5";
 import { createAgentRegistry } from "./agents/agent-registry.js?v=1";
 import { createAgentGuardrails } from "./agents/agent-guardrails.js?v=1";
 import { createAgentContextBuilder } from "./agents/agent-context-builder.js?v=1";
@@ -462,40 +462,19 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // NV-1100-P9: Handle semantic learning route
+  // NV-1100-P1: Handle semantic learning route via page controller
+  var _semanticPageController = null;
   window.addEventListener('nv:routerendered', function (e) {
     if (e.detail && e.detail.routeId === 'semantic-learning') {
-      var mount = document.getElementById('semantic-learning-root');
-      if (!mount) return;
-
-      // Ensure semantic engine is initialized (async)
-      var initPromise = window.NeuralVerse?.semanticLearning?.ensureInitialized() || Promise.resolve();
-      initPromise.then(function () {
-        // Populate concept selector
-        var select = document.getElementById('concept-select');
-        if (select && window.NeuralVerse?.SemanticEngine) {
-          var concepts = window.NeuralVerse.SemanticEngine.getAllConcepts();
-          concepts.sort(function (a, b) { return a.name.localeCompare(b.name); });
-          select.innerHTML = '<option value="">— Choose a concept —</option>';
-          for (var i = 0; i < concepts.length; i++) {
-            var opt = document.createElement('option');
-            opt.value = concepts[i].id;
-            opt.textContent = concepts[i].name + ' (' + concepts[i].category + ')';
-            select.appendChild(opt);
-          }
-
-          select.addEventListener('change', function () {
-            var conceptId = this.value;
-            var resultsDiv = document.getElementById('semantic-results');
-            if (!resultsDiv) return;
-            if (!conceptId) {
-              resultsDiv.innerHTML = '<p class="nv-sem-empty">Select a concept to see recommendations.</p>';
-              return;
-            }
-            resultsDiv.innerHTML = window.NeuralVerse.SemanticUIController.renderSemanticPanel(conceptId);
-          });
-        }
-      });
+      if (_semanticPageController) {
+        _semanticPageController.reinitialize();
+      } else if (window.NeuralVerse?.createSemanticPageController) {
+        _semanticPageController = window.NeuralVerse.createSemanticPageController({ root: document });
+        _semanticPageController.initialize();
+      }
+    } else if (_semanticPageController && _semanticPageController.isInitialized()) {
+      _semanticPageController.destroy();
+      _semanticPageController = null;
     }
   });
 
