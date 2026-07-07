@@ -1,11 +1,11 @@
 {
   "version": "1.0.0",
   "schemaVersion": "1.0",
-  "lastUpdated": "2026-06-30",
+  "lastUpdated": "2026-06-24",
   "governance": {
     "status": "active",
     "owner": "NV-1100 Governance",
-    "lastReviewed": "2026-06-30",
+    "lastReviewed": "2026-06-24",
     "reviewPolicy": "Concept additions require cross-domain validation"
   },
   "validCategories": [
@@ -44,5 +44,170 @@
     "Draft",
     "Reviewed"
   ],
-  "concepts": []
+  "concepts": [
+    {
+      "id": "linear-models",
+      "file": "concepts/linear-models.json"
+    },
+    {
+      "id": "gradient-descent",
+      "file": "concepts/gradient-descent.json"
+    },
+    {
+      "id": "regularization",
+      "file": "concepts/regularization.json"
+    },
+    {
+      "id": "decision-boundaries",
+      "file": "concepts/decision-boundaries.json"
+    },
+    {
+      "id": "neural-networks",
+      "file": "concepts/neural-networks.json"
+    },
+    {
+      "id": "backpropagation",
+      "file": "concepts/backpropagation.json"
+    },
+    {
+      "id": "activation-functions",
+      "file": "concepts/activation-functions.json"
+    },
+    {
+      "id": "convolution",
+      "file": "concepts/convolution.json"
+    },
+    {
+      "id": "pooling",
+      "file": "concepts/pooling.json"
+    },
+    {
+      "id": "recurrent-networks",
+      "file": "concepts/recurrent-networks.json"
+    },
+    {
+      "id": "self-attention",
+      "file": "concepts/self-attention.json"
+    },
+    {
+      "id": "transformer-architecture",
+      "file": "concepts/transformer-architecture.json"
+    },
+    {
+      "id": "positional-encoding",
+      "file": "concepts/positional-encoding.json"
+    },
+    {
+      "id": "word-embeddings",
+      "file": "concepts/word-embeddings.json"
+    },
+    {
+      "id": "semantic-search",
+      "file": "concepts/semantic-search.json"
+    },
+    {
+      "id": "vector-similarity",
+      "file": "concepts/vector-similarity.json"
+    },
+    {
+      "id": "dense-retrieval",
+      "file": "concepts/dense-retrieval.json"
+    },
+    {
+      "id": "reranking",
+      "file": "concepts/reranking.json"
+    },
+    {
+      "id": "chunking",
+      "file": "concepts/chunking.json"
+    },
+    {
+      "id": "rag-pipeline",
+      "file": "concepts/rag-pipeline.json"
+    },
+    {
+      "id": "knowledge-grounding",
+      "file": "concepts/knowledge-grounding.json"
+    },
+    {
+      "id": "query-routing",
+      "file": "concepts/query-routing.json"
+    },
+    {
+      "id": "agentic-rag",
+      "file": "concepts/agentic-rag.json"
+    },
+    {
+      "id": "react-pattern",
+      "file": "concepts/react-pattern.json"
+    },
+    {
+      "id": "tool-calling",
+      "file": "concepts/tool-calling.json"
+    },
+    {
+      "id": "planning-loops",
+      "file": "concepts/planning-loops.json"
+    },
+    {
+      "id": "causal-masking",
+      "file": "concepts/causal-masking.json"
+    },
+    {
+      "id": "tokenization",
+      "file": "concepts/tokenization.json"
+    },
+    {
+      "id": "batch-normalization",
+      "file": "concepts/batch-normalization.json"
+    },
+    {
+      "id": "dropout",
+      "file": "concepts/dropout.json"
+    },
+    {
+      "id": "loss-functions",
+      "file": "concepts/loss-functions.json"
+    },
+    {
+      "id": "data-augmentation",
+      "file": "concepts/data-augmentation.json"
+    },
+    {
+      "id": "learning-rate-scheduling",
+      "file": "concepts/learning-rate-scheduling.json"
+    },
+    {
+      "id": "optimizers",
+      "file": "concepts/optimizers.json"
+    },
+    {
+      "id": "data-drift",
+      "file": "concepts/data-drift.json"
+    },
+    {
+      "id": "model-deployment",
+      "file": "concepts/model-deployment.json"
+    },
+    {
+      "id": "model-monitoring",
+      "file": "concepts/model-monitoring.json"
+    },
+    {
+      "id": "feature-engineering",
+      "file": "concepts/feature-engineering.json"
+    },
+    {
+      "id": "cross-validation",
+      "file": "concepts/cross-validation.json"
+    },
+    {
+      "id": "object-detection",
+      "file": "concepts/object-detection.json"
+    },
+    {
+      "id": "image-segmentation",
+      "file": "concepts/image-segmentation.json"
+    }
+  ]
 }

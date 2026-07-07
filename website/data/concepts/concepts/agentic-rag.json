@@ -37,18 +37,7 @@
     "rag-pipeline",
     "react-pattern"
   ],
-  "artifactReferences": [
-    "artifact-agentic-rag-comparison-table",
-    "artifact-agentic-rag-exercise",
-    "artifact-agentic-rag-explanatory-text",
-    "artifact-agentic-rag-interactive-visualization",
-    "artifact-agentic-rag-visual-intuition",
-    "artifact-query-routing-comparison-table",
-    "artifact-query-routing-exercise",
-    "artifact-query-routing-explanatory-text",
-    "artifact-query-routing-interactive-visualization",
-    "artifact-query-routing-visual-intuition"
-  ],
+  "artifactReferences": [],
   "difficulty": "expert",
   "category": "agents",
   "canonicalStatus": "Reviewed",

@@ -31,18 +31,7 @@
   "prerequisiteConcepts": [
     "gradient-descent"
   ],
-  "artifactReferences": [
-    "artifact-ai-for-scientific-discovery-comparison-table",
-    "artifact-ai-for-scientific-discovery-exercise",
-    "artifact-ai-for-scientific-discovery-explanatory-text",
-    "artifact-ai-for-scientific-discovery-interactive-visualization",
-    "artifact-ai-for-scientific-discovery-visual-intuition",
-    "artifact-gradient-descent-optimization-comparison-table",
-    "artifact-gradient-descent-optimization-exercise",
-    "artifact-gradient-descent-optimization-explanatory-text",
-    "artifact-gradient-descent-optimization-interactive-visualization",
-    "artifact-gradient-descent-optimization-visual-intuition"
-  ],
+  "artifactReferences": [],
   "difficulty": "intermediate",
   "category": "optimization",
   "canonicalStatus": "Reviewed",

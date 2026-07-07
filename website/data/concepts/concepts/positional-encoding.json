@@ -31,18 +31,7 @@
   "prerequisiteConcepts": [
     "self-attention"
   ],
-  "artifactReferences": [
-    "artifact-positional-encoding-comparison-table",
-    "artifact-positional-encoding-exercise",
-    "artifact-positional-encoding-explanatory-text",
-    "artifact-positional-encoding-interactive-visualization",
-    "artifact-positional-encoding-visual-intuition",
-    "artifact-transformer-overview-comparison-table",
-    "artifact-transformer-overview-exercise",
-    "artifact-transformer-overview-explanatory-text",
-    "artifact-transformer-overview-interactive-visualization",
-    "artifact-transformer-overview-visual-intuition"
-  ],
+  "artifactReferences": [],
   "difficulty": "intermediate",
   "category": "transformers",
   "canonicalStatus": "Reviewed",

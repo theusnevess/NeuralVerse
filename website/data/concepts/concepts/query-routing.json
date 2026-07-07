@@ -31,18 +31,7 @@
   "prerequisiteConcepts": [
     "rag-pipeline"
   ],
-  "artifactReferences": [
-    "artifact-query-expansion-reformulation-comparison-table",
-    "artifact-query-expansion-reformulation-exercise",
-    "artifact-query-expansion-reformulation-explanatory-text",
-    "artifact-query-expansion-reformulation-interactive-visualization",
-    "artifact-query-expansion-reformulation-visual-intuition",
-    "artifact-query-routing-comparison-table",
-    "artifact-query-routing-exercise",
-    "artifact-query-routing-explanatory-text",
-    "artifact-query-routing-interactive-visualization",
-    "artifact-query-routing-visual-intuition"
-  ],
+  "artifactReferences": [],
   "difficulty": "advanced",
   "category": "rag",
   "canonicalStatus": "Reviewed",

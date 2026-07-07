@@ -30,18 +30,7 @@
     }
   ],
   "prerequisiteConcepts": [],
-  "artifactReferences": [
-    "artifact-data-drift-and-concept-drift-comparison-table",
-    "artifact-data-drift-and-concept-drift-exercise",
-    "artifact-data-drift-and-concept-drift-explanatory-text",
-    "artifact-data-drift-and-concept-drift-interactive-visualization",
-    "artifact-data-drift-and-concept-drift-visual-intuition",
-    "artifact-model-monitoring-observability-comparison-table",
-    "artifact-model-monitoring-observability-exercise",
-    "artifact-model-monitoring-observability-explanatory-text",
-    "artifact-model-monitoring-observability-interactive-visualization",
-    "artifact-model-monitoring-observability-visual-intuition"
-  ],
+  "artifactReferences": [],
   "difficulty": "advanced",
   "category": "mlops",
   "canonicalStatus": "Reviewed",

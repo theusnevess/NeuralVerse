@@ -36,13 +36,7 @@
   "prerequisiteConcepts": [
     "neural-networks"
   ],
-  "artifactReferences": [
-    "artifact-backpropagation-comparison-table",
-    "artifact-backpropagation-exercise",
-    "artifact-backpropagation-explanatory-text",
-    "artifact-backpropagation-interactive-visualization",
-    "artifact-backpropagation-visual-intuition"
-  ],
+  "artifactReferences": [],
   "difficulty": "intermediate",
   "category": "deep-learning",
   "canonicalStatus": "Reviewed",

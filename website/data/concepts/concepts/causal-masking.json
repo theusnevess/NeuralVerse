@@ -29,18 +29,7 @@
   "prerequisiteConcepts": [
     "transformer-architecture"
   ],
-  "artifactReferences": [
-    "artifact-autoregressive-generation-comparison-table",
-    "artifact-autoregressive-generation-exercise",
-    "artifact-autoregressive-generation-explanatory-text",
-    "artifact-autoregressive-generation-interactive-visualization",
-    "artifact-autoregressive-generation-visual-intuition",
-    "artifact-reasoning-models-and-test-time-compute-comparison-table",
-    "artifact-reasoning-models-and-test-time-compute-exercise",
-    "artifact-reasoning-models-and-test-time-compute-explanatory-text",
-    "artifact-reasoning-models-and-test-time-compute-interactive-visualization",
-    "artifact-reasoning-models-and-test-time-compute-visual-intuition"
-  ],
+  "artifactReferences": [],
   "difficulty": "intermediate",
   "category": "transformers",
   "canonicalStatus": "Reviewed",

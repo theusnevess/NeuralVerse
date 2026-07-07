@@ -30,13 +30,7 @@
   "prerequisiteConcepts": [
     "neural-networks"
   ],
-  "artifactReferences": [
-    "artifact-epochs-batches-learning-rate-comparison-table",
-    "artifact-epochs-batches-learning-rate-exercise",
-    "artifact-epochs-batches-learning-rate-explanatory-text",
-    "artifact-epochs-batches-learning-rate-interactive-visualization",
-    "artifact-epochs-batches-learning-rate-visual-intuition"
-  ],
+  "artifactReferences": [],
   "difficulty": "intermediate",
   "category": "deep-learning",
   "canonicalStatus": "Reviewed",

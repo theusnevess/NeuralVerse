@@ -31,13 +31,7 @@
     "dense-retrieval",
     "vector-similarity"
   ],
-  "artifactReferences": [
-    "artifact-reranking-comparison-table",
-    "artifact-reranking-exercise",
-    "artifact-reranking-explanatory-text",
-    "artifact-reranking-interactive-visualization",
-    "artifact-reranking-visual-intuition"
-  ],
+  "artifactReferences": [],
   "difficulty": "advanced",
   "category": "retrieval",
   "canonicalStatus": "Reviewed",
