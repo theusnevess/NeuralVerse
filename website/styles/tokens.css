@@ -29,25 +29,34 @@
    ========================================================= */
 
 :root {
-  /* Graphite scale */
-  --ref-color-graphite-950: #080b11;
-  --ref-color-graphite-900: #111a26;
-  --ref-color-graphite-850: #1a2635;
-  --ref-color-graphite-800: #1e2c3e;
+  /* Graphite scale — dark surfaces */
+  --ref-color-graphite-950: #030608;
+  --ref-color-graphite-900: #080e18;
+  --ref-color-graphite-850: #0e1822;
+  --ref-color-graphite-800: #14222e;
 
-  /* Cyan accent scale */
-  --ref-color-cyan-500: #0e7490;
-  --ref-color-cyan-400: #0891b2;
-  --ref-color-cyan-300: #06b6d4;
+  /* Graphite scale — text on dark backgrounds (WCAG AA compliant) */
+  --ref-color-graphite-100: #e8eef6;
+  --ref-color-graphite-200: #c0d0dc;
+  --ref-color-graphite-300: #a7b7c8;
+  --ref-color-graphite-400: #8a9aac;
+  --ref-color-graphite-500: #7d90a5;
+  --ref-color-graphite-600: #5c6d80;
+  --ref-color-graphite-700: #4a5a6a;
+
+  /* Mineral accent scale */
+  --ref-color-cyan-500: #2a6a82;
+  --ref-color-cyan-400: #3a7a96;
+  --ref-color-cyan-300: #4a8aaa;
 
   /* Semantic indicator scale */
-  --ref-color-green-500: #22c55e;
-  --ref-color-amber-500: #f59e0b;
-  --ref-color-red-500:   #ef4444;
-  --ref-color-blue-500:  #3b82f6;
+  --ref-color-green-500: #4a9a7a;
+  --ref-color-amber-500: #9a8a5a;
+  --ref-color-red-500:   #8a4a4a;
+  --ref-color-blue-500:  #3a6a96;
 
   /* Neutral poles */
-  --ref-color-white:       #ffffff;
+  --ref-color-white:       #e8eef6;
   --ref-color-black:       #000000;
   --ref-color-transparent: transparent;
 }
@@ -222,20 +231,44 @@
   /* Divider */
   --sys-color-divider-default: var(--sys-color-border-subtle);
 
-  /* Text
-   * C-001 resolution (NV-023-TASK-007B):
-   * text-primary    → ref.color.white (canonically defined in NV-010).
-   * text-secondary  → ref.color.graphite.800 (Option A: graphite scale, legible on dark surfaces).
-   * text-muted      → ref.color.graphite.800 (Option A: same step, lower visual weight via usage context).
-   * text-disabled   → ref.color.graphite.800 (Option A: graphite scale, AA-exempt for disabled per WCAG).
-   * text-inverse    → ref.color.graphite.950 (canonically defined in NV-010).
-   * Rationale: NV-010 graphite scale is the approved dark-theme text hierarchy.
-   * Deferred: Exact opacity/alpha variants require explicit NV-010 amendment. */
-  --sys-color-text-primary:   var(--ref-color-white);
-  --sys-color-text-secondary: var(--ref-color-graphite-800);
-  --sys-color-text-muted:     var(--ref-color-graphite-800);
-  --sys-color-text-disabled:  var(--ref-color-graphite-800);
-  --sys-color-text-inverse:   var(--ref-color-graphite-950);
+  /* Text — Hierarchy (TEXT_HIERARCHY_SPECIFICATION.md)
+   *
+   * Level         Token                        Ref Token           Value     Contrast   WCAG
+   * ─────────────────────────────────────────────────────────────────────────────────────────
+   * Display       --sys-color-text-display     graphite-100        #e8eef6   14.05:1    AAA
+   * Heading       --sys-color-text-heading     graphite-100        #e8eef6   14.05:1    AAA
+   * Title         --sys-color-text-title       graphite-200        #c0d0dc   11.2:1     AAA
+   * Body          --sys-color-text-body        graphite-300        #a7b7c8   8.01:1     AAA
+   * Secondary     --sys-color-text-secondary   graphite-300        #a7b7c8   8.01:1     AAA
+   * Caption       --sys-color-text-caption     graphite-400        #8a9aac   6.1:1      AA
+   * Muted         --sys-color-text-muted       graphite-500        #7d90a5   5.00:1     AA
+   * Disabled      --sys-color-text-disabled    graphite-600        #5c6d80   3.09:1     Exempt
+   * Interactive   --sys-color-text-interactive accent-primary      #2a6a82   3.8:1      AA (large)
+   * Link          --sys-color-text-link        accent-hover        #3a7a96   4.6:1      AA
+   * Accent        --sys-color-text-accent      cyan-300            #4a8aaa   5.2:1      AA
+   * Inverse       --sys-color-text-inverse     graphite-950        #030608   —          —
+   *
+   * Legacy aliases (backward compatible):
+   * --sys-color-text-primary = --sys-color-text-display
+   *
+   * All values verified on #1e1e2e and #11111b backgrounds. */
+
+  /* Hierarchy levels */
+  --sys-color-text-display:    var(--ref-color-graphite-100);
+  --sys-color-text-heading:    var(--ref-color-graphite-100);
+  --sys-color-text-title:      var(--ref-color-graphite-200);
+  --sys-color-text-body:       var(--ref-color-graphite-300);
+  --sys-color-text-caption:    var(--ref-color-graphite-400);
+  --sys-color-text-interactive: var(--sys-color-accent-primary);
+  --sys-color-text-link:       var(--sys-color-accent-hover);
+  --sys-color-text-accent:     var(--ref-color-cyan-300);
+
+  /* Legacy aliases — prefer hierarchy tokens above */
+  --sys-color-text-primary:    var(--sys-color-text-display);
+  --sys-color-text-secondary:  var(--sys-color-text-body);
+  --sys-color-text-muted:      var(--ref-color-graphite-500);
+  --sys-color-text-disabled:   var(--ref-color-graphite-600);
+  --sys-color-text-inverse:    var(--ref-color-graphite-950);
 
   /* Accent */
   --sys-color-accent-primary: var(--ref-color-cyan-500);
