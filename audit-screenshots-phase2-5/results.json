@@ -1,0 +1,94 @@
+{
+  "consoleErrors": [],
+  "consoleWarnings": [],
+  "pageErrors": [],
+  "viewportResults": {
+    "desktop-1440x900": {
+      "routing": {
+        "hasNotFound": false,
+        "hasMemoryRoot": true,
+        "pageText": "Skip to main workspace\nSearch curriculum...\nCtrl+K\nHome\nLearning\nModules\nWorkspace\nContent\nRetrieval\nAtlas\nLabs\nMemory\nSemantic\nVisualize\nSettings\nNot Found\n\nMEMORY\n\nYour study context, organized.\n\nNotes, bookmarks, highlights, and study state — surfaced when it matters, never lost in a feed.\n\n+ New Memory\nImport\nExport\n0\nTOTAL\n0\nPINNED\n0\nARCHIVED\nPINNED\nPin memories to keep your most important knowledge within reach. Pinned items persist across sessions.\nRECENT\nYour memory forms as you learn. N"
+      },
+      "overflow": {
+        "bodyScrollWidth": 1440,
+        "bodyClientWidth": 1440,
+        "hasOverflow": false
+      }
+    },
+    "desktop-1280x800": {
+      "routing": {
+        "hasNotFound": false,
+        "hasMemoryRoot": true,
+        "pageText": "Skip to main workspace\nSearch curriculum...\nCtrl+K\nHome\nLearning\nModules\nWorkspace\nContent\nRetrieval\nAtlas\nLabs\nMemory\nSemantic\nVisualize\nSettings\nNot Found\n\nMEMORY\n\nYour study context, organized.\n\nNotes, bookmarks, highlights, and study state — surfaced when it matters, never lost in a feed.\n\n+ New Memory\nImport\nExport\n0\nTOTAL\n0\nPINNED\n0\nARCHIVED\nPINNED\nPin memories to keep your most important knowledge within reach. Pinned items persist across sessions.\nRECENT\nYour memory forms as you learn. N"
+      },
+      "overflow": {
+        "bodyScrollWidth": 1280,
+        "bodyClientWidth": 1280,
+        "hasOverflow": false
+      }
+    },
+    "laptop-1024x768": {
+      "routing": {
+        "hasNotFound": false,
+        "hasMemoryRoot": true,
+        "pageText": "Skip to main workspace\nSearch curriculum...\nCtrl+K\nHome\nLearning\nModules\nWorkspace\nContent\nRetrieval\nAtlas\nLabs\nMemory\nSemantic\nVisualize\nSettings\nNot Found\n\nMEMORY\n\nYour study context, organized.\n\nNotes, bookmarks, highlights, and study state — surfaced when it matters, never lost in a feed.\n\n+ New Memory\nImport\nExport\n0\nTOTAL\n0\nPINNED\n0\nARCHIVED\nPINNED\nPin memories to keep your most important knowledge within reach. Pinned items persist across sessions.\nRECENT\nYour memory forms as you learn. N"
+      },
+      "overflow": {
+        "bodyScrollWidth": 1024,
+        "bodyClientWidth": 1024,
+        "hasOverflow": false
+      }
+    },
+    "tablet-768x1024": {
+      "routing": {
+        "hasNotFound": false,
+        "hasMemoryRoot": true,
+        "pageText": "Skip to main workspace\nSearch curriculum...\nCtrl+K\nHome\nLearning\nModules\nWorkspace\nContent\nRetrieval\nAtlas\nLabs\nMemory\nSemantic\nVisualize\nSettings\nNot Found\n\nMEMORY\n\nYour study context, organized.\n\nNotes, bookmarks, highlights, and study state — surfaced when it matters, never lost in a feed.\n\n+ New Memory\nImport\nExport\n0\nTOTAL\n0\nPINNED\n0\nARCHIVED\nPINNED\nPin memories to keep your most important knowledge within reach. Pinned items persist across sessions.\nRECENT\nYour memory forms as you learn. N"
+      },
+      "overflow": {
+        "bodyScrollWidth": 768,
+        "bodyClientWidth": 768,
+        "hasOverflow": false
+      }
+    },
+    "mobile-430x932": {
+      "routing": {
+        "hasNotFound": false,
+        "hasMemoryRoot": true,
+        "pageText": "Skip to main workspace\nSearch curriculum...\nCtrl+K\nNot Found\n\nMEMORY\n\nYour study context, organized.\n\nNotes, bookmarks, highlights, and study state — surfaced when it matters, never lost in a feed.\n\n+ New Memory\nImport\nExport\n0\nTOTAL\n0\nPINNED\n0\nARCHIVED\nPINNED\nPin memories to keep your most important knowledge within reach. Pinned items persist across sessions.\nRECENT\nYour memory forms as you learn. Notes, bookmarks, and highlights are captured automatically as you explore NeuralVerse.\nCOLLECTIO"
+      },
+      "overflow": {
+        "bodyScrollWidth": 430,
+        "bodyClientWidth": 430,
+        "hasOverflow": false
+      }
+    },
+    "mobile-390x844": {
+      "routing": {
+        "hasNotFound": false,
+        "hasMemoryRoot": true,
+        "pageText": "Skip to main workspace\nSearch curriculum...\nCtrl+K\nNot Found\n\nMEMORY\n\nYour study context, organized.\n\nNotes, bookmarks, highlights, and study state — surfaced when it matters, never lost in a feed.\n\n+ New Memory\nImport\nExport\n0\nTOTAL\n0\nPINNED\n0\nARCHIVED\nPINNED\nPin memories to keep your most important knowledge within reach. Pinned items persist across sessions.\nRECENT\nYour memory forms as you learn. Notes, bookmarks, and highlights are captured automatically as you explore NeuralVerse.\nCOLLECTIO"
+      },
+      "overflow": {
+        "bodyScrollWidth": 390,
+        "bodyClientWidth": 390,
+        "hasOverflow": false
+      }
+    },
+    "mobile-360x740": {
+      "routing": {
+        "hasNotFound": false,
+        "hasMemoryRoot": true,
+        "pageText": "Skip to main workspace\nSearch curriculum...\nCtrl+K\nNot Found\n\nMEMORY\n\nYour study context, organized.\n\nNotes, bookmarks, highlights, and study state — surfaced when it matters, never lost in a feed.\n\n+ New Memory\nImport\nExport\n0\nTOTAL\n0\nPINNED\n0\nARCHIVED\nPINNED\nPin memories to keep your most important knowledge within reach. Pinned items persist across sessions.\nRECENT\nYour memory forms as you learn. Notes, bookmarks, and highlights are captured automatically as you explore NeuralVerse.\nCOLLECTIO"
+      },
+      "overflow": {
+        "bodyScrollWidth": 360,
+        "bodyClientWidth": 360,
+        "hasOverflow": false
+      }
+    }
+  },
+  "navigation": {
+    "duplicates": 1
+  }
+}

@@ -1,0 +1,103 @@
+{
+  "page_exists": true,
+  "route_resolves": true,
+  "not_found_appears": false,
+  "console_errors": [],
+  "page_errors": [],
+  "screenshot_files": [
+    "desktop-1440-top.png",
+    "desktop-1440-mid.png",
+    "desktop-1440-bottom.png",
+    "desktop-1280-top.png",
+    "desktop-1280-mid.png",
+    "desktop-1280-bottom.png",
+    "desktop-1024-top.png",
+    "desktop-1024-mid.png",
+    "desktop-1024-bottom.png",
+    "tablet-768-top.png",
+    "tablet-768-mid.png",
+    "tablet-768-bottom.png",
+    "mobile-430-top.png",
+    "mobile-430-mid.png",
+    "mobile-430-bottom.png",
+    "mobile-390-top.png",
+    "mobile-390-mid.png",
+    "mobile-390-bottom.png",
+    "mobile-360-top.png",
+    "mobile-360-mid.png",
+    "mobile-360-bottom.png"
+  ],
+  "viewport_results": {
+    "desktop-1440": {
+      "console_errors": [],
+      "page_errors": [],
+      "has_not_found": false,
+      "has_semantic": true,
+      "body_text": "Skip to main workspace\nSearch curriculum...\nCtrl+K\nHome\nLearning\nModules\nWorkspace\nContent\nRetrieval\nAtlas\nLabs\nMemory\nSemantic\nVisualize\nSettings\nSemantic Learning\n\nSEMANTIC LEARNING\n\nConcept intelligence.\n\nDeterministic recommendations based on concept relationships. No learner inference, no opaque ranking \u2014 every suggestion traces back to the curriculum graph.\n\nSelect a concept: \n\u2014 Choose a concept \u2014\nCurrent view: Semantic Learning Intelligence.\nCONTEXT\n\nSelect a concept, module, laboratory, assessment or research topic. Relevant contextual information will appear here while you explore NeuralVerse.\n\nNEURALVERSE \u00a9 2026\nNeuralVerse AI\nCOPILOT\nFocus\nZen\nCURRENT SESSION\nNo active session\nTOPICS STUDIED\nNo topics yet\nCURRENT GOAL\n\nNot set\n\nCURRENT MODULE\n\nNone\n\nRECENT CONCEPTS\nNo concepts yet\nLEARNING JOURNEY\nStart a conversation\nDeveloper Mode\nHow can I help you learn today?\n\nAsk for an explanation, proof sketch, visual walkthrough, or lab. The answer will render as a focused study not"
+    },
+    "desktop-1280": {
+      "console_errors": [],
+      "page_errors": [],
+      "has_not_found": false,
+      "has_semantic": true,
+      "body_text": "Skip to main workspace\nSearch curriculum...\nCtrl+K\nHome\nLearning\nModules\nWorkspace\nContent\nRetrieval\nAtlas\nLabs\nMemory\nSemantic\nVisualize\nSettings\nSemantic Learning\n\nSEMANTIC LEARNING\n\nConcept intelligence.\n\nDeterministic recommendations based on concept relationships. No learner inference, no opaque ranking \u2014 every suggestion traces back to the curriculum graph.\n\nSelect a concept: \n\u2014 Choose a concept \u2014\nCurrent view: Semantic Learning Intelligence.\nCONTEXT\n\nSelect a concept, module, laboratory, assessment or research topic. Relevant contextual information will appear here while you explore NeuralVerse.\n\nNEURALVERSE \u00a9 2026\nNeuralVerse AI\nCOPILOT\nFocus\nZen\nCURRENT SESSION\nNo active session\nTOPICS STUDIED\nNo topics yet\nCURRENT GOAL\n\nNot set\n\nCURRENT MODULE\n\nNone\n\nRECENT CONCEPTS\nNo concepts yet\nLEARNING JOURNEY\nStart a conversation\nDeveloper Mode\nHow can I help you learn today?\n\nAsk for an explanation, proof sketch, visual walkthrough, or lab. The answer will render as a focused study not"
+    },
+    "desktop-1024": {
+      "console_errors": [],
+      "page_errors": [],
+      "has_not_found": false,
+      "has_semantic": true,
+      "body_text": "Skip to main workspace\nSearch curriculum...\nCtrl+K\nHome\nLearning\nModules\nWorkspace\nContent\nRetrieval\nAtlas\nLabs\nMemory\nSemantic\nVisualize\nSettings\nSemantic Learning\n\nSEMANTIC LEARNING\n\nConcept intelligence.\n\nDeterministic recommendations based on concept relationships. No learner inference, no opaque ranking \u2014 every suggestion traces back to the curriculum graph.\n\nSelect a concept: \n\u2014 Choose a concept \u2014\nCurrent view: Semantic Learning Intelligence.\nCONTEXT\n\nSelect a concept, module, laboratory, assessment or research topic. Relevant contextual information will appear here while you explore NeuralVerse.\n\nNEURALVERSE \u00a9 2026\nNeuralVerse AI\nCOPILOT\nFocus\nZen\nCURRENT SESSION\nNo active session\nTOPICS STUDIED\nNo topics yet\nCURRENT GOAL\n\nNot set\n\nCURRENT MODULE\n\nNone\n\nRECENT CONCEPTS\nNo concepts yet\nLEARNING JOURNEY\nStart a conversation\nDeveloper Mode\nHow can I help you learn today?\n\nAsk for an explanation, proof sketch, visual walkthrough, or lab. The answer will render as a focused study not"
+    },
+    "tablet-768": {
+      "console_errors": [],
+      "page_errors": [],
+      "has_not_found": false,
+      "has_semantic": true,
+      "body_text": "Skip to main workspace\nSearch curriculum...\nCtrl+K\nHome\nLearning\nModules\nWorkspace\nContent\nRetrieval\nAtlas\nLabs\nMemory\nSemantic\nVisualize\nSettings\nSemantic Learning\n\nSEMANTIC LEARNING\n\nConcept intelligence.\n\nDeterministic recommendations based on concept relationships. No learner inference, no opaque ranking \u2014 every suggestion traces back to the curriculum graph.\n\nSelect a concept: \n\u2014 Choose a concept \u2014\nCurrent view: Semantic Learning Intelligence.\nCONTEXT\n\nSelect a concept, module, laboratory, assessment or research topic. Relevant contextual information will appear here while you explore NeuralVerse.\n\nNEURALVERSE \u00a9 2026\nNeuralVerse AI\nCOPILOT\nCURRENT SESSION\nNo active session\nTOPICS STUDIED\nNo topics yet\nCURRENT GOAL\n\nNot set\n\nCURRENT MODULE\n\nNone\n\nRECENT CONCEPTS\nNo concepts yet\nLEARNING JOURNEY\nStart a conversation\nDeveloper Mode\nHow can I help you learn today?\n\nAsk for an explanation, proof sketch, visual walkthrough, or lab. The answer will render as a focused study note.\n\nSummar"
+    },
+    "mobile-430": {
+      "console_errors": [],
+      "page_errors": [],
+      "has_not_found": false,
+      "has_semantic": true,
+      "body_text": "Skip to main workspace\nSearch curriculum...\nCtrl+K\nSemantic Learning\n\nSEMANTIC LEARNING\n\nConcept intelligence.\n\nDeterministic recommendations based on concept relationships. No learner inference, no opaque ranking \u2014 every suggestion traces back to the curriculum graph.\n\nSelect a concept: \n\u2014 Choose a concept \u2014\nCurrent view: Semantic Learning Intelligence.\nCONTEXT\n\nSelect a concept, module, laboratory, assessment or research topic. Relevant contextual information will appear here while you explore NeuralVerse.\n\nNEURALVERSE \u00a9 2026\nNeuralVerse AI\nCURRENT SESSION\nNo active session\nTOPICS STUDIED\nNo topics yet\nCURRENT GOAL\n\nNot set\n\nCURRENT MODULE\n\nNone\n\nRECENT CONCEPTS\nNo concepts yet\nLEARNING JOURNEY\nStart a conversation\nDeveloper Mode\nHow can I help you learn today?\n\nAsk for an explanation, proof sketch, visual walkthrough, or lab. The answer will render as a focused study note.\n\nSummarize this paper\nCompare approaches\nExplain contributions\nWhat are the limitations?\nShow related work\nRECE"
+    },
+    "mobile-390": {
+      "console_errors": [],
+      "page_errors": [],
+      "has_not_found": false,
+      "has_semantic": true,
+      "body_text": "Skip to main workspace\nSearch curriculum...\nCtrl+K\nSemantic Learning\n\nSEMANTIC LEARNING\n\nConcept intelligence.\n\nDeterministic recommendations based on concept relationships. No learner inference, no opaque ranking \u2014 every suggestion traces back to the curriculum graph.\n\nSelect a concept: \n\u2014 Choose a concept \u2014\nCurrent view: Semantic Learning Intelligence.\nCONTEXT\n\nSelect a concept, module, laboratory, assessment or research topic. Relevant contextual information will appear here while you explore NeuralVerse.\n\nNEURALVERSE \u00a9 2026\nNeuralVerse AI\nCURRENT SESSION\nNo active session\nTOPICS STUDIED\nNo topics yet\nCURRENT GOAL\n\nNot set\n\nCURRENT MODULE\n\nNone\n\nRECENT CONCEPTS\nNo concepts yet\nLEARNING JOURNEY\nStart a conversation\nDeveloper Mode\nHow can I help you learn today?\n\nAsk for an explanation, proof sketch, visual walkthrough, or lab. The answer will render as a focused study note.\n\nSummarize this paper\nCompare approaches\nExplain contributions\nWhat are the limitations?\nShow related work\nRECE"
+    },
+    "mobile-360": {
+      "console_errors": [],
+      "page_errors": [],
+      "has_not_found": false,
+      "has_semantic": true,
+      "body_text": "Skip to main workspace\nSearch curriculum...\nCtrl+K\nSemantic Learning\n\nSEMANTIC LEARNING\n\nConcept intelligence.\n\nDeterministic recommendations based on concept relationships. No learner inference, no opaque ranking \u2014 every suggestion traces back to the curriculum graph.\n\nSelect a concept: \n\u2014 Choose a concept \u2014\nCurrent view: Semantic Learning Intelligence.\nCONTEXT\n\nSelect a concept, module, laboratory, assessment or research topic. Relevant contextual information will appear here while you explore NeuralVerse.\n\nNEURALVERSE \u00a9 2026\nNeuralVerse AI\nCURRENT SESSION\nNo active session\nTOPICS STUDIED\nNo topics yet\nCURRENT GOAL\n\nNot set\n\nCURRENT MODULE\n\nNone\n\nRECENT CONCEPTS\nNo concepts yet\nLEARNING JOURNEY\nStart a conversation\nDeveloper Mode\nHow can I help you learn today?\n\nAsk for an explanation, proof sketch, visual walkthrough, or lab. The answer will render as a focused study note.\n\nSummarize this paper\nCompare approaches\nExplain contributions\nWhat are the limitations?\nShow related work\nRECE"
+    }
+  },
+  "interactive_elements": {
+    "buttons": 61,
+    "inputs": 7,
+    "selects": 1,
+    "links": 14
+  },
+  "page_structure": {
+    "h1_text": "Concept intelligence.",
+    "h2_text": "CONTEXT",
+    "eyebrow_text": "SEMANTIC LEARNING",
+    "select_exists": true,
+    "semantic_results_exists": true
+  },
+  "full_body_text": "Skip to main workspace\nSearch curriculum...\nCtrl+K\nHome\nLearning\nModules\nWorkspace\nContent\nRetrieval\nAtlas\nLabs\nMemory\nSemantic\nVisualize\nSettings\nSemantic Learning\n\nSEMANTIC LEARNING\n\nConcept intelligence.\n\nDeterministic recommendations based on concept relationships. No learner inference, no opaque ranking \u2014 every suggestion traces back to the curriculum graph.\n\nSelect a concept: \n\u2014 Choose a concept \u2014\nCurrent view: Semantic Learning Intelligence.\nCONTEXT\n\nSelect a concept, module, laboratory, assessment or research topic. Relevant contextual information will appear here while you explore NeuralVerse.\n\nNEURALVERSE \u00a9 2026\nNeuralVerse AI\nCOPILOT\nFocus\nZen\nCURRENT SESSION\nNo active session\nTOPICS STUDIED\nNo topics yet\nCURRENT GOAL\n\nNot set\n\nCURRENT MODULE\n\nNone\n\nRECENT CONCEPTS\nNo concepts yet\nLEARNING JOURNEY\nStart a conversation\nDeveloper Mode\nHow can I help you learn today?\n\nAsk for an explanation, proof sketch, visual walkthrough, or lab. The answer will render as a focused study note.\n\nSummarize this paper\nCompare approaches\nExplain contributions\nWhat are the limitations?\nShow related work\nRECENT CONVERSATIONS\n0\nJump to Latest\n\ud83d\udca1\nExplain a concept\n\ud83d\udcd0\nShow mathematics\n\ud83e\uddea\nOpen laboratory\n\u2705\nGenerate quiz\n\ud83d\udcca\nCreate visualization\n\ud83d\udd0d\nSearch concepts\n\ud83d\udcda\nResearch topic\n\ud83d\udd04\nReview prerequisites\n\ud83c\udfaf\nSet learning goal\n\ud83d\udccb\nView learning journey\n\ud83d\udcdd\nTake notes\n\u2699\ufe0f\nToggle Developer Mode\n\ud83d\udde3\ufe0f\nFocus Mode\n\ud83c\udf1f\nZen Mode",
+  "empty_state_visible": false,
+  "html_length": 63355,
+  "visible_content": {
+    "semantic_page_root": true,
+    "concept_selector": true,
+    "concept_select": true,
+    "results_container": true
+  }
+}

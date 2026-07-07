@@ -1,0 +1,142 @@
+{
+  "validation_passed": true,
+  "errors": [],
+  "viewport_results": {
+    "desktop-1440": {
+      "resolved": true,
+      "not_found": false,
+      "select_options": 42,
+      "loading_hidden": true,
+      "empty_state_visible": true,
+      "concept_info_hidden": true,
+      "controller_ready": true,
+      "console_errors": [],
+      "page_errors": [],
+      "structure": {
+        "h1": "Concept intelligence.",
+        "eyebrow": "SEMANTIC LEARNING",
+        "results": true,
+        "loading": true,
+        "emptyState": true
+      }
+    },
+    "desktop-1280": {
+      "resolved": true,
+      "not_found": false,
+      "select_options": 42,
+      "loading_hidden": true,
+      "empty_state_visible": true,
+      "concept_info_hidden": true,
+      "controller_ready": true,
+      "console_errors": [],
+      "page_errors": [],
+      "structure": {
+        "h1": "Concept intelligence.",
+        "eyebrow": "SEMANTIC LEARNING",
+        "results": true,
+        "loading": true,
+        "emptyState": true
+      }
+    },
+    "desktop-1024": {
+      "resolved": true,
+      "not_found": false,
+      "select_options": 42,
+      "loading_hidden": true,
+      "empty_state_visible": true,
+      "concept_info_hidden": true,
+      "controller_ready": true,
+      "console_errors": [],
+      "page_errors": [],
+      "structure": {
+        "h1": "Concept intelligence.",
+        "eyebrow": "SEMANTIC LEARNING",
+        "results": true,
+        "loading": true,
+        "emptyState": true
+      }
+    },
+    "tablet-768": {
+      "resolved": true,
+      "not_found": false,
+      "select_options": 42,
+      "loading_hidden": true,
+      "empty_state_visible": true,
+      "concept_info_hidden": true,
+      "controller_ready": true,
+      "console_errors": [],
+      "page_errors": [],
+      "structure": {
+        "h1": "Concept intelligence.",
+        "eyebrow": "SEMANTIC LEARNING",
+        "results": true,
+        "loading": true,
+        "emptyState": true
+      }
+    },
+    "mobile-430": {
+      "resolved": true,
+      "not_found": false,
+      "select_options": 42,
+      "loading_hidden": true,
+      "empty_state_visible": true,
+      "concept_info_hidden": true,
+      "controller_ready": true,
+      "console_errors": [],
+      "page_errors": [],
+      "structure": {
+        "h1": "Concept intelligence.",
+        "eyebrow": "SEMANTIC LEARNING",
+        "results": true,
+        "loading": true,
+        "emptyState": true
+      }
+    },
+    "mobile-390": {
+      "resolved": true,
+      "not_found": false,
+      "select_options": 42,
+      "loading_hidden": true,
+      "empty_state_visible": true,
+      "concept_info_hidden": true,
+      "controller_ready": true,
+      "console_errors": [],
+      "page_errors": [],
+      "structure": {
+        "h1": "Concept intelligence.",
+        "eyebrow": "SEMANTIC LEARNING",
+        "results": true,
+        "loading": true,
+        "emptyState": true
+      }
+    },
+    "mobile-360": {
+      "resolved": true,
+      "not_found": false,
+      "select_options": 42,
+      "loading_hidden": true,
+      "empty_state_visible": true,
+      "concept_info_hidden": true,
+      "controller_ready": true,
+      "console_errors": [],
+      "page_errors": [],
+      "structure": {
+        "h1": "Concept intelligence.",
+        "eyebrow": "SEMANTIC LEARNING",
+        "results": true,
+        "loading": true,
+        "emptyState": true
+      }
+    }
+  },
+  "test_results": {
+    "selection_flow": {
+      "option_count": 42,
+      "results_rendered": true,
+      "info_rendered": true
+    },
+    "keyboard": {
+      "active_element": "BUTTON.nv-global-search-trigger"
+    }
+  }
+}

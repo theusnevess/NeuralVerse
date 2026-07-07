@@ -1,0 +1,517 @@
+{
+  "consoleErrors": [],
+  "consoleWarnings": [],
+  "pageErrors": [],
+  "viewportResults": {
+    "desktop-1440x900": {
+      "structure": {
+        "exists": true,
+        "header": false,
+        "eyebrow": "Memory",
+        "title": "Your study context, organized.",
+        "pinnedSection": false,
+        "recentSection": false,
+        "collectionsSection": false,
+        "buttons": [
+          {
+            "text": "+ New Memory",
+            "variant": null,
+            "action": null,
+            "ariaLabel": "Create new memory"
+          },
+          {
+            "text": "Import",
+            "variant": null,
+            "action": null,
+            "ariaLabel": "Import memory data"
+          },
+          {
+            "text": "Export",
+            "variant": null,
+            "action": null,
+            "ariaLabel": "Export memory data"
+          }
+        ],
+        "selects": [
+          {
+            "ariaLabel": "Filter by type",
+            "options": [
+              "All Types",
+              "Note",
+              "Bookmark",
+              "Highlight",
+              "Collection",
+              "Workspace",
+              "Laboratory",
+              "Review",
+              "Search",
+              "Custom"
+            ]
+          },
+          {
+            "ariaLabel": "Sort by",
+            "options": [
+              "Last Updated",
+              "Created",
+              "Title"
+            ]
+          }
+        ]
+      },
+      "overflow": {
+        "bodyScrollWidth": 1440,
+        "bodyClientWidth": 1440,
+        "htmlScrollWidth": 1440,
+        "htmlClientWidth": 1440,
+        "hasHorizontalOverflow": false
+      }
+    },
+    "desktop-1280x800": {
+      "structure": {
+        "exists": true,
+        "header": false,
+        "eyebrow": "Memory",
+        "title": "Your study context, organized.",
+        "pinnedSection": false,
+        "recentSection": false,
+        "collectionsSection": false,
+        "buttons": [
+          {
+            "text": "+ New Memory",
+            "variant": null,
+            "action": null,
+            "ariaLabel": "Create new memory"
+          },
+          {
+            "text": "Import",
+            "variant": null,
+            "action": null,
+            "ariaLabel": "Import memory data"
+          },
+          {
+            "text": "Export",
+            "variant": null,
+            "action": null,
+            "ariaLabel": "Export memory data"
+          }
+        ],
+        "selects": [
+          {
+            "ariaLabel": "Filter by type",
+            "options": [
+              "All Types",
+              "Note",
+              "Bookmark",
+              "Highlight",
+              "Collection",
+              "Workspace",
+              "Laboratory",
+              "Review",
+              "Search",
+              "Custom"
+            ]
+          },
+          {
+            "ariaLabel": "Sort by",
+            "options": [
+              "Last Updated",
+              "Created",
+              "Title"
+            ]
+          }
+        ]
+      },
+      "overflow": {
+        "bodyScrollWidth": 1280,
+        "bodyClientWidth": 1280,
+        "htmlScrollWidth": 1280,
+        "htmlClientWidth": 1280,
+        "hasHorizontalOverflow": false
+      }
+    },
+    "laptop-1024x768": {
+      "structure": {
+        "exists": true,
+        "header": false,
+        "eyebrow": "Memory",
+        "title": "Your study context, organized.",
+        "pinnedSection": false,
+        "recentSection": false,
+        "collectionsSection": false,
+        "buttons": [
+          {
+            "text": "+ New Memory",
+            "variant": null,
+            "action": null,
+            "ariaLabel": "Create new memory"
+          },
+          {
+            "text": "Import",
+            "variant": null,
+            "action": null,
+            "ariaLabel": "Import memory data"
+          },
+          {
+            "text": "Export",
+            "variant": null,
+            "action": null,
+            "ariaLabel": "Export memory data"
+          }
+        ],
+        "selects": [
+          {
+            "ariaLabel": "Filter by type",
+            "options": [
+              "All Types",
+              "Note",
+              "Bookmark",
+              "Highlight",
+              "Collection",
+              "Workspace",
+              "Laboratory",
+              "Review",
+              "Search",
+              "Custom"
+            ]
+          },
+          {
+            "ariaLabel": "Sort by",
+            "options": [
+              "Last Updated",
+              "Created",
+              "Title"
+            ]
+          }
+        ]
+      },
+      "overflow": {
+        "bodyScrollWidth": 1024,
+        "bodyClientWidth": 1024,
+        "htmlScrollWidth": 1024,
+        "htmlClientWidth": 1024,
+        "hasHorizontalOverflow": false
+      }
+    },
+    "tablet-768x1024": {
+      "structure": {
+        "exists": true,
+        "header": false,
+        "eyebrow": "Memory",
+        "title": "Your study context, organized.",
+        "pinnedSection": false,
+        "recentSection": false,
+        "collectionsSection": false,
+        "buttons": [
+          {
+            "text": "+ New Memory",
+            "variant": null,
+            "action": null,
+            "ariaLabel": "Create new memory"
+          },
+          {
+            "text": "Import",
+            "variant": null,
+            "action": null,
+            "ariaLabel": "Import memory data"
+          },
+          {
+            "text": "Export",
+            "variant": null,
+            "action": null,
+            "ariaLabel": "Export memory data"
+          }
+        ],
+        "selects": [
+          {
+            "ariaLabel": "Filter by type",
+            "options": [
+              "All Types",
+              "Note",
+              "Bookmark",
+              "Highlight",
+              "Collection",
+              "Workspace",
+              "Laboratory",
+              "Review",
+              "Search",
+              "Custom"
+            ]
+          },
+          {
+            "ariaLabel": "Sort by",
+            "options": [
+              "Last Updated",
+              "Created",
+              "Title"
+            ]
+          }
+        ]
+      },
+      "overflow": {
+        "bodyScrollWidth": 768,
+        "bodyClientWidth": 768,
+        "htmlScrollWidth": 768,
+        "htmlClientWidth": 768,
+        "hasHorizontalOverflow": false
+      }
+    },
+    "mobile-430x932": {
+      "structure": {
+        "exists": true,
+        "header": false,
+        "eyebrow": "Memory",
+        "title": "Your study context, organized.",
+        "pinnedSection": false,
+        "recentSection": false,
+        "collectionsSection": false,
+        "buttons": [
+          {
+            "text": "+ New Memory",
+            "variant": null,
+            "action": null,
+            "ariaLabel": "Create new memory"
+          },
+          {
+            "text": "Import",
+            "variant": null,
+            "action": null,
+            "ariaLabel": "Import memory data"
+          },
+          {
+            "text": "Export",
+            "variant": null,
+            "action": null,
+            "ariaLabel": "Export memory data"
+          }
+        ],
+        "selects": [
+          {
+            "ariaLabel": "Filter by type",
+            "options": [
+              "All Types",
+              "Note",
+              "Bookmark",
+              "Highlight",
+              "Collection",
+              "Workspace",
+              "Laboratory",
+              "Review",
+              "Search",
+              "Custom"
+            ]
+          },
+          {
+            "ariaLabel": "Sort by",
+            "options": [
+              "Last Updated",
+              "Created",
+              "Title"
+            ]
+          }
+        ]
+      },
+      "overflow": {
+        "bodyScrollWidth": 430,
+        "bodyClientWidth": 430,
+        "htmlScrollWidth": 430,
+        "htmlClientWidth": 430,
+        "hasHorizontalOverflow": false
+      }
+    },
+    "mobile-390x844": {
+      "structure": {
+        "exists": true,
+        "header": false,
+        "eyebrow": "Memory",
+        "title": "Your study context, organized.",
+        "pinnedSection": false,
+        "recentSection": false,
+        "collectionsSection": false,
+        "buttons": [
+          {
+            "text": "+ New Memory",
+            "variant": null,
+            "action": null,
+            "ariaLabel": "Create new memory"
+          },
+          {
+            "text": "Import",
+            "variant": null,
+            "action": null,
+            "ariaLabel": "Import memory data"
+          },
+          {
+            "text": "Export",
+            "variant": null,
+            "action": null,
+            "ariaLabel": "Export memory data"
+          }
+        ],
+        "selects": [
+          {
+            "ariaLabel": "Filter by type",
+            "options": [
+              "All Types",
+              "Note",
+              "Bookmark",
+              "Highlight",
+              "Collection",
+              "Workspace",
+              "Laboratory",
+              "Review",
+              "Search",
+              "Custom"
+            ]
+          },
+          {
+            "ariaLabel": "Sort by",
+            "options": [
+              "Last Updated",
+              "Created",
+              "Title"
+            ]
+          }
+        ]
+      },
+      "overflow": {
+        "bodyScrollWidth": 390,
+        "bodyClientWidth": 390,
+        "htmlScrollWidth": 390,
+        "htmlClientWidth": 390,
+        "hasHorizontalOverflow": false
+      }
+    },
+    "mobile-360x740": {
+      "structure": {
+        "exists": true,
+        "header": false,
+        "eyebrow": "Memory",
+        "title": "Your study context, organized.",
+        "pinnedSection": false,
+        "recentSection": false,
+        "collectionsSection": false,
+        "buttons": [
+          {
+            "text": "+ New Memory",
+            "variant": null,
+            "action": null,
+            "ariaLabel": "Create new memory"
+          },
+          {
+            "text": "Import",
+            "variant": null,
+            "action": null,
+            "ariaLabel": "Import memory data"
+          },
+          {
+            "text": "Export",
+            "variant": null,
+            "action": null,
+            "ariaLabel": "Export memory data"
+          }
+        ],
+        "selects": [
+          {
+            "ariaLabel": "Filter by type",
+            "options": [
+              "All Types",
+              "Note",
+              "Bookmark",
+              "Highlight",
+              "Collection",
+              "Workspace",
+              "Laboratory",
+              "Review",
+              "Search",
+              "Custom"
+            ]
+          },
+          {
+            "ariaLabel": "Sort by",
+            "options": [
+              "Last Updated",
+              "Created",
+              "Title"
+            ]
+          }
+        ]
+      },
+      "overflow": {
+        "bodyScrollWidth": 360,
+        "bodyClientWidth": 360,
+        "htmlScrollWidth": 360,
+        "htmlClientWidth": 360,
+        "hasHorizontalOverflow": false
+      }
+    }
+  },
+  "accessibility": {
+    "ariaLabels": [
+      {
+        "tag": "DIV",
+        "label": "Memory Dashboard"
+      },
+      {
+        "tag": "BUTTON",
+        "label": "Create new memory"
+      },
+      {
+        "tag": "BUTTON",
+        "label": "Import memory data"
+      },
+      {
+        "tag": "BUTTON",
+        "label": "Export memory data"
+      },
+      {
+        "tag": "DIV",
+        "label": "Memory statistics"
+      },
+      {
+        "tag": "DIV",
+        "label": "Filter memories"
+      },
+      {
+        "tag": "SELECT",
+        "label": "Filter by type"
+      },
+      {
+        "tag": "SELECT",
+        "label": "Sort by"
+      },
+      {
+        "tag": "INPUT",
+        "label": "Show only pinned"
+      },
+      {
+        "tag": "INPUT",
+        "label": "Show archived"
+      },
+      {
+        "tag": "DIV",
+        "label": "All memories"
+      }
+    ],
+    "roles": [
+      {
+        "tag": "DIV",
+        "role": "main"
+      },
+      {
+        "tag": "DIV",
+        "role": "region"
+      },
+      {
+        "tag": "DIV",
+        "role": "group"
+      },
+      {
+        "tag": "DIV",
+        "role": "list"
+      }
+    ]
+  },
+  "navigation": {
+    "duplicatedElements": 1
+  }
+}
