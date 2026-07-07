@@ -1,17 +1,107 @@
 <section class="nv-semantic-page" data-semantic-root>
-  <header class="nv-page-section__header" style="text-align: start; margin-inline: 0;">
-    <p class="nv-page-section__eyebrow">Semantic Learning</p>
-    <h1>Concept intelligence.</h1>
-    <p>Deterministic recommendations based on concept relationships. No learner inference, no opaque ranking — every suggestion traces back to the curriculum graph.</p>
+
+  <!-- Hero Header — compact -->
+  <header class="nv-sem-hero" aria-labelledby="sem-hero-title">
+    <div class="nv-sem-hero__ambient" aria-hidden="true"></div>
+    <div class="nv-sem-hero__copy">
+      <p class="nv-os-kicker">Semantic</p>
+      <h1 id="sem-hero-title">Concept intelligence.</h1>
+      <p class="nv-sem-hero__lede">Deterministic recommendations based on concept relationships. No learner inference — every suggestion traces back to the curriculum graph.</p>
+    </div>
   </header>
 
-  <div class="nv-sem-page">
-    <div id="semantic-concept-selector" class="nv-sem-selector">
-      <label for="concept-select" class="nv-sem-label">Select a concept:</label>
-      <select id="concept-select" class="nv-sem-select" aria-label="Select concept to explore">
-        <option value="">— Choose a concept —</option>
-      </select>
-    </div>
-    <div id="semantic-results" class="nv-sem-results"></div>
+  <!-- Loading State -->
+  <div id="semantic-loading" class="nv-sem-loading" role="status" aria-label="Loading semantic engine" aria-busy="true">
+    <div class="nv-sem-loading__bar"></div>
+    <span class="nv-sem-loading__text">Initializing semantic engine...</span>
   </div>
+
+  <!-- Empty State — compact -->
+  <div id="semantic-empty-state" class="nv-sem-empty-state" role="region" aria-label="Semantic exploration guidance">
+    <div class="nv-sem-empty-state__visual" aria-hidden="true">
+      <div class="nv-sem-orbit">
+        <div class="nv-sem-orbit__ring nv-sem-orbit__ring--a"></div>
+        <div class="nv-sem-orbit__ring nv-sem-orbit__ring--b"></div>
+        <div class="nv-sem-orbit__ring nv-sem-orbit__ring--c"></div>
+        <div class="nv-sem-orbit__core"></div>
+      </div>
+    </div>
+    <h2 class="nv-sem-empty-state__title">Choose a concept to inspect its semantic neighborhood</h2>
+    <p class="nv-sem-empty-state__desc">Select a concept above to reveal prerequisites, dependents, related concepts, and deterministic learning recommendations.</p>
+    <div class="nv-sem-empty-state__columns">
+      <div class="nv-sem-empty-state__col">
+        <h3>Semantic</h3>
+        <p>Understands meaning and conceptual relationships.</p>
+      </div>
+      <div class="nv-sem-empty-state__col">
+        <h3>vs. Retrieval</h3>
+        <p>Retrieval finds references. Semantic inspects neighborhoods.</p>
+      </div>
+      <div class="nv-sem-empty-state__col">
+        <h3>vs. Atlas</h3>
+        <p>Atlas maps topology. Semantic reveals distance.</p>
+      </div>
+    </div>
+    <p class="nv-sem-empty-state__hint">All recommendations are deterministic and rule-based.</p>
+  </div>
+
+  <!-- Semantic Breadcrumb -->
+  <div id="semantic-breadcrumb" class="nv-sem-breadcrumb-container" hidden aria-live="polite"></div>
+
+  <!-- Toast Notification -->
+  <div id="semantic-toast" class="nv-sem-toast" role="status" aria-live="polite" hidden></div>
+
+  <!-- Main Content Area -->
+  <div class="nv-sem-content">
+
+    <!-- Concept Selector Surface — promoted -->
+    <div id="semantic-concept-selector" class="nv-sem-selector">
+      <div class="nv-sem-selector__header">
+        <label for="concept-select" class="nv-sem-selector__label">Concept Browser</label>
+        <span class="nv-sem-selector__count" id="semantic-concept-count" aria-live="polite"></span>
+      </div>
+      <div class="nv-sem-selector__field">
+        <svg class="nv-sem-selector__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <select id="concept-select" class="nv-sem-selector__select" aria-label="Select concept to explore">
+          <option value="">Choose a concept...</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Concept Info Panel -->
+    <div id="semantic-concept-info" class="nv-sem-concept-info-container" hidden aria-live="polite"></div>
+
+    <!-- Semantic Intelligence Panels -->
+    <div id="semantic-intelligence" class="nv-sem-intelligence" hidden aria-live="polite"></div>
+
+    <!-- Semantic Neighborhood Visualization -->
+    <div id="semantic-neighborhood-viz" class="nv-sem-viz" role="img" aria-label="Semantic neighborhood visualization" hidden>
+      <div class="nv-sem-viz__header">
+        <h2 class="nv-sem-viz__title">Semantic Neighborhood</h2>
+        <p class="nv-sem-viz__subtitle">Conceptual distance and relationship diagram</p>
+      </div>
+      <div class="nv-sem-viz__canvas-wrap">
+        <canvas id="semantic-viz-canvas" class="nv-sem-viz__canvas" tabindex="0" aria-describedby="semantic-viz-a11y-summary"></canvas>
+      </div>
+      <p id="semantic-viz-a11y-summary" class="nv-sem-viz-a11y-summary nv-sr-only" aria-live="polite"></p>
+      <div class="nv-sem-viz__legend" aria-label="Visualization legend">
+        <span class="nv-sem-viz__legend-item"><span class="nv-sem-viz__legend-swatch nv-sem-viz__legend-swatch--center" aria-hidden="true"></span>Selected</span>
+        <span class="nv-sem-viz__legend-item"><span class="nv-sem-viz__legend-swatch nv-sem-viz__legend-swatch--prereq" aria-hidden="true"></span>Prerequisites</span>
+        <span class="nv-sem-viz__legend-item"><span class="nv-sem-viz__legend-swatch nv-sem-viz__legend-swatch--related" aria-hidden="true"></span>Related</span>
+        <span class="nv-sem-viz__legend-item"><span class="nv-sem-viz__legend-swatch nv-sem-viz__legend-swatch--dep" aria-hidden="true"></span>Dependents</span>
+        <span class="nv-sem-viz__legend-item"><span class="nv-sem-viz__legend-swatch nv-sem-viz__legend-swatch--rec" aria-hidden="true"></span>Recommendations</span>
+      </div>
+    </div>
+
+    <!-- Semantic Results -->
+    <div id="semantic-results" class="nv-sem-results" aria-live="polite"></div>
+
+    <!-- Cross-System Navigation Actions -->
+    <div id="semantic-cross-system-actions" class="nv-sem-cross-system" hidden aria-live="polite"></div>
+
+  </div>
+
 </section>

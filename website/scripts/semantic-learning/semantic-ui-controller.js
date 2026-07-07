@@ -287,6 +287,187 @@
     container.innerHTML = renderTraversalPanel(conceptId);
   }
 
+  /* ─── Intelligence Panels ──────────────────────────────── */
+
+  function getIntelligence() {
+    return window.NeuralVerse?.SemanticIntelligence || null;
+  }
+
+  function renderExplanationPanel(conceptId) {
+    var intel = getIntelligence();
+    if (!intel) return '';
+
+    var explanation = intel.generateExplanation(conceptId);
+    if (!explanation) return '';
+
+    var html = '<div class="nv-sem-intel nv-sem-explanation" role="region" aria-label="Concept explanation">';
+    html += '<h3 class="nv-sem-intel__title">Why This Concept Matters</h3>';
+    html += '<div class="nv-sem-intel__grid">';
+    html += '<div class="nv-sem-intel__item"><span class="nv-sem-intel__label">Role</span><span class="nv-sem-intel__value">' + escapeHtml(explanation.role) + '</span></div>';
+    html += '<div class="nv-sem-intel__item"><span class="nv-sem-intel__label">Importance</span><span class="nv-sem-intel__value">' + escapeHtml(explanation.importance) + '</span></div>';
+    html += '<div class="nv-sem-intel__item"><span class="nv-sem-intel__label">Learning Stage</span><span class="nv-sem-intel__value">' + escapeHtml(explanation.stage) + '</span></div>';
+    html += '<div class="nv-sem-intel__item"><span class="nv-sem-intel__label">Domain</span><span class="nv-sem-intel__value">' + escapeHtml(explanation.domain) + '</span></div>';
+    html += '<div class="nv-sem-intel__item"><span class="nv-sem-intel__label">Relationship Density</span><span class="nv-sem-intel__value">' + explanation.relationshipDensity + ' connections</span></div>';
+    html += '</div>';
+    if (explanation.summary) {
+      html += '<p class="nv-sem-intel__summary">' + escapeHtml(explanation.summary) + '</p>';
+    }
+    html += '</div>';
+    return html;
+  }
+
+  function renderRelationshipReasonsPanel(conceptId) {
+    var intel = getIntelligence();
+    if (!intel) return '';
+
+    var reasons = intel.generateRelationshipReasons(conceptId);
+    if (!reasons || reasons.length === 0) return '';
+
+    var html = '<div class="nv-sem-intel nv-sem-reasons" role="region" aria-label="Relationship reasoning">';
+    html += '<h3 class="nv-sem-intel__title">Why These Concepts Connect</h3>';
+    html += '<ul class="nv-sem-reasons__list" role="list">';
+    for (var i = 0; i < reasons.length; i++) {
+      var r = reasons[i];
+      html += '<li class="nv-sem-reasons__item">';
+      html += '<span class="nv-sem-reasons__icon" aria-hidden="true">' + r.icon + '</span>';
+      html += '<div class="nv-sem-reasons__content">';
+      html += '<span class="nv-sem-reasons__concept">' + escapeHtml(r.conceptName) + '</span>';
+      html += '<span class="nv-sem-reasons__type nv-sem-reasons__type--' + escapeHtml(r.type) + '">' + escapeHtml(r.type.replace('_', ' ')) + '</span>';
+      html += '<span class="nv-sem-reasons__reason">' + escapeHtml(r.reason) + '</span>';
+      html += '</div>';
+      html += '</li>';
+    }
+    html += '</ul></div>';
+    return html;
+  }
+
+  function renderNeighborhoodStatsPanel(conceptId) {
+    var intel = getIntelligence();
+    if (!intel) return '';
+
+    var stats = intel.calculateNeighborhoodStats(conceptId);
+    if (!stats) return '';
+
+    var html = '<div class="nv-sem-intel nv-sem-stats" role="region" aria-label="Neighborhood statistics">';
+    html += '<h3 class="nv-sem-intel__title">Neighborhood Intelligence</h3>';
+    html += '<dl class="nv-sem-stats__grid">';
+    html += '<div class="nv-sem-stats__item"><dt class="nv-sem-stats__label">Semantic Neighbors</dt><dd class="nv-sem-stats__value">' + stats.totalNeighbors + '</dd></div>';
+    html += '<div class="nv-sem-stats__item"><dt class="nv-sem-stats__label">Prerequisites</dt><dd class="nv-sem-stats__value">' + stats.prerequisites + '</dd></div>';
+    html += '<div class="nv-sem-stats__item"><dt class="nv-sem-stats__label">Dependents</dt><dd class="nv-sem-stats__value">' + stats.dependents + '</dd></div>';
+    html += '<div class="nv-sem-stats__item"><dt class="nv-sem-stats__label">Related</dt><dd class="nv-sem-stats__value">' + stats.related + '</dd></div>';
+    html += '<div class="nv-sem-stats__item"><dt class="nv-sem-stats__label">Bridge Connections</dt><dd class="nv-sem-stats__value">' + stats.bridgeConnections + '</dd></div>';
+    html += '<div class="nv-sem-stats__item"><dt class="nv-sem-stats__label">Domain Coverage</dt><dd class="nv-sem-stats__value">' + escapeHtml(stats.domainCoverage) + '</dd></div>';
+    html += '</dl></div>';
+    return html;
+  }
+
+  function renderLearningTrajectoryPanel(conceptId) {
+    var intel = getIntelligence();
+    if (!intel) return '';
+
+    var trajectory = intel.generateLearningTrajectory(conceptId);
+    if (!trajectory || !trajectory.next || trajectory.next.length === 0) return '';
+
+    var html = '<div class="nv-sem-intel nv-sem-trajectory" role="region" aria-label="Learning trajectory">';
+    html += '<h3 class="nv-sem-intel__title">Learning Trajectory</h3>';
+    html += '<div class="nv-sem-trajectory__flow">';
+    html += '<div class="nv-sem-trajectory__step nv-sem-trajectory__step--current">';
+    html += '<span class="nv-sem-trajectory__marker" aria-hidden="true"></span>';
+    html += '<div class="nv-sem-trajectory__info">';
+    html += '<span class="nv-sem-trajectory__label">Current</span>';
+    html += '<span class="nv-sem-trajectory__concept">' + escapeHtml(trajectory.current.name) + '</span>';
+    html += '</div>';
+    html += '</div>';
+    for (var i = 0; i < trajectory.next.length; i++) {
+      var step = trajectory.next[i];
+      html += '<div class="nv-sem-trajectory__step">';
+      html += '<span class="nv-sem-trajectory__marker" aria-hidden="true"></span>';
+      html += '<div class="nv-sem-trajectory__info">';
+      html += '<span class="nv-sem-trajectory__label">Then</span>';
+      html += '<span class="nv-sem-trajectory__concept">' + escapeHtml(step.name) + '</span>';
+      if (step.reason) {
+        html += '<span class="nv-sem-trajectory__reason">' + escapeHtml(step.reason) + '</span>';
+      }
+      html += '</div>';
+      html += '</div>';
+    }
+    html += '</div>';
+    if (trajectory.rationale.length > 0) {
+      html += '<div class="nv-sem-trajectory__rationale">';
+      for (var j = 0; j < trajectory.rationale.length; j++) {
+        html += '<p class="nv-sem-trajectory__rationale-item">' + escapeHtml(trajectory.rationale[j]) + '</p>';
+      }
+      html += '</div>';
+    }
+    html += '</div>';
+    return html;
+  }
+
+  function renderSemanticContextPanel(conceptId) {
+    var intel = getIntelligence();
+    if (!intel) return '';
+
+    var context = intel.generateSemanticContext(conceptId);
+    if (!context) return '';
+
+    var html = '<div class="nv-sem-intel nv-sem-context" role="region" aria-label="Semantic context">';
+    html += '<h3 class="nv-sem-intel__title">Semantic Context</h3>';
+    html += '<div class="nv-sem-context__grid">';
+
+    if (context.primaryDomain) {
+      html += '<div class="nv-sem-context__item">';
+      html += '<span class="nv-sem-context__label">Primary Domain</span>';
+      html += '<span class="nv-sem-context__value">' + escapeHtml(context.primaryDomain) + '</span>';
+      html += '</div>';
+    }
+
+    if (context.frequentlyWith.length > 0) {
+      html += '<div class="nv-sem-context__item">';
+      html += '<span class="nv-sem-context__label">Frequently appears with</span>';
+      html += '<span class="nv-sem-context__value">' + escapeHtml(context.frequentlyWith.join(', ')) + '</span>';
+      html += '</div>';
+    }
+
+    if (context.usefulBefore.length > 0) {
+      html += '<div class="nv-sem-context__item">';
+      html += '<span class="nv-sem-context__label">Most useful before</span>';
+      html += '<span class="nv-sem-context__value">' + escapeHtml(context.usefulBefore.join(', ')) + '</span>';
+      html += '</div>';
+    }
+
+    if (context.requiresUnderstanding.length > 0) {
+      html += '<div class="nv-sem-context__item">';
+      html += '<span class="nv-sem-context__label">Requires understanding</span>';
+      html += '<span class="nv-sem-context__value">' + escapeHtml(context.requiresUnderstanding.join(', ')) + '</span>';
+      html += '</div>';
+    }
+
+    if (context.knowledgeDomains.length > 0) {
+      html += '<div class="nv-sem-context__item">';
+      html += '<span class="nv-sem-context__label">Knowledge Domains</span>';
+      html += '<span class="nv-sem-context__value">' + escapeHtml(context.knowledgeDomains.join(', ')) + '</span>';
+      html += '</div>';
+    }
+
+    html += '</div></div>';
+    return html;
+  }
+
+  function renderIntelligencePanels(conceptId) {
+    var html = '';
+    html += renderExplanationPanel(conceptId);
+    html += renderRelationshipReasonsPanel(conceptId);
+    html += renderNeighborhoodStatsPanel(conceptId);
+    html += renderLearningTrajectoryPanel(conceptId);
+    html += renderSemanticContextPanel(conceptId);
+    return html;
+  }
+
+  function mountIntelligencePanels(conceptId, container) {
+    if (!container) return;
+    container.innerHTML = renderIntelligencePanels(conceptId);
+  }
+
   window.NeuralVerse = window.NeuralVerse || {};
   window.NeuralVerse.SemanticUIController = {
     renderSemanticPanel: renderSemanticPanel,
@@ -294,6 +475,13 @@
     renderTraversalPanel: renderTraversalPanel,
     renderSemanticSearchResults: renderSemanticSearchResults,
     mountSemanticPanel: mountSemanticPanel,
-    mountTraversalPanel: mountTraversalPanel
+    mountTraversalPanel: mountTraversalPanel,
+    renderIntelligencePanels: renderIntelligencePanels,
+    mountIntelligencePanels: mountIntelligencePanels,
+    renderExplanationPanel: renderExplanationPanel,
+    renderRelationshipReasonsPanel: renderRelationshipReasonsPanel,
+    renderNeighborhoodStatsPanel: renderNeighborhoodStatsPanel,
+    renderLearningTrajectoryPanel: renderLearningTrajectoryPanel,
+    renderSemanticContextPanel: renderSemanticContextPanel
   };
 })();
