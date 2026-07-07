@@ -1,677 +1,870 @@
 /**
- * NV-1100-P9B — Visualization Renderer
- * DOM/SVG rendering for all visualization primitive types.
- * Pure rendering layer — no business logic.
+ * NV-800 — Phase 5+6: Mathematical Fidelity & Communication
+ * Adaptive axes, numerical stability, comparative feedback,
+ * dynamic highlights, mathematical narration.
  */
 (function () {
   'use strict';
 
-  function escapeHtml(value) {
-    return String(value || '')
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
+  function esc(v) {
+    return String(v || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
 
-  function createSvgElement(tag, attrs) {
-    var el = document.createElementNS('http://www.w3.org/2000/svg', tag);
-    if (attrs) {
-      var keys = Object.keys(attrs);
-      for (var i = 0; i < keys.length; i++) {
-        el.setAttribute(keys[i], attrs[keys[i]]);
+  function el(tag, a) {
+    var e = document.createElementNS('http://www.w3.org/2000/svg', tag);
+    if (a) Object.keys(a).forEach(function (k) { e.setAttribute(k, a[k]); });
+    return e;
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // Canvas — Scientific Figure Composition
+  // ═══════════════════════════════════════════════════════════
+
+  var W = 720, H = 460;
+  var P = { t: 32, r: 32, b: 48, l: 56 };
+  function pw() { return W - P.l - P.r; }
+  function ph() { return H - P.t - P.b; }
+
+  var F = { mono: "'JetBrains Mono', monospace", sans: "Inter, system-ui, sans-serif" };
+
+  // ═══════════════════════════════════════════════════════════
+  // Numerical Stability — protect against edge cases
+  // ═══════════════════════════════════════════════════════════
+
+  function safe(v) {
+    if (typeof v !== 'number' || !isFinite(v)) return 0;
+    return v;
+  }
+
+  function safeDiv(a, b) {
+    if (!b || !isFinite(b)) return 0;
+    var r = a / b;
+    return isFinite(r) ? r : 0;
+  }
+
+  function safeSqrt(v) {
+    if (v < 0) return 0;
+    var r = Math.sqrt(v);
+    return isFinite(r) ? r : 0;
+  }
+
+  function safeExp(v) {
+    if (v > 500) return Math.exp(500);
+    if (v < -500) return Math.exp(-500);
+    var r = Math.exp(v);
+    return isFinite(r) ? r : 0;
+  }
+
+  function safeLog(v) {
+    if (v <= 0) return -10;
+    var r = Math.log(v);
+    return isFinite(r) ? r : -10;
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // Adaptive Bounds — viewport intelligence
+  // ═══════════════════════════════════════════════════════════
+
+  function bnd(pts, opts) {
+    opts = opts || {};
+    if (!pts || pts.length === 0) return { x0: -10, x1: 10, y0: -10, y1: 10, dx: 20, dy: 20 };
+
+    var xs = pts.map(function (p) { return safe(p.x); });
+    var ys = pts.map(function (p) { return safe(p.y); });
+
+    var xMin = Math.min.apply(null, xs);
+    var xMax = Math.max.apply(null, xs);
+    var yMin = Math.min.apply(null, ys);
+    var yMax = Math.max.apply(null, ys);
+
+    // Ensure range is never zero
+    var dx = (xMax - xMin) || 1;
+    var dy = (yMax - yMin) || 1;
+
+    // Ensure minimum range for readability
+    dx = Math.max(dx, opts.minDx || 2);
+    dy = Math.max(dy, opts.minDy || 2);
+
+    // Center the data
+    var xCenter = (xMin + xMax) / 2;
+    var yCenter = (yMin + yMax) / 2;
+
+    // Add breathing room (15% padding)
+    var padX = dx * 0.15;
+    var padY = dy * 0.15;
+
+    return {
+      x0: xCenter - dx / 2 - padX,
+      x1: xCenter + dx / 2 + padX,
+      y0: yCenter - dy / 2 - padY,
+      y1: yCenter + dy / 2 + padY,
+      dx: dx + padX * 2,
+      dy: dy + padY * 2
+    };
+  }
+
+  function mx(v, b) { return P.l + (safeDiv(v - b.x0, b.dx)) * pw(); }
+  function my(v, b) { return P.t + ph() - (safeDiv(v - b.y0, b.dy)) * ph(); }
+
+  // ═══════════════════════════════════════════════════════════
+  // Smart Tick Formatting — pleasant numbers
+  // ═══════════════════════════════════════════════════════════
+
+  function niceNum(range, round) {
+    var exponent = Math.floor(Math.log10(range));
+    var fraction = range / Math.pow(10, exponent);
+    var nice;
+    if (round) {
+      if (fraction < 1.5) nice = 1;
+      else if (fraction < 3) nice = 2;
+      else if (fraction < 7) nice = 5;
+      else nice = 10;
+    } else {
+      if (fraction <= 1) nice = 1;
+      else if (fraction <= 2) nice = 2;
+      else if (fraction <= 5) nice = 5;
+      else nice = 10;
+    }
+    return nice * Math.pow(10, exponent);
+  }
+
+  function smartTicks(min, max, maxTicks) {
+    maxTicks = maxTicks || 6;
+    var range = max - min;
+    if (range <= 0 || !isFinite(range)) return [0];
+
+    var niceRange = niceNum(range, false);
+    var spacing = niceNum(niceRange / (maxTicks - 1), true);
+    if (spacing <= 0 || !isFinite(spacing)) return [min, max];
+
+    var ticks = [];
+    var start = Math.ceil(min / spacing) * spacing;
+    for (var t = start; t <= max + spacing * 0.001; t += spacing) {
+      ticks.push(Math.round(t * 1e10) / 1e10); // Avoid floating point artifacts
+    }
+
+    // Always include 0 if in range
+    if (ticks.length > 0 && min < 0 && max > 0) {
+      var hasZero = ticks.some(function (t) { return Math.abs(t) < spacing * 0.01; });
+      if (!hasZero) {
+        ticks.push(0);
+        ticks.sort(function (a, b) { return a - b; });
       }
     }
-    return el;
+
+    return ticks.length > 0 ? ticks : [min, max];
   }
 
-  function renderLinePlot(container, model) {
-    var width = 600;
-    var height = 400;
-    var padding = { top: 30, right: 30, bottom: 50, left: 60 };
-    var plotW = width - padding.left - padding.right;
-    var plotH = height - padding.top - padding.bottom;
+  function fmtSmart(n) {
+    if (!isFinite(n)) return '0';
+    var abs = Math.abs(n);
+    if (abs === 0) return '0';
+    if (abs >= 1e6) return (n / 1e6).toFixed(1) + 'M';
+    if (abs >= 1e3) return (n / 1e3).toFixed(1) + 'k';
+    if (abs < 0.001 && abs > 0) return n.toExponential(1);
+    if (abs >= 100) return Math.round(n).toString();
+    if (abs >= 10) return n.toFixed(1);
+    if (abs >= 1) return n.toFixed(2);
+    return n.toFixed(3);
+  }
 
-    var allPoints = model.points || [];
-    if (allPoints.length === 0) {
-      container.innerHTML = '<p class="nv-pviz-empty">No data points.</p>';
-      return;
-    }
+  // ═══════════════════════════════════════════════════════════
+  // SVG Base
+  // ═══════════════════════════════════════════════════════════
 
-    var xs = allPoints.map(function (p) { return p.x; });
-    var ys = allPoints.map(function (p) { return p.y; });
-    var minX = Math.min.apply(null, xs);
-    var maxX = Math.max.apply(null, xs);
-    var minY = Math.min.apply(null, ys);
-    var maxY = Math.max.apply(null, ys);
-    var rangeX = maxX - minX || 1;
-    var rangeY = maxY - minY || 1;
+  function svg(label) {
+    return el('svg', {
+      viewBox: '0 0 ' + W + ' ' + H,
+      role: 'img', 'aria-label': esc(label || 'Visualization'),
+      class: 'nv-pviz-chart-svg',
+      style: 'width:100%;height:auto;max-height:480px'
+    });
+  }
 
-    var svg = createSvgElement('svg', {
-      viewBox: '0 0 ' + width + ' ' + height,
-      role: 'img',
-      'aria-label': escapeHtml(model.title || 'Line plot'),
-      style: 'width:100%;height:auto;max-height:400px'
+  // ═══════════════════════════════════════════════════════════
+  // Primitives
+  // ═══════════════════════════════════════════════════════════
+
+  function _axis(s, b) {
+    s.appendChild(el('line', { x1: P.l, y1: H - P.b, x2: W - P.r, y2: H - P.b, stroke: 'rgba(138,180,248,0.08)', 'stroke-width': '0.5' }));
+    s.appendChild(el('line', { x1: P.l, y1: P.t, x2: P.l, y2: H - P.b, stroke: 'rgba(138,180,248,0.08)', 'stroke-width': '0.5' }));
+  }
+
+  function _grid(s, b, opts) {
+    opts = opts || {};
+    var ticks = smartTicks(b.y0, b.y1, opts.maxTicks || 5);
+    ticks.forEach(function (v) {
+      var gy = my(v, b);
+      if (gy > P.t && gy < H - P.b) {
+        s.appendChild(el('line', { x1: P.l, y1: gy, x2: W - P.r, y2: gy, stroke: 'rgba(138,180,248,0.03)', 'stroke-width': '0.3' }));
+      }
+    });
+  }
+
+  function _ticks(s, b) {
+    var yTicks = smartTicks(b.y0, b.y1, 5);
+    yTicks.forEach(function (v) {
+      var gy = my(v, b);
+      if (gy > P.t + 8 && gy < H - P.b - 8) {
+        var t = el('text', { x: P.l - 10, y: gy + 3, fill: 'rgba(138,180,248,0.25)', 'font-size': '8.5', 'text-anchor': 'end', 'font-family': F.mono, 'letter-spacing': '0.02em' });
+        t.textContent = fmtSmart(v);
+        s.appendChild(t);
+      }
     });
 
-    // Grid lines
-    for (var g = 0; g <= 5; g++) {
-      var gy = padding.top + (plotH / 5) * g;
-      svg.appendChild(createSvgElement('line', {
-        x1: padding.left, y1: gy,
-        x2: width - padding.right, y2: gy,
-        stroke: 'rgba(138,180,248,0.08)', 'stroke-width': '0.5'
-      }));
-      var label = maxY - (rangeY / 5) * g;
-      var text = createSvgElement('text', {
-        x: padding.left - 8, y: gy + 4,
-        fill: 'rgba(138,180,248,0.5)', 'font-size': '10',
-        'text-anchor': 'end', 'font-family': 'monospace'
-      });
-      text.textContent = label.toFixed(2);
-      svg.appendChild(text);
-    }
+    var xTicks = smartTicks(b.x0, b.x1, 5);
+    xTicks.forEach(function (v) {
+      var gx = mx(v, b);
+      if (gx > P.l + 12 && gx < W - P.r - 12) {
+        var t = el('text', { x: gx, y: H - P.b + 16, fill: 'rgba(138,180,248,0.25)', 'font-size': '8.5', 'text-anchor': 'middle', 'font-family': F.mono, 'letter-spacing': '0.02em' });
+        t.textContent = fmtSmart(v);
+        s.appendChild(t);
+      }
+    });
+  }
 
-    // X axis labels
-    for (var xi = 0; xi <= 4; xi++) {
-      var xPos = padding.left + (plotW / 4) * xi;
-      var xVal = minX + (rangeX / 4) * xi;
-      var xText = createSvgElement('text', {
-        x: xPos, y: height - padding.bottom + 18,
-        fill: 'rgba(138,180,248,0.5)', 'font-size': '10',
-        'text-anchor': 'middle', 'font-family': 'monospace'
-      });
-      xText.textContent = xVal.toFixed(1);
-      svg.appendChild(xText);
-    }
+  function _ann(s, x, y, label, opts) {
+    opts = opts || {};
+    var col = opts.color || '#f59e0b';
+    var lx = x + (opts.dx || 14);
+    var ly = y + (opts.dy || -16);
+    s.appendChild(el('circle', { cx: x, cy: y, r: opts.r || 3, fill: col, stroke: '#080c14', 'stroke-width': '1.5' }));
+    var t = el('text', { x: lx, y: ly + 4, fill: col, 'font-size': '9.5', 'font-family': F.mono, 'font-weight': '500', opacity: '0.85', 'letter-spacing': '0.02em' });
+    t.textContent = label;
+    s.appendChild(t);
+  }
 
-    // Plot line
-    var points = [];
-    for (var pi = 0; pi < allPoints.length; pi++) {
-      var px = padding.left + ((allPoints[pi].x - minX) / rangeX) * plotW;
-      var py = padding.top + plotH - ((allPoints[pi].y - minY) / rangeY) * plotH;
-      points.push(px + ',' + py);
-    }
+  function _ref(s, x1, y1, x2, y2, color) {
+    s.appendChild(el('line', { x1: x1, y1: y1, x2: x2, y2: y2, stroke: color || 'rgba(138,180,248,0.1)', 'stroke-width': '0.5', 'stroke-dasharray': '3 2' }));
+  }
 
-    if (points.length > 1) {
-      svg.appendChild(createSvgElement('polyline', {
-        points: points.join(' '),
-        fill: 'none',
-        stroke: '#06b6d4',
-        'stroke-width': '2',
-        'stroke-linejoin': 'round'
-      }));
-    }
+  function _region(s, d, color) {
+    s.appendChild(el('path', { d: d, fill: color, stroke: 'none' }));
+  }
+
+  function _title(s, text) {
+    var t = el('text', { x: P.l + 4, y: 20, fill: 'rgba(232,238,246,0.6)', 'font-size': '11', 'font-weight': '600', 'font-family': F.sans, 'letter-spacing': '-0.01em' });
+    t.textContent = text;
+    s.appendChild(t);
+  }
+
+  function _label(s, x, y, text, opts) {
+    opts = opts || {};
+    var t = el('text', { x: x, y: y, fill: opts.fill || '#a7b7c8', 'font-size': opts.size || '9', 'text-anchor': opts.anchor || 'middle', 'font-family': opts.font || F.mono, opacity: opts.opacity || '0.7', 'letter-spacing': '0.02em' });
+    t.textContent = text;
+    s.appendChild(t);
+  }
+
+  // Ghost curve — previous state for comparison
+  function _ghost(s, pts, b, color) {
+    if (!pts || pts.length < 2) return;
+    var path = pts.map(function (p) { return mx(safe(p.x), b) + ',' + my(safe(p.y), b); }).join(' ');
+    s.appendChild(el('polyline', { points: path, fill: 'none', stroke: color || 'rgba(138,180,248,0.08)', 'stroke-width': '1.5', 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'stroke-dasharray': '4 3' }));
+  }
+
+  function _tooltip(s) {
+    var g = el('g', { class: 'nv-pviz-tooltip', opacity: '0' });
+    g.appendChild(el('rect', { x: 0, y: 0, width: 130, height: 28, fill: '#0e1420', stroke: 'rgba(6,182,212,0.2)', 'stroke-width': '0.5', rx: '3' }));
+    g.appendChild(el('text', { x: 6, y: 11, fill: '#e8eef6', 'font-size': '9', 'font-family': F.mono }));
+    g.appendChild(el('text', { x: 6, y: 22, fill: '#a7b7c8', 'font-size': '8', 'font-family': F.mono }));
+    s.appendChild(g);
+    s.appendChild(el('rect', { x: P.l, y: P.t, width: pw(), height: ph(), fill: 'transparent', class: 'nv-pviz-tracker' }));
+    s.appendChild(el('line', { x1: 0, y1: P.t, x2: 0, y2: H - P.b, stroke: 'rgba(6,182,212,0.1)', 'stroke-width': '0.5', 'stroke-dasharray': '3 2', opacity: '0', class: 'nv-pviz-cross-x' }));
+    s.appendChild(el('line', { x1: P.l, y1: 0, x2: W - P.r, y2: 0, stroke: 'rgba(6,182,212,0.1)', 'stroke-width': '0.5', 'stroke-dasharray': '3 2', opacity: '0', class: 'nv-pviz-cross-y' }));
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // LINEAR — Adaptive, minimal
+  // ═══════════════════════════════════════════════════════════
+
+  function renderLinear(container, model) {
+    var pts = model.points || [];
+    if (pts.length < 2) { container.innerHTML = '<p class="nv-pviz-empty">No data.</p>'; return; }
+    var b = bnd(pts, { minDy: 4 });
+    var s = svg(model.title);
+
+    _grid(s, b);
+    _axis(s, b);
+    _ticks(s, b);
+
+    // Ghost curve (previous state)
+    if (model.ghostPoints) _ghost(s, model.ghostPoints, b);
+
+    // The line
+    var path = pts.map(function (p) { return mx(safe(p.x), b) + ',' + my(safe(p.y), b); }).join(' ');
+    s.appendChild(el('polyline', { points: path, fill: 'none', stroke: '#06b6d4', 'stroke-width': '2', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }));
 
     // Annotations
-    if (model.annotations && model.annotations.length > 0) {
-      for (var ai = 0; ai < model.annotations.length; ai++) {
-        var ann = model.annotations[ai];
-        var annX = padding.left + ((ann.x - minX) / rangeX) * plotW;
-        var annY = padding.top + plotH - ((ann.y - minY) / rangeY) * plotH;
-        svg.appendChild(createSvgElement('circle', {
-          cx: annX, cy: annY, r: '5',
-          fill: '#f59e0b', stroke: '#0f172a', 'stroke-width': '2'
-        }));
-        var annText = createSvgElement('text', {
-          x: annX + 10, y: annY - 10,
-          fill: '#f59e0b', 'font-size': '11',
-          'font-family': 'monospace', 'font-weight': 'bold'
-        });
-        annText.textContent = ann.label || '';
-        svg.appendChild(annText);
+    if (model.annotations) {
+      model.annotations.forEach(function (a) {
+        _ann(s, mx(safe(a.x), b), my(safe(a.y), b), a.label);
+      });
+    }
+
+    _title(s, model.title);
+    _tooltip(s);
+    container.innerHTML = '';
+    container.appendChild(s);
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // QUADRATIC — Vertex, symmetry, regions
+  // ═══════════════════════════════════════════════════════════
+
+  function renderQuadratic(container, model) {
+    var pts = model.points || [];
+    if (pts.length < 2) { container.innerHTML = '<p class="nv-pviz-empty">No data.</p>'; return; }
+    var b = bnd(pts, { minDy: 4 });
+    var s = svg(model.title);
+
+    _grid(s, b);
+    _axis(s, b);
+    _ticks(s, b);
+
+    // Ghost curve
+    if (model.ghostPoints) _ghost(s, model.ghostPoints, b);
+
+    // Positive/negative regions
+    var zeroY = my(0, b);
+    if (zeroY > P.t && zeroY < H - P.b) {
+      var posD = 'M' + P.l + ',' + zeroY;
+      pts.forEach(function (p) { posD += ' L' + mx(safe(p.x), b) + ',' + my(safe(p.y), b); });
+      posD += ' L' + W - P.r + ',' + zeroY + ' Z';
+      _region(s, posD, 'rgba(34,197,94,0.04)');
+
+      var negD = 'M' + P.l + ',' + zeroY;
+      pts.forEach(function (p) { negD += ' L' + mx(safe(p.x), b) + ',' + my(safe(p.y), b); });
+      negD += ' L' + W - P.r + ',' + zeroY + ' Z';
+      _region(s, negD, 'rgba(239,68,68,0.04)');
+    }
+
+    // Symmetry axis
+    if (model.annotations) {
+      var vtx = model.annotations.find(function (a) { return a.label.indexOf('vertex') !== -1; });
+      if (vtx) _ref(s, mx(safe(vtx.x), b), P.t, mx(safe(vtx.x), b), H - P.b, 'rgba(6,182,212,0.15)');
+    }
+
+    // The parabola
+    var path = pts.map(function (p) { return mx(safe(p.x), b) + ',' + my(safe(p.y), b); }).join(' ');
+    s.appendChild(el('polyline', { points: path, fill: 'none', stroke: '#06b6d4', 'stroke-width': '2', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }));
+
+    if (model.annotations) {
+      model.annotations.forEach(function (a) {
+        _ann(s, mx(safe(a.x), b), my(safe(a.y), b), a.label, { dy: -16 });
+      });
+    }
+
+    _title(s, model.title);
+    _tooltip(s);
+    container.innerHTML = '';
+    container.appendChild(s);
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // SIGMOID — Regions
+  // ═══════════════════════════════════════════════════════════
+
+  function renderSigmoid(container, model) {
+    var pts = model.points || [];
+    if (pts.length < 2) { container.innerHTML = '<p class="nv-pviz-empty">No data.</p>'; return; }
+    var b = bnd(pts, { minDy: 1.5 });
+    var s = svg(model.title);
+
+    _grid(s, b);
+    _axis(s, b);
+
+    // Ghost curve
+    if (model.ghostPoints) _ghost(s, model.ghostPoints, b);
+
+    // Regions
+    var x0 = model.annotations && model.annotations[0] ? safe(model.annotations[0].x) : 0;
+    var zeroY = my(0, b);
+
+    // Activation region
+    var actPts = pts.filter(function (p) { return safe(p.x) <= x0; });
+    if (actPts.length > 1) {
+      var actD = 'M' + mx(safe(actPts[0].x), b) + ',' + zeroY;
+      actPts.forEach(function (p) { actD += ' L' + mx(safe(p.x), b) + ',' + my(safe(p.y), b); });
+      actD += ' L' + mx(safe(actPts[actPts.length - 1].x), b) + ',' + zeroY + ' Z';
+      _region(s, actD, 'rgba(6,182,212,0.08)');
+    }
+
+    // Saturation region
+    var satPts = pts.filter(function (p) { return safe(p.x) >= x0; });
+    if (satPts.length > 1) {
+      var satD = 'M' + mx(safe(satPts[0].x), b) + ',' + zeroY;
+      satPts.forEach(function (p) { satD += ' L' + mx(safe(p.x), b) + ',' + my(safe(p.y), b); });
+      satD += ' L' + mx(safe(satPts[satPts.length - 1].x), b) + ',' + zeroY + ' Z';
+      _region(s, satD, 'rgba(6,182,212,0.08)');
+    }
+
+    // Transition region
+    var transPts = pts.filter(function (p) { return safe(p.x) >= x0 - 1.5 && safe(p.x) <= x0 + 1.5; });
+    if (transPts.length > 1) {
+      var tD = 'M' + mx(safe(transPts[0].x), b) + ',' + zeroY;
+      transPts.forEach(function (p) { tD += ' L' + mx(safe(p.x), b) + ',' + my(safe(p.y), b); });
+      tD += ' L' + mx(safe(transPts[transPts.length - 1].x), b) + ',' + zeroY + ' Z';
+      _region(s, tD, 'rgba(34,197,94,0.12)');
+    }
+
+    // 0.5 reference
+    _ref(s, P.l, my(0.5, b), W - P.r, my(0.5, b), 'rgba(138,180,248,0.08)');
+
+    // The S-curve
+    var path = pts.map(function (p) { return mx(safe(p.x), b) + ',' + my(safe(p.y), b); }).join(' ');
+    s.appendChild(el('polyline', { points: path, fill: 'none', stroke: '#06b6d4', 'stroke-width': '2', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }));
+
+    if (model.annotations) {
+      model.annotations.forEach(function (a) {
+        _ann(s, mx(safe(a.x), b), my(safe(a.y), b), a.label, { color: '#22c55e' });
+      });
+    }
+
+    _label(s, mx(x0 - 3, b), H - P.b - 8, 'low', { fill: 'rgba(138,180,248,0.3)', size: '8' });
+    _label(s, mx(x0 + 3, b), H - P.b - 8, 'high', { fill: 'rgba(138,180,248,0.3)', size: '8' });
+
+    _title(s, model.title);
+    _tooltip(s);
+    container.innerHTML = '';
+    container.appendChild(s);
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // NORMAL DISTRIBUTION — 68-95-99.7
+  // ═══════════════════════════════════════════════════════════
+
+  function renderNormalDist(container, model) {
+    var pts = model.points || [];
+    if (pts.length < 2) { container.innerHTML = '<p class="nv-pviz-empty">No data.</p>'; return; }
+    var b = bnd(pts, { minDy: 0.5 });
+    var s = svg(model.title);
+
+    _grid(s, b);
+    _axis(s, b);
+
+    // Ghost curve
+    if (model.ghostPoints) _ghost(s, model.ghostPoints, b);
+
+    // 68-95-99.7 regions
+    if (model.annotations) {
+      var mu = model.annotations.find(function (a) { return a.label.indexOf('μ') !== -1; });
+      var sigma = model.annotations.find(function (a) { return a.label.indexOf('σ') !== -1; });
+      if (mu && sigma) {
+        var muVal = safe(mu.x), sigVal = safe(sigma.x - mu.x);
+        if (sigVal > 0) {
+          var zeroY = my(0, b);
+
+          // 99.7%
+          var r3 = pts.filter(function (p) { return safe(p.x) >= muVal - 3 * sigVal && safe(p.x) <= muVal + 3 * sigVal; });
+          if (r3.length > 1) {
+            var d3 = 'M' + mx(safe(r3[0].x), b) + ',' + zeroY;
+            r3.forEach(function (p) { d3 += ' L' + mx(safe(p.x), b) + ',' + my(safe(p.y), b); });
+            d3 += ' L' + mx(safe(r3[r3.length - 1].x), b) + ',' + zeroY + ' Z';
+            _region(s, d3, 'rgba(6,182,212,0.06)');
+          }
+
+          // 95%
+          var r2 = pts.filter(function (p) { return safe(p.x) >= muVal - 2 * sigVal && safe(p.x) <= muVal + 2 * sigVal; });
+          if (r2.length > 1) {
+            var d2 = 'M' + mx(safe(r2[0].x), b) + ',' + zeroY;
+            r2.forEach(function (p) { d2 += ' L' + mx(safe(p.x), b) + ',' + my(safe(p.y), b); });
+            d2 += ' L' + mx(safe(r2[r2.length - 1].x), b) + ',' + zeroY + ' Z';
+            _region(s, d2, 'rgba(6,182,212,0.1)');
+          }
+
+          // 68%
+          var r1 = pts.filter(function (p) { return safe(p.x) >= muVal - sigVal && safe(p.x) <= muVal + sigVal; });
+          if (r1.length > 1) {
+            var d1 = 'M' + mx(safe(r1[0].x), b) + ',' + zeroY;
+            r1.forEach(function (p) { d1 += ' L' + mx(safe(p.x), b) + ',' + my(safe(p.y), b); });
+            d1 += ' L' + mx(safe(r1[r1.length - 1].x), b) + ',' + zeroY + ' Z';
+            _region(s, d1, 'rgba(6,182,212,0.18)');
+          }
+
+          _ref(s, mx(muVal - sigVal, b), P.t, mx(muVal - sigVal, b), H - P.b, 'rgba(138,180,248,0.1)');
+          _ref(s, mx(muVal + sigVal, b), P.t, mx(muVal + sigVal, b), H - P.b, 'rgba(138,180,248,0.1)');
+          _label(s, mx(muVal, b), H - P.b + 28, '68%', { fill: '#06b6d4', size: '10', weight: '600' });
+        }
       }
     }
 
-    // Axes
-    svg.appendChild(createSvgElement('line', {
-      x1: padding.left, y1: height - padding.bottom,
-      x2: width - padding.right, y2: height - padding.bottom,
-      stroke: 'rgba(138,180,248,0.2)', 'stroke-width': '1'
-    }));
+    // The bell curve
+    var path = pts.map(function (p) { return mx(safe(p.x), b) + ',' + my(safe(p.y), b); }).join(' ');
+    s.appendChild(el('polyline', { points: path, fill: 'none', stroke: '#06b6d4', 'stroke-width': '2', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }));
 
-    // Title
-    var titleText = createSvgElement('text', {
-      x: width / 2, y: 18,
-      fill: '#cdd6f4', 'font-size': '13',
-      'text-anchor': 'middle', 'font-weight': '600',
-      'font-family': 'sans-serif'
-    });
-    titleText.textContent = model.title || '';
-    svg.appendChild(titleText);
-
-    // Axis labels
-    if (model.yLabel) {
-      var yLabelEl = createSvgElement('text', {
-        x: 15, y: height / 2,
-        fill: 'rgba(138,180,248,0.4)', 'font-size': '10',
-        'text-anchor': 'middle', 'font-family': 'monospace',
-        transform: 'rotate(-90, 15, ' + (height / 2) + ')'
+    if (model.annotations) {
+      model.annotations.forEach(function (a, i) {
+        _ann(s, mx(safe(a.x), b), my(safe(a.y), b), a.label, { color: i === 0 ? '#f59e0b' : '#22c55e', dy: -18 });
       });
-      yLabelEl.textContent = model.yLabel;
-      svg.appendChild(yLabelEl);
     }
 
+    _title(s, model.title);
+    _tooltip(s);
     container.innerHTML = '';
-    container.appendChild(svg);
+    container.appendChild(s);
   }
 
-  function renderMultiLinePlot(container, model) {
-    var width = 600;
-    var height = 400;
-    var padding = { top: 30, right: 30, bottom: 50, left: 60 };
-    var plotW = width - padding.left - padding.right;
-    var plotH = height - padding.top - padding.bottom;
-    var colors = ['#06b6d4', '#f59e0b', '#ef4444', '#22c55e'];
+  // ═══════════════════════════════════════════════════════════
+  // RELU — Regions
+  // ═══════════════════════════════════════════════════════════
 
+  function renderRelu(container, model) {
+    var pts = model.points || [];
+    if (pts.length < 2) { container.innerHTML = '<p class="nv-pviz-empty">No data.</p>'; return; }
+    var b = bnd(pts, { minDy: 2 });
+    var s = svg(model.title);
+
+    _grid(s, b);
+    _axis(s, b);
+
+    // Ghost curve
+    if (model.ghostPoints) _ghost(s, model.ghostPoints, b);
+
+    // Regions
+    var threshold = model.annotations && model.annotations[0] ? safe(model.annotations[0].x) : 0;
+    var zeroY = my(0, b);
+    var threshX = mx(threshold, b);
+
+    // Inactive
+    if (threshX > P.l) {
+      s.appendChild(el('rect', { x: P.l, y: Math.max(P.t, zeroY - 40), width: Math.max(0, threshX - P.l), height: Math.min(40, zeroY - P.t), fill: 'rgba(239,68,68,0.06)', rx: '2' }));
+      _label(s, P.l + (threshX - P.l) / 2, Math.max(P.t + 10, zeroY - 44), 'inactive', { fill: 'rgba(239,68,68,0.4)', size: '8' });
+    }
+
+    // Active
+    if (threshX < W - P.r) {
+      s.appendChild(el('rect', { x: threshX, y: P.t, width: Math.max(0, W - P.r - threshX), height: Math.max(0, zeroY - P.t), fill: 'rgba(34,197,94,0.04)', rx: '2' }));
+      _label(s, threshX + (W - P.r - threshX) / 2, P.t + 14, 'active', { fill: 'rgba(34,197,94,0.4)', size: '8' });
+    }
+
+    _ref(s, threshX, P.t, threshX, H - P.b, 'rgba(245,158,11,0.2)');
+
+    // The ramp
+    var path = pts.map(function (p) { return mx(safe(p.x), b) + ',' + my(safe(p.y), b); }).join(' ');
+    s.appendChild(el('polyline', { points: path, fill: 'none', stroke: '#06b6d4', 'stroke-width': '2', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }));
+
+    if (model.annotations) {
+      model.annotations.forEach(function (a) {
+        _ann(s, mx(safe(a.x), b), my(safe(a.y), b), a.label, { color: '#f59e0b' });
+      });
+    }
+
+    _title(s, model.title);
+    _tooltip(s);
+    container.innerHTML = '';
+    container.appendChild(s);
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // GRADIENT DESCENT
+  // ═══════════════════════════════════════════════════════════
+
+  function renderGradientDescent(container, model) {
+    var pts = model.points || [];
+    if (pts.length < 2) { container.innerHTML = '<p class="nv-pviz-empty">No data.</p>'; return; }
+    var b = bnd(pts, { minDy: 5 });
+    var s = svg(model.title);
+
+    _grid(s, b);
+    _axis(s, b);
+    _ticks(s, b);
+
+    // Ghost curve
+    if (model.ghostPoints) _ghost(s, model.ghostPoints, b);
+
+    // Convergence region
+    var convY = my(safe(pts[pts.length - 1].y), b);
+    s.appendChild(el('rect', { x: P.l, y: convY - 4, width: pw(), height: 8, fill: 'rgba(34,197,94,0.08)', rx: '2' }));
+
+    // The trajectory
+    var path = pts.map(function (p) { return mx(safe(p.x), b) + ',' + my(safe(p.y), b); }).join(' ');
+    s.appendChild(el('polyline', { points: path, fill: 'none', stroke: '#06b6d4', 'stroke-width': '2', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }));
+
+    // Start/end markers
+    s.appendChild(el('circle', { cx: mx(safe(pts[0].x), b), cy: my(safe(pts[0].y), b), r: '4', fill: '#f59e0b', stroke: '#0a0f1a', 'stroke-width': '1.5' }));
+    s.appendChild(el('circle', { cx: mx(safe(pts[pts.length - 1].x), b), cy: my(safe(pts[pts.length - 1].y), b), r: '4', fill: '#22c55e', stroke: '#0a0f1a', 'stroke-width': '1.5' }));
+
+    _label(s, mx(safe(pts[0].x), b) + 8, my(safe(pts[0].y), b) - 6, 'start', { fill: '#f59e0b', size: '9', anchor: 'start' });
+    _label(s, mx(safe(pts[pts.length - 1].x), b) + 8, my(safe(pts[pts.length - 1].y), b) - 6, 'converged', { fill: '#22c55e', size: '9', anchor: 'start' });
+
+    _title(s, model.title);
+    _tooltip(s);
+    container.innerHTML = '';
+    container.appendChild(s);
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // MULTI-LINE
+  // ═══════════════════════════════════════════════════════════
+
+  function renderMultiLine(container, model) {
     var allSeries = model.series || [];
-    if (allSeries.length === 0) {
-      container.innerHTML = '<p class="nv-pviz-empty">No data.</p>';
-      return;
-    }
+    if (allSeries.length === 0) { container.innerHTML = '<p class="nv-pviz-empty">No data.</p>'; return; }
+    var colors = ['#06b6d4', '#f59e0b', '#ef4444', '#22c55e'];
+    var allPts = [];
+    allSeries.forEach(function (s) { allPts = allPts.concat(s); });
+    var b = bnd(allPts);
+    var s = svg(model.title);
 
-    var allXs = [];
-    var allYs = [];
-    for (var si = 0; si < allSeries.length; si++) {
-      for (var pi = 0; pi < allSeries[si].length; pi++) {
-        allXs.push(allSeries[si][pi].x);
-        allYs.push(allSeries[si][pi].y);
-      }
-    }
+    _grid(s, b);
+    _axis(s, b);
+    _ticks(s, b);
 
-    var minX = Math.min.apply(null, allXs);
-    var maxX = Math.max.apply(null, allXs);
-    var minY = Math.min.apply(null, allYs);
-    var maxY = Math.max.apply(null, allYs);
-    var rangeX = maxX - minX || 1;
-    var rangeY = maxY - minY || 1;
-
-    var svg = createSvgElement('svg', {
-      viewBox: '0 0 ' + width + ' ' + height,
-      role: 'img',
-      'aria-label': escapeHtml(model.title || 'Multi-line plot'),
-      style: 'width:100%;height:auto;max-height:400px'
+    allSeries.forEach(function (series, idx) {
+      var path = series.map(function (p) { return mx(safe(p.x), b) + ',' + my(safe(p.y), b); }).join(' ');
+      s.appendChild(el('polyline', { points: path, fill: 'none', stroke: colors[idx % colors.length], 'stroke-width': '1.5', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }));
     });
 
-    // Grid
-    for (var g = 0; g <= 5; g++) {
-      var gy = padding.top + (plotH / 5) * g;
-      svg.appendChild(createSvgElement('line', {
-        x1: padding.left, y1: gy,
-        x2: width - padding.right, y2: gy,
-        stroke: 'rgba(138,180,248,0.08)', 'stroke-width': '0.5'
-      }));
-      var label = maxY - (rangeY / 5) * g;
-      var text = createSvgElement('text', {
-        x: padding.left - 8, y: gy + 4,
-        fill: 'rgba(138,180,248,0.5)', 'font-size': '10',
-        'text-anchor': 'end', 'font-family': 'monospace'
+    if (model.seriesLabels) {
+      model.seriesLabels.forEach(function (label, i) {
+        var lx = P.l + 12;
+        var ly = P.t + 14 + i * 14;
+        s.appendChild(el('line', { x1: lx, y1: ly, x2: lx + 14, y2: ly, stroke: colors[i % colors.length], 'stroke-width': '1.5', 'stroke-linecap': 'round' }));
+        var t = el('text', { x: lx + 20, y: ly + 3, fill: 'rgba(167,183,200,0.5)', 'font-size': '8.5', 'font-family': F.mono });
+        t.textContent = label;
+        s.appendChild(t);
       });
-      text.textContent = label.toFixed(2);
-      svg.appendChild(text);
     }
 
-    // Series
-    for (var si2 = 0; si2 < allSeries.length; si2++) {
-      var series = allSeries[si2];
-      var pts = [];
-      for (var pi2 = 0; pi2 < series.length; pi2++) {
-        var px = padding.left + ((series[pi2].x - minX) / rangeX) * plotW;
-        var py = padding.top + plotH - ((series[pi2].y - minY) / rangeY) * plotH;
-        pts.push(px + ',' + py);
-      }
-      if (pts.length > 1) {
-        svg.appendChild(createSvgElement('polyline', {
-          points: pts.join(' '),
-          fill: 'none',
-          stroke: colors[si2 % colors.length],
-          'stroke-width': '2',
-          'stroke-linejoin': 'round'
-        }));
-      }
-    }
-
-    // Legend
-    if (model.seriesLabels && model.seriesLabels.length > 0) {
-      for (var li = 0; li < model.seriesLabels.length; li++) {
-        var lx = padding.left + 10 + li * 100;
-        var ly = padding.top + 10;
-        svg.appendChild(createSvgElement('line', {
-          x1: lx, y1: ly, x2: lx + 20, y2: ly,
-          stroke: colors[li % colors.length], 'stroke-width': '2'
-        }));
-        var legendText = createSvgElement('text', {
-          x: lx + 25, y: ly + 4,
-          fill: 'rgba(138,180,248,0.7)', 'font-size': '10',
-          'font-family': 'monospace'
-        });
-        legendText.textContent = model.seriesLabels[li];
-        svg.appendChild(legendText);
-      }
-    }
-
-    // Axes
-    svg.appendChild(createSvgElement('line', {
-      x1: padding.left, y1: height - padding.bottom,
-      x2: width - padding.right, y2: height - padding.bottom,
-      stroke: 'rgba(138,180,248,0.2)', 'stroke-width': '1'
-    }));
-
-    // Title
-    var titleText = createSvgElement('text', {
-      x: width / 2, y: 18,
-      fill: '#cdd6f4', 'font-size': '13',
-      'text-anchor': 'middle', 'font-weight': '600',
-      'font-family': 'sans-serif'
-    });
-    titleText.textContent = model.title || '';
-    svg.appendChild(titleText);
-
+    _title(s, model.title);
+    _tooltip(s);
     container.innerHTML = '';
-    container.appendChild(svg);
+    container.appendChild(s);
   }
+
+  // ═══════════════════════════════════════════════════════════
+  // BAR CHART
+  // ═══════════════════════════════════════════════════════════
 
   function renderBarChart(container, model) {
-    var width = 600;
-    var height = 350;
-    var padding = { top: 30, right: 20, bottom: 60, left: 60 };
-    var plotW = width - padding.left - padding.right;
-    var plotH = height - padding.top - padding.bottom;
-
     var bars = model.bars || [];
-    if (bars.length === 0) {
-      container.innerHTML = '<p class="nv-pviz-empty">No data.</p>';
-      return;
-    }
+    if (bars.length === 0) { container.innerHTML = '<p class="nv-pviz-empty">No data.</p>'; return; }
+    var vals = bars.map(function (b) { return safe(b.value); });
+    var maxV = Math.max.apply(null, vals.map(Math.abs)) || 1;
+    var s = svg(model.title);
 
-    var values = bars.map(function (b) { return b.value; });
-    var maxVal = Math.max.apply(null, values.map(Math.abs)) || 1;
+    _axis(s, { x0: 0, x1: 1, y0: 0, y1: maxV, dx: 1, dy: maxV });
 
-    var svg = createSvgElement('svg', {
-      viewBox: '0 0 ' + width + ' ' + height,
-      role: 'img',
-      'aria-label': escapeHtml(model.title || 'Bar chart'),
-      style: 'width:100%;height:auto;max-height:350px'
+    var barW = Math.min(pw() / (bars.length * 1.4), 52);
+    var gap = (pw() - barW * bars.length) / (bars.length + 1);
+
+    bars.forEach(function (bar, i) {
+      var barH = (Math.abs(safe(bar.value)) / maxV) * ph() * 0.85;
+      var x = P.l + gap + i * (barW + gap);
+      var y = P.t + ph() - barH;
+      s.appendChild(el('rect', { x: x, y: y, width: barW, height: barH, fill: '#06b6d4', opacity: '0.6', rx: '2' }));
+      var vt = el('text', { x: x + barW / 2, y: y - 5, fill: 'rgba(167,183,200,0.4)', 'font-size': '8', 'text-anchor': 'middle', 'font-family': F.mono });
+      vt.textContent = fmtSmart(safe(bar.value));
+      s.appendChild(vt);
+      var lt = el('text', { x: x + barW / 2, y: H - P.b + 14, fill: 'rgba(138,180,248,0.25)', 'font-size': '8', 'text-anchor': 'middle', 'font-family': F.mono, transform: bar.label.length > 5 ? 'rotate(-25, ' + (x + barW / 2) + ', ' + (H - P.b + 14) + ')' : '' });
+      lt.textContent = bar.label;
+      s.appendChild(lt);
     });
 
-    var barWidth = Math.min(plotW / (bars.length * 1.5), 50);
-
-    for (var i = 0; i < bars.length; i++) {
-      var barH = (Math.abs(bars[i].value) / maxVal) * plotH;
-      var x = padding.left + (i / bars.length) * plotW + (plotW / bars.length - barWidth) / 2;
-      var y = padding.top + plotH - barH;
-
-      svg.appendChild(createSvgElement('rect', {
-        x: x, y: y, width: barWidth, height: barH,
-        fill: '#06b6d4', opacity: '0.7', rx: '2'
-      }));
-
-      // Value label
-      var valText = createSvgElement('text', {
-        x: x + barWidth / 2, y: y - 5,
-        fill: 'rgba(138,180,248,0.7)', 'font-size': '9',
-        'text-anchor': 'middle', 'font-family': 'monospace'
-      });
-      valText.textContent = bars[i].value.toFixed(3);
-      svg.appendChild(valText);
-
-      // X axis label
-      var xLabel = createSvgElement('text', {
-        x: x + barWidth / 2, y: height - padding.bottom + 15,
-        fill: 'rgba(138,180,248,0.5)', 'font-size': '10',
-        'text-anchor': 'middle', 'font-family': 'monospace',
-        transform: bars[i].label.length > 4 ? 'rotate(-30, ' + (x + barWidth / 2) + ', ' + (height - padding.bottom + 15) + ')' : ''
-      });
-      xLabel.textContent = bars[i].label;
-      svg.appendChild(xLabel);
-    }
-
-    // Grid
-    for (var g = 0; g <= 4; g++) {
-      var gy = padding.top + (plotH / 4) * g;
-      svg.appendChild(createSvgElement('line', {
-        x1: padding.left, y1: gy,
-        x2: width - padding.right, y2: gy,
-        stroke: 'rgba(138,180,248,0.08)', 'stroke-width': '0.5'
-      }));
-    }
-
-    // Axes
-    svg.appendChild(createSvgElement('line', {
-      x1: padding.left, y1: height - padding.bottom,
-      x2: width - padding.right, y2: height - padding.bottom,
-      stroke: 'rgba(138,180,248,0.2)', 'stroke-width': '1'
-    }));
-
-    // Title
-    var titleText = createSvgElement('text', {
-      x: width / 2, y: 18,
-      fill: '#cdd6f4', 'font-size': '13',
-      'text-anchor': 'middle', 'font-weight': '600',
-      'font-family': 'sans-serif'
-    });
-    titleText.textContent = model.title || '';
-    svg.appendChild(titleText);
-
+    _title(s, model.title);
     container.innerHTML = '';
-    container.appendChild(svg);
+    container.appendChild(s);
   }
 
-  function renderScatterPlot(container, model) {
-    var width = 600;
-    var height = 400;
-    var padding = { top: 30, right: 30, bottom: 50, left: 60 };
-    var plotW = width - padding.left - padding.right;
-    var plotH = height - padding.top - padding.bottom;
+  // ═══════════════════════════════════════════════════════════
+  // SCATTER
+  // ═══════════════════════════════════════════════════════════
 
-    var points = model.points || [];
-    if (points.length === 0) {
-      container.innerHTML = '<p class="nv-pviz-empty">No data points.</p>';
-      return;
+  function renderScatter(container, model) {
+    var pts = model.points || [];
+    if (pts.length === 0) { container.innerHTML = '<p class="nv-pviz-empty">No data.</p>'; return; }
+    var b = bnd(pts);
+    var s = svg(model.title);
+
+    _grid(s, b);
+    _axis(s, b);
+    _ticks(s, b);
+
+    if (model.lines) {
+      model.lines.forEach(function (l) {
+        s.appendChild(el('line', { x1: mx(safe(l.from.x), b), y1: my(safe(l.from.y), b), x2: mx(safe(l.to.x), b), y2: my(safe(l.to.y), b), stroke: l.color || '#06b6d4', 'stroke-width': '2', 'stroke-linecap': 'round' }));
+      });
     }
 
-    var xs = points.map(function (p) { return p.x; });
-    var ys = points.map(function (p) { return p.y; });
-    var minX = Math.min.apply(null, xs);
-    var maxX = Math.max.apply(null, xs);
-    var minY = Math.min.apply(null, ys);
-    var maxY = Math.max.apply(null, ys);
-    var rangeX = maxX - minX || 1;
-    var rangeY = maxY - minY || 1;
-
-    var svg = createSvgElement('svg', {
-      viewBox: '0 0 ' + width + ' ' + height,
-      role: 'img',
-      'aria-label': escapeHtml(model.title || 'Scatter plot'),
-      style: 'width:100%;height:auto;max-height:400px'
-    });
-
-    // Grid
-    for (var g = 0; g <= 4; g++) {
-      var gy = padding.top + (plotH / 4) * g;
-      svg.appendChild(createSvgElement('line', {
-        x1: padding.left, y1: gy,
-        x2: width - padding.right, y2: gy,
-        stroke: 'rgba(138,180,248,0.08)', 'stroke-width': '0.5'
-      }));
-    }
-
-    // Points
-    for (var pi = 0; pi < points.length; pi++) {
-      var p = points[pi];
-      var px = padding.left + ((p.x - minX) / rangeX) * plotW;
-      var py = padding.top + plotH - ((p.y - minY) / rangeY) * plotH;
-      var color = p.color || (model.colors && model.colors[p.cluster || 0]) || '#06b6d4';
-      var radius = p.isQuery ? 7 : (p.isNeighbor ? 5 : 3.5);
-
-      if (p.isQuery) {
-        svg.appendChild(createSvgElement('circle', {
-          cx: px, cy: py, r: radius,
-          fill: '#f59e0b', stroke: '#0f172a', 'stroke-width': '2'
-        }));
-      } else if (p.isNeighbor) {
-        svg.appendChild(createSvgElement('circle', {
-          cx: px, cy: py, r: radius,
-          fill: color, stroke: '#ffffff', 'stroke-width': '1.5'
-        }));
-      } else {
-        svg.appendChild(createSvgElement('circle', {
-          cx: px, cy: py, r: radius,
-          fill: color, opacity: '0.7'
-        }));
-      }
-    }
-
-    // Lines (for cosine similarity)
-    if (model.lines && model.lines.length > 0) {
-      for (var li = 0; li < model.lines.length; li++) {
-        var line = model.lines[li];
-        var x1 = padding.left + ((line.from.x - minX) / rangeX) * plotW;
-        var y1 = padding.top + plotH - ((line.from.y - minY) / rangeY) * plotH;
-        var x2 = padding.left + ((line.to.x - minX) / rangeX) * plotW;
-        var y2 = padding.top + plotH - ((line.to.y - minY) / rangeY) * plotH;
-        svg.appendChild(createSvgElement('line', {
-          x1: x1, y1: y1, x2: x2, y2: y2,
-          stroke: line.color || '#06b6d4', 'stroke-width': '2',
-          'stroke-dasharray': '4 2'
-        }));
-      }
-    }
-
-    // Boundary line
     if (model.boundaryLine) {
-      var bLine = model.boundaryLine;
-      var bx1 = minX;
-      var by1 = bLine.slope * bx1 + bLine.intercept;
-      var bx2 = maxX;
-      var by2 = bLine.slope * bx2 + bLine.intercept;
-      var lx1 = padding.left + ((bx1 - minX) / rangeX) * plotW;
-      var ly1 = padding.top + plotH - ((by1 - minY) / rangeY) * plotH;
-      var lx2 = padding.left + ((bx2 - minX) / rangeX) * plotW;
-      var ly2 = padding.top + plotH - ((by2 - minY) / rangeY) * plotH;
-      svg.appendChild(createSvgElement('line', {
-        x1: lx1, y1: ly1, x2: lx2, y2: ly2,
-        stroke: '#ef4444', 'stroke-width': '2',
-        'stroke-dasharray': '6 3', opacity: '0.7'
-      }));
+      var bl = model.boundaryLine;
+      var bx1 = b.x0, by1 = safe(bl.slope) * bx1 + safe(bl.intercept);
+      var bx2 = b.x1, by2 = safe(bl.slope) * bx2 + safe(bl.intercept);
+      s.appendChild(el('line', { x1: mx(bx1, b), y1: my(by1, b), x2: mx(bx2, b), y2: my(by2, b), stroke: '#ef4444', 'stroke-width': '1.5', 'stroke-dasharray': '6 3', opacity: '0.6' }));
     }
 
-    // Annotations
-    if (model.annotations && model.annotations.length > 0) {
-      for (var ai = 0; ai < model.annotations.length; ai++) {
-        var ann = model.annotations[ai];
-        var annX = padding.left + ((ann.x - minX) / rangeX) * plotW;
-        var annY = padding.top + plotH - ((ann.y - minY) / rangeY) * plotH;
-        svg.appendChild(createSvgElement('circle', {
-          cx: annX, cy: annY, r: '5',
-          fill: '#f59e0b', stroke: '#0f172a', 'stroke-width': '2'
-        }));
-        var annText = createSvgElement('text', {
-          x: annX + 10, y: annY - 10,
-          fill: '#f59e0b', 'font-size': '11',
-          'font-family': 'monospace', 'font-weight': 'bold'
-        });
-        annText.textContent = ann.label || '';
-        svg.appendChild(annText);
-      }
-    }
-
-    // Axes
-    svg.appendChild(createSvgElement('line', {
-      x1: padding.left, y1: height - padding.bottom,
-      x2: width - padding.right, y2: height - padding.bottom,
-      stroke: 'rgba(138,180,248,0.2)', 'stroke-width': '1'
-    }));
-
-    // Title
-    var titleText = createSvgElement('text', {
-      x: width / 2, y: 18,
-      fill: '#cdd6f4', 'font-size': '13',
-      'text-anchor': 'middle', 'font-weight': '600',
-      'font-family': 'sans-serif'
+    pts.forEach(function (p) {
+      if (p.isQuery || p.isNeighbor) return;
+      var c = p.color || (model.colors && model.colors[p.cluster || 0]) || '#06b6d4';
+      s.appendChild(el('circle', { cx: mx(safe(p.x), b), cy: my(safe(p.y), b), r: 2.5, fill: c, opacity: '0.45' }));
     });
-    titleText.textContent = model.title || '';
-    svg.appendChild(titleText);
+    pts.forEach(function (p) {
+      if (!p.isNeighbor) return;
+      var c = p.color || (model.colors && model.colors[p.cluster || 0]) || '#06b6d4';
+      s.appendChild(el('circle', { cx: mx(safe(p.x), b), cy: my(safe(p.y), b), r: 4, fill: c, stroke: '#ffffff', 'stroke-width': '1' }));
+    });
+    pts.forEach(function (p) {
+      if (!p.isQuery) return;
+      s.appendChild(el('circle', { cx: mx(safe(p.x), b), cy: my(safe(p.y), b), r: 5, fill: '#f59e0b', stroke: '#080c14', 'stroke-width': '1.5' }));
+    });
 
-    // Axis labels
-    if (model.xLabel) {
-      var xLabelText = createSvgElement('text', {
-        x: width / 2, y: height - 8,
-        fill: 'rgba(138,180,248,0.4)', 'font-size': '10',
-        'text-anchor': 'middle', 'font-family': 'monospace'
+    if (model.annotations) {
+      model.annotations.forEach(function (a) {
+        _ann(s, mx(safe(a.x), b), my(safe(a.y), b), a.label);
       });
-      xLabelText.textContent = model.xLabel;
-      svg.appendChild(xLabelText);
     }
 
-    if (model.yLabel) {
-      var yLabelText = createSvgElement('text', {
-        x: 15, y: height / 2,
-        fill: 'rgba(138,180,248,0.4)', 'font-size': '10',
-        'text-anchor': 'middle', 'font-family': 'monospace',
-        transform: 'rotate(-90, 15, ' + (height / 2) + ')'
-      });
-      yLabelText.textContent = model.yLabel;
-      svg.appendChild(yLabelText);
-    }
-
+    _title(s, model.title);
+    _tooltip(s);
     container.innerHTML = '';
-    container.appendChild(svg);
+    container.appendChild(s);
   }
+
+  // ═══════════════════════════════════════════════════════════
+  // HEATMAP
+  // ═══════════════════════════════════════════════════════════
 
   function renderHeatmap(container, model) {
     var matrices = model.matrices || [];
-    if (matrices.length === 0) {
-      container.innerHTML = '<p class="nv-pviz-empty">No data.</p>';
-      return;
-    }
-
+    if (matrices.length === 0) { container.innerHTML = '<p class="nv-pviz-empty">No data.</p>'; return; }
     var html = '<div class="nv-pviz-heatmap-wrapper">';
-
-    if (model.title) {
-      html += '<h4 class="nv-pviz-chart-title">' + escapeHtml(model.title) + '</h4>';
-    }
-
-    for (var mi = 0; mi < matrices.length; mi++) {
-      var matrix = matrices[mi];
-      if (!matrix || !matrix.length) continue;
-
-      if (model.matrixLabels && model.matrixLabels[mi]) {
-        html += '<h5 class="nv-pviz-heatmap-subtitle">' + escapeHtml(model.matrixLabels[mi]) + '</h5>';
-      }
-
-      var rows = matrix.length;
-      var cols = matrix[0].length;
+    if (model.title) html += '<h4 class="nv-pviz-chart-title">' + esc(model.title) + '</h4>';
+    matrices.forEach(function (matrix, mi) {
+      if (!matrix || !matrix.length) return;
+      if (model.matrixLabels && model.matrixLabels[mi]) html += '<h5 class="nv-pviz-heatmap-subtitle">' + esc(model.matrixLabels[mi]) + '</h5>';
+      var rows = matrix.length, cols = matrix[0].length;
       var flat = [];
-      for (var r = 0; r < rows; r++) {
-        for (var c = 0; c < cols; c++) {
-          flat.push(matrix[r][c]);
-        }
-      }
-      var minVal = Math.min.apply(null, flat);
-      var maxVal = Math.max.apply(null, flat);
-      var range = maxVal - minVal || 1;
-
+      matrix.forEach(function (r) { r.forEach(function (c) { flat.push(safe(c)); }); });
+      var minV = Math.min.apply(null, flat), maxV = Math.max.apply(null, flat);
+      var range = maxV - minV || 1;
       html += '<div class="nv-pviz-heatmap-grid" style="grid-template-columns: auto repeat(' + cols + ', 1fr);">';
-
-      // Header row
       html += '<div class="nv-pviz-heatmap-cell nv-pviz-heatmap-header"></div>';
-      for (var ch = 0; ch < cols; ch++) {
-        var colLabel = (model.colLabels && model.colLabels[ch]) || String(ch);
-        html += '<div class="nv-pviz-heatmap-cell nv-pviz-heatmap-header">' + escapeHtml(colLabel) + '</div>';
-      }
-
-      // Data rows
-      for (var ri = 0; ri < rows; ri++) {
-        var rowLabel = (model.rowLabels && model.rowLabels[ri]) || String(ri);
-        html += '<div class="nv-pviz-heatmap-cell nv-pviz-heatmap-header">' + escapeHtml(rowLabel) + '</div>';
-        for (var ci = 0; ci < cols; ci++) {
-          var val = matrix[ri][ci];
-          var norm = (val - minVal) / range;
-          var alpha = 0.15 + norm * 0.85;
-          html += '<div class="nv-pviz-heatmap-cell" ';
-          html += 'style="background-color: rgba(6,182,212,' + alpha + ');" ';
-          html += 'title="' + escapeHtml((model.rowLabels && model.rowLabels[ri] || ri) + ' → ' + (model.colLabels && model.colLabels[ci] || ci) + ': ' + val.toFixed(4)) + '">';
-          html += '<span>' + val.toFixed(3) + '</span>';
-          html += '</div>';
-        }
-      }
-
+      for (var ch = 0; ch < cols; ch++) html += '<div class="nv-pviz-heatmap-cell nv-pviz-heatmap-header">' + esc((model.colLabels && model.colLabels[ch]) || String(ch)) + '</div>';
+      matrix.forEach(function (row, ri) {
+        html += '<div class="nv-pviz-heatmap-cell nv-pviz-heatmap-header">' + esc((model.rowLabels && model.rowLabels[ri]) || String(ri)) + '</div>';
+        row.forEach(function (val, ci) {
+          var norm = (safe(val) - minV) / range;
+          html += '<div class="nv-pviz-heatmap-cell" style="background-color: rgba(6,182,212,' + (0.08 + norm * 0.92) + ');" title="' + esc(((model.rowLabels && model.rowLabels[ri]) || ri) + ' → ' + ((model.colLabels && model.colLabels[ci]) || ci) + ': ' + safe(val).toFixed(4)) + '"><span>' + safe(val).toFixed(3) + '</span></div>';
+        });
+      });
       html += '</div>';
-    }
-
+    });
     html += '</div>';
     container.innerHTML = html;
   }
+
+  // ═══════════════════════════════════════════════════════════
+  // CONFUSION MATRIX
+  // ═══════════════════════════════════════════════════════════
 
   function renderConfusionMatrix(container, model) {
     var html = '<div class="nv-pviz-confusion-wrapper">';
-
-    if (model.title) {
-      html += '<h4 class="nv-pviz-chart-title">' + escapeHtml(model.title) + '</h4>';
-    }
-
+    if (model.title) html += '<h4 class="nv-pviz-chart-title">' + esc(model.title) + '</h4>';
     var matrix = model.matrix || [[0, 0], [0, 0]];
-    var maxVal = Math.max.apply(null, matrix.flat());
-
+    var maxV = Math.max.apply(null, matrix.flat());
     html += '<div class="nv-pviz-confusion-grid">';
-
-    // Headers
     html += '<div class="nv-pviz-confusion-cell nv-pviz-confusion-corner"></div>';
-    for (var ch = 0; ch < (model.colLabels || []).length; ch++) {
-      html += '<div class="nv-pviz-confusion-cell nv-pviz-confusion-col-header">' + escapeHtml(model.colLabels[ch]) + '</div>';
-    }
-
-    for (var ri = 0; ri < matrix.length; ri++) {
-      var rowLabel = (model.rowLabels && model.rowLabels[ri]) || String(ri);
-      html += '<div class="nv-pviz-confusion-cell nv-pviz-confusion-row-header">' + escapeHtml(rowLabel) + '</div>';
-      for (var ci = 0; ci < matrix[ri].length; ci++) {
-        var val = matrix[ri][ci];
-        var norm = maxVal > 0 ? val / maxVal : 0;
-        var isCorrect = ri === ci;
-        html += '<div class="nv-pviz-confusion-cell nv-pviz-confusion-value" ';
-        html += 'style="background-color: ' + (isCorrect ? 'rgba(6,182,212,' + (0.2 + norm * 0.6) + ')' : 'rgba(239,68,68,' + (0.1 + norm * 0.5) + ')') + ';">';
-        html += '<span class="nv-pviz-confusion-number">' + val + '</span>';
-        html += '</div>';
-      }
-    }
-
+    (model.colLabels || []).forEach(function (l) { html += '<div class="nv-pviz-confusion-cell nv-pviz-confusion-col-header">' + esc(l) + '</div>'; });
+    matrix.forEach(function (row, ri) {
+      html += '<div class="nv-pviz-confusion-cell nv-pviz-confusion-row-header">' + esc((model.rowLabels && model.rowLabels[ri]) || String(ri)) + '</div>';
+      row.forEach(function (val, ci) {
+        var norm = maxV > 0 ? val / maxV : 0;
+        html += '<div class="nv-pviz-confusion-cell nv-pviz-confusion-value" style="background-color: ' + (ri === ci ? 'rgba(6,182,212,' + (0.2 + norm * 0.6) + ')' : 'rgba(239,68,68,' + (0.1 + norm * 0.5) + ')') + ';"><span class="nv-pviz-confusion-number">' + val + '</span></div>';
+      });
+    });
     html += '</div>';
-
-    // Metrics
     if (model.metrics) {
       var m = model.metrics;
       html += '<div class="nv-pviz-metrics">';
-      html += '<div class="nv-pviz-metric-item"><span class="nv-pviz-metric-label">Accuracy:</span><span class="nv-pviz-metric-value">' + (m.accuracy * 100).toFixed(2) + '%</span></div>';
-      html += '<div class="nv-pviz-metric-item"><span class="nv-pviz-metric-label">Precision:</span><span class="nv-pviz-metric-value">' + (m.precision * 100).toFixed(2) + '%</span></div>';
-      html += '<div class="nv-pviz-metric-item"><span class="nv-pviz-metric-label">Recall:</span><span class="nv-pviz-metric-value">' + (m.recall * 100).toFixed(2) + '%</span></div>';
-      html += '<div class="nv-pviz-metric-item"><span class="nv-pviz-metric-label">F1 Score:</span><span class="nv-pviz-metric-value">' + (m.f1Score * 100).toFixed(2) + '%</span></div>';
-      html += '<div class="nv-pviz-metric-item"><span class="nv-pviz-metric-label">Total:</span><span class="nv-pviz-metric-value">' + m.total + '</span></div>';
+      html += '<div class="nv-pviz-metric-item"><span class="nv-pviz-metric-label">Accuracy:</span><span class="nv-pviz-metric-value">' + (safe(m.accuracy) * 100).toFixed(2) + '%</span></div>';
+      html += '<div class="nv-pviz-metric-item"><span class="nv-pviz-metric-label">Precision:</span><span class="nv-pviz-metric-value">' + (safe(m.precision) * 100).toFixed(2) + '%</span></div>';
+      html += '<div class="nv-pviz-metric-item"><span class="nv-pviz-metric-label">Recall:</span><span class="nv-pviz-metric-value">' + (safe(m.recall) * 100).toFixed(2) + '%</span></div>';
+      html += '<div class="nv-pviz-metric-item"><span class="nv-pviz-metric-label">F1 Score:</span><span class="nv-pviz-metric-value">' + (safe(m.f1Score) * 100).toFixed(2) + '%</span></div>';
       html += '</div>';
     }
-
     html += '</div>';
     container.innerHTML = html;
   }
 
+  // ═══════════════════════════════════════════════════════════
+  // ═══════════════════════════════════════════════════════════
+  // OVERLAY — Multiple curves on one chart
+  // ═══════════════════════════════════════════════════════════
+
+  var OVERLAY_COLORS = ['#06b6d4', '#f59e0b', '#ef4444', '#22c55e', '#a855f7'];
+
+  function renderOverlay(container, model) {
+    var overlays = model.overlays || [];
+    if (overlays.length === 0) { container.innerHTML = '<p class="nv-pviz-empty">No data.</p>'; return; }
+
+    // Compute combined bounds
+    var allPts = [];
+    overlays.forEach(function (o) { if (o.points) allPts = allPts.concat(o.points); });
+    var b = bnd(allPts);
+    var s = svg(model.title);
+
+    _grid(s, b);
+    _axis(s, b);
+    _ticks(s, b);
+
+    // Render each overlay curve
+    overlays.forEach(function (overlay, idx) {
+      var pts = overlay.points || [];
+      if (pts.length < 2) return;
+      var color = overlay.color || OVERLAY_COLORS[idx % OVERLAY_COLORS.length];
+      var path = pts.map(function (p) { return mx(safe(p.x), b) + ',' + my(safe(p.y), b); }).join(' ');
+      s.appendChild(el('polyline', {
+        points: path, fill: 'none', stroke: color,
+        'stroke-width': '1.5', 'stroke-linecap': 'round', 'stroke-linejoin': 'round',
+        opacity: overlay.opacity || '1'
+      }));
+    });
+
+    // Legend
+    var legendY = P.t + 8;
+    overlays.forEach(function (overlay, idx) {
+      var color = overlay.color || OVERLAY_COLORS[idx % OVERLAY_COLORS.length];
+      var lx = P.l + 8;
+      var ly = legendY + idx * 16;
+      s.appendChild(el('line', { x1: lx, y1: ly, x2: lx + 14, y2: ly, stroke: color, 'stroke-width': '1.5', 'stroke-linecap': 'round' }));
+      var t = el('text', { x: lx + 20, y: ly + 3, fill: 'rgba(167,183,200,0.5)', 'font-size': '8.5', 'font-family': F.mono });
+      t.textContent = overlay.label || ('Curve ' + (idx + 1));
+      s.appendChild(t);
+    });
+
+    _title(s, model.title);
+    _tooltip(s);
+    container.innerHTML = '';
+    container.appendChild(s);
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // Main Render
+  // ═══════════════════════════════════════════════════════════
+
   function renderVisualization(container, model) {
     if (!container || !model) return;
-
     switch (model.type) {
-      case 'line-plot':
-        renderLinePlot(container, model);
-        break;
-      case 'multi-line':
-        renderMultiLinePlot(container, model);
-        break;
-      case 'bar-chart':
-        renderBarChart(container, model);
-        break;
-      case 'scatter-plot':
-        renderScatterPlot(container, model);
-        break;
-      case 'heatmap':
-        renderHeatmap(container, model);
-        break;
-      case 'confusion-matrix':
-        renderConfusionMatrix(container, model);
-        break;
-      case 'matrix':
-        renderLinePlot(container, model);
-        break;
-      default:
-        renderLinePlot(container, model);
-        break;
+      case 'line-plot': renderLinear(container, model); break;
+      case 'multi-line': renderMultiLine(container, model); break;
+      case 'overlay': renderOverlay(container, model); break;
+      case 'bar-chart': renderBarChart(container, model); break;
+      case 'scatter-plot': renderScatter(container, model); break;
+      case 'heatmap': renderHeatmap(container, model); break;
+      case 'confusion-matrix': renderConfusionMatrix(container, model); break;
+      case 'matrix': renderLinear(container, model); break;
+      default: renderLinear(container, model); break;
     }
   }
 
   window.NeuralVerse = window.NeuralVerse || {};
   window.NeuralVerse.VizRenderer = {
     render: renderVisualization,
-    renderLinePlot: renderLinePlot,
-    renderMultiLinePlot: renderMultiLinePlot,
+    renderOverlay: renderOverlay,
+    renderLinePlot: renderLinear,
+    renderMultiLinePlot: renderMultiLine,
     renderBarChart: renderBarChart,
-    renderScatterPlot: renderScatterPlot,
+    renderScatterPlot: renderScatter,
     renderHeatmap: renderHeatmap,
     renderConfusionMatrix: renderConfusionMatrix
   };
