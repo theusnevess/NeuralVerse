@@ -113,7 +113,7 @@
       html += '<div class="nv-memory-app__title">';
       html += '<p class="nv-page-section__eyebrow">Memory</p>';
       html += '<h1>Your study context, organized.</h1>';
-      html += '<p>Notes, bookmarks, highlights, and study state — surfaced when it matters, never lost in a feed.</p>';
+      html += '<p>Notes, bookmarks, highlights, and study state \u2014 surfaced when it matters, never lost in a feed.</p>';
       html += '</div>';
       html += '<div class="nv-memory-app__actions">';
       html += '<button class="nv-memory-btn nv-memory-btn-primary" data-action="create" aria-label="Create new memory">+ New Memory</button>';
@@ -135,7 +135,7 @@
       html += '<div class="nv-memory-section">';
       html += '<div class="nv-memory-section-header"><h2 class="nv-memory-section-title">Pinned</h2></div>';
       if (pinnedItems.length === 0) {
-        html += '<div class="nv-memory-empty">No pinned memories.</div>';
+        html += '<div class="nv-memory-empty">Pin memories to keep your most important knowledge within reach. Pinned items persist across sessions.</div>';
       } else {
         html += '<div class="nv-memory-card-grid" role="list" aria-label="Pinned memories">';
         for (var p = 0; p < pinnedItems.length; p++) {
@@ -148,7 +148,7 @@
       html += '<div class="nv-memory-section">';
       html += '<div class="nv-memory-section-header"><h2 class="nv-memory-section-title">Recent</h2></div>';
       if (recentItems.length === 0) {
-        html += '<div class="nv-memory-empty">No memories yet. Create your first one.</div>';
+        html += '<div class="nv-memory-empty">Your memory forms as you learn. Notes, bookmarks, and highlights are captured automatically as you explore NeuralVerse.</div>';
       } else {
         html += '<div class="nv-memory-card-grid" role="list" aria-label="Recent memories">';
         for (var r = 0; r < recentItems.length; r++) {
@@ -161,7 +161,7 @@
       html += '<div class="nv-memory-section">';
       html += '<div class="nv-memory-section-header"><h2 class="nv-memory-section-title">Collections</h2></div>';
       if (allCollections.length === 0) {
-        html += '<div class="nv-memory-empty">No collections yet.</div>';
+        html += '<div class="nv-memory-empty">Group related memories into collections to build knowledge clusters. Collections help you see connections between concepts.</div>';
       } else {
         html += '<div class="nv-memory-card-grid" role="list" aria-label="Collections">';
         for (var c = 0; c < allCollections.length; c++) {
@@ -429,7 +429,7 @@
       html += '</div>';
 
       if (allCollections.length === 0) {
-        html += '<div class="nv-memory-empty">No collections yet. Create one to organize your memories.</div>';
+        html += '<div class="nv-memory-empty">Collections let you group related memories into knowledge clusters. Create one to organize your learning journey.</div>';
       } else {
         html += '<div class="nv-memory-card-grid" role="list" aria-label="Collections list">';
         for (var c = 0; c < allCollections.length; c++) {
@@ -487,7 +487,7 @@
       }
 
       if (items.length === 0) {
-        html += '<div class="nv-memory-empty">This collection is empty.</div>';
+        html += '<div class="nv-memory-empty">This collection is empty. Add memories to start building your knowledge cluster.</div>';
       } else {
         html += '<div class="nv-memory-card-grid" role="list" aria-label="Collection items">';
         for (var i = 0; i < items.length; i++) {
@@ -904,6 +904,33 @@
           // Session is valid; dashboard will load on render
         }
       }
+
+      // Consume semantic context from URL
+      consumeSemanticContext();
+    }
+
+    function consumeSemanticContext() {
+      var SemanticContext = window.NeuralVerse?.SemanticContext;
+      if (!SemanticContext) return;
+
+      var conceptId = SemanticContext.getParamFromHash('concept');
+      if (!conceptId) {
+        var ctx = SemanticContext.getActiveContext();
+        if (ctx && ctx.id) conceptId = ctx.id;
+      }
+
+      if (!conceptId) return;
+
+      // Store for editor pre-population
+      _pendingSemanticConcept = conceptId;
+    }
+
+    var _pendingSemanticConcept = null;
+
+    function getPendingSemanticConcept() {
+      var id = _pendingSemanticConcept;
+      _pendingSemanticConcept = null;
+      return id;
     }
 
     function renderDashboard(targetContainer) {
@@ -926,6 +953,7 @@
       renderCollectionsList: renderCollectionsList,
       renderCollectionDetail: renderCollectionDetail,
       renderSearchResults: renderSearchResults,
+      getPendingSemanticConcept: getPendingSemanticConcept,
       destroy: destroy
     };
   }
