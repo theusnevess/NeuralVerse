@@ -24,35 +24,235 @@
 
 /* ── Laboratory Index ──────────────────────────────────── */
 .nv-lab-index {
-  padding: clamp(2rem, 4vw, 3rem) clamp(var(--sys-space-inset-md), 5vw, var(--sys-space-inset-xl));
+  padding: clamp(1.5rem, 3vw, 2.5rem) clamp(var(--sys-space-inset-md), 5vw, var(--sys-space-inset-xl));
   max-width: 78rem;
   margin: 0 auto;
 }
 
-.nv-lab-index-header {
-  margin-bottom: var(--sys-space-stack-xl);
-  text-align: start;
+/* ── Command Header ───────────────────────────────────── */
+.nv-lab-command-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--nv-lab-border);
 }
 
-.nv-lab-index-header h1 {
+.nv-lab-command-eyebrow {
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--nv-lab-accent);
+  margin: 0 0 4px 0;
+  font-weight: 500;
+}
+
+.nv-lab-command-header h1 {
   font-family: var(--sys-font-display-family, var(--sys-font-body-family));
-  font-size: clamp(1.625rem, 2.4vw, 2rem);
+  font-size: clamp(1.375rem, 2.2vw, 1.75rem);
   font-weight: 600;
-  letter-spacing: -0.015em;
+  letter-spacing: -0.02em;
   line-height: 1.2;
   color: var(--nv-lab-text);
   margin: 0;
 }
 
-.nv-lab-index-header p {
-  color: var(--nv-lab-text-secondary);
-  margin: 0.75rem 0 0;
-  max-inline-size: 50ch;
-  line-height: 1.6;
-  font-size: 0.9375rem;
+.nv-lab-command-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
 }
 
-.nv-lab-section-title {
+.nv-lab-command-stat {
+  font-size: 0.75rem;
+  color: var(--nv-lab-text-muted);
+  font-family: monospace;
+  letter-spacing: 0.02em;
+}
+
+.nv-lab-command-divider {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--nv-lab-text-muted);
+  opacity: 0.4;
+}
+
+/* ── Continue Section ─────────────────────────────────── */
+.nv-lab-continue-section {
+  margin-bottom: 20px;
+}
+
+.nv-lab-continue-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 20px;
+  background: var(--nv-lab-accent-dim);
+  border: 1px solid rgba(6,182,212,0.2);
+  border-left: 3px solid var(--nv-lab-accent);
+  border-radius: var(--nv-lab-radius);
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.nv-lab-continue-card:hover,
+.nv-lab-continue-card:focus-visible {
+  border-color: var(--nv-lab-accent);
+  background: rgba(6,182,212,0.12);
+  outline: none;
+}
+
+.nv-lab-continue-label {
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--nv-lab-accent);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.nv-lab-continue-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.nv-lab-continue-title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--nv-lab-text);
+  margin: 0 0 2px 0;
+}
+
+.nv-lab-continue-summary {
+  font-size: 0.8125rem;
+  color: var(--nv-lab-text-secondary);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nv-lab-continue-action {
+  font-size: 0.8125rem;
+  color: var(--nv-lab-accent);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* ── Featured Experiment ──────────────────────────────── */
+.nv-lab-featured-section {
+  margin-bottom: 28px;
+}
+
+.nv-lab-featured-card {
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  background: var(--nv-lab-surface);
+  border: 1px solid var(--nv-lab-border);
+  border-radius: var(--nv-lab-radius);
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  position: relative;
+}
+
+.nv-lab-featured-card:hover,
+.nv-lab-featured-card:focus-visible {
+  border-color: var(--nv-lab-accent);
+  box-shadow: 0 0 0 1px var(--nv-lab-accent-dim);
+  outline: none;
+}
+
+.nv-lab-featured-badge {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--nv-lab-accent);
+  background: var(--nv-lab-accent-dim);
+  padding: 3px 8px;
+  border-radius: var(--nv-lab-radius-sm);
+  font-weight: 500;
+}
+
+.nv-lab-featured-body {
+  flex: 1;
+}
+
+.nv-lab-featured-title {
+  font-size: 1.375rem;
+  font-weight: 600;
+  color: var(--nv-lab-text);
+  margin: 0 0 8px 0;
+}
+
+.nv-lab-featured-summary {
+  font-size: 0.9375rem;
+  color: var(--nv-lab-text-secondary);
+  margin: 0 0 16px 0;
+  line-height: 1.5;
+  max-inline-size: 60ch;
+}
+
+.nv-lab-featured-vars,
+.nv-lab-featured-observe {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.nv-lab-featured-vars-label,
+.nv-lab-featured-observe-label {
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--nv-lab-text-muted);
+  font-weight: 500;
+  min-width: 72px;
+}
+
+.nv-lab-featured-vars-list,
+.nv-lab-featured-observe-text {
+  font-size: 0.875rem;
+  color: var(--nv-lab-text-secondary);
+  font-family: monospace;
+}
+
+.nv-lab-featured-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--nv-lab-border);
+}
+
+.nv-lab-featured-duration,
+.nv-lab-featured-status {
+  font-size: 0.75rem;
+  color: var(--nv-lab-text-muted);
+}
+
+.nv-lab-featured-action {
+  margin-left: auto;
+  font-size: 0.8125rem;
+  color: var(--nv-lab-accent);
+  font-weight: 500;
+}
+
+/* ── Experiment Families ──────────────────────────────── */
+.nv-lab-families-section {
+  margin-bottom: 32px;
+}
+
+.nv-lab-families-heading {
   font-size: 1.1rem;
   font-weight: 600;
   color: var(--nv-lab-text);
@@ -61,124 +261,1135 @@
   border-bottom: 1px solid var(--nv-lab-border);
 }
 
-.nv-lab-recent-section,
-.nv-lab-all-section {
-  margin-bottom: 32px;
+.nv-lab-families-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 
-.nv-lab-grid {
+.nv-lab-family-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.nv-lab-family-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.nv-lab-family-title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--nv-lab-text);
+  margin: 0;
+}
+
+.nv-lab-family-count {
+  font-size: 0.6875rem;
+  color: var(--nv-lab-text-muted);
+  background: var(--nv-lab-surface);
+  border: 1px solid var(--nv-lab-border);
+  padding: 1px 6px;
+  border-radius: 10px;
+  font-family: monospace;
+}
+
+.nv-lab-family-desc {
+  font-size: 0.8125rem;
+  color: var(--nv-lab-text-muted);
+  margin: 0 0 12px 0;
+}
+
+.nv-lab-family-labs {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: var(--nv-lab-gap);
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 12px;
 }
 
-.nv-lab-recent-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: var(--nv-lab-gap-sm);
-}
-
-.nv-lab-card {
-  display: block;
+/* ── Experiment Card ──────────────────────────────────── */
+.nv-lab-experiment-card {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
   background: var(--nv-lab-surface);
   border: 1px solid var(--nv-lab-border);
   border-radius: var(--nv-lab-radius);
-  padding: 16px;
   text-decoration: none;
   color: inherit;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.nv-lab-card:hover,
-.nv-lab-card:focus-visible {
+.nv-lab-experiment-card:hover,
+.nv-lab-experiment-card:focus-visible {
   border-color: var(--nv-lab-accent);
   box-shadow: 0 0 0 1px var(--nv-lab-accent-dim);
   outline: none;
 }
 
-.nv-lab-card--recent {
-  padding: 12px;
-  border-left: 3px solid var(--nv-lab-accent);
+.nv-lab-experiment-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
 }
 
-.nv-lab-card-category {
-  display: inline-block;
-  font-size: 0.7rem;
+.nv-lab-experiment-title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--nv-lab-text);
+  margin: 0;
+  line-height: 1.3;
+}
+
+.nv-lab-experiment-duration {
+  font-size: 0.6875rem;
+  color: var(--nv-lab-text-muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.nv-lab-experiment-manipulate,
+.nv-lab-experiment-observe {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.nv-lab-experiment-label {
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--nv-lab-text-muted);
+  font-weight: 500;
+  min-width: 60px;
+  flex-shrink: 0;
+}
+
+.nv-lab-experiment-vars,
+.nv-lab-experiment-output {
+  font-size: 0.8125rem;
+  color: var(--nv-lab-text-secondary);
+  font-family: monospace;
+}
+
+.nv-lab-experiment-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--nv-lab-border);
+}
+
+.nv-lab-experiment-status {
+  font-size: 0.6875rem;
+  color: var(--nv-lab-text-muted);
+  text-transform: capitalize;
+}
+
+.nv-lab-experiment-run {
+  font-size: 0.75rem;
+  color: var(--nv-lab-accent);
+  font-weight: 500;
+}
+
+/* ── Laboratory Viewer ─────────────────────────────────── */
+.nv-lab-viewer {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 80px);
+  overflow: hidden;
+}
+
+/* ── Workspace Header ─────────────────────────────────── */
+.nv-lab-workspace-header {
+  padding: 16px 24px;
+  background: var(--nv-lab-surface);
+  border-bottom: 1px solid var(--nv-lab-border);
+  flex-shrink: 0;
+}
+
+.nv-lab-ws-nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.nv-lab-ws-family {
+  font-size: 0.6875rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--nv-lab-accent);
   background: var(--nv-lab-accent-dim);
   padding: 2px 8px;
   border-radius: var(--nv-lab-radius-sm);
-  margin-bottom: 8px;
 }
 
-.nv-lab-card-title {
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--nv-lab-text);
-  margin: 0 0 8px 0;
-}
-
-.nv-lab-card-summary {
-  font-size: 0.85rem;
-  color: var(--nv-lab-text-secondary);
-  margin: 0 0 12px 0;
-  line-height: 1.4;
-}
-
-.nv-lab-card-meta {
+.nv-lab-ws-overview {
   display: flex;
-  gap: 12px;
-  font-size: 0.75rem;
-  color: var(--nv-lab-text-muted);
+  flex-direction: column;
+  gap: 6px;
 }
 
-.nv-lab-card-time {
-  font-size: 0.75rem;
-  color: var(--nv-lab-text-muted);
-  margin-top: 4px;
-  display: block;
-}
-
-/* ── Laboratory Viewer ─────────────────────────────────── */
-.nv-lab-viewer {
-  display: grid;
-  grid-template-columns: 320px 1fr;
-  grid-template-rows: auto 1fr;
-  gap: 0;
-  height: calc(100vh - 80px);
-  overflow: hidden;
-}
-
-.nv-lab-viewer-header {
-  grid-column: 1 / -1;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 16px 24px;
-  background: var(--nv-lab-surface);
-  border-bottom: 1px solid var(--nv-lab-border);
-}
-
-.nv-lab-viewer-header h2 {
-  font-size: 1.25rem;
+.nv-lab-ws-title {
+  font-size: 1.375rem;
   font-weight: 600;
   color: var(--nv-lab-text);
   margin: 0;
+}
+
+.nv-lab-ws-summary {
+  font-size: 0.875rem;
+  color: var(--nv-lab-text-secondary);
+  margin: 0;
+  max-inline-size: 65ch;
+}
+
+.nv-lab-ws-meta {
+  display: flex;
+  gap: 16px;
+  margin-top: 4px;
+}
+
+.nv-lab-ws-meta-item {
+  font-size: 0.75rem;
+  color: var(--nv-lab-text-muted);
+}
+
+.nv-lab-ws-meta-label {
+  color: var(--nv-lab-text-secondary);
+  font-weight: 500;
+}
+
+/* ── Workspace Body ───────────────────────────────────── */
+.nv-lab-workspace-body {
+  display: grid;
+  grid-template-columns: 280px 1fr 240px;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* ── Setup Panel ──────────────────────────────────────── */
+.nv-lab-ws-setup {
+  background: var(--nv-lab-surface);
+  border-right: 1px solid var(--nv-lab-border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.nv-lab-ws-setup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--nv-lab-border);
+  flex-shrink: 0;
+}
+
+.nv-lab-ws-setup-header h3 {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--nv-lab-text);
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.nv-lab-ws-reset-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: transparent;
+  border: 1px solid var(--nv-lab-border);
+  border-radius: var(--nv-lab-radius-sm);
+  color: var(--nv-lab-text-muted);
+  padding: 4px 8px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.nv-lab-ws-reset-btn:hover {
+  color: var(--nv-lab-text);
+  border-color: var(--nv-lab-accent);
+}
+
+.nv-lab-ws-params {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 16px;
+}
+
+/* ── Execution Controls ───────────────────────────────── */
+.nv-lab-ws-controls {
+  border-top: 1px solid var(--nv-lab-border);
+  padding: 12px 16px;
+  flex-shrink: 0;
+}
+
+.nv-lab-ws-controls h4 {
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--nv-lab-text-muted);
+  margin: 0 0 8px 0;
+  font-weight: 500;
+}
+
+.nv-lab-ws-control-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.nv-lab-ws-ctrl {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--nv-lab-bg);
+  border: 1px solid var(--nv-lab-border);
+  border-radius: var(--nv-lab-radius-sm);
+  color: var(--nv-lab-text-secondary);
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+
+.nv-lab-ws-ctrl:hover:not(:disabled) {
+  color: var(--nv-lab-text);
+  border-color: var(--nv-lab-accent);
+  background: var(--nv-lab-accent-dim);
+}
+
+.nv-lab-ws-ctrl:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.nv-lab-ws-speed {
+  display: flex;
+  gap: 2px;
+  margin-left: auto;
+}
+
+.nv-lab-ws-speed-btn {
+  padding: 4px 8px;
+  background: transparent;
+  border: 1px solid var(--nv-lab-border);
+  border-radius: var(--nv-lab-radius-sm);
+  color: var(--nv-lab-text-muted);
+  font-size: 0.6875rem;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.nv-lab-ws-speed-btn.active {
+  color: var(--nv-lab-accent);
+  border-color: var(--nv-lab-accent);
+  background: var(--nv-lab-accent-dim);
+}
+
+/* ── Live State ───────────────────────────────────────── */
+.nv-lab-ws-live {
+  border-top: 1px solid var(--nv-lab-border);
+  padding: 12px 16px;
+  flex-shrink: 0;
+}
+
+.nv-lab-ws-live h4 {
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--nv-lab-text-muted);
+  margin: 0 0 8px 0;
+  font-weight: 500;
+}
+
+.nv-lab-ws-live-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.nv-lab-ws-live-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nv-lab-ws-live-label {
+  font-size: 0.75rem;
+  color: var(--nv-lab-text-muted);
+}
+
+.nv-lab-ws-live-value {
+  font-size: 0.75rem;
+  font-family: monospace;
+  color: var(--nv-lab-accent);
+}
+
+/* ── Center Area ──────────────────────────────────────── */
+.nv-lab-ws-center {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ── Timeline ─────────────────────────────────────────── */
+.nv-lab-ws-timeline {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 12px 20px;
+  background: var(--nv-lab-surface);
+  border-bottom: 1px solid var(--nv-lab-border);
+  overflow-x: auto;
+  flex-shrink: 0;
+}
+
+.nv-lab-ws-tl-step {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  cursor: pointer;
+  border-radius: var(--nv-lab-radius-sm);
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+
+.nv-lab-ws-tl-step:hover {
+  background: var(--nv-lab-surface-hover);
+}
+
+.nv-lab-ws-tl-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--nv-lab-border);
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+
+.nv-lab-ws-tl-step.active .nv-lab-ws-tl-dot {
+  background: var(--nv-lab-accent);
+  box-shadow: 0 0 0 2px var(--nv-lab-accent-dim);
+}
+
+.nv-lab-ws-tl-step.completed .nv-lab-ws-tl-dot {
+  background: var(--nv-lab-accent);
+}
+
+.nv-lab-ws-tl-label {
+  font-size: 0.6875rem;
+  color: var(--nv-lab-text-muted);
+}
+
+.nv-lab-ws-tl-step.active .nv-lab-ws-tl-label {
+  color: var(--nv-lab-text);
+}
+
+/* ── Visualization Area ───────────────────────────────── */
+.nv-lab-ws-viz-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.nv-lab-ws-viz-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  border-bottom: 1px solid var(--nv-lab-border);
+  flex-shrink: 0;
+}
+
+.nv-lab-ws-viz-header h3 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--nv-lab-text);
+  margin: 0;
+}
+
+.nv-lab-ws-viz-meta {
+  font-size: 0.6875rem;
+  color: var(--nv-lab-text-muted);
+  font-family: monospace;
+}
+
+.nv-lab-ws-viz-canvas {
+  flex: 1;
+  padding: 16px 20px;
+  overflow: auto;
+  min-height: 200px;
+}
+
+/* ── Observation Workspace ─────────────────────────────── */
+.nv-lab-ws-observations {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 8px;
+  padding: 8px 12px;
+  overflow: auto;
+  min-height: 0;
+}
+
+.nv-lab-obs-panel {
+  display: flex;
+  flex-direction: column;
+  background: var(--nv-lab-surface);
+  border: 1px solid var(--nv-lab-border);
+  border-radius: var(--nv-lab-radius);
+  overflow: hidden;
+  min-height: 160px;
+  transition: border-color 0.2s;
+}
+
+.nv-lab-obs-panel:hover {
+  border-color: var(--nv-lab-border-hover);
+}
+
+.nv-lab-obs-panel--expanded {
+  grid-column: 1 / -1;
+  min-height: 300px;
+}
+
+.nv-lab-obs-panel--large {
+  min-height: 200px;
+}
+
+.nv-lab-obs-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--nv-lab-border);
+  flex-shrink: 0;
+}
+
+.nv-lab-obs-panel-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.nv-lab-obs-panel-title {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--nv-lab-text);
+}
+
+.nv-lab-obs-panel-purpose {
+  font-size: 0.625rem;
+  color: var(--nv-lab-text-muted);
+  font-style: italic;
+}
+
+.nv-lab-obs-panel-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.nv-lab-obs-btn {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid var(--nv-lab-border);
+  border-radius: var(--nv-lab-radius-sm);
+  color: var(--nv-lab-text-muted);
+  cursor: pointer;
+  font-size: 0.75rem;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.nv-lab-obs-btn:hover {
+  color: var(--nv-lab-text);
+  border-color: var(--nv-lab-accent);
+}
+
+.nv-lab-obs-panel-body {
+  flex: 1;
+  padding: 8px 12px;
+  overflow: auto;
+  min-height: 100px;
+}
+
+.nv-lab-obs-title {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--nv-lab-text-secondary);
+  margin: 0 0 8px 0;
+}
+
+/* ── Observation-Specific Styles ───────────────────────── */
+.nv-lab-obs-position {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.nv-lab-obs-pos-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.nv-lab-obs-pos-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nv-lab-obs-pos-label {
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--nv-lab-text-muted);
+}
+
+.nv-lab-obs-pos-value {
+  font-size: 1rem;
+  font-family: monospace;
+  font-weight: 600;
+  color: var(--nv-lab-accent);
+}
+
+.nv-lab-obs-convergence {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.nv-lab-obs-conv-bar {
+  height: 6px;
+  background: var(--nv-lab-border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.nv-lab-obs-conv-fill {
+  height: 100%;
+  background: var(--nv-lab-accent);
+  transition: width 0.3s;
+}
+
+.nv-lab-obs-conv-label {
+  font-size: 0.6875rem;
+  color: var(--nv-lab-text-muted);
+}
+
+.nv-lab-obs-dataset {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.nv-lab-obs-ds-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nv-lab-obs-ds-label {
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--nv-lab-text-muted);
+}
+
+.nv-lab-obs-ds-value {
+  font-size: 0.8125rem;
+  font-family: monospace;
+  color: var(--nv-lab-text);
+}
+
+.nv-lab-obs-fit-quality {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.nv-lab-obs-fit-r2 {
+  font-size: 1.5rem;
+  font-family: monospace;
+  font-weight: 600;
+  color: var(--nv-lab-accent);
+}
+
+.nv-lab-obs-fit-bar {
+  height: 6px;
+  background: var(--nv-lab-border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.nv-lab-obs-fit-fill {
+  height: 100%;
+  background: var(--nv-lab-accent);
+  transition: width 0.3s;
+}
+
+.nv-lab-obs-fit-label {
+  font-size: 0.6875rem;
+  color: var(--nv-lab-text-muted);
+}
+
+.nv-lab-obs-variance {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.nv-lab-obs-var-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nv-lab-obs-var-label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--nv-lab-text-secondary);
+  min-width: 30px;
+}
+
+.nv-lab-obs-var-bar {
+  flex: 1;
+  height: 8px;
+  background: var(--nv-lab-border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.nv-lab-obs-var-fill {
+  height: 100%;
+  background: var(--nv-lab-accent);
+  border-radius: 4px;
+  transition: width 0.3s;
+}
+
+.nv-lab-obs-var-fill--secondary {
+  background: var(--nv-lab-text-muted);
+}
+
+.nv-lab-obs-var-pct {
+  font-size: 0.75rem;
+  font-family: monospace;
+  font-weight: 600;
+  color: var(--nv-lab-text);
+  min-width: 36px;
+  text-align: right;
+}
+
+.nv-lab-obs-var-total {
+  font-size: 0.6875rem;
+  color: var(--nv-lab-text-muted);
+  text-align: right;
+  padding-top: 4px;
+  border-top: 1px solid var(--nv-lab-border);
+}
+
+.nv-lab-obs-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.nv-lab-obs-breakdown-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 8px;
+  background: var(--nv-lab-bg);
+  border-radius: var(--nv-lab-radius-sm);
+}
+
+.nv-lab-obs-breakdown-row--highlight {
+  background: var(--nv-lab-accent-dim);
+  border: 1px solid rgba(6,182,212,0.2);
+}
+
+.nv-lab-obs-breakdown-label {
+  font-size: 0.75rem;
+  color: var(--nv-lab-text-secondary);
+}
+
+.nv-lab-obs-breakdown-value {
+  font-size: 0.8125rem;
+  font-family: monospace;
+  font-weight: 600;
+  color: var(--nv-lab-text);
+}
+
+.nv-lab-obs-ranking {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nv-lab-obs-rank-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.nv-lab-obs-rank-pos {
+  font-size: 0.625rem;
+  color: var(--nv-lab-text-muted);
+  min-width: 14px;
+  text-align: right;
+}
+
+.nv-lab-obs-rank-label {
+  font-size: 0.75rem;
+  color: var(--nv-lab-text-secondary);
+  min-width: 60px;
+}
+
+.nv-lab-obs-rank-bar {
+  flex: 1;
+  height: 4px;
+  background: var(--nv-lab-border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.nv-lab-obs-rank-fill {
+  height: 100%;
+  background: var(--nv-lab-accent);
+  border-radius: 2px;
+}
+
+.nv-lab-obs-rank-val {
+  font-size: 0.6875rem;
+  font-family: monospace;
+  color: var(--nv-lab-text);
+  min-width: 36px;
+  text-align: right;
+}
+
+.nv-lab-obs-cm {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nv-lab-obs-cm-header {
+  display: flex;
+  gap: 4px;
+  padding-left: 70px;
+}
+
+.nv-lab-obs-cm-col {
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--nv-lab-text-muted);
+  text-align: center;
   flex: 1;
 }
 
-.nv-lab-header-summary {
-  font-size: 0.85rem;
-  color: var(--nv-lab-text-secondary);
-  flex: 2;
+.nv-lab-obs-cm-row {
+  display: flex;
+  gap: 4px;
+  align-items: center;
 }
 
-.nv-lab-header-actions {
+.nv-lab-obs-cm-label {
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--nv-lab-text-muted);
+  min-width: 66px;
+}
+
+.nv-lab-obs-cm-cell {
+  flex: 1;
   display: flex;
-  gap: 8px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 6px;
+  border-radius: var(--nv-lab-radius-sm);
+  font-size: 1.125rem;
+  font-weight: 700;
+  font-family: monospace;
+  min-height: 50px;
+}
+
+.nv-lab-obs-cm-cell span {
+  font-size: 0.5625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.7;
+  margin-top: 2px;
+}
+
+.nv-lab-obs-cm-cell--tp { background: rgba(16,185,129,0.15); color: #10b981; }
+.nv-lab-obs-cm-cell--fp { background: rgba(239,68,68,0.15); color: #ef4444; }
+.nv-lab-obs-cm-cell--fn { background: rgba(245,158,11,0.15); color: #f59e0b; }
+.nv-lab-obs-cm-cell--tn { background: rgba(6,182,212,0.15); color: #06b6d4; }
+
+.nv-lab-obs-threshold-table {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nv-lab-obs-th-row {
+  display: flex;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: var(--nv-lab-radius-sm);
+  font-size: 0.75rem;
+  font-family: monospace;
+}
+
+.nv-lab-obs-th-row span {
+  flex: 1;
+  text-align: center;
+  color: var(--nv-lab-text-secondary);
+}
+
+.nv-lab-obs-th-row--active {
+  background: var(--nv-lab-accent-dim);
+}
+
+.nv-lab-obs-th-row--active span {
+  color: var(--nv-lab-accent);
+  font-weight: 600;
+}
+
+.nv-lab-obs-th-header {
+  border-bottom: 1px solid var(--nv-lab-border);
+  margin-bottom: 2px;
+}
+
+.nv-lab-obs-th-header span {
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--nv-lab-text-muted);
+}
+
+.nv-lab-obs-error {
+  font-size: 0.75rem;
+  color: #fca5a5;
+}
+
+/* ── Metrics Panel ────────────────────────────────────── */
+.nv-lab-ws-metrics {
+  border-top: 1px solid var(--nv-lab-border);
+  padding: 12px 20px;
   flex-shrink: 0;
+}
+
+.nv-lab-ws-metrics h4 {
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--nv-lab-text-muted);
+  margin: 0 0 8px 0;
+  font-weight: 500;
+}
+
+.nv-lab-ws-metrics-grid {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.nv-lab-ws-metric {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nv-lab-ws-metric-label {
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--nv-lab-text-muted);
+}
+
+.nv-lab-ws-metric-value {
+  font-size: 0.9375rem;
+  font-family: monospace;
+  font-weight: 600;
+  color: var(--nv-lab-accent);
+}
+
+/* ── Algorithm State Inspector ─────────────────────────── */
+.nv-lab-ws-inspector {
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid var(--nv-lab-border);
+  max-height: 40%;
+  overflow: hidden;
+}
+
+.nv-lab-ws-inspector-header {
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--nv-lab-border);
+  flex-shrink: 0;
+}
+
+.nv-lab-ws-inspector-header h3 {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--nv-lab-text-muted);
+  margin: 0;
+  font-weight: 500;
+}
+
+.nv-lab-ws-inspector-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 12px;
+}
+
+.nv-lab-ws-inspector-section {
+  margin-bottom: 8px;
+}
+
+.nv-lab-ws-inspector-section-title {
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--nv-lab-text-muted);
+  margin: 0 0 6px 0;
+  font-weight: 500;
+}
+
+.nv-lab-ws-inspector-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.nv-lab-inspector-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 6px 8px;
+  background: var(--nv-lab-bg);
+  border: 1px solid var(--nv-lab-border);
+  border-radius: var(--nv-lab-radius-sm);
+  min-width: 100px;
+  flex: 1;
+  transition: border-color 0.3s, background 0.3s;
+}
+
+.nv-lab-inspector-card--changed {
+  border-color: var(--nv-lab-accent);
+  background: var(--nv-lab-accent-dim);
+}
+
+.nv-lab-inspector-label {
+  font-size: 0.5625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--nv-lab-text-muted);
+}
+
+.nv-lab-inspector-value {
+  font-size: 0.8125rem;
+  font-family: monospace;
+  font-weight: 600;
+  color: var(--nv-lab-text);
+}
+
+.nv-lab-inspector-interpretation {
+  font-size: 0.5625rem;
+  color: var(--nv-lab-text-muted);
+  font-style: italic;
+}
+
+.nv-lab-inspector-fixed {
+  font-size: 0.5rem;
+  color: var(--nv-lab-text-muted);
+  opacity: 0.5;
+}
+
+/* ── Change Feed ───────────────────────────────────────── */
+.nv-lab-ws-change-feed {
+  border-top: 1px solid var(--nv-lab-border);
+  padding: 6px 12px;
+}
+
+.nv-lab-ws-change-entries {
+  max-height: 80px;
+  overflow-y: auto;
+}
+
+.nv-lab-ws-change-entry {
+  font-size: 0.6875rem;
+  color: var(--nv-lab-text-muted);
+  padding: 2px 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.nv-lab-change-arrow {
+  color: var(--nv-lab-accent);
+  font-size: 0.75rem;
+}
+
+/* ── Log Panel ────────────────────────────────────────── */
+.nv-lab-ws-log {
+  background: var(--nv-lab-surface);
+  border-left: 1px solid var(--nv-lab-border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.nv-lab-ws-log h4 {
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--nv-lab-text-muted);
+  margin: 0;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--nv-lab-border);
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+.nv-lab-ws-log-entries {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 16px;
+  font-size: 0.75rem;
+  font-family: monospace;
+  line-height: 1.6;
+}
+
+.nv-lab-ws-log-entry {
+  color: var(--nv-lab-text-muted);
+  padding: 2px 0;
+}
+
+.nv-lab-ws-log-entry .log-step {
+  color: var(--nv-lab-accent);
+  margin-right: 6px;
 }
 
 .nv-lab-back-btn {
@@ -543,6 +1754,616 @@
   color: var(--nv-lab-text);
 }
 
+/* ── Bayesian Tree ──────────────────────────────────────── */
+.nv-bayes-tree {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+}
+
+.nv-bayes-tree-root {
+  display: flex;
+  justify-content: center;
+}
+
+.nv-bayes-tree-node {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6px 12px;
+  background: var(--nv-lab-bg);
+  border: 1px solid var(--nv-lab-border);
+  border-radius: var(--nv-lab-radius-sm);
+  font-size: 0.75rem;
+  color: var(--nv-lab-text);
+}
+
+.nv-bayes-tree-root-node {
+  border-color: var(--nv-lab-accent);
+  background: var(--nv-lab-accent-dim);
+}
+
+.nv-bayes-tree-label {
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--nv-lab-text-muted);
+}
+
+.nv-bayes-tree-value {
+  font-family: monospace;
+  font-weight: 600;
+  color: var(--nv-lab-accent);
+}
+
+.nv-bayes-tree-branches {
+  display: flex;
+  gap: 24px;
+  width: 100%;
+}
+
+.nv-bayes-tree-branch {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  border: 1px solid transparent;
+  border-radius: var(--nv-lab-radius-sm);
+  transition: border-color 0.3s, background 0.3s;
+}
+
+.nv-bayes-tree-branch--active {
+  border-color: var(--nv-lab-accent);
+  background: var(--nv-lab-accent-dim);
+}
+
+.nv-bayes-tree-edge {
+  font-size: 0.5625rem;
+  color: var(--nv-lab-text-muted);
+  font-family: monospace;
+}
+
+.nv-bayes-tree-disease {
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.nv-bayes-tree-healthy {
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+.nv-bayes-tree-sub-branches {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+}
+
+.nv-bayes-tree-sub-branch {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.nv-bayes-tree-leaf {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: var(--nv-lab-radius-sm);
+  font-size: 0.6875rem;
+  width: 100%;
+}
+
+.nv-bayes-tree-positive {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.nv-bayes-tree-negative {
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+.nv-bayes-tree-leaf-label {
+  font-size: 0.5625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--nv-lab-text-muted);
+}
+
+.nv-bayes-tree-leaf-value {
+  font-family: monospace;
+  font-weight: 600;
+  font-size: 0.75rem;
+  color: var(--nv-lab-text);
+}
+
+/* ── Bayesian Update ────────────────────────────────────── */
+.nv-bayes-update {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 8px 0;
+}
+
+.nv-bayes-update-bar-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nv-bayes-update-label {
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--nv-lab-text-muted);
+}
+
+.nv-bayes-update-bar-track {
+  height: 8px;
+  background: var(--nv-lab-border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.nv-bayes-update-bar {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.5s ease-out;
+}
+
+.nv-bayes-update-bar--prior {
+  background: var(--nv-lab-text-muted);
+}
+
+.nv-bayes-update-bar--posterior {
+  background: var(--nv-lab-accent);
+}
+
+.nv-bayes-update-value {
+  font-size: 0.9375rem;
+  font-family: monospace;
+  font-weight: 600;
+  color: var(--nv-lab-accent);
+}
+
+.nv-bayes-update-arrow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 4px 0;
+}
+
+.nv-bayes-update-arrow-icon {
+  font-size: 1.25rem;
+  color: var(--nv-lab-accent);
+}
+
+.nv-bayes-update-arrow-label {
+  font-size: 0.6875rem;
+  color: var(--nv-lab-text-secondary);
+  font-family: monospace;
+}
+
+.nv-bayes-update-arrow-sub {
+  font-size: 0.5625rem;
+  color: var(--nv-lab-text-muted);
+  font-family: monospace;
+}
+
+.nv-bayes-update-change {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 8px;
+  background: var(--nv-lab-bg);
+  border: 1px solid var(--nv-lab-border);
+  border-radius: var(--nv-lab-radius-sm);
+}
+
+.nv-bayes-update-change-label {
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--nv-lab-text-muted);
+}
+
+.nv-bayes-update-change-value {
+  font-family: monospace;
+  font-weight: 600;
+  font-size: 0.8125rem;
+}
+
+.nv-bayes-update-change--positive {
+  color: #22c55e;
+}
+
+.nv-bayes-update-change--negative {
+  color: #ef4444;
+}
+
+/* ── Belief Evolution Chart ─────────────────────────────── */
+.nv-bayes-evolution {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.nv-bayes-evolution-chart {
+  width: 100%;
+}
+
+.nv-bayes-evolution-svg {
+  width: 100%;
+  height: auto;
+}
+
+.nv-bayes-evolution-grid {
+  stroke: var(--nv-lab-border);
+  stroke-width: 0.5;
+}
+
+.nv-bayes-evolution-line {
+  fill: none;
+  stroke: var(--nv-lab-accent);
+  stroke-width: 2;
+}
+
+.nv-bayes-evolution-point {
+  fill: var(--nv-lab-accent);
+  stroke: var(--nv-lab-surface);
+  stroke-width: 1.5;
+}
+
+.nv-bayes-evolution-axis-label {
+  font-size: 8px;
+  fill: var(--nv-lab-text-muted);
+  font-family: monospace;
+}
+
+.nv-bayes-evolution-legend {
+  display: flex;
+  justify-content: center;
+}
+
+.nv-bayes-evolution-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.625rem;
+  color: var(--nv-lab-text-muted);
+}
+
+.nv-bayes-evolution-legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--nv-lab-accent);
+}
+
+/* ── Confusion Matrix ───────────────────────────────────── */
+.nv-bayes-confusion {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid var(--nv-lab-border);
+  border-radius: var(--nv-lab-radius-sm);
+  overflow: hidden;
+}
+
+.nv-bayes-confusion-header,
+.nv-bayes-confusion-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.nv-bayes-confusion-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 4px;
+  border: 1px solid var(--nv-lab-border);
+  font-size: 0.625rem;
+}
+
+.nv-bayes-confusion-cell--header {
+  background: var(--nv-lab-bg);
+  color: var(--nv-lab-text-secondary);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.nv-bayes-confusion-cell--tp {
+  background: rgba(34, 197, 94, 0.1);
+}
+
+.nv-bayes-confusion-cell--fn {
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.nv-bayes-confusion-cell--fp {
+  background: rgba(234, 179, 8, 0.1);
+}
+
+.nv-bayes-confusion-cell--tn {
+  background: rgba(59, 130, 246, 0.1);
+}
+
+.nv-bayes-confusion-cell-label {
+  font-size: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--nv-lab-text-muted);
+}
+
+.nv-bayes-confusion-cell-value {
+  font-family: monospace;
+  font-weight: 600;
+  font-size: 0.8125rem;
+  color: var(--nv-lab-text);
+}
+
+.nv-bayes-confusion-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.nv-bayes-confusion-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 4px 8px;
+  background: var(--nv-lab-bg);
+  border: 1px solid var(--nv-lab-border);
+  border-radius: var(--nv-lab-radius-sm);
+  min-width: 80px;
+}
+
+.nv-bayes-confusion-stat-label {
+  font-size: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--nv-lab-text-muted);
+}
+
+.nv-bayes-confusion-stat-value {
+  font-family: monospace;
+  font-weight: 600;
+  font-size: 0.75rem;
+  color: var(--nv-lab-accent);
+}
+
+/* ── Embedding Space ────────────────────────────────────── */
+.nv-embed-space {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.nv-embed-space-svg {
+  width: 100%;
+  height: auto;
+}
+
+.nv-embed-space-grid {
+  stroke: var(--nv-lab-border);
+  stroke-width: 0.5;
+}
+
+.nv-embed-space-point {
+  transition: r 0.2s;
+}
+
+.nv-embed-space-label {
+  font-size: 8px;
+  fill: var(--nv-lab-text-muted);
+  font-family: monospace;
+}
+
+.nv-embed-space-legend {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.nv-embed-space-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.625rem;
+  color: var(--nv-lab-text-muted);
+}
+
+.nv-embed-space-legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+/* ── Embedding Matrix ───────────────────────────────────── */
+.nv-embed-matrix {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid var(--nv-lab-border);
+  border-radius: var(--nv-lab-radius-sm);
+  overflow: hidden;
+  font-size: 0.625rem;
+}
+
+.nv-embed-matrix-row {
+  display: grid;
+  grid-template-columns: 40px repeat(9, 1fr);
+}
+
+.nv-embed-matrix-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 2px;
+  border: 1px solid var(--nv-lab-border);
+  font-family: monospace;
+  font-size: 0.5625rem;
+  color: var(--nv-lab-text);
+  min-height: 28px;
+}
+
+.nv-embed-matrix-cell--header {
+  background: var(--nv-lab-bg);
+  color: var(--nv-lab-text-secondary);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.nv-embed-matrix-cell--highlight {
+  border-color: var(--nv-lab-accent);
+  box-shadow: inset 0 0 0 1px var(--nv-lab-accent-dim);
+}
+
+/* ── Nearest Neighbors ──────────────────────────────────── */
+.nv-embed-neighbors {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.nv-embed-neighbor {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  background: var(--nv-lab-bg);
+  border: 1px solid var(--nv-lab-border);
+  border-radius: var(--nv-lab-radius-sm);
+  transition: border-color 0.2s;
+}
+
+.nv-embed-neighbor:hover {
+  border-color: var(--nv-lab-border-hover);
+}
+
+.nv-embed-neighbor-rank {
+  font-size: 0.6875rem;
+  font-family: monospace;
+  color: var(--nv-lab-accent);
+  font-weight: 600;
+  min-width: 24px;
+}
+
+.nv-embed-neighbor-name {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--nv-lab-text);
+  flex: 1;
+}
+
+.nv-embed-neighbor-scores {
+  display: flex;
+  gap: 8px;
+}
+
+.nv-embed-neighbor-score {
+  font-size: 0.625rem;
+  font-family: monospace;
+  color: var(--nv-lab-text-secondary);
+  padding: 2px 6px;
+  background: var(--nv-lab-surface);
+  border-radius: var(--nv-lab-radius-sm);
+}
+
+.nv-embed-neighbor-score--dim {
+  opacity: 0.6;
+}
+
+/* ── Vector Anatomy ─────────────────────────────────────── */
+.nv-embed-anatomy {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.nv-embed-anatomy-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nv-embed-anatomy-label {
+  font-size: 0.5625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--nv-lab-text-muted);
+  min-width: 70px;
+  text-align: right;
+}
+
+.nv-embed-anatomy-tracks {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nv-embed-anatomy-track {
+  height: 4px;
+  background: var(--nv-lab-border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.nv-embed-anatomy-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.3s;
+}
+
+.nv-embed-anatomy-fill--query {
+  background: var(--nv-lab-accent);
+}
+
+.nv-embed-anatomy-fill--neighbor {
+  background: #22c55e;
+}
+
+.nv-embed-anatomy-value {
+  font-size: 0.5625rem;
+  font-family: monospace;
+  color: var(--nv-lab-text-muted);
+  min-width: 40px;
+}
+
+.nv-embed-anatomy-legend {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.nv-embed-anatomy-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.5625rem;
+  color: var(--nv-lab-text-muted);
+}
+
+.nv-embed-anatomy-legend-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
 /* ── Empty State ───────────────────────────────────────── */
 .nv-lab-empty-params {
   color: var(--nv-lab-text-muted);
@@ -551,19 +2372,71 @@
   padding: 24px;
 }
 
+.nv-lab-empty-state {
+  color: var(--nv-lab-text-muted);
+  font-size: 0.9375rem;
+  text-align: center;
+  padding: 48px 24px;
+  border: 1px dashed var(--nv-lab-border);
+  border-radius: var(--nv-lab-radius);
+  margin-top: 16px;
+}
+
+.nv-lab-empty-state p {
+  margin: 0 0 8px 0;
+}
+
+.nv-lab-empty-hint {
+  font-size: 0.8125rem;
+  color: var(--nv-lab-text-muted);
+  opacity: 0.7;
+}
+
 /* ── Responsive ────────────────────────────────────────── */
+
+/* Hide generic context panel on Labs pages */
+[data-workspace-active-view="laboratory"] ~ .nv-context-panel,
+[data-workspace-active-view="laboratory-detail"] ~ .nv-context-panel {
+  display: none;
+}
+
 @media (max-width: 1024px) {
-  .nv-lab-viewer {
+  .nv-lab-workspace-body {
     grid-template-columns: 1fr;
-    grid-template-rows: auto auto 1fr;
-    height: auto;
-    min-height: calc(100vh - 80px);
+    grid-template-rows: auto 1fr auto;
   }
 
-  .nv-lab-parameter-panel {
+  .nv-lab-ws-setup {
     border-right: none;
     border-bottom: 1px solid var(--nv-lab-border);
-    max-height: 300px;
+    max-height: 250px;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .nv-lab-ws-params {
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .nv-lab-ws-controls,
+  .nv-lab-ws-live {
+    border-top: none;
+    border-right: 1px solid var(--nv-lab-border);
+    flex: 1;
+    min-width: 150px;
+  }
+
+  .nv-lab-ws-log {
+    border-left: none;
+    border-top: 1px solid var(--nv-lab-border);
+    max-height: 150px;
+  }
+
+  .nv-lab-command-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
   }
 }
 
@@ -572,30 +2445,97 @@
     padding: 16px;
   }
 
-  .nv-lab-grid {
+  .nv-lab-family-labs {
     grid-template-columns: 1fr;
   }
 
-  .nv-lab-recent-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .nv-lab-viewer-header {
-    flex-wrap: wrap;
+  .nv-lab-workspace-header {
     padding: 12px 16px;
   }
 
-  .nv-lab-header-summary {
-    flex-basis: 100%;
-    order: 3;
+  .nv-lab-ws-title {
+    font-size: 1.125rem;
   }
 
-  .nv-lab-visualization-panel {
-    padding: 16px;
+  .nv-lab-ws-viz-canvas {
+    padding: 12px 16px;
+  }
+
+  .nv-lab-ws-metrics-grid {
+    gap: 12px;
+  }
+
+  .nv-lab-featured-title {
+    font-size: 1.125rem;
+  }
+
+  .nv-lab-featured-badge {
+    position: static;
+    display: inline-block;
+    margin-bottom: 8px;
+  }
+
+  .nv-lab-experiment-manipulate,
+  .nv-lab-experiment-observe {
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .nv-lab-experiment-label {
+    min-width: auto;
   }
 
   .nv-lab-summary-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .nv-bayes-tree-branches {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .nv-bayes-tree-sub-branches {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .nv-bayes-confusion-header,
+  .nv-bayes-confusion-row {
+    grid-template-columns: 1fr 1fr 1fr;
+    font-size: 0.5625rem;
+  }
+
+  .nv-bayes-confusion-cell {
+    padding: 4px 2px;
+  }
+
+  .nv-bayes-confusion-cell-value {
+    font-size: 0.6875rem;
+  }
+
+  .nv-embed-matrix-row {
+    grid-template-columns: 30px repeat(9, 1fr);
+  }
+
+  .nv-embed-matrix-cell {
+    font-size: 0.5rem;
+    padding: 2px 1px;
+  }
+
+  .nv-embed-neighbor {
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 6px 8px;
+  }
+
+  .nv-embed-neighbor-scores {
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .nv-embed-anatomy-label {
+    min-width: 50px;
+    font-size: 0.5rem;
   }
 }
 
@@ -606,5 +2546,24 @@
 
   .nv-lab-summary-grid {
     grid-template-columns: 1fr;
+  }
+
+  .nv-lab-command-meta {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .nv-lab-continue-card {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .nv-lab-continue-action {
+    width: 100%;
+    text-align: right;
+  }
+
+  .nv-lab-ws-control-bar {
+    flex-wrap: wrap;
   }
 }
