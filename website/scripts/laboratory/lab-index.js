@@ -6,17 +6,31 @@
 (function () {
   'use strict';
 
-  var LAB_FILES = [];
+  var EXPECTED_LAB_COUNT = 10;
+
+  var LAB_FILES = [
+    'data/laboratories/linear-regression-lab.js',
+    'data/laboratories/logistic-regression-lab.js',
+    'data/laboratories/gradient-descent-lab.js',
+    'data/laboratories/pca-projection-lab.js',
+    'data/laboratories/kmeans-clustering-lab.js',
+    'data/laboratories/bayes-rule-lab.js',
+    'data/laboratories/embedding-similarity-lab.js',
+    'data/laboratories/cosine-similarity-lab.js',
+    'data/laboratories/precision-recall-lab.js',
+    'data/laboratories/transformer-attention-lab.js'
+  ];
 
   var loaded = false;
   var loading = false;
   var pendingCallbacks = [];
 
   function loadAllLabs(callback) {
-    // Labs are loaded via static script tags in index.html.
-    // Check if they're already registered.
+    // Primary: labs are loaded via static script tags in index.html.
+    // Fallback: dynamically inject any that are missing.
     var existingLabs = window.NeuralVerse.LabRegistry ? window.NeuralVerse.LabRegistry.getAll().length : 0;
-    if (existingLabs >= LAB_FILES.length || loaded) {
+
+    if (existingLabs >= EXPECTED_LAB_COUNT || loaded) {
       loaded = true;
       if (callback) callback();
       return;
@@ -27,13 +41,12 @@
       return;
     }
 
-    // Dynamic fallback: load scripts that haven't been loaded yet
     loading = true;
     if (callback) pendingCallbacks.push(callback);
 
     var loadedCount = 0;
     var toLoad = LAB_FILES.filter(function (file) {
-      return !document.querySelector('script[src="' + file + '"]');
+      return !document.querySelector('script[src*="' + file + '"]');
     });
 
     if (toLoad.length === 0) {
@@ -56,6 +69,10 @@
       };
       script.onerror = function () {
         loadedCount++;
+        console.warn('Failed to load lab file: ' + file);
+        if (window.NeuralVerse.LabRegistry && window.NeuralVerse.LabRegistry.recordFailure) {
+          window.NeuralVerse.LabRegistry.recordFailure(file, 'Script load failed');
+        }
         if (loadedCount >= toLoad.length) {
           loaded = true;
           loading = false;
@@ -80,8 +97,15 @@
         window.NeuralVerse.ExportImportBridge.integrateWithPersistenceManager();
       }
 
-      var labCount = window.NeuralVerse.LabRegistry ? window.NeuralVerse.LabRegistry.getAll().length : 0;
-      if (window.NV_DEBUG) console.log('Laboratory system initialized with ' + labCount + ' labs.');
+      var registry = window.NeuralVerse.LabRegistry;
+      var health = registry ? registry.healthCheck(EXPECTED_LAB_COUNT) : null;
+      if (health) {
+        if (window.NV_DEBUG || !health.complete) {
+          console.log('Laboratory health: ' + health.loaded + '/' + EXPECTED_LAB_COUNT + ' labs loaded' +
+            (health.failedCount > 0 ? ' (' + health.failedCount + ' failed)' : '') +
+            (health.duplicates > 0 ? ' (' + health.duplicates + ' duplicates blocked)' : ''));
+        }
+      }
     });
   }
 

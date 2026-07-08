@@ -12,6 +12,8 @@
   var _categoryIndex = {};
   var _conceptIndex = {};
   var _artifactIndex = {};
+  var _failedLabs = [];
+  var _duplicateCount = 0;
 
   function _rebuildIndexes() {
     _slugIndex = {};
@@ -86,10 +88,23 @@
       console.warn('Lab validation failed for ' + (definition.id || 'unknown') + ':', validation);
       return false;
     }
-    labs[definition.id] = definition;
-    if (labOrder.indexOf(definition.id) === -1) {
-      labOrder.push(definition.id);
+
+    // Duplicate detection: same ID
+    if (labs[definition.id]) {
+      _duplicateCount++;
+      console.warn('Duplicate lab registration ignored: ' + definition.id + ' (already registered)');
+      return false;
     }
+
+    // Duplicate detection: same slug
+    if (_slugIndex[definition.slug]) {
+      _duplicateCount++;
+      console.warn('Duplicate lab slug ignored: ' + definition.slug + ' (already registered as ' + _slugIndex[definition.slug].id + ')');
+      return false;
+    }
+
+    labs[definition.id] = definition;
+    labOrder.push(definition.id);
     _addToIndexes(definition);
     return true;
   }
@@ -169,6 +184,29 @@
     });
   }
 
+  function recordFailure(file, error) {
+    _failedLabs.push({ file: file, error: error, timestamp: new Date().toISOString() });
+  }
+
+  function healthCheck(expectedCount) {
+    var loaded = getAllLabs();
+    var loadedCount = loaded.length;
+    var expected = expectedCount || loadedCount;
+    var slugs = loaded.map(function (l) { return l.slug; });
+    var idDupes = slugs.filter(function (s, i) { return slugs.indexOf(s) !== i; });
+
+    return {
+      loaded: loadedCount,
+      expected: expected,
+      complete: loadedCount >= expected,
+      duplicates: _duplicateCount,
+      duplicateSlugs: idDupes,
+      failed: _failedLabs.slice(),
+      failedCount: _failedLabs.length,
+      registryReady: loadedCount > 0
+    };
+  }
+
   window.NeuralVerse = window.NeuralVerse || {};
   window.NeuralVerse.LabRegistry = {
     register: registerLab,
@@ -180,7 +218,9 @@
     getByArtifact: getLabsByArtifact,
     getCategories: getCategories,
     search: searchLabs,
-    getIndex: getLabIndex
+    getIndex: getLabIndex,
+    recordFailure: recordFailure,
+    healthCheck: healthCheck
   };
 
 })();
