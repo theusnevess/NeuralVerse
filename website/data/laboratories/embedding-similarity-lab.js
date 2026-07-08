@@ -3,37 +3,53 @@
 
   window.NeuralVerse = window.NeuralVerse || {};
 
-  function seededRandom(seed) {
-    var state = seed % 2147483647;
-    if (state <= 0) state += 2147483646;
-    return function () {
-      state = (state * 16807) % 2147483647;
-      return (state - 1) / 2147483646;
-    };
+  var EPSILON = 1e-10;
+
+  var ITEMS = ['embedding', 'vector', 'token', 'attention', 'query', 'retrieval', 'database', 'index', 'document'];
+
+  var SEMANTIC_DIMENSIONS = ['representation', 'geometry', 'retrieval', 'language', 'modeling', 'data'];
+
+  var BASE_EMBEDDINGS = {
+    embedding:    [0.95, 0.80, 0.85, 0.70, 0.90, 0.60],
+    vector:       [0.85, 0.90, 0.70, 0.60, 0.75, 0.80],
+    token:        [0.70, 0.50, 0.60, 0.90, 0.65, 0.55],
+    attention:    [0.80, 0.60, 0.75, 0.85, 0.90, 0.50],
+    query:        [0.65, 0.55, 0.90, 0.70, 0.70, 0.75],
+    retrieval:    [0.70, 0.60, 0.95, 0.65, 0.80, 0.85],
+    database:     [0.50, 0.45, 0.85, 0.40, 0.55, 0.95],
+    index:        [0.55, 0.50, 0.80, 0.45, 0.60, 0.90],
+    document:     [0.60, 0.40, 0.70, 0.75, 0.50, 0.85]
+  };
+
+  function safeDiv(a, b) {
+    if (b < EPSILON) return 0;
+    return a / b;
   }
 
-  var WORDS = ['cat', 'dog', 'car', 'house', 'tree', 'book'];
+  function clamp(val, min, max) {
+    return Math.max(min, Math.min(max, val));
+  }
 
-  var BASE_VECTORS = [
-    [0.8, 0.2, 0.7, 0.1, 0.3, 0.5, 0.9, 0.4],
-    [0.75, 0.25, 0.65, 0.15, 0.35, 0.45, 0.85, 0.35],
-    [0.1, 0.7, 0.2, 0.8, 0.6, 0.3, 0.1, 0.9],
-    [0.15, 0.65, 0.25, 0.75, 0.55, 0.35, 0.15, 0.85],
-    [0.5, 0.4, 0.6, 0.3, 0.2, 0.7, 0.5, 0.3],
-    [0.3, 0.6, 0.4, 0.5, 0.7, 0.2, 0.3, 0.6]
-  ];
+  function round4(val) {
+    return Math.round(val * 10000) / 10000;
+  }
 
-  function generateEmbeddings(dimension, scale) {
-    var vectors = [];
-    for (var i = 0; i < WORDS.length; i++) {
-      var vec = [];
-      for (var d = 0; d < dimension; d++) {
-        var baseIdx = d % BASE_VECTORS[i].length;
-        vec.push(Math.round(BASE_VECTORS[i][baseIdx] * scale * 10000) / 10000);
-      }
-      vectors.push(vec);
+  function vectorNorm(v) {
+    var sum = 0;
+    for (var i = 0; i < v.length; i++) {
+      sum += v[i] * v[i];
     }
-    return vectors;
+    return Math.sqrt(sum);
+  }
+
+  function normalizeVector(v) {
+    var norm = vectorNorm(v);
+    if (norm < EPSILON) return v.slice();
+    var result = [];
+    for (var i = 0; i < v.length; i++) {
+      result.push(round4(v[i] / norm));
+    }
+    return result;
   }
 
   function dotProduct(a, b) {
@@ -44,109 +60,1002 @@
     return sum;
   }
 
-  function magnitude(v) {
-    var sum = 0;
-    for (var i = 0; i < v.length; i++) {
-      sum += v[i] * v[i];
-    }
-    return Math.sqrt(sum);
-  }
-
   function cosineSimilarity(a, b) {
-    var magA = magnitude(a);
-    var magB = magnitude(b);
-    if (magA === 0 || magB === 0) return 0;
-    return dotProduct(a, b) / (magA * magB);
+    var normA = vectorNorm(a);
+    var normB = vectorNorm(b);
+    if (normA < EPSILON || normB < EPSILON) return 0;
+    return round4(dotProduct(a, b) / (normA * normB));
   }
 
-  function computeSimilarityMatrix(vectors) {
+  function euclideanDistance(a, b) {
+    var sum = 0;
+    for (var i = 0; i < a.length; i++) {
+      var diff = a[i] - b[i];
+      sum += diff * diff;
+    }
+    return round4(Math.sqrt(sum));
+  }
+
+  function computeNorms(vectors) {
+    var norms = [];
+    for (var i = 0; i < vectors.length; i++) {
+      norms.push(round4(vectorNorm(vectors[i])));
+    }
+    return norms;
+  }
+
+  function computeNormalizedVectors(vectors) {
+    var normalized = [];
+    for (var i = 0; i < vectors.length; i++) {
+      normalized.push(normalizeVector(vectors[i]));
+    }
+    return normalized;
+  }
+
+  function computeDotProductMatrix(vectors) {
     var n = vectors.length;
     var matrix = [];
     for (var i = 0; i < n; i++) {
       var row = [];
       for (var j = 0; j < n; j++) {
-        row.push(Math.round(cosineSimilarity(vectors[i], vectors[j]) * 10000) / 10000);
+        row.push(round4(dotProduct(vectors[i], vectors[j])));
       }
       matrix.push(row);
     }
     return matrix;
   }
 
-  function computePairwiseSimilarities(words, matrix) {
-    var similarities = [];
-    for (var i = 0; i < words.length; i++) {
-      for (var j = i + 1; j < words.length; j++) {
-        similarities.push({
-          word1: words[i],
-          word2: words[j],
-          score: matrix[i][j]
-        });
+  function computeCosineMatrix(vectors) {
+    var n = vectors.length;
+    var matrix = [];
+    for (var i = 0; i < n; i++) {
+      var row = [];
+      for (var j = 0; j < n; j++) {
+        row.push(cosineSimilarity(vectors[i], vectors[j]));
+      }
+      matrix.push(row);
+    }
+    return matrix;
+  }
+
+  function computeDistanceMatrix(vectors) {
+    var n = vectors.length;
+    var matrix = [];
+    for (var i = 0; i < n; i++) {
+      var row = [];
+      for (var j = 0; j < n; j++) {
+        row.push(euclideanDistance(vectors[i], vectors[j]));
+      }
+      matrix.push(row);
+    }
+    return matrix;
+  }
+
+  function rankNeighbors(queryIdx, cosineMatrix) {
+    var scores = [];
+    for (var i = 0; i < cosineMatrix.length; i++) {
+      if (i !== queryIdx) {
+        scores.push({ index: i, score: cosineMatrix[queryIdx][i] });
       }
     }
-    similarities.sort(function (a, b) { return b.score - a.score; });
-    return similarities;
+    scores.sort(function (a, b) { return b.score - a.score; });
+    return scores;
+  }
+
+  function computeDimensionContributions(queryVec, neighborVec) {
+    var contributions = [];
+    var queryNorm = vectorNorm(queryVec);
+    var neighborNorm = vectorNorm(neighborVec);
+
+    for (var i = 0; i < queryVec.length; i++) {
+      var qNormed = queryNorm > EPSILON ? queryVec[i] / queryNorm : 0;
+      var nNormed = neighborNorm > EPSILON ? neighborVec[i] / neighborNorm : 0;
+      contributions.push({
+        dimension: SEMANTIC_DIMENSIONS[i] || 'dim_' + i,
+        query: round4(qNormed),
+        neighbor: round4(nNormed),
+        contribution: round4(qNormed * nNormed)
+      });
+    }
+    return contributions;
+  }
+
+  function runEmbeddingPipeline(params) {
+    var items = ITEMS.slice();
+    var vectors = [];
+    for (var i = 0; i < items.length; i++) {
+      vectors.push(BASE_EMBEDDINGS[items[i]].slice());
+    }
+
+    var norms = computeNorms(vectors);
+    var normalizedVectors = computeNormalizedVectors(vectors);
+    var dotMatrix = computeDotProductMatrix(vectors);
+    var cosineMatrix = computeCosineMatrix(vectors);
+    var distanceMatrix = computeDistanceMatrix(vectors);
+
+    var queryIdx = 0;
+    var neighbors = rankNeighbors(queryIdx, cosineMatrix);
+    var topMatch = neighbors.length > 0 ? items[neighbors[0].index] : '';
+    var topScore = neighbors.length > 0 ? neighbors[0].score : 0;
+
+    var contributions = computeDimensionContributions(vectors[queryIdx], vectors[neighbors.length > 0 ? neighbors[0].index : 0]);
+
+    return {
+      items: items,
+      vectors: vectors,
+      norms: norms,
+      normalizedVectors: normalizedVectors,
+      dotProductMatrix: dotMatrix,
+      cosineMatrix: cosineMatrix,
+      distanceMatrix: distanceMatrix,
+      queryIndex: queryIdx,
+      neighbors: neighbors,
+      topMatch: topMatch,
+      topScore: topScore,
+      dimensionContributions: contributions
+    };
   }
 
   var labDefinition = {
     id: 'lab-embedding-similarity',
     slug: 'embedding-similarity',
-    title: 'Embedding Similarity',
-    summary: 'Explore how word embeddings capture semantic similarity by comparing vector representations of words.',
+    title: 'Embedding Similarity Laboratory',
+    summary: 'Explore how vector representations encode semantic relationships. Watch similarity emerge from vector geometry through normalization, dot product, cosine similarity, and nearest-neighbor retrieval.',
     category: 'natural-language-processing',
     artifactReferences: [],
-    conceptReferences: ['word-embeddings'],
+    conceptReferences: ['word-embeddings', 'cosine-similarity', 'nearest-neighbor', 'semantic-search'],
     parameterSchema: [
       {
-        name: 'dimension',
+        name: 'queryItem',
+        type: 'select',
+        options: ITEMS.slice(),
+        default: 'embedding',
+        label: 'Query Item'
+      },
+      {
+        name: 'topK',
         type: 'integer',
-        min: 2,
+        min: 1,
         max: 8,
         step: 1,
         default: 3,
-        label: 'Embedding Dimension'
-      },
-      {
-        name: 'scale',
-        type: 'slider',
-        min: 0.5,
-        max: 3.0,
-        step: 0.1,
-        default: 1.0,
-        label: 'Scale'
+        label: 'Top-K Neighbors'
       }
     ],
     initialState: {
-      dimension: 3,
-      scale: 1.0
+      queryItem: 'embedding',
+      topK: 3
+    },
+    steps: (function () {
+      var steps = [];
+
+      steps.push({
+        label: 'Load',
+        log: 'Loaded 9 deterministic embedding vectors with semantic dimensions',
+        state: function (p) {
+          return {
+            query: p.queryItem,
+            dimension: 6,
+            vectorNorm: 0,
+            normalized: false,
+            topMatch: '—',
+            cosineSim: 0,
+            dotProduct: 0,
+            euclideanDist: 0,
+            topK: p.topK,
+            avgSimilarity: 0,
+            magnitudeEffect: 'Pending',
+            angleInterpretation: 'Pending',
+            clusterDensity: 'Pending'
+          };
+        },
+        metrics: function (p) {
+          return {
+            'Items': ITEMS.length,
+            'Dimensions': 6,
+            'Query': p.queryItem,
+            'Status': 'Loaded'
+          };
+        },
+        viz: function (p) {
+          var result = runEmbeddingPipeline(p);
+          return {
+            phase: 'load',
+            items: result.items,
+            vectors: result.vectors,
+            queryIndex: result.queryIndex
+          };
+        }
+      });
+
+      steps.push({
+        label: 'Inspect Norms',
+        log: 'Computed vector norms — magnitude varies across items',
+        state: function (p) {
+          var result = runEmbeddingPipeline(p);
+          var queryIdx = result.items.indexOf(p.queryItem);
+          if (queryIdx < 0) queryIdx = 0;
+          var norm = result.norms[queryIdx];
+
+          return {
+            query: p.queryItem,
+            dimension: 6,
+            vectorNorm: norm,
+            normalized: false,
+            topMatch: '—',
+            cosineSim: 0,
+            dotProduct: 0,
+            euclideanDist: 0,
+            topK: p.topK,
+            avgSimilarity: 0,
+            magnitudeEffect: norm > 2.0 ? 'Large magnitude' : norm > 1.5 ? 'Moderate magnitude' : 'Small magnitude',
+            angleInterpretation: 'Pending normalization',
+            clusterDensity: 'Pending'
+          };
+        },
+        metrics: function (p) {
+          var result = runEmbeddingPipeline(p);
+          var queryIdx = result.items.indexOf(p.queryItem);
+          if (queryIdx < 0) queryIdx = 0;
+          return {
+            'Query': p.queryItem,
+            'Norm': result.norms[queryIdx],
+            'All Norms': result.norms.join(', '),
+            'Status': 'Norms computed'
+          };
+        },
+        viz: function (p) {
+          var result = runEmbeddingPipeline(p);
+          return {
+            phase: 'norms',
+            items: result.items,
+            vectors: result.vectors,
+            norms: result.norms,
+            queryIndex: result.items.indexOf(p.queryItem) >= 0 ? result.items.indexOf(p.queryItem) : 0
+          };
+        }
+      });
+
+      steps.push({
+        label: 'Normalize',
+        log: 'Normalized all vectors to unit length for cosine comparison',
+        state: function (p) {
+          var result = runEmbeddingPipeline(p);
+          var queryIdx = result.items.indexOf(p.queryItem);
+          if (queryIdx < 0) queryIdx = 0;
+
+          return {
+            query: p.queryItem,
+            dimension: 6,
+            vectorNorm: 1.0,
+            normalized: true,
+            topMatch: '—',
+            cosineSim: 0,
+            dotProduct: 0,
+            euclideanDist: 0,
+            topK: p.topK,
+            avgSimilarity: 0,
+            magnitudeEffect: 'Removed by normalization',
+            angleInterpretation: 'Vectors on unit sphere',
+            clusterDensity: 'Pending'
+          };
+        },
+        metrics: function (p) {
+          return {
+            'Query': p.queryItem,
+            'Normalized': 'Yes',
+            'Unit Norm': '1.0',
+            'Status': 'Normalized'
+          };
+        },
+        viz: function (p) {
+          var result = runEmbeddingPipeline(p);
+          return {
+            phase: 'normalize',
+            items: result.items,
+            vectors: result.vectors,
+            normalizedVectors: result.normalizedVectors,
+            norms: result.norms,
+            queryIndex: result.items.indexOf(p.queryItem) >= 0 ? result.items.indexOf(p.queryItem) : 0
+          };
+        }
+      });
+
+      steps.push({
+        label: 'Dot Product',
+        log: 'Computed dot product matrix — magnitude affects scores',
+        state: function (p) {
+          var result = runEmbeddingPipeline(p);
+          var queryIdx = result.items.indexOf(p.queryItem);
+          if (queryIdx < 0) queryIdx = 0;
+
+          var dotScores = result.dotProductMatrix[queryIdx];
+          var maxDot = 0;
+          var maxIdx = 0;
+          for (var i = 0; i < dotScores.length; i++) {
+            if (i !== queryIdx && dotScores[i] > maxDot) {
+              maxDot = dotScores[i];
+              maxIdx = i;
+            }
+          }
+
+          return {
+            query: p.queryItem,
+            dimension: 6,
+            vectorNorm: result.norms[queryIdx],
+            normalized: false,
+            topMatch: result.items[maxIdx],
+            cosineSim: 0,
+            dotProduct: round4(maxDot),
+            euclideanDist: 0,
+            topK: p.topK,
+            avgSimilarity: 0,
+            magnitudeEffect: 'Dot product includes magnitude',
+            angleInterpretation: 'Pending cosine',
+            clusterDensity: 'Pending'
+          };
+        },
+        metrics: function (p) {
+          var result = runEmbeddingPipeline(p);
+          var queryIdx = result.items.indexOf(p.queryItem);
+          if (queryIdx < 0) queryIdx = 0;
+          return {
+            'Query': p.queryItem,
+            'Top Dot Product': result.dotProductMatrix[queryIdx][queryIdx === 0 ? 1 : 0],
+            'Status': 'Dot products computed'
+          };
+        },
+        viz: function (p) {
+          var result = runEmbeddingPipeline(p);
+          return {
+            phase: 'dotproduct',
+            items: result.items,
+            dotProductMatrix: result.dotProductMatrix,
+            queryIndex: result.items.indexOf(p.queryItem) >= 0 ? result.items.indexOf(p.queryItem) : 0
+          };
+        }
+      });
+
+      steps.push({
+        label: 'Cosine',
+        log: 'Computed cosine similarity — direction rather than magnitude',
+        state: function (p) {
+          var result = runEmbeddingPipeline(p);
+          var queryIdx = result.items.indexOf(p.queryItem);
+          if (queryIdx < 0) queryIdx = 0;
+
+          var neighbors = result.neighbors;
+          var topMatch = neighbors.length > 0 ? result.items[neighbors[0].index] : '—';
+          var topScore = neighbors.length > 0 ? neighbors[0].score : 0;
+
+          var totalScore = 0;
+          for (var i = 0; i < neighbors.length; i++) {
+            totalScore += neighbors[i].score;
+          }
+          var avgSim = neighbors.length > 0 ? round4(totalScore / neighbors.length) : 0;
+
+          return {
+            query: p.queryItem,
+            dimension: 6,
+            vectorNorm: 1.0,
+            normalized: true,
+            topMatch: topMatch,
+            cosineSim: topScore,
+            dotProduct: result.dotProductMatrix[queryIdx][neighbors.length > 0 ? neighbors[0].index : 0],
+            euclideanDist: 0,
+            topK: p.topK,
+            avgSimilarity: avgSim,
+            magnitudeEffect: 'Irrelevant for cosine',
+            angleInterpretation: topScore > 0.9 ? 'Very small angle' : topScore > 0.7 ? 'Small angle' : 'Moderate angle',
+            clusterDensity: 'Pending'
+          };
+        },
+        metrics: function (p) {
+          var result = runEmbeddingPipeline(p);
+          return {
+            'Query': p.queryItem,
+            'Top Match': result.topMatch,
+            'Cosine': result.topScore,
+            'Status': 'Cosine computed'
+          };
+        },
+        viz: function (p) {
+          var result = runEmbeddingPipeline(p);
+          return {
+            phase: 'cosine',
+            items: result.items,
+            cosineMatrix: result.cosineMatrix,
+            queryIndex: result.items.indexOf(p.queryItem) >= 0 ? result.items.indexOf(p.queryItem) : 0
+          };
+        }
+      });
+
+      steps.push({
+        label: 'Distance',
+        log: 'Computed Euclidean distance matrix',
+        state: function (p) {
+          var result = runEmbeddingPipeline(p);
+          var queryIdx = result.items.indexOf(p.queryItem);
+          if (queryIdx < 0) queryIdx = 0;
+
+          var neighbors = result.neighbors;
+          var topMatch = neighbors.length > 0 ? result.items[neighbors[0].index] : '—';
+          var topScore = neighbors.length > 0 ? neighbors[0].score : 0;
+
+          var totalScore = 0;
+          for (var i = 0; i < neighbors.length; i++) {
+            totalScore += neighbors[i].score;
+          }
+          var avgSim = neighbors.length > 0 ? round4(totalScore / neighbors.length) : 0;
+
+          var closestDist = neighbors.length > 0 ? result.distanceMatrix[queryIdx][neighbors[0].index] : 0;
+
+          return {
+            query: p.queryItem,
+            dimension: 6,
+            vectorNorm: 1.0,
+            normalized: true,
+            topMatch: topMatch,
+            cosineSim: topScore,
+            dotProduct: result.dotProductMatrix[queryIdx][neighbors.length > 0 ? neighbors[0].index : 0],
+            euclideanDist: closestDist,
+            topK: p.topK,
+            avgSimilarity: avgSim,
+            magnitudeEffect: 'Irrelevant for cosine',
+            angleInterpretation: topScore > 0.9 ? 'Very small angle' : topScore > 0.7 ? 'Small angle' : 'Moderate angle',
+            clusterDensity: closestDist < 0.5 ? 'Tight cluster' : closestDist < 1.0 ? 'Moderate spread' : 'Sparse'
+          };
+        },
+        metrics: function (p) {
+          var result = runEmbeddingPipeline(p);
+          var queryIdx = result.items.indexOf(p.queryItem);
+          if (queryIdx < 0) queryIdx = 0;
+          var neighbors = result.neighbors;
+          var closestDist = neighbors.length > 0 ? result.distanceMatrix[queryIdx][neighbors[0].index] : 0;
+          return {
+            'Query': p.queryItem,
+            'Closest Distance': closestDist,
+            'Status': 'Distances computed'
+          };
+        },
+        viz: function (p) {
+          var result = runEmbeddingPipeline(p);
+          return {
+            phase: 'distance',
+            items: result.items,
+            distanceMatrix: result.distanceMatrix,
+            cosineMatrix: result.cosineMatrix,
+            queryIndex: result.items.indexOf(p.queryItem) >= 0 ? result.items.indexOf(p.queryItem) : 0
+          };
+        }
+      });
+
+      steps.push({
+        label: 'Rank',
+        log: 'Ranked nearest neighbors for query "' + '"',
+        state: function (p) {
+          var result = runEmbeddingPipeline(p);
+          var queryIdx = result.items.indexOf(p.queryItem);
+          if (queryIdx < 0) queryIdx = 0;
+
+          var neighbors = result.neighbors;
+          var topKNeighbors = neighbors.slice(0, p.topK);
+          var topMatch = topKNeighbors.length > 0 ? result.items[topKNeighbors[0].index] : '—';
+          var topScore = topKNeighbors.length > 0 ? topKNeighbors[0].score : 0;
+
+          var totalScore = 0;
+          for (var i = 0; i < topKNeighbors.length; i++) {
+            totalScore += topKNeighbors[i].score;
+          }
+          var avgSim = topKNeighbors.length > 0 ? round4(totalScore / topKNeighbors.length) : 0;
+
+          var closestDist = topKNeighbors.length > 0 ? result.distanceMatrix[queryIdx][topKNeighbors[0].index] : 0;
+
+          return {
+            query: p.queryItem,
+            dimension: 6,
+            vectorNorm: 1.0,
+            normalized: true,
+            topMatch: topMatch,
+            cosineSim: topScore,
+            dotProduct: result.dotProductMatrix[queryIdx][topKNeighbors.length > 0 ? topKNeighbors[0].index : 0],
+            euclideanDist: closestDist,
+            topK: p.topK,
+            avgSimilarity: avgSim,
+            magnitudeEffect: 'Irrelevant for cosine',
+            angleInterpretation: topScore > 0.9 ? 'Very small angle' : topScore > 0.7 ? 'Small angle' : 'Moderate angle',
+            clusterDensity: closestDist < 0.5 ? 'Tight cluster' : closestDist < 1.0 ? 'Moderate spread' : 'Sparse'
+          };
+        },
+        metrics: function (p) {
+          var result = runEmbeddingPipeline(p);
+          var queryIdx = result.items.indexOf(p.queryItem);
+          if (queryIdx < 0) queryIdx = 0;
+          var neighbors = result.neighbors.slice(0, p.topK);
+          var topNames = neighbors.map(function (n) { return result.items[n.index] + '(' + n.score + ')'; }).join(', ');
+          return {
+            'Query': p.queryItem,
+            'Top-K': p.topK,
+            'Neighbors': topNames,
+            'Status': 'Ranked'
+          };
+        },
+        viz: function (p) {
+          var result = runEmbeddingPipeline(p);
+          return {
+            phase: 'rank',
+            items: result.items,
+            cosineMatrix: result.cosineMatrix,
+            distanceMatrix: result.distanceMatrix,
+            neighbors: result.neighbors.slice(0, p.topK),
+            queryIndex: result.items.indexOf(p.queryItem) >= 0 ? result.items.indexOf(p.queryItem) : 0,
+            dimensionContributions: result.dimensionContributions
+          };
+        }
+      });
+
+      steps.push({
+        label: 'Analyze',
+        log: 'Inference complete — analyzing retrieval and semantic structure',
+        state: function (p) {
+          var result = runEmbeddingPipeline(p);
+          var queryIdx = result.items.indexOf(p.queryItem);
+          if (queryIdx < 0) queryIdx = 0;
+
+          var neighbors = result.neighbors;
+          var topKNeighbors = neighbors.slice(0, p.topK);
+          var topMatch = topKNeighbors.length > 0 ? result.items[topKNeighbors[0].index] : '—';
+          var topScore = topKNeighbors.length > 0 ? topKNeighbors[0].score : 0;
+
+          var totalScore = 0;
+          for (var i = 0; i < topKNeighbors.length; i++) {
+            totalScore += topKNeighbors[i].score;
+          }
+          var avgSim = topKNeighbors.length > 0 ? round4(totalScore / topKNeighbors.length) : 0;
+
+          var closestDist = topKNeighbors.length > 0 ? result.distanceMatrix[queryIdx][topKNeighbors[0].index] : 0;
+
+          return {
+            query: p.queryItem,
+            dimension: 6,
+            vectorNorm: 1.0,
+            normalized: true,
+            topMatch: topMatch,
+            cosineSim: topScore,
+            dotProduct: result.dotProductMatrix[queryIdx][topKNeighbors.length > 0 ? topKNeighbors[0].index : 0],
+            euclideanDist: closestDist,
+            topK: p.topK,
+            avgSimilarity: avgSim,
+            magnitudeEffect: 'Magnitude irrelevant for cosine',
+            angleInterpretation: topScore > 0.9 ? 'Vectors nearly aligned' : topScore > 0.7 ? 'Vectors moderately aligned' : 'Vectors divergent',
+            clusterDensity: closestDist < 0.5 ? 'Tight semantic cluster' : closestDist < 1.0 ? 'Moderate spread' : 'Sparse distribution'
+          };
+        },
+        metrics: function (p) {
+          var result = runEmbeddingPipeline(p);
+          var queryIdx = result.items.indexOf(p.queryItem);
+          if (queryIdx < 0) queryIdx = 0;
+          var neighbors = result.neighbors.slice(0, p.topK);
+          var topNames = neighbors.map(function (n) { return result.items[n.index] + '(' + n.score + ')'; }).join(', ');
+          return {
+            'Query': p.queryItem,
+            'Top Match': result.topMatch,
+            'Cosine': result.topScore,
+            'Avg Similarity': result.topScore,
+            'Status': 'Complete'
+          };
+        },
+        viz: function (p) {
+          var result = runEmbeddingPipeline(p);
+          return {
+            phase: 'analyze',
+            items: result.items,
+            vectors: result.vectors,
+            normalizedVectors: result.normalizedVectors,
+            cosineMatrix: result.cosineMatrix,
+            distanceMatrix: result.distanceMatrix,
+            neighbors: result.neighbors.slice(0, p.topK),
+            queryIndex: result.items.indexOf(p.queryItem) >= 0 ? result.items.indexOf(p.queryItem) : 0,
+            dimensionContributions: result.dimensionContributions
+          };
+        }
+      });
+
+      return steps;
+    })(),
+    observations: [
+      {
+        id: 'embedding-space',
+        title: 'Embedding Space',
+        purpose: 'Where do items sit in representation space?',
+        defaultSize: 'large',
+        render: function (container, params, stepIndex, history) {
+          var result = runEmbeddingPipeline(params);
+          var queryIdx = result.items.indexOf(params.queryItem);
+          if (queryIdx < 0) queryIdx = 0;
+
+          var neighbors = result.neighbors.slice(0, params.topK);
+          var neighborIndices = neighbors.map(function (n) { return n.index; });
+
+          container.innerHTML = '';
+          var title = document.createElement('h4');
+          title.className = 'nv-lab-obs-title';
+          title.textContent = 'Embedding Space (2D Projection)';
+          container.appendChild(title);
+
+          var space = document.createElement('div');
+          space.className = 'nv-embed-space';
+          space.setAttribute('role', 'img');
+          space.setAttribute('aria-label', '2D projection of embedding vectors with query ' + params.queryItem + ' highlighted');
+
+          var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+          svg.setAttribute('viewBox', '0 0 300 200');
+          svg.setAttribute('class', 'nv-embed-space-svg');
+          svg.setAttribute('aria-hidden', 'true');
+
+          var gridLines = '';
+          for (var g = 0; g <= 4; g++) {
+            var gx = 40 + (g * 60);
+            var gy = 10 + (g * 45);
+            gridLines += '<line x1="' + gx + '" y1="10" x2="' + gx + '" y2="190" class="nv-embed-space-grid"/>';
+            gridLines += '<line x1="40" y1="' + gy + '" x2="280" y2="' + gy + '" class="nv-embed-space-grid"/>';
+          }
+
+          var points = '';
+          for (var i = 0; i < result.items.length; i++) {
+            var vec = result.vectors[i];
+            var px = 40 + ((vec[0] + vec[1]) / 2) * 240;
+            var py = 10 + ((vec[2] + vec[3]) / 2) * 180;
+            px = Math.max(40, Math.min(280, px));
+            py = Math.max(10, Math.min(190, py));
+
+            var isQuery = i === queryIdx;
+            var isNeighbor = neighborIndices.indexOf(i) >= 0;
+
+            var fillColor = isQuery ? '#06b6d4' : isNeighbor ? '#22c55e' : '#475569';
+            var radius = isQuery ? 6 : isNeighbor ? 5 : 4;
+            var strokeColor = isQuery ? '#06b6d4' : isNeighbor ? '#22c55e' : '#64748b';
+
+            points += '<circle cx="' + px + '" cy="' + py + '" r="' + radius + '" fill="' + fillColor + '" stroke="' + strokeColor + '" stroke-width="1.5" class="nv-embed-space-point"/>';
+            points += '<text x="' + (px + 8) + '" y="' + (py + 3) + '" class="nv-embed-space-label">' + result.items[i] + '</text>';
+          }
+
+          svg.innerHTML = gridLines + points;
+          space.appendChild(svg);
+
+          var legend = document.createElement('div');
+          legend.className = 'nv-embed-space-legend';
+          legend.innerHTML =
+            '<span class="nv-embed-space-legend-item"><span class="nv-embed-space-legend-dot" style="background:#06b6d4"></span>Query</span>' +
+            '<span class="nv-embed-space-legend-item"><span class="nv-embed-space-legend-dot" style="background:#22c55e"></span>Top Neighbors</span>' +
+            '<span class="nv-embed-space-legend-item"><span class="nv-embed-space-legend-dot" style="background:#475569"></span>Other Items</span>';
+
+          container.appendChild(space);
+          container.appendChild(legend);
+        }
+      },
+      {
+        id: 'similarity-matrix',
+        title: 'Similarity Matrix',
+        purpose: 'Which items are most similar to each other?',
+        defaultSize: 'large',
+        render: function (container, params, stepIndex, history) {
+          var result = runEmbeddingPipeline(params);
+          var queryIdx = result.items.indexOf(params.queryItem);
+          if (queryIdx < 0) queryIdx = 0;
+
+          container.innerHTML = '';
+          var title = document.createElement('h4');
+          title.className = 'nv-lab-obs-title';
+          title.textContent = 'Cosine Similarity Matrix';
+          container.appendChild(title);
+
+          var matrix = document.createElement('div');
+          matrix.className = 'nv-embed-matrix';
+          matrix.setAttribute('role', 'table');
+          matrix.setAttribute('aria-label', 'Cosine similarity matrix');
+
+          var headerRow = '<div class="nv-embed-matrix-row" role="row"><div class="nv-embed-matrix-cell nv-embed-matrix-cell--header" role="columnheader"></div>';
+          for (var h = 0; h < result.items.length; h++) {
+            headerRow += '<div class="nv-embed-matrix-cell nv-embed-matrix-cell--header" role="columnheader">' + result.items[h].substring(0, 3) + '</div>';
+          }
+          headerRow += '</div>';
+
+          var rows = headerRow;
+          for (var i = 0; i < result.items.length; i++) {
+            rows += '<div class="nv-embed-matrix-row" role="row">';
+            rows += '<div class="nv-embed-matrix-cell nv-embed-matrix-cell--header" role="rowheader">' + result.items[i].substring(0, 3) + '</div>';
+            for (var j = 0; j < result.items.length; j++) {
+              var val = result.cosineMatrix[i][j];
+              var bg = val > 0.9 ? 'rgba(6,182,212,0.4)' : val > 0.7 ? 'rgba(6,182,212,0.2)' : val > 0.5 ? 'rgba(6,182,212,0.1)' : 'transparent';
+              var isQueryRow = i === queryIdx;
+              var borderClass = isQueryRow ? ' nv-embed-matrix-cell--highlight' : '';
+              rows += '<div class="nv-embed-matrix-cell' + borderClass + '" role="cell" style="background:' + bg + '" aria-label="' + result.items[i] + ' to ' + result.items[j] + ': ' + val + '">' + val.toFixed(2) + '</div>';
+            }
+            rows += '</div>';
+          }
+
+          matrix.innerHTML = rows;
+          container.appendChild(matrix);
+        }
+      },
+      {
+        id: 'nearest-neighbors',
+        title: 'Nearest Neighbors',
+        purpose: 'What would retrieval return first?',
+        defaultSize: 'large',
+        render: function (container, params, stepIndex, history) {
+          var result = runEmbeddingPipeline(params);
+          var queryIdx = result.items.indexOf(params.queryItem);
+          if (queryIdx < 0) queryIdx = 0;
+
+          var neighbors = result.neighbors.slice(0, params.topK);
+
+          container.innerHTML = '';
+          var title = document.createElement('h4');
+          title.className = 'nv-lab-obs-title';
+          title.textContent = 'Top-' + params.topK + ' Nearest Neighbors';
+          container.appendChild(title);
+
+          var list = document.createElement('div');
+          list.className = 'nv-embed-neighbors';
+          list.setAttribute('role', 'list');
+          list.setAttribute('aria-label', 'Ranked nearest neighbors for ' + params.queryItem);
+
+          for (var i = 0; i < neighbors.length; i++) {
+            var n = neighbors[i];
+            var item = document.createElement('div');
+            item.className = 'nv-embed-neighbor';
+            item.setAttribute('role', 'listitem');
+
+            var rank = document.createElement('span');
+            rank.className = 'nv-embed-neighbor-rank';
+            rank.textContent = '#' + (i + 1);
+
+            var name = document.createElement('span');
+            name.className = 'nv-embed-neighbor-name';
+            name.textContent = result.items[n.index];
+
+            var scores = document.createElement('div');
+            scores.className = 'nv-embed-neighbor-scores';
+
+            var cosineScore = document.createElement('span');
+            cosineScore.className = 'nv-embed-neighbor-score';
+            cosineScore.textContent = 'cos: ' + n.score.toFixed(3);
+
+            var dotScore = document.createElement('span');
+            dotScore.className = 'nv-embed-neighbor-score nv-embed-neighbor-score--dim';
+            dotScore.textContent = 'dot: ' + result.dotProductMatrix[queryIdx][n.index].toFixed(3);
+
+            var distScore = document.createElement('span');
+            distScore.className = 'nv-embed-neighbor-score nv-embed-neighbor-score--dim';
+            distScore.textContent = 'dist: ' + result.distanceMatrix[queryIdx][n.index].toFixed(3);
+
+            scores.appendChild(cosineScore);
+            scores.appendChild(dotScore);
+            scores.appendChild(distScore);
+
+            item.appendChild(rank);
+            item.appendChild(name);
+            item.appendChild(scores);
+            list.appendChild(item);
+          }
+
+          container.appendChild(list);
+        }
+      },
+      {
+        id: 'vector-anatomy',
+        title: 'Vector Anatomy',
+        purpose: 'Which dimensions explain similarity?',
+        defaultSize: 'small',
+        render: function (container, params, stepIndex, history) {
+          var result = runEmbeddingPipeline(params);
+          var contributions = result.dimensionContributions;
+
+          container.innerHTML = '';
+          var title = document.createElement('h4');
+          title.className = 'nv-lab-obs-title';
+          title.textContent = 'Dimension Contributions';
+          container.appendChild(title);
+
+          var bars = document.createElement('div');
+          bars.className = 'nv-embed-anatomy';
+          bars.setAttribute('role', 'list');
+          bars.setAttribute('aria-label', 'Dimension contribution comparison');
+
+          var maxContrib = 0;
+          for (var c = 0; c < contributions.length; c++) {
+            if (contributions[c].contribution > maxContrib) maxContrib = contributions[c].contribution;
+          }
+
+          for (var i = 0; i < contributions.length; i++) {
+            var contrib = contributions[i];
+            var bar = document.createElement('div');
+            bar.className = 'nv-embed-anatomy-bar';
+            bar.setAttribute('role', 'listitem');
+
+            var label = document.createElement('span');
+            label.className = 'nv-embed-anatomy-label';
+            label.textContent = contrib.dimension;
+
+            var tracks = document.createElement('div');
+            tracks.className = 'nv-embed-anatomy-tracks';
+
+            var queryTrack = document.createElement('div');
+            queryTrack.className = 'nv-embed-anatomy-track';
+            queryTrack.innerHTML = '<div class="nv-embed-anatomy-fill nv-embed-anatomy-fill--query" style="width:' + (contrib.query * 100) + '%"></div>';
+
+            var neighborTrack = document.createElement('div');
+            neighborTrack.className = 'nv-embed-anatomy-track';
+            neighborTrack.innerHTML = '<div class="nv-embed-anatomy-fill nv-embed-anatomy-fill--neighbor" style="width:' + (contrib.contribution * 100 / Math.max(maxContrib, 0.01)) + '%"></div>';
+
+            var value = document.createElement('span');
+            value.className = 'nv-embed-anatomy-value';
+            value.textContent = contrib.contribution.toFixed(3);
+
+            tracks.appendChild(queryTrack);
+            tracks.appendChild(neighborTrack);
+
+            bar.appendChild(label);
+            bar.appendChild(tracks);
+            bar.appendChild(value);
+            bars.appendChild(bar);
+          }
+
+          var legend = document.createElement('div');
+          legend.className = 'nv-embed-anatomy-legend';
+          legend.innerHTML =
+            '<span class="nv-embed-anatomy-legend-item"><span class="nv-embed-anatomy-legend-dot" style="background:#06b6d4"></span>Query</span>' +
+            '<span class="nv-embed-anatomy-legend-item"><span class="nv-embed-anatomy-legend-dot" style="background:#22c55e"></span>Contribution</span>';
+
+          container.appendChild(bars);
+          container.appendChild(legend);
+        }
+      }
+    ],
+    inspector: {
+      title: 'Embedding Similarity State',
+      sections: [
+        {
+          label: 'Query',
+          cards: [
+            { key: 'query', label: 'Selected Query', unit: '', interpretation: function (v) { return 'Query item selected'; } },
+            { key: 'dimension', label: 'Vector Dimension', unit: '', interpretation: function (v) { return v + '-dimensional space'; } },
+            { key: 'vectorNorm', label: 'Vector Norm', unit: '', interpretation: function (v) { return v === 1.0 ? 'Unit vector' : v > 2.0 ? 'Large magnitude' : 'Moderate magnitude'; } },
+            { key: 'normalized', label: 'Normalized?', unit: '', interpretation: function (v) { return v === true ? 'Yes — cosine comparison enabled' : 'No — magnitude affects dot product'; } }
+          ]
+        },
+        {
+          label: 'Similarity',
+          cards: [
+            { key: 'topMatch', label: 'Top Match', unit: '', interpretation: function (v) { return v !== '—' ? 'Nearest neighbor selected' : 'Pending computation'; } },
+            { key: 'cosineSim', label: 'Cosine Similarity', unit: '', interpretation: function (v) { return v > 0.9 ? 'Very strong alignment' : v > 0.7 ? 'Strong alignment' : v > 0.5 ? 'Moderate alignment' : 'Weak alignment'; } },
+            { key: 'dotProduct', label: 'Dot Product', unit: '', interpretation: function (v) { return v > 3.0 ? 'Large dot product' : v > 1.0 ? 'Moderate dot product' : 'Small dot product'; } },
+            { key: 'euclideanDist', label: 'Euclidean Distance', unit: '', interpretation: function (v) { return v < 0.5 ? 'Very close' : v < 1.0 ? 'Close' : 'Distant'; } }
+          ]
+        },
+        {
+          label: 'Retrieval',
+          cards: [
+            { key: 'topK', label: 'Top-K Count', unit: '', interpretation: function (v) { return 'Retrieving ' + v + ' neighbors'; } },
+            { key: 'nearestNeighbor', label: 'Nearest Neighbor', unit: '', interpretation: function (v) { return v || 'Pending'; } },
+            { key: 'rankStability', label: 'Rank Stability', unit: '', interpretation: function (v) { return 'Stable ranking'; } },
+            { key: 'avgSimilarity', label: 'Average Similarity', unit: '', interpretation: function (v) { return v > 0.8 ? 'High cluster cohesion' : v > 0.6 ? 'Moderate cohesion' : 'Low cohesion'; } }
+          ]
+        },
+        {
+          label: 'Geometry',
+          cards: [
+            { key: 'magnitudeEffect', label: 'Magnitude Effect', unit: '', interpretation: function (v) { return v; } },
+            { key: 'angleInterpretation', label: 'Angle Interpretation', unit: '', interpretation: function (v) { return v; } },
+            { key: 'clusterDensity', label: 'Cluster Density', unit: '', interpretation: function (v) { return v; } }
+          ]
+        }
+      ],
+      computeState: function (params, stepIndex, history) {
+        var result = runEmbeddingPipeline(params);
+        var queryIdx = result.items.indexOf(params.queryItem);
+        if (queryIdx < 0) queryIdx = 0;
+
+        var neighbors = result.neighbors.slice(0, params.topK);
+        var topMatch = neighbors.length > 0 ? result.items[neighbors[0].index] : '—';
+        var topScore = neighbors.length > 0 ? neighbors[0].score : 0;
+
+        var totalScore = 0;
+        for (var i = 0; i < neighbors.length; i++) {
+          totalScore += neighbors[i].score;
+        }
+        var avgSim = neighbors.length > 0 ? round4(totalScore / neighbors.length) : 0;
+
+        var closestDist = neighbors.length > 0 ? result.distanceMatrix[queryIdx][neighbors[0].index] : 0;
+        var dotProd = neighbors.length > 0 ? result.dotProductMatrix[queryIdx][neighbors[0].index] : 0;
+
+        return {
+          query: params.queryItem,
+          dimension: 6,
+          vectorNorm: result.norms[queryIdx],
+          normalized: stepIndex >= 2,
+          topMatch: topMatch,
+          cosineSim: topScore,
+          dotProduct: dotProd,
+          euclideanDist: closestDist,
+          topK: params.topK,
+          nearestNeighbor: topMatch,
+          rankStability: 'Stable',
+          avgSimilarity: avgSim,
+          magnitudeEffect: stepIndex >= 2 ? 'Removed by normalization' : 'Affects dot product',
+          angleInterpretation: topScore > 0.9 ? 'Very small angle' : topScore > 0.7 ? 'Small angle' : 'Moderate angle',
+          clusterDensity: closestDist < 0.5 ? 'Tight cluster' : closestDist < 1.0 ? 'Moderate spread' : 'Sparse'
+        };
+      },
+      changeDetector: function (prev, curr) {
+        var changes = [];
+        if (prev && curr) {
+          if (prev.topMatch !== curr.topMatch) {
+            changes.push({
+              from: 'topMatch',
+              to: null,
+              label: 'Top match changed to "' + curr.topMatch + '"'
+            });
+          }
+          if (prev.cosineSim !== curr.cosineSim) {
+            changes.push({
+              from: 'cosineSim',
+              to: null,
+              label: 'Cosine similarity updated to ' + curr.cosineSim.toFixed(3)
+            });
+          }
+          if (prev.normalized !== curr.normalized) {
+            changes.push({
+              from: 'normalized',
+              to: null,
+              label: curr.normalized ? 'Vectors normalized — magnitude removed' : 'Normalization pending'
+            });
+          }
+          if (prev.magnitudeEffect !== curr.magnitudeEffect) {
+            changes.push({
+              from: 'magnitudeEffect',
+              to: null,
+              label: 'Magnitude effect: ' + curr.magnitudeEffect
+            });
+          }
+        }
+        return changes;
+      }
     },
     execute: function (params) {
-      var dimension = params.dimension !== undefined ? params.dimension : 3;
-      var scale = params.scale !== undefined ? params.scale : 1.0;
+      var queryItem = params.queryItem || 'embedding';
+      var topK = Math.round(clamp(params.topK || 3, 1, 8));
 
-      dimension = Math.round(dimension);
-      dimension = Math.max(2, Math.min(8, dimension));
-      scale = Math.max(0.5, Math.min(3.0, scale));
+      if (ITEMS.indexOf(queryItem) < 0) queryItem = 'embedding';
 
-      var vectors = generateEmbeddings(dimension, scale);
-      var similarityMatrix = computeSimilarityMatrix(vectors);
-      var similarities = computePairwiseSimilarities(WORDS, similarityMatrix);
+      var result = runEmbeddingPipeline({ queryItem: queryItem, topK: topK });
 
       return {
-        words: WORDS.slice(),
-        vectors: vectors,
-        similarityMatrix: similarityMatrix,
-        similarities: similarities
+        items: result.items,
+        vectors: result.vectors,
+        norms: result.norms,
+        normalizedVectors: result.normalizedVectors,
+        dotProductMatrix: result.dotProductMatrix,
+        cosineMatrix: result.cosineMatrix,
+        distanceMatrix: result.distanceMatrix,
+        queryIndex: result.queryIndex,
+        neighbors: result.neighbors,
+        topMatch: result.topMatch,
+        topScore: result.topScore,
+        topK: topK
       };
     },
     visualization: {
-      type: 'heatmap',
-      title: 'Embedding Similarity Heatmap'
+      type: 'numeric-summary',
+      title: 'Embedding Similarity — Representation Geometry'
     },
     canonicalStatus: 'reviewed',
-    version: '1.0.0',
+    version: '2.0.0',
     reviewedBy: 'NeuralVerse Team',
-    lastReviewed: '2026-06-25',
-    estimatedDuration: '10 minutes'
+    lastReviewed: '2026-07-07',
+    estimatedDuration: '15 minutes'
   };
 
   if (window.NeuralVerse.LabRegistry && window.NeuralVerse.LabRegistry.register) {
