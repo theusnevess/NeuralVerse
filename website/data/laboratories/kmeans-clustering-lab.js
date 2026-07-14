@@ -144,7 +144,7 @@
 
     steps.push({
       label: 'Initialize Centroids',
-      log: 'Randomly initialized ' + numClusters + ' centroids',
+      log: 'Initialized ' + numClusters + ' centroids using random sampling',
       state: function (p) {
         return { centroids: centroids, assignments: [], iteration: 0, phase: 'initialize' };
       },
@@ -160,7 +160,7 @@
       (function (iterIdx, centRef, assignRef, prevInertiaRef, histRef) {
         steps.push({
           label: 'Iteration ' + (iterIdx + 1) + ' — Assign',
-          log: 'Assigning points to nearest centroids',
+          log: 'Assigning points to nearest centroid using Euclidean distance',
           state: function (p) {
             var newAssign = assignClusters(points, centRef);
             return { centroids: centRef, assignments: newAssign, iteration: iterIdx + 1, phase: 'assign' };
@@ -191,7 +191,7 @@
 
         steps.push({
           label: 'Iteration ' + (iterIdx + 1) + ' — Update',
-          log: 'Updating centroid positions',
+          log: 'Updating centroids to cluster means',
           state: function (p) {
             var newAssign = assignClusters(points, centRef);
             var updateResult = updateCentroids(points, newAssign, numClusters);
@@ -253,8 +253,8 @@
 
     var finalInertia = computeInertia(points, assignments, centroids);
     steps.push({
-      label: 'Converged',
-      log: 'K-Means converged after ' + steps.length + ' steps',
+      label: 'Complete',
+      log: 'Converged: no assignments changed, centroid displacement < threshold',
       state: function () {
         return { centroids: centroids, assignments: assignments, iteration: steps.length, phase: 'converged', inertia: finalInertia };
       },
@@ -319,29 +319,29 @@
       title: 'K-Means State',
       sections: [
         {
-          label: 'Current Iteration',
+          label: 'Iteration Progress',
           cards: [
             { key: 'iteration', label: 'Iteration', interpretation: function (v) { return v === 0 ? 'Initialization' : 'Running'; } },
-            { key: 'phase', label: 'Phase', interpretation: function (v) { return v === 'assign' ? 'Points being assigned' : v === 'update' ? 'Centroids moving' : v === 'converged' ? 'No more changes' : 'Ready'; } },
-            { key: 'inertia', label: 'Inertia', interpretation: function (v) { return v < 10 ? 'Tight clusters' : v < 50 ? 'Moderate spread' : 'Loose clusters'; } },
-            { key: 'status', label: 'Status' }
+            { key: 'phase', label: 'Current Phase', interpretation: function (v) { return v === 'assign' ? 'Points being assigned' : v === 'update' ? 'Centroids moving' : v === 'converged' ? 'No more changes' : 'Ready'; } },
+            { key: 'inertia', label: 'Within-Cluster Sum of Squares', interpretation: function (v) { return v < 10 ? 'Tight clusters' : v < 50 ? 'Moderate spread' : 'Loose clusters'; } },
+            { key: 'status', label: 'Convergence State' }
           ]
         },
         {
-          label: 'Centroids',
+          label: 'Centroid Positions',
           cards: [
             { key: 'centroid0', label: 'Centroid 0', interpretation: function (v) { return v ? 'Position: [' + v + ']' : 'Not initialized'; } },
             { key: 'centroid1', label: 'Centroid 1', interpretation: function (v) { return v ? 'Position: [' + v + ']' : 'Not initialized'; } },
             { key: 'centroid2', label: 'Centroid 2', interpretation: function (v) { return v ? 'Position: [' + v + ']' : 'Not initialized'; } },
-            { key: 'centroidShift', label: 'Centroid Shift', interpretation: function (v) { return v < 0.01 ? 'Nearly stationary' : v < 0.5 ? 'Moderate movement' : 'Large movement'; } }
+            { key: 'centroidShift', label: 'Centroid Displacement', interpretation: function (v) { return v < 0.01 ? 'Nearly stationary' : v < 0.5 ? 'Moderate movement' : 'Large movement'; } }
           ]
         },
         {
-          label: 'Assignment Statistics',
+          label: 'Cluster Properties',
           cards: [
             { key: 'clusterSizes', label: 'Cluster Sizes', interpretation: function (v) { return v || 'No assignments yet'; } },
             { key: 'emptyClusters', label: 'Empty Clusters', interpretation: function (v) { return v === 0 ? 'All clusters occupied' : v + ' cluster(s) empty — will reinitialize'; } },
-            { key: 'reassigned', label: 'Reassigned Points', interpretation: function (v) { return v === 0 ? 'No changes' : v + ' points changed cluster'; } },
+            { key: 'reassigned', label: 'Reassignment Count', interpretation: function (v) { return v === 0 ? 'No changes' : v + ' points changed cluster'; } },
             { key: 'totalPoints', label: 'Total Points', fixed: true }
           ]
         }
@@ -518,7 +518,8 @@
           });
 
           container.appendChild(svg);
-        }
+        },
+        interpretation: function (params, stepIndex) { return 'Color-coded clusters show how K-Means partitions the data based on proximity to centroids.'; }
       },
       {
         id: 'centroid-evolution',
@@ -601,7 +602,8 @@
           }
 
           container.appendChild(svg);
-        }
+        },
+        interpretation: function (params, stepIndex) { return 'Centroid trails show the migration path as centroids converge to cluster centers.'; }
       },
       {
         id: 'inertia-curve',
@@ -639,7 +641,8 @@
           } else {
             container.innerHTML += '<p style="font-size:0.75rem;color:var(--nv-lab-text-muted)">Run to see inertia history</p>';
           }
-        }
+        },
+        interpretation: function (params, stepIndex) { return 'Decreasing inertia indicates clusters are becoming more compact and well-separated.'; }
       },
       {
         id: 'cluster-statistics',
@@ -690,9 +693,103 @@
           } else {
             container.innerHTML += '<p style="font-size:0.75rem;color:var(--nv-lab-text-muted)">Run to see cluster sizes</p>';
           }
-        }
+        },
+        interpretation: function (params, stepIndex) { return 'Cluster size distribution reveals whether the data has natural groupings of similar size.'; }
       }
     ],
+    xai: {
+      categories: ['Clustering', 'Convergence', 'Geometry'],
+      crossLabConnections: [
+        { trigger: 'converged', target: 'pca-projection', text: 'Use PCA to visualize cluster structure in reduced dimensions.', suggestCategory: 'Representation' },
+        { trigger: 'emptyCluster', target: 'kmeans-clustering', text: 'Reduce the number of clusters or improve initialization.', suggestCategory: 'Clustering' }
+      ]
+    },
+    renderPreparation: function (container, params) {
+      var numClusters = params.numClusters !== undefined ? params.numClusters : 3;
+      var numPoints = params.numPoints !== undefined ? params.numPoints : 60;
+      var spread = params.spread !== undefined ? params.spread : 1.2;
+      numClusters = Math.round(numClusters);
+      numClusters = Math.max(2, Math.min(8, numClusters));
+      numPoints = Math.round(numPoints);
+      numPoints = Math.max(20, Math.min(200, numPoints));
+
+      var points = generateClusterData(numPoints, numClusters, spread, 789);
+      var centroids = initializeCentroids(points, numClusters, 456);
+
+      var colors = ['#06b6d4', '#f59e0b', '#ef4444', '#10b981', '#8b5cf6', '#ec4899', '#f97316', '#6366f1'];
+      var allX = points.map(function (p) { return p[0]; });
+      var allY = points.map(function (p) { return p[1]; });
+      var minX = Math.min.apply(null, allX) - 1;
+      var maxX = Math.max.apply(null, allX) + 1;
+      var minY = Math.min.apply(null, allY) - 1;
+      var maxY = Math.max.apply(null, allY) + 1;
+      var rangeX = maxX - minX || 1;
+      var rangeY = maxY - minY || 1;
+
+      container.innerHTML = '';
+      var title = document.createElement('h4');
+      title.className = 'nv-lab-obs-title';
+      title.textContent = 'Data & Initial Centroids';
+      container.appendChild(title);
+
+      var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('viewBox', '0 0 400 300');
+      svg.setAttribute('role', 'img');
+      svg.setAttribute('aria-label', 'Initial data points and centroids');
+      svg.style.width = '100%';
+      svg.style.height = 'auto';
+      svg.style.maxHeight = '250px';
+
+      points.forEach(function (p) {
+        var cx = 40 + ((p[0] - minX) / rangeX) * 320;
+        var cy = 10 + ((p[1] - minY) / rangeY) * 260;
+        var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('cx', cx);
+        circle.setAttribute('cy', cy);
+        circle.setAttribute('r', '4');
+        circle.setAttribute('fill', '#9ca3af');
+        circle.setAttribute('opacity', '0.6');
+        svg.appendChild(circle);
+      });
+
+      centroids.forEach(function (c, ci) {
+        var cx = 40 + ((c[0] - minX) / rangeX) * 320;
+        var cy = 10 + ((c[1] - minY) / rangeY) * 260;
+        var rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        rect.setAttribute('x', cx - 6);
+        rect.setAttribute('y', cy - 6);
+        rect.setAttribute('width', '12');
+        rect.setAttribute('height', '12');
+        rect.setAttribute('fill', colors[ci % colors.length]);
+        rect.setAttribute('stroke', '#fff');
+        rect.setAttribute('stroke-width', '2');
+        svg.appendChild(rect);
+      });
+
+      container.appendChild(svg);
+    },
+    getPreparationTelemetry: function (params) {
+      var numClusters = params.numClusters !== undefined ? params.numClusters : 3;
+      var numPoints = params.numPoints !== undefined ? params.numPoints : 60;
+      var points = generateClusterData(numPoints, numClusters, params.spread !== undefined ? params.spread : 1.2, 789);
+      var centroids = initializeCentroids(points, numClusters, 456);
+      return [
+        { key: 'clusterCount', label: 'Cluster Count (k)', value: String(numClusters) },
+        { key: 'pointCount', label: 'Point Count', value: String(numPoints) },
+        { key: 'centroidCount', label: 'Initial Centroids', value: String(centroids.length) },
+        { key: 'phase', label: 'Current Phase', value: 'Initialized' },
+        { key: 'status', label: 'Status', value: 'Ready' }
+      ];
+    },
+    getCompletionSummary: function (result, params) {
+      if (!result) return [];
+      return [
+        { label: 'Iterations', value: String(result.iterations) },
+        { label: 'Inertia', value: String(Math.round(result.inertia * 10000) / 10000) },
+        { label: 'Clusters', value: String(result.centroids ? result.centroids.length : params.numClusters) },
+        { label: 'Status', value: 'Converged' }
+      ];
+    },
     execute: function (params) {
       var numClusters = params.numClusters !== undefined ? params.numClusters : 3;
       var numPoints = params.numPoints !== undefined ? params.numPoints : 60;

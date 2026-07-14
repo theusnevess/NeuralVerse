@@ -1543,6 +1543,8 @@
   }
 
   .nv-agent-trigger {
+    top: auto;
+    left: auto;
     bottom: 12px;
     right: 12px;
     width: 44px;

@@ -92,7 +92,7 @@
 
     steps.push({
       label: 'Generate Vectors',
-      log: 'Loaded semantic vectors for ' + keys.length + ' terms',
+      log: 'Loaded ' + keys.length + ' semantic vectors in 6-dimensional space',
       state: function () { return { v1: v1, v2: v2, phase: 'generate' }; },
       metrics: function () { return { 'Vector A': '[' + v1.slice(0, 3).map(function (x) { return x.toFixed(2); }).join(', ') + '...]', 'Vector B': '[' + v2.slice(0, 3).map(function (x) { return x.toFixed(2); }).join(', ') + '...]', 'Phase': 'Generate', 'Status': 'Ready' }; },
       viz: function () { return { v1: v1, v2: v2, phase: 'generate' }; }
@@ -100,7 +100,7 @@
 
     steps.push({
       label: 'Inspect Norms',
-      log: '||A|| = ' + all.n1.toFixed(4) + ', ||B|| = ' + all.n2.toFixed(4),
+      log: 'Vector norms computed: ||A|| and ||B|| measured',
       state: function () { return { n1: all.n1, n2: all.n2, phase: 'norms' }; },
       metrics: function () { return { '||A||': all.n1.toFixed(4), '||B||': all.n2.toFixed(4), 'Phase': 'Norms', 'Status': 'Computed' }; },
       viz: function () { return { v1: v1, v2: v2, n1: all.n1, n2: all.n2, phase: 'norms' }; }
@@ -108,7 +108,7 @@
 
     steps.push({
       label: 'Normalize',
-      log: 'Normalized vectors to unit length',
+      log: 'Normalized vectors to unit length, removing magnitude',
       state: function () { return { n1n: all.n1n, n2n: all.n2n, phase: 'normalize' }; },
       metrics: function () { return { '||A\'||': norm(all.n1n).toFixed(4), '||B\'||': norm(all.n2n).toFixed(4), 'Phase': 'Normalize', 'Status': 'Done' }; },
       viz: function () { return { v1: v1, v2: v2, n1n: all.n1n, n2n: all.n2n, phase: 'normalize' }; }
@@ -116,7 +116,7 @@
 
     steps.push({
       label: 'Dot Product',
-      log: 'A · B = ' + all.dp.toFixed(4),
+      log: 'Dot product A·B computed',
       state: function () { return { dp: all.dp, phase: 'dot' }; },
       metrics: function () { return { 'Dot Product': all.dp.toFixed(4), 'Phase': 'Dot Product', 'Status': 'Computed' }; },
       viz: function () { return { v1: v1, v2: v2, dp: all.dp, phase: 'dot' }; }
@@ -124,7 +124,7 @@
 
     steps.push({
       label: 'Compute Angle',
-      log: 'θ = ' + all.ang.toFixed(2) + '°',
+      log: 'Angle θ computed between vectors',
       state: function () { return { ang: all.ang, phase: 'angle' }; },
       metrics: function () { return { 'Angle': all.ang.toFixed(2) + '°', 'Phase': 'Angle', 'Status': 'Computed' }; },
       viz: function () { return { v1: v1, v2: v2, ang: all.ang, phase: 'angle' }; }
@@ -132,7 +132,7 @@
 
     steps.push({
       label: 'Compute Cosine',
-      log: 'cos(θ) = ' + all.cos.toFixed(4),
+      log: 'Cosine similarity cos(θ) computed',
       state: function () { return { cos: all.cos, phase: 'cosine' }; },
       metrics: function () { return { 'Cosine': all.cos.toFixed(4), 'Phase': 'Cosine', 'Status': 'Computed' }; },
       viz: function () { return { v1: v1, v2: v2, cos: all.cos, ang: all.ang, phase: 'cosine' }; }
@@ -140,7 +140,7 @@
 
     steps.push({
       label: 'Compute Projection',
-      log: 'Projection of A onto B: scalar = ' + all.proj.scalar.toFixed(4),
+      log: 'Projection scalar computed: component of A along B',
       state: function () { return { proj: all.proj, phase: 'projection' }; },
       metrics: function () { return { 'Proj Scalar': all.proj.scalar.toFixed(4), 'Phase': 'Projection', 'Status': 'Computed' }; },
       viz: function () { return { v1: v1, v2: v2, proj: all.proj, phase: 'projection' }; }
@@ -148,7 +148,7 @@
 
     steps.push({
       label: 'Rank Neighbors',
-      log: 'Ranked ' + all.rankings.length + ' vectors by cosine similarity',
+      log: 'Ranked all vectors by cosine similarity',
       state: function () { return { rankings: all.rankings, phase: 'rank' }; },
       metrics: function () { return { 'Neighbors': all.rankings.length, 'Top': all.rankings[0] ? all.rankings[0].label : '—', 'Phase': 'Rank', 'Status': 'Ranked' }; },
       viz: function () { return { v1: v1, v2: v2, rankings: all.rankings, phase: 'rank' }; }
@@ -163,8 +163,8 @@
     });
 
     steps.push({
-      label: 'Finished',
-      log: 'Geometric similarity analysis complete',
+      label: 'Complete',
+      log: 'Geometric analysis complete: angle, projection, and similarity computed',
       state: function () { return { phase: 'finished' }; },
       metrics: function () { return { 'Phase': 'Complete', 'Status': 'Done' }; },
       viz: function () { return { v1: v1, v2: v2, cos: all.cos, ang: all.ang, proj: all.proj, phase: 'finished' }; }
@@ -193,27 +193,27 @@
       title: 'Cosine Similarity State',
       sections: [
         {
-          label: 'Geometry',
+          label: 'Vector Properties',
           cards: [
-            { key: 'normA', label: 'Vector A Norm', interpretation: function (v) { return '||A|| = ' + v; } },
-            { key: 'normB', label: 'Vector B Norm', interpretation: function (v) { return '||B|| = ' + v; } },
-            { key: 'angle', label: 'Angle', interpretation: function (v) { var a = parseFloat(v); return a < 30 ? 'Highly aligned' : a < 90 ? 'Moderately aligned' : a < 150 ? 'Divergent' : 'Opposite direction'; } },
-            { key: 'normalized', label: 'Normalized', interpretation: function (v) { return v ? 'Unit vectors — magnitude removed' : 'Raw vectors — magnitude present'; } }
+            { key: 'normA', label: '||A||', interpretation: function (v) { return '||A|| = ' + v; } },
+            { key: 'normB', label: '||B||', interpretation: function (v) { return '||B|| = ' + v; } },
+            { key: 'angle', label: 'Angle θ', interpretation: function (v) { var a = parseFloat(v); return a < 30 ? 'Highly aligned' : a < 90 ? 'Moderately aligned' : a < 150 ? 'Divergent' : 'Opposite direction'; } },
+            { key: 'normalized', label: 'Normalization State', interpretation: function (v) { return v ? 'Unit vectors — magnitude removed' : 'Raw vectors — magnitude present'; } }
           ]
         },
         {
-          label: 'Similarity',
+          label: 'Similarity Metrics',
           cards: [
-            { key: 'dotProduct', label: 'Dot Product', interpretation: function (v) { return v > 0 ? 'Positive alignment' : v < 0 ? 'Negative alignment' : 'Orthogonal'; } },
-            { key: 'cosine', label: 'Cosine', interpretation: function (v) { return v > 0.9 ? 'Very similar' : v > 0.5 ? 'Similar' : v > 0 ? 'Weakly similar' : 'Dissimilar'; } },
+            { key: 'dotProduct', label: 'Dot Product A·B', interpretation: function (v) { return v > 0 ? 'Positive alignment' : v < 0 ? 'Negative alignment' : 'Orthogonal'; } },
+            { key: 'cosine', label: 'Cosine Similarity', interpretation: function (v) { return v > 0.9 ? 'Very similar' : v > 0.5 ? 'Similar' : v > 0 ? 'Weakly similar' : 'Dissimilar'; } },
             { key: 'projLength', label: 'Projection Length', interpretation: function (v) { return Math.abs(v) > 0.8 ? 'Large shared component' : 'Small shared component'; } },
             { key: 'rank', label: 'Similarity Rank', interpretation: function (v) { return v === 1 ? 'Most similar vector' : 'Rank ' + v + ' in similarity'; } }
           ]
         },
         {
-          label: 'Interpretation',
+          label: 'Geometric Interpretation',
           cards: [
-            { key: 'alignment', label: 'Alignment', interpretation: function (v) { return v; } },
+            { key: 'alignment', label: 'Alignment Assessment', interpretation: function (v) { return v; } },
             { key: 'directionAgreement', label: 'Direction Agreement', interpretation: function (v) { return v; } },
             { key: 'magnitudeEffect', label: 'Magnitude Effect', interpretation: function (v) { return v; } }
           ]
@@ -357,7 +357,8 @@
           svg.appendChild(lblB);
 
           container.appendChild(svg);
-        }
+        },
+        interpretation: function (params, stepIndex) { return 'The angle between vectors determines cosine similarity — smaller angles mean higher similarity.'; }
       },
       {
         id: 'similarity-breakdown',
@@ -385,7 +386,8 @@
           html += '<div class="nv-lab-obs-breakdown-row nv-lab-obs-breakdown-row--highlight"><span class="nv-lab-obs-breakdown-label">Cosine</span><span class="nv-lab-obs-breakdown-value">' + all.cos.toFixed(4) + '</span></div>';
           html += '</div>';
           container.innerHTML = html;
-        }
+        },
+        interpretation: function (params, stepIndex) { return 'Cosine similarity decomposes into dot product divided by the product of norms.'; }
       },
       {
         id: 'neighbor-ranking',
@@ -415,7 +417,8 @@
           });
           html += '</div>';
           container.innerHTML = html;
-        }
+        },
+        interpretation: function (params, stepIndex) { return 'Ranking by cosine similarity identifies the most semantically similar vectors.'; }
       },
       {
         id: 'projection-analysis',
@@ -438,7 +441,7 @@
           container.appendChild(title);
 
           var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-          svg.setAttribute('viewBox', '0 0 400 200');
+          svg.setAttribute('viewBox', '0 0 400 300');
           svg.setAttribute('role', 'img');
           svg.setAttribute('aria-label', 'Vector projection decomposition');
           svg.style.width = '100%';
@@ -505,9 +508,125 @@
           svg.appendChild(lblP);
 
           container.appendChild(svg);
-        }
+        },
+        interpretation: function (params, stepIndex) { return 'The projection shows how much of vector A lies along the direction of vector B.'; }
       }
     ],
+    renderPreparation: function (container, params) {
+      var kA = params.vectorA || 'retrieval';
+      var kB = params.vectorB || 'search';
+      var v1 = VECTORS[kA] ? VECTORS[kA].values : [1, 0];
+      var v2 = VECTORS[kB] ? VECTORS[kB].values : [0, 1];
+      var p = project2D(v1, v2);
+      var ang = angle(v1, v2);
+
+      container.innerHTML = '';
+      var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('viewBox', '0 0 400 300');
+      svg.setAttribute('role', 'img');
+      svg.setAttribute('aria-label', 'Preparation vectors with angle');
+      svg.style.width = '100%';
+      svg.style.height = 'auto';
+      svg.style.maxHeight = '200px';
+
+      var cx = 200, cy = 200;
+
+      var g;
+      for (g = -200; g <= 200; g += 40) {
+        var vLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        vLine.setAttribute('x1', cx + g); vLine.setAttribute('y1', 0);
+        vLine.setAttribute('x2', cx + g); vLine.setAttribute('y2', 300);
+        vLine.setAttribute('stroke', 'rgba(138,180,248,0.06)'); vLine.setAttribute('stroke-width', '0.5');
+        svg.appendChild(vLine);
+      }
+
+      if (ang > 1 && ang < 179) {
+        var arcR = 40;
+        var startAngle = Math.atan2(-p.y1, p.x1);
+        var endAngle = Math.atan2(-p.y2, p.x2);
+        var arcPath = 'M ' + (cx + arcR * Math.cos(startAngle)) + ' ' + (cy + arcR * Math.sin(startAngle));
+        arcPath += ' A ' + arcR + ' ' + arcR + ' 0 0 1 ' + (cx + arcR * Math.cos(endAngle)) + ' ' + (cy + arcR * Math.sin(endAngle));
+        var arc = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        arc.setAttribute('d', arcPath);
+        arc.setAttribute('fill', 'none');
+        arc.setAttribute('stroke', '#f59e0b');
+        arc.setAttribute('stroke-width', '1.5');
+        arc.setAttribute('stroke-dasharray', '3 2');
+        svg.appendChild(arc);
+      }
+
+      var lineA = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      lineA.setAttribute('x1', cx); lineA.setAttribute('y1', cy);
+      lineA.setAttribute('x2', cx + p.x1); lineA.setAttribute('y2', cy + p.y1);
+      lineA.setAttribute('stroke', '#06b6d4');
+      lineA.setAttribute('stroke-width', '2');
+      svg.appendChild(lineA);
+
+      var tipA = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      tipA.setAttribute('cx', cx + p.x1); tipA.setAttribute('cy', cy + p.y1);
+      tipA.setAttribute('r', '5'); tipA.setAttribute('fill', '#06b6d4');
+      svg.appendChild(tipA);
+
+      var lblA = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      lblA.setAttribute('x', cx + p.x1 + 8); lblA.setAttribute('y', cy + p.y1 - 5);
+      lblA.setAttribute('fill', '#06b6d4'); lblA.setAttribute('font-size', '11');
+      lblA.setAttribute('font-weight', '600');
+      lblA.textContent = 'A';
+      svg.appendChild(lblA);
+
+      var lineB = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      lineB.setAttribute('x1', cx); lineB.setAttribute('y1', cy);
+      lineB.setAttribute('x2', cx + p.x2); lineB.setAttribute('y2', cy + p.y2);
+      lineB.setAttribute('stroke', '#f59e0b');
+      lineB.setAttribute('stroke-width', '2');
+      svg.appendChild(lineB);
+
+      var tipB = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      tipB.setAttribute('cx', cx + p.x2); tipB.setAttribute('cy', cy + p.y2);
+      tipB.setAttribute('r', '5'); tipB.setAttribute('fill', '#f59e0b');
+      svg.appendChild(tipB);
+
+      var lblB = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      lblB.setAttribute('x', cx + p.x2 + 8); lblB.setAttribute('y', cy + p.y2 - 5);
+      lblB.setAttribute('fill', '#f59e0b'); lblB.setAttribute('font-size', '11');
+      lblB.setAttribute('font-weight', '600');
+      lblB.textContent = 'B';
+      svg.appendChild(lblB);
+
+      container.appendChild(svg);
+    },
+    getPreparationTelemetry: function (params) {
+      var kA = params.vectorA || 'retrieval';
+      var kB = params.vectorB || 'search';
+      var v1 = VECTORS[kA] ? VECTORS[kA].values : [1, 0];
+      var v2 = VECTORS[kB] ? VECTORS[kB].values : [0, 1];
+      var n1 = norm(v1), n2 = norm(v2);
+      var ang = angle(v1, v2);
+      var cos = cosine(v1, v2);
+      return [
+        { key: 'vectorANorm', label: 'Vector A Norm', value: n1.toFixed(4) },
+        { key: 'vectorBNorm', label: 'Vector B Norm', value: n2.toFixed(4) },
+        { key: 'angle', label: 'Angle (degrees)', value: ang.toFixed(2) + '\u00B0' },
+        { key: 'cosineSimilarity', label: 'Cosine Similarity', value: cos.toFixed(4) },
+        { key: 'status', label: 'Status', value: 'Ready' }
+      ];
+    },
+    getCompletionSummary: function (result, params) {
+      if (!result) return [];
+      return [
+        { label: 'Cosine', value: result.cosineSimilarity.toFixed(4) },
+        { label: 'Angle', value: result.angleDegrees.toFixed(2) + '\u00B0' },
+        { label: 'Projection Scalar', value: result.projection.scalar.toFixed(4) },
+        { label: 'Status', value: 'Complete' }
+      ];
+    },
+    xai: {
+      categories: ['Similarity', 'Geometry'],
+      crossLabConnections: [
+        { trigger: 'orthogonal', target: 'transformer-attention', text: 'Orthogonal embeddings produce zero attention \u2014 explore this connection.', suggestCategory: 'Attention' },
+        { trigger: 'aligned', target: 'embedding-similarity', text: 'Compare directional and distance-based similarity measures.', suggestCategory: 'Similarity' }
+      ]
+    },
     execute: function (params) {
       var kA = params.vectorA || 'retrieval';
       var kB = params.vectorB || 'search';

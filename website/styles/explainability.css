@@ -1,0 +1,422 @@
+/**
+ * NV-900-P9 — Explainability CSS
+ * Phase 5: Progressive disclosure. Compact findings.
+ */
+
+:root {
+  --nv-xai-bg: var(--sys-color-surface-secondary, #111827);
+  --nv-xai-surface: var(--sys-color-surface-tertiary, #1a2332);
+  --nv-xai-border: var(--sys-color-border, rgba(138,180,248,0.08));
+  --nv-xai-border-hover: var(--sys-color-border-hover, rgba(138,180,248,0.18));
+  --nv-xai-accent: var(--sys-color-accent-primary, #06b6d4);
+  --nv-xai-accent-dim: rgba(6,182,212,0.08);
+  --nv-xai-text: var(--sys-color-text-primary, #e2e8f0);
+  --nv-xai-text-secondary: var(--sys-color-text-secondary, #94a3b8);
+  --nv-xai-text-muted: var(--sys-color-text-tertiary, #64748b);
+  --nv-xai-radius: 6px;
+  --nv-xai-radius-sm: 3px;
+  --nv-xai-severity-critical: #ef4444;
+  --nv-xai-severity-significant: #f59e0b;
+  --nv-xai-severity-important: #3b82f6;
+  --nv-xai-severity-info: #06b6d4;
+  --nv-xai-confidence-high: #10b981;
+  --nv-xai-confidence-moderate: #f59e0b;
+  --nv-xai-confidence-low: #ef4444;
+}
+
+/* ── XAI Panel ────────────────────────────────────────── */
+.nv-xai-panel {
+  background: transparent;
+  border-top: 1px solid rgba(148, 163, 184, 0.06);
+  overflow: hidden;
+}
+
+.nv-xai-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 10px;
+}
+
+.nv-xai-panel-header h3 {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: var(--nv-xai-text-muted);
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.nv-xai-panel-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nv-xai-metrics-inline {
+  font-size: 0.6875rem;
+  color: var(--nv-xai-text-muted);
+  font-family: 'SF Mono', 'Fira Code', monospace;
+}
+
+.nv-xai-metrics-inline span {
+  color: var(--nv-xai-accent);
+  font-weight: 600;
+}
+
+.nv-xai-toggle-history {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: transparent;
+  border: none;
+  border-radius: 3px;
+  color: var(--nv-xai-text-muted);
+  cursor: pointer;
+  transition: color 120ms ease;
+}
+
+.nv-xai-toggle-history:hover,
+.nv-xai-toggle-history:focus-visible {
+  color: var(--nv-xai-text);
+  outline: none;
+}
+
+.nv-xai-toggle-history.active {
+  color: var(--nv-xai-accent);
+}
+
+/* ── Live Finding ─────────────────────────────────────── */
+.nv-xai-live-finding {
+  padding: 3px 10px 5px;
+  min-height: 24px;
+}
+
+.nv-xai-empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 28px;
+}
+
+.nv-xai-empty-label {
+  font-size: 0.75rem;
+  color: var(--nv-xai-text-muted);
+  font-style: italic;
+}
+
+/* ── Finding Card (compact, progressive disclosure) ───── */
+.nv-xai-finding {
+  background: rgba(148, 163, 184, 0.03);
+  border-radius: var(--nv-xai-radius);
+  padding: 8px 10px;
+  border-left: 2px solid var(--nv-xai-severity-info);
+  cursor: pointer;
+  transition: background 120ms ease;
+}
+
+.nv-xai-finding:hover {
+  background: rgba(148, 163, 184, 0.06);
+}
+
+.nv-xai-finding--critical { border-left-color: var(--nv-xai-severity-critical); }
+.nv-xai-finding--significant { border-left-color: var(--nv-xai-severity-significant); }
+.nv-xai-finding--important { border-left-color: var(--nv-xai-severity-important); }
+.nv-xai-finding--information { border-left-color: var(--nv-xai-severity-info); }
+
+.nv-xai-finding-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nv-xai-finding-title {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--nv-xai-text);
+  margin: 0;
+  flex: 1;
+  min-width: 0;
+}
+
+.nv-xai-finding-badges {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+/* ── Badges ───────────────────────────────────────────── */
+.nv-xai-severity-badge,
+.nv-xai-confidence-badge,
+.nv-xai-category-badge {
+  font-size: 0.5625rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 1px 5px;
+  border-radius: 2px;
+  white-space: nowrap;
+}
+
+.nv-xai-severity-badge {
+  background: rgba(6,182,212,0.08);
+  color: var(--nv-xai-accent);
+}
+
+.nv-xai-severity--critical { background: rgba(239,68,68,0.1); color: var(--nv-xai-severity-critical); }
+.nv-xai-severity--significant { background: rgba(245,158,11,0.1); color: var(--nv-xai-severity-significant); }
+.nv-xai-severity--important { background: rgba(59,130,246,0.1); color: var(--nv-xai-severity-important); }
+.nv-xai-severity--info { background: rgba(6,182,212,0.08); color: var(--nv-xai-severity-info); }
+
+.nv-xai-confidence-badge {
+  background: rgba(16,185,129,0.08);
+  color: var(--nv-xai-confidence-high);
+}
+
+.nv-xai-confidence--high { background: rgba(16,185,129,0.08); color: var(--nv-xai-confidence-high); }
+.nv-xai-confidence--moderate { background: rgba(245,158,11,0.08); color: var(--nv-xai-confidence-moderate); }
+.nv-xai-confidence--low { background: rgba(239,68,68,0.08); color: var(--nv-xai-confidence-low); }
+
+.nv-xai-category-badge {
+  background: var(--nv-xai-accent-dim);
+  color: var(--nv-xai-accent);
+}
+
+/* ── Finding Layers (hidden by default, expandable) ───── */
+.nv-xai-finding-layers {
+  display: none;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(148, 163, 184, 0.06);
+}
+
+.nv-xai-finding.is-expanded .nv-xai-finding-layers {
+  display: flex;
+}
+
+.nv-xai-layer {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.nv-xai-layer-label {
+  font-size: 0.5625rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--nv-xai-text-muted);
+}
+
+.nv-xai-layer-content {
+  font-size: 0.75rem;
+  color: var(--nv-xai-text-secondary);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ── Expand Indicator ─────────────────────────────────── */
+.nv-xai-finding-expand {
+  font-size: 0.625rem;
+  color: var(--nv-xai-text-muted);
+  margin-left: auto;
+  transition: transform 120ms ease;
+}
+
+.nv-xai-finding.is-expanded .nv-xai-finding-expand {
+  transform: rotate(90deg);
+}
+
+/* ── Finding References ───────────────────────────────── */
+.nv-xai-finding-refs {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 6px;
+  flex-wrap: wrap;
+}
+
+.nv-xai-finding-ref {
+  font-size: 0.625rem;
+  color: var(--nv-xai-accent);
+  background: var(--nv-xai-accent-dim);
+  padding: 1px 5px;
+  border-radius: 2px;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+}
+
+/* ── Timeline ─────────────────────────────────────────── */
+.nv-xai-history {
+  border-top: 1px solid rgba(148, 163, 184, 0.06);
+  padding: 4px 10px;
+  max-height: 160px;
+  overflow-y: auto;
+}
+
+.nv-xai-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.nv-xai-timeline-entry {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 6px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background 100ms ease;
+  font-size: 0.6875rem;
+}
+
+.nv-xai-timeline-entry:hover,
+.nv-xai-timeline-entry:focus-visible {
+  background: rgba(148, 163, 184, 0.04);
+  outline: none;
+}
+
+.nv-xai-timeline-marker {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.nv-xai-timeline-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--nv-xai-severity-info);
+}
+
+.nv-xai-timeline-dot--critical { background: var(--nv-xai-severity-critical); }
+.nv-xai-timeline-dot--significant { background: var(--nv-xai-severity-significant); }
+.nv-xai-timeline-dot--important { background: var(--nv-xai-severity-important); }
+.nv-xai-timeline-dot--information { background: var(--nv-xai-severity-info); }
+
+.nv-xai-timeline-index {
+  font-size: 0.625rem;
+  color: var(--nv-xai-text-muted);
+  font-family: 'SF Mono', 'Fira Code', monospace;
+}
+
+.nv-xai-timeline-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-width: 0;
+  flex: 1;
+}
+
+.nv-xai-timeline-title {
+  font-size: 0.75rem;
+  color: var(--nv-xai-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nv-xai-timeline-meta {
+  font-size: 0.625rem;
+  color: var(--nv-xai-text-muted);
+}
+
+.nv-xai-timeline-step {
+  font-size: 0.625rem;
+  color: var(--nv-xai-accent);
+  font-family: 'SF Mono', 'Fira Code', monospace;
+}
+
+/* ── Visual Evidence Highlight ────────────────────────── */
+.nv-xai-evidence-pulse {
+  animation: nv-xai-evidence-highlight 1.2s ease-out;
+}
+
+@keyframes nv-xai-evidence-highlight {
+  0% { box-shadow: 0 0 0 0 rgba(6,182,212,0.4); }
+  50% { box-shadow: 0 0 0 3px rgba(6,182,212,0.15); }
+  100% { box-shadow: 0 0 0 0 rgba(6,182,212,0); }
+}
+
+/* ── Cross-Lab Suggestion ─────────────────────────────── */
+.nv-xai-cross-lab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  margin-top: 6px;
+  background: var(--nv-xai-accent-dim);
+  border-radius: var(--nv-xai-radius-sm);
+  font-size: 0.75rem;
+  color: var(--nv-xai-text-secondary);
+}
+
+.nv-xai-cross-lab-link {
+  color: var(--nv-xai-accent);
+  text-decoration: none;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.nv-xai-cross-lab-link:hover,
+.nv-xai-cross-lab-link:focus-visible {
+  text-decoration: underline;
+  outline: none;
+}
+
+/* ── Responsive ───────────────────────────────────────── */
+@media (max-width: 768px) {
+  .nv-xai-finding-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .nv-xai-finding-badges {
+    align-self: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .nv-xai-finding {
+    padding: 6px 8px;
+  }
+
+  .nv-xai-layer-content {
+    font-size: 0.6875rem;
+  }
+
+  .nv-xai-history {
+    max-height: 150px;
+  }
+}
+
+/* ── Reduced Motion ───────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .nv-xai-finding {
+    animation: none;
+  }
+
+  .nv-xai-evidence-pulse {
+    animation: none;
+  }
+}
+
+/* ── Scrollbar ────────────────────────────────────────── */
+.nv-xai-history::-webkit-scrollbar {
+  width: 3px;
+}
+
+.nv-xai-history::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.nv-xai-history::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.15);
+  border-radius: 2px;
+}

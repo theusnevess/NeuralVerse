@@ -231,7 +231,7 @@
 
       steps.push({
         label: 'Load',
-        log: 'Loaded 9 deterministic embedding vectors with semantic dimensions',
+        log: 'Loaded 9 embedding vectors, each in 6-dimensional semantic space',
         state: function (p) {
           return {
             query: p.queryItem,
@@ -270,7 +270,7 @@
 
       steps.push({
         label: 'Inspect Norms',
-        log: 'Computed vector norms — magnitude varies across items',
+        log: 'Computed L2 norms: vector magnitudes vary across items',
         state: function (p) {
           var result = runEmbeddingPipeline(p);
           var queryIdx = result.items.indexOf(p.queryItem);
@@ -318,7 +318,7 @@
 
       steps.push({
         label: 'Normalize',
-        log: 'Normalized all vectors to unit length for cosine comparison',
+        log: 'Normalized vectors to unit length, removing magnitude from similarity',
         state: function (p) {
           var result = runEmbeddingPipeline(p);
           var queryIdx = result.items.indexOf(p.queryItem);
@@ -363,7 +363,7 @@
 
       steps.push({
         label: 'Dot Product',
-        log: 'Computed dot product matrix — magnitude affects scores',
+        log: 'Dot product matrix computed: scores reflect both direction and magnitude',
         state: function (p) {
           var result = runEmbeddingPipeline(p);
           var queryIdx = result.items.indexOf(p.queryItem);
@@ -418,7 +418,7 @@
 
       steps.push({
         label: 'Cosine',
-        log: 'Computed cosine similarity — direction rather than magnitude',
+        log: 'Cosine similarity computed: direction-only comparison of vectors',
         state: function (p) {
           var result = runEmbeddingPipeline(p);
           var queryIdx = result.items.indexOf(p.queryItem);
@@ -472,7 +472,7 @@
 
       steps.push({
         label: 'Distance',
-        log: 'Computed Euclidean distance matrix',
+        log: 'Euclidean distance matrix computed: geometric proximity measured',
         state: function (p) {
           var result = runEmbeddingPipeline(p);
           var queryIdx = result.items.indexOf(p.queryItem);
@@ -532,7 +532,7 @@
 
       steps.push({
         label: 'Rank',
-        log: 'Ranked nearest neighbors for query "' + '"',
+        log: 'Ranked neighbors by cosine similarity, top match identified',
         state: function (p) {
           var result = runEmbeddingPipeline(p);
           var queryIdx = result.items.indexOf(p.queryItem);
@@ -595,8 +595,8 @@
       });
 
       steps.push({
-        label: 'Analyze',
-        log: 'Inference complete — analyzing retrieval and semantic structure',
+        label: 'Complete',
+        log: 'Analysis complete: semantic structure revealed through vector geometry',
         state: function (p) {
           var result = runEmbeddingPipeline(p);
           var queryIdx = result.items.indexOf(p.queryItem);
@@ -689,25 +689,32 @@
           space.setAttribute('aria-label', '2D projection of embedding vectors with query ' + params.queryItem + ' highlighted');
 
           var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-          svg.setAttribute('viewBox', '0 0 300 200');
+          svg.setAttribute('viewBox', '0 0 400 300');
           svg.setAttribute('class', 'nv-embed-space-svg');
           svg.setAttribute('aria-hidden', 'true');
 
           var gridLines = '';
-          for (var g = 0; g <= 4; g++) {
-            var gx = 40 + (g * 60);
-            var gy = 10 + (g * 45);
-            gridLines += '<line x1="' + gx + '" y1="10" x2="' + gx + '" y2="190" class="nv-embed-space-grid"/>';
-            gridLines += '<line x1="40" y1="' + gy + '" x2="280" y2="' + gy + '" class="nv-embed-space-grid"/>';
+            for (var g = 0; g <= 4; g++) {
+              var gx = 35 + (g * 82.5);
+              var gy = 25 + (g * 60);
+              gridLines += '<line x1="' + gx + '" y1="25" x2="' + gx + '" y2="265" class="nv-embed-space-grid"/>';
+              gridLines += '<line x1="35" y1="' + gy + '" x2="365" y2="' + gy + '" class="nv-embed-space-grid"/>';
           }
 
+          // Normalize the projected coordinates to the active data range so
+          // scientific marks use the available drawing area at every size.
+          var projection = result.vectors.map(function (vec) {
+            return { x: (vec[0] + vec[1]) / 2, y: (vec[2] + vec[3]) / 2 };
+          });
+          var xs = projection.map(function (point) { return point.x; });
+          var ys = projection.map(function (point) { return point.y; });
+          var minX = Math.min.apply(null, xs), maxX = Math.max.apply(null, xs);
+          var minY = Math.min.apply(null, ys), maxY = Math.max.apply(null, ys);
+          var spanX = maxX - minX || 1, spanY = maxY - minY || 1;
           var points = '';
           for (var i = 0; i < result.items.length; i++) {
-            var vec = result.vectors[i];
-            var px = 40 + ((vec[0] + vec[1]) / 2) * 240;
-            var py = 10 + ((vec[2] + vec[3]) / 2) * 180;
-            px = Math.max(40, Math.min(280, px));
-            py = Math.max(10, Math.min(190, py));
+            var px = 45 + ((projection[i].x - minX) / spanX) * 290;
+            var py = 45 + ((projection[i].y - minY) / spanY) * 190;
 
             var isQuery = i === queryIdx;
             var isNeighbor = neighborIndices.indexOf(i) >= 0;
@@ -732,7 +739,8 @@
 
           container.appendChild(space);
           container.appendChild(legend);
-        }
+        },
+        interpretation: function (params, stepIndex) { return 'Items closer in embedding space share more semantic similarity — distance reflects meaning.'; }
       },
       {
         id: 'similarity-matrix',
@@ -777,7 +785,8 @@
 
           matrix.innerHTML = rows;
           container.appendChild(matrix);
-        }
+        },
+        interpretation: function (params, stepIndex) { return 'High cosine similarity values indicate vectors point in similar directions in semantic space.'; }
       },
       {
         id: 'nearest-neighbors',
@@ -842,7 +851,8 @@
           }
 
           container.appendChild(list);
-        }
+        },
+        interpretation: function (params, stepIndex) { return 'Nearest neighbors are retrieved by cosine similarity — the most semantically similar items.'; }
       },
       {
         id: 'vector-anatomy',
@@ -911,45 +921,46 @@
 
           container.appendChild(bars);
           container.appendChild(legend);
-        }
+        },
+        interpretation: function (params, stepIndex) { return 'Dimension contributions reveal which semantic aspects drive similarity between query and neighbor.'; }
       }
     ],
     inspector: {
       title: 'Embedding Similarity State',
       sections: [
         {
-          label: 'Query',
+          label: 'Query Properties',
           cards: [
-            { key: 'query', label: 'Selected Query', unit: '', interpretation: function (v) { return 'Query item selected'; } },
-            { key: 'dimension', label: 'Vector Dimension', unit: '', interpretation: function (v) { return v + '-dimensional space'; } },
-            { key: 'vectorNorm', label: 'Vector Norm', unit: '', interpretation: function (v) { return v === 1.0 ? 'Unit vector' : v > 2.0 ? 'Large magnitude' : 'Moderate magnitude'; } },
-            { key: 'normalized', label: 'Normalized?', unit: '', interpretation: function (v) { return v === true ? 'Yes — cosine comparison enabled' : 'No — magnitude affects dot product'; } }
+            { key: 'query', label: 'Query Item', unit: '', interpretation: function (v) { return 'Query item selected'; } },
+            { key: 'dimension', label: 'Dimensionality', unit: '', interpretation: function (v) { return v + '-dimensional space'; } },
+            { key: 'vectorNorm', label: 'Vector Norm ||v||', unit: '', interpretation: function (v) { return v === 1.0 ? 'Unit vector' : v > 2.0 ? 'Large magnitude' : 'Moderate magnitude'; } },
+            { key: 'normalized', label: 'Normalization State', unit: '', interpretation: function (v) { return v === true ? 'Yes — cosine comparison enabled' : 'No — magnitude affects dot product'; } }
           ]
         },
         {
-          label: 'Similarity',
+          label: 'Similarity Metrics',
           cards: [
-            { key: 'topMatch', label: 'Top Match', unit: '', interpretation: function (v) { return v !== '—' ? 'Nearest neighbor selected' : 'Pending computation'; } },
+            { key: 'topMatch', label: 'Nearest Neighbor', unit: '', interpretation: function (v) { return v !== '—' ? 'Nearest neighbor selected' : 'Pending computation'; } },
             { key: 'cosineSim', label: 'Cosine Similarity', unit: '', interpretation: function (v) { return v > 0.9 ? 'Very strong alignment' : v > 0.7 ? 'Strong alignment' : v > 0.5 ? 'Moderate alignment' : 'Weak alignment'; } },
             { key: 'dotProduct', label: 'Dot Product', unit: '', interpretation: function (v) { return v > 3.0 ? 'Large dot product' : v > 1.0 ? 'Moderate dot product' : 'Small dot product'; } },
             { key: 'euclideanDist', label: 'Euclidean Distance', unit: '', interpretation: function (v) { return v < 0.5 ? 'Very close' : v < 1.0 ? 'Close' : 'Distant'; } }
           ]
         },
         {
-          label: 'Retrieval',
+          label: 'Retrieval Properties',
           cards: [
-            { key: 'topK', label: 'Top-K Count', unit: '', interpretation: function (v) { return 'Retrieving ' + v + ' neighbors'; } },
-            { key: 'nearestNeighbor', label: 'Nearest Neighbor', unit: '', interpretation: function (v) { return v || 'Pending'; } },
+            { key: 'topK', label: 'Top-K Value', unit: '', interpretation: function (v) { return 'Retrieving ' + v + ' neighbors'; } },
+            { key: 'nearestNeighbor', label: 'Primary Neighbor', unit: '', interpretation: function (v) { return v || 'Pending'; } },
             { key: 'rankStability', label: 'Rank Stability', unit: '', interpretation: function (v) { return 'Stable ranking'; } },
-            { key: 'avgSimilarity', label: 'Average Similarity', unit: '', interpretation: function (v) { return v > 0.8 ? 'High cluster cohesion' : v > 0.6 ? 'Moderate cohesion' : 'Low cohesion'; } }
+            { key: 'avgSimilarity', label: 'Mean Similarity', unit: '', interpretation: function (v) { return v > 0.8 ? 'High cluster cohesion' : v > 0.6 ? 'Moderate cohesion' : 'Low cohesion'; } }
           ]
         },
         {
-          label: 'Geometry',
+          label: 'Geometric Interpretation',
           cards: [
             { key: 'magnitudeEffect', label: 'Magnitude Effect', unit: '', interpretation: function (v) { return v; } },
-            { key: 'angleInterpretation', label: 'Angle Interpretation', unit: '', interpretation: function (v) { return v; } },
-            { key: 'clusterDensity', label: 'Cluster Density', unit: '', interpretation: function (v) { return v; } }
+            { key: 'angleInterpretation', label: 'Angular Relationship', unit: '', interpretation: function (v) { return v; } },
+            { key: 'clusterDensity', label: 'Local Density', unit: '', interpretation: function (v) { return v; } }
           ]
         }
       ],
@@ -1023,6 +1034,106 @@
         }
         return changes;
       }
+    },
+    xai: {
+      categories: ['Similarity', 'Representation', 'Geometry'],
+      crossLabConnections: [
+        { trigger: 'highSimilarity', target: 'cosine-similarity', text: 'Compare Euclidean and cosine similarity for these embeddings.', suggestCategory: 'Similarity' },
+        { trigger: 'clusterStructure', target: 'kmeans-clustering', text: 'Apply K-Means to discover clusters in the embedding space.', suggestCategory: 'Clustering' }
+      ]
+    },
+    renderPreparation: function (container, params) {
+      var result = runEmbeddingPipeline(params);
+      var queryIdx = result.items.indexOf(params.queryItem);
+      if (queryIdx < 0) queryIdx = 0;
+
+      var neighbors = result.neighbors.slice(0, params.topK);
+      var neighborIndices = neighbors.map(function (n) { return n.index; });
+
+      container.innerHTML = '';
+      var title = document.createElement('h4');
+      title.className = 'nv-lab-obs-title';
+      title.textContent = 'Preparation — Embedding Neighborhood View';
+      container.appendChild(title);
+
+      var space = document.createElement('div');
+      space.className = 'nv-embed-space';
+      space.setAttribute('role', 'img');
+      space.setAttribute('aria-label', 'Preparation scatter visualization for ' + params.queryItem);
+
+      var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('viewBox', '0 0 400 300');
+      svg.setAttribute('class', 'nv-embed-space-svg');
+      svg.setAttribute('aria-hidden', 'true');
+
+      var gridLines = '';
+      for (var g = 0; g <= 4; g++) {
+        var gx = 40 + (g * 60);
+        var gy = 10 + (g * 45);
+        gridLines += '<line x1="' + gx + '" y1="10" x2="' + gx + '" y2="190" class="nv-embed-space-grid"/>';
+        gridLines += '<line x1="40" y1="' + gy + '" x2="280" y2="' + gy + '" class="nv-embed-space-grid"/>';
+      }
+
+      var points = '';
+      for (var i = 0; i < result.items.length; i++) {
+        var vec = result.vectors[i];
+        var px = 35 + ((vec[0] + vec[1]) / 2) * 330;
+        var py = 25 + ((vec[2] + vec[3]) / 2) * 240;
+        px = Math.max(35, Math.min(365, px));
+        py = Math.max(25, Math.min(265, py));
+
+        var isQuery = i === queryIdx;
+        var isNeighbor = neighborIndices.indexOf(i) >= 0;
+
+        var fillColor = isQuery ? '#06b6d4' : isNeighbor ? '#22c55e' : '#475569';
+        var radius = isQuery ? 6 : isNeighbor ? 5 : 4;
+        var strokeColor = isQuery ? '#06b6d4' : isNeighbor ? '#22c55e' : '#64748b';
+
+        points += '<circle cx="' + px + '" cy="' + py + '" r="' + radius + '" fill="' + fillColor + '" stroke="' + strokeColor + '" stroke-width="1.5" class="nv-embed-space-point"/>';
+        points += '<text x="' + (px + 8) + '" y="' + (py + 3) + '" class="nv-embed-space-label">' + result.items[i] + '</text>';
+      }
+
+      svg.innerHTML = gridLines + points;
+      space.appendChild(svg);
+
+      var legend = document.createElement('div');
+      legend.className = 'nv-embed-space-legend';
+      legend.innerHTML =
+        '<span class="nv-embed-space-legend-item"><span class="nv-embed-space-legend-dot" style="background:#06b6d4"></span>Selected</span>' +
+        '<span class="nv-embed-space-legend-item"><span class="nv-embed-space-legend-dot" style="background:#22c55e"></span>Neighbors</span>' +
+        '<span class="nv-embed-space-legend-item"><span class="nv-embed-space-legend-dot" style="background:#475569"></span>Other Items</span>';
+
+      container.appendChild(space);
+      container.appendChild(legend);
+    },
+    getPreparationTelemetry: function (params) {
+      var result = runEmbeddingPipeline(params);
+      var queryIdx = result.items.indexOf(params.queryItem);
+      if (queryIdx < 0) queryIdx = 0;
+      var secondIdx = result.neighbors.length > 0 ? result.neighbors[0].index : 1;
+      var initialSimilarity = cosineSimilarity(result.vectors[queryIdx], result.vectors[secondIdx]);
+
+      return [
+        { key: 'selectedPair', label: 'Selected Pair', value: params.queryItem + ' / ' + result.items[secondIdx] },
+        { key: 'vectorDimensions', label: 'Vector Dimensions', value: '6' },
+        { key: 'initialSimilarity', label: 'Initial Similarity', value: String(Math.round(initialSimilarity * 10000) / 10000) },
+        { key: 'comparisonState', label: 'Comparison State', value: 'Pending' },
+        { key: 'status', label: 'Status', value: 'Ready' }
+      ];
+    },
+    getCompletionSummary: function (result, params) {
+      if (!result) return [];
+      var queryIdx = result.items.indexOf(params.queryItem);
+      if (queryIdx < 0) queryIdx = 0;
+      var neighbors = result.neighbors.slice(0, params.topK);
+      var bestMatch = neighbors.length > 0 ? result.items[neighbors[0].index] : '\u2014';
+      var similarity = neighbors.length > 0 ? neighbors[0].score : 0;
+
+      return [
+        { label: 'Best Match', value: bestMatch },
+        { label: 'Similarity', value: String(Math.round(similarity * 10000) / 10000) },
+        { label: 'Status', value: 'Complete' }
+      ];
     },
     execute: function (params) {
       var queryItem = params.queryItem || 'embedding';

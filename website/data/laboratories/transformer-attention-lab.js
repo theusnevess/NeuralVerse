@@ -222,7 +222,7 @@
 
     steps.push({
       label: 'Tokenize',
-      log: 'Tokenized ' + tokens.length + ' tokens: [' + tokens.join(', ') + ']',
+      log: 'Tokenized input sequence: ' + tokens.length + ' tokens',
       state: function () { return { tokens: tokens, phase: 'tokenize' }; },
       metrics: function () { return { 'Tokens': tokens.length, 'Phase': 'Tokenize', 'Status': 'Ready' }; },
       viz: function () { return { tokens: tokens, phase: 'tokenize' }; }
@@ -230,7 +230,7 @@
 
     steps.push({
       label: 'Embed',
-      log: 'Built deterministic embeddings (d=' + dModel + ')',
+      log: 'Built token embeddings in ' + dModel + '-dimensional space',
       state: function () { return { tokens: tokens, dModel: dModel, phase: 'embed' }; },
       metrics: function () { return { 'Dimension': dModel, 'Phase': 'Embed', 'Status': 'Building' }; },
       viz: function () { return { tokens: tokens, embeddings: embeddings, phase: 'embed' }; }
@@ -239,7 +239,7 @@
     var Q = matmul(embeddings, Wq);
     steps.push({
       label: 'Project Q',
-      log: 'Computed Q = X × Wq (' + tokens.length + '×' + dHead + ')',
+      log: 'Query projection computed: Q = X × Wq',
       state: function () { return { Q: Q, phase: 'project-q' }; },
       metrics: function () { return { 'Shape': tokens.length + '×' + dHead, 'Phase': 'Q Projection', 'Status': 'Computing' }; },
       viz: function () { return { tokens: tokens, Q: Q, phase: 'project-q' }; }
@@ -248,7 +248,7 @@
     var K = matmul(embeddings, Wk);
     steps.push({
       label: 'Project K',
-      log: 'Computed K = X × Wk (' + tokens.length + '×' + dHead + ')',
+      log: 'Key projection computed: K = X × Wk',
       state: function () { return { K: K, phase: 'project-k' }; },
       metrics: function () { return { 'Shape': tokens.length + '×' + dHead, 'Phase': 'K Projection', 'Status': 'Computing' }; },
       viz: function () { return { tokens: tokens, K: K, phase: 'project-k' }; }
@@ -257,7 +257,7 @@
     var V = matmul(embeddings, Wv);
     steps.push({
       label: 'Project V',
-      log: 'Computed V = X × Wv (' + tokens.length + '×' + dHead + ')',
+      log: 'Value projection computed: V = X × Wv',
       state: function () { return { V: V, phase: 'project-v' }; },
       metrics: function () { return { 'Shape': tokens.length + '×' + dHead, 'Phase': 'V Projection', 'Status': 'Computing' }; },
       viz: function () { return { tokens: tokens, V: V, phase: 'project-v' }; }
@@ -266,7 +266,7 @@
     var rawScores = matmulAB(Q, K);
     steps.push({
       label: 'Score QK\u1D40',
-      log: 'Computed raw attention scores Q×K\u1D40',
+      log: 'Raw attention scores computed: Q×K\u1D40',
       state: function () { return { rawScores: rawScores, phase: 'score' }; },
       metrics: function () { return { 'Shape': tokens.length + '×' + tokens.length, 'Phase': 'Scoring', 'Status': 'Computing' }; },
       viz: function () { return { tokens: tokens, rawScores: rawScores, phase: 'score' }; }
@@ -283,7 +283,7 @@
     }
     steps.push({
       label: 'Scale',
-      log: 'Scaled scores by \u221Ad_k = ' + scale.toFixed(2),
+      log: 'Scaled attention scores by \u221Ad_k to prevent gradient vanishing',
       state: function () { return { scaledScores: scaledScores, scale: scale, phase: 'scale' }; },
       metrics: function () { return { 'Scale': scale.toFixed(2), 'Phase': 'Scaling', 'Status': 'Computing' }; },
       viz: function () { return { tokens: tokens, scaledScores: scaledScores, phase: 'scale' }; }
@@ -297,7 +297,7 @@
       }
       steps.push({
         label: 'Mask',
-        log: 'Applied causal mask to future positions',
+        log: 'Causal mask applied: future tokens cannot attend to past',
         state: function () { return { scaledScores: scaledScores, causalMask: true, phase: 'mask' }; },
         metrics: function () { return { 'Mask': 'Causal', 'Phase': 'Masking', 'Status': 'Applied' }; },
         viz: function () { return { tokens: tokens, scaledScores: scaledScores, causalMask: true, phase: 'mask' }; }
@@ -313,7 +313,7 @@
     }
     steps.push({
       label: 'Softmax',
-      log: 'Applied row-wise softmax (T=' + temperature + ')',
+      log: 'Softmax applied row-wise with temperature T=' + temperature,
       state: function () { return { attentionWeights: attentionWeights, phase: 'softmax' }; },
       metrics: function () { return { 'Rows': tokens.length, 'Phase': 'Softmax', 'Status': 'Normalized' }; },
       viz: function () { return { tokens: tokens, attentionWeights: attentionWeights, phase: 'softmax' }; }
@@ -322,7 +322,7 @@
     var context = matmulAB(attentionWeights, V);
     steps.push({
       label: 'Context',
-      log: 'Computed context = attention × V',
+      log: 'Context vectors computed: weighted sum of values',
       state: function () { return { context: context, phase: 'context' }; },
       metrics: function () { return { 'Shape': tokens.length + '×' + dHead, 'Phase': 'Context', 'Status': 'Computed' }; },
       viz: function () { return { tokens: tokens, context: context, attentionWeights: attentionWeights, phase: 'context' }; }
@@ -342,7 +342,7 @@
 
     steps.push({
       label: 'Analyze',
-      log: 'Strongest link: "' + tokens[strongestLink.from] + '" → "' + tokens[strongestLink.to] + '" (' + strongestLink.value.toFixed(3) + ')',
+      log: 'Strongest attention link identified: ' + tokens[strongestLink.from] + ' attends to ' + tokens[strongestLink.to] + ' with weight ' + strongestLink.value.toFixed(3),
       state: function () {
         return {
           tokens: tokens, attentionWeights: attentionWeights, context: context,
@@ -363,8 +363,8 @@
     });
 
     steps.push({
-      label: 'Finished',
-      log: 'Attention computation complete',
+      label: 'Complete',
+      log: 'Self-attention complete: context vectors formed from weighted value aggregation',
       state: function () {
         return {
           tokens: tokens, attentionWeights: attentionWeights, context: context,
@@ -436,28 +436,28 @@
       title: 'Attention State',
       sections: [
         {
-          label: 'Sequence',
+          label: 'Input Properties',
           cards: [
-            { key: 'seqLength', label: 'Tokens', interpretation: function (v) { return v + ' tokens in sequence'; } },
-            { key: 'dModel', label: 'Embedding Dim', interpretation: function (v) { return 'd_model = ' + v; } },
+            { key: 'seqLength', label: 'Sequence Length', interpretation: function (v) { return v + ' tokens in sequence'; } },
+            { key: 'dModel', label: 'Embedding Dimension', interpretation: function (v) { return 'd_model = ' + v; } },
             { key: 'maskMode', label: 'Mask Mode', interpretation: function (v) { return v ? 'Causal — future tokens masked' : 'Bidirectional — all tokens visible'; } }
           ]
         },
         {
-          label: 'Projections',
+          label: 'Projection Magnitudes',
           cards: [
-            { key: 'qNorm', label: 'Q Norm', interpretation: function (v) { return 'Query projection magnitude'; } },
-            { key: 'kNorm', label: 'K Norm', interpretation: function (v) { return 'Key projection magnitude'; } },
-            { key: 'vNorm', label: 'V Norm', interpretation: function (v) { return 'Value projection magnitude'; } }
+            { key: 'qNorm', label: '||Q|| Query Norm', interpretation: function (v) { return 'Query projection magnitude'; } },
+            { key: 'kNorm', label: '||K|| Key Norm', interpretation: function (v) { return 'Key projection magnitude'; } },
+            { key: 'vNorm', label: '||V|| Value Norm', interpretation: function (v) { return 'Value projection magnitude'; } }
           ]
         },
         {
-          label: 'Attention',
+          label: 'Attention Properties',
           cards: [
             { key: 'scoreRange', label: 'Score Range', interpretation: function (v) { return 'Raw scores: [' + v + ']'; } },
-            { key: 'avgEntropy', label: 'Avg Entropy', interpretation: function (v) { return v < 1.5 ? 'Focused attention' : v < 3.0 ? 'Moderate spread' : 'Diffuse attention'; } },
-            { key: 'strongestLink', label: 'Strongest Link', interpretation: function (v) { return v ? '"' + v.from + '" → "' + v.to + '"' : 'Computing...'; } },
-            { key: 'rowSum', label: 'Rows Sum To', interpretation: function (v) { return v === 1 ? 'Valid probability distribution' : 'Normalized'; } }
+            { key: 'avgEntropy', aliases: ['attentionEntropy'], label: 'Attention Entropy', interpretation: function (v) { return v < 1.5 ? 'Focused attention' : v < 3.0 ? 'Moderate spread' : 'Diffuse attention'; } },
+            { key: 'strongestLink', label: 'Strongest Attention Link', interpretation: function (v) { if (!v) return 'Computing...'; if (typeof v === 'string') return '"' + v + '"'; return '"' + v.from + '" → "' + v.to + '"'; } },
+            { key: 'rowSum', label: 'Row Sum Validation', interpretation: function (v) { return v === 1 ? 'Valid probability distribution' : 'Normalized'; } }
           ]
         }
       ],
@@ -465,6 +465,25 @@
         var tokens = (SEQUENCES['cat-sat'] || SEQUENCES['cat-sat']).slice(0, params.seqLength || 6);
         var dModel = parseInt(params.dModel) || 4;
         var result = computeAttention(tokens, dModel, dModel, params.temperature || 1.0, params.causalMask || false, 42);
+
+        var maxWeight = 0;
+        var dominantIdx = 0;
+        for (var i = 0; i < result.attentionWeights.length; i++) {
+          for (var j = 0; j < result.attentionWeights[i].length; j++) {
+            if (result.attentionWeights[i][j] > maxWeight) {
+              maxWeight = result.attentionWeights[i][j];
+              dominantIdx = j;
+            }
+          }
+        }
+
+        var strongCount = 0;
+        for (var i = 0; i < result.attentionWeights.length; i++) {
+          for (var j = 0; j < result.attentionWeights[i].length; j++) {
+            if (result.attentionWeights[i][j] > 0.3 && i !== j) strongCount++;
+          }
+        }
+
         return {
           seqLength: result.seqLength,
           dModel: result.dModel,
@@ -474,16 +493,21 @@
           vNorm: result.vNorm,
           scoreRange: '[' + result.scoreRange[0].toFixed(2) + ', ' + result.scoreRange[1].toFixed(2) + ']',
           avgEntropy: result.averageEntropy,
-          strongestLink: result.strongestLink,
-          rowSum: 1
+          strongestLink: result.strongestLink ? (result.strongestLink.from + ' → ' + result.strongestLink.to) : '—',
+          rowSum: 1,
+          attentionEntropy: result.averageEntropy,
+          numTokens: tokens.length,
+          maxAttentionWeight: maxWeight,
+          dominantToken: tokens[dominantIdx] || '—',
+          strongLinks: strongCount
         };
       },
       changeDetector: function (prev, curr) {
         var changes = [];
         if (prev && curr) {
           if (prev.avgEntropy !== curr.avgEntropy) changes.push({ from: 'avgEntropy', to: null, label: 'Attention entropy changed' });
-          if (prev.strongestLink && curr.strongestLink && prev.strongestLink.from !== curr.strongestLink.from) {
-            changes.push({ from: 'strongestLink', to: null, label: 'Strongest link: "' + curr.strongestLink.from + '" → "' + curr.strongestLink.to + '"' });
+          if (prev.strongestLink !== curr.strongestLink && curr.strongestLink !== '—') {
+            changes.push({ from: 'strongestLink', to: null, label: 'Strongest link: ' + curr.strongestLink });
           }
         }
         return changes;
@@ -507,12 +531,12 @@
           container.appendChild(title);
 
           var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-          svg.setAttribute('viewBox', '0 0 400 200');
+          svg.setAttribute('viewBox', '0 0 400 300');
           svg.setAttribute('role', 'img');
           svg.setAttribute('aria-label', 'Token attention flow');
           svg.style.width = '100%';
           svg.style.height = 'auto';
-          svg.style.maxHeight = '200px';
+          svg.style.maxHeight = '250px';
 
           var tokenPositions = [];
           var spacing = 400 / (tokens.length + 1);
@@ -560,7 +584,8 @@
           });
 
           container.appendChild(svg);
-        }
+        },
+        interpretation: function (params, stepIndex) { return 'Attention flow lines show which tokens attend to which — thicker lines indicate stronger attention.'; }
       },
       {
         id: 'qk-scores',
@@ -579,7 +604,8 @@
           container.appendChild(title);
 
           window.NeuralVerse.VisualizationEngine.renderHeatmap(container, result.scaledScores, { title: '' });
-        }
+        },
+        interpretation: function (params, stepIndex) { return 'Scaled QK^T scores before softmax reveal raw similarity between query and key vectors.'; }
       },
       {
         id: 'attention-matrix',
@@ -598,7 +624,8 @@
           container.appendChild(title);
 
           window.NeuralVerse.VisualizationEngine.renderHeatmap(container, result.attentionWeights, { title: '' });
-        }
+        },
+        interpretation: function (params, stepIndex) { return 'After softmax, each row sums to 1 — a probability distribution over tokens.'; }
       },
       {
         id: 'context-vectors',
@@ -650,9 +677,148 @@
           tbl.appendChild(tbody);
           table.appendChild(tbl);
           container.appendChild(table);
-        }
+        },
+        interpretation: function (params, stepIndex) { return 'Context vectors are weighted averages of values, where weights come from attention.'; }
       }
     ],
+    xai: {
+      categories: ['Attention', 'Representation', 'Similarity'],
+      crossLabConnections: [
+        { trigger: 'focusedAttention', target: 'embedding-similarity', text: 'Investigate the geometry of heavily attended tokens.', suggestCategory: 'Representation' },
+        { trigger: 'diffuseAttention', target: 'cosine-similarity', text: 'Examine vector similarity when attention is spread evenly.', suggestCategory: 'Similarity' }
+      ]
+    },
+    renderPreparation: function (container, params) {
+      var tokens = (SEQUENCES['cat-sat'] || SEQUENCES['cat-sat']).slice(0, params.seqLength || 6);
+      var dModel = parseInt(params.dModel) || 4;
+      var result = computeAttention(tokens, dModel, dModel, params.temperature || 1.0, params.causalMask || false, 42);
+
+      container.innerHTML = '';
+      var title = document.createElement('h4');
+      title.className = 'nv-lab-obs-title';
+      title.textContent = 'Preparation';
+      container.appendChild(title);
+
+      var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('viewBox', '0 0 400 350');
+      svg.setAttribute('role', 'img');
+      svg.setAttribute('aria-label', 'Initial attention preparation');
+      svg.style.width = '100%';
+      svg.style.height = 'auto';
+      svg.style.maxHeight = '300px';
+
+      var spacing = 400 / (tokens.length + 1);
+      for (var i = 0; i < tokens.length; i++) {
+        var x = spacing * (i + 1);
+        var rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        rect.setAttribute('x', String(x - 25));
+        rect.setAttribute('y', '20');
+        rect.setAttribute('width', '50');
+        rect.setAttribute('height', '24');
+        rect.setAttribute('rx', '4');
+        rect.setAttribute('fill', '#1e293b');
+        rect.setAttribute('stroke', '#06b6d4');
+        rect.setAttribute('stroke-width', '1');
+        svg.appendChild(rect);
+
+        var text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        text.setAttribute('x', String(x));
+        text.setAttribute('y', '36');
+        text.setAttribute('text-anchor', 'middle');
+        text.setAttribute('fill', '#e2e8f0');
+        text.setAttribute('font-size', '9');
+        text.setAttribute('font-family', 'monospace');
+        text.textContent = tokens[i];
+        svg.appendChild(text);
+      }
+
+      var matrix = result.attentionWeights;
+      var cellW = 320 / matrix.length;
+      var cellH = 240 / matrix.length;
+      var offsetX = 40;
+      var offsetY = 60;
+
+      for (var i = 0; i < matrix.length; i++) {
+        for (var j = 0; j < matrix[i].length; j++) {
+          var val = matrix[i][j];
+          var r = Math.round(6 + val * 200);
+          var g = Math.round(29 + (1 - val) * 80);
+          var b = Math.round(59 + (1 - val) * 190);
+
+          var cell = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+          cell.setAttribute('x', String(offsetX + j * cellW));
+          cell.setAttribute('y', String(offsetY + i * cellH));
+          cell.setAttribute('width', String(cellW - 1));
+          cell.setAttribute('height', String(cellH - 1));
+          cell.setAttribute('rx', '2');
+          cell.setAttribute('fill', 'rgb(' + r + ',' + g + ',' + b + ')');
+          svg.appendChild(cell);
+
+          var valText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+          valText.setAttribute('x', String(offsetX + j * cellW + cellW / 2));
+          valText.setAttribute('y', String(offsetY + i * cellH + cellH / 2 + 3));
+          valText.setAttribute('text-anchor', 'middle');
+          valText.setAttribute('fill', val > 0.5 ? '#0f172a' : '#e2e8f0');
+          valText.setAttribute('font-size', '8');
+          valText.setAttribute('font-family', 'monospace');
+          valText.textContent = val.toFixed(2);
+          svg.appendChild(valText);
+        }
+      }
+
+      for (var i = 0; i < matrix.length; i++) {
+        var rowLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        rowLabel.setAttribute('x', String(offsetX - 5));
+        rowLabel.setAttribute('y', String(offsetY + i * cellH + cellH / 2 + 3));
+        rowLabel.setAttribute('text-anchor', 'end');
+        rowLabel.setAttribute('fill', '#94a3b8');
+        rowLabel.setAttribute('font-size', '8');
+        rowLabel.setAttribute('font-family', 'monospace');
+        rowLabel.textContent = tokens[i];
+        svg.appendChild(rowLabel);
+      }
+
+      for (var j = 0; j < matrix.length; j++) {
+        var colLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        colLabel.setAttribute('x', String(offsetX + j * cellW + cellW / 2));
+        colLabel.setAttribute('y', String(offsetY - 5));
+        colLabel.setAttribute('text-anchor', 'middle');
+        colLabel.setAttribute('fill', '#94a3b8');
+        colLabel.setAttribute('font-size', '8');
+        colLabel.setAttribute('font-family', 'monospace');
+        colLabel.textContent = tokens[j];
+        svg.appendChild(colLabel);
+      }
+
+      container.appendChild(svg);
+    },
+    getPreparationTelemetry: function (params) {
+      var tokens = (SEQUENCES['cat-sat'] || SEQUENCES['cat-sat']).slice(0, params.seqLength || 6);
+      var dModel = parseInt(params.dModel) || 4;
+      var result = computeAttention(tokens, dModel, dModel, params.temperature || 1.0, params.causalMask || false, 42);
+
+      return [
+        { key: 'tokenCount', label: 'Token Count', value: tokens.length },
+        { key: 'selectedHead', label: 'Selected Head', value: 0 },
+        { key: 'initialEntropy', label: 'Initial Entropy', value: result.averageEntropy },
+        { key: 'matrixSize', label: 'Attention Matrix Size', value: tokens.length + '\u00D7' + tokens.length },
+        { key: 'status', label: 'Status', value: 'Ready' }
+      ];
+    },
+    getCompletionSummary: function (result, params) {
+      if (!result) return [];
+      var tokens = result.tokens || [];
+      var strongestLink = result.strongestLink || { from: 0, to: 0, value: 0 };
+      var strongestLabel = tokens.length > 0
+        ? '\u201C' + tokens[strongestLink.from] + '\u201D \u2192 \u201C' + tokens[strongestLink.to] + '\u201D (' + strongestLink.value.toFixed(3) + ')'
+        : '\u2014';
+
+      return [
+        { label: 'Average Entropy', value: result.averageEntropy !== undefined ? result.averageEntropy.toFixed(4) : '\u2014' },
+        { label: 'Strongest Link', value: strongestLabel },
+        { label: 'Status', value: 'Complete' }
+      ];
+    },
     execute: function (params) {
       var seqLength = params.seqLength !== undefined ? params.seqLength : 6;
       var dModel = parseInt(params.dModel) || 4;

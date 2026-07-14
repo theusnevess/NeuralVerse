@@ -233,7 +233,7 @@
 
       steps.push({
         label: 'Initialize',
-        log: 'Generating prior belief from scenario parameters',
+        log: 'Initializing prior probability from scenario parameters',
         state: function (p) {
           var scenario = scenarios[p.scenario] || scenarios.medical;
           return {
@@ -273,7 +273,7 @@
         (function (stepNum) {
           steps.push({
             label: 'Observe ' + stepNum,
-            log: 'Observation ' + stepNum + ' processed',
+            log: 'Applying Bayes\' theorem: updating posterior with new evidence',
             state: function (p) {
               var scenario = scenarios[p.scenario] || scenarios.medical;
               var obsType = stepNum <= scenario.observations.length
@@ -378,8 +378,8 @@
       }
 
       steps.push({
-        label: 'Analyze',
-        log: 'Inference complete — analyzing belief evolution',
+        label: 'Complete',
+        log: 'Sequential inference complete: posterior probability updated across all observations',
         state: function (p) {
           var scenario = scenarios[p.scenario] || scenarios.medical;
           var finalPrior = p.priorProbability;
@@ -550,7 +550,8 @@
             '</div>';
 
           container.appendChild(tree);
-        }
+        },
+        interpretation: function (params, stepIndex) { return 'The probability tree visualizes how prior beliefs split into possible outcomes under each hypothesis.'; }
       },
       {
         id: 'bayesian-update',
@@ -623,7 +624,8 @@
           update.appendChild(posteriorBar);
           update.appendChild(change);
           container.appendChild(update);
-        }
+        },
+        interpretation: function (params, stepIndex) { return 'Each observation shifts the posterior — positive evidence strengthens belief, negative evidence weakens it.'; }
       },
       {
         id: 'belief-evolution',
@@ -664,7 +666,7 @@
           var range = maxVal - minVal;
 
           var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-          svg.setAttribute('viewBox', '0 0 300 150');
+          svg.setAttribute('viewBox', '0 0 400 300');
           svg.setAttribute('class', 'nv-bayes-evolution-svg');
           svg.setAttribute('aria-hidden', 'true');
 
@@ -708,7 +710,8 @@
 
           container.appendChild(chart);
           container.appendChild(legend);
-        }
+        },
+        interpretation: function (params, stepIndex) { return 'The belief evolution curve shows how posterior probability changes with accumulating evidence.'; }
       },
       {
         id: 'confusion-structure',
@@ -803,37 +806,38 @@
             '</div>';
 
           container.appendChild(stats);
-        }
+        },
+        interpretation: function (params, stepIndex) { return 'The confusion structure reveals how sensitivity and specificity create different error patterns.'; }
       }
     ],
     inspector: {
       title: 'Bayesian Inference State',
       sections: [
         {
-          label: 'Prior',
+          label: 'Prior Belief',
           cards: [
-            { key: 'priorProbability', label: 'Prior Probability', unit: '', interpretation: function (v) { return v < 0.05 ? 'Rare event' : v < 0.20 ? 'Moderate prior' : 'Common event'; } },
+            { key: 'priorProbability', label: 'Prior P(H)', unit: '', interpretation: function (v) { return v < 0.05 ? 'Rare event' : v < 0.20 ? 'Moderate prior' : 'Common event'; } },
             { key: 'hypothesis', label: 'Hypothesis', unit: '' },
             { key: 'evidenceCount', label: 'Evidence Count', unit: '', interpretation: function (v) { return v === 0 ? 'No evidence yet' : v + ' observations applied'; } },
             { key: 'iteration', label: 'Current Iteration', unit: '' }
           ]
         },
         {
-          label: 'Evidence',
+          label: 'Evidence Properties',
           cards: [
-            { key: 'likelihood', label: 'Likelihood', unit: '', interpretation: function (v) { return v > 0.8 ? 'Strong evidence' : v > 0.5 ? 'Moderate evidence' : 'Weak evidence'; } },
+            { key: 'likelihood', label: 'Likelihood P(E|H)', unit: '', interpretation: function (v) { return v > 0.8 ? 'Strong evidence' : v > 0.5 ? 'Moderate evidence' : 'Weak evidence'; } },
             { key: 'falsePositiveRate', label: 'False Positive Rate', unit: '', fixed: true },
-            { key: 'evidenceProbability', label: 'Evidence Probability', unit: '', interpretation: function (v) { return v < 0.1 ? 'Unlikely evidence' : v < 0.3 ? 'Moderate evidence' : 'Common evidence'; } },
-            { key: 'normalizationConstant', label: 'Normalization', unit: '' }
+            { key: 'evidenceProbability', label: 'Marginal P(E)', unit: '', interpretation: function (v) { return v < 0.1 ? 'Unlikely evidence' : v < 0.3 ? 'Moderate evidence' : 'Common evidence'; } },
+            { key: 'normalizationConstant', label: 'Normalization Constant', unit: '' }
           ]
         },
         {
-          label: 'Posterior',
+          label: 'Updated Belief',
           cards: [
-            { key: 'posterior', label: 'Posterior', unit: '', interpretation: function (v) { return v > 0.9 ? 'Very strong belief' : v > 0.7 ? 'Strong belief' : v > 0.5 ? 'Moderate belief' : 'Weak belief'; } },
-            { key: 'confidence', label: 'Confidence', unit: '', interpretation: function (v) { return v > 0.8 ? 'High confidence' : v > 0.4 ? 'Moderate confidence' : 'Low confidence'; } },
-            { key: 'beliefChange', label: 'Belief Change', unit: '', interpretation: function (v) { return Math.abs(v) < 0.01 ? 'Stable' : v > 0 ? 'Belief strengthened' : 'Belief weakened'; } },
-            { key: 'convergence', label: 'Convergence', unit: '' }
+            { key: 'posterior', label: 'Posterior P(H|E)', unit: '', interpretation: function (v) { return v > 0.9 ? 'Very strong belief' : v > 0.7 ? 'Strong belief' : v > 0.5 ? 'Moderate belief' : 'Weak belief'; } },
+            { key: 'confidence', label: 'Belief Confidence', unit: '', interpretation: function (v) { return v > 0.8 ? 'High confidence' : v > 0.4 ? 'Moderate confidence' : 'Low confidence'; } },
+            { key: 'beliefChange', label: 'Belief Shift', unit: '', interpretation: function (v) { return Math.abs(v) < 0.01 ? 'Stable' : v > 0 ? 'Belief strengthened' : 'Belief weakened'; } },
+            { key: 'convergence', label: 'Convergence State', unit: '' }
           ]
         }
       ],
@@ -900,6 +904,98 @@
         }
         return changes;
       }
+    },
+    renderPreparation: function (container, params) {
+      var scenario = scenarios[params.scenario] || scenarios.medical;
+      var prior = params.priorProbability;
+      var sensitivity = params.sensitivity;
+      var fpr = params.falsePositiveRate;
+
+      container.innerHTML = '';
+      var title = document.createElement('h4');
+      title.className = 'nv-lab-obs-title';
+      title.textContent = 'Preparation Overview';
+      container.appendChild(title);
+
+      var chart = document.createElement('div');
+      chart.className = 'nv-bayes-preparation';
+      chart.setAttribute('role', 'img');
+      chart.setAttribute('aria-label', 'Preparation overview showing prior, likelihood, and initial posterior');
+
+      var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('viewBox', '0 0 400 200');
+      svg.setAttribute('class', 'nv-bayes-preparation-svg');
+      svg.setAttribute('aria-hidden', 'true');
+
+      var barWidth = 80;
+      var barGap = 30;
+      var startX = 60;
+      var maxBarHeight = 120;
+      var baseY = 160;
+
+      var bars = [
+        { label: 'Prior', value: prior, color: '#3b82f6' },
+        { label: 'Likelihood', value: sensitivity, color: '#10b981' },
+        { label: 'Initial Posterior', value: prior, color: '#8b5cf6' }
+      ];
+
+      var svgContent = '';
+      for (var i = 0; i < bars.length; i++) {
+        var bar = bars[i];
+        var x = startX + i * (barWidth + barGap);
+        var barHeight = bar.value * maxBarHeight;
+        var y = baseY - barHeight;
+
+        svgContent += '<rect x="' + x + '" y="' + y + '" width="' + barWidth + '" height="' + barHeight + '" fill="' + bar.color + '" rx="4" opacity="0.85"/>';
+        svgContent += '<text x="' + (x + barWidth / 2) + '" y="' + (y - 8) + '" text-anchor="middle" class="nv-bayes-preparation-value">' + (bar.value * 100).toFixed(1) + '%</text>';
+        svgContent += '<text x="' + (x + barWidth / 2) + '" y="' + (baseY + 20) + '" text-anchor="middle" class="nv-bayes-preparation-label">' + bar.label + '</text>';
+      }
+
+      svgContent += '<line x1="' + (startX + barWidth + barGap / 2) + '" y1="' + (baseY - 30) + '" x2="' + (startX + barWidth + barGap / 2) + '" y2="' + (baseY - 10) + '" stroke="#6b7280" stroke-width="1.5" marker-end="url(#prep-arrow)"/>';
+      svgContent += '<defs><marker id="prep-arrow" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6" fill="#6b7280"/></marker></defs>';
+
+      svg.innerHTML = svgContent;
+      chart.appendChild(svg);
+      container.appendChild(chart);
+
+      var note = document.createElement('div');
+      note.className = 'nv-bayes-preparation-note';
+      note.innerHTML = '<span class="nv-bayes-preparation-note-label">Scenario:</span> ' + scenario.name + ' — ' + scenario.label;
+      container.appendChild(note);
+    },
+    getPreparationTelemetry: function (params) {
+      var scenario = scenarios[params.scenario] || scenarios.medical;
+      var prior = params.priorProbability;
+      var sensitivity = params.sensitivity;
+      var fpr = params.falsePositiveRate;
+
+      var initialUpdate = computeBayesianUpdate(prior, sensitivity, fpr, true);
+      var evidenceProb = initialUpdate.evidenceProbability;
+
+      return [
+        { key: 'prior', label: 'Prior', value: String(round4(prior)) },
+        { key: 'likelihood', label: 'Likelihood', value: String(round4(sensitivity)) },
+        { key: 'evidenceProbability', label: 'Evidence Probability', value: String(round4(evidenceProb)) },
+        { key: 'status', label: 'Status', value: 'Ready' }
+      ];
+    },
+    getCompletionSummary: function (result, params) {
+      if (!result) return [];
+      var finalPosterior = result.finalPosterior;
+      var updates = result.results ? result.results.length : 0;
+
+      return [
+        { label: 'Final Posterior', value: String(round4(finalPosterior)) },
+        { label: 'Updates', value: String(updates) },
+        { label: 'Status', value: 'Complete' }
+      ];
+    },
+    xai: {
+      categories: ['Probability', 'Evaluation'],
+      crossLabConnections: [
+        { trigger: 'strongEvidence', target: 'logistic-regression', text: 'Compare Bayesian belief updating with logistic regression classification.', suggestCategory: 'Classification' },
+        { trigger: 'priorDominance', target: 'bayes-rule', text: 'Try a weaker prior to let evidence speak more strongly.', suggestCategory: 'Probability' }
+      ]
     },
     execute: function (params) {
       var scenario = scenarios[params.scenario] || scenarios.medical;

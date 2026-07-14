@@ -1,0 +1,634 @@
+/* Phase 12.1 owns workspace region structure only. Legacy component styling
+   remains inside each region until its dedicated migration phase. */
+.nv-lab-v4-workspace {
+  display: grid;
+  grid-template-areas:
+    "header"
+    "stage"
+    "console"
+    "disclosure"
+    "completion"
+    "continuations";
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto max-content auto auto auto auto;
+  min-width: 0;
+  overflow: visible;
+  position: relative;
+  isolation: isolate;
+}
+
+/* The route grows in document flow. The laboratory is not a viewport-sized
+   canvas; Inspector, Research, Completion and Continuation belong to the
+   document scroll owner. */
+.nv-lab-instrument {
+  height: auto;
+  min-height: 0;
+  overflow: visible;
+}
+
+/* V4 Labs use document.scrollingElement as the sole page scroll owner. Legacy
+   viewer/body rules used a viewport-height shell plus an internal scroller,
+   which made downstream decks render beyond the document scroll range. */
+.nv-lab-viewer:has(.nv-lab-instrument) {
+  height: auto;
+  min-height: 0;
+  overflow: visible;
+}
+
+.nv-lab-viewer:has(.nv-lab-instrument) .nv-lab-workspace-body {
+  flex: none;
+  grid-template-rows: auto;
+  overflow: visible;
+}
+
+.nv-lab-v4-workspace > .nv-lab-v4-header {
+  grid-area: header;
+  min-width: 0;
+}
+
+.nv-lab-v4-workspace > .nv-lab-v4-stage {
+  grid-area: stage;
+  min-width: 0;
+}
+
+.nv-lab-v4-workspace > .nv-lab-v4-console {
+  grid-area: console;
+  min-width: 0;
+}
+
+.nv-lab-v4-workspace > .nv-lab-v4-disclosure {
+  grid-area: disclosure;
+  min-width: 0;
+}
+
+.nv-lab-v4-workspace > [data-lab-v4-completion-summary] {
+  grid-area: completion;
+  min-width: 0;
+}
+
+.nv-lab-v4-workspace > .nv-lab-v4-continuations {
+  grid-area: continuations;
+  display: block;
+  min-width: 0;
+}
+
+/* Phase 12.2: the scientific stage owns only canvas, essential telemetry,
+   and the current finding. Legacy internals remain outside this composition. */
+.nv-lab-v4-workspace > .nv-lab-v4-stage {
+  display: grid;
+  grid-template-areas: "telemetry canvas";
+  grid-template-columns: minmax(12rem, 15rem) minmax(0, 1fr);
+  gap: clamp(1rem, 2vw, 1.75rem);
+  align-items: start;
+  height: fit-content;
+  min-height: clamp(280px, 56vh, 680px);
+  overflow: visible;
+}
+
+.nv-lab-v4-workspace > .nv-lab-v4-stage:has(.nv-lab-v4-current-finding:not([hidden])) {
+  grid-template-areas: "telemetry canvas finding";
+  grid-template-columns: minmax(13rem, 16rem) minmax(0, 1fr) minmax(18rem, 22rem);
+}
+
+.nv-lab-v4-stage > .nv-lab-v4-canvas {
+  grid-area: canvas;
+  display: block;
+  position: static;
+  min-width: 0;
+  overflow: visible;
+}
+
+.nv-lab-v4-canvas .nv-lab-ws-observations {
+  display: block;
+  position: relative;
+  inset: auto;
+  min-height: clamp(280px, 56vh, 680px);
+  overflow: visible;
+  z-index: auto;
+}
+
+/* Secondary observations are rendered diagnostics, not controls. Keeping their
+   absolute positioning inside this in-flow owner prevents them covering drawers. */
+.nv-lab-v4-canvas .nv-lab-obs-panel--secondary {
+  pointer-events: none;
+}
+
+.nv-lab-v4-canvas .nv-lab-v4-visualization {
+  position: relative;
+  inset: auto;
+  min-height: clamp(280px, 56vh, 680px);
+  height: auto;
+  overflow: visible;
+}
+
+.nv-lab-v4-canvas .nv-lab-v4-visualization .nv-lab-obs-panel-body {
+  min-height: 0;
+  overflow: visible;
+}
+
+.nv-lab-v4-canvas .nv-lab-v4-visualization svg,
+.nv-lab-v4-canvas .nv-lab-v4-visualization canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+}
+
+.nv-lab-v4-stage > .nv-lab-v4-telemetry {
+  grid-area: telemetry;
+  position: static;
+  align-self: start;
+  min-width: 0;
+  max-height: none;
+  overflow: visible;
+}
+
+.nv-lab-v4-stage > .nv-lab-v4-current-finding {
+  grid-area: finding;
+  position: static;
+  align-self: start;
+  min-width: 0;
+  max-height: none;
+  overflow: visible;
+}
+
+.nv-lab-v4-stage > .nv-lab-v4-current-finding[hidden] {
+  display: none;
+}
+
+/* The v4 rail replaces the legacy absolute, two-column HUD. A metric is one
+   semantic label/value pair, never a fragment in a compressed table. */
+.nv-lab-instrument .nv-lab-v4-stage > .nv-lab-v4-telemetry {
+  width: auto;
+  padding: 0.875rem 1rem;
+  border: 1px solid color-mix(in srgb, var(--sys-color-border, #2b4a56) 75%, transparent);
+  border-radius: 0.75rem;
+  background: color-mix(in srgb, var(--sys-color-surface, #10212a) 94%, #071116);
+  box-shadow: none;
+}
+
+.nv-lab-v4-telemetry .nv-lab-hud-telemetry-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.625rem;
+  margin: 0;
+}
+
+.nv-lab-v4-telemetry .nv-lab-hud-metric {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.75rem;
+  align-items: baseline;
+  min-width: 0;
+  padding: 0;
+}
+
+.nv-lab-v4-telemetry .nv-lab-hud-metric-label {
+  min-width: 0;
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.nv-lab-v4-telemetry .nv-lab-hud-metric-value {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.nv-lab-instrument .nv-lab-v4-stage > .nv-lab-v4-current-finding {
+  padding: 1rem;
+  border-left: 1px solid color-mix(in srgb, var(--sys-color-border, #2b4a56) 75%, transparent);
+  max-height: none;
+}
+
+.nv-lab-v4-current-finding .nv-xai-panel-header,
+.nv-lab-v4-current-finding .nv-xai-finding-header {
+  display: grid;
+  gap: 0.625rem;
+}
+
+.nv-lab-v4-current-finding .nv-xai-finding-title {
+  max-width: none;
+  overflow-wrap: anywhere;
+}
+
+.nv-lab-v4-current-finding .nv-xai-finding-badges {
+  justify-content: flex-start;
+}
+
+.nv-lab-v4-current-finding .nv-xai-finding-layers {
+  display: flex;
+}
+
+.nv-lab-v4-current-finding .nv-xai-layer:nth-child(n + 3),
+.nv-lab-v4-current-finding .nv-xai-finding-refs {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .nv-lab-v4-workspace > .nv-lab-v4-stage,
+  .nv-lab-v4-workspace > .nv-lab-v4-stage:has(.nv-lab-v4-current-finding:not([hidden])) {
+    grid-template-areas:
+      "canvas"
+      "telemetry"
+      "finding";
+    grid-template-columns: minmax(0, 1fr);
+    min-height: clamp(220px, 52vh, 460px);
+  }
+
+  .nv-lab-v4-canvas .nv-lab-v4-visualization {
+    min-height: clamp(220px, 52vh, 460px);
+  }
+}
+
+@media (max-width: 1180px) and (min-width: 901px) {
+  .nv-lab-v4-workspace > .nv-lab-v4-stage:has(.nv-lab-v4-current-finding:not([hidden])) {
+    grid-template-areas:
+      "telemetry canvas"
+      "finding finding";
+    grid-template-columns: minmax(13rem, 16rem) minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 1180px) {
+  .nv-lab-v4-timeline__label { display: none; }
+  .nv-lab-v4-timeline__step.is-current .nv-lab-v4-timeline__label { display: block; position: absolute; left: 0; right: 0; top: 1.5rem; font-size: 0.6875rem; white-space: nowrap; }
+}
+
+@media (max-width: 700px) {
+  .nv-lab-v4-workspace > .nv-lab-v4-stage {
+    min-height: clamp(200px, 48vh, 360px);
+  }
+
+  .nv-lab-v4-canvas .nv-lab-ws-observations {
+    min-height: clamp(200px, 48vh, 360px);
+  }
+
+  .nv-lab-v4-canvas .nv-lab-v4-visualization {
+    min-height: clamp(200px, 48vh, 360px);
+  }
+
+  .nv-lab-v4-stage > .nv-lab-v4-telemetry,
+  .nv-lab-v4-stage > .nv-lab-v4-current-finding {
+    padding-inline: 0;
+    border-inline: 0;
+  }
+
+  .nv-lab-v4-telemetry .nv-lab-hud-metric {
+    gap: 1rem;
+  }
+}
+
+.nv-lab-v4-workspace > .nv-lab-v4-region,
+.nv-lab-v4-workspace > .nv-lab-v4-header,
+.nv-lab-v4-workspace > .nv-lab-v4-stage,
+.nv-lab-v4-workspace > .nv-lab-v4-console,
+.nv-lab-v4-workspace > .nv-lab-v4-disclosure,
+.nv-lab-v4-workspace > .nv-lab-v4-continuations {
+  box-sizing: border-box;
+}
+
+@media (max-width: 700px) {
+  .nv-lab-v4-workspace {
+    grid-template-areas:
+      "header"
+      "stage"
+      "console"
+      "disclosure"
+      "completion"
+      "continuations";
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nv-lab-v4-workspace,
+  .nv-lab-v4-workspace * {
+    scroll-behavior: auto;
+  }
+}
+
+/* Phase 12.3: the v4 console owns execution layout; legacy control classes are
+   intentionally absent so historical instrument-bar rules cannot own geometry. */
+.nv-lab-v4-execution-console {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  grid-template-areas:
+    "timeline controls speed"
+    "timeline status status";
+  gap: 0.75rem 1rem;
+  width: 100%;
+  min-width: 0;
+  padding: 1rem;
+  position: relative;
+  overflow: visible;
+  background: color-mix(in srgb, var(--sys-color-surface, #10212a) 94%, #071116);
+  border: 1px solid color-mix(in srgb, var(--sys-color-border, #2b4a56) 75%, transparent);
+  border-radius: 0.75rem;
+}
+
+.nv-lab-v4-execution-console__timeline { grid-area: timeline; min-width: 0; }
+.nv-lab-v4-execution-console__controls { grid-area: controls; display: flex; gap: 0.4rem; flex-direction: row; }
+.nv-lab-v4-execution-console__speed { grid-area: speed; display: flex; gap: 0.25rem; flex-direction: row; }
+.nv-lab-v4-execution-console__status { grid-area: status; min-width: 0; align-self: center; color: var(--sys-color-text-muted, #a9bdc5); font-size: 0.8125rem; }
+
+.nv-lab-v4-execution-console__control,
+.nv-lab-v4-execution-console__speed-option {
+  display: inline-flex;
+  min-width: 45px;
+  min-height: 45px;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.5rem 0.65rem;
+  border: 1px solid var(--sys-color-border, #2b4a56);
+  border-radius: 0.45rem;
+  background: var(--sys-color-surface-raised, #162c36);
+  color: var(--sys-color-text, #e5f4f8);
+  font: inherit;
+  cursor: pointer;
+}
+
+.nv-lab-v4-execution-console__control--primary { background: var(--sys-color-accent, #00bcd4); border-color: var(--sys-color-accent, #00bcd4); color: #041014; font-weight: 700; }
+.nv-lab-v4-execution-console__speed-option.is-selected { background: color-mix(in srgb, var(--sys-color-accent, #00bcd4) 22%, var(--sys-color-surface-raised, #162c36)); border-color: var(--sys-color-accent, #00bcd4); font-weight: 700; }
+.nv-lab-v4-execution-console__control:hover:not(:disabled), .nv-lab-v4-execution-console__speed-option:hover { border-color: var(--sys-color-accent, #00bcd4); }
+.nv-lab-v4-execution-console__control:focus-visible, .nv-lab-v4-execution-console__speed-option:focus-visible, .nv-lab-v4-timeline__input:focus-visible { outline: 3px solid var(--sys-color-accent, #00bcd4); outline-offset: 2px; }
+.nv-lab-v4-execution-console__control:disabled { cursor: not-allowed; color: var(--sys-color-text-muted, #a9bdc5); background: #17242a; border-color: #44555c; }
+
+.nv-lab-v4-timeline { display: grid; grid-template-columns: repeat(var(--nv-lab-step-count, 12), minmax(0, 1fr)); position: relative; min-width: 0; min-height: 50px; padding-block: 0.25rem; }
+.nv-lab-v4-timeline__track { position: absolute; top: 1.25rem; left: 0; right: 0; height: 2px; background: var(--sys-color-border, #2b4a56); }
+.nv-lab-v4-timeline__progress { height: 100%; width: 0; background: var(--sys-color-accent, #00bcd4); transition: width 120ms linear; }
+.nv-lab-v4-timeline__step { display: grid; justify-items: center; gap: 0.35rem; min-width: 0; z-index: 1; color: var(--sys-color-text-muted, #a9bdc5); font-size: 0.6875rem; text-align: center; }
+.nv-lab-v4-timeline__dot { display: block; width: 10px; height: 10px; margin-top: 0.7rem; border-radius: 50%; background: var(--sys-color-border, #2b4a56); }
+.nv-lab-v4-timeline__step.is-current .nv-lab-v4-timeline__dot { width: 14px; height: 14px; margin-top: 0.58rem; background: var(--sys-color-accent, #00bcd4); box-shadow: 0 0 0 3px color-mix(in srgb, var(--sys-color-accent, #00bcd4) 25%, transparent); }
+.nv-lab-v4-timeline__step.is-completed .nv-lab-v4-timeline__dot { background: var(--sys-color-accent, #00bcd4); }
+.nv-lab-v4-timeline__label { overflow-wrap: normal; word-break: normal; }
+.nv-lab-v4-timeline__step:not(.is-milestone) .nv-lab-v4-timeline__label { display: none; }
+.nv-lab-v4-timeline__step:not(.is-milestone) .nv-lab-v4-timeline__dot { width: 6px; height: 6px; margin-top: 0.85rem; }
+.nv-lab-v4-timeline__input { position: absolute; inset: 0; z-index: 2; width: 100%; min-width: 45px; min-height: 45px; margin: 0; opacity: 0; cursor: pointer; }
+
+@media (max-width: 900px) {
+  .nv-lab-v4-execution-console { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "timeline timeline" "controls speed" "status status"; }
+}
+
+@media (max-width: 700px) {
+  .nv-lab-v4-execution-console { grid-template-columns: minmax(0, 1fr); grid-template-areas: "timeline" "controls" "speed" "status"; gap: 0.75rem; padding: 0.75rem; }
+  .nv-lab-v4-execution-console__controls, .nv-lab-v4-execution-console__speed { justify-content: space-between; }
+  .nv-lab-v4-execution-console__control { flex: 1 1 0; padding-inline: 0.35rem; }
+  .nv-lab-v4-timeline { min-height: 56px; }
+  .nv-lab-v4-timeline__label { font-size: 0.6rem; }
+}
+
+/* NV-1000 Canonical Layout: shared deck ownership and responsive modes. */
+.nv-lab-v4-workspace {
+  --nv-lab-deck-gap: clamp(1rem, 2vw, 1.75rem);
+  --nv-lab-panel-gap: 0.75rem;
+  display: grid;
+  grid-template-areas: "header" "observation" "execution" "analysis" "research" "completion" "continuations";
+  gap: var(--nv-lab-deck-gap);
+  padding-block: clamp(0.75rem, 1.5vw, 1.5rem);
+}
+
+.nv-lab-v4-workspace > .nv-lab-v4-header { grid-area: header; }
+.nv-lab-v4-workspace > .nv-lab-v4-observation-deck { grid-area: observation; }
+.nv-lab-v4-workspace > .nv-lab-v4-execution-deck { grid-area: execution; }
+.nv-lab-v4-workspace > .nv-lab-v4-analysis-deck { grid-area: analysis; }
+.nv-lab-v4-workspace > .nv-lab-v4-research-deck { grid-area: research; }
+.nv-lab-v4-workspace > [data-lab-v4-completion-deck] { grid-area: completion; margin: 0; }
+.nv-lab-v4-workspace > .nv-lab-v4-continuations { grid-area: continuations; }
+
+.nv-lab-v4-observation-deck {
+  display: grid;
+  grid-template-columns: minmax(0, 9fr) minmax(17rem, 3fr);
+  gap: var(--nv-lab-deck-gap);
+  align-items: start;
+  min-width: 0;
+}
+
+.nv-lab-v4-observation-deck > .nv-lab-v4-stage {
+  display: block;
+  min-width: 0;
+  min-height: 370px;
+  height: clamp(370px, 44vh, 430px);
+  overflow: hidden;
+}
+
+/* The visualization owns the useful area of the stage. These overrides only
+   remove legacy instrument padding and height caps; the renderers keep their
+   viewBox and therefore their scientific aspect ratio. */
+.nv-lab-instrument .nv-lab-v4-observation-deck .nv-lab-obs-panel--primary {
+  min-height: inherit;
+  padding: clamp(1rem, 2vw, 1.75rem);
+  border-radius: 0.75rem;
+}
+
+.nv-lab-instrument .nv-lab-v4-observation-deck .nv-lab-obs-panel--primary .nv-lab-obs-panel-body {
+  min-height: 0;
+}
+
+.nv-lab-v4-observation-deck .nv-lab-v4-canvas,
+.nv-lab-v4-observation-deck .nv-lab-ws-observations,
+.nv-lab-v4-observation-deck .nv-lab-v4-visualization {
+  height: 100%;
+  min-height: inherit;
+}
+
+.nv-lab-v4-observation-deck .nv-lab-v4-visualization {
+  display: flex;
+  flex-direction: column;
+}
+
+.nv-lab-v4-observation-deck .nv-lab-v4-visualization .nv-lab-obs-panel-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Embedding Space is a compound renderer; unlike a standalone SVG its wrapper
+   must stretch before the SVG can claim the available scientific stage area. */
+.nv-lab-instrument .nv-lab-v4-observation-deck .nv-lab-obs-panel-body > .nv-embed-space {
+  width: 100%;
+  align-self: stretch;
+}
+
+.nv-lab-instrument .nv-lab-v4-observation-deck .nv-embed-space svg.nv-embed-space-svg {
+  width: 100% !important;
+  height: min(100%, 300px) !important;
+  align-self: stretch;
+}
+
+.nv-lab-instrument .nv-lab-v4-observation-deck .nv-lab-v4-visualization svg {
+  display: block;
+  width: 100%;
+  height: auto !important;
+  max-width: 100%;
+  max-height: 100% !important;
+  flex: 0 1 auto;
+}
+
+/* Secondary observation cards are supporting diagnostics, not chart
+   annotations. Keep them in the normal information flow below the primary
+   visualization so they cannot cover a plotted mark or axis. */
+.nv-lab-v4-observation-deck .nv-lab-obs-panel--secondary {
+  position: static;
+  inset: auto;
+  width: auto;
+  max-width: none;
+  margin-top: 0.5rem;
+}
+
+.nv-lab-v4-scientific-context {
+  display: flex;
+  flex-direction: column;
+  gap: var(--nv-lab-panel-gap);
+  min-width: 0;
+  align-self: start;
+}
+
+.nv-lab-v4-configuration-slot { min-width: 0; }
+.nv-lab-v4-configuration-slot .nv-lab-v4-parameters { width: 100%; }
+.nv-lab-v4-configuration-slot .nv-lab-v4-disclosure-panel { border-radius: 0.75rem; }
+.nv-lab-v4-configuration-slot .nv-lab-v4-disclosure-panel__header { padding-block: 0.5rem; }
+.nv-lab-v4-configuration-slot .nv-lab-v4-disclosure-panel__body-inner { padding-block: 0.5rem; }
+.nv-lab-v4-configuration-slot .nv-lab-ws-params { display: block; }
+.nv-lab-v4-configuration-slot .nv-lab-param-group { grid-template-columns: minmax(6.5rem, 0.75fr) minmax(7rem, 1fr) auto; gap: 0.15rem 0.4rem; padding-block: 0.1rem; }
+.nv-lab-v4-configuration-slot .nv-lab-slider-row { gap: 0.35rem; }
+.nv-lab-v4-configuration-slot .nv-lab-param-desc { display: none; }
+.nv-lab-v4-configuration-slot select { width: 100%; min-width: 0; }
+/* Five-control laboratories use two self-contained control cells to preserve
+   the bounded rail; four-control laboratories retain the clearer row model. */
+.nv-lab-v4-configuration-slot .nv-lab-ws-params:has(.nv-lab-param-group:nth-child(5)) { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.25rem 0.5rem; }
+.nv-lab-v4-configuration-slot .nv-lab-ws-params:has(.nv-lab-param-group:nth-child(5)) .nv-lab-param-group { grid-template-columns: 1fr; }
+
+@media (min-width: 1201px) {
+  .nv-lab-v4-workspace[data-configuration-layout="dense-grid"] .nv-lab-v4-observation-deck { grid-template-columns: minmax(0, 7fr) minmax(24rem, 5fr); }
+  .nv-lab-v4-workspace[data-configuration-layout="dense-grid"] .nv-lab-v4-telemetry .nv-lab-hud-telemetry-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.35rem 0.75rem; }
+  .nv-lab-v4-workspace[data-configuration-layout="dense-grid"] .nv-lab-v4-configuration-slot .nv-lab-ws-params { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.35rem 0.75rem; }
+  .nv-lab-v4-workspace[data-configuration-layout="dense-grid"] .nv-lab-v4-configuration-slot .nv-lab-param-group { grid-template-columns: 1fr; gap: 0.2rem; padding-block: 0.15rem; }
+  .nv-lab-v4-workspace[data-configuration-layout="dense-grid"] .nv-lab-v4-configuration-slot .nv-lab-param-label { flex-direction: row; align-items: baseline; justify-content: space-between; gap: 0.35rem; }
+}
+
+.nv-lab-v4-scientific-context > .nv-lab-v4-telemetry,
+.nv-lab-v4-scientific-context > .nv-lab-v4-current-finding {
+  width: auto;
+  margin: 0;
+  position: static;
+  min-width: 0;
+}
+
+.nv-lab-v4-scientific-context > .nv-lab-v4-current-finding:not([hidden]) { flex: 1 1 auto; }
+.nv-lab-v4-scientific-context > .nv-lab-v4-current-finding[hidden] { display: none; }
+
+/* The rail is live context, not a duplicate diagnostic report. Full finding
+   layers remain available through the finding's existing keyboard/click
+   disclosure and Findings History. */
+.nv-lab-v4-scientific-context .nv-xai-finding-layers,
+.nv-lab-v4-scientific-context .nv-xai-finding-refs { display: none; }
+.nv-lab-v4-scientific-context .nv-xai-finding.is-expanded .nv-xai-finding-layers { display: flex; }
+.nv-lab-v4-scientific-context .nv-xai-finding.is-expanded .nv-xai-finding-refs { display: flex; }
+.nv-lab-v4-scientific-context .nv-xai-finding-title { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+/* Keep orientation content adjacent rather than distributing identity across
+   the full header width. The summary may wrap once instead of truncating. */
+.nv-lab-viewer:has(.nv-lab-instrument) .nv-lab-ws-overview {
+  grid-template-columns: auto minmax(18rem, 1fr) auto;
+  gap: 0.4rem 0.75rem;
+}
+
+.nv-lab-viewer:has(.nv-lab-instrument) .nv-lab-ws-summary {
+  max-width: none;
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
+}
+
+.nv-lab-viewer:has(.nv-lab-instrument) .nv-lab-ws-meta {
+  justify-self: start;
+  grid-column: 2 / -1;
+  gap: 0.75rem;
+}
+
+.nv-lab-viewer:has(.nv-lab-instrument) .nv-lab-ws-meta-item:nth-child(3) {
+  display: inline-flex;
+}
+
+.nv-lab-v4-execution-console {
+  grid-template-columns: auto minmax(12rem, 1fr) auto auto auto;
+  grid-template-areas: "status timeline controls secondary speed";
+  gap: 0.45rem 0.75rem;
+  padding-block: 0.75rem;
+}
+.nv-lab-v4-execution-console__status { line-height: 1.2; }
+.nv-lab-v4-timeline { min-height: 42px; }
+.nv-lab-v4-execution-console__timeline { grid-area: timeline; }
+.nv-lab-v4-execution-console__controls { grid-area: controls; display: flex; justify-content: flex-start; }
+.nv-lab-v4-execution-console__secondary { grid-area: secondary; display: flex; gap: 0.4rem; }
+.nv-lab-v4-execution-console__speed { grid-area: speed; justify-content: flex-end; }
+.nv-lab-v4-execution-console__status { grid-area: status; font-weight: 600; }
+
+.nv-lab-v4-disclosure-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  grid-template-areas: "inspector inspector" "findings log";
+  gap: var(--nv-lab-panel-gap);
+}
+.nv-lab-v4-disclosure-panel { margin: 0 !important; }
+.nv-lab-v4-parameters { grid-area: configuration; }
+.nv-lab-v4-inspector-details { grid-area: inspector; }
+.nv-lab-v4-findings-history { grid-area: findings; }
+.nv-lab-v4-scientific-log { grid-area: log; }
+.nv-lab-v4-research-deck { min-width: 0; }
+
+.nv-lab-v4-completion-summary { display: grid; gap: 0.75rem; padding: 1rem; border: 1px solid var(--sys-color-border, #2b4a56); border-radius: 0.75rem; background: var(--sys-color-surface, #10212a); }
+.nv-lab-v4-completion-summary__header h3 { margin: 0; font-size: 0.9375rem; }
+.nv-lab-v4-completion-summary__header p { margin: 0.25rem 0 0; color: var(--sys-color-text-muted, #a9bdc5); font-size: 0.8125rem; }
+.nv-lab-v4-completion-summary__outcome { display: flex; justify-content: space-between; gap: 0.75rem; padding: 0.625rem 0; border-block: 1px solid color-mix(in srgb, var(--sys-color-border, #2b4a56) 60%, transparent); }
+.nv-lab-v4-completion-summary__outcome span { color: var(--sys-color-text-muted, #a9bdc5); font-size: 0.75rem; }
+
+@media (max-width: 1180px) {
+  .nv-lab-v4-observation-deck { grid-template-columns: minmax(0, 1fr) minmax(15rem, 0.45fr); }
+}
+
+@media (max-width: 900px) {
+  .nv-lab-v4-observation-deck { grid-template-columns: minmax(0, 1fr); }
+  .nv-lab-v4-observation-deck > .nv-lab-v4-stage { min-height: 300px; height: clamp(320px, 45vh, 440px); }
+  .nv-lab-v4-scientific-context { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .nv-lab-v4-scientific-context > .nv-lab-v4-current-finding:not([hidden]) { grid-column: 1 / -1; }
+  .nv-lab-v4-disclosure-workspace { grid-template-columns: minmax(0, 1fr); grid-template-areas: "configuration" "inspector" "findings" "log"; }
+}
+
+@media (max-width: 700px) {
+  .nv-lab-viewer:has(.nv-lab-instrument) .nv-lab-ws-overview { grid-template-columns: 1fr; }
+  .nv-lab-viewer:has(.nv-lab-instrument) .nv-lab-ws-meta { grid-column: auto; }
+}
+
+@media (max-width: 700px) {
+  .nv-lab-v4-workspace { --nv-lab-deck-gap: 1rem; padding-block: 0.75rem; }
+  .nv-lab-v4-observation-deck > .nv-lab-v4-stage { min-height: clamp(220px, 48vh, 360px); }
+  .nv-lab-v4-scientific-context { display: flex; }
+  .nv-lab-v4-execution-console { grid-template-columns: minmax(0, 1fr); grid-template-areas: "status" "timeline" "controls" "secondary" "speed"; }
+  .nv-lab-v4-execution-console__controls { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .nv-lab-v4-execution-console__secondary { justify-content: space-between; }
+  .nv-lab-v4-execution-console__speed { justify-content: space-between; }
+  .nv-lab-v4-timeline { min-height: 48px; }
+  .nv-lab-v4-timeline__label { display: none; }
+  .nv-lab-v4-timeline__step.is-current .nv-lab-v4-timeline__label { display: block; position: absolute; left: 0; right: 0; top: 1.5rem; font-size: 0.6875rem; white-space: nowrap; }
+  .nv-lab-v4-scientific-context > * { position: static !important; inset: auto !important; }
+  /* The stage body defaults to a horizontal flex row. Embedding Space carries
+     a title plus a compound renderer, so it must own a stacked mobile track. */
+  .nv-lab-v4-visualization:has(.nv-embed-space) .nv-lab-obs-panel-body {
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+  }
+  .nv-lab-v4-visualization:has(.nv-embed-space) .nv-embed-space {
+    width: 100%;
+    min-width: 0;
+    flex: 1 1 auto;
+    align-self: stretch;
+  }
+}

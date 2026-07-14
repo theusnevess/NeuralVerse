@@ -137,7 +137,7 @@
 
     steps.push({
       label: 'Initialize Weights',
-      log: 'Initialized weights near zero: w=[' + model.w[0].toFixed(3) + ', ' + model.w[1].toFixed(3) + '], b=' + model.b.toFixed(3),
+      log: 'Initialized weights near zero, beginning gradient descent',
       state: function () {
         return { w1: model.w[0], w2: model.w[1], bias: model.b, iteration: 0, phase: 'initialize', loss: 0, gradNorm: 0 };
       },
@@ -149,7 +149,7 @@
       (function (iterIdx, mRef, prevLossRef) {
         steps.push({
           label: 'Iteration ' + (iterIdx + 1),
-          log: 'Computing logits and gradients',
+          log: 'Computing forward pass and gradient of cross-entropy loss',
           state: function () {
             var preds = forward(mRef, points);
             var loss = computeLoss(preds, labels);
@@ -213,8 +213,8 @@
     var finalPr = precisionRecall(finalCm);
 
     steps.push({
-      label: 'Finished',
-      log: 'Training finished. Accuracy: ' + (finalAcc * 100).toFixed(1) + '%, Loss: ' + finalLoss.toFixed(4),
+      label: 'Complete',
+      log: 'Training complete: model converged with accuracy ' + (finalAcc * 100).toFixed(1) + '% and cross-entropy loss ' + finalLoss.toFixed(4),
       state: function () {
         return {
           w1: model.w[0], w2: model.w[1], bias: model.b,
@@ -225,7 +225,7 @@
           precision: Math.round(finalPr.precision * 10000) / 10000,
           recall: Math.round(finalPr.recall * 10000) / 10000,
           tp: finalCm.tp, fp: finalCm.fp, fn: finalCm.fn, tn: finalCm.tn,
-          status: 'Finished'
+          status: 'Complete'
         };
       },
       metrics: function () {
@@ -233,7 +233,7 @@
           'Iteration': maxIter,
           'Loss': Math.round(finalLoss * 10000) / 10000,
           'Accuracy': Math.round(finalAcc * 10000) / 10000,
-          'Status': 'Finished'
+          'Status': 'Complete'
         };
       },
       viz: function () {
@@ -315,29 +315,29 @@
       title: 'Logistic Regression State',
       sections: [
         {
-          label: 'Current State',
+          label: 'Training Progress',
           cards: [
-            { key: 'iteration', label: 'Iteration', interpretation: function (v) { return v === 0 ? 'Initialization' : 'Training'; } },
-            { key: 'phase', label: 'Phase' },
-            { key: 'loss', label: 'Loss', interpretation: function (v) { return v < 0.3 ? 'Well fit' : v < 0.6 ? 'Improving' : 'High loss'; } },
-            { key: 'status', label: 'Status' }
+            { key: 'iteration', label: 'Epoch', interpretation: function (v) { return v === 0 ? 'Initialization' : 'Training'; } },
+            { key: 'phase', label: 'Training Phase' },
+            { key: 'loss', label: 'Cross-Entropy Loss', interpretation: function (v) { return v < 0.3 ? 'Well fit' : v < 0.6 ? 'Improving' : 'High loss'; } },
+            { key: 'status', label: 'Convergence State' }
           ]
         },
         {
-          label: 'Model Parameters',
+          label: 'Learned Parameters',
           cards: [
-            { key: 'w1', label: 'Weight 1', interpretation: function (v) { return 'Controls x1 influence'; } },
-            { key: 'w2', label: 'Weight 2', interpretation: function (v) { return 'Controls x2 influence'; } },
-            { key: 'bias', label: 'Bias', interpretation: function (v) { return 'Decision boundary offset'; } }
+            { key: 'w1', label: 'Weight w₁', interpretation: function (v) { return 'Controls x1 influence'; } },
+            { key: 'w2', label: 'Weight w₂', interpretation: function (v) { return 'Controls x2 influence'; } },
+            { key: 'bias', label: 'Bias Term', interpretation: function (v) { return 'Decision boundary offset'; } }
           ]
         },
         {
-          label: 'Optimization',
+          label: 'Model Quality',
           cards: [
-            { key: 'gradNorm', label: 'Gradient Norm', interpretation: function (v) { return v < 0.01 ? 'Near convergence' : v < 0.1 ? 'Moderate update' : 'Large update'; } },
-            { key: 'accuracy', label: 'Accuracy', interpretation: function (v) { return v > 0.9 ? 'Excellent' : v > 0.7 ? 'Good' : 'Needs improvement'; } },
-            { key: 'precision', label: 'Precision', interpretation: function (v) { return v > 0.85 ? 'Few false positives' : 'Some false positives'; } },
-            { key: 'recall', label: 'Recall', interpretation: function (v) { return v > 0.85 ? 'Few false negatives' : 'Some false negatives'; } }
+            { key: 'gradNorm', label: 'Gradient Magnitude', interpretation: function (v) { return v < 0.01 ? 'Near convergence' : v < 0.1 ? 'Moderate update' : 'Large update'; } },
+            { key: 'accuracy', label: 'Classification Accuracy', interpretation: function (v) { return v > 0.9 ? 'Excellent' : v > 0.7 ? 'Good' : 'Needs improvement'; } },
+            { key: 'precision', label: 'Precision (PPV)', interpretation: function (v) { return v > 0.85 ? 'Few false positives' : 'Some false positives'; } },
+            { key: 'recall', label: 'Recall (Sensitivity)', interpretation: function (v) { return v > 0.85 ? 'Few false negatives' : 'Some false negatives'; } }
           ]
         }
       ],
@@ -463,7 +463,8 @@
           });
 
           container.appendChild(svg);
-        }
+        },
+        interpretation: function (params, stepIndex) { return 'The decision boundary separates classes — its position and orientation reflect the learned weights.'; }
       },
       {
         id: 'loss-curve',
@@ -495,7 +496,8 @@
           } else {
             container.innerHTML += '<p style="font-size:0.75rem;color:var(--nv-lab-text-muted)">Train to see loss history</p>';
           }
-        }
+        },
+        interpretation: function (params, stepIndex) { return 'Decreasing cross-entropy loss indicates the model is improving its probability estimates.'; }
       },
       {
         id: 'probability-dist',
@@ -530,7 +532,8 @@
             title: '',
             labels: ['0-0.1', '0.1-0.2', '0.2-0.3', '0.3-0.4', '0.4-0.5', '0.5-0.6', '0.6-0.7', '0.7-0.8', '0.8-0.9', '0.9-1.0']
           });
-        }
+        },
+        interpretation: function (params, stepIndex) { return 'Confident predictions cluster near 0 or 1 — uncertain predictions cluster near 0.5.'; }
       },
       {
         id: 'confusion-matrix',
@@ -558,9 +561,99 @@
 
           var matrix = [[cm.tn, cm.fp], [cm.fn, cm.tp]];
           window.NeuralVerse.VisualizationEngine.renderMatrix(container, matrix, { title: '' });
-        }
+        },
+        interpretation: function (params, stepIndex) { return 'The confusion matrix reveals the types of errors the classifier makes.'; }
       }
     ],
+    xai: {
+      categories: ['Classification', 'Optimization', 'Evaluation'],
+      crossLabConnections: [
+        { trigger: 'highAccuracy', target: 'precision-recall', text: 'Analyze precision-recall tradeoffs for deeper evaluation.', suggestCategory: 'Evaluation' },
+        { trigger: 'lowAccuracy', target: 'gradient-descent', text: 'Optimization may be unstable — examine learning dynamics.', suggestCategory: 'Optimization' }
+      ]
+    },
+    renderPreparation: function (container, params) {
+      var pts = generateDataset(params.numPoints, params.separation, params.noise, 42);
+      var labels = pts.map(function (p) { return p.y; });
+      var initModel = initWeights(2, 777);
+
+      container.innerHTML = '';
+      var title = document.createElement('h4');
+      title.className = 'nv-lab-obs-title';
+      title.textContent = 'Classified Data Points';
+      container.appendChild(title);
+
+      var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('viewBox', '0 0 400 300');
+      svg.setAttribute('role', 'img');
+      svg.setAttribute('aria-label', 'Scatter plot with initial decision boundary');
+      svg.style.width = '100%';
+      svg.style.height = 'auto';
+      svg.style.maxHeight = '250px';
+
+      var allX = pts.map(function (p) { return p.x1; });
+      var allY = pts.map(function (p) { return p.x2; });
+      var minX = Math.min.apply(null, allX) - 0.5;
+      var maxX = Math.max.apply(null, allX) + 0.5;
+      var minY = Math.min.apply(null, allY) - 0.5;
+      var maxY = Math.max.apply(null, allY) + 0.5;
+      var rangeX = maxX - minX || 1;
+      var rangeY = maxY - minY || 1;
+
+      var boundaryX = -initModel.b / (initModel.w[0] || 1e-8);
+      var sx = 40 + ((boundaryX - minX) / rangeX) * 320;
+      var boundaryLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      boundaryLine.setAttribute('x1', sx); boundaryLine.setAttribute('y1', '10');
+      boundaryLine.setAttribute('x2', sx); boundaryLine.setAttribute('y2', '270');
+      boundaryLine.setAttribute('stroke', '#06b6d4');
+      boundaryLine.setAttribute('stroke-width', '2');
+      boundaryLine.setAttribute('stroke-dasharray', '4 2');
+      svg.appendChild(boundaryLine);
+
+      pts.forEach(function (p, idx) {
+        var cx = 40 + ((p.x1 - minX) / rangeX) * 320;
+        var cy = 10 + ((p.x2 - minY) / rangeY) * 260;
+        var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('cx', cx);
+        circle.setAttribute('cy', cy);
+        circle.setAttribute('r', '4');
+        circle.setAttribute('fill', labels[idx] === 1 ? '#06b6d4' : '#f59e0b');
+        circle.setAttribute('opacity', '0.7');
+        svg.appendChild(circle);
+      });
+
+      container.appendChild(svg);
+    },
+    getPreparationTelemetry: function (params) {
+      var pts = generateDataset(params.numPoints, params.separation, params.noise, 42);
+      var labels = pts.map(function (p) { return p.y; });
+      var initModel = initWeights(2, 777);
+      var initPreds = forward(initModel, pts);
+      var initLoss = computeLoss(initPreds, labels);
+      var numClass0 = 0;
+      for (var i = 0; i < labels.length; i++) {
+        if (labels[i] === 0) numClass0++;
+      }
+      var balance = Math.round(numClass0 / labels.length * 100);
+      return [
+        { key: 'sampleCount', label: 'Sample Count', value: String(pts.length) },
+        { key: 'initialThreshold', label: 'Initial Threshold', value: String(0.5) },
+        { key: 'initialLoss', label: 'Initial Loss', value: String(Math.round(initLoss * 10000) / 10000) },
+        { key: 'classBalance', label: 'Class Balance', value: balance + '% class 0' },
+        { key: 'status', label: 'Status', value: 'Ready' }
+      ];
+    },
+    getCompletionSummary: function (result, params) {
+      if (!result) return [];
+      var finalLoss = result.lossHistory && result.lossHistory.length > 0 ? result.lossHistory[result.lossHistory.length - 1] : 0;
+      var converged = finalLoss < 0.3;
+      return [
+        { label: 'Final Loss', value: String(Math.round(finalLoss * 10000) / 10000) },
+        { label: 'Converged', value: converged ? 'Yes' : 'No' },
+        { label: 'Accuracy', value: String(result.accuracy) },
+        { label: 'Status', value: converged ? 'Complete' : 'Incomplete' }
+      ];
+    },
     execute: function (params) {
       var numPoints = params.numPoints !== undefined ? params.numPoints : 80;
       var separation = params.separation !== undefined ? params.separation : 1.0;

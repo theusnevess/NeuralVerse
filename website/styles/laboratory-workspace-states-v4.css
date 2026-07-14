@@ -1,0 +1,129 @@
+/* ═══════════════════════════════════════════════════════════════════
+   Phase 12.5 — Canonical Execution & Research State Styles
+   Two-axis model: data-execution-state × data-research-state
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── State indicator (console status line) ──────────────────────── */
+[data-lab-v4-execution-console][data-execution-state="preparation"] .nv-lab-v4-execution-console__status {
+  color: var(--sys-color-text-muted, #a9bdc5);
+}
+[data-lab-v4-execution-console][data-execution-state="running"] .nv-lab-v4-execution-console__status {
+  color: var(--sys-color-accent, #00bcd4);
+}
+[data-lab-v4-execution-console][data-execution-state="paused"] .nv-lab-v4-execution-console__status {
+  color: #f59e0b;
+}
+[data-lab-v4-execution-console][data-execution-state="completed"] .nv-lab-v4-execution-console__status {
+  color: #10b981;
+}
+
+/* ── Control availability per state ─────────────────────────────── */
+[data-lab-v4-workspace][data-execution-state="preparation"] [data-action="pause"] {
+  opacity: 0.4;
+  pointer-events: none;
+}
+[data-lab-v4-workspace][data-execution-state="completed"] [data-action="run"] {
+  opacity: 0.4;
+  pointer-events: none;
+}
+[data-lab-v4-workspace][data-execution-state="completed"] [data-action="pause"] {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* ── Timeline state ─────────────────────────────────────────────── */
+[data-lab-v4-workspace][data-execution-state="preparation"] .nv-lab-v4-timeline__progress {
+  width: 0 !important;
+}
+[data-lab-v4-workspace][data-execution-state="completed"] .nv-lab-v4-timeline__progress {
+  transition: none;
+}
+
+/* ── Preparation guidance ───────────────────────────────────────── */
+.nv-lab-v4-preparation-guidance {
+  padding: 0.75rem 1rem;
+  margin-top: 0.5rem;
+  border-radius: 0.5rem;
+  background: color-mix(in srgb, var(--sys-color-surface, #10212a) 92%, #0a1519);
+  border: 1px solid color-mix(in srgb, var(--sys-color-border, #2b4a56) 50%, transparent);
+  font-size: 0.8125rem;
+  color: var(--sys-color-text-muted, #a9bdc5);
+  line-height: 1.5;
+}
+.nv-lab-v4-preparation-guidance:empty {
+  display: none;
+}
+
+/* ── Research mode indicator on header ──────────────────────────── */
+[data-lab-v4-workspace][data-research-state="active"] .nv-lab-ws-research-toggle {
+  background: color-mix(in srgb, var(--sys-color-accent, #00bcd4) 20%, var(--sys-color-surface-raised, #162c36));
+  border-color: var(--sys-color-accent, #00bcd4);
+  color: var(--sys-color-accent, #00bcd4);
+}
+
+/* ── Research panel progressive disclosure ──────────────────────── */
+[data-lab-v4-research][data-disclosure-state="collapsed"] .nv-lab-research-body > *:first-child {
+  display: block;
+}
+[data-lab-v4-research][data-disclosure-state="collapsed"] .nv-lab-research-notes,
+[data-lab-v4-research][data-disclosure-state="collapsed"] .nv-lab-research-bookmarks,
+[data-lab-v4-research][data-disclosure-state="collapsed"] .nv-lab-research-evidence,
+[data-lab-v4-research][data-disclosure-state="collapsed"] .nv-lab-research-conclusions {
+  display: none !important;
+}
+
+/* ── Completion summary ─────────────────────────────────────────── */
+.nv-lab-v4-completion-summary {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 0.75rem 1rem;
+  margin-top: 0.5rem;
+  border-radius: 0.5rem;
+  background: color-mix(in srgb, #10b981 8%, var(--sys-color-surface, #10212a));
+  border: 1px solid color-mix(in srgb, #10b981 25%, transparent);
+  font-size: 0.8125rem;
+  color: var(--sys-color-text, #e5f4f8);
+}
+.nv-lab-v4-completion-summary__item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+.nv-lab-v4-completion-summary__label {
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--sys-color-text-muted, #a9bdc5);
+}
+.nv-lab-v4-completion-summary__value {
+  font-weight: 600;
+  font-family: monospace;
+}
+.nv-lab-v4-completion-summary:empty {
+  display: none;
+}
+
+/* ── State-specific observation visibility ──────────────────────── */
+[data-lab-v4-workspace][data-execution-state="preparation"] .nv-lab-obs-panel--secondary {
+  opacity: 0.85;
+}
+
+/* ── Research mode body modifier ────────────────────────────────── */
+[data-lab-v4-workspace][data-research-state="active"] .nv-lab-v4-disclosure {
+  border-left: 2px solid color-mix(in srgb, var(--sys-color-accent, #00bcd4) 30%, transparent);
+}
+
+/* ── Focus preservation during state transitions ────────────────── */
+[data-lab-v4-execution-console__control]:focus-visible {
+  outline: 3px solid var(--sys-color-accent, #00bcd4);
+  outline-offset: 2px;
+}
+
+/* ── Mobile: keep state visible ─────────────────────────────────── */
+@media (max-width: 700px) {
+  .nv-lab-v4-completion-summary {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}

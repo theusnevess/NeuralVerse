@@ -30,6 +30,11 @@
 
   function _addToIndexes(lab) {
     if (lab.slug) _slugIndex[lab.slug] = lab;
+    if (lab.aliases && Array.isArray(lab.aliases)) {
+      for (var s = 0; s < lab.aliases.length; s++) {
+        if (lab.aliases[s]) _slugIndex[lab.aliases[s]] = lab;
+      }
+    }
 
     if (lab.category) {
       if (!_categoryIndex[lab.category]) _categoryIndex[lab.category] = [];
@@ -55,6 +60,11 @@
 
   function _removeFromIndexes(lab) {
     if (lab.slug && _slugIndex[lab.slug]) delete _slugIndex[lab.slug];
+    if (lab.aliases && Array.isArray(lab.aliases)) {
+      for (var s = 0; s < lab.aliases.length; s++) {
+        if (lab.aliases[s] && _slugIndex[lab.aliases[s]]) delete _slugIndex[lab.aliases[s]];
+      }
+    }
 
     if (lab.category && _categoryIndex[lab.category]) {
       var idx = _categoryIndex[lab.category].indexOf(lab.id);

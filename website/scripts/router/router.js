@@ -519,14 +519,10 @@ class ViewController {
       `,
       laboratory: `
         <div class="nv-lab-index" data-lab-index>
-          <header class="nv-lab-index-header">
-            <h1>Interactive Laboratories</h1>
-            <p>Browse and launch deterministic educational experiments. All execution happens locally in your browser.</p>
-          </header>
           <div data-lab-index-content>
             <div class="nv-search-loading">
               <div class="nv-search-loading-spinner"></div>
-              <div class="nv-search-loading-text">Loading laboratories...</div>
+              <div class="nv-search-loading-text">Opening exhibition...</div>
             </div>
           </div>
         </div>

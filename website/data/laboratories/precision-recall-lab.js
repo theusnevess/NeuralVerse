@@ -67,7 +67,7 @@
 
     steps.push({
       label: 'Generate Dataset',
-      log: 'Generated ' + samples.length + ' classification samples',
+      log: 'Generated ' + samples.length + ' classification samples with known ground truth',
       state: function () { return { samples: samples, phase: 'generate' }; },
       metrics: function () { var p = samples.filter(function (s) { return s.actual === 1; }).length; return { 'Total': samples.length, 'Positive': p, 'Negative': samples.length - p, 'Phase': 'Generate' }; },
       viz: function () { return { samples: samples, phase: 'generate' }; }
@@ -75,7 +75,7 @@
 
     steps.push({
       label: 'Compute Scores',
-      log: 'Sorted ' + samples.length + ' prediction probabilities',
+      log: 'Sorted prediction probabilities for threshold sweep',
       state: function () { return { samples: samples, phase: 'scores' }; },
       metrics: function () { return { 'Sorted': samples.length + ' samples', 'Phase': 'Scores', 'Status': 'Ready' }; },
       viz: function () { return { samples: samples, phase: 'scores' }; }
@@ -83,7 +83,7 @@
 
     steps.push({
       label: 'Apply Threshold',
-      log: 'Threshold = ' + threshold.toFixed(2) + ' — classifying samples',
+      log: 'Applying threshold θ = ' + threshold.toFixed(2) + ', classifying predictions',
       state: function () { return { threshold: threshold, phase: 'threshold' }; },
       metrics: function () { return { 'Threshold': threshold.toFixed(2), 'Phase': 'Threshold', 'Status': 'Applied' }; },
       viz: function () { return { samples: samples, threshold: threshold, phase: 'threshold' }; }
@@ -92,7 +92,7 @@
     var cm = confusionAt(samples, threshold);
     steps.push({
       label: 'Build Confusion Matrix',
-      log: 'TP=' + cm.tp + ', FP=' + cm.fp + ', FN=' + cm.fn + ', TN=' + cm.tn,
+      log: 'Confusion matrix: TP=' + cm.tp + ', FP=' + cm.fp + ', FN=' + cm.fn + ', TN=' + cm.tn,
       state: function () { return { cm: cm, phase: 'confusion' }; },
       metrics: function () { return { 'TP': cm.tp, 'FP': cm.fp, 'FN': cm.fn, 'TN': cm.tn, 'Phase': 'Confusion' }; },
       viz: function () { return { samples: samples, threshold: threshold, cm: cm, phase: 'confusion' }; }
@@ -101,7 +101,7 @@
     var m = prMetrics(cm);
     steps.push({
       label: 'Compute Precision',
-      log: 'Precision = TP/(TP+FP) = ' + m.precision.toFixed(4),
+      log: 'Precision computed: fraction of positive predictions that are correct',
       state: function () { return { precision: m.precision, phase: 'precision' }; },
       metrics: function () { return { 'Precision': m.precision.toFixed(4), 'Phase': 'Precision', 'Status': 'Computed' }; },
       viz: function () { return { samples: samples, threshold: threshold, cm: cm, m: m, phase: 'precision' }; }
@@ -109,7 +109,7 @@
 
     steps.push({
       label: 'Compute Recall',
-      log: 'Recall = TP/(TP+FN) = ' + m.recall.toFixed(4),
+      log: 'Recall computed: fraction of actual positives detected',
       state: function () { return { recall: m.recall, phase: 'recall' }; },
       metrics: function () { return { 'Recall': m.recall.toFixed(4), 'F1': m.f1.toFixed(4), 'Phase': 'Recall', 'Status': 'Computed' }; },
       viz: function () { return { samples: samples, threshold: threshold, cm: cm, m: m, phase: 'recall' }; }
@@ -118,7 +118,7 @@
     var curve = buildPRCurve(samples);
     steps.push({
       label: 'Build PR Curve',
-      log: 'Generated PR curve with ' + curve.length + ' points',
+      log: 'Precision-Recall curve constructed from threshold sweep',
       state: function () { return { curve: curve, phase: 'pr-curve' }; },
       metrics: function () { return { 'Curve Points': curve.length, 'Phase': 'PR Curve', 'Status': 'Generated' }; },
       viz: function () { return { samples: samples, threshold: threshold, cm: cm, m: m, curve: curve, phase: 'pr-curve' }; }
@@ -126,15 +126,15 @@
 
     steps.push({
       label: 'Analyze Trade-offs',
-      log: 'Precision=' + m.precision.toFixed(3) + ', Recall=' + m.recall.toFixed(3) + ', F1=' + m.f1.toFixed(3),
+      log: 'Evaluation complete: precision=' + m.precision.toFixed(3) + ', recall=' + m.recall.toFixed(3) + ', f1=' + m.f1.toFixed(3),
       state: function () { return { m: m, cm: cm, curve: curve, phase: 'analyze' }; },
       metrics: function () { return { 'Precision': m.precision.toFixed(3), 'Recall': m.recall.toFixed(3), 'F1': m.f1.toFixed(3), 'Phase': 'Analyze' }; },
       viz: function () { return { samples: samples, threshold: threshold, cm: cm, m: m, curve: curve, phase: 'analyze' }; }
     });
 
     steps.push({
-      label: 'Finished',
-      log: 'Evaluation complete',
+      label: 'Complete',
+      log: 'PR analysis complete: trade-off curve characterizes classifier behavior',
       state: function () { return { phase: 'finished' }; },
       metrics: function () { return { 'Phase': 'Complete', 'Status': 'Done' }; },
       viz: function () { return { samples: samples, threshold: threshold, cm: cm, m: m, curve: curve, phase: 'finished' }; }
@@ -162,24 +162,24 @@
       title: 'Evaluation State',
       sections: [
         {
-          label: 'Threshold',
+          label: 'Decision Boundary',
           cards: [
-            { key: 'threshold', label: 'Current Threshold', interpretation: function (v) { return 'Decision boundary at ' + v; } },
-            { key: 'posPred', label: 'Positive Predictions', interpretation: function (v) { return v + ' samples predicted positive'; } },
-            { key: 'negPred', label: 'Negative Predictions', interpretation: function (v) { return v + ' samples predicted negative'; } }
+            { key: 'threshold', label: 'Threshold θ', interpretation: function (v) { return 'Decision boundary at ' + v; } },
+            { key: 'posPred', label: 'Predicted Positive', interpretation: function (v) { return v + ' samples predicted positive'; } },
+            { key: 'negPred', label: 'Predicted Negative', interpretation: function (v) { return v + ' samples predicted negative'; } }
           ]
         },
         {
-          label: 'Classification',
+          label: 'Confusion Matrix',
           cards: [
-            { key: 'tp', label: 'True Positives', interpretation: function (v) { return 'Correctly identified positives'; } },
-            { key: 'fp', label: 'False Positives', interpretation: function (v) { return v > 5 ? 'Many false alarms' : v > 0 ? 'Some false alarms' : 'No false alarms'; } },
-            { key: 'fn', label: 'False Negatives', interpretation: function (v) { return v > 5 ? 'Many missed positives' : v > 0 ? 'Some missed' : 'None missed'; } },
-            { key: 'tn', label: 'True Negatives', interpretation: function (v) { return 'Correctly identified negatives'; } }
+            { key: 'tp', label: 'True Positives (TP)', interpretation: function (v) { return 'Correctly identified positives'; } },
+            { key: 'fp', label: 'False Positives (FP)', interpretation: function (v) { return v > 5 ? 'Many false alarms' : v > 0 ? 'Some false alarms' : 'No false alarms'; } },
+            { key: 'fn', label: 'False Negatives (FN)', interpretation: function (v) { return v > 5 ? 'Many missed positives' : v > 0 ? 'Some missed' : 'None missed'; } },
+            { key: 'tn', label: 'True Negatives (TN)', interpretation: function (v) { return 'Correctly identified negatives'; } }
           ]
         },
         {
-          label: 'Metrics',
+          label: 'Evaluation Metrics',
           cards: [
             { key: 'precision', label: 'Precision', interpretation: function (v) { return v > 0.9 ? 'Very few false positives' : v > 0.7 ? 'Good precision' : 'Many false positives'; } },
             { key: 'recall', label: 'Recall', interpretation: function (v) { return v > 0.9 ? 'Catches most positives' : v > 0.7 ? 'Good recall' : 'Many positives missed'; } },
@@ -231,12 +231,12 @@
           container.appendChild(title);
 
           var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-          svg.setAttribute('viewBox', '0 0 400 200');
+          svg.setAttribute('viewBox', '0 0 400 300');
           svg.setAttribute('role', 'img');
           svg.setAttribute('aria-label', 'Prediction score distribution');
           svg.style.width = '100%';
           svg.style.height = 'auto';
-          svg.style.maxHeight = '200px';
+          svg.style.maxHeight = '250px';
 
           var bins = new Array(20).fill(0);
           var binLabels = new Array(20).fill(0);
@@ -281,7 +281,8 @@
           svg.appendChild(threshLbl);
 
           container.appendChild(svg);
-        }
+        },
+        interpretation: function (params, stepIndex) { return 'The threshold line separates predicted positives from predicted negatives.'; }
       },
       {
         id: 'confusion-matrix',
@@ -308,7 +309,8 @@
           html += '<div class="nv-lab-obs-cm-cell nv-lab-obs-cm-cell--tn">' + cm.tn + '<span>TN</span></div></div>';
           html += '</div>';
           container.innerHTML = html;
-        }
+        },
+        interpretation: function (params, stepIndex) { return 'The confusion matrix shows how the threshold choice affects true and false predictions.'; }
       },
       {
         id: 'pr-curve',
@@ -328,12 +330,12 @@
           container.appendChild(title);
 
           var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-          svg.setAttribute('viewBox', '0 0 400 250');
+          svg.setAttribute('viewBox', '0 0 400 300');
           svg.setAttribute('role', 'img');
           svg.setAttribute('aria-label', 'Precision-Recall curve');
           svg.style.width = '100%';
           svg.style.height = 'auto';
-          svg.style.maxHeight = '220px';
+          svg.style.maxHeight = '250px';
 
           var pad = { l: 45, r: 15, t: 15, b: 30 };
           var w = 400 - pad.l - pad.r;
@@ -393,7 +395,8 @@
           svg.appendChild(yLbl);
 
           container.appendChild(svg);
-        }
+        },
+        interpretation: function (params, stepIndex) { return 'The PR curve traces the precision-recall trade-off as the threshold varies.'; }
       },
       {
         id: 'threshold-explorer',
@@ -428,9 +431,118 @@
           });
           html += '</div>';
           container.innerHTML = html;
-        }
+        },
+        interpretation: function (params, stepIndex) { return 'Different thresholds produce different precision-recall balances — the optimal choice depends on the application.'; }
       }
     ],
+    xai: {
+      categories: ['Evaluation', 'Classification'],
+      crossLabConnections: [
+        { trigger: 'optimalThreshold', target: 'logistic-regression', text: 'Apply this threshold insight to logistic regression classification.', suggestCategory: 'Classification' },
+        { trigger: 'highRecall', target: 'precision-recall', text: 'Increasing precision requires accepting some false negatives.', suggestCategory: 'Evaluation' }
+      ]
+    },
+    renderPreparation: function (container, params) {
+      var samples = generateSamples(params.numPositive || 40, params.numNegative || 40);
+      var threshold = params.threshold || 0.5;
+      var curve = buildPRCurve(samples);
+      var m = prMetrics(confusionAt(samples, threshold));
+
+      container.innerHTML = '';
+      var title = document.createElement('h4');
+      title.className = 'nv-lab-obs-title';
+      title.textContent = 'Preparation — PR Curve Overview';
+      container.appendChild(title);
+
+      var info = document.createElement('p');
+      info.className = 'nv-lab-obs-info';
+      info.textContent = 'Threshold θ = ' + threshold.toFixed(2) + ' · Precision = ' + m.precision.toFixed(3) + ' · Recall = ' + m.recall.toFixed(3);
+      container.appendChild(info);
+
+      var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('viewBox', '0 0 400 300');
+      svg.setAttribute('role', 'img');
+      svg.setAttribute('aria-label', 'Precision-Recall curve with current threshold');
+      svg.style.width = '100%';
+      svg.style.height = 'auto';
+      svg.style.maxHeight = '250px';
+
+      var pad = { l: 45, r: 15, t: 15, b: 30 };
+      var w = 400 - pad.l - pad.r;
+      var h = 250 - pad.t - pad.b;
+
+      for (var g = 0; g <= 4; g++) {
+        var gy = pad.t + (h / 4) * g;
+        var gl = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        gl.setAttribute('x1', pad.l); gl.setAttribute('y1', gy);
+        gl.setAttribute('x2', pad.l + w); gl.setAttribute('y2', gy);
+        gl.setAttribute('stroke', 'rgba(138,180,248,0.1)'); gl.setAttribute('stroke-width', '0.5');
+        svg.appendChild(gl);
+      }
+
+      var pathD = '';
+      curve.forEach(function (pt, i) {
+        var x = pad.l + pt.recall * w;
+        var y = pad.t + (1 - pt.precision) * h;
+        pathD += (i === 0 ? 'M' : 'L') + x + ',' + y;
+      });
+      var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path.setAttribute('d', pathD);
+      path.setAttribute('fill', 'none');
+      path.setAttribute('stroke', '#06b6d4');
+      path.setAttribute('stroke-width', '2');
+      svg.appendChild(path);
+
+      var opX = pad.l + m.recall * w;
+      var opY = pad.t + (1 - m.precision) * h;
+      var opDot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      opDot.setAttribute('cx', opX); opDot.setAttribute('cy', opY);
+      opDot.setAttribute('r', '5'); opDot.setAttribute('fill', '#ef4444');
+      opDot.setAttribute('stroke', '#fff'); opDot.setAttribute('stroke-width', '1.5');
+      svg.appendChild(opDot);
+
+      var opLbl = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      opLbl.setAttribute('x', opX + 8); opLbl.setAttribute('y', opY - 5);
+      opLbl.setAttribute('fill', '#ef4444'); opLbl.setAttribute('font-size', '9');
+      opLbl.textContent = 'θ=' + threshold.toFixed(2);
+      svg.appendChild(opLbl);
+
+      var xLbl = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      xLbl.setAttribute('x', pad.l + w / 2); xLbl.setAttribute('y', 245);
+      xLbl.setAttribute('fill', 'rgba(138,180,248,0.5)'); xLbl.setAttribute('font-size', '10');
+      xLbl.setAttribute('text-anchor', 'middle'); xLbl.textContent = 'Recall';
+      svg.appendChild(xLbl);
+
+      var yLbl = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      yLbl.setAttribute('x', 10); yLbl.setAttribute('y', pad.t + h / 2);
+      yLbl.setAttribute('fill', 'rgba(138,180,248,0.5)'); yLbl.setAttribute('font-size', '10');
+      yLbl.setAttribute('text-anchor', 'middle'); yLbl.setAttribute('transform', 'rotate(-90, 10, ' + (pad.t + h / 2) + ')');
+      yLbl.textContent = 'Precision';
+      svg.appendChild(yLbl);
+
+      container.appendChild(svg);
+    },
+    getPreparationTelemetry: function (params) {
+      var samples = generateSamples(params.numPositive || 40, params.numNegative || 40);
+      var threshold = params.threshold || 0.5;
+      var m = prMetrics(confusionAt(samples, threshold));
+      return [
+        { key: 'threshold', label: 'Threshold', value: threshold.toFixed(2) },
+        { key: 'precision', label: 'Precision', value: m.precision.toFixed(4) },
+        { key: 'recall', label: 'Recall', value: m.recall.toFixed(4) },
+        { key: 'f1', label: 'F1', value: m.f1.toFixed(4) },
+        { key: 'status', label: 'Status', value: 'Ready' }
+      ];
+    },
+    getCompletionSummary: function (result, params) {
+      if (!result) return [];
+      return [
+        { label: 'Final Precision', value: result.precision.toFixed(4) },
+        { label: 'Final Recall', value: result.recall.toFixed(4) },
+        { label: 'Final F1', value: result.f1Score.toFixed(4) },
+        { label: 'Status', value: 'Complete' }
+      ];
+    },
     execute: function (params) {
       var threshold = params.threshold || 0.5;
       var numPos = params.numPositive || 40;

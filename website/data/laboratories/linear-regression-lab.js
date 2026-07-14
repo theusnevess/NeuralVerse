@@ -113,7 +113,7 @@
     steps: [
       {
         label: 'Generate Dataset',
-        log: 'Generating data points with noise',
+        log: 'Generated 20 data points with noise level 0.5',
         state: function (p) { return { phase: 'dataset' }; },
         metrics: function (p) {
           return { 'Phase': 'Dataset', 'Points': p.numPoints, 'Noise': p.noise, 'Status': 'Ready' };
@@ -124,7 +124,7 @@
       },
       {
         label: 'Compute Statistics',
-        log: 'Computing mean and variance',
+        log: 'Computed sample statistics: mean X and mean Y',
         state: function (p) { return { phase: 'statistics' }; },
         metrics: function (p) {
           var pts = generateData(p.slope, p.intercept, p.noise, p.numPoints);
@@ -137,7 +137,7 @@
       },
       {
         label: 'Fit Model',
-        log: 'Computing least squares fit',
+        log: 'Fitting linear model via ordinary least squares',
         state: function (p) { return { phase: 'fitting' }; },
         metrics: function (p) {
           var pts = generateData(p.slope, p.intercept, p.noise, p.numPoints);
@@ -152,7 +152,7 @@
       },
       {
         label: 'Compute Residuals',
-        log: 'Computing residual sum of squares',
+        log: 'Residual sum of squares computed, R² indicates model fit quality',
         state: function (p) { return { phase: 'residuals' }; },
         metrics: function (p) {
           var pts = generateData(p.slope, p.intercept, p.noise, p.numPoints);
@@ -167,7 +167,7 @@
       },
       {
         label: 'Complete',
-        log: 'Linear regression complete',
+        log: 'Linear regression complete: fitted line minimizes squared residuals',
         state: function (p) { return { phase: 'complete' }; },
         metrics: function (p) {
           var pts = generateData(p.slope, p.intercept, p.noise, p.numPoints);
@@ -195,7 +195,8 @@
           title.textContent = 'Regression Fit';
           container.appendChild(title);
           window.NeuralVerse.VisualizationEngine.renderScatterPlot(container, pts, { title: '', line: true });
-        }
+        },
+        interpretation: function (params, stepIndex) { return 'The fitted line minimizes the sum of squared residuals between predictions and observations.'; }
       },
       {
         id: 'residual-plot',
@@ -212,7 +213,8 @@
           title.textContent = 'Residuals';
           container.appendChild(title);
           window.NeuralVerse.VisualizationEngine.renderBarChart(container, residuals, { title: '' });
-        }
+        },
+        interpretation: function (params, stepIndex) { return 'Randomly scattered residuals indicate the linear model captures the underlying relationship.'; }
       },
       {
         id: 'dataset-view',
@@ -231,7 +233,8 @@
           html += '<div class="nv-lab-obs-ds-stat"><span class="nv-lab-obs-ds-label">Y range</span><span class="nv-lab-obs-ds-value">' + Math.round(Math.min.apply(null, ys) * 10) / 10 + ' to ' + Math.round(Math.max.apply(null, ys) * 10) / 10 + '</span></div>';
           html += '</div>';
           container.innerHTML = html;
-        }
+        },
+        interpretation: function (params, stepIndex) { return 'The dataset structure determines the quality and reliability of the fitted model.'; }
       },
       {
         id: 'fit-quality',
@@ -248,33 +251,34 @@
             '<div class="nv-lab-obs-fit-r2">' + r2 + '</div>' +
             '<div class="nv-lab-obs-fit-bar"><div class="nv-lab-obs-fit-fill" style="width:' + pct + '%"></div></div>' +
             '<span class="nv-lab-obs-fit-label">R² = ' + r2 + '</span></div>';
-        }
+        },
+        interpretation: function (params, stepIndex) { return 'R² close to 1.0 indicates the model explains nearly all observed variance in the data.'; }
       }
     ],
     inspector: {
       title: 'Linear Regression State',
       sections: [
         {
-          label: 'Fitted Model',
+          label: 'Model Construction',
           cards: [
-            { key: 'fittedSlope', label: 'Slope', unit: '', interpretation: function (v) { return 'Rate of change per unit X'; } },
-            { key: 'fittedIntercept', label: 'Intercept', unit: '', interpretation: function (v) { return 'Value when X = 0'; } },
-            { key: 'rSquared', label: 'R²', unit: '', interpretation: function (v) { return v > 0.9 ? 'Excellent fit' : v > 0.7 ? 'Good fit' : v > 0.5 ? 'Moderate fit' : 'Poor fit'; } }
+            { key: 'fittedSlope', aliases: ['slope'], label: 'Estimated Slope', unit: '', interpretation: function (v) { return 'Rate of change per unit X'; } },
+            { key: 'fittedIntercept', aliases: ['intercept'], label: 'Estimated Intercept', unit: '', interpretation: function (v) { return 'Value when X = 0'; } },
+            { key: 'rSquared', label: 'Coefficient of Determination (R²)', unit: '', interpretation: function (v) { return v > 0.9 ? 'Excellent fit' : v > 0.7 ? 'Good fit' : v > 0.5 ? 'Moderate fit' : 'Poor fit'; } }
           ]
         },
         {
-          label: 'Data Statistics',
+          label: 'Data Properties',
           cards: [
-            { key: 'meanX', label: 'Mean X', unit: '' },
-            { key: 'meanY', label: 'Mean Y', unit: '' },
-            { key: 'rss', label: 'Residual Sum', unit: '', interpretation: function (v) { return v < 1 ? 'Low residuals' : 'High residuals'; } }
+            { key: 'meanX', label: 'Mean of X', unit: '' },
+            { key: 'meanY', label: 'Mean of Y', unit: '' },
+            { key: 'rss', aliases: ['residuals'], label: 'Residual Sum of Squares', unit: '', interpretation: function (v) { return v < 1 ? 'Low residuals' : 'High residuals'; } }
           ]
         },
         {
-          label: 'Phase',
+          label: 'Fit Quality',
           cards: [
             { key: 'phase', label: 'Current Phase', unit: '' },
-            { key: 'dataPoints', label: 'Data Points', unit: '' },
+            { key: 'dataPoints', label: 'Sample Count', unit: '' },
             { key: 'noiseLevel', label: 'Noise Level', unit: '' }
           ]
         }
@@ -286,10 +290,13 @@
         return {
           fittedSlope: Math.round(fit.slope * 10000) / 10000,
           fittedIntercept: Math.round(fit.intercept * 10000) / 10000,
+          slope: Math.round(fit.slope * 10000) / 10000,
+          intercept: Math.round(fit.intercept * 10000) / 10000,
           rSquared: Math.round(fit.rSquared * 10000) / 10000,
           meanX: Math.round(fit.meanX * 100) / 100,
           meanY: Math.round(fit.meanY * 100) / 100,
           rss: Math.round(fit.residualSumOfSquares * 100) / 100,
+          residuals: Math.round(fit.residualSumOfSquares * 100) / 100,
           phase: phases[Math.min(stepIndex, phases.length - 1)],
           dataPoints: params.numPoints,
           noiseLevel: params.noise
@@ -303,6 +310,54 @@
         }
         return changes;
       }
+    },
+    xai: {
+      categories: ['Statistical Structure', 'Evaluation', 'Data Quality'],
+      crossLabConnections: [
+        { trigger: 'goodFit', target: 'gradient-descent', text: 'Investigate how optimization finds the best-fit line.', suggestCategory: 'Optimization' },
+        { trigger: 'poorFit', target: 'pca-projection', text: 'Try PCA to find better data representations.', suggestCategory: 'Representation' }
+      ]
+    },
+    renderPreparation: function (container, params) {
+      var pts = generateData(params.slope, params.intercept, params.noise, params.numPoints);
+      var fit = leastSquaresFit(pts);
+      var meanY = Math.round(fit.meanY * 10000) / 10000;
+      container.innerHTML = '';
+      var title = document.createElement('h4');
+      title.className = 'nv-lab-obs-title';
+      title.textContent = 'Linear Regression — Data & Initial Line';
+      container.appendChild(title);
+      window.NeuralVerse.VisualizationEngine.renderScatterPlot(container, pts, { title: '', line: false });
+      var marker = document.createElement('div');
+      marker.className = 'nv-lab-obs-position';
+      marker.innerHTML = '<div class="nv-lab-obs-pos-grid">' +
+        '<div class="nv-lab-obs-pos-item"><span class="nv-lab-obs-pos-label">Points</span><span class="nv-lab-obs-pos-value">' + pts.length + '</span></div>' +
+        '<div class="nv-lab-obs-pos-item"><span class="nv-lab-obs-pos-label">Mean Y</span><span class="nv-lab-obs-pos-value">' + meanY + '</span></div>' +
+        '<div class="nv-lab-obs-pos-item"><span class="nv-lab-obs-pos-label">Initial Line</span><span class="nv-lab-obs-pos-value">y = ' + meanY + '</span></div>' +
+        '</div>';
+      container.appendChild(marker);
+    },
+    getPreparationTelemetry: function (params) {
+      var pts = generateData(params.slope, params.intercept, params.noise, params.numPoints);
+      var fit = leastSquaresFit(pts);
+      return [
+        { key: 'sampleCount', label: 'Sample Count', value: String(pts.length) },
+        { key: 'initialSlope', label: 'Initial Slope', value: String(Math.round(fit.slope * 10000) / 10000) },
+        { key: 'initialIntercept', label: 'Initial Intercept', value: String(Math.round(fit.intercept * 10000) / 10000) },
+        { key: 'initialRSquared', label: 'Initial R²', value: String(Math.round(fit.rSquared * 10000) / 10000) },
+        { key: 'status', label: 'Status', value: 'Ready' }
+      ];
+    },
+    getCompletionSummary: function (result, params) {
+      if (!result) return [];
+      var pts = generateData(params.slope, params.intercept, params.noise, params.numPoints);
+      var fit = leastSquaresFit(pts);
+      return [
+        { label: 'Slope', value: String(Math.round(fit.slope * 10000) / 10000) },
+        { label: 'Intercept', value: String(Math.round(fit.intercept * 10000) / 10000) },
+        { label: 'R²', value: String(Math.round(fit.rSquared * 10000) / 10000) },
+        { label: 'Status', value: 'Complete' }
+      ];
     },
     execute: function (params) {
       var slope = params.slope !== undefined ? params.slope : 2.0;
