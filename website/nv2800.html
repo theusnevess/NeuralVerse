@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Convolution in Computer Vision — NV-2800</title>
+<style>
+:root{--bg:#0b0f19;--surface:#111827;--surface2:#1e293b;--border:#334155;--text:#e2e8f0;--text2:#94a3b8;--cyan:#22d3ee;--blue:#3b82f6;--green:#10b981;--amber:#f59e0b;--red:#ef4444;--purple:#a78bfa;--radius:8px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,-apple-system,sans-serif;line-height:1.7;padding:0}
+a{color:var(--cyan);text-decoration:none}
+a:hover{text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:32px 24px}
+.header{border-bottom:1px solid var(--border);padding-bottom:24px;margin-bottom:32px}
+.header h1{font-size:28px;font-weight:700;color:var(--text);margin-bottom:8px}
+.header .meta{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--text2)}
+.header .meta span{display:flex;align-items:center;gap:4px}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;text-transform:uppercase}
+.badge-draft{background:rgba(148,163,184,0.15);color:var(--text2)}
+.badge-exp{background:rgba(34,211,238,0.15);color:var(--cyan)}
+nav.toc{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;margin-bottom:32px}
+nav.toc h2{font-size:14px;text-transform:uppercase;letter-spacing:0.05em;color:var(--text2);margin-bottom:12px}
+nav.toc ol{list-style:none;counter-reset:section}
+nav.toc li{counter-increment:section}
+nav.toc li::before{content:counter(section) ". ";color:var(--cyan);font-weight:600;font-size:13px}
+nav.toc a{font-size:14px;color:var(--text);display:block;padding:3px 0}
+nav.toc a:hover{color:var(--cyan)}
+section{margin-bottom:40px}
+section h2{font-size:22px;font-weight:700;color:var(--text);margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+section h3{font-size:17px;font-weight:600;color:var(--cyan);margin:20px 0 10px}
+p{margin-bottom:14px;color:var(--text)}
+ul,ol{margin:0 0 14px 24px}
+li{margin-bottom:6px}
+code{background:var(--surface2);padding:2px 6px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--cyan)}
+pre{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;overflow-x:auto;margin:14px 0}
+pre code{background:none;padding:0}
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
+th,td{padding:10px 14px;border:1px solid var(--border);text-align:left}
+th{background:var(--surface);color:var(--text2);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:0.03em}
+td{color:var(--text)}
+.concept-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin:16px 0}
+.concept-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px}
+.concept-card h4{font-size:14px;color:var(--cyan);margin-bottom:6px}
+.concept-card p{font-size:13px;color:var(--text2);margin:0}
+.assessment-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin:10px 0}
+.assessment-item .q{font-weight:600;margin-bottom:8px}
+.assessment-item .a{color:var(--green);font-size:13px}
+.case-study{background:var(--surface);border-left:3px solid var(--blue);border-radius:0 var(--radius) var(--radius) 0;padding:16px 20px;margin:14px 0}
+.case-study h4{color:var(--blue);margin-bottom:8px}
+.curiosity-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px;margin:8px 0;font-size:13px}
+.curiosity-card .tone{color:var(--amber);font-size:11px;text-transform:uppercase;font-weight:600}
+.lab-btn{display:inline-flex;align-items:center;gap:8px;background:var(--cyan);color:var(--bg);padding:10px 20px;border-radius:var(--radius);font-weight:600;font-size:14px;border:none;cursor:pointer;text-decoration:none}
+.lab-btn:hover{opacity:0.9;text-decoration:none}
+.graph-vis{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin:16px 0}
+.graph-nodes{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.graph-node{background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:4px 12px;font-size:12px;color:var(--text)}
+.graph-node.highlight{border-color:var(--cyan);color:var(--cyan)}
+</style>
+</head>
+<body>
+<div class="container" id="app">
+  <div class="header">
+    <h1>Convolution in Computer Vision</h1>
+    <p style="color:var(--text2);margin-bottom:12px">From Classical Image Kernels to Learned CNN Feature Maps</p>
+    <div class="meta">
+      <span><span class="badge badge-draft">Draft</span></span>
+      <span><span class="badge badge-exp">Experimental Test</span></span>
+      <span>Module 1 → Module 2 Bridge</span>
+      <span>11 Concepts</span>
+      <span>10 Sources</span>
+      <span>18 Graph Nodes</span>
+      <span>30 Edges</span>
+    </div>
+  </div>
+
+  <nav class="toc">
+    <h2>Contents</h2>
+    <ol>
+      <li><a href="#sec-orientation">Orientation</a></li>
+      <li><a href="#sec-motivation">Motivation</a></li>
+      <li><a href="#sec-intuition">Intuition</a></li>
+      <li><a href="#sec-formal">Formal Definition</a></li>
+      <li><a href="#sec-parameters">Parameters</a></li>
+      <li><a href="#sec-classical">Classical Filters</a></li>
+      <li><a href="#sec-cnn">Transition to CNNs</a></li>
+      <li><a href="#sec-concepts">Concept Records (11)</a></li>
+      <li><a href="#sec-graph">Knowledge Graph (18 nodes, 30 edges)</a></li>
+      <li><a href="#sec-casestudies">Application Case Studies (3)</a></li>
+      <li><a href="#sec-assessment">Assessment (31 items)</a></li>
+      <li><a href="#sec-misconceptions">Misconceptions (8)</a></li>
+      <li><a href="#sec-curiosity">Curiosity (16 artifacts)</a></li>
+      <li><a href="#sec-sources">Research Sources (10)</a></li>
+      <li><a href="#sec-lab">Kernel Observatory Lab</a></li>
+    </ol>
+  </nav>
+
+  <section id="sec-orientation">
+    <h2>1. Orientation</h2>
+    <p><strong>Module position:</strong> Module 1 spatial-domain filtering, bridging to Module 2 CNN fundamentals.</p>
+    <p><strong>Depth:</strong> 3.5 hours. <strong>Prerequisites:</strong> matrices, summation, image tensors, array indexing, local neighborhoods, linear transformations.</p>
+    <p>You will trace a kernel, calculate outputs, predict shapes, implement three paths, and collect reproducible Laboratory evidence.</p>
+  </section>
+
+  <section id="sec-motivation">
+    <h2>2. Motivation</h2>
+    <p>A camera on a production line records millions of pixels, but a scratch is a local change in intensity and orientation. A whole-image average loses its location. Reusing one local operation at every location gives a measurable response map while preserving spatial structure.</p>
+  </section>
+
+  <section id="sec-intuition">
+    <h2>3. Intuition</h2>
+    <p>For each small patch, align the kernel, multiply corresponding values, and add. The output number belongs to the kernel center's location.</p>
+    <ul>
+      <li><strong>Visual analogy:</strong> A transparent stencil placed over a grid.</li>
+      <li><strong>Engineering analogy:</strong> A reusable local quality-control gauge.</li>
+      <li><strong>Not an analogy:</strong> No physical object travels over pixels; this is indexed arithmetic, and the exact result depends on boundary policy and whether the kernel is flipped.</li>
+    </ul>
+  </section>
+
+  <section id="sec-formal">
+    <h2>4. Formal Definition</h2>
+    <h3>1D Discrete Convolution</h3>
+    <p><code>(x * y)[n] = Σ_m x[n − m] · y[m]</code></p>
+    <h3>2D Discrete Convolution</h3>
+    <p><code>(X * Y)[i, j] = Σ_u Σ_v X[i − u, j − v] · Y[u, v]</code></p>
+    <h3>Cross-Correlation (what libraries implement)</h3>
+    <p><code>(X ⋆ Y)[i, j] = Σ_u Σ_v X[i + u, j + v] · Y[u, v]</code></p>
+    <h3>Output Size Formula</h3>
+    <pre><code>H_out = floor((H + 2p − d(kh − 1) − 1) / s) + 1
+W_out = floor((W + 2p − d(kw − 1) − 1) / s) + 1</code></pre>
+    <p>Where: H, W = input dimensions; kh, kw = kernel dimensions; p = padding; s = stride; d = dilation.</p>
+    <h3>Multi-Channel Convolution</h3>
+    <p><code>Y[o, i, j] = b[o] + Σ_c Σ_u Σ_v X[c, i + u, j + v] · K[o, c, u, v]</code></p>
+  </section>
+
+  <section id="sec-parameters">
+    <h2>5. Parameters</h2>
+    <table>
+      <tr><th>Parameter</th><th>Definition</th><th>Visual Effect</th><th>Mathematical Effect</th><th>Common Mistake</th></tr>
+      <tr><td><code>kernel size</code></td><td>Dimensions of the local operator</td><td>Larger kernel = more context visible</td><td>Increases kh × kw products per output</td><td>Larger is not always better</td></tr>
+      <tr><td><code>stride</code></td><td>Step size between kernel placements</td><td>s>1 reduces output resolution</td><td>H_out = floor((H − kh)/s) + 1</td><td>Stride is not pooling</td></tr>
+      <tr><td><code>padding</code></td><td>Values added around input borders</td><td>Preserves edge pixel access</td><td>Adds 2p to input dimensions</td><td>Padding adds assumptions, not information</td></tr>
+      <tr><td><code>dilation</code></td><td>Spacing between kernel taps</td><td>Expands receptive field without weights</td><td>k_eff = d(kh − 1) + 1</td><td>Does not add parameters</td></tr>
+      <tr><td><code>channels</code></td><td>Input/output feature planes</td><td>Each output channel = one feature map</td><td>Output has Cout planes</td><td>Channels ≠ classes</td></tr>
+    </table>
+  </section>
+
+  <section id="sec-classical">
+    <h2>6. Classical Filters</h2>
+    <table>
+      <tr><th>Filter</th><th>Kernel</th><th>Purpose</th><th>Limitation</th></tr>
+      <tr><td>Box Blur</td><td><code>(1/9) × ones(3,3)</code></td><td>Uniform smoothing</td><td>Blurs edges equally</td></tr>
+      <tr><td>Gaussian Blur</td><td><code>[[1,2,1],[2,4,2],[1,2,1]] / 16</code></td><td>Center-weighted smoothing</td><td>Still blurs edges</td></tr>
+      <tr><td>Sharpen</td><td><code>[[0,-1,0],[-1,5,-1],[0,-1,0]]</code></td><td>Enhance local contrast</td><td>Amplifies noise</td></tr>
+      <tr><td>Sobel X</td><td><code>[[-1,0,1],[-2,0,2],[-1,0,1]]</code></td><td>Vertical edge detection</td><td>Orientation-specific</td></tr>
+      <tr><td>Sobel Y</td><td><code>[[-1,-2,-1],[0,0,0],[1,2,1]]</code></td><td>Horizontal edge detection</td><td>Orientation-specific</td></tr>
+      <tr><td>Laplacian</td><td><code>[[0,1,0],[1,-4,1],[0,1,0]]</code></td><td>Rapid intensity change</td><td>Very sensitive to noise</td></tr>
+    </table>
+  </section>
+
+  <section id="sec-cnn">
+    <h2>7. From Fixed to Learned Filters</h2>
+    <p>A <strong>classical filter</strong> encodes a hand-chosen property (edges, smoothing). A <strong>learned filter</strong> starts as parameters and is optimized by gradient descent on a task objective. The local operation is the same; only the coefficients change.</p>
+    <p>Many successful CNN first-layer filters resemble classical filters (edge detectors, color blob detectors). The network discovers that these patterns are useful — the same patterns engineers designed decades ago.</p>
+    <h3>Translation Equivariance</h3>
+    <p>A CNN layer is approximately <strong>translation equivariant</strong>: shifting the input shifts the corresponding output. This holds for interior positions with consistent padding. It does <strong>not</strong> mean the network is translation invariant — pooling, stride, and boundaries break exact equivariance.</p>
+  </section>
+
+  <section id="sec-concepts">
+    <h2>8. Concept Records (11)</h2>
+    <div class="concept-grid" id="concept-grid"></div>
+  </section>
+
+  <section id="sec-graph">
+    <h2>9. Knowledge Graph</h2>
+    <p>18 nodes, 30 typed edges connecting prerequisites, parameters, classical filters, CNN generalization, and Laboratory tests.</p>
+    <div class="graph-vis">
+      <h3 style="color:var(--cyan);margin-bottom:12px">Nodes</h3>
+      <div class="graph-nodes" id="graph-nodes"></div>
+      <h3 style="color:var(--cyan);margin:16px 0 12px">Key Relationships</h3>
+      <div id="graph-edges"></div>
+    </div>
+  </section>
+
+  <section id="sec-casestudies">
+    <h2>10. Application Case Studies</h2>
+    <div id="case-studies"></div>
+  </section>
+
+  <section id="sec-assessment">
+    <h2>11. Assessment (31 items)</h2>
+    <div id="assessment-diagnostic"></div>
+    <h3 style="color:var(--cyan);margin:20px 0 10px">Laboratory Tasks (6)</h3>
+    <div id="assessment-lab"></div>
+    <h3 style="color:var(--cyan);margin:20px 0 10px">Final Assessment (12)</h3>
+    <div id="assessment-final"></div>
+  </section>
+
+  <section id="sec-misconceptions">
+    <h2>12. Misconceptions (8)</h2>
+    <div id="misconceptions"></div>
+  </section>
+
+  <section id="sec-curiosity">
+    <h2>13. Curiosity Artifacts (16)</h2>
+    <div id="curiosity"></div>
+  </section>
+
+  <section id="sec-sources">
+    <h2>14. Research Sources (10)</h2>
+    <div id="sources"></div>
+  </section>
+
+  <section id="sec-lab">
+    <h2>15. Kernel Observatory Lab</h2>
+    <p>Deterministic interactive convolution laboratory. 8 image presets, 7 kernels, stride/padding/dilation controls, pixel-level inspection.</p>
+    <a href="#/laboratory/kernel-observatory" class="lab-btn">Open Kernel Observatory →</a>
+  </section>
+</div>
+
+<script>
+async function loadJSON(url) {
+  const r = await fetch(url);
+  return r.json();
+}
+
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+async function init() {
+  const [concepts, graphNodes, graphEdges, caseStudies, assessment, curiosity, sources] = await Promise.all([
+    loadJSON('/experimental/nv-2800-convolution/concepts/concepts.json'),
+    loadJSON('/experimental/nv-2800-convolution/graph/nodes.json'),
+    loadJSON('/experimental/nv-2800-convolution/graph/edges.json'),
+    loadJSON('/experimental/nv-2800-convolution/applications/case-studies.json'),
+    loadJSON('/experimental/nv-2800-convolution/assessments/assessment.json'),
+    loadJSON('/experimental/nv-2800-convolution/curiosity/cards.json'),
+    loadJSON('/experimental/nv-2800-convolution/research/sources.json'),
+  ]);
+
+  // Concepts
+  const cg = document.getElementById('concept-grid');
+  concepts.records.forEach(c => {
+    cg.innerHTML += '<div class="concept-card"><h4>' + esc(c.preferredName) + '</h4><p>' + esc(c.definition) + '</p><p style="margin-top:6px;font-size:12px;color:var(--amber)">' + esc(c.id) + '</p></div>';
+  });
+
+  // Graph nodes
+  const gn = document.getElementById('graph-nodes');
+  graphNodes.nodes.forEach(n => {
+    const hl = n.startsWith('cnn.') ? ' highlight' : '';
+    gn.innerHTML += '<span class="graph-node' + hl + '">' + esc(n) + '</span>';
+  });
+
+  // Graph edges
+  const ge = document.getElementById('graph-edges');
+  graphEdges.edges.slice(0, 15).forEach(e => {
+    ge.innerHTML += '<div style="font-size:13px;padding:3px 0;color:var(--text2)">' + esc(e[0]) + ' <span style="color:var(--cyan)">' + esc(e[2]) + '</span> ' + esc(e[1]) + '</div>';
+  });
+  ge.innerHTML += '<div style="font-size:12px;color:var(--text2);margin-top:8px">... and ' + (graphEdges.edges.length - 15) + ' more edges</div>';
+
+  // Case studies
+  const cs = document.getElementById('case-studies');
+  caseStudies.caseStudies.forEach(c => {
+    cs.innerHTML += '<div class="case-study"><h4>' + esc(c.title) + '</h4><p>' + esc(c.problem) + '</p><p style="font-size:13px;color:var(--text2)"><strong>Pipeline:</strong> ' + esc(c.pipeline) + '</p><p style="font-size:13px;color:var(--text2)"><strong>Limitations:</strong> ' + esc(c.limitations) + '</p></div>';
+  });
+
+  // Assessment - diagnostic
+  const ad = document.getElementById('assessment-diagnostic');
+  assessment.diagnostic.forEach(q => {
+    ad.innerHTML += '<div class="assessment-item"><div class="q">[' + esc(q.type) + '] ' + esc(q.prompt) + '</div><div class="a">Answer: ' + esc(q.answer) + '</div></div>';
+  });
+
+  // Assessment - lab
+  const al = document.getElementById('assessment-lab');
+  assessment.laboratory.forEach(q => {
+    al.innerHTML += '<div class="assessment-item"><div class="q">' + esc(q) + '</div></div>';
+  });
+
+  // Assessment - final
+  const af = document.getElementById('assessment-final');
+  assessment.final.forEach(q => {
+    af.innerHTML += '<div class="assessment-item"><div class="q">' + esc(q) + '</div></div>';
+  });
+
+  // Misconceptions
+  const mc = document.getElementById('misconceptions');
+  assessment.misconceptions.forEach(m => {
+    mc.innerHTML += '<div class="assessment-item"><div class="q">Misconception: ' + esc(m) + '</div></div>';
+  });
+
+  // Curiosity
+  const cu = document.getElementById('curiosity');
+  curiosity.artifacts.forEach(c => {
+    cu.innerHTML += '<div class="curiosity-card"><div class="tone">' + esc(c.kind) + ' · ' + esc(c.tone) + '</div><p>' + esc(c.text) + '</p></div>';
+  });
+
+  // Sources
+  const sr = document.getElementById('sources');
+  sources.sources.forEach(s => {
+    sr.innerHTML += '<div class="assessment-item"><div class="q">' + esc(s.title) + '</div><div class="a">' + esc(s.authors) + ' (' + s.year + ') — ' + esc(s.venue) + '<br><code>' + esc(s.persistentIdentifier) + '</code></div></div>';
+  });
+}
+
+init();
+</script>
+</body>
+</html>

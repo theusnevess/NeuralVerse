@@ -28,6 +28,7 @@ import { createCopilotRuntimeBridge } from "./agents/copilot-runtime-bridge.js?v
 import "./agents/agent-tools.js?v=1";
 import "./agents/agentic-loop.js?v=1";
 import { createAgentPanelController } from "./agents/agent-panel-controller.js?v=1";
+import "./learning/learning-controller.js?v=1";
 
 window.NV_DEBUG = window.NV_DEBUG || false;
 
@@ -451,8 +452,12 @@ document.addEventListener("DOMContentLoaded", () => {
           var memCtrl = window.NeuralVerse.createMemoryUIController({ root: document });
           memCtrl.init();
           var memory = window.NeuralVerse.MemoryRegistry.get(memoryId);
+          if (!memory && window.NeuralVerse.MemoryStorage?.load) {
+            window.NeuralVerse.MemoryStorage.load();
+            memory = window.NeuralVerse.MemoryRegistry.get(memoryId);
+          }
           if (memory) {
-            memCtrl.renderMemoryDetail(mount, memory);
+            memCtrl.renderMemoryDetail(mount, memoryId);
           } else {
             mount.innerHTML = '<p class="nv-memory-empty">Memory not found. <a href="#/memory">Back to Memory</a></p>';
           }

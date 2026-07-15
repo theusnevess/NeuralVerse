@@ -1071,6 +1071,29 @@
       "overview": "This Learning Path organizes multiple Modules into a coherent, high-level Transformer architecture curriculum progression.",
       "aim": "Introduce learners to the conceptual foundations of the Transformer architecture, including attention parallelization, scaled Query-Key-Value operations, multi-head attention subspaces, sinusoidal positional encoding, encoder/decoder causal masking, and subword tokenization representations.",
       "source": "../docs/content/learning-paths/transformer-foundations/learning-path-composition.md"
+    },
+    {
+      "id": "path-convolution-computer-vision",
+      "slug": "convolution-computer-vision",
+      "title": "Convolution in Computer Vision",
+      "type": "Foundational Learning Path",
+      "canonicalStatus": "Draft",
+      "moduleIds": [
+        "module-convolution-spatial-filtering"
+      ],
+      "lessonScope": [
+        "lesson-convolution-computer-vision"
+      ],
+      "artifactScope": [
+        "artifact-convolution-computer-vision-explanatory-text",
+        "artifact-convolution-computer-vision-visual-intuition",
+        "artifact-convolution-computer-vision-interactive-visualization",
+        "artifact-convolution-computer-vision-exercise",
+        "artifact-convolution-computer-vision-comparison-table"
+      ],
+      "overview": "From classical image kernels to learned CNN feature maps. Covers 2D discrete convolution, cross-correlation, parameters, classical filters, and the transition to learned convolutional filters.",
+      "aim": "Understand convolution as the foundational local operation in computer vision and relate fixed hand-designed filters to learned CNN filters.",
+      "source": "../docs/content/learning-paths/convolutional-neural-networks-foundations/learning-path-composition.md"
     }
   ],
   "modules": [
@@ -2352,6 +2375,26 @@
       ],
       "overview": "This module organizes lessons related to 2D image matrix filtering operations, feature maps, and computer vision paradigms.",
       "aim": "Introduce learners to spatial feature extraction in computer vision, including 2D convolutions (kernels, stride, padding), feature maps (gradients, blurring), and the paradigm shift from classical hand-crafted descriptors to deep representation learning.",
+      "source": "../docs/content/modules/visual-feature-extraction-foundations/module-composition.md"
+    },
+    {
+      "id": "module-convolution-spatial-filtering",
+      "slug": "convolution-spatial-filtering",
+      "title": "Convolution: Spatial-Domain Filtering",
+      "type": "Core Module",
+      "canonicalStatus": "Draft",
+      "lessonIds": [
+        "lesson-convolution-computer-vision"
+      ],
+      "artifactScope": [
+        "artifact-convolution-computer-vision-explanatory-text",
+        "artifact-convolution-computer-vision-visual-intuition",
+        "artifact-convolution-computer-vision-interactive-visualization",
+        "artifact-convolution-computer-vision-exercise",
+        "artifact-convolution-computer-vision-comparison-table"
+      ],
+      "overview": "Module covering 2D convolution, cross-correlation, kernel parameters, classical filters, and the bridge to learned CNN filters.",
+      "aim": "Master the local operation that underpins all CNN feature extraction.",
       "source": "../docs/content/modules/visual-feature-extraction-foundations/module-composition.md"
     }
   ],
@@ -4395,6 +4438,23 @@
       "overview": "This lesson orchestrates reusable Learning Artifacts into a coherent learning experience about World Models and Latent Simulation.",
       "learningGoal": "After completing this lesson flow, the learner should understand the core concepts of World Models and Latent Simulation and be able to reason about their practical use in model-based reinforcement learning, planning, and cognitive architectures.",
       "source": "../docs/content/lessons/world-models-and-latent-simulation/lesson-composition.md"
+    },
+    {
+      "id": "lesson-convolution-computer-vision",
+      "slug": "convolution-computer-vision",
+      "title": "Convolution in Computer Vision",
+      "topic": "Convolution in Computer Vision",
+      "canonicalStatus": "Draft",
+      "artifactIds": [
+        "artifact-convolution-computer-vision-explanatory-text",
+        "artifact-convolution-computer-vision-visual-intuition",
+        "artifact-convolution-computer-vision-interactive-visualization",
+        "artifact-convolution-computer-vision-exercise",
+        "artifact-convolution-computer-vision-comparison-table"
+      ],
+      "overview": "Complete lesson on 2D discrete convolution from classical kernels to learned CNN filters.",
+      "learningGoal": "After completing this lesson, the learner should be able to compute convolution outputs, predict parameter effects, implement convolution in NumPy/OpenCV/PyTorch, and relate classical fixed filters to learned CNN filters.",
+      "source": "../docs/content/lessons/convolutional-neural-networks/lesson-composition.md"
     }
   ],
   "artifacts": [
@@ -12809,6 +12869,85 @@
       "estimatedDuration": "4-6 minutes",
       "topicSlug": "world-models-and-latent-simulation",
       "source": "../docs/content/learning-artifacts/world-models-and-latent-simulation/visual-intuition.md"
+    },
+    {
+      "id": "artifact-convolution-computer-vision-explanatory-text",
+      "slug": "convolution-computer-vision/explanatory-text.md",
+      "title": "Convolution in Computer Vision: From Classical Kernels to Learned CNN Filters",
+      "family": "Instruction Artifacts",
+      "type": "Explanatory Text",
+      "canonicalStatus": "Draft",
+      "instructionalObjectives": [
+        "Explain 2D discrete convolution and cross-correlation",
+        "Describe how kernels transform local image regions",
+        "Relate classical filters to CNN learned filters"
+      ],
+      "estimatedDuration": "12-15 minutes",
+      "topicSlug": "convolution-computer-vision",
+      "source": "../website/content/learning-artifacts/convolution-computer-vision/explanatory-text.md"
+    },
+    {
+      "id": "artifact-convolution-computer-vision-visual-intuition",
+      "slug": "convolution-computer-vision/visual-intuition.md",
+      "title": "The Sliding Window: Seeing Convolution in Action",
+      "family": "Instruction Artifacts",
+      "type": "Visual Intuition",
+      "canonicalStatus": "Draft",
+      "instructionalObjectives": [
+        "Visualize how a kernel slides across an image",
+        "See element-wise multiplication and summation",
+        "Predict output changes from parameter changes"
+      ],
+      "estimatedDuration": "4-6 minutes",
+      "topicSlug": "convolution-computer-vision",
+      "source": "../website/content/learning-artifacts/convolution-computer-vision/visual-intuition.md"
+    },
+    {
+      "id": "artifact-convolution-computer-vision-interactive-visualization",
+      "slug": "convolution-computer-vision/interactive-visualization.md",
+      "title": "Kernel Observatory: Interactive Convolution Laboratory",
+      "family": "Instruction Artifacts",
+      "type": "Interactive Visualization",
+      "canonicalStatus": "Draft",
+      "instructionalObjectives": [
+        "Manipulate kernel parameters and observe output changes",
+        "Inspect pixel-level calculations",
+        "Compare kernels on the same input"
+      ],
+      "estimatedDuration": "15-20 minutes",
+      "topicSlug": "convolution-computer-vision",
+      "source": "../website/content/learning-artifacts/convolution-computer-vision/interactive-visualization.md"
+    },
+    {
+      "id": "artifact-convolution-computer-vision-exercise",
+      "slug": "convolution-computer-vision/exercise.md",
+      "title": "Convolution Practice: Kernels, Parameters, and Edge Cases",
+      "family": "Practice Artifacts",
+      "type": "Exercise",
+      "canonicalStatus": "Draft",
+      "instructionalObjectives": [
+        "Compute convolution outputs by hand",
+        "Predict shape changes from parameters",
+        "Diagnose unexpected results"
+      ],
+      "estimatedDuration": "8-10 minutes",
+      "topicSlug": "convolution-computer-vision",
+      "source": "../website/content/learning-artifacts/convolution-computer-vision/exercise.md"
+    },
+    {
+      "id": "artifact-convolution-computer-vision-comparison-table",
+      "slug": "convolution-computer-vision/comparison-table.md",
+      "title": "Classical vs Learned Filters: A Comparison",
+      "family": "Reference Artifacts",
+      "type": "Comparison Table",
+      "canonicalStatus": "Draft",
+      "instructionalObjectives": [
+        "Contrast fixed and learned convolution filters",
+        "Identify when each approach is appropriate"
+      ],
+      "estimatedDuration": "3-4 minutes",
+      "topicSlug": "convolution-computer-vision",
+      "source": "../website/content/learning-artifacts/convolution-computer-vision/comparison-table.md"
     }
   ]
 }

@@ -594,3 +594,18 @@ export function createLearningController(options = {}) {
     getState: learningState.getState,
   };
 }
+
+// Auto-initialize when imported
+(function () {
+  'use strict';
+  const controller = createLearningController();
+  window.NeuralVerse = window.NeuralVerse || {};
+  window.NeuralVerse.learning = {
+    state: controller.getState,
+    init: controller.init,
+    renderModules: controller.renderModules,
+  };
+  controller.init().catch(function (err) {
+    console.error('Learning controller auto-init failed', err);
+  });
+})();

@@ -1,1 +1,26 @@
-[]
+[
+  {
+    "id": "module-00-foundations",
+    "pathId": "foundations",
+    "title": "Foundations",
+    "order": 1
+  },
+  {
+    "id": "module-01-classical-ml",
+    "pathId": "classical-machine-learning",
+    "title": "Classical ML",
+    "order": 1
+  },
+  {
+    "id": "module-02-deep-learning",
+    "pathId": "deep-learning",
+    "title": "Deep Learning",
+    "order": 1
+  },
+  {
+    "id": "module-convolution-spatial-filtering",
+    "pathId": "convolution-computer-vision",
+    "title": "Spatial-Domain Filtering",
+    "order": 1
+  }
+]

@@ -38,6 +38,7 @@
     var currentLab = null;
     var currentParams = {};
     var currentResult = null;
+    var executionSnapshot = null;
 
     function getContainer() {
       return root.querySelector('[data-lab-container]') || root.querySelector('.nv-lab-main') || root.querySelector('.nv-lab-viewer') || root;
@@ -86,6 +87,7 @@
         if (schema.description) {
           html += '<span class="nv-lab-param-desc">' + escapeHtml(schema.description) + '</span>';
         }
+        if (schema.unit) html += '<span class="nv-lab-param-unit">' + escapeHtml(schema.unit) + '</span>';
         html += '</label>';
 
         switch (schema.type) {
@@ -101,8 +103,8 @@
             html += 'data-param-type="' + schema.type + '" ';
             html += 'aria-label="' + escapeHtml(schema.label) + '" ';
             html += 'aria-valuemin="' + schema.min + '" aria-valuemax="' + schema.max + '" aria-valuenow="' + value + '">';
-            html += '<span class="nv-lab-slider-value">' + (typeof value === 'number' ? value : value) + '</span>';
             html += '</div>';
+            html += '<span class="nv-lab-slider-value">' + (typeof value === 'number' ? value : value) + '</span>';
             break;
           }
           case 'boolean': {
@@ -145,6 +147,7 @@
 
       panel.innerHTML = html;
       bindParameterEvents(lab);
+      updateParameterMutability();
     }
 
     function bindParameterEvents(lab) {
@@ -252,6 +255,26 @@
     var stepInterval = null;
     var stepSpeed = 1;
     var executionControlsWired = false;
+    var feedbackTimeouts = [];
+    var researchDisclosureOperation = 0;
+    var researchDisclosureCleanup = null;
+
+    function scheduleFeedback(callback, delay) {
+      var timeoutId = setTimeout(function () {
+        feedbackTimeouts = feedbackTimeouts.filter(function (id) { return id !== timeoutId; });
+        callback();
+      }, delay);
+      feedbackTimeouts.push(timeoutId);
+      return timeoutId;
+    }
+
+    function cancelFeedback() {
+      feedbackTimeouts.forEach(function (timeoutId) { clearTimeout(timeoutId); });
+      feedbackTimeouts = [];
+      root.querySelectorAll('.nv-lab-inspector-row--changed, .nv-xai-evidence-pulse').forEach(function (element) {
+        element.classList.remove('nv-lab-inspector-row--changed', 'nv-xai-evidence-pulse');
+      });
+    }
 
     function loadLab(lab) {
       if (!lab) return;
@@ -260,7 +283,7 @@
       // carry an active session into another laboratory's workspace.
       if (window.NeuralVerse.ResearchMode && window.NeuralVerse.ResearchMode.isActive()) {
         var activeSession = window.NeuralVerse.ResearchMode.getSession();
-        if (activeSession && activeSession.labId !== lab.id) {
+         if (activeSession && activeSession.laboratoryId !== lab.id) {
           window.NeuralVerse.ResearchMode.exit();
         }
       }
@@ -292,6 +315,7 @@
         updateInspector();
         updateV4Telemetry();
         setWorkspacePhase('preparation');
+        updateExecutionPresentation();
       }
 
       window.NeuralVerse.LabStateStorage.addRecentLab(lab.id, lab.title, lab.slug);
@@ -308,6 +332,23 @@
       container.addEventListener('click', function (event) {
         var target = event.target;
         if (!target || !target.closest) return;
+        if (target.closest('[data-completion-repeat]')) {
+          handleExecutionAction('reset-exec');
+          handleExecutionAction('run');
+          return;
+        }
+        var variation = target.closest('[data-completion-vary]');
+        if (variation) {
+          handleExecutionAction('reset-exec');
+          var control = container.querySelector('#lab-param-' + variation.getAttribute('data-parameter'));
+          if (control) control.focus();
+          return;
+        }
+        if (target.closest('[data-completion-evidence]')) {
+          showV4Panel('inspector');
+          expandV4Disclosure('inspector');
+          return;
+        }
         var actionControl = target.closest('[data-action]');
         if (actionControl && container.contains(actionControl)) {
           handleExecutionAction(actionControl.getAttribute('data-action'));
@@ -388,7 +429,7 @@
         if (resetBtn && workspace.contains(resetBtn)) {
           event.stopImmediatePropagation();
           event.stopPropagation();
-          if (uiController) uiController.resetParameters();
+          resetParameters();
           return;
         }
 
@@ -491,7 +532,7 @@
         if (body) {
           body.hidden = true;
           body.inert = true;
-          body.style.maxHeight = '0';
+          body.style.maxHeight = '0px';
           body.style.opacity = '0';
         }
       } else {
@@ -501,7 +542,7 @@
         if (body) {
           body.hidden = false;
           body.inert = false;
-          body.style.maxHeight = '9999px';
+          body.style.maxHeight = body.scrollHeight + 'px';
           body.style.opacity = '1';
         }
       }
@@ -594,30 +635,58 @@
 
       switch (action) {
         case 'run':
-          // Resume uses the existing run action, but its visible presentation
-          // and engine state must represent continuation rather than a restart.
-          stepSession.state = 'running';
-          startAutoRun();
-          updateExecutionPresentation('running');
+          var validation = window.NeuralVerse.ParameterEngine.validateAll(currentLab.parameterSchema, currentParams);
+          if (!validation.valid) {
+            showExecutionError(validation.errors.join('; '));
+            return;
+          }
+          executionSnapshot = Object.freeze(Object.assign({}, validation.params));
+           stepSession = window.NeuralVerse.ExecutionEngine.createStepSession(currentLab, executionSnapshot);
+            if (stepSession && window.NeuralVerse.ExecutionEngine.startSession(stepSession)) {
+              stepSession.runId = 'execution_' + Date.now();
+              currentResult = window.NeuralVerse.ExecutionEngine.execute(currentLab, executionSnapshot);
+             if (window.NeuralVerse.ResearchMode.isActive()) window.NeuralVerse.ResearchMode.beginRun(currentLab, executionSnapshot);
+             startAutoRun();
+            updateExecutionPresentation();
+            focusPrimaryCommand('pause');
+          }
           break;
         case 'step':
+          if (!executionSnapshot) {
+            var stepValidation = window.NeuralVerse.ParameterEngine.validateAll(currentLab.parameterSchema, currentParams);
+            if (!stepValidation.valid) { showExecutionError(stepValidation.errors.join('; ')); return; }
+            executionSnapshot = Object.freeze(Object.assign({}, stepValidation.params));
+            stepSession = window.NeuralVerse.ExecutionEngine.createStepSession(currentLab, executionSnapshot);
+            stepSession.runId = 'execution_' + Date.now();
+            currentResult = window.NeuralVerse.ExecutionEngine.execute(currentLab, executionSnapshot);
+            if (window.NeuralVerse.ResearchMode.isActive()) window.NeuralVerse.ResearchMode.beginRun(currentLab, executionSnapshot);
+          }
           stepForward();
-          if (stepSession.state !== 'finished') stepSession.state = 'paused';
-          updateExecutionPresentation(stepSession.state);
+          if (window.NeuralVerse.ExecutionEngine.getLifecycleState(stepSession) === 'running') {
+            window.NeuralVerse.ExecutionEngine.pauseSession(stepSession);
+          }
+          updateExecutionPresentation();
           break;
         case 'pause':
           stopAutoRun();
-          stepSession.state = 'paused';
-          updateExecutionPresentation('paused');
+          if (window.NeuralVerse.ExecutionEngine.pauseSession(stepSession)) {
+            updateExecutionPresentation();
+            focusPrimaryCommand('run');
+          }
           break;
-        case 'reset-exec':
-          stopAutoRun();
-          window.NeuralVerse.ExecutionEngine.resetSession(stepSession);
-          updateExecutionPresentation('idle');
-          updateMetricsFromStep();
-          updateControlStates('idle');
+         case 'reset-exec':
+            stopAutoRun();
+            cancelFeedback();
+            if (window.NeuralVerse.ResearchMode.isActive() && window.NeuralVerse.ResearchMode.getCurrentRun()) window.NeuralVerse.ResearchMode.finishRun('aborted', { reason: 'Execution reset' }, []);
+             window.NeuralVerse.ExecutionEngine.resetSession(stepSession);
+             executionSnapshot = null;
+            resetXAIState();
+            resetScientificLog();
+           updateMetricsFromStep();
+          updateExecutionPresentation();
           renderPreparationVisualization();
           resetWorkspaceDisclosure();
+          focusPrimaryCommand('run');
           break;
       }
     }
@@ -626,11 +695,14 @@
       stopAutoRun();
       var delay = Math.max(50, 500 / stepSpeed);
       stepInterval = setInterval(function () {
-        if (!stepSession || stepSession.state === 'finished') {
+        var lifecycle = window.NeuralVerse.ExecutionEngine.getLifecycleState(stepSession);
+        if (!stepSession || lifecycle === 'completed' || lifecycle === 'failed') {
           stopAutoRun();
-          setWorkspacePhase('completed');
-          updateControlStates('finished');
-          renderCompletionSummary(currentResult);
+          if (lifecycle === 'completed') {
+            setWorkspacePhase('completed');
+            renderCompletionSummary(currentResult);
+          }
+          updateExecutionPresentation();
           return;
         }
         stepForward();
@@ -646,6 +718,7 @@
 
     var prevInspectorState = null;
     var xaiFindingsBuffer = [];
+    var xaiEvidenceStore = null;
     var xaiTotalFindings = 0;
     var xaiCriticalFindings = 0;
     var xaiStepsWithFindings = 0;
@@ -706,17 +779,26 @@
       return body.matches('[data-lab-v4-workspace]') ? body : body.querySelector('[data-lab-v4-workspace]');
     }
 
-    function deriveExecutionState(controlState) {
-      var map = { 'idle': 'preparation', 'running': 'running', 'paused': 'paused', 'finished': 'completed' };
-      return map[controlState] || 'preparation';
+    function deriveExecutionState(lifecycle) {
+      var map = { ready: 'preparation', running: 'running', paused: 'paused', completed: 'completed', failed: 'failed' };
+      return map[lifecycle] || 'preparation';
     }
 
-    function applyWorkspaceExecutionState(executionState) {
+    function getExecutionLifecycle() {
+      return window.NeuralVerse.ExecutionEngine.getLifecycleState(stepSession);
+    }
+
+    function applyWorkspaceExecutionState(executionState, lifecycle) {
       var v4Root = getV4Root();
       if (!v4Root) return;
       v4Root.setAttribute('data-execution-state', executionState);
+      v4Root.setAttribute('data-execution-lifecycle', lifecycle || getExecutionLifecycle());
       var consoleEl = v4Root.querySelector('[data-lab-v4-execution-console]');
-      if (consoleEl) consoleEl.setAttribute('data-execution-state', executionState);
+      if (consoleEl) {
+        consoleEl.setAttribute('data-execution-state', executionState);
+        consoleEl.setAttribute('data-execution-lifecycle', lifecycle || getExecutionLifecycle());
+        consoleEl.setAttribute('aria-busy', executionState === 'running' ? 'true' : 'false');
+      }
     }
 
     function applyWorkspaceResearchState(researchState) {
@@ -738,7 +820,7 @@
         panel.setAttribute('data-research-panel-state', isActive ? 'active' : 'inactive');
         panel.setAttribute('data-disclosure-state', isActive ? 'expanded' : 'collapsed');
       }
-      if (body) body.hidden = !isActive;
+      if (body) setResearchDisclosure(body, isActive);
       if (status) status.textContent = isActive ? 'Active' : 'Inactive';
       toggles.forEach(function (toggle) {
         toggle.setAttribute('aria-expanded', isActive ? 'true' : 'false');
@@ -748,6 +830,61 @@
           toggle.textContent = isActive ? 'Deactivate Research Session' : 'Activate Research Session';
         }
       });
+    }
+
+    function setResearchDisclosure(body, isOpen) {
+      var operation = ++researchDisclosureOperation;
+      var reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (researchDisclosureCleanup) {
+        body.removeEventListener('transitionend', researchDisclosureCleanup);
+        researchDisclosureCleanup = null;
+      }
+
+      if (isOpen) {
+        // Availability precedes measurement so motion never decides whether the
+        // Research Session is exposed to keyboard or assistive technology.
+        body.hidden = false;
+        body.inert = false;
+        body.removeAttribute('aria-hidden');
+        body.style.maxHeight = '0px';
+        body.style.opacity = '0';
+
+        var open = function () {
+          if (operation !== researchDisclosureOperation) return;
+          body.style.maxHeight = body.scrollHeight + 'px';
+          body.style.opacity = '1';
+          if (reducedMotion) body.style.maxHeight = 'none';
+        };
+        if (reducedMotion) open();
+        else requestAnimationFrame(open);
+        return;
+      }
+
+      body.inert = true;
+      body.setAttribute('aria-hidden', 'true');
+      if (reducedMotion || body.hidden) {
+        body.hidden = true;
+        body.style.maxHeight = '';
+        body.style.opacity = '';
+        return;
+      }
+
+      body.style.maxHeight = body.scrollHeight + 'px';
+      requestAnimationFrame(function () {
+        if (operation !== researchDisclosureOperation) return;
+        body.style.maxHeight = '0px';
+        body.style.opacity = '0';
+      });
+
+      researchDisclosureCleanup = function finishClose(event) {
+        if (event.target !== body || event.propertyName !== 'max-height' || operation !== researchDisclosureOperation) return;
+        body.removeEventListener('transitionend', finishClose);
+        researchDisclosureCleanup = null;
+        body.hidden = true;
+        body.style.maxHeight = '';
+        body.style.opacity = '';
+      };
+      body.addEventListener('transitionend', researchDisclosureCleanup);
     }
 
     function setWorkspacePhase(phase) {
@@ -760,12 +897,12 @@
       }
       if (phase === 'completed') {
         body.setAttribute('data-workspace-phase', 'completed');
-        applyWorkspaceExecutionState('completed');
+        applyWorkspaceExecutionState('completed', 'completed');
         return;
       }
       body.setAttribute('data-workspace-phase', phase);
-      var executionState = phase === 'execution' ? 'running' : phase === 'interpretation' ? 'paused' : phase;
-      applyWorkspaceExecutionState(executionState);
+      var lifecycle = phase === 'execution' ? 'running' : phase === 'interpretation' ? 'paused' : phase === 'preparation' ? 'ready' : getExecutionLifecycle();
+      applyWorkspaceExecutionState(deriveExecutionState(lifecycle), lifecycle);
     }
 
     function collapseParameters() {
@@ -872,8 +1009,14 @@
     }
 
     function stepForward() {
-      if (!stepSession || stepSession.state === 'finished') return;
+      if (!stepSession || getExecutionLifecycle() === 'completed') return;
       window.NeuralVerse.ExecutionEngine.stepForward(stepSession);
+      if (getExecutionLifecycle() === 'failed') {
+         stopAutoRun();
+         captureResearchRun('failed');
+         updateExecutionPresentation();
+        return;
+      }
       var snapshot = window.NeuralVerse.ExecutionEngine.getStepSnapshot(stepSession, stepSession.currentStep);
       if (snapshot) {
         updateTimeline();
@@ -883,7 +1026,7 @@
         generateAndRenderFindings();
         updateInspector();
         renderAllObservations();
-        if (stepSession.state === 'finished') {
+        if (getExecutionLifecycle() === 'completed') {
           setWorkspacePhase('completed');
         } else {
           setWorkspacePhase('execution');
@@ -892,9 +1035,10 @@
         collapseParameters();
         revealPanel('[data-lab-inspector]');
       }
-      if (stepSession.state === 'finished') {
-        stopAutoRun();
-        updateExecutionPresentation('finished');
+      if (getExecutionLifecycle() === 'completed') {
+         stopAutoRun();
+         captureResearchRun('completed');
+         updateExecutionPresentation();
         renderCompletionSummary(currentResult);
       }
     }
@@ -912,6 +1056,22 @@
           }
         }
       });
+      renderScientificStageSemantics();
+    }
+
+    function renderScientificStageSemantics() {
+      if (!currentLab || !window.NeuralVerse.ScientificStage) return;
+      var primary = currentLab.observations && currentLab.observations[0];
+      var body = primary && root.querySelector('[data-obs-body="' + primary.id + '"]');
+      var stage = root.querySelector('[data-lab-v4-stage]');
+      if (!body || !stage) return;
+      var lifecycle = getExecutionLifecycle();
+      var phase = !stepSession || stepSession.currentStep < 0 ? 'preparation' : lifecycle === 'completed' ? 'completed' : lifecycle === 'running' ? 'execution' : 'paused';
+      var model = window.NeuralVerse.ScientificStage.buildViewModel(currentLab, currentParams, stepSession ? stepSession.currentStep : 0, phase, currentResult);
+      stage.setAttribute('data-scientific-stage', '');
+      stage.setAttribute('data-scientific-stage-state', model.phase);
+      stage.setAttribute('aria-label', model.title + '. ' + model.question);
+      window.NeuralVerse.ScientificStage.decorate(body, model);
     }
 
     function renderPreparationVisualization() {
@@ -935,6 +1095,7 @@
       } else {
         renderAllObservations();
       }
+      renderScientificStageSemantics();
       renderCompletionSummary(null);
     }
 
@@ -943,49 +1104,33 @@
       if (!container) return;
       var existing = container.querySelector('.nv-lab-v4-completion-summary');
       if (existing) existing.remove();
-      if (!result) return;
-      if (!currentLab || typeof currentLab.getCompletionSummary !== 'function') return;
-      // ExecutionEngine returns an operational envelope while laboratory
-      // adapters describe scientific result fields. Keep that boundary here.
-      var scientificResult = result && result.success && result.result ? result.result : result;
-      var summary = currentLab.getCompletionSummary(scientificResult, currentParams);
-      if (!summary || summary.length === 0) return;
+      if (!result) {
+        var inactiveContinuations = container.querySelector('[data-lab-v4-continuations]');
+        if (inactiveContinuations) { inactiveContinuations.hidden = true; inactiveContinuations.innerHTML = ''; }
+        return;
+      }
+      if (!currentLab || !executionSnapshot || !window.NeuralVerse.CompletionNextExperiments) return;
+      var evidence = xaiEvidenceStore ? xaiEvidenceStore.records.map(function (item) { return { id: item.id, label: item.title || item.observation || 'Scientific finding' }; }) : [];
+      var model = window.NeuralVerse.CompletionNextExperiments.createCompletion(currentLab, stepSession && stepSession.runId, result, executionSnapshot, stepSession, evidence);
+      if (!model) return;
       var el = document.createElement('div');
-      el.className = 'nv-lab-v4-completion-summary';
-      el.setAttribute('data-lab-v4-completion-summary', '');
-       el.setAttribute('data-lab-v4-completion-deck', '');
-       el.setAttribute('role', 'status');
-       el.setAttribute('aria-label', 'Experiment complete');
-       var completedSteps = stepSession ? stepSession.totalSteps : 0;
-       var outcome = summary.find(function (item) { return /converg|status|outcome|result/i.test(item.label); });
-       var metricItems = summary.filter(function (item) { return item !== outcome; });
-       el.innerHTML = '<div class="nv-lab-v4-completion-summary__header"><h3>Experiment Outcome</h3><p>Execution completed' + (completedSteps ? ' after ' + completedSteps + ' steps.' : '.') + '</p></div>';
-       if (outcome) {
-         // Runtime lifecycle and scientific outcome are independent. A stale
-         // adapter value must never present an active state after completion.
-         if (/^(running|ready|paused)$/i.test(String(outcome.value))) {
-           outcome = { label: 'Scientific Outcome', value: 'Outcome Unavailable' };
-         }
-         var outcomeEl = document.createElement('div');
-         outcomeEl.className = 'nv-lab-v4-completion-summary__outcome';
-         outcomeEl.innerHTML = '<span>Scientific Outcome</span><strong>' + escapeHtml(outcome.label + ': ' + outcome.value) + '</strong>';
-         el.appendChild(outcomeEl);
-       } else {
-         var unavailableOutcome = document.createElement('div');
-         unavailableOutcome.className = 'nv-lab-v4-completion-summary__outcome';
-         unavailableOutcome.innerHTML = '<span>Scientific Outcome</span><strong>Outcome Unavailable</strong>';
-         el.appendChild(unavailableOutcome);
-       }
-       metricItems.forEach(function (item) {
-         var itemEl = document.createElement('div');
-         itemEl.className = 'nv-lab-v4-completion-summary__item';
-        itemEl.innerHTML = '<span class="nv-lab-v4-completion-summary__label">' + escapeHtml(item.label) + '</span><span class="nv-lab-v4-completion-summary__value">' + escapeHtml(item.value) + '</span>';
-        el.appendChild(itemEl);
-      });
+      el.innerHTML = window.NeuralVerse.CompletionNextExperiments.renderCompletion(model);
+      el = el.firstChild;
       var continuations = container.querySelector('[data-lab-v4-continuations]');
       if (continuations && continuations.parentNode) {
+        continuations.hidden = false;
         continuations.parentNode.insertBefore(el, continuations);
+        continuations.innerHTML = window.NeuralVerse.CompletionNextExperiments.renderContinuations(window.NeuralVerse.CompletionNextExperiments.continuation(currentLab, model));
       }
+    }
+
+    function captureResearchRun(status) {
+      if (!window.NeuralVerse.ResearchMode.isActive() || !window.NeuralVerse.ResearchMode.getCurrentRun()) return;
+      var scientificResult = currentResult && currentResult.success ? currentResult.result : currentResult;
+      var summary = currentLab && typeof currentLab.getCompletionSummary === 'function' ? currentLab.getCompletionSummary(scientificResult, executionSnapshot || currentParams) : [];
+      var measurements = (summary || []).map(function (item) { return { label: item.label, value: item.value }; });
+      window.NeuralVerse.ResearchMode.finishRun(status, scientificResult || { error: stepSession && stepSession.error }, measurements);
+      renderResearchWorkspace();
     }
 
     function updateInspector() {
@@ -995,7 +1140,7 @@
       if (!container) return;
 
       var state = inspector.computeState(currentParams, stepSession ? stepSession.currentStep : 0, stepSession ? stepSession.history : []);
-      if (stepSession && stepSession.state === 'finished') {
+      if (stepSession && getExecutionLifecycle() === 'completed') {
         Object.keys(state).forEach(function (key) {
           if (/^(running|ready|paused)$/i.test(String(state[key])) && /(status|state|phase)/i.test(key)) state[key] = 'Outcome Unavailable';
         });
@@ -1039,7 +1184,7 @@
             // Live highlight on change
             if (cardEl && oldVal !== displayVal && oldVal !== '—') {
               cardEl.classList.add('nv-lab-inspector-row--changed');
-              setTimeout(function () {
+              scheduleFeedback(function () {
                 cardEl.classList.remove('nv-lab-inspector-row--changed');
               }, 600);
             }
@@ -1156,45 +1301,84 @@
         updateV4Telemetry();
         renderAllObservations();
       }
-      if (stepSession.state === 'finished') {
+      if (getExecutionLifecycle() === 'completed') {
         setWorkspacePhase('completed');
-        updateExecutionPresentation('finished');
+        updateExecutionPresentation();
         renderCompletionSummary(currentResult);
       } else {
-        stepSession.state = 'paused';
-        updateExecutionPresentation('paused');
+        window.NeuralVerse.ExecutionEngine.pauseSession(stepSession);
+        updateExecutionPresentation();
       }
     }
 
-    function updateExecutionPresentation(state) {
-      updateControlStates(state);
+    function updateExecutionPresentation() {
+      updateControlStates();
       updateTimeline();
       updateLiveState();
       updateV4Telemetry();
+      syncScientificStageLifecycle();
+      updateParameterMutability();
     }
 
-    function updateControlStates(state) {
+    function updateParameterMutability() {
+      var panel = getParameterPanel();
+      if (!panel) return;
+      var lifecycle = stepSession ? getExecutionLifecycle() : 'ready';
+      var locked = lifecycle === 'running' || lifecycle === 'paused';
+      panel.querySelectorAll('input, select, textarea').forEach(function (control) {
+        control.disabled = locked;
+        control.setAttribute('aria-disabled', locked ? 'true' : 'false');
+      });
+      panel.setAttribute('data-configuration-state', locked ? 'locked' : executionSnapshot ? 'completed-snapshot' : 'editable');
+    }
+
+    function syncScientificStageLifecycle() {
+      var stage = root.querySelector('[data-lab-v4-stage]');
+      if (!stage) return;
+      var lifecycle = getExecutionLifecycle();
+      var state = lifecycle === 'ready' ? 'preparation' : lifecycle === 'running' ? 'execution' : lifecycle;
+      stage.setAttribute('data-scientific-stage-state', state);
+    }
+
+    function focusPrimaryCommand(action) {
       var container = getContainer();
       if (!container) return;
+      var target = container.querySelector('[data-action="' + action + '"]');
+      if (target) setTimeout(function () { target.focus(); }, 0);
+    }
+
+    function updateControlStates() {
+      var container = getContainer();
+      if (!container) return;
+      var lifecycle = getExecutionLifecycle();
       var runBtn = container.querySelector('[data-action="run"]');
       var pauseBtn = container.querySelector('[data-action="pause"]');
       var stepBtn = container.querySelector('[data-action="step"]');
-      if (runBtn) runBtn.disabled = state === 'running' || state === 'finished';
+      var resetBtn = container.querySelector('[data-action="reset-exec"]');
+      if (runBtn) runBtn.disabled = lifecycle === 'running' || lifecycle === 'completed' || lifecycle === 'failed';
       if (runBtn) {
-        var resuming = state === 'paused';
+        var resuming = lifecycle === 'paused';
         runBtn.textContent = resuming ? 'Resume' : 'Run';
         runBtn.setAttribute('aria-label', resuming ? 'Resume experiment' : 'Run experiment');
+        runBtn.classList.toggle('nv-lab-v4-execution-console__control--primary', lifecycle === 'ready' || lifecycle === 'paused');
       }
-      if (pauseBtn) pauseBtn.disabled = state !== 'running';
-      if (stepBtn) stepBtn.disabled = state === 'finished';
-      var executionState = deriveExecutionState(state);
-      applyWorkspaceExecutionState(executionState);
+      if (pauseBtn) {
+        pauseBtn.disabled = lifecycle !== 'running';
+        pauseBtn.classList.toggle('nv-lab-v4-execution-console__control--primary', lifecycle === 'running');
+      }
+      if (stepBtn) stepBtn.disabled = lifecycle === 'completed' || lifecycle === 'failed';
+      if (resetBtn) {
+        resetBtn.disabled = lifecycle === 'ready';
+        resetBtn.classList.toggle('nv-lab-v4-execution-console__control--primary', lifecycle === 'completed' || lifecycle === 'failed');
+      }
+      applyWorkspaceExecutionState(deriveExecutionState(lifecycle), lifecycle);
     }
 
     function updateTimeline() {
       var container = getContainer();
       if (!container || !stepSession) return;
       var currentStep = Math.max(0, stepSession.currentStep);
+      var progressState = window.NeuralVerse.ExecutionEngine.getProgress(stepSession);
       container.querySelectorAll('.nv-lab-v4-timeline__step').forEach(function (el) {
         var idx = parseInt(el.getAttribute('data-step'));
         el.classList.remove('is-current', 'is-completed');
@@ -1204,10 +1388,11 @@
       var timelineInput = container.querySelector('[data-lab-v4-timeline-input]');
       if (timelineInput) {
         timelineInput.value = String(currentStep);
-        timelineInput.setAttribute('aria-valuetext', (stepSession.state === 'idle' ? 'Ready at step 0 of ' : 'Step ' + (currentStep + 1) + ' of ') + stepSession.totalSteps);
+        timelineInput.setAttribute('aria-valuenow', String(currentStep));
+        timelineInput.setAttribute('aria-valuetext', getExecutionLifecycle() === 'ready' ? 'Ready at step 0 of ' + stepSession.totalSteps : 'Step ' + progressState.current + ' of ' + progressState.total);
       }
       var progress = container.querySelector('[data-lab-v4-timeline-progress]');
-      if (progress) progress.style.width = (stepSession.currentStep < 0 ? 0 : ((stepSession.currentStep + 1) / stepSession.totalSteps) * 100) + '%';
+      if (progress) progress.style.width = (progressState.fraction * 100) + '%';
     }
 
     function updateLiveState() {
@@ -1218,10 +1403,23 @@
       var statusEl = container.querySelector('[data-live-status]');
       var stageStepEl = container.querySelector('[data-lab-v4-telemetry] [data-hud-metric-value="step"]');
       if (stepSession) {
-        if (stepEl) stepEl.textContent = Math.max(0, stepSession.currentStep + 1) + ' / ' + stepSession.totalSteps;
-        if (headerStepEl) headerStepEl.textContent = (stepSession.currentStep + 1) + ' / ' + stepSession.totalSteps;
-        if (statusEl) statusEl.textContent = stepSession.state === 'idle' ? 'Ready' : stepSession.state === 'finished' ? 'Completed' : stepSession.state === 'running' ? 'Running' : 'Paused';
-        if (stageStepEl) stageStepEl.textContent = Math.max(0, stepSession.currentStep + 1) + ' / ' + stepSession.totalSteps;
+        var lifecycle = getExecutionLifecycle();
+        var progressState = window.NeuralVerse.ExecutionEngine.getProgress(stepSession);
+        var snapshot = window.NeuralVerse.ExecutionEngine.getStepSnapshot(stepSession, stepSession.currentStep);
+        var messageEl = container.querySelector('[data-execution-message]');
+        var label = snapshot && snapshot.label ? snapshot.label : 'Awaiting start';
+        var messages = {
+          ready: 'Run the experiment to begin execution.',
+          running: 'Executing: ' + label + '.',
+          paused: 'Paused after: ' + label + '. Resume to continue.',
+          completed: 'Execution completed. Review the experiment outcome below.',
+          failed: stepSession.error || 'The experiment could not complete. Reset to try again.'
+        };
+        if (stepEl) stepEl.textContent = progressState.current + ' / ' + progressState.total;
+        if (headerStepEl) headerStepEl.textContent = progressState.current + ' / ' + progressState.total;
+        if (statusEl) statusEl.textContent = lifecycle.charAt(0).toUpperCase() + lifecycle.slice(1);
+        if (messageEl) messageEl.textContent = messages[lifecycle];
+        if (stageStepEl) stageStepEl.textContent = progressState.current + ' / ' + progressState.total;
       } else {
         if (stepEl) stepEl.textContent = 'N/A';
         if (headerStepEl) headerStepEl.textContent = 'N/A';
@@ -1298,6 +1496,17 @@
       if (countEl) countEl.textContent = logEntryCount;
     }
 
+    function resetScientificLog() {
+      var container = getContainer();
+      if (!container) return;
+      var entries = container.querySelector('[data-lab-log-entries]');
+      if (entries) entries.innerHTML = '';
+      logEntryCount = 0;
+      var countEl = container.querySelector('[data-lab-log-count]');
+      if (countEl) countEl.textContent = '0';
+      hideV4Panel('log');
+    }
+
     function renderStepViz(vizData) {
       var vizPanel = root.querySelector('[data-lab-visualization]');
       if (!vizPanel || !vizData) return;
@@ -1335,14 +1544,8 @@
         updateMetricsFromStep();
         updateInspector();
         renderPreparationVisualization();
-        updateControlStates('idle');
-        // Reset log
-        var entries = root.querySelector('[data-lab-log-entries]');
-        if (entries) entries.innerHTML = '';
-        logEntryCount = 0;
-        var countEl = root.querySelector('[data-lab-log-count]');
-        if (countEl) countEl.textContent = '0';
-        hideV4Panel('log');
+        updateControlStates();
+        resetScientificLog();
         // Hide XAI panel on reset
         var xaiPanel = root.querySelector('[data-xai-panel]');
         if (xaiPanel) {
@@ -1584,7 +1787,8 @@
         { slug: 'embedding-similarity', key: 'embedding', title: 'Embedding Similarity', sentence: 'Compare semantic neighbors in vector space.', difficulty: 'Intermediate', domain: 'Representation' },
         { slug: 'cosine-similarity', key: 'cosine', title: 'Cosine Similarity', sentence: 'Measure vector alignment by angle.', difficulty: 'Beginner', domain: 'Representation' },
         { slug: 'precision-recall', key: 'threshold', title: 'Precision and Recall', sentence: 'Move a threshold and inspect classifier tradeoffs.', difficulty: 'Intermediate', domain: 'Evaluation' },
-        { slug: 'transformer-attention', key: 'attention', title: 'Transformer Attention', sentence: 'Inspect how tokens distribute attention weights.', difficulty: 'Advanced', domain: 'Attention' }
+        { slug: 'transformer-attention', key: 'attention', title: 'Transformer Attention', sentence: 'Inspect how tokens distribute attention weights.', difficulty: 'Advanced', domain: 'Attention' },
+        { slug: 'kernel-observatory', key: 'kernel', title: 'Kernel Observatory', sentence: 'Observe, predict, and inspect 2D image convolution.', difficulty: 'Intermediate', domain: 'Computer Vision' }
       ].map(function (spec, index) {
         spec.lab = getExperiment(spec.slug, index);
         spec.concepts = spec.lab ? (spec.lab.conceptReferences || []).slice(0, 4).map(formatConcept) : [];
@@ -1597,7 +1801,8 @@
         { label: 'Representation', domains: ['Representation', 'Geometry'] },
         { label: 'Reasoning', domains: ['Probability'] },
         { label: 'Evaluation', domains: ['Evaluation'] },
-        { label: 'Transformers', domains: ['Attention'] }
+        { label: 'Transformers', domains: ['Attention'] },
+        { label: 'Computer Vision', domains: ['Computer Vision'] }
       ];
 
       function conceptPayload(concepts) {
@@ -1776,12 +1981,12 @@
       if (hypothesis) {
         hypothesis.addEventListener('input', function () {
           if (window.NeuralVerse.ResearchMode.isActive()) {
-            window.NeuralVerse.ResearchMode.setHypothesis(this.value);
+            updateResearchFields();
           }
         });
       }
 
-      var saveBtn = container.querySelector('[data-research-save-session]');
+       var saveBtn = container.querySelector('[data-research-save-session]');
       if (saveBtn) {
         saveBtn.addEventListener('click', function () {
           if (window.NeuralVerse.ResearchMode.isActive()) {
@@ -1790,6 +1995,26 @@
           }
         });
       }
+      var restoreBtn = container.querySelector('[data-research-restore]');
+      if (restoreBtn) restoreBtn.addEventListener('click', restoreLatestResearchSession);
+      updateResearchRestoreAvailability();
+
+      container.querySelectorAll('[data-research-title], [data-research-question], [data-research-rationale], [data-research-hypothesis-status], [data-research-variable], [data-research-limitations], [data-research-conclusion]').forEach(function (field) {
+        field.addEventListener('change', updateResearchFields);
+      });
+      ['[data-research-begin]', '[data-research-review]', '[data-research-complete]'].forEach(function (selector) {
+        var button = container.querySelector(selector);
+        if (button) button.addEventListener('click', function () { updateResearchFields(); var next = selector.indexOf('begin') >= 0 ? 'active' : selector.indexOf('review') >= 0 ? 'review' : 'completed'; window.NeuralVerse.ResearchMode.transition(next); renderResearchWorkspace(); });
+      });
+      var findingButton = container.querySelector('[data-research-capture-finding]');
+      if (findingButton) findingButton.addEventListener('click', captureCurrentFinding);
+      var stageButton = container.querySelector('[data-research-capture-stage]');
+      if (stageButton) stageButton.addEventListener('click', captureStageEvidence);
+      var compareButton = container.querySelector('[data-research-compare]');
+      if (compareButton) compareButton.addEventListener('click', compareSelectedRuns);
+      var reopenButton = container.querySelector('[data-research-reopen]');
+      if (reopenButton) reopenButton.addEventListener('click', function () { window.NeuralVerse.ResearchMode.transition('active'); renderResearchWorkspace(); });
+      container.querySelectorAll('[data-research-export]').forEach(function (button) { button.addEventListener('click', function () { exportResearchSession(button.getAttribute('data-research-export')); }); });
 
       var noteAdd = container.querySelector('[data-research-note-add]');
       if (noteAdd) {
@@ -1841,19 +2066,35 @@
         if (conclusions) conclusions.style.display = 'none';
         applyWorkspaceResearchState('inactive');
       } else {
-        var session = window.NeuralVerse.ResearchMode.enter(currentLab);
+        var session = window.NeuralVerse.ResearchMode.activate(currentLab);
         if (session) {
           toggles.forEach(function (toggle) { toggle.classList.add('active'); });
-          if (notes) notes.style.display = '';
+          if (notes) notes.style.display = 'none';
           if (bookmarks) bookmarks.style.display = 'none';
-          if (evidence) evidence.style.display = 'none';
-          if (conclusions) conclusions.style.display = 'none';
+          if (evidence) evidence.style.display = '';
+          if (conclusions) conclusions.style.display = '';
           applyWorkspaceResearchState('active');
           updateResearchSessionInfo();
-          updateResearchEvidenceTimeline();
-          updateResearchConclusions();
+          renderResearchWorkspace();
         }
       }
+    }
+
+    function updateResearchRestoreAvailability() {
+      var container = getContainer();
+      if (!container || !currentLab) return;
+      var restore = container.querySelector('[data-research-restore]');
+      if (restore) restore.hidden = window.NeuralVerse.ResearchMode.isActive() || !window.NeuralVerse.ResearchStorage.getSessionsForLab(currentLab.id).length;
+    }
+
+    function restoreLatestResearchSession() {
+      if (!currentLab || window.NeuralVerse.ResearchMode.isActive()) return;
+      var sessions = window.NeuralVerse.ResearchStorage.getSessionsForLab(currentLab.id);
+      var restored = sessions.length && window.NeuralVerse.ResearchMode.restore(sessions[0]);
+      if (!restored) return;
+      applyWorkspaceResearchState('active');
+      renderResearchWorkspace();
+      updateResearchRestoreAvailability();
     }
 
     function updateResearchSessionInfo() {
@@ -1866,14 +2107,15 @@
       var statusEl = container.querySelector('[data-research-status]');
       var hypothesisEl = container.querySelector('[data-research-hypothesis]');
 
-      if (session) {
-        if (nameEl) nameEl.textContent = session.name;
+       if (session) {
+        if (nameEl) nameEl.textContent = session.title;
         if (countEl) countEl.textContent = session.runs.length + ' run(s)';
-        if (statusEl) statusEl.textContent = 'Active';
-        if (hypothesisEl) hypothesisEl.value = session.hypothesis || '';
-      } else {
-        if (statusEl) statusEl.textContent = 'Inactive';
-      }
+        if (statusEl) statusEl.textContent = session.state === 'draft' ? 'Draft - Research active' : session.state.charAt(0).toUpperCase() + session.state.slice(1);
+        if (hypothesisEl) hypothesisEl.value = session.hypothesis.statement || '';
+       } else {
+         if (statusEl) statusEl.textContent = 'Inactive';
+       }
+       updateResearchRestoreAvailability();
     }
 
     function addResearchNote() {
@@ -1887,7 +2129,8 @@
       var type = typeEl ? typeEl.value : 'observation';
       var text = textEl.value.trim();
 
-      window.NeuralVerse.ResearchMode.addNote(text, type, stepSession ? stepSession.currentStep : 0);
+      if (type === 'interpretation') window.NeuralVerse.ResearchMode.addInterpretation(text, [], stepSession ? stepSession.currentStep : 0);
+      else window.NeuralVerse.ResearchMode.addObservation(text, [], stepSession ? stepSession.currentStep : 0);
       textEl.value = '';
 
       updateResearchNotes();
@@ -1905,8 +2148,9 @@
       if (!session) return;
 
       var html = '';
-      for (var i = session.notes.length - 1; i >= 0 && i >= session.notes.length - 10; i--) {
-        var note = session.notes[i];
+      var records = session.observations.concat(session.interpretations).sort(function (a, b) { return b.timestamp.localeCompare(a.timestamp); });
+      for (var i = 0; i < records.length && i < 10; i++) {
+        var note = records[i];
         html += '<div class="nv-lab-research-note">';
         html += '<span class="nv-lab-research-note-type">' + escapeHtml(note.type) + '</span>';
         html += '<div class="nv-lab-research-note-text">' + escapeHtml(note.text) + '</div>';
@@ -1914,7 +2158,7 @@
       }
       list.innerHTML = html;
       var notesPanel = container.querySelector('[data-research-notes]');
-      if (notesPanel) notesPanel.setAttribute('data-availability', session.notes.length ? 'populated' : 'available');
+      if (notesPanel) notesPanel.setAttribute('data-availability', records.length ? 'populated' : 'available');
     }
 
     function addBookmark() {
@@ -1970,7 +2214,7 @@
       var textEl = container.querySelector('[data-research-conclusion-text]');
       if (!textEl || !textEl.value.trim()) return;
 
-      window.NeuralVerse.ResearchMode.addConclusion(textEl.value.trim(), 'observation', true);
+      window.NeuralVerse.ResearchMode.update({ conclusion: textEl.value.trim() });
       textEl.value = '';
       updateResearchConclusions();
       updateResearchEvidenceTimeline();
@@ -1985,18 +2229,12 @@
       if (!session) return;
 
       var html = '';
-      for (var i = session.conclusions.length - 1; i >= 0; i--) {
-        var conclusion = session.conclusions[i];
-        html += '<div class="nv-lab-research-conclusion">';
-        html += '<span>' + escapeHtml(conclusion.type || 'observation') + '</span>';
-        html += '<p>' + escapeHtml(conclusion.text) + '</p>';
-        html += '</div>';
-      }
+      if (session.conclusion) html += '<div class="nv-lab-research-conclusion"><span>Learner-authored conclusion</span><p>' + escapeHtml(session.conclusion) + '</p></div>';
       list.innerHTML = html;
       var conclusionsPanel = container.querySelector('[data-research-conclusions]');
       if (conclusionsPanel) {
-        conclusionsPanel.style.display = session.conclusions.length ? '' : 'none';
-        conclusionsPanel.setAttribute('data-availability', session.conclusions.length ? 'populated' : 'unavailable');
+        conclusionsPanel.style.display = session.conclusion ? '' : 'none';
+        conclusionsPanel.setAttribute('data-availability', session.conclusion ? 'populated' : 'unavailable');
       }
     }
 
@@ -2006,21 +2244,92 @@
       var list = container.querySelector('[data-research-evidence-list]');
       if (!list) return;
 
-      var timeline = window.NeuralVerse.ResearchMode.getEvidenceTimeline();
+      var researchSession = window.NeuralVerse.ResearchMode.getSession();
+      var timeline = researchSession ? researchSession.capturedEvidence : [];
       var html = '';
       for (var i = timeline.length - 1; i >= 0 && i >= timeline.length - 8; i--) {
         var item = timeline[i];
         html += '<div class="nv-lab-research-evidence-item">';
-        html += '<span>' + escapeHtml(item.label) + '</span>';
-        html += '<p>' + escapeHtml(item.detail || '') + '</p>';
+        html += '<span>' + escapeHtml(item.category || 'Evidence') + '</span>';
+        html += '<p>' + escapeHtml(item.scientificSummary || '') + '</p>';
         html += '</div>';
       }
       list.innerHTML = html;
       var evidencePanel = container.querySelector('[data-research-evidence]');
       if (evidencePanel) {
-        evidencePanel.style.display = timeline.length ? '' : 'none';
+        // Capture actions remain available before the first learner-selected item.
+        evidencePanel.style.display = '';
         evidencePanel.setAttribute('data-availability', timeline.length ? 'populated' : 'unavailable');
       }
+    }
+
+    function updateResearchFields() {
+      var container = getContainer();
+      var session = window.NeuralVerse.ResearchMode.getSession();
+      if (!container || !session) return;
+      function value(selector) { var field = container.querySelector(selector); return field ? field.value : ''; }
+      var variables = {};
+      container.querySelectorAll('[data-research-variable]').forEach(function (field) {
+        variables[field.getAttribute('data-research-variable')] = field.value.split(',').map(function (item) { return item.trim(); }).filter(Boolean);
+      });
+      window.NeuralVerse.ResearchMode.update({
+        title: value('[data-research-title]') || 'Untitled investigation',
+        researchQuestion: value('[data-research-question]'),
+        hypothesis: { statement: value('[data-research-hypothesis]'), rationale: value('[data-research-rationale]'), status: value('[data-research-hypothesis-status]') || 'untested' },
+        variables: variables,
+        limitations: value('[data-research-limitations]').split('\n').map(function (item) { return item.trim(); }).filter(Boolean),
+        conclusion: value('[data-research-conclusion]')
+      });
+    }
+
+    function renderResearchWorkspace() {
+      var container = getContainer(); var session = window.NeuralVerse.ResearchMode.getSession();
+      if (!container || !session) return;
+      function set(selector, value) { var field = container.querySelector(selector); if (field) field.value = value || ''; }
+      set('[data-research-title]', session.title); set('[data-research-question]', session.researchQuestion); set('[data-research-hypothesis]', session.hypothesis.statement); set('[data-research-rationale]', session.hypothesis.rationale); set('[data-research-hypothesis-status]', session.hypothesis.status); set('[data-research-limitations]', session.limitations.join('\n')); set('[data-research-conclusion]', session.conclusion);
+      container.querySelectorAll('[data-research-variable]').forEach(function (field) { field.value = (session.variables[field.getAttribute('data-research-variable')] || []).join(', '); });
+      updateResearchSessionInfo(); updateResearchNotes(); updateResearchEvidenceTimeline(); updateResearchConclusions();
+      var notesPanel = container.querySelector('[data-research-notes]');
+      if (notesPanel) notesPanel.style.display = session.runs.length ? '' : 'none';
+      var evidenceCount = container.querySelector('[data-research-evidence-count]'); if (evidenceCount) evidenceCount.textContent = session.capturedEvidence.length + ' evidence';
+      var runs = container.querySelector('[data-research-runs]');
+      if (runs) runs.innerHTML = session.runs.map(function (run, index) { return '<label class="nv-lab-research-run"><input type="checkbox" data-research-run-id="' + escapeHtml(run.runId) + '"' + (run.status === 'completed' ? '' : ' disabled') + '> Run ' + (index + 1) + ': ' + escapeHtml(run.status) + ' | ' + escapeHtml(Object.keys(run.configurationSnapshot).map(function (key) { return key + '=' + formatDisplayValue(run.configurationSnapshot[key]); }).join(', ')) + '</label>'; }).join('') || '<p>No runs captured yet.</p>';
+      var comparisons = container.querySelector('[data-research-comparisons]');
+      if (comparisons) comparisons.innerHTML = session.comparisons.map(function (item) { return '<p>' + escapeHtml(item.classification.replace('-', ' ')) + ': changed ' + escapeHtml(item.changedParameters.join(', ') || 'none') + '; controlled ' + escapeHtml(item.controlledParameters.join(', ') || 'none') + '.</p>'; }).join('');
+      var reproducibility = container.querySelector('[data-research-reproducibility]');
+      if (reproducibility) reproducibility.textContent = 'Schema v' + session.version + ' | ' + session.runs.length + ' run(s) | ' + session.capturedEvidence.length + ' captured evidence item(s) | browser-local persistence.';
+      var completed = session.state === 'completed';
+      container.querySelectorAll('[data-research-title], [data-research-question], [data-research-hypothesis], [data-research-rationale], [data-research-hypothesis-status], [data-research-variable], [data-research-limitations], [data-research-conclusion], [data-research-begin], [data-research-review], [data-research-complete], [data-research-compare], [data-research-capture-finding], [data-research-capture-stage]').forEach(function (element) { element.disabled = completed; });
+       var reopen = container.querySelector('[data-research-reopen]'); if (reopen) reopen.hidden = !completed;
+       updateResearchRestoreAvailability();
+    }
+
+    function captureCurrentFinding() {
+      var finding = xaiFindingsBuffer.length ? xaiFindingsBuffer[xaiFindingsBuffer.length - 1] : null;
+      if (!finding) return;
+      window.NeuralVerse.ResearchMode.captureEvidence({ sourceId: 'finding:' + finding.id, category: finding.category || 'Finding', severity: finding.severity || 'Informational', scientificSummary: finding.observation || finding.title, measurements: [], provenance: { source: 'Scientific Inspector', sourceSteps: [finding.stepIndex] } });
+      renderResearchWorkspace();
+    }
+
+    function captureStageEvidence() {
+      if (!stepSession || stepSession.currentStep < 0) return;
+      var snapshot = window.NeuralVerse.ExecutionEngine.getStepSnapshot(stepSession, stepSession.currentStep);
+      var session = window.NeuralVerse.ResearchMode.getSession();
+      var run = window.NeuralVerse.ResearchMode.getCurrentRun() || (session && session.runs[session.runs.length - 1]);
+      if (!run) return;
+      window.NeuralVerse.ResearchMode.captureEvidence({ sourceId: 'stage:' + run.runId + ':' + stepSession.currentStep, category: 'Stage evidence', severity: 'Informational', scientificSummary: snapshot ? snapshot.label : 'Scientific Stage state', measurements: snapshot ? snapshot.metrics : {}, provenance: { source: 'Scientific Stage', sourceSteps: [stepSession.currentStep] } });
+      renderResearchWorkspace();
+    }
+
+    function compareSelectedRuns() {
+      var container = getContainer(); if (!container) return;
+      var ids = Array.prototype.slice.call(container.querySelectorAll('[data-research-run-id]:checked')).map(function (input) { return input.getAttribute('data-research-run-id'); });
+      window.NeuralVerse.ResearchMode.compare(ids); renderResearchWorkspace();
+    }
+
+    function exportResearchSession(format) {
+      var content = window.NeuralVerse.ResearchMode.export(format); if (!content) return;
+      var blob = new Blob([content], { type: format === 'json' ? 'application/json' : 'text/markdown' }); var url = URL.createObjectURL(blob); var link = document.createElement('a'); link.href = url; link.download = 'research-session.' + (format === 'json' ? 'json' : 'md'); link.click(); URL.revokeObjectURL(url);
     }
 
     // ── XAI Integration ──────────────────────────────────
@@ -2037,6 +2346,8 @@
 
     function generateAndRenderFindings() {
       if (!currentLab || !window.NeuralVerse.XAIEngine) return;
+      try {
+      if (!xaiEvidenceStore) xaiEvidenceStore = window.NeuralVerse.XAIEngine.createEvidenceStore(currentLab.id, 'run-' + Date.now());
 
       var findings = window.NeuralVerse.XAIEngine.analyze(
         currentLab,
@@ -2052,24 +2363,17 @@
 
       for (var i = 0; i < findings.length; i++) {
         var finding = findings[i];
-        xaiFindingsBuffer.push(finding);
+        xaiEvidenceStore.add(finding);
+        xaiFindingsBuffer = xaiEvidenceStore.records;
         xaiTotalFindings++;
         if (finding.severity === 'Critical') xaiCriticalFindings++;
 
         window.NeuralVerse.XAIHistory.addFinding(finding);
 
-        if (window.NeuralVerse.ResearchMode && window.NeuralVerse.ResearchMode.isActive()) {
-          window.NeuralVerse.ResearchMode.addNote(
-            finding.title + ': ' + finding.observation,
-            'interpretation',
-            finding.stepIndex
-          );
-        }
       }
 
       var topFinding = findings[0];
       revealPanel('[data-xai-panel]');
-      setWorkspacePhase('interpretation');
       renderLiveFinding(topFinding);
       renderXAIMetrics();
       renderFindingHistory();
@@ -2079,8 +2383,9 @@
         addXAIEventToLog(topFinding);
       }
 
-      if (window.NeuralVerse.ResearchMode && window.NeuralVerse.ResearchMode.isActive()) {
-        updateResearchEvidenceTimeline();
+      } catch (e) {
+        // Evidence presentation must never interrupt the experiment lifecycle.
+        if (window.NV_DEBUG) console.warn('Evidence rendering error:', e);
       }
     }
 
@@ -2120,15 +2425,15 @@
       var findingCountEl = container.querySelector('[data-xai-finding-count]');
       if (findingCountEl) findingCountEl.textContent = xaiFindingsBuffer.length;
 
-      var findings = xaiFindingsBuffer.slice(-20);
-      if (findings.length === 0) {
-        timeline.innerHTML = '<div class="nv-xai-empty-state"><span class="nv-xai-empty-label">No findings yet.</span></div>';
+      var findings = xaiEvidenceStore ? xaiEvidenceStore.getGroups().slice(0, 20) : [];
+      if (!findings.length) {
+        timeline.innerHTML = '<div class="nv-xai-empty-state"><span class="nv-xai-empty-label">No scientific findings have been generated for this run.</span></div>';
         return;
       }
 
       var html = '';
       for (var i = findings.length - 1; i >= 0; i--) {
-        html += window.NeuralVerse.XAIEngine.renderTimelineEntry(findings[i], xaiFindingsBuffer.length - (findings.length - i));
+        html += window.NeuralVerse.XAIEngine.renderTimelineEntry(findings[i], i);
       }
       timeline.innerHTML = html;
 
@@ -2148,10 +2453,7 @@
     }
 
     function findFindingById(id) {
-      for (var i = 0; i < xaiFindingsBuffer.length; i++) {
-        if (xaiFindingsBuffer[i].id === id) return xaiFindingsBuffer[i];
-      }
-      return null;
+      return xaiEvidenceStore ? xaiEvidenceStore.getById(id) : null;
     }
 
     function renderXAIMetrics() {
@@ -2189,9 +2491,9 @@
 
       if (target) {
         target.classList.add('nv-xai-evidence-pulse');
-        setTimeout(function () {
-          target.classList.remove('nv-xai-evidence-pulse');
-        }, 1500);
+          scheduleFeedback(function () {
+            target.classList.remove('nv-xai-evidence-pulse');
+          }, 1500);
       }
     }
 
@@ -2225,6 +2527,8 @@
 
     function resetXAIState() {
       xaiFindingsBuffer = [];
+      if (xaiEvidenceStore) xaiEvidenceStore.reset();
+      xaiEvidenceStore = null;
       xaiTotalFindings = 0;
       xaiCriticalFindings = 0;
       xaiStepsWithFindings = 0;
@@ -2253,10 +2557,12 @@
     function destroy() {
       if (executeDebounce) clearTimeout(executeDebounce);
       stopAutoRun();
+      cancelFeedback();
       stepSession = null;
       currentLab = null;
       currentParams = {};
       currentResult = null;
+      executionSnapshot = null;
       xaiFindingsBuffer = [];
       xaiTotalFindings = 0;
       xaiCriticalFindings = 0;

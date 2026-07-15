@@ -5,6 +5,7 @@
     "title": "Foundations Introduction",
     "description": "Why mathematics, statistics, and programming form the base for AI engineering.",
     "source": "content/modules/module-00-foundations/index.md",
+    "moduleId": "module-00-foundations",
     "estimatedReadingTime": 3,
     "order": 1
   },
@@ -14,6 +15,7 @@
     "title": "Classical Machine Learning Overview",
     "description": "Supervised learning, unsupervised learning, features, and evaluation fundamentals.",
     "source": "content/modules/module-01-classical-ml/index.md",
+    "moduleId": "module-01-classical-ml",
     "estimatedReadingTime": 3,
     "order": 2
   },
@@ -23,7 +25,18 @@
     "title": "Deep Learning Basics",
     "description": "Neural networks, backpropagation, and representation learning.",
     "source": "content/modules/module-02-deep-learning/index.md",
+    "moduleId": "module-02-deep-learning",
     "estimatedReadingTime": 3,
     "order": 3
+  },
+  {
+    "id": "convolution-overview",
+    "type": "Guide",
+    "title": "Convolution in Computer Vision",
+    "description": "From classical image kernels to learned CNN feature maps. Covers 2D convolution, cross-correlation, and kernel parameters.",
+    "source": "content/modules/module-01-classical-ml/convolution-overview.md",
+    "moduleId": "module-convolution-spatial-filtering",
+    "estimatedReadingTime": 4,
+    "order": 4
   }
 ]

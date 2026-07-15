@@ -1,0 +1,18 @@
+{
+  "artifactId": "nv2800-narrative-transitions",
+  "owner": "Narrative Agent",
+  "authorityBoundary": "Narrative preserves Knowledge Agent terminology and does not define curriculum dependencies.",
+  "opening": "A useful visual system must decide whether a small local region contains a meaningful change. Convolution gives that decision a repeatable numerical form.",
+  "transitions": [
+    {"from":"motivation","to":"intuition","text":"Start with one local patch so the calculation remains visible before the operation is repeated across an image."},
+    {"from":"intuition","to":"mathematics","text":"The sliding-window picture is useful, but the indices specify exactly which values participate and how a boundary is handled."},
+    {"from":"classical filters","to":"learned filters","text":"Fixed Sobel and blur kernels state the property in advance. A CNN retains the local operation while learning coefficients from an objective."},
+    {"from":"implementation","to":"laboratory","text":"Run the same operation on deterministic fixtures, predict the response, and inspect the single output value that the formula describes."},
+    {"from":"laboratory","to":"applications","text":"The experiment isolates one effect; engineering systems must also manage sensor variability, latency, monitoring, and review."},
+    {"from":"assessment","to":"closure","text":"Use each answer as explicit evidence about one concept or parameter, rather than as a claim about hidden mastery."}
+  ],
+  "laboratoryDebrief": "Record the observed response, the parameter configuration, and the remaining limitation separately. A strong-looking heatmap alone is not an explanation.",
+  "closure": "A convolutional layer is local weighted aggregation. Fixed kernels express chosen image operations; learned filters retain the same geometry while optimizing their coefficients.",
+  "nextTopicBridge": "Pooling, receptive-field composition, and CNN training build on the output-shape and local-evidence reasoning established here.",
+  "governance_status": "experimental_test"
+}

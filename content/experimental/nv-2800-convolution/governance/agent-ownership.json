@@ -1,0 +1,19 @@
+{
+  "artifactId": "nv2800-agent-ownership-audit",
+  "owner": "Obsidian & Knowledge Governance Agent",
+  "executionOrder": ["Curriculum & Dependency Agent","Research Agent","Knowledge Agent","Application Agent","Code, Simulation & Laboratory Agent","Assessment Agent","Narrative Agent","Curiosity Agent","Didactic Architecture Agent","Obsidian & Knowledge Governance Agent"],
+  "agents": [
+    {"number":1,"name":"Curriculum & Dependency Agent","artifacts":["curriculum/placement.json","curriculum/dependencies.json"],"input":"assignment placement","output":"prerequisites, dependencies, unlocks","boundary":"no final explanations"},
+    {"number":2,"name":"Research Agent","artifacts":["research/sources.json"],"input":"curriculum bridge","output":"verified source registry","boundary":"no curriculum sequence"},
+    {"number":3,"name":"Knowledge Agent","artifacts":["concepts/concepts.json","graph/nodes.json","graph/edges.json"],"input":"research source IDs","output":"definitions and semantic links","boundary":"no lesson order"},
+    {"number":4,"name":"Application Agent","artifacts":["applications/case-studies.json"],"input":"concept IDs and sources","output":"case studies","boundary":"no unsupported performance claims"},
+    {"number":5,"name":"Code, Simulation & Laboratory Agent","artifacts":["laboratory/laboratory.json","laboratory/presets.json"],"input":"concept parameters","output":"deterministic Laboratory contract","boundary":"no curriculum progression"},
+    {"number":6,"name":"Assessment Agent","artifacts":["assessments/assessment.json"],"input":"objectives and concepts","output":"explicit evidence checks and remediation","boundary":"no hidden-mastery inference"},
+    {"number":7,"name":"Narrative Agent","artifacts":["narrative/transitions.json"],"input":"fixed technical concepts","output":"transitions and closure","boundary":"does not alter technical meaning"},
+    {"number":8,"name":"Curiosity Agent","artifacts":["curiosity/cards.json"],"input":"governed concepts","output":"optional technically bounded artifacts","boundary":"does not alter canonical explanation"},
+    {"number":9,"name":"Didactic Architecture Agent","artifacts":["didactic/composition.json","visuals/asset-manifest.json","retrieval/queries.json"],"input":"all preceding owned outputs","output":"surface order and progressive disclosure","boundary":"does not rewrite Knowledge records"},
+    {"number":10,"name":"Obsidian & Knowledge Governance Agent","artifacts":["obsidian/Convolution in Computer Vision.md","governance/validation.json","governance/agent-ownership.json"],"input":"all package artifacts","output":"terminology, provenance, final audit","boundary":"final validation authority"}
+  ],
+  "audit": {"executed":10,"ownedArtifacts":10,"unknownContentOwnership":0,"duplicatedCanonicalDefinitions":0,"authorityConflicts":0,"result":"PASS"},
+  "governance_status":"experimental_test"
+}

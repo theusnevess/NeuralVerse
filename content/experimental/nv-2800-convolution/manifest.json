@@ -1,0 +1,7 @@
+{
+  "initiative": "NV-2800", "title": "Convolution in Computer Vision", "version": "0.1.0-experimental", "moduleId": "module-01-classical-ml", "lessonId": "nv-2800-convolution", "laboratoryId": "kernel-observatory",
+  "canonical_status": "experimental_test", "publication_status": "internal_validation", "authority": "non_canonical", "production_visibility": "disabled", "governance_review": "required", "last_reviewed": "2026-07-15",
+  "home": {"title":"Convolution in Computer Vision","valueProposition":"See how a small numerical kernel turns local image evidence into feature maps.","teaser":"Slide, multiply, sum, inspect.","primaryAction":"Start lesson","secondaryAction":"Open Kernel Observatory","studyDepth":"Level 1-7; 3.5 hours"},
+  "retrievalMetadata": {"keywords":["convolution","kernel","cross-correlation","padding","stride","dilation","feature map","Sobel","CNN"],"semanticTags":["computer vision","signal processing","deep learning"],"relationships":["RELATED","SIMILAR","CONTINUATION","PREREQUISITE","APPLICATION","RESEARCH","LABORATORY","ASSESSMENT","CURIOSITY"]},
+  "ownership": {"1":"curriculum","2":"research","3":"knowledge","4":"applications","5":"laboratory","6":"assessment","7":"narrative","8":"curiosity","9":"didactic orchestration","10":"governance"}
+}

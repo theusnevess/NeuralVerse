@@ -346,10 +346,19 @@ class ViewController {
 </section>
       `,
       learning: `
-        <div class="nv-stack nv-stack--gap-md">
-          <div class="nv-stack nv-stack--gap-md">
+        <div class="nv-learning-page" data-learning-page>
+          <div class="nv-learning-hero" data-learning-hero>
             <h1 class="nv-sr-only">Learning Paths</h1>
           </div>
+          <div class="nv-learning-metrics" data-learning-metrics></div>
+          <div class="nv-learning-filters" data-learning-filters></div>
+          <div class="nv-learning-content" data-learning-content>
+            <div class="nv-learning-path-list" data-learning-path-list></div>
+            <div class="nv-module-list" data-module-list></div>
+          </div>
+          <div class="nv-learning-empty" data-learning-empty hidden></div>
+          <div class="nv-module-empty" data-module-empty hidden></div>
+          <div aria-live="polite" data-learning-live></div>
         </div>
       `,
       'learning-detail': `

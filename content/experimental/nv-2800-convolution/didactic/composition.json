@@ -1,0 +1,25 @@
+{
+  "artifactId": "nv2800-didactic-composition",
+  "owner": "Didactic Architecture Agent",
+  "authorityBoundary": "Orchestrates owned outputs; does not redefine Knowledge concepts or Curriculum dependencies.",
+  "sequence": [
+    {"stage":1,"surface":"Learning Workspace","artifact":"lesson:orientation","purpose":"set objectives, prerequisites, outputs"},
+    {"stage":2,"surface":"Learning Workspace","artifact":"lesson:motivation","purpose":"establish local visual problem"},
+    {"stage":3,"surface":"Learning Workspace","artifact":"lesson:intuition","purpose":"patch-to-output mental model"},
+    {"stage":4,"surface":"Learning Workspace","artifact":"lesson:formal-definition","purpose":"introduce notation after intuition"},
+    {"stage":5,"surface":"Visualizations","artifact":"VIS-01..VIS-12","purpose":"externalize spatial and parameter changes"},
+    {"stage":6,"surface":"Learning Workspace","artifact":"lesson:worked-example","purpose":"independent numerical verification"},
+    {"stage":7,"surface":"Learning Workspace","artifact":"lesson:parameters","purpose":"one parameter at a time"},
+    {"stage":8,"surface":"Learning Workspace","artifact":"lesson:classical-filters","purpose":"fixed-filter baseline"},
+    {"stage":9,"surface":"Learning Workspace","artifact":"lesson:learned-filters","purpose":"bridge to CNNs"},
+    {"stage":10,"surface":"Learning Workspace","artifact":"lesson:implementation","purpose":"transfer to code"},
+    {"stage":11,"surface":"Laboratory Workspace","artifact":"lab-kernel-observatory","purpose":"prediction and evidence"},
+    {"stage":12,"surface":"Application Surface","artifact":"APP-01..APP-03","purpose":"engineering constraints"},
+    {"stage":13,"surface":"Assessment Surface","artifact":"nv2800-assessment","purpose":"explicit checks and remediation"},
+    {"stage":14,"surface":"Curiosity Surface","artifact":"C01..C16","purpose":"optional extension"},
+    {"stage":15,"surface":"Completion Surface","artifact":"lesson:synthesis","purpose":"compress and bridge forward"}
+  ],
+  "cognitiveLoad": "Single-channel, stride-one valid example precedes padding, stride, dilation, channels, and learned filters.",
+  "responsive": "Desktop can co-locate visual and inspector; tablet stacks inspector; mobile prioritizes controls, text equivalent, and then visualization.",
+  "governance_status": "experimental_test"
+}
