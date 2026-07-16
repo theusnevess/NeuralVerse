@@ -1,12 +1,18 @@
 # NeuralVerse System Bible
 
-The official, exhaustive, canonical technical reference manual for the NeuralVerse project.
+Generated implementation documentation for the NeuralVerse project. This snapshot is descriptive and non-canonical; it must not replace owner-approved authority documents or governed Obsidian records.
 
 ## Purpose
 
-This document suite describes what NeuralVerse is, how it is architected, how it operates, how its subsystems interact, and what has been implemented. It is intended as a single source of truth for engineers, architects, and researchers working on or evaluating the platform.
+This document suite describes what NeuralVerse is, how it is architected, how it operates, how its subsystems interact, and what has been implemented. It is a generated implementation snapshot for engineers, architects, and researchers. Canonical authority remains with owner-approved Vision, UI Constitution, Architecture Guide, Canonical Curriculum, strategic documents, initiative contracts, agent definitions, and governed Obsidian records.
 
 ## Documents
+
+### Governance References
+
+- [Project Vision](01-project-vision.md)
+- [UI Constitution](02-ui-constitution.md)
+- [Architecture Guide](03-architecture-guide.md)
 
 | # | Document | Description |
 |---|----------|-------------|
@@ -43,6 +49,11 @@ This document suite describes what NeuralVerse is, how it is architected, how it
 | 30 | [Known Limitations](30-known-limitations.md) | Unimplemented features, boundaries, non-goals |
 | 31 | [Development Guidelines](31-development-guidelines.md) | Conventions for contributors |
 | 32 | [Glossary](32-glossary.md) | Key terms and definitions |
+| 33 | [NV-2900 Repository Cleanup](33-nv-2900-repository-cleanup.md) | Experimental content purge, dead code removal |
+
+## Related Architecture Documents
+
+- [NV-2900: Canonical Repository Cleanup](../architecture/nv-2900/canonical-repository-cleanup-and-experimental-content-purge.md)
 
 ## How to Use
 
@@ -51,6 +62,6 @@ This document suite describes what NeuralVerse is, how it is architected, how it
 - **Architects**: Read [System Architecture](02-system-architecture.md), [Governance Model](27-governance-model.md), and [Security Model](26-security-model.md)
 - **QA engineers**: Read [Testing and Certification](28-testing-and-certification.md) and the audit scripts in `scripts/`
 
-## Source of Truth
+## Documentation Authority
 
-This documentation is derived exclusively from the implemented system and canonical project architecture. It does not describe roadmap items, hypothetical features, or aspirational capabilities.
+This documentation is derived from the implemented system and project architecture. It does not describe roadmap items, hypothetical features, or aspirational capabilities, and it does not supersede canonical authority documents.

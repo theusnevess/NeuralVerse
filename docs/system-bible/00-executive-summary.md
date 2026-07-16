@@ -36,11 +36,26 @@ NeuralVerse is a fully client-side single-page application (SPA) with a vanilla 
 | Retrieval Playground (5 modes, graph, compare, evidence) | Implemented (Presentation mode: placeholder) |
 | Knowledge Graph / Atlas | Implemented |
 | Search System | Implemented |
-| Accessibility | Audited and compliant |
+| Laboratories (10 interactive labs) | Implemented |
+| Accessibility | Automated checks measured; direct keyboard and screen-reader reconciliation pending |
 | Governance Model | Enforced at multiple layers |
-| Audits & Certification | QA1-QA5 completed, Master Certification Gate passing |
+| Audits & Certification | Historical QA claims retained as historical evidence; NV-2900 closure gates remain pending |
 | Backend / Auth / Database | Not implemented (by design) |
 | External API / LLM integration | Not implemented (by design) |
+
+## Repository Statistics (Post NV-2900 Cleanup)
+
+| Metric | Value |
+|--------|-------|
+| Tracked files | 3,478 |
+| Repository size | ~492 MB |
+| TypeScript source files | ~120 |
+| Website scripts | 228 |
+| CSS files | 40 |
+| Playwright specs | 28 |
+| Playwright configs | 18 |
+| Laboratory definitions | 10 |
+| Agent scripts | 87 |
 
 ## Related Chapters
 

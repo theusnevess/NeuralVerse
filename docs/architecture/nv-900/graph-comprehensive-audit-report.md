@@ -17,20 +17,16 @@ Date: 2026-06-22T19:59:23.936Z
 ## Visual Stages Audit
 
 ### 1. Overview (Root Paths)
-Nodes representing main learning pathways distributed in a concentric radial structure around the global center.
-![Overview (Paths)](images/01_overview.png)
+Nodes representing main learning pathways distributed in a concentric radial structure around the global center. The historical screenshot asset is no longer retained.
 
 ### 2. Paths Expanded (Modules Visible)
-Branching out from paths to reveal modules without visual overlaps.
-![Paths Expanded](images/02_paths_expanded.png)
+Branching out from paths to reveal modules without visual overlaps. The historical screenshot asset is no longer retained.
 
 ### 3. Modules Expanded (Lessons Visible)
-Sub-branches detailing modules down to individual lessons.
-![Modules Expanded](images/03_modules_expanded.png)
+Sub-branches detailing modules down to individual lessons. The historical screenshot asset is no longer retained.
 
 ### 4. Fully Expanded Mind Map (Artifacts Visible)
-The full depth of the curriculum fully expanded in concentric rings, proving the correctness of the anti-overlap radial math.
-![Fully Expanded](images/04_fully_expanded.png)
+The full depth of the curriculum fully expanded in concentric rings, proving the correctness of the anti-overlap radial math. The historical screenshot asset is no longer retained.
 
 ## Overlap Details
 No overlaps detected. The layout scaling is perfectly distributing the angles and spacing!

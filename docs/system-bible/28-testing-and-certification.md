@@ -56,6 +56,11 @@ Playwright-based end-to-end tests verify:
 - No console errors during operation
 - Responsive behavior across viewports
 
+**Current Inventory:**
+- 28 canonical specifications
+- 18 canonical configurations
+- Test suites: NV-1000 through NV-2600 (16 suites)
+
 ### Workspace Audits
 
 Workspace-specific tests verify:
@@ -124,13 +129,21 @@ Before certification:
 - `npm run build` must pass (React islands build)
 - `git diff --check` must show no whitespace errors
 
+### NV-2900 Automated Closure
+
+- Build: PASS
+- Documentation links: PASS, 0 broken links
+- Playwright: PASS, 16 suites and 70/70 tests
+- Automated accessibility: PASS, 2/2 tests
+- Direct headed route review and Obsidian synchronization: deferred by project decision
+
 ## Test Statistics
 
 | Layer | Typical Checks | Failure Tolerance |
 |-------|---------------|-------------------|
 | Extreme Audits | 100-309 per audit | Zero Critical/High |
 | Master Gate | All audits combined | Zero failures |
-| Playwright | Full route coverage | Zero failures |
+| Playwright (28 specs) | Full route coverage | Zero failures |
 | Accessibility | 10-20 per route | Zero violations |
 | Security | 5-10 patterns | Zero violations |
 

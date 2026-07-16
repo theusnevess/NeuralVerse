@@ -36,6 +36,18 @@
 - Structured response rendering with 12 section types
 - Invocation history with localStorage persistence
 
+## Laboratories
+
+- 10 interactive laboratories with deterministic simulations
+- Gradient Descent, Linear Regression, Logistic Regression
+- K-Means Clustering, PCA Projection
+- Bayes Rule, Embedding Similarity, Cosine Similarity
+- Precision & Recall, Transformer Attention
+- Scientific stage, execution console, inspector panel
+- Research states (Draft, Active, Review, Completed, Reopened)
+- Predict-before-run hypothesis modeling
+- Evidence capture and provenance tracking
+
 ## Personalization
 
 - Per-resource Markdown notes with live preview
@@ -83,6 +95,8 @@
 
 ## Accessibility
 
+The implementation contains accessibility-oriented contracts and automated coverage, but NV-2900 closure does not claim certification without direct keyboard and live screen-reader review. The current measured NV-2200 automated suite passed 2/2 tests; manual reconciliation remains pending.
+
 - Keyboard navigation for all interactive elements
 - Native `<dialog>` for search modal
 - ARIA landmarks and roles throughout
@@ -90,7 +104,7 @@
 - Focus management on route changes
 - `prefers-reduced-motion` support
 - `inert` on closed panels
-- Accessible color contrast
+- Accessible color contrast (static/automated evidence; direct review pending)
 
 ## Security
 
@@ -113,9 +127,22 @@
 - Single-command build (`npm run build`)
 - React islands compiled to IIFE bundle
 - Python dev server for development
-- 25 CSS files with token-based design system
-- 47 audit/verification scripts
+- 40 CSS files with token-based design system
+- 28 Playwright specifications
+- 18 Playwright configurations
 - Comprehensive QA certification process (QA1-QA5)
+
+## Repository Structure
+
+- `src/` — TypeScript source (atlas, agents, ai, retrieval)
+- `website/` — Static website (HTML, JS, CSS, data, assets)
+- `tests/` — Playwright specifications and configurations
+- `docs/` — Architecture, governance, content composition
+- `react-build/` — React component source and build config
+- `artifacts/` — Playwright validation outputs
+- `content/` — Educational content packages
+- `labs/` — Laboratory definitions
+- `tools/` — Build and validation scripts
 
 ## Related Chapters
 
