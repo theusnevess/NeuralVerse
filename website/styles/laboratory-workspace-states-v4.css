@@ -16,6 +16,9 @@
 [data-lab-v4-execution-console][data-execution-state="completed"] .nv-lab-v4-execution-console__status {
   color: #10b981;
 }
+[data-lab-v4-execution-console][data-execution-state="failed"] .nv-lab-v4-execution-console__status {
+  color: #ef4444;
+}
 
 /* ── Control availability per state ─────────────────────────────── */
 [data-lab-v4-workspace][data-execution-state="preparation"] [data-action="pause"] {

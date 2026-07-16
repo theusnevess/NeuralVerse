@@ -1,0 +1,50 @@
+import { expect, test } from './fixtures/playwright-runtime-observability';
+
+const labs = ['gradient-descent','linear-regression','logistic-regression','kmeans-clustering','pca-projection','bayes-rule','embedding-similarity','cosine-similarity','precision-recall','transformer-attention'];
+for (const slug of labs) test(`${slug}: activation creates an editable draft`, async ({ page }) => {
+  await page.goto(`/index.html#/laboratory/${slug}`);
+  await page.getByRole('button', { name: 'Activate Research Session' }).last().click();
+  await expect(page.locator('[data-research-session-body]')).toBeVisible();
+  await page.locator('[data-research-question]').fill('How does a configured variable affect an observed measurement?');
+  await page.locator('[data-research-hypothesis]').fill('Changing the selected variable may change the observed measurement.');
+  await page.locator('[data-research-variable="independent"]').fill('Configured variable');
+  await page.locator('[data-research-variable="dependent"]').fill('Observed measurement');
+  await page.locator('[data-research-begin]').click();
+  await expect(page.locator('[data-research-status]')).toHaveText('Active');
+});
+
+test('gradient descent preserves two immutable run snapshots and explicit evidence', async ({ page }) => {
+  await page.addInitScript(() => localStorage.removeItem('nv_research_sessions'));
+  await page.goto('/index.html#/laboratory/gradient-descent');
+  await page.getByRole('button', { name: 'Activate Research Session' }).last().click();
+  await page.locator('[data-research-question]').fill('How does learning rate affect convergence behavior?');
+  await page.locator('[data-research-begin]').click();
+  await page.locator('[data-action="run"]').click();
+  await expect(page.locator('[data-lab-v4-workspace]')).toHaveAttribute('data-execution-lifecycle', 'completed', { timeout: 30000 });
+  const runA = await page.evaluate(() => window.NeuralVerse.ResearchMode.getSession().runs[0]);
+  expect(runA.status).toBe('completed');
+  expect(runA.configurationSnapshot.learningRate).toBe(0.1);
+  expect(runA.runId).toBeTruthy();
+  await page.locator('[data-research-capture-stage]').click();
+  const capturedEvidence = await page.evaluate(() => window.NeuralVerse.ResearchMode.getSession().capturedEvidence);
+  expect(capturedEvidence).toHaveLength(1);
+  expect(capturedEvidence[0].runId).toBe(runA.runId);
+  expect(capturedEvidence[0].laboratoryId).toBe('lab-gradient-descent');
+  expect(capturedEvidence[0].provenance.source).toBe('Scientific Stage');
+  await page.locator('[data-research-capture-stage]').click();
+  await expect.poll(() => page.evaluate(() => window.NeuralVerse.ResearchMode.getSession().capturedEvidence.length)).toBe(1);
+  await page.locator('[data-action="reset-exec"]').click();
+  await expect(page.locator('[data-lab-v4-workspace]')).toHaveAttribute('data-execution-lifecycle', 'ready');
+  await page.locator('#lab-param-learningRate').focus();
+  await page.locator('#lab-param-learningRate').press('ArrowRight');
+  await expect.poll(() => page.locator('#lab-param-learningRate').inputValue()).toBe('0.111');
+  const unchangedRunA = await page.evaluate(() => window.NeuralVerse.ResearchMode.getSession().runs[0]);
+  expect(unchangedRunA.configurationSnapshot).toEqual(runA.configurationSnapshot);
+  await page.locator('[data-action="run"]').click();
+  await expect(page.locator('[data-lab-v4-workspace]')).toHaveAttribute('data-execution-lifecycle', 'completed', { timeout: 30000 });
+  const runs = await page.evaluate(() => window.NeuralVerse.ResearchMode.getSession().runs);
+  expect(runs).toHaveLength(2);
+  expect(runs[1].runId).not.toBe(runA.runId);
+  expect(runs[1].configurationSnapshot.learningRate).toBe(0.111);
+  expect(runs[0].configurationSnapshot.learningRate).toBe(0.1);
+});

@@ -74,7 +74,7 @@
         max: 5,
         step: 0.1,
         default: 2.0,
-        label: 'Slope'
+        label: 'Slope', description: 'Sets the linear relationship between input and output.', scientificMeaning: 'Coefficient of the synthetic linear model.', unitClassification: 'unitless'
       },
       {
         name: 'intercept',
@@ -83,7 +83,7 @@
         max: 10,
         step: 0.5,
         default: 1.0,
-        label: 'Intercept'
+        label: 'Intercept', description: 'Sets the output value where the input is zero.', scientificMeaning: 'Constant term of the synthetic linear model.', unitClassification: 'unitless'
       },
       {
         name: 'noise',
@@ -92,7 +92,7 @@
         max: 2,
         step: 0.1,
         default: 0.5,
-        label: 'Noise Level'
+        label: 'Noise Level', description: 'Controls random variation around the fitted relationship.', scientificMeaning: 'Synthetic observation-noise scale.', unitClassification: 'unitless'
       },
       {
         name: 'numPoints',
@@ -101,7 +101,7 @@
         max: 50,
         step: 1,
         default: 20,
-        label: 'Number of Points'
+        label: 'Number of Points', description: 'Sets the number of generated observations.', scientificMeaning: 'Discrete synthetic dataset size.', unit: 'samples'
       }
     ],
     initialState: {
@@ -390,6 +390,7 @@
       title: 'Linear Regression Fit',
       line: true
     },
+    scientificStage: { title: 'Linear regression fit', scientificQuestion: 'How does the fitted line account for the observed relationship between X and Y?', evidence: [{ key: 'R²', label: 'R²' }, { key: 'Slope', label: 'Slope' }, { key: 'Intercept', label: 'Intercept' }], interpretation: 'Points, fitted line, and residual evidence expose the quality of the linear model.' },
     canonicalStatus: 'reviewed',
     version: '1.0.0',
     reviewedBy: 'NeuralVerse Team',

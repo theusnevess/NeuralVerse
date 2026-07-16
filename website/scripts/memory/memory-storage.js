@@ -37,7 +37,7 @@
       window.NeuralVerse.StorageAdapter &&
       typeof window.NeuralVerse.StorageAdapter === 'object'
     ) {
-      return window.NeuralVerse.StorageAdapter;
+      return window.NeuralVerse.StorageAdapter._localStorageAdapter || window.NeuralVerse.StorageAdapter;
     }
     return null;
   }

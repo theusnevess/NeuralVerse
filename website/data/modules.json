@@ -16,11 +16,5 @@
     "pathId": "deep-learning",
     "title": "Deep Learning",
     "order": 1
-  },
-  {
-    "id": "module-convolution-spatial-filtering",
-    "pathId": "convolution-computer-vision",
-    "title": "Spatial-Domain Filtering",
-    "order": 1
   }
 ]

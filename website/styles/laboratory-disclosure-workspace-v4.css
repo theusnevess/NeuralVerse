@@ -147,7 +147,7 @@
   cursor: pointer;
   border-radius: 0.35rem;
   flex-shrink: 0;
-  transition: transform 180ms ease;
+  transition: transform var(--nv-motion-feedback-duration) var(--nv-motion-feedback-ease);
 }
 
 .nv-lab-v4-disclosure-panel__toggle:hover {
@@ -163,7 +163,7 @@
 .nv-lab-v4-disclosure-panel__toggle svg {
   width: 14px;
   height: 14px;
-  transition: transform 180ms ease;
+  transition: transform var(--nv-motion-feedback-duration) var(--nv-motion-feedback-ease);
 }
 
 /* Expanded chevron rotation */
@@ -177,7 +177,7 @@
   overflow: hidden;
   max-height: 0;
   opacity: 0;
-  transition: max-height 200ms ease, opacity 180ms ease;
+  transition: max-height var(--nv-motion-disclosure-duration) var(--nv-motion-disclosure-ease), opacity var(--nv-motion-feedback-duration) var(--nv-motion-feedback-ease);
 }
 
 .nv-lab-v4-disclosure-panel__body[hidden] {
@@ -185,7 +185,7 @@
 }
 
 .nv-lab-v4-disclosure-panel[data-disclosure-state="expanded"] .nv-lab-v4-disclosure-panel__body {
-  max-height: 9999px;
+  max-height: none;
   opacity: 1;
 }
 
@@ -391,7 +391,7 @@
   width: 14px;
   height: 14px;
   flex-shrink: 0;
-  transition: transform 180ms ease;
+  transition: transform var(--nv-motion-feedback-duration) var(--nv-motion-feedback-ease);
 }
 
 .nv-lab-v4-inspector-details [aria-expanded="true"] .nv-lab-hud-accordion-chevron,
@@ -404,13 +404,12 @@
   overflow: hidden;
   max-height: 0;
   opacity: 0;
-  transition: max-height 200ms ease, opacity 180ms ease;
+  transition: max-height var(--nv-motion-disclosure-duration) var(--nv-motion-disclosure-ease), opacity var(--nv-motion-feedback-duration) var(--nv-motion-feedback-ease);
   padding: 0 0.75rem;
 }
 
 .nv-lab-v4-inspector-details .nv-lab-hud-accordion-body.is-expanded,
 .nv-lab-v4-inspector-details .nv-lab-hud-drawer-body.is-expanded {
-  max-height: 9999px;
   opacity: 1;
   padding: 0 0.75rem 0.5rem;
 }
@@ -866,6 +865,37 @@
   color: var(--sys-color-text, #e5f4f8);
 }
 
+.nv-lab-v4-research .nv-lab-research-label,
+.nv-lab-v4-research .nv-lab-research-variables label,
+.nv-lab-v4-research .nv-lab-research-review {
+  display: grid;
+  gap: 0.3rem;
+  margin-top: 0.6rem;
+  color: var(--sys-color-text-muted, #a9bdc5);
+  font-size: 0.75rem;
+}
+
+.nv-lab-v4-research .nv-lab-research-variables {
+  display: grid;
+  gap: 0.4rem;
+  margin: 0.75rem 0;
+  border: 1px solid color-mix(in srgb, var(--sys-color-border, #2b4a56) 55%, transparent);
+}
+
+.nv-lab-v4-research .nv-lab-research-comparisons,
+.nv-lab-v4-research .nv-lab-research-review,
+.nv-lab-v4-research .nv-lab-research-reproducibility {
+  padding: 0.75rem 1rem;
+  border-top: 1px solid color-mix(in srgb, var(--sys-color-border, #2b4a56) 30%, transparent);
+}
+
+.nv-lab-v4-research .nv-lab-research-run {
+  display: block;
+  padding: 0.4rem 0;
+  font-size: 0.75rem;
+  color: var(--sys-color-text, #e5f4f8);
+}
+
 /* ── Research Activation Button ──────────────────────────────────────────── */
 
 .nv-lab-v4-research__activation {
@@ -925,6 +955,15 @@
 
   .nv-lab-v4-research .nv-lab-research-note-input {
     flex-wrap: wrap;
+  }
+
+  .nv-lab-v4-research .nv-lab-research-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .nv-lab-v4-research .nv-lab-research-btn {
+    min-width: 0;
   }
 }
 

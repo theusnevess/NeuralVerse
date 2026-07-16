@@ -6,7 +6,8 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "lint": "npm run typecheck",
     "test": "node -e \"require('node:fs').rmSync('.tmp/ts-tests', { recursive: true, force: true })\" && tsc -p tsconfig.test.json --noCheck && node --test .tmp/ts-tests/src/atlas/**/*.test.js .tmp/ts-tests/src/agents/**/*.test.js .tmp/ts-tests/src/retrieval/**/*.test.js .tmp/ts-tests/src/ai/**/*.test.js && node -e \"require('node:fs').rmSync('.tmp/ts-tests', { recursive: true, force: true })\"",
-    "coverage": "node -e \"require('node:fs').rmSync('.tmp/ts-tests', { recursive: true, force: true })\" && tsc -p tsconfig.test.json --noCheck && node --experimental-test-coverage --test .tmp/ts-tests/src/atlas/**/*.test.js .tmp/ts-tests/src/agents/**/*.test.js .tmp/ts-tests/src/retrieval/**/*.test.js .tmp/ts-tests/src/ai/**/*.test.js && node -e \"require('node:fs').rmSync('.tmp/ts-tests', { recursive: true, force: true })\""
+    "coverage": "node -e \"require('node:fs').rmSync('.tmp/ts-tests', { recursive: true, force: true })\" && tsc -p tsconfig.test.json --noCheck && node --experimental-test-coverage --test .tmp/ts-tests/src/atlas/**/*.test.js .tmp/ts-tests/src/agents/**/*.test.js .tmp/ts-tests/src/retrieval/**/*.test.js .tmp/ts-tests/src/ai/**/*.test.js && node -e \"require('node:fs').rmSync('.tmp/ts-tests', { recursive: true, force: true })\"",
+    "test:playwright:complete": "node tools/run-complete-playwright-validation.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.57.0",

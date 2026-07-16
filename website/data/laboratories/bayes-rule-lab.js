@@ -182,7 +182,7 @@
         type: 'select',
         options: ['medical', 'spam', 'manufacturing', 'weather', 'quality'],
         default: 'medical',
-        label: 'Scenario'
+        label: 'Scenario', description: 'Selects the applied context used to frame the hypothesis.', scientificMeaning: 'Categorical Bayesian inference scenario.', unitClassification: 'not-applicable'
       },
       {
         name: 'priorProbability',
@@ -191,7 +191,7 @@
         max: 0.99,
         step: 0.01,
         default: 0.01,
-        label: 'Prior Probability P(H)'
+        label: 'Prior Probability P(H)', description: 'Sets the belief in the hypothesis before evidence.', scientificMeaning: 'Prior probability of the hypothesis.', unitClassification: 'probability'
       },
       {
         name: 'sensitivity',
@@ -200,7 +200,7 @@
         max: 0.99,
         step: 0.01,
         default: 0.90,
-        label: 'Sensitivity P(+|H)'
+        label: 'Sensitivity P(+|H)', description: 'Sets the chance of a positive observation when the hypothesis is true.', scientificMeaning: 'Conditional probability of positive evidence given the hypothesis.', unitClassification: 'probability'
       },
       {
         name: 'falsePositiveRate',
@@ -209,7 +209,7 @@
         max: 0.50,
         step: 0.01,
         default: 0.05,
-        label: 'False Positive Rate P(+|~H)'
+        label: 'False Positive Rate P(+|~H)', description: 'Sets the chance of a positive observation when the hypothesis is false.', scientificMeaning: 'Conditional probability of positive evidence given the complement.', unitClassification: 'probability'
       },
       {
         name: 'numObservations',
@@ -218,7 +218,7 @@
         max: 10,
         step: 1,
         default: 3,
-        label: 'Number of Observations'
+        label: 'Number of Observations', description: 'Sets how many evidence updates are applied.', scientificMeaning: 'Discrete evidence-update count.', unitClassification: 'observation-count'
       }
     ],
     initialState: {
@@ -1030,6 +1030,7 @@
       type: 'numeric-summary',
       title: "Bayesian Inference — Belief Evolution"
     },
+    scientificStage: { title: 'Bayesian belief update', scientificQuestion: 'How does each observation update the probability of the hypothesis?', evidence: [{ key: 'Final Posterior', label: 'Posterior' }, { key: 'Initial Prior', label: 'Initial prior' }, { key: 'Total Change', label: 'Belief change' }], interpretation: 'The probability tree and belief evolution connect evidence branches to posterior change.' },
     canonicalStatus: 'reviewed',
     version: '2.0.0',
     reviewedBy: 'NeuralVerse Team',

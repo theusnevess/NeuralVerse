@@ -264,7 +264,8 @@
     html += '<div class="nv-xai-timeline-body">';
     html += '<span class="nv-xai-timeline-title">' + escapeHtml(finding.title) + '</span>';
     html += '<span class="nv-xai-timeline-meta">' + escapeHtml(finding.severity) + ' · ' + escapeHtml(finding.confidence) + '</span>';
-    html += '<span class="nv-xai-timeline-step">Step ' + (finding.stepIndex + 1) + '</span>';
+    var occurrence = finding.occurrence;
+    html += '<span class="nv-xai-timeline-step">Step ' + ((occurrence ? occurrence.latestStep : finding.stepIndex) + 1) + (occurrence && occurrence.count > 1 ? ' · ' + occurrence.count + ' occurrences' : '') + '</span>';
     html += '</div>';
 
     html += '</div>';

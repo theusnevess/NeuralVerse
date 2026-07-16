@@ -17,6 +17,7 @@ const CONCEPT_BASE_PATH = '/data/concepts/';
 
 let _indexCache = null;
 let _conceptCache = new Map();
+let _conceptPromises = new Map();
 let _indexPromise = null;
 
 let _aliasIndex = null;
@@ -56,27 +57,35 @@ async function loadConcept(conceptId) {
     return _conceptCache.get(conceptId);
   }
 
-  var perf = window.NeuralVerse?.PerfInstrumentation;
-  if (perf) perf.recordCacheMiss();
+  if (_conceptPromises.has(conceptId)) return _conceptPromises.get(conceptId);
 
-  const index = await loadIndex();
-  if (!index) return null;
+  const request = (async () => {
+    var perf = window.NeuralVerse?.PerfInstrumentation;
+    if (perf) perf.recordCacheMiss();
 
-  const entry = index.concepts.find((c) => c.id === conceptId);
-  if (!entry) return null;
+    const index = await loadIndex();
+    if (!index) return null;
 
-  var loadStart = performance.now();
-  const data = await fetchJson(`${CONCEPT_BASE_PATH}${entry.file}`).catch((err) => {
-    console.error(`Failed to load concept ${conceptId}:`, err);
-    return null;
-  });
-  if (perf) perf.recordLazyLoad(loadStart);
+    const entry = index.concepts.find((c) => c.id === conceptId);
+    if (!entry) return null;
 
-  if (data) {
-    _conceptCache.set(conceptId, Object.freeze(data));
+    var loadStart = performance.now();
+    const data = await fetchJson(`${CONCEPT_BASE_PATH}${entry.file}`).catch((err) => {
+      console.error(`Failed to load concept ${conceptId}:`, err);
+      return null;
+    });
+    if (perf) perf.recordLazyLoad(loadStart);
+
+    if (data) _conceptCache.set(conceptId, Object.freeze(data));
+    return data;
+  })();
+
+  _conceptPromises.set(conceptId, request);
+  try {
+    return await request;
+  } finally {
+    _conceptPromises.delete(conceptId);
   }
-
-  return data;
 }
 
 async function loadAllConcepts() {

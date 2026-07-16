@@ -3,7 +3,6 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT = path.join(__dirname);
-const CONTENT_ROOT = path.join(__dirname, '..', 'content', 'experimental');
 const PORT = Number(process.env.PORT) || 8080;
 
 const MIME = {
@@ -21,24 +20,6 @@ const MIME = {
 const server = http.createServer((req, res) => {
   let url = req.url.split('?')[0];
   if (url === '/') url = '/index.html';
-
-  // Serve experimental content under /experimental/
-  if (url.startsWith('/experimental/')) {
-    const rel = url.substring('/experimental/'.length);
-    const filePath = path.join(CONTENT_ROOT, rel);
-    const ext = path.extname(filePath);
-    fs.readFile(filePath, (err, data) => {
-      if (res.destroyed) return;
-      if (err) {
-        res.writeHead(404, { 'Content-Type': 'text/plain' });
-        res.end('Not found: ' + rel);
-        return;
-      }
-      res.writeHead(200, { 'Content-Type': MIME[ext] || 'application/octet-stream' });
-      res.end(data);
-    });
-    return;
-  }
 
   const filePath = path.join(ROOT, url);
   const ext = path.extname(filePath);

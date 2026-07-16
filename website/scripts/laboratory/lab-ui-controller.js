@@ -1787,8 +1787,7 @@
         { slug: 'embedding-similarity', key: 'embedding', title: 'Embedding Similarity', sentence: 'Compare semantic neighbors in vector space.', difficulty: 'Intermediate', domain: 'Representation' },
         { slug: 'cosine-similarity', key: 'cosine', title: 'Cosine Similarity', sentence: 'Measure vector alignment by angle.', difficulty: 'Beginner', domain: 'Representation' },
         { slug: 'precision-recall', key: 'threshold', title: 'Precision and Recall', sentence: 'Move a threshold and inspect classifier tradeoffs.', difficulty: 'Intermediate', domain: 'Evaluation' },
-        { slug: 'transformer-attention', key: 'attention', title: 'Transformer Attention', sentence: 'Inspect how tokens distribute attention weights.', difficulty: 'Advanced', domain: 'Attention' },
-        { slug: 'kernel-observatory', key: 'kernel', title: 'Kernel Observatory', sentence: 'Observe, predict, and inspect 2D image convolution.', difficulty: 'Intermediate', domain: 'Computer Vision' }
+        { slug: 'transformer-attention', key: 'attention', title: 'Transformer Attention', sentence: 'Inspect how tokens distribute attention weights.', difficulty: 'Advanced', domain: 'Attention' }
       ].map(function (spec, index) {
         spec.lab = getExperiment(spec.slug, index);
         spec.concepts = spec.lab ? (spec.lab.conceptReferences || []).slice(0, 4).map(formatConcept) : [];

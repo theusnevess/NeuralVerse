@@ -33,10 +33,10 @@
       case 'integer':
       case 'float': {
         var num = Number(value);
-        if (isNaN(num)) return { valid: false, error: 'Value must be a number' };
-        var clamped = clamp(num, schema.min, schema.max);
-        var rounded = roundToStep(clamped, schema.step || 1);
-        return { valid: true, value: rounded };
+        if (!isFinite(num)) return { valid: false, error: 'Value must be a finite number' };
+        if (schema.type === 'integer' && !Number.isInteger(num)) return { valid: false, error: 'Value must be an integer' };
+        if (num < schema.min || num > schema.max) return { valid: false, error: 'Value must be between ' + schema.min + ' and ' + schema.max };
+        return { valid: true, value: num };
       }
       case 'boolean': {
         return { valid: true, value: !!value };

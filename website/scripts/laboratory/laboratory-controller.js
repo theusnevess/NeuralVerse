@@ -112,7 +112,7 @@
 
       var html = '<section class="nv-lab-v4-workspace nv-lab-workspace-body nv-lab-instrument" ' +
         'data-lab-v4-workspace data-lab-workspace data-workspace-version="4" ' +
-        'data-workspace-architecture="canvas-first" data-configuration-layout="' + configurationLayout + '" data-execution-state="preparation" ' +
+        'data-workspace-architecture="canvas-first" data-configuration-layout="' + configurationLayout + '" data-execution-state="preparation" data-execution-lifecycle="ready" ' +
         'data-research-state="inactive">';
 
       // ── Workspace Header (compact) ──
@@ -129,7 +129,7 @@
       html += '</button>';
       html += '</div>';
       html += '<div class="nv-lab-ws-overview">';
-      html += '<h2 class="nv-lab-ws-title" data-lab-title>' + escapeHtml(lab.title) + '</h2>';
+       html += '<h1 class="nv-lab-ws-title" data-lab-title>' + escapeHtml(lab.title) + '</h1>';
       html += '<p class="nv-lab-ws-summary" data-lab-summary>' + escapeHtml(lab.summary) + '</p>';
       html += '<div class="nv-lab-ws-meta">';
       html += '<span class="nv-lab-ws-meta-item"><span class="nv-lab-ws-meta-label">Duration</span> ' + escapeHtml(lab.estimatedDuration || '10 min') + '</span>';
@@ -152,6 +152,9 @@
           html += '<div class="' + panelClass + '" data-obs-id="' + escapeHtml(obs.id) + '" data-obs-index="' + i + '"' + (isPrimary ? ' data-lab-v4-visualization' : '') + '>';
           html += '<div class="nv-lab-obs-panel-header">';
           html += '<span class="nv-lab-obs-panel-title">' + escapeHtml(obs.title) + '</span>';
+          if (isPrimary && lab.scientificStage && lab.scientificStage.scientificQuestion) {
+            html += '<span class="nv-lab-stage-question" data-scientific-stage-question>' + escapeHtml(lab.scientificStage.scientificQuestion) + '</span>';
+          }
           if (!isPrimary) {
             html += '<span class="nv-lab-obs-panel-purpose">' + escapeHtml(obs.purpose) + '</span>';
           }
@@ -226,10 +229,11 @@
       // ── Phase 12.3: execution controls are owned only by the v4 console. ──
       if (hasSteps) {
         html += '<section class="nv-lab-v4-console nv-lab-v4-execution-deck" data-lab-v4-console data-lab-v4-execution-deck aria-label="Execution deck">';
-        html += '<section class="nv-lab-v4-execution-console" data-lab-v4-execution-console data-execution-state="preparation" aria-label="Experiment execution controls">';
-        html += '<div class="nv-lab-v4-execution-console__status" data-lab-v4-execution-status aria-live="polite">';
-        html += '<span data-live-status>Ready</span><span aria-hidden="true"> · </span><span data-live-step>0 / ' + lab.steps.length + '</span>';
+        html += '<section class="nv-lab-v4-execution-console" data-lab-v4-execution-console data-execution-state="preparation" data-execution-lifecycle="ready" aria-label="Experiment execution controls">';
+        html += '<div class="nv-lab-v4-execution-console__status" data-lab-v4-execution-status aria-live="polite" aria-atomic="true">';
+        html += '<strong data-live-status>Ready</strong><span aria-hidden="true"> · </span><span data-live-step>0 / ' + lab.steps.length + '</span>';
         html += '</div>';
+        html += '<p class="nv-lab-v4-execution-console__message" data-execution-message>Run the experiment to begin execution.</p>';
         html += '<div class="nv-lab-v4-execution-console__timeline" data-lab-v4-timeline-region>';
         html += '<div class="nv-lab-v4-timeline" data-lab-timeline style="--nv-lab-step-count:' + lab.steps.length + '">';
         html += '<div class="nv-lab-v4-timeline__track" aria-hidden="true"><div class="nv-lab-v4-timeline__progress" data-lab-v4-timeline-progress></div></div>';
@@ -241,7 +245,7 @@
           html += '<span class="nv-lab-v4-timeline__label">' + escapeHtml(step.label) + '</span>';
           html += '</span>';
         });
-        html += '<input class="nv-lab-v4-timeline__input" data-lab-v4-timeline-input type="range" min="0" max="' + (lab.steps.length - 1) + '" value="0" aria-label="Experiment step" aria-valuetext="Ready at step 0 of ' + lab.steps.length + '">';
+        html += '<input class="nv-lab-v4-timeline__input" data-lab-v4-timeline-input type="range" min="0" max="' + (lab.steps.length - 1) + '" value="0" aria-label="Experiment step" aria-valuemin="0" aria-valuemax="' + (lab.steps.length - 1) + '" aria-valuenow="0" aria-valuetext="Ready at step 0 of ' + lab.steps.length + '">';
         html += '</div>';
         html += '</div>';
         html += '<div class="nv-lab-v4-execution-console__controls" data-lab-v4-playback-controls aria-label="Playback controls">';
@@ -410,15 +414,24 @@
       html += '<span class="nv-lab-v4-disclosure-panel__title">Research Session</span>';
       html += '<span class="nv-lab-v4-disclosure-panel__summary" data-research-status>Inactive</span>';
       html += '</span>';
-      html += '<button class="nv-lab-v4-research__activate" type="button" data-research-activate aria-expanded="false" aria-controls="v4-research-body">Activate Research Session</button>';
+       html += '<button class="nv-lab-v4-research__activate" type="button" data-research-activate aria-expanded="false" aria-controls="v4-research-body">Activate Research Session</button>';
+       html += '<button class="nv-lab-research-btn" type="button" data-research-restore hidden>Restore latest session</button>';
       html += '</div>';
       html += '<div class="nv-lab-v4-disclosure-panel__body" id="v4-research-body" data-research-session-body hidden>';
       html += '<div class="nv-lab-v4-disclosure-panel__body-inner">';
-      html += '<div class="nv-lab-research-body">';
-      html += '<textarea class="nv-lab-research-textarea" data-research-hypothesis placeholder="Formulate your hypothesis..." rows="2"></textarea>';
+       html += '<div class="nv-lab-research-body">';
+       html += '<label class="nv-lab-research-label">Session title<input class="nv-lab-research-note-text" data-research-title placeholder="Untitled investigation"></label>';
+       html += '<label class="nv-lab-research-label">Hypothesis statement<textarea class="nv-lab-research-textarea" data-research-hypothesis placeholder="State a testable hypothesis..." rows="2"></textarea></label>';
+       html += '<label class="nv-lab-research-label">Research question<textarea class="nv-lab-research-textarea" data-research-question placeholder="Describe an investigable relationship..." rows="2"></textarea></label>';
+       html += '<label class="nv-lab-research-label">Hypothesis rationale<input class="nv-lab-research-note-text" data-research-rationale></label>';
+       html += '<fieldset class="nv-lab-research-variables"><legend>Variables (editable suggestions)</legend><label>Independent<input class="nv-lab-research-note-text" data-research-variable="independent"></label><label>Dependent<input class="nv-lab-research-note-text" data-research-variable="dependent"></label><label>Controlled<input class="nv-lab-research-note-text" data-research-variable="controlled"></label></fieldset>';
+       html += '<label class="nv-lab-research-label">Hypothesis status<select data-research-hypothesis-status><option value="untested">Untested</option><option value="supported">Supported</option><option value="partially-supported">Partially Supported</option><option value="not-supported">Not Supported</option><option value="inconclusive">Inconclusive</option></select></label>';
       html += '<div class="nv-lab-research-actions">';
-      html += '<button class="nv-lab-research-btn" data-research-save-session>Save</button>';
-      html += '<button class="nv-lab-research-btn" data-research-view-history>History</button>';
+       html += '<button class="nv-lab-research-btn" data-research-save-session>Save</button>';
+       html += '<button class="nv-lab-research-btn" data-research-begin>Begin Investigation</button>';
+       html += '<button class="nv-lab-research-btn" data-research-review>Review Session</button>';
+        html += '<button class="nv-lab-research-btn" data-research-complete>Complete Session</button>';
+       html += '<button class="nv-lab-research-btn" data-research-reopen hidden>Reopen Session</button>';
       html += '</div>';
       html += '<div class="nv-lab-research-session-info" data-research-session-info>';
       html += '<span class="nv-lab-research-session-name" data-research-session-name>Untitled</span>';
@@ -444,25 +457,29 @@
       html += '<h4>Bookmarks</h4>';
       html += '<div class="nv-lab-research-bookmarks-list" data-research-bookmarks-list></div>';
       html += '</div>';
-      html += '<div class="nv-lab-research-evidence" data-research-evidence style="display:none;">';
-      html += '<h4>Evidence Timeline</h4>';
+       html += '<div class="nv-lab-research-evidence" data-research-evidence style="display:none;">';
+       html += '<h4>Evidence Timeline</h4>';
+       html += '<button class="nv-lab-research-btn" data-research-capture-finding>Capture current finding</button><button class="nv-lab-research-btn" data-research-capture-stage>Capture Stage evidence</button>';
       html += '<div class="nv-lab-research-evidence-list" data-research-evidence-list></div>';
       html += '</div>';
-      html += '<div class="nv-lab-research-conclusions" data-research-conclusions style="display:none;">';
+       html += '<div class="nv-lab-research-conclusions" data-research-conclusions style="display:none;">';
       html += '<h4>Conclusions</h4>';
       html += '<div class="nv-lab-research-conclusion-input">';
       html += '<input type="text" class="nv-lab-research-conclusion-text" data-research-conclusion-text placeholder="Record conclusion..." />';
       html += '<button class="nv-lab-research-conclusion-add" data-research-conclusion-add>Add</button>';
       html += '</div>';
-      html += '<div class="nv-lab-research-conclusions-list" data-research-conclusions-list></div>';
-      html += '</div>';
+       html += '<div class="nv-lab-research-conclusions-list" data-research-conclusions-list></div>';
+       html += '</div>';
+       html += '<div class="nv-lab-research-comparisons"><h4>Run comparison</h4><div data-research-runs></div><button class="nv-lab-research-btn" data-research-compare>Compare selected runs</button><div data-research-comparisons></div></div>';
+       html += '<div class="nv-lab-research-review"><h4>Limitations and conclusion</h4><input class="nv-lab-research-note-text" data-research-limitations placeholder="One limitation per line"><textarea class="nv-lab-research-textarea" data-research-conclusion placeholder="This investigation tested..." rows="3"></textarea><button class="nv-lab-research-btn" data-research-export="json">Export JSON</button><button class="nv-lab-research-btn" data-research-export="markdown">Export Markdown</button></div>';
+       html += '<section class="nv-lab-research-reproducibility"><h4>Reproducibility</h4><div data-research-reproducibility>Run records are stored in this browser.</div></section>';
       html += '</div>';
       html += '</div>';
       html += '</section>';
       html += '</section>'; // research deck
-      html += '<section class="nv-lab-v4-continuations nv-lab-drawer-layer" data-lab-v4-continuations data-lab-v4-continuation-deck aria-label="Next experiments">';
-      var ecosystem = window.NeuralVerse.LabEcosystem;
-      if (ecosystem) {
+       html += '<section class="nv-lab-v4-continuations nv-lab-drawer-layer" data-lab-v4-continuations data-lab-v4-continuation-deck aria-label="Next experiments" hidden>';
+       var ecosystem = window.NeuralVerse.LabEcosystem;
+       if (ecosystem) {
         var nextExps = ecosystem.getNextExperiments(lab.slug);
         var continuationSource = null;
         try { continuationSource = sessionStorage.getItem('labContinuationSource'); } catch (e) {}
@@ -476,7 +493,7 @@
           }
         }
 
-        if (nextExps.length > 0) {
+         if (nextExps.length > 0 && !window.NeuralVerse.CompletionNextExperiments) {
           html += '<div class="nv-lab-continuations" data-lab-continuations>';
           html += '<h4 class="nv-lab-continuations-title">Next Experiments</h4>';
           html += '<div class="nv-lab-continuations-list">';

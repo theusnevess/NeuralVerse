@@ -397,14 +397,14 @@
         max: 6,
         step: 1,
         default: 6,
-        label: 'Sequence Length'
+        label: 'Sequence Length', description: 'Sets how many tokens participate in self-attention.', scientificMeaning: 'Discrete input token count.', unit: 'tokens'
       },
       {
         name: 'dModel',
         type: 'select',
         options: ['4', '8', '16'],
         default: '4',
-        label: 'Embedding Dimension'
+        label: 'Embedding Dimension', description: 'Selects the width of each token representation.', scientificMeaning: 'Categorical model-dimension choice.', unit: 'dimensions'
       },
       {
         name: 'temperature',
@@ -413,13 +413,13 @@
         max: 3.0,
         step: 0.1,
         default: 1.0,
-        label: 'Temperature'
+        label: 'Temperature', description: 'Scales attention scores before softmax normalization.', scientificMeaning: 'Attention softmax temperature scale.', unitClassification: 'unitless'
       },
       {
         name: 'causalMask',
         type: 'boolean',
         default: false,
-        label: 'Causal Mask'
+        label: 'Causal Mask', description: 'Prevents each token from attending to future tokens.', scientificMeaning: 'Boolean future-token visibility constraint.', unitClassification: 'not-applicable'
       }
     ],
     initialState: {
@@ -840,6 +840,7 @@
       };
     },
     visualization: { type: 'heatmap', title: 'Attention Weights' },
+    scientificStage: { title: 'Self-attention distribution', scientificQuestion: 'Which tokens receive the strongest attention as the context representation is formed?', evidence: [{ key: 'Average Entropy', label: 'Average entropy' }, { key: 'Strongest Link', label: 'Strongest link' }, { key: 'Attention Entropy', label: 'Attention entropy' }], interpretation: 'Token links and the attention matrix show how normalized weights redistribute context across the sequence.' },
     canonicalStatus: 'reviewed',
     version: '1.0.0',
     reviewedBy: 'NeuralVerse Team',

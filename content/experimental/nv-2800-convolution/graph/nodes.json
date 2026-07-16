@@ -1,1 +1,0 @@
-{"owner":"Knowledge Agent","nodes":["cnn.convolution","cnn.kernel","image.tensor","matrix.multiplication","local.neighborhood","cnn.cross_correlation","cnn.padding","cnn.stride","cnn.dilation","cnn.channel","cnn.feature_map","cnn.receptive_field","edge.detection","gaussian.blur","sobel.operator","cnn","cnn.learned_filter","cnn.translation_equivariance"]}

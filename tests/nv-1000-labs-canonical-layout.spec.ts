@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test, type Page } from './fixtures/playwright-runtime-observability';
 import { mkdirSync, writeFileSync } from 'node:fs';
 
 const labs = ['gradient-descent', 'linear-regression', 'logistic-regression', 'kmeans-clustering', 'pca-projection', 'bayes-rule', 'embedding-similarity', 'cosine-similarity', 'precision-recall', 'transformer-attention'];
@@ -9,7 +9,11 @@ const selectors = ['[data-lab-v4-header]', '[data-lab-v4-observation-deck]', '[d
 
 function write(name: string, value: unknown) { mkdirSync(artifactDir, { recursive: true }); writeFileSync(`${artifactDir}/${name}`, JSON.stringify(value, null, 2)); }
 let navigationId = 0;
-async function open(page: Page, slug: string) { await page.goto(`/index.html?canonical=${navigationId++}#/laboratory/${slug}`, { waitUntil: 'domcontentloaded' }); await expect(page.locator('[data-lab-v4-workspace]')).toBeVisible(); }
+async function open(page: Page, slug: string) {
+  await page.goto(`/index.html?canonical=${navigationId++}#/laboratory/${slug}`, { waitUntil: 'domcontentloaded' });
+  await expect(page.locator('[data-lab-v4-workspace]')).toBeVisible();
+  await page.waitForFunction(() => window.NeuralVerse?.semanticLearning?.isInitialized?.() === true);
+}
 
 test('canonical region order and responsive geometry', async ({ page }) => {
   test.setTimeout(240_000);

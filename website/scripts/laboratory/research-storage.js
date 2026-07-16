@@ -1,247 +1,44 @@
-/**
- * NV-900-P8 — Research Storage
- * Local-first persistence for research sessions using localStorage.
- */
-
+/** NV-1600 — validated browser-local persistence for Research Sessions. */
 (function () {
   'use strict';
-
   var STORAGE_KEY = 'nv_research_sessions';
+  var SCHEMA_VERSION = 1;
   var MAX_SESSIONS_PER_LAB = 50;
 
-  function getAdapter() {
-    return window.NeuralVerse?.StorageAdapter || null;
+  function clone(value) { return JSON.parse(JSON.stringify(value)); }
+  function id(prefix) { return prefix + '_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8); }
+  function adapter() {
+    var storage = window.NeuralVerse && window.NeuralVerse.StorageAdapter;
+    // ResearchStorage is a synchronous local-session contract. The optional
+    // unified adapter exposes promise-returning methods, while retaining this
+    // canonical local adapter for synchronous consumers.
+    return storage && storage._localStorageAdapter ? storage._localStorageAdapter : storage;
   }
-
-  function readJSON(key) {
-    var adapter = getAdapter();
-    if (!adapter) return null;
-    var raw = adapter.getItem(key);
-    if (!raw) return null;
-    try {
-      return JSON.parse(raw);
-    } catch (e) {
-      return null;
-    }
+  function read() {
+    var store = adapter();
+    if (!store) return {};
+    try { var value = JSON.parse(store.getItem(STORAGE_KEY) || '{}'); return value && typeof value === 'object' ? value : {}; } catch (e) { return {}; }
   }
-
-  function writeJSON(key, value) {
-    var adapter = getAdapter();
-    if (!adapter) return;
-    adapter.setItem(key, JSON.stringify(value));
+  function write(value) { var store = adapter(); if (store) store.setItem(STORAGE_KEY, JSON.stringify(value)); }
+  function valid(session) {
+    return session && session.version === SCHEMA_VERSION && typeof session.id === 'string' && typeof session.laboratoryId === 'string' && Array.isArray(session.runs) && Array.isArray(session.capturedEvidence);
   }
-
-  function getAllSessions() {
-    return readJSON(STORAGE_KEY) || {};
+  function createSession(lab) {
+    var now = new Date().toISOString();
+    return { id: id('session'), version: SCHEMA_VERSION, laboratoryId: lab.id, laboratorySlug: lab.slug, laboratoryTitle: lab.title, laboratoryContractVersion: lab.version || '1', title: 'Untitled investigation', state: 'draft', createdAt: now, updatedAt: now, researchQuestion: '', hypothesis: { statement: '', rationale: '', status: 'untested' }, variables: { independent: [], dependent: [], controlled: [] }, runs: [], capturedEvidence: [], observations: [], interpretations: [], comparisons: [], limitations: [], conclusion: '', reproducibility: { persistence: 'browser-local only', knownLimitations: [] } };
   }
-
-  function getSessionsForLab(labId) {
-    var all = getAllSessions();
-    return all[labId] || [];
-  }
-
-  function saveSession(labId, session) {
-    var all = getAllSessions();
-    if (!all[labId]) all[labId] = [];
-
-    // Update existing or add new
-    var existingIdx = -1;
-    for (var i = 0; i < all[labId].length; i++) {
-      if (all[labId][i].id === session.id) {
-        existingIdx = i;
-        break;
-      }
-    }
-
-    if (existingIdx >= 0) {
-      all[labId][existingIdx] = session;
-    } else {
-      all[labId].unshift(session);
-    }
-
-    // Trim to max
-    if (all[labId].length > MAX_SESSIONS_PER_LAB) {
-      all[labId] = all[labId].slice(0, MAX_SESSIONS_PER_LAB);
-    }
-
-    writeJSON(STORAGE_KEY, all);
-    dispatchEvent('nv:research_session_saved', { labId: labId, sessionId: session.id });
-  }
-
-  function getSession(labId, sessionId) {
-    var sessions = getSessionsForLab(labId);
-    for (var i = 0; i < sessions.length; i++) {
-      if (sessions[i].id === sessionId) return sessions[i];
-    }
-    return null;
-  }
-
-  function deleteSession(labId, sessionId) {
-    var all = getAllSessions();
-    if (!all[labId]) return;
-    all[labId] = all[labId].filter(function (s) { return s.id !== sessionId; });
-    writeJSON(STORAGE_KEY, all);
-    dispatchEvent('nv:research_session_deleted', { labId: labId, sessionId: sessionId });
-  }
-
-  function getRecentSessions(labId, count) {
-    var sessions = getSessionsForLab(labId);
-    return sessions.slice(0, count || 10);
-  }
-
-  function getAllRecentSessions(count) {
-    var all = getAllSessions();
-    var flat = [];
-    for (var labId in all) {
-      for (var i = 0; i < all[labId].length; i++) {
-        flat.push(all[labId][i]);
-      }
-    }
-    flat.sort(function (a, b) {
-      return new Date(b.createdAt) - new Date(a.createdAt);
-    });
-    return flat.slice(0, count || 20);
-  }
-
-  function getSessionCount(labId) {
-    var all = getAllSessions();
-    return all[labId] ? all[labId].length : 0;
-  }
-
-  function createSession(labId, labSlug, labTitle, params) {
-    return {
-      id: 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
-      labId: labId,
-      labSlug: labSlug,
-      labTitle: labTitle,
-      name: 'Session ' + new Date().toLocaleString(),
-      hypothesis: '',
-      params: params || {},
-      runs: [],
-      notes: [],
-      bookmarks: [],
-      conclusions: [],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      status: 'active'
-    };
-  }
-
-  function createRun(session, params, result) {
-    return {
-      id: 'run_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
-      params: params || {},
-      result: result || null,
-      metrics: {},
-      observations: [],
-      log: [],
-      runtime: 0,
-      timestamp: new Date().toISOString()
-    };
-  }
-
-  function addNote(session, note) {
-    session.notes.push({
-      id: 'note_' + Date.now(),
-      text: note.text || '',
-      type: note.type || 'observation',
-      stepIndex: note.stepIndex || 0,
-      timestamp: new Date().toISOString()
-    });
+  function save(session) {
+    if (!valid(session)) return false;
+    var all = read(); var list = Array.isArray(all[session.laboratoryId]) ? all[session.laboratoryId] : [];
     session.updatedAt = new Date().toISOString();
+    var index = list.findIndex(function (item) { return item.id === session.id; });
+    if (index >= 0) list[index] = clone(session); else list.unshift(clone(session));
+    all[session.laboratoryId] = list.slice(0, MAX_SESSIONS_PER_LAB); write(all); return true;
   }
-
-  function addBookmark(session, bookmark) {
-    session.bookmarks.push({
-      id: 'bookmark_' + Date.now(),
-      stepIndex: bookmark.stepIndex || 0,
-      label: bookmark.label || '',
-      state: bookmark.state || null,
-      timestamp: new Date().toISOString()
-    });
-    session.updatedAt = new Date().toISOString();
-  }
-
-  function addConclusion(session, conclusion) {
-    session.conclusions.push({
-      id: 'conclusion_' + Date.now(),
-      text: conclusion.text || '',
-      type: conclusion.type || 'observation',
-      supported: conclusion.supported || null,
-      timestamp: new Date().toISOString()
-    });
-    session.updatedAt = new Date().toISOString();
-  }
-
-  function updateSessionName(session, name) {
-    session.name = name;
-    session.updatedAt = new Date().toISOString();
-  }
-
-  function updateHypothesis(session, hypothesis) {
-    session.hypothesis = hypothesis;
-    session.updatedAt = new Date().toISOString();
-  }
-
-  function getResearchInsights(labId) {
-    var sessions = getSessionsForLab(labId);
-    if (sessions.length < 2) return null;
-
-    var totalRuns = 0;
-    var convergedCount = 0;
-    var paramRanges = {};
-
-    for (var i = 0; i < sessions.length; i++) {
-      var session = sessions[i];
-      totalRuns += session.runs.length;
-      for (var j = 0; j < session.runs.length; j++) {
-        var run = session.runs[j];
-        if (run.result && run.result.converged) convergedCount++;
-        for (var key in run.params) {
-          if (!paramRanges[key]) paramRanges[key] = { min: Infinity, max: -Infinity };
-          var val = parseFloat(run.params[key]);
-          if (!isNaN(val)) {
-            if (val < paramRanges[key].min) paramRanges[key].min = val;
-            if (val > paramRanges[key].max) paramRanges[key].max = val;
-          }
-        }
-      }
-    }
-
-    return {
-      totalSessions: sessions.length,
-      totalRuns: totalRuns,
-      convergenceRate: totalRuns > 0 ? Math.round((convergedCount / totalRuns) * 100) : 0,
-      parameterRanges: paramRanges
-    };
-  }
-
-  function dispatchEvent(name, detail) {
-    try {
-      window.dispatchEvent(new CustomEvent(name, { detail: detail }));
-    } catch (e) {
-      // Ignore
-    }
-  }
+  function get(labId, sessionId) { var item = (read()[labId] || []).find(function (session) { return session.id === sessionId; }); return valid(item) ? clone(item) : null; }
+  function allForLab(labId) { return (read()[labId] || []).filter(valid).map(clone); }
+  function remove(labId, sessionId) { var all = read(); all[labId] = (all[labId] || []).filter(function (session) { return session.id !== sessionId; }); write(all); }
 
   window.NeuralVerse = window.NeuralVerse || {};
-  window.NeuralVerse.ResearchStorage = {
-    getAllSessions: getAllSessions,
-    getSessionsForLab: getSessionsForLab,
-    getSession: getSession,
-    saveSession: saveSession,
-    deleteSession: deleteSession,
-    getRecentSessions: getRecentSessions,
-    getAllRecentSessions: getAllRecentSessions,
-    getSessionCount: getSessionCount,
-    createSession: createSession,
-    createRun: createRun,
-    addNote: addNote,
-    addBookmark: addBookmark,
-    addConclusion: addConclusion,
-    updateSessionName: updateSessionName,
-    updateHypothesis: updateHypothesis,
-    getResearchInsights: getResearchInsights
-  };
-
+  window.NeuralVerse.ResearchStorage = { SCHEMA_VERSION: SCHEMA_VERSION, createSession: createSession, saveSession: save, getSession: get, getSessionsForLab: allForLab, deleteSession: remove };
 })();

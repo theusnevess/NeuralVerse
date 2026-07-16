@@ -285,7 +285,7 @@
         max: 8,
         step: 1,
         default: 3,
-        label: 'Number of Clusters (k)'
+        label: 'Number of Clusters (k)', description: 'Sets how many centroids K-Means will maintain.', scientificMeaning: 'Discrete cluster-count parameter.', unit: 'clusters'
       },
       {
         name: 'numPoints',
@@ -294,7 +294,7 @@
         max: 200,
         step: 10,
         default: 60,
-        label: 'Dataset Size'
+        label: 'Dataset Size', description: 'Sets the number of generated data points.', scientificMeaning: 'Discrete synthetic dataset size.', unit: 'samples'
       },
       {
         name: 'spread',
@@ -303,7 +303,7 @@
         max: 3.0,
         step: 0.1,
         default: 1.2,
-        label: 'Cluster Variance'
+        label: 'Cluster Variance', description: 'Controls the spread of generated clusters.', scientificMeaning: 'Synthetic cluster-spread scale.', unitClassification: 'unitless'
       }
     ],
     initialState: {
@@ -840,6 +840,7 @@
       return { points: labeledPoints, centroids: roundedCentroids, iterations: iterations, inertia: Math.round(inertia * 10000) / 10000 };
     },
     visualization: { type: 'scatter-plot', title: 'K-Means Clustering Result' },
+    scientificStage: { title: 'K-Means cluster assignment', scientificQuestion: 'How do assignments and centroid positions change as clusters tighten?', evidence: [{ key: 'Inertia', label: 'Inertia' }, { key: 'Centroid Displacement', label: 'Centroid displacement' }, { key: 'Iterations', label: 'Iterations' }], interpretation: 'Points and centroid marks make reassignment and centroid movement observable across iterations.' },
     canonicalStatus: 'reviewed',
     version: '1.0.0',
     reviewedBy: 'NeuralVerse Team',

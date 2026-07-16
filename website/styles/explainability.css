@@ -4,24 +4,24 @@
  */
 
 :root {
-  --nv-xai-bg: var(--sys-color-surface-secondary, #111827);
-  --nv-xai-surface: var(--sys-color-surface-tertiary, #1a2332);
-  --nv-xai-border: var(--sys-color-border, rgba(138,180,248,0.08));
-  --nv-xai-border-hover: var(--sys-color-border-hover, rgba(138,180,248,0.18));
-  --nv-xai-accent: var(--sys-color-accent-primary, #06b6d4);
-  --nv-xai-accent-dim: rgba(6,182,212,0.08);
-  --nv-xai-text: var(--sys-color-text-primary, #e2e8f0);
-  --nv-xai-text-secondary: var(--sys-color-text-secondary, #94a3b8);
-  --nv-xai-text-muted: var(--sys-color-text-tertiary, #64748b);
-  --nv-xai-radius: 6px;
-  --nv-xai-radius-sm: 3px;
-  --nv-xai-severity-critical: #ef4444;
-  --nv-xai-severity-significant: #f59e0b;
-  --nv-xai-severity-important: #3b82f6;
-  --nv-xai-severity-info: #06b6d4;
-  --nv-xai-confidence-high: #10b981;
-  --nv-xai-confidence-moderate: #f59e0b;
-  --nv-xai-confidence-low: #ef4444;
+  --nv-xai-bg: var(--nv-surface-region);
+  --nv-xai-surface: var(--nv-surface-panel);
+  --nv-xai-border: var(--nv-border-subtle);
+  --nv-xai-border-hover: var(--nv-border-selected);
+  --nv-xai-accent: var(--nv-action-primary);
+  --nv-xai-accent-dim: color-mix(in srgb, var(--nv-action-primary) 8%, transparent);
+  --nv-xai-text: var(--nv-text-primary);
+  --nv-xai-text-secondary: var(--nv-text-secondary);
+  --nv-xai-text-muted: var(--nv-text-muted);
+  --nv-xai-radius: var(--nv-radius-panel);
+  --nv-xai-radius-sm: var(--sys-radius-surface);
+  --nv-xai-severity-critical: var(--sys-color-semantic-error);
+  --nv-xai-severity-significant: var(--sys-color-semantic-warning);
+  --nv-xai-severity-important: var(--sys-color-semantic-info);
+  --nv-xai-severity-info: var(--nv-action-primary);
+  --nv-xai-confidence-high: var(--sys-color-semantic-success);
+  --nv-xai-confidence-moderate: var(--sys-color-semantic-warning);
+  --nv-xai-confidence-low: var(--sys-color-semantic-error);
 }
 
 /* ── XAI Panel ────────────────────────────────────────── */

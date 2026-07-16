@@ -152,9 +152,9 @@
     artifactReferences: [],
     conceptReferences: ['cross-validation', 'feature-engineering'],
     parameterSchema: [
-      { name: 'threshold', type: 'slider', min: 0.05, max: 0.95, step: 0.05, default: 0.5, label: 'Classification Threshold' },
-      { name: 'numPositive', type: 'integer', min: 10, max: 80, step: 5, default: 40, label: 'Positive Samples' },
-      { name: 'numNegative', type: 'integer', min: 10, max: 80, step: 5, default: 40, label: 'Negative Samples' }
+      { name: 'threshold', type: 'slider', min: 0.05, max: 0.95, step: 0.05, default: 0.5, label: 'Classification Threshold', description: 'Sets the score cutoff for a positive prediction.', scientificMeaning: 'Probability decision boundary.', unitClassification: 'probability' },
+      { name: 'numPositive', type: 'integer', min: 10, max: 80, step: 5, default: 40, label: 'Positive Samples', description: 'Sets the number of generated positive examples.', scientificMeaning: 'Discrete positive-class sample count.', unit: 'samples' },
+      { name: 'numNegative', type: 'integer', min: 10, max: 80, step: 5, default: 40, label: 'Negative Samples', description: 'Sets the number of generated negative examples.', scientificMeaning: 'Discrete negative-class sample count.', unit: 'samples' }
     ],
     initialState: { threshold: 0.5, numPositive: 40, numNegative: 40 },
     steps: (function () { return buildSteps(generateSamples(40, 40), 0.5); })(),
@@ -554,6 +554,7 @@
       return { confusionMatrix: [[cm.tp, cm.fp], [cm.fn, cm.tn]], precision: m.precision, recall: m.recall, f1Score: m.f1, accuracy: m.accuracy, threshold: threshold, prCurve: curve };
     },
     visualization: { type: 'line-chart', title: 'Precision-Recall Curve' },
+    scientificStage: { title: 'Threshold and precision-recall trade-off', scientificQuestion: 'How does the decision threshold change the balance between precision and recall?', evidence: [{ key: 'Final Precision', label: 'Precision' }, { key: 'Final Recall', label: 'Recall' }, { key: 'Final F1', label: 'F1 score' }], interpretation: 'The threshold, score distribution, and operating point show the trade-off behind the reported metrics.' },
     canonicalStatus: 'reviewed',
     version: '1.0.0',
     reviewedBy: 'NeuralVerse Team',

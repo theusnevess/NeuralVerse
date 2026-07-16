@@ -88,9 +88,15 @@ The simulated research playground system. Provides search, graph, discovery, and
 **Study Queue**
 An ordered list of resources a learner plans to study. Supports add, remove, reorder, and "Start Next" operations.
 
+## V
+
+**Validation Artifact**
+A machine-readable JSON file produced during testing or cleanup that records metrics, findings, and verdicts. Examples: `validation-results.json`, `repository-inventory.json`.
+
 ## Related Chapters
 
 - [Curriculum Architecture](05-curriculum-architecture.md)
 - [Didactic Agent Runtime](11-didactic-agent-runtime.md)
 - [Governance Model](27-governance-model.md)
 - [Testing and Certification](28-testing-and-certification.md)
+- [NV-2900 Repository Cleanup](33-nv-2900-repository-cleanup.md)

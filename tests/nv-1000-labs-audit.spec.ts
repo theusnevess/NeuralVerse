@@ -4,9 +4,9 @@
  * Audit-only phase. No implementation fixes.
  */
 
-import { test, expect, type Page, type ConsoleMessage } from '@playwright/test';
+import { test, expect, type Page, type ConsoleMessage } from './fixtures/playwright-runtime-observability';
 
-const BASE = 'http://localhost:8080';
+const BASE = 'http://127.0.0.1:8090';
 const HOME_URL = `${BASE}/index.html#/laboratory`;
 
 const LABS = [

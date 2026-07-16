@@ -29,6 +29,82 @@
    ========================================================= */
 
 :root {
+  /* NV-1900 Laboratory semantic authority. Shared Laboratory regions consume
+     these roles; renderer data colors remain scientific, not interface roles. */
+  --nv-surface-canvas: var(--sys-color-background-base);
+  --nv-surface-region: var(--sys-color-surface-base);
+  --nv-surface-panel: var(--sys-color-surface-raised);
+  --nv-surface-control: var(--sys-color-surface-overlay);
+  --nv-text-primary: var(--sys-color-text-primary);
+  --nv-text-secondary: var(--sys-color-text-secondary);
+  --nv-text-muted: var(--sys-color-text-muted);
+  --nv-border-subtle: var(--sys-color-border-subtle);
+  --nv-border-default: var(--sys-color-border-default);
+  --nv-border-selected: var(--sys-color-accent-primary);
+  --nv-action-primary: var(--sys-color-accent-primary);
+  --nv-action-primary-hover: var(--sys-color-accent-hover);
+  --nv-focus-ring: var(--sys-a11y-focus-ring);
+  --nv-space-control-gap: var(--sys-space-stack-sm);
+  --nv-space-panel-padding: var(--sys-space-inset-md);
+  --nv-radius-control: var(--sys-radius-control);
+  --nv-radius-panel: var(--sys-radius-container);
+  --nv-motion-interface: var(--sys-motion-duration-transition);
+  --nv-science-axis: var(--sys-color-text-muted);
+  --nv-science-grid: var(--sys-color-border-subtle);
+  --nv-science-data: var(--sys-color-accent-primary);
+  --nv-science-selection: var(--sys-color-accent-hover);
+  --nv-science-warning: var(--sys-color-semantic-warning);
+  --nv-science-terminal: var(--sys-color-semantic-success);
+
+  /* Legacy Laboratory aliases remain globally available while consuming this
+     single authority. Component styles must not redefine these roles. */
+  --nv-lab-depth-0: #05070B;
+  --nv-lab-depth-1: #0C1220;
+  --nv-lab-depth-2: #121C2C;
+  --nv-lab-depth-3: #18253A;
+  --nv-lab-depth-4: transparent;
+  --nv-lab-bg: var(--nv-surface-canvas);
+  --nv-lab-surface: var(--nv-surface-region);
+  --nv-lab-surface-hover: var(--nv-surface-panel);
+  --nv-lab-surface-interactive: var(--nv-lab-depth-2);
+  --nv-lab-surface-focused: var(--nv-lab-depth-3);
+  --nv-lab-surface-transparent: color-mix(in srgb, var(--nv-lab-depth-1) 65%, transparent);
+  --nv-lab-border: var(--nv-border-default);
+  --nv-lab-border-hover: var(--nv-border-selected);
+  --nv-lab-border-subtle: color-mix(in srgb, var(--nv-border-subtle) 65%, transparent);
+  --nv-lab-accent: var(--nv-action-primary);
+  --nv-lab-accent-dim: color-mix(in srgb, var(--nv-action-primary) 12%, transparent);
+  --nv-lab-accent-glow: color-mix(in srgb, var(--nv-action-primary) 6%, transparent);
+  --nv-lab-accent-subtle: color-mix(in srgb, var(--nv-action-primary) 4%, transparent);
+  --nv-lab-text: var(--nv-text-primary);
+  --nv-lab-text-secondary: var(--nv-text-secondary);
+  --nv-lab-text-muted: var(--nv-text-muted);
+  --nv-lab-radius: var(--nv-radius-panel);
+  --nv-lab-radius-sm: var(--nv-radius-control);
+  --nv-lab-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  --nv-lab-shadow-elevated: 0 4px 16px rgba(0, 0, 0, 0.25), 0 1px 4px rgba(0, 0, 0, 0.15);
+  --nv-lab-shadow-glow: 0 0 24px color-mix(in srgb, var(--nv-action-primary) 8%, transparent);
+  --nv-lab-gap: var(--sys-space-stack-md);
+  --nv-lab-gap-sm: var(--sys-space-stack-sm);
+  --nv-lab-gap-xs: var(--sys-space-stack-xs);
+  --nv-lab-type-hero: clamp(3rem, 5.5vw, 3.75rem);
+  --nv-lab-type-primary: clamp(1.75rem, 3vw, 2.125rem);
+  --nv-lab-type-secondary: clamp(1.25rem, 2.2vw, 1.625rem);
+  --nv-lab-type-experiment: 1.25rem;
+  --nv-lab-type-body: 1rem;
+  --nv-lab-type-metadata: 0.8125rem;
+  --nv-lab-type-label: 0.6875rem;
+  --nv-lab-type-micro: 0.625rem;
+  --nv-lab-motion-editorial: 420ms;
+  --nv-lab-motion-reveal: 520ms;
+  --nv-lab-motion-hover: 180ms;
+  --nv-lab-motion-state: 200ms;
+  --nv-lab-easing-editorial: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --nv-lab-easing-reveal: cubic-bezier(0.16, 1, 0.3, 1);
+  --nv-lab-light-intensity: 0.06;
+  --nv-lab-light-hero: radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--nv-action-primary) 5%, transparent) 0%, transparent 60%);
+  --nv-lab-light-accent: radial-gradient(ellipse at 0% 50%, color-mix(in srgb, var(--nv-action-primary) 4%, transparent) 0%, transparent 50%);
+
   /* Graphite scale — dark surfaces */
   --ref-color-graphite-950: #030608;
   --ref-color-graphite-900: #080e18;
@@ -181,6 +257,37 @@
   --ref-motion-ease-enter:     cubic-bezier(0.0, 0, 0.2, 1);
   --ref-motion-ease-exit:      cubic-bezier(0.4, 0, 1,   1);
   --ref-motion-ease-emphasized: cubic-bezier(0.2, 0, 0,   1);
+}
+
+/* NV-2100: canonical interface-motion authority. Scientific cadence and
+   renderer interpolation remain owned by execution and renderer contracts. */
+:root {
+  --nv-motion-duration-instant: var(--ref-motion-duration-instant);
+  --nv-motion-duration-fast: var(--ref-motion-duration-hover);
+  --nv-motion-duration-standard: var(--ref-motion-duration-normal);
+  --nv-motion-duration-deliberate: var(--ref-motion-duration-slow);
+  --nv-motion-ease-enter: var(--ref-motion-ease-enter);
+  --nv-motion-ease-exit: var(--ref-motion-ease-exit);
+  --nv-motion-ease-move: var(--ref-motion-ease-standard);
+  --nv-motion-ease-emphasis: var(--ref-motion-ease-emphasized);
+  --nv-motion-distance-xs: 1px;
+  --nv-motion-distance-sm: 4px;
+  --nv-motion-distance-md: 8px;
+  --nv-motion-opacity-muted: 0.72;
+  --nv-motion-scale-pressed: 0.98;
+
+  --nv-motion-feedback-duration: var(--nv-motion-duration-fast);
+  --nv-motion-feedback-ease: var(--nv-motion-ease-move);
+  --nv-motion-disclosure-duration: var(--nv-motion-duration-standard);
+  --nv-motion-disclosure-ease: var(--nv-motion-ease-enter);
+  --nv-motion-state-duration: var(--nv-motion-duration-standard);
+  --nv-motion-state-ease: var(--nv-motion-ease-move);
+  --nv-motion-region-reveal-duration: var(--nv-motion-duration-deliberate);
+  --nv-motion-region-reveal-ease: var(--nv-motion-ease-enter);
+  --nv-motion-attention-duration: var(--nv-motion-duration-standard);
+  --nv-motion-attention-ease: var(--nv-motion-ease-emphasis);
+  --nv-motion-exit-duration: var(--nv-motion-duration-fast);
+  --nv-motion-exit-ease: var(--nv-motion-ease-exit);
 }
 
 /* =========================================================
@@ -373,6 +480,39 @@
   --sys-font-code-size:        var(--ref-font-size-300);
   --sys-font-code-weight:      var(--ref-font-weight-regular);
   --sys-font-code-line-height: var(--ref-font-line-height-relaxed);
+}
+
+/* NV-2000 semantic Laboratory typography. These roles compose the existing
+   reference and system primitives; they do not create another type scale. */
+:root {
+  --nv-font-interface: var(--sys-font-body-family);
+  --nv-font-numeric: var(--sys-font-body-family);
+  --nv-font-code: var(--sys-font-code-family);
+
+  --nv-type-laboratory-title: clamp(1.5rem, 2.2vw, 2rem);
+  --nv-type-region-title: var(--ref-font-size-600);
+  --nv-type-panel-title: var(--ref-font-size-500);
+  --nv-type-section-title: var(--ref-font-size-400);
+  --nv-type-body: var(--sys-font-body-size);
+  --nv-type-supporting: var(--ref-font-size-300);
+  --nv-type-control-label: var(--ref-font-size-300);
+  --nv-type-control-description: var(--ref-font-size-200);
+  --nv-type-measurement: var(--ref-font-size-400);
+  --nv-type-measurement-label: var(--ref-font-size-300);
+  --nv-type-metadata: var(--sys-font-caption-size);
+  --nv-type-status: var(--ref-font-size-300);
+  --nv-type-annotation: var(--ref-font-size-300);
+  --nv-type-code: var(--sys-font-code-size);
+
+  --nv-leading-heading: var(--ref-font-line-height-tight);
+  --nv-leading-body: var(--sys-font-body-line-height);
+  --nv-leading-reading: var(--ref-font-line-height-relaxed);
+  --nv-leading-label: 1.3;
+  --nv-leading-numeric: 1.2;
+  --nv-leading-code: var(--sys-font-code-line-height);
+  --nv-tracking-normal: var(--ref-font-tracking-normal);
+  --nv-measure-reading: 68ch;
+  --nv-measure-supporting: 52rem;
 }
 
 /* =========================================================
@@ -763,5 +903,8 @@
     --sys-background-ambient-motion: var(--ref-motion-duration-instant);
     --sys-background-neural-drift-duration: var(--ref-motion-duration-instant);
     --sys-background-neural-pulse-duration: var(--ref-motion-duration-instant);
+    --nv-motion-duration-fast: var(--ref-motion-duration-instant);
+    --nv-motion-duration-standard: var(--ref-motion-duration-instant);
+    --nv-motion-duration-deliberate: var(--ref-motion-duration-instant);
   }
 }

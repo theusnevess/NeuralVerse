@@ -211,10 +211,10 @@
     artifactReferences: [],
     conceptReferences: ['feature-engineering', 'regularization'],
     parameterSchema: [
-      { name: 'numPoints', type: 'integer', min: 20, max: 100, step: 5, default: 50, label: 'Sample Count' },
-      { name: 'variance1', type: 'slider', min: 0.5, max: 5.0, step: 0.1, default: 3.0, label: 'Variance (Major Axis)' },
-      { name: 'variance2', type: 'slider', min: 0.1, max: 3.0, step: 0.1, default: 0.5, label: 'Variance (Minor Axis)' },
-      { name: 'rotation', type: 'slider', min: 0, max: 3.14, step: 0.1, default: 0.78, label: 'Data Rotation (rad)' }
+      { name: 'numPoints', type: 'integer', min: 20, max: 100, step: 5, default: 50, label: 'Sample Count', description: 'Sets the number of generated observations.', scientificMeaning: 'Discrete synthetic dataset size.', unit: 'samples' },
+      { name: 'variance1', type: 'slider', min: 0.5, max: 5.0, step: 0.1, default: 3.0, label: 'Variance (Major Axis)', description: 'Controls spread along the principal synthetic axis.', scientificMeaning: 'Major-axis variance scale.', unitClassification: 'unitless' },
+      { name: 'variance2', type: 'slider', min: 0.1, max: 3.0, step: 0.1, default: 0.5, label: 'Variance (Minor Axis)', description: 'Controls spread along the secondary synthetic axis.', scientificMeaning: 'Minor-axis variance scale.', unitClassification: 'unitless' },
+      { name: 'rotation', type: 'slider', min: 0, max: 3.14, step: 0.1, default: 0.78, label: 'Data Rotation (rad)', description: 'Rotates the generated dataset before projection.', scientificMeaning: 'Orientation angle of the synthetic covariance structure.', unit: 'radians' }
     ],
     initialState: { numPoints: 50, variance1: 3.0, variance2: 0.5, rotation: 0.78 },
     steps: (function () {
@@ -587,6 +587,7 @@
       };
     },
     visualization: { type: 'scatter-plot', title: 'PCA Projection' },
+    scientificStage: { title: 'PCA projection', scientificQuestion: 'Which directions preserve the largest share of variation in the dataset?', evidence: [{ key: 'PC1 Variance', label: 'PC1 explained variance' }, { key: 'PC2 Variance', label: 'PC2 explained variance' }, { key: 'Correlation Coefficient', label: 'Correlation' }], interpretation: 'The data cloud, centroid, and component directions connect covariance structure to projection.' },
     canonicalStatus: 'reviewed',
     version: '1.0.0',
     reviewedBy: 'NeuralVerse Team',

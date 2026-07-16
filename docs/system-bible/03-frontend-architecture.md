@@ -2,33 +2,43 @@
 
 ## Routing
 
-The application uses a custom `HashRouter` (`router.js`) that listens for `hashchange` events. Route patterns are defined in `routes.js` and match against `window.location.hash`. When a match is found, the corresponding page template is fetched from `website/pages/` and loaded into `#nv-workspace-content-body`.
+The application uses a custom `HashRouter` (`router.js`) that listens for `hashchange` events. Route patterns are defined in `routes.js` and match against `window.location.hash`. When a match is found, the corresponding view template — defined as an inline HTML string in the `ViewController.templates` object within `router.js` — is injected into `#nv-workspace-content-body`.
 
 ### Route Registration
 
 Each route is registered with:
 - A regex pattern (e.g., `^#/learning/([^/]+)$`)
 - A route ID (e.g., `learning-detail`)
-- A view template path (e.g., `pages/learning-detail.html`)
-- A render function for dynamic content
+- A label and title for navigation
+- An `isImplemented` flag
+
+Route view templates are inline HTML strings in `router.js`, not external files.
 
 ### Route Table
 
 | Hash Pattern | Route ID | View Template |
 |---|---|---|
-| `#/` | `home` | `pages/home.html` |
-| `#/learning` | `learning` | `pages/learning.html` |
-| `#/learning/:pathId` | `learning-detail` | `pages/learning-detail.html` |
-| `#/learning/:pathId/module/:moduleId` | `learning-path` | `pages/learning-path.html` |
-| `#/learning/:pathId/module/:moduleId/lesson/:lessonId` | `lesson-detail` | `pages/learning-detail.html` |
-| `#/learning/:pathId/module/:moduleId/lesson/:lessonId/artifact/:artifactId` | `artifact-detail` | `pages/learning-detail.html` |
-| `#/modules` | `modules` | `pages/learning-detail.html` |
-| `#/modules/:moduleId` | `module-detail` | `pages/learning-detail.html` |
-| `#/workspace` | `workspace` | `pages/workspace.html` |
-| `#/content` | `content` | `pages/content.html` |
-| `#/retrieval-playground` | `retrieval-playground` | `pages/retrieval-playground.html` |
-| `#/knowledge-graph` | `knowledge-graph` | `pages/knowledge-graph.html` |
-| `#/settings` | `settings` | `pages/settings.html` |
+| `#/` | `home` | Inline (home) |
+| `#/learning` | `learning` | Inline (learning) |
+| `#/learning/:pathId` | `learning-detail` | Inline (learning-detail) |
+| `#/learning/:pathId/module/:moduleId` | `learning-path` | Inline (learning-path) |
+| `#/learning/:pathId/module/:moduleId/lesson/:lessonId` | `lesson-detail` | Inline (lesson-detail) |
+| `#/learning/:pathId/module/:moduleId/lesson/:lessonId/artifact/:artifactId` | `artifact-detail` | Inline (artifact-detail) |
+| `#/modules` | `modules` | Inline (modules) |
+| `#/modules/:moduleId` | `module-detail` | Inline (module-detail) |
+| `#/workspace` | `workspace` | Inline (workspace) |
+| `#/content` | `content` | Inline (content) |
+| `#/retrieval-playground` | `retrieval-playground` | Inline (retrieval-playground) |
+| `#/knowledge-graph` | `knowledge-graph` | Inline (knowledge-graph) |
+| `#/settings` | `settings` | Inline (settings) |
+| `#/laboratory` | `laboratory` | Inline (laboratory) |
+| `#/laboratory/:slug` | `laboratory-detail` | Inline (laboratory-detail) |
+| `#/memory` | `memory` | Inline (memory) |
+| `#/memory/:memoryId` | `memory-detail` | Inline (memory-detail) |
+| `#/semantic-learning` | `semantic-learning` | Inline (semantic-learning) |
+| `#/visualizations` | `visualizations` | Inline (visualizations) |
+| `#/visualizations/:slug` | `visualization-detail` | Inline (visualization-detail) |
+| `#/generative-layer` | `generative-layer` | Inline (generative-layer) |
 
 ## Shell
 

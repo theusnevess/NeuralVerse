@@ -260,7 +260,7 @@
         max: 200,
         step: 10,
         default: 80,
-        label: 'Dataset Size'
+        label: 'Dataset Size', description: 'Sets the number of generated labeled observations.', scientificMeaning: 'Discrete classification dataset size.', unit: 'samples'
       },
       {
         name: 'separation',
@@ -269,7 +269,7 @@
         max: 3.0,
         step: 0.1,
         default: 1.0,
-        label: 'Class Separation'
+        label: 'Class Separation', description: 'Controls how far apart the two generated classes are.', scientificMeaning: 'Synthetic class-separation scale.', unitClassification: 'unitless'
       },
       {
         name: 'noise',
@@ -278,7 +278,7 @@
         max: 3.0,
         step: 0.1,
         default: 1.0,
-        label: 'Noise Level'
+        label: 'Noise Level', description: 'Controls variation within each generated class.', scientificMeaning: 'Synthetic class-noise scale.', unitClassification: 'unitless'
       },
       {
         name: 'learningRate',
@@ -287,7 +287,7 @@
         max: 2.0,
         step: 0.01,
         default: 0.5,
-        label: 'Learning Rate'
+        label: 'Learning Rate', description: 'Controls the size of each training update.', scientificMeaning: 'Gradient descent step-size multiplier.', unitClassification: 'unitless'
       },
       {
         name: 'threshold',
@@ -296,7 +296,7 @@
         max: 0.9,
         step: 0.05,
         default: 0.5,
-        label: 'Classification Threshold'
+        label: 'Classification Threshold', description: 'Sets the probability cutoff for a positive prediction.', scientificMeaning: 'Probability decision boundary.', unitClassification: 'probability'
       }
     ],
     initialState: {
@@ -688,6 +688,7 @@
       };
     },
     visualization: { type: 'scatter-plot', title: 'Logistic Regression Training' },
+    scientificStage: { title: 'Logistic decision boundary', scientificQuestion: 'How do learned weights change the boundary that separates the two classes?', evidence: [{ key: 'Final Loss', label: 'Cross-entropy loss' }, { key: 'Accuracy', label: 'Accuracy' }, { key: 'Gradient Magnitude', label: 'Gradient magnitude' }], interpretation: 'Class marks and the boundary show the model relationship; loss and accuracy provide supporting evidence.' },
     canonicalStatus: 'reviewed',
     version: '1.0.0',
     reviewedBy: 'NeuralVerse Team',

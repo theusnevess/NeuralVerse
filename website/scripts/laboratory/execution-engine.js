@@ -78,18 +78,51 @@
     var steps = lab.steps || [];
     var totalSteps = steps.length || 1;
 
+    var validation = window.NeuralVerse.ParameterEngine.validateAll(lab.parameterSchema, params || {});
+    if (!validation.valid) return null;
+
     return {
       labId: lab.id,
       lab: lab,
-      params: params || {},
+      // A session owns an independent normalized copy for its entire lifecycle.
+      params: Object.freeze(Object.assign({}, validation.params)),
       steps: steps,
       totalSteps: totalSteps,
       currentStep: -1,
       history: [],
       state: 'idle',
       startTime: null,
-      logs: []
+      logs: [],
+      error: null
     };
+  }
+
+  function getLifecycleState(session) {
+    if (!session) return 'ready';
+    if (session.state === 'finished') return 'completed';
+    if (session.state === 'failed') return 'failed';
+    if (session.state === 'paused') return 'paused';
+    if (session.state === 'running') return 'running';
+    return 'ready';
+  }
+
+  function startSession(session) {
+    if (!session || (session.state !== 'idle' && session.state !== 'paused')) return false;
+    session.state = 'running';
+    session.error = null;
+    return true;
+  }
+
+  function pauseSession(session) {
+    if (!session || session.state !== 'running') return false;
+    session.state = 'paused';
+    return true;
+  }
+
+  function getProgress(session) {
+    var total = session ? Math.max(1, session.totalSteps) : 1;
+    var current = session ? Math.max(0, session.currentStep + 1) : 0;
+    return { current: current, total: total, fraction: current / total };
   }
 
   function stepForward(session) {
@@ -106,7 +139,14 @@
     if (!session.startTime) session.startTime = Date.now();
 
     var step = session.steps[nextStep];
-    var snapshot = computeStepSnapshot(session, nextStep, step);
+    var snapshot;
+    try {
+      snapshot = computeStepSnapshot(session, nextStep, step);
+    } catch (err) {
+      session.state = 'failed';
+      session.error = 'The experiment could not complete this step.';
+      return session;
+    }
     session.history.push(snapshot);
 
     session.logs.push({
@@ -164,6 +204,7 @@
     session.startTime = null;
     session.history = [];
     session.logs = [];
+    session.error = null;
     return session;
   }
 
@@ -183,6 +224,10 @@
   window.NeuralVerse.ExecutionEngine = {
     execute: executeLab,
     createStepSession: createStepSession,
+    getLifecycleState: getLifecycleState,
+    startSession: startSession,
+    pauseSession: pauseSession,
+    getProgress: getProgress,
     stepForward: stepForward,
     getStepSnapshot: getStepSnapshot,
     resetSession: resetSession,

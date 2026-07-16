@@ -16,11 +16,5 @@
     "title": "Deep Learning",
     "description": "Neural networks, backpropagation, and representation learning.",
     "order": 3
-  },
-  {
-    "id": "convolution-computer-vision",
-    "title": "Convolution in Computer Vision",
-    "description": "From classical image kernels to learned CNN feature maps. Covers 2D convolution, cross-correlation, parameters, and the transition to learned filters.",
-    "order": 4
   }
 ]

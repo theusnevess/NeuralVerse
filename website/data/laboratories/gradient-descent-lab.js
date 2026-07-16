@@ -81,7 +81,10 @@
         max: 2.0,
         step: 0.01,
         default: 0.1,
-        label: 'Learning Rate'
+        label: 'Learning Rate',
+        description: 'Controls the size of each gradient-directed update.',
+        scientificMeaning: 'Gradient descent step-size multiplier.',
+        unitClassification: 'unitless'
       },
       {
         name: 'initialX',
@@ -90,7 +93,10 @@
         max: 5,
         step: 0.1,
         default: 3.0,
-        label: 'Initial X'
+        label: 'Initial X',
+        description: 'Sets the starting position on the selected loss curve.',
+        scientificMeaning: 'Initial scalar position in the synthetic loss domain.',
+        unitClassification: 'unitless'
       },
       {
         name: 'numIterations',
@@ -99,14 +105,20 @@
         max: 100,
         step: 1,
         default: 30,
-        label: 'Number of Iterations'
+        label: 'Number of Iterations',
+        description: 'Limits the number of gradient updates.',
+        scientificMeaning: 'Discrete optimization update count.',
+        unitClassification: 'iteration-count'
       },
       {
         name: 'functionType',
         type: 'select',
         options: ['quadratic', 'cubic', 'sine'],
         default: 'quadratic',
-        label: 'Loss Function'
+        label: 'Loss Function',
+        description: 'Selects the objective surface to optimize.',
+        scientificMeaning: 'Categorical objective-function choice.',
+        unitClassification: 'not-applicable'
       }
     ],
     initialState: {
@@ -578,6 +590,7 @@
       type: 'line-chart',
       title: 'Loss Curve During Optimization'
     },
+    scientificStage: { title: 'Gradient descent loss surface', scientificQuestion: 'How do gradient updates move the current position toward lower loss?', evidence: [{ key: 'Loss', label: 'Loss' }, { key: 'Gradient', label: 'Gradient' }, { key: 'Iteration', label: 'Iteration' }], interpretation: 'The path and loss curve show the effect of each gradient-directed update.' },
     canonicalStatus: 'reviewed',
     version: '1.0.0',
     reviewedBy: 'NeuralVerse Team',

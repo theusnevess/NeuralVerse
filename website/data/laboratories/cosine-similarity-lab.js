@@ -182,8 +182,8 @@
     artifactReferences: [],
     conceptReferences: ['vector-similarity'],
     parameterSchema: [
-      { name: 'vectorA', type: 'select', options: ['retrieval', 'search', 'embedding', 'vector', 'loss', 'gradient', 'angle', 'projection'], default: 'retrieval', label: 'Vector A' },
-      { name: 'vectorB', type: 'select', options: ['retrieval', 'search', 'embedding', 'vector', 'loss', 'gradient', 'angle', 'projection'], default: 'search', label: 'Vector B' }
+      { name: 'vectorA', type: 'select', options: ['retrieval', 'search', 'embedding', 'vector', 'loss', 'gradient', 'angle', 'projection'], default: 'retrieval', label: 'Vector A', description: 'Selects the first vector for geometric comparison.', scientificMeaning: 'Categorical source-vector choice.', unitClassification: 'not-applicable' },
+      { name: 'vectorB', type: 'select', options: ['retrieval', 'search', 'embedding', 'vector', 'loss', 'gradient', 'angle', 'projection'], default: 'search', label: 'Vector B', description: 'Selects the second vector for geometric comparison.', scientificMeaning: 'Categorical comparison-vector choice.', unitClassification: 'not-applicable' }
     ],
     initialState: { vectorA: 'retrieval', vectorB: 'search' },
     steps: (function () {
@@ -642,6 +642,7 @@
       };
     },
     visualization: { type: 'svg-diagram', title: 'Vector Similarity' },
+    scientificStage: { title: 'Cosine vector geometry', scientificQuestion: 'How does the angle between vectors determine their directional similarity?', evidence: [{ key: 'Cosine', label: 'Cosine similarity' }, { key: 'Angle', label: 'Angle' }, { key: 'Projection Scalar', label: 'Projection scalar' }], interpretation: 'Vector direction, angle, and projection make the cosine relationship directly observable.' },
     canonicalStatus: 'reviewed',
     version: '1.0.0',
     reviewedBy: 'NeuralVerse Team',

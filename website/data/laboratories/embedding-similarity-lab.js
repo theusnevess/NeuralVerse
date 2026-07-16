@@ -210,7 +210,7 @@
         type: 'select',
         options: ITEMS.slice(),
         default: 'embedding',
-        label: 'Query Item'
+        label: 'Query Item', description: 'Selects the embedding used as the similarity query.', scientificMeaning: 'Categorical query-vector choice.', unitClassification: 'not-applicable'
       },
       {
         name: 'topK',
@@ -219,7 +219,7 @@
         max: 8,
         step: 1,
         default: 3,
-        label: 'Top-K Neighbors'
+        label: 'Top-K Neighbors', description: 'Sets how many nearest embeddings are returned.', scientificMeaning: 'Discrete nearest-neighbor result count.', unit: 'neighbors'
       }
     ],
     initialState: {
@@ -1162,6 +1162,7 @@
       type: 'numeric-summary',
       title: 'Embedding Similarity — Representation Geometry'
     },
+    scientificStage: { title: 'Embedding neighborhood', scientificQuestion: 'Which embedded items are nearest to the selected query and by how much?', evidence: [{ key: 'Best Match', label: 'Best match' }, { key: 'Similarity', label: 'Similarity' }, { key: 'Vector Dimensions', label: 'Vector dimensions' }], interpretation: 'The selected point, its neighbors, and their geometry provide the similarity evidence.' },
     canonicalStatus: 'reviewed',
     version: '2.0.0',
     reviewedBy: 'NeuralVerse Team',

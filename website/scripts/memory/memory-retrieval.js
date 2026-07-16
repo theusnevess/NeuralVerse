@@ -253,8 +253,8 @@
 
   function getMemory(id) {
     var registry = getRegistry();
-    if (registry && typeof registry.getById === 'function') {
-      return registry.getById(id) || null;
+    if (registry && typeof registry.get === 'function') {
+      return registry.get(id) || null;
     }
     var items = getAllItems();
     for (var i = 0; i < items.length; i++) {
