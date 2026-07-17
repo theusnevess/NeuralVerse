@@ -33,14 +33,14 @@ def test_alembic_configuration_points_to_shared_migrations() -> None:
     assert Path(script_location) == MIGRATIONS
 
 
-def test_b41_is_the_only_linear_head() -> None:
+def test_stage2_workflow_migration_is_the_only_linear_head() -> None:
     script = ScriptDirectory.from_config(alembic_config())
     heads = script.get_heads()
-    assert heads == ["b41000000001"]
+    assert heads == ["b42000000001"]
     revision = script.get_revision(heads[0])
     assert revision is not None
-    assert revision.down_revision == "b30000000001"
-    assert revision.doc.startswith("Add the B.4.1 operational persistence foundation.")
+    assert revision.down_revision == "b41000000001"
+    assert revision.doc.startswith("Add durable NV-XFI workflow checkpoints")
 
 
 def test_application_metadata_has_only_operational_tables() -> None:
@@ -48,6 +48,8 @@ def test_application_metadata_has_only_operational_tables() -> None:
         "fixture_records",
         "idempotency_records",
         "operational_audit_events",
+        "cross_front_workflow_executions",
+        "cross_front_workflow_queue",
     }
 
 

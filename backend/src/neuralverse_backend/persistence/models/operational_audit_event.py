@@ -3,11 +3,13 @@ from __future__ import annotations
 import uuid
 from datetime import datetime
 
-from sqlalchemy import CheckConstraint, DateTime, Index, String, Uuid
+from sqlalchemy import JSON, CheckConstraint, DateTime, Index, String, Text, Uuid
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column
 
 from neuralverse_backend.persistence.metadata import Base
+
+PORTABLE_JSONB = JSON().with_variant(JSONB(astext_type=Text()), "postgresql")
 
 
 class OperationalAuditEvent(Base):
@@ -29,7 +31,7 @@ class OperationalAuditEvent(Base):
     recorded_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, server_default="CURRENT_TIMESTAMP"
     )
-    audit_metadata: Mapped[object] = mapped_column("metadata", JSONB, nullable=False)
+    audit_metadata: Mapped[object] = mapped_column("metadata", PORTABLE_JSONB, nullable=False)
 
     __table_args__ = (
         CheckConstraint(
@@ -54,11 +56,11 @@ class OperationalAuditEvent(Base):
         CheckConstraint(
             "char_length(btrim(operation)) > 0",
             name="operation_nonempty",
-        ),
+        ).ddl_if(dialect="postgresql"),
         CheckConstraint(
             "jsonb_typeof(metadata) = 'object' AND octet_length(metadata::text) <= 16384",
             name="metadata_bounds",
-        ),
+        ).ddl_if(dialect="postgresql"),
         CheckConstraint(
             "occurred_at <= recorded_at",
             name="timestamp_order",

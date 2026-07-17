@@ -63,6 +63,8 @@ def test_metadata_contains_only_operational_models_and_is_deterministic() -> Non
         "fixture_records",
         "idempotency_records",
         "operational_audit_events",
+        "cross_front_workflow_executions",
+        "cross_front_workflow_queue",
     }
     assert metadata.naming_convention["ix"] == "ix_%(table_name)s_%(column_0_N_name)s"
 

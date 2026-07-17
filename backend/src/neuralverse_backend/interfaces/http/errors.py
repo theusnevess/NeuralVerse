@@ -98,6 +98,13 @@ async def http_error_handler(request: Request, exc: StarletteHTTPException) -> J
     status_code = exc.status_code
     error_code = "NOT_FOUND" if status_code == 404 else "HTTP_ERROR"
     message = "Resource not found." if status_code == 404 else "Request could not be completed."
+    if isinstance(exc.detail, dict):
+        detail_code = exc.detail.get("code")
+        detail_message = exc.detail.get("message")
+        if isinstance(detail_code, str):
+            error_code = detail_code
+        if isinstance(detail_message, str):
+            message = detail_message
     return _response(request, status_code=status_code, error_code=error_code, message=message)
 
 

@@ -3,7 +3,7 @@ from __future__ import annotations
 import uuid
 from datetime import datetime
 
-from sqlalchemy import CheckConstraint, DateTime, ForeignKey, Index, String, Uuid, text
+from sqlalchemy import JSON, CheckConstraint, DateTime, ForeignKey, Index, String, Text, Uuid, text
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.types import LargeBinary
@@ -14,6 +14,8 @@ from neuralverse_backend.persistence.models.enums import (
     FixtureClassification,
     FixtureSharedContractStatus,
 )
+
+PORTABLE_JSONB = JSON().with_variant(JSONB(astext_type=Text()), "postgresql")
 
 
 class FixtureRecord(Base):
@@ -50,11 +52,11 @@ class FixtureRecord(Base):
     payload_media_type: Mapped[str] = mapped_column(String(128), nullable=False)
     raw_payload: Mapped[bytes] = mapped_column(LargeBinary, nullable=False)
     raw_payload_sha256: Mapped[str] = mapped_column(String(64), nullable=False)
-    structural_payload: Mapped[object | None] = mapped_column(JSONB, nullable=True)
+    structural_payload: Mapped[object | None] = mapped_column(PORTABLE_JSONB, nullable=True)
     structural_payload_sha256: Mapped[str | None] = mapped_column(String(64), nullable=True)
     validation_status: Mapped[str] = mapped_column(String(32), nullable=False)
     validation_findings: Mapped[object] = mapped_column(
-        JSONB, nullable=False, server_default=text("'[]'::jsonb")
+        PORTABLE_JSONB, nullable=False, server_default=text("'[]'")
     )
     received_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     recorded_at: Mapped[datetime] = mapped_column(
@@ -70,19 +72,19 @@ class FixtureRecord(Base):
         CheckConstraint(
             "char_length(btrim(fixture_schema_name)) > 0",
             name="schema_name_nonempty",
-        ),
+        ).ddl_if(dialect="postgresql"),
         CheckConstraint(
             "char_length(btrim(fixture_schema_version)) > 0",
             name="schema_version_nonempty",
-        ),
+        ).ddl_if(dialect="postgresql"),
         CheckConstraint(
             "char_length(btrim(minimum_reader_version)) > 0",
             name="reader_version_nonempty",
-        ),
+        ).ddl_if(dialect="postgresql"),
         CheckConstraint(
             "char_length(btrim(producer_version)) > 0",
             name="producer_version_nonempty",
-        ),
+        ).ddl_if(dialect="postgresql"),
         CheckConstraint(
             f"fixture_classification = '{FixtureClassification.TEST_FIXTURE.value}'",
             name="classification",
@@ -101,13 +103,11 @@ class FixtureRecord(Base):
             name="media_type",
         ),
         CheckConstraint(
-            "octet_length(raw_payload) <= 1048576",
-            name="payload_size",
-        ),
+            "octet_length(raw_payload) <= 1048576", name="payload_size"
+        ).ddl_if(dialect="postgresql"),
         CheckConstraint(
-            "raw_payload_sha256 ~ '^[0-9a-f]{64}$'",
-            name="raw_hash",
-        ),
+            "raw_payload_sha256 ~ '^[0-9a-f]{64}$'", name="raw_hash"
+        ).ddl_if(dialect="postgresql"),
         CheckConstraint(
             "validation_status IN ('STRUCTURALLY_VALID', 'STRUCTURALLY_REJECTED')",
             name="validation_status",
@@ -119,7 +119,7 @@ class FixtureRecord(Base):
         CheckConstraint(
             "structural_payload_sha256 IS NULL OR structural_payload_sha256 ~ '^[0-9a-f]{64}$'",
             name="structural_hash",
-        ),
+        ).ddl_if(dialect="postgresql"),
         CheckConstraint(
             "(validation_status = 'STRUCTURALLY_VALID') = (structural_payload IS NOT NULL)",
             name="valid_payload",

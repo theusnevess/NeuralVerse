@@ -92,10 +92,12 @@ def assert_rejected(engine: Engine, statement: Insert) -> None:
             connection.execute(statement)
 
 
-def test_catalog_contains_exactly_three_application_tables(postgres_engine: Engine) -> None:
+def test_catalog_contains_operational_and_cross_front_tables(postgres_engine: Engine) -> None:
     tables = set(inspect(postgres_engine).get_table_names(schema="public"))
     assert tables == {
         "alembic_version",
+        "cross_front_workflow_executions",
+        "cross_front_workflow_queue",
         "fixture_records",
         "idempotency_records",
         "operational_audit_events",
