@@ -20,3 +20,23 @@ playwright-report/
 test-results/
 test-results-phase12-6/
 tests/playwright/
+
+# Backend local environments and Python caches
+backend/.venv/
+backend/.env
+backend/.env.*
+!backend/.env.example
+backend/**/__pycache__/
+backend/.mypy_cache/
+backend/.pytest_cache/
+backend/.ruff_cache/
+backend/.coverage
+backend/htmlcov/
+backend/dist/
+backend/build/
+backend/*.egg-info/
+backend/*.log
+backend/*.dump
+backend/*.sql.gz
+backend/.postgres-data/
+backend/.integration-test-output/
