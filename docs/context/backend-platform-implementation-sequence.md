@@ -7,7 +7,7 @@ Owner: NeuralVerse project owner and backend platform implementer<br>
 Authority: NV-BIP-000, NV-ACP-000, and BIP-M0 Phase 6 target architecture<br>
 Related documents: `backend-platform-target-architecture.md`, `backend-platform-security-baseline.md`, `backend-platform-local-development-model.md`, `backend-platform-cross-front-decisions.md`<br>
 Supersession: None<br>
-Last review date: `2026-07-16`
+Last review date: `2026-07-17`
 
 ## Sequence Rules
 
@@ -122,6 +122,23 @@ The non-canonical fixture vertical slice is `LEVEL 2 - FIXTURE VERTICAL SLICE CE
 The optional B.4.4 internal HTTP adapter remains conditional on demonstrated application-service transport need. The next canonical package slice requires its own accepted plan and gate.
 
 The next immediate action is precise staging and commit of the certified backend foundation. No B.4.4 implementation begins before that commit boundary is reviewed.
+
+## BIP-M1 and BIP-M2-P0 Handoff
+
+`BIP-M1` is completed, committed, and locally tagged at `e5344d19f7540772c6e50c2bac5f21fe6927cbb8` with `nv-bip-level2-fixture-e5344d19`. The tag certifies only the non-canonical Level 2 fixture vertical slice.
+
+`BIP-M2-P0` is `IMPLEMENTED` as the Cross-Front Integration Contract decision package. `NV-XFI-000` approves CF-010, CF-011, and CF-012. The optional B.4.4 fixture HTTP adapter remains deferred. BIP-M2 implementation remains blocked on neutral artifact foundation certification.
+
+The next authorized milestone is `NV-XFI-M1 — Neutral Shared Contract Artifact Foundation`. It may create the dedicated contracts worktree and contract artifacts, but no BIP-M2 implementation, endpoint, migration, ACP change, commit, tag, or remote operation is authorized by this phase.
+
+## Approved Cross-Front Sequence
+
+1. `NV-XFI-M0` - Hub approval of `NV-XFI-000`.
+2. `NV-XFI-M1` - Neutral Shared Contract Artifact Foundation.
+3. `NV-XFI-M2` - Initial Input Contract Schemas and Golden Examples.
+4. `NV-XFI-CERT` - Shared Contract Foundation Certification.
+5. `ACP-XFI-A1` - ACP adoption of approved contracts.
+6. `BIP-M2.1` - Backend shared artifact intake and validation.
 
 ## Phase 7 Handoff
 

@@ -6,8 +6,24 @@ Status: `DECIDED WITH CONDITIONS`<br>
 Owner: NeuralVerse project owner with semantic owners listed per decision<br>
 Authority: BIP-M0 Phase 6 and approved NeuralVerse semantic authorities<br>
 Related documents: `backend-platform-target-architecture.md`, `backend-platform-implementation-sequence.md`<br>
-Supersession: None; unresolved entries remain open until their semantic owner decides<br>
-Last review date: `2026-07-16`
+Supersession: CF-010, CF-011, and CF-012 are superseded by `NV-XFI-000`; later implementation statuses remain separate<br>
+Last review date: `2026-07-17`
+
+## BIP-M2-P0 Decision Package
+
+`BIP-M2-P0` is `IMPLEMENTED` as the documentation and readiness package for `BIP-M2 — Canonical Handoff Intake and Content Versioning Foundation`. `NV-XFI-000` closes CF-010, CF-011, and CF-012 as governance decisions. The detailed package is `backend-platform-bip-m2-cross-front-readiness.md`; the implementation plan remains blocked on artifact foundation certification.
+
+The certified backend Level 2 fixture remains non-canonical. The certified ACP evidence is limited to commit `b397035a9cfc3d376afc31633583f2b9ecd76548`; later ACP worktree changes are not consumed as authority.
+
+The current option matrix is:
+
+| Decision | Prepared recommendation | Required authority | Status |
+|---|---|---|---|
+| CF-010 representation | JSON Schema 2020-12 plus normative semantic documentation; generated projections; OpenAPI transport-only | NeuralVerse Hub, ACP, BIP, frontend authority | `ACCEPTED` |
+| CF-011 placement | Hub-governed neutral shared-contract source at the approved contracts front | NeuralVerse Hub and semantic owners | `ACCEPTED` |
+| CF-012 clients | Approved semantic artifacts plus BIP-owned transport adapter; generated API clients only from approved transport contracts | NeuralVerse Hub, frontend authority, BIP | `ACCEPTED` |
+
+These decisions are approved by `NV-XFI-000`. No implementation artifact is created by this adoption change; only `NV-XFI-M1` is authorized next.
 
 ## Phase 6.5 and Phase 7 Evidence Baseline
 
@@ -42,16 +58,16 @@ Canonical-definition statuses are independent from implementation statuses: `CAN
 | CF-007 | Governance authority | Backend publication module | Exact recommendation enum, coverage, findings, review, backlog, rationale | Exact review linkage and transport shape | Recommendation is not publication authority | `PARTIALLY_RESOLVED_BY_CANONICAL_SOURCE` |
 | CF-008 | Shared contract authority | Backend transport layer | Required version metadata and major/minor/patch compatibility rules | Language-neutral enforcement | Reject unknown major; preserve compatible unknown fields | `PARTIALLY_RESOLVED_BY_CANONICAL_SOURCE` |
 | CF-009 | Shared contract authority | Backend persistence adapter | Silent discard forbidden; compatible optional fields preserved | Raw/typed preservation implementation | Lossless semantic payload boundary | `PARTIALLY_RESOLVED_BY_CANONICAL_SOURCE` |
-| CF-010 | Shared contract authority | Backend transport/tooling | Canonical semantics and version principles | Exact language-neutral representation | JSON Schema/OpenAPI/manual option analysis | `REMAINS_CROSS_FRONT_DECISION_REQUIRED` |
-| CF-011 | Project owner/semantic owners | Backend platform | Ownership split and no table-shape coupling | Shared contract repository/package placement | Explicit governed contract location | `REMAINS_CROSS_FRONT_DECISION_REQUIRED` |
-| CF-012 | Project owner/frontend authority | Backend platform | Frontend consumes typed published-package delivery | Client generation and adapter ownership | Typed/validated client after schema decision | `REMAINS_CROSS_FRONT_DECISION_REQUIRED` |
+| CF-010 | Shared contract authority | Backend transport/tooling | Canonical semantics and version principles | JSON Schema 2020-12 plus normative semantic document | Neutral machine-readable source | `ACCEPTED` |
+| CF-011 | Project owner/semantic owners | Backend platform | Ownership split and no table-shape coupling | Approved neutral contracts front | Explicit governed contract location | `ACCEPTED` |
+| CF-012 | Project owner/frontend authority | Backend platform | Frontend consumes typed published-package delivery | BIP-owned transport adapter over approved outputs | Typed/validated client boundary | `ACCEPTED` |
 | CF-013 | Curriculum authority | Backend curriculum projection | ACP curriculum authority; backend projection; incremental migration | Cutover and parity gate | Static authority until validated projection | `PARTIALLY_RESOLVED_BY_CANONICAL_SOURCE` |
 | CF-014 | Content/publication authority | Backend publication module | Exact package/content/lab/assessment/release references required | Encoding and historical migration | Require exact version/release for new durable records | `RESOLVED_BY_CANONICAL_SOURCE` |
 | CF-015 | Retrieval/semantic authority | Backend search module | Backend retrieval/storage boundary; agent tooling/model decisions deferred | Embedding/chunking owner and index contract | PostgreSQL persistence without unilateral model choice | `PARTIALLY_RESOLVED_BY_CANONICAL_SOURCE` |
 
 ## Cross-Front Decisions Required Before Real Semantic Data
 
-The first vertical slice may use a clearly marked test fixture because it does not invent canonical semantics. Real curriculum, agent-generated, laboratory, assessment, asset, or embedding payloads require the applicable registry entries above to move from `CROSS_FRONT_DECISION_REQUIRED` to an approved status.
+The first vertical slice may use a clearly marked test fixture because it does not invent canonical semantics. Real curriculum, agent-generated, laboratory, assessment, asset, or embedding payloads require the applicable approved contract artifacts and implementation gates above; approval of CF-010/011/012 does not constitute implementation.
 
 The backend may preserve opaque JSONB payloads and exact identifiers while these decisions remain open. It may not reinterpret content blocks, choose publication meaning, infer assessment semantics, or declare an embedding model authoritative.
 

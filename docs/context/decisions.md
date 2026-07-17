@@ -15,6 +15,7 @@
 - Graph visualization should prioritize clarity over complexity.
 - Playwright/browser validation is preferred for UI-heavy tasks.
 - OpenCode configuration should remain minimal, reversible, and project-local.
+- `BIP-M2-P0` is `IMPLEMENTED` as the approved documentation/readiness phase. `NV-XFI-000` approves CF-010, CF-011, and CF-012 as the canonical Cross-Front Integration Contract. It authorizes only `NV-XFI-M1 — Neutral Shared Contract Artifact Foundation`; BIP-M2 implementation remains unauthorized. See `backend-platform-bip-m2-cross-front-readiness.md` and `backend-platform-bip-m2-plan.md`.
 
 ## Avoided Decisions
 
