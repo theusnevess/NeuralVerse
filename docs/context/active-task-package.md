@@ -1,5 +1,13 @@
 # Active Task Package
 
+Task: `NV-BIP-M4-CERT`
+
+Status: `CERTIFIED WITH CONDITIONS — COMMIT REQUIRED`
+
+Next action: `NV-BIP-M4-COMMIT — Commit the Certified Canonical Backend Domain Model`
+
+---
+
 Task: `NV-BIP-M3-IMPLEMENT`
 
 Classification: `BIP_CANONICAL_CONTRACT_CONSUMER_IMPLEMENTED_WITH_CONDITIONS`
