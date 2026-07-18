@@ -180,3 +180,15 @@ phase; BIP-M2 through BIP-M9 remain outside this phase and require separate
 authorization.
 This Stage 5 state supersedes the earlier Stage 4 pre-authorization wording
 for BIP-M1 only; BIP-M2 through BIP-M9 remain separately unauthorized.
+
+## Stage 7 — BIP-M3 Content Versioning and Publication Model
+
+Status: `IMPLEMENTED_PENDING_OWNER_REVIEW`.
+
+The BIP-M3 publication transaction is implemented at migration head
+`b51000000001`. It owns immutable content versions and ordered blocks,
+publication gates, release numbering, supersession/deprecation/retirement,
+delivery manifests, audit records, idempotent commands and transactional
+outbox persistence. External delivery, workflow orchestration, Frontend,
+Obsidian synchronization and BIP-M4 through BIP-M9 remain separately
+unauthorized.

@@ -56,6 +56,12 @@ class SqlAlchemyPublicationRepository:
                 publication_release_id=UUID(str(release.id)),
                 content_package_id=UUID(str(release.package_id)),
                 content_version_id=UUID(str(release.version_id)),
+                release_number=release.release_number,
+                supersedes_release_id=(
+                    UUID(str(release.supersedes_release_id))
+                    if release.supersedes_release_id
+                    else None
+                ),
                 status=release.status.value,
                 governance_review_ids=[str(r) for r in release.governance_review_ids],
                 created_at=release.created_at.value if release.created_at else None,
@@ -64,6 +70,10 @@ class SqlAlchemyPublicationRepository:
             self._session.add(record)
         else:
             record.status = release.status.value
+            record.release_number = release.release_number
+            record.supersedes_release_id = (
+                UUID(str(release.supersedes_release_id)) if release.supersedes_release_id else None
+            )
             record.released_at = release.released_at.value if release.released_at else None
         self._session.flush()
         release_id = UUID(str(release.id))
@@ -152,9 +162,7 @@ class SqlAlchemyPublicationRepository:
             release_id=PublicationReleaseId(_value=str(record.release_id)),
             version_id=ContentVersionId(_value=str(record.version_id)),
             block_ids=references(PublicationManifestBlockRecord, "block_id"),
-            asset_version_ids=references(
-                PublicationManifestAssetVersionRecord, "asset_version_id"
-            ),
+            asset_version_ids=references(PublicationManifestAssetVersionRecord, "asset_version_id"),
             laboratory_spec_ids=references(
                 PublicationManifestLaboratorySpecRecord, "laboratory_spec_id"
             ),
@@ -173,6 +181,12 @@ class SqlAlchemyPublicationRepository:
             package_id=ContentPackageId(_value=str(record.content_package_id)),
             version_id=ContentVersionId(_value=str(record.content_version_id)),
             status=PublicationReleaseStatus(record.status),
+            release_number=record.release_number,
+            supersedes_release_id=(
+                PublicationReleaseId(_value=str(record.supersedes_release_id))
+                if record.supersedes_release_id
+                else None
+            ),
             governance_review_ids=tuple(
                 GovernanceReviewId(_value=str(r))
                 for r in self._session.execute(

@@ -59,6 +59,17 @@ BIP-M1 through BIP-M9 remain `NOT_AUTHORIZED` as new work; existing committed
 evidence is preserved. This additive section does not alter the concurrent
 implementation or delivery evidence recorded above.
 
+
+## Stage 7 — BIP-M3 Content Versioning and Publication
+
+BIP-M3 is `IMPLEMENTED_PENDING_OWNER_REVIEW` at migration head
+`b51000000001`. Immutable versions and ordered blocks, publication gates,
+release numbering, supersession/deprecation/retirement, audit records,
+delivery manifests, idempotent commands and transactional outbox persistence
+are implemented and validated against PostgreSQL 16. External delivery,
+workflow orchestration, Frontend, Obsidian synchronization and BIP-M4+
+remain separately unauthorized.
+
 ## Stage 5 — BIP-M1 Shared Contract Intake and Domain Model
 
 BIP-M1 here denotes the canonical shared-contract intake/domain phase and is

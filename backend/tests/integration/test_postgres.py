@@ -76,7 +76,7 @@ def test_real_session_rolls_back_and_closes(postgres_engine: Engine) -> None:
 def test_migration_inspector_reports_compatible(postgres_engine: Engine) -> None:
     inspection = MigrationStateInspector(postgres_engine).inspect(force=True)
     assert inspection.status == "healthy"
-    assert inspection.current_revision == inspection.expected_revision == "b50000000001"
+    assert inspection.current_revision == inspection.expected_revision == "b51000000001"
 
 
 def test_readiness_checker_reports_healthy(postgres_engine: Engine) -> None:

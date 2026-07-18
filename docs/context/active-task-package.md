@@ -20,6 +20,14 @@ Frontend migration and deferred-decision records are
 authorized by this documentation phase. This section records owner approval
 without changing the concurrent Stage 5/6 task statements above.
 
+
+## Stage 7 — BIP-M3 publication model
+
+BIP-M3 is `IMPLEMENTED_PENDING_OWNER_REVIEW` with migration head
+`b51000000001`. The Backend publication transaction, immutable release model,
+publication gates, delivery manifest, audit and transactional outbox are
+validated. External delivery and later BIP milestones remain deferred.
+
 ## Stage 5 — BIP-M1 Shared Contract Intake and Domain Model
 
 BIP-M1 here denotes the canonical shared-contract intake/domain phase and is

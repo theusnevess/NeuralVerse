@@ -81,6 +81,11 @@ from neuralverse_backend.persistence.models.publication import (
     PublicationReleaseGovernanceReviewRecord,
     PublicationReleaseRecord,
 )
+from neuralverse_backend.persistence.models.publication_m3 import (
+    DeliveryManifestRecord,
+    PublicationAuditRecord,
+    PublicationCommandRecord,
+)
 from neuralverse_backend.persistence.models.sources_citations import (
     CitationRecord,
     SourceClaimLinkRecord,
@@ -149,6 +154,9 @@ __all__ = [
     "PublicationManifestSourceRecord",
     "PublicationReleaseGovernanceReviewRecord",
     "PublicationReleaseRecord",
+    "PublicationAuditRecord",
+    "PublicationCommandRecord",
+    "DeliveryManifestRecord",
     "RevisionDirectiveRecord",
     "SourceClaimLinkRecord",
     "SourceRecord",

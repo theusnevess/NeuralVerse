@@ -26,6 +26,9 @@ class PublicationReleaseStatus(Enum):
     PENDING = "pending"
     RELEASED = "released"
     WITHDRAWN = "withdrawn"
+    SUPERSEDED = "superseded"
+    DEPRECATED = "deprecated"
+    RETIRED = "retired"
 
 
 class PublicationRelease(Entity):
@@ -39,6 +42,8 @@ class PublicationRelease(Entity):
         version_id: ContentVersionId,
         status: PublicationReleaseStatus = PublicationReleaseStatus.PENDING,
         governance_review_ids: tuple[GovernanceReviewId, ...] = (),
+        release_number: int = 0,
+        supersedes_release_id: PublicationReleaseId | None = None,
         created_at: UtcTimestamp | None = None,
         released_at: UtcTimestamp | None = None,
     ) -> None:
@@ -47,6 +52,8 @@ class PublicationRelease(Entity):
         self.version_id = version_id
         self.status = status
         self.governance_review_ids = governance_review_ids
+        self.release_number = release_number
+        self.supersedes_release_id = supersedes_release_id
         self.created_at = created_at
         self.released_at = released_at
 
@@ -68,6 +75,41 @@ class PublicationRelease(Entity):
                 target_state=PublicationReleaseStatus.WITHDRAWN.value,
             )
         self.status = PublicationReleaseStatus.WITHDRAWN
+
+    def supersede(self) -> None:
+        if self.status != PublicationReleaseStatus.RELEASED:
+            raise LifecycleViolation(
+                f"Cannot supersede publication in status {self.status.value}",
+                current_state=self.status.value,
+                target_state=PublicationReleaseStatus.SUPERSEDED.value,
+            )
+        self.status = PublicationReleaseStatus.SUPERSEDED
+
+    def deprecate(self) -> None:
+        if self.status not in {
+            PublicationReleaseStatus.RELEASED,
+            PublicationReleaseStatus.SUPERSEDED,
+        }:
+            raise LifecycleViolation(
+                f"Cannot deprecate publication in status {self.status.value}",
+                current_state=self.status.value,
+                target_state=PublicationReleaseStatus.DEPRECATED.value,
+            )
+        self.status = PublicationReleaseStatus.DEPRECATED
+
+    def retire(self) -> None:
+        if self.status not in {
+            PublicationReleaseStatus.RELEASED,
+            PublicationReleaseStatus.SUPERSEDED,
+            PublicationReleaseStatus.DEPRECATED,
+            PublicationReleaseStatus.WITHDRAWN,
+        }:
+            raise LifecycleViolation(
+                f"Cannot retire publication in status {self.status.value}",
+                current_state=self.status.value,
+                target_state=PublicationReleaseStatus.RETIRED.value,
+            )
+        self.status = PublicationReleaseStatus.RETIRED
 
 
 class PublicationReleaseCreated(DomainEvent):

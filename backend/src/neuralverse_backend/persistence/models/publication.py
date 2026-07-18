@@ -10,7 +10,9 @@ from sqlalchemy import (
     DateTime,
     ForeignKey,
     Index,
+    Integer,
     String,
+    UniqueConstraint,
     Uuid,
     text,
 )
@@ -36,6 +38,11 @@ class PublicationReleaseRecord(Base):
         ForeignKey("content_versions.content_version_id", ondelete="RESTRICT"),
         nullable=False,
     )
+    release_number: Mapped[int] = mapped_column(Integer, nullable=False, server_default=text("0"))
+    supersedes_release_id: Mapped[uuid.UUID | None] = mapped_column(
+        Uuid(as_uuid=True),
+        ForeignKey("publication_releases.publication_release_id", ondelete="RESTRICT"),
+    )
     status: Mapped[str] = mapped_column(
         String(32), nullable=False, server_default=text("'pending'")
     )
@@ -45,9 +52,14 @@ class PublicationReleaseRecord(Base):
 
     __table_args__ = (
         CheckConstraint(
-            "status IN ('pending', 'released', 'withdrawn')",
-            name="status",
+            "status IN ('pending', 'released', 'withdrawn', 'superseded', 'deprecated', 'retired')",
+            name="publication_release_status",
         ),
+        CheckConstraint("release_number >= 0", name="release_number_nonnegative"),
+        UniqueConstraint(
+            "content_package_id", "release_number", name="uq_publication_release_number"
+        ),
+        UniqueConstraint("content_version_id", name="uq_publication_release_version"),
         Index("ix_publication_releases_package", "content_package_id"),
         Index("ix_publication_releases_version", "content_version_id"),
         Index("ix_publication_releases_status", "status"),
