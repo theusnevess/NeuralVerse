@@ -1,0 +1,421 @@
+[
+  {
+    "agentId": "curriculum-dependency",
+    "agentVersion": "1.0.0",
+    "assetRequestIds": [],
+    "citationIds": [],
+    "confidence": 1,
+    "contributionId": "contribution:svd-curriculum-dependency",
+    "contributionType": "dependency_analysis",
+    "createdAt": "2026-07-18T00:00:00.000Z",
+    "created_at": "2026-07-18T00:00:00.000Z",
+    "generationJobId": "generation-job:svd-curriculum-dependency",
+    "inputDependencies": [
+      {
+        "id": "curriculum-node:svd-image-compression",
+        "kind": "curriculum_node"
+      }
+    ],
+    "metadata": {
+      "referencePackage": "svd-image-compression",
+      "semanticOwner": "curriculum-dependency"
+    },
+    "minimum_reader_version": "1.0.0",
+    "packageId": "package:svd-image-compression-reference",
+    "packageVersion": "1.0.0",
+    "payloadSchemaVersion": "1.0.0",
+    "producer_version": "1.0.0",
+    "schema_name": "AgentContribution",
+    "schema_version": "1.0.0",
+    "structuredPayload": {
+      "claims": [
+        "A large image contains repeated structure. This lesson asks how much of that structure can be retained with fewer numbers.",
+        "A grayscale image is a matrix; RGB is three channel matrices. Truncation is an estimated representation cost, not a file-format guarantee.",
+        "The useful pattern is factorize, select a justified rank, reconstruct, measure and state the assumptions."
+      ],
+      "responsibility": "curriculum-dependency",
+      "semanticKey": "module-0.mathematics.svd.image-compression",
+      "topic": "Singular Value Decomposition"
+    },
+    "validationResults": [],
+    "warnings": []
+  },
+  {
+    "agentId": "didactic",
+    "agentVersion": "1.0.0",
+    "assetRequestIds": [],
+    "citationIds": [],
+    "confidence": 1,
+    "contributionId": "contribution:svd-didactic",
+    "contributionType": "didactic_structure",
+    "createdAt": "2026-07-18T00:00:00.000Z",
+    "created_at": "2026-07-18T00:00:00.000Z",
+    "generationJobId": "generation-job:svd-didactic",
+    "inputDependencies": [
+      {
+        "id": "contribution:svd-curriculum-dependency",
+        "kind": "contribution"
+      }
+    ],
+    "metadata": {
+      "referencePackage": "svd-image-compression",
+      "semanticOwner": "didactic"
+    },
+    "minimum_reader_version": "1.0.0",
+    "packageId": "package:svd-image-compression-reference",
+    "packageVersion": "1.0.0",
+    "payloadSchemaVersion": "1.0.0",
+    "producer_version": "1.0.0",
+    "schema_name": "AgentContribution",
+    "schema_version": "1.0.0",
+    "structuredPayload": {
+      "claims": [
+        "Explain A = UΣVᵀ, compute an SVD, reconstruct at rank k, measure error, and defend an engineering choice.",
+        "Use NumPy, validate 1≤k≤rank, reconstruct with matrix multiplication, clip image values and restore dtype.",
+        "One matrix can reveal a compact latent geometry without knowing anything about the image subject."
+      ],
+      "responsibility": "didactic",
+      "semanticKey": "module-0.mathematics.svd.image-compression",
+      "topic": "Singular Value Decomposition"
+    },
+    "validationResults": [],
+    "warnings": []
+  },
+  {
+    "agentId": "research",
+    "agentVersion": "1.0.0",
+    "assetRequestIds": [],
+    "citationIds": [
+      "citation:svd-numpy-svd"
+    ],
+    "confidence": 1,
+    "contributionId": "contribution:svd-research",
+    "contributionType": "research_evidence",
+    "createdAt": "2026-07-18T00:00:00.000Z",
+    "created_at": "2026-07-18T00:00:00.000Z",
+    "generationJobId": "generation-job:svd-research",
+    "inputDependencies": [
+      {
+        "id": "contribution:svd-didactic",
+        "kind": "contribution"
+      }
+    ],
+    "metadata": {
+      "referencePackage": "svd-image-compression",
+      "semanticOwner": "research"
+    },
+    "minimum_reader_version": "1.0.0",
+    "packageId": "package:svd-image-compression-reference",
+    "packageVersion": "1.0.0",
+    "payloadSchemaVersion": "1.0.0",
+    "producer_version": "1.0.0",
+    "schema_name": "AgentContribution",
+    "schema_version": "1.0.0",
+    "structuredPayload": {
+      "claims": [
+        "Activate working knowledge of linear systems and matrices, basic vector norms, image arrays, Python and NumPy.",
+        "Convert a deterministic synthetic grayscale image to float, sweep k, and report error, retained energy and estimated ratio.",
+        "Read the foundational papers, Matrix Computations, NumPy documentation and image-processing references."
+      ],
+      "responsibility": "research",
+      "semanticKey": "module-0.mathematics.svd.image-compression",
+      "topic": "Singular Value Decomposition"
+    },
+    "validationResults": [],
+    "warnings": []
+  },
+  {
+    "agentId": "knowledge",
+    "agentVersion": "1.0.0",
+    "assetRequestIds": [],
+    "citationIds": [
+      "citation:svd-scikit-image"
+    ],
+    "confidence": 1,
+    "contributionId": "contribution:svd-knowledge",
+    "contributionType": "conceptual_definition",
+    "createdAt": "2026-07-18T00:00:00.000Z",
+    "created_at": "2026-07-18T00:00:00.000Z",
+    "generationJobId": "generation-job:svd-knowledge",
+    "inputDependencies": [
+      {
+        "id": "contribution:svd-research",
+        "kind": "contribution"
+      }
+    ],
+    "metadata": {
+      "referencePackage": "svd-image-compression",
+      "semanticOwner": "knowledge"
+    },
+    "minimum_reader_version": "1.0.0",
+    "packageId": "package:svd-image-compression-reference",
+    "packageVersion": "1.0.0",
+    "payloadSchemaVersion": "1.0.0",
+    "producer_version": "1.0.0",
+    "schema_name": "AgentContribution",
+    "schema_version": "1.0.0",
+    "structuredPayload": {
+      "claims": [
+        "A bandwidth-constrained imaging pipeline needs a predictable quality-versus-size control.",
+        "Apply the same decomposition independently to R, G and B channels, then stack and clip the results."
+      ],
+      "responsibility": "knowledge",
+      "semanticKey": "module-0.mathematics.svd.image-compression",
+      "topic": "Singular Value Decomposition"
+    },
+    "validationResults": [],
+    "warnings": []
+  },
+  {
+    "agentId": "application",
+    "agentVersion": "1.0.0",
+    "assetRequestIds": [],
+    "citationIds": [
+      "citation:svd-compression"
+    ],
+    "confidence": 1,
+    "contributionId": "contribution:svd-application",
+    "contributionType": "application_guidance",
+    "createdAt": "2026-07-18T00:00:00.000Z",
+    "created_at": "2026-07-18T00:00:00.000Z",
+    "generationJobId": "generation-job:svd-application",
+    "inputDependencies": [
+      {
+        "id": "contribution:svd-knowledge",
+        "kind": "contribution"
+      }
+    ],
+    "metadata": {
+      "referencePackage": "svd-image-compression",
+      "semanticOwner": "application"
+    },
+    "minimum_reader_version": "1.0.0",
+    "packageId": "package:svd-image-compression-reference",
+    "packageVersion": "1.0.0",
+    "payloadSchemaVersion": "1.0.0",
+    "producer_version": "1.0.0",
+    "schema_name": "AgentContribution",
+    "schema_version": "1.0.0",
+    "structuredPayload": {
+      "claims": [
+        "SVD rotates coordinates into orthogonal directions, scales them by singular values, then rotates them again.",
+        "Expose image selection, rank slider, spectrum, retained energy, reconstruction, difference, error, ratio and reset."
+      ],
+      "responsibility": "application",
+      "semanticKey": "module-0.mathematics.svd.image-compression",
+      "topic": "Singular Value Decomposition"
+    },
+    "validationResults": [],
+    "warnings": []
+  },
+  {
+    "agentId": "laboratory",
+    "agentVersion": "1.0.0",
+    "assetRequestIds": [],
+    "citationIds": [
+      "citation:svd-golub-reinsch"
+    ],
+    "confidence": 1,
+    "contributionId": "contribution:svd-laboratory",
+    "contributionType": "laboratory_observation",
+    "createdAt": "2026-07-18T00:00:00.000Z",
+    "created_at": "2026-07-18T00:00:00.000Z",
+    "generationJobId": "generation-job:svd-laboratory",
+    "inputDependencies": [
+      {
+        "id": "contribution:svd-application",
+        "kind": "contribution"
+      }
+    ],
+    "metadata": {
+      "referencePackage": "svd-image-compression",
+      "semanticOwner": "laboratory"
+    },
+    "minimum_reader_version": "1.0.0",
+    "packageId": "package:svd-image-compression-reference",
+    "packageVersion": "1.0.0",
+    "payloadSchemaVersion": "1.0.0",
+    "producer_version": "1.0.0",
+    "schema_name": "AgentContribution",
+    "schema_version": "1.0.0",
+    "structuredPayload": {
+      "claims": [
+        "For A in R^(m×n), A = UΣVᵀ where U and V have orthonormal columns and Σ contains nonnegative singular values.",
+        "Build and evaluate the bounded SVD image compression pipeline and submit code, figures, metrics and interpretation."
+      ],
+      "responsibility": "laboratory",
+      "semanticKey": "module-0.mathematics.svd.image-compression",
+      "topic": "Singular Value Decomposition"
+    },
+    "validationResults": [],
+    "warnings": []
+  },
+  {
+    "agentId": "assessment",
+    "agentVersion": "1.0.0",
+    "assetRequestIds": [],
+    "citationIds": [
+      "citation:svd-eckart-young"
+    ],
+    "confidence": 1,
+    "contributionId": "contribution:svd-assessment",
+    "contributionType": "assessment_guidance",
+    "createdAt": "2026-07-18T00:00:00.000Z",
+    "created_at": "2026-07-18T00:00:00.000Z",
+    "generationJobId": "generation-job:svd-assessment",
+    "inputDependencies": [
+      {
+        "id": "contribution:svd-laboratory",
+        "kind": "contribution"
+      }
+    ],
+    "metadata": {
+      "referencePackage": "svd-image-compression",
+      "semanticOwner": "assessment"
+    },
+    "minimum_reader_version": "1.0.0",
+    "packageId": "package:svd-image-compression-reference",
+    "packageVersion": "1.0.0",
+    "payloadSchemaVersion": "1.0.0",
+    "producer_version": "1.0.0",
+    "schema_name": "AgentContribution",
+    "schema_version": "1.0.0",
+    "structuredPayload": {
+      "claims": [
+        "For reduced SVD with r=min(m,n), U is m×r, Σ is r×r and Vᵀ is r×n; UᵀU=I and VᵀV=I.",
+        "For remote image transmission, rank is a policy knob; high-frequency detail, texture and perceptual quality can fail differently."
+      ],
+      "responsibility": "assessment",
+      "semanticKey": "module-0.mathematics.svd.image-compression",
+      "topic": "Singular Value Decomposition"
+    },
+    "validationResults": [],
+    "warnings": []
+  },
+  {
+    "agentId": "narrative",
+    "agentVersion": "1.0.0",
+    "assetRequestIds": [],
+    "citationIds": [
+      "citation:svd-numpy-svd"
+    ],
+    "confidence": 1,
+    "contributionId": "contribution:svd-narrative",
+    "contributionType": "narrative_framing",
+    "createdAt": "2026-07-18T00:00:00.000Z",
+    "created_at": "2026-07-18T00:00:00.000Z",
+    "generationJobId": "generation-job:svd-narrative",
+    "inputDependencies": [
+      {
+        "id": "contribution:svd-assessment",
+        "kind": "contribution"
+      }
+    ],
+    "metadata": {
+      "referencePackage": "svd-image-compression",
+      "semanticOwner": "narrative"
+    },
+    "minimum_reader_version": "1.0.0",
+    "packageId": "package:svd-image-compression-reference",
+    "packageVersion": "1.0.0",
+    "payloadSchemaVersion": "1.0.0",
+    "producer_version": "1.0.0",
+    "schema_name": "AgentContribution",
+    "schema_version": "1.0.0",
+    "structuredPayload": {
+      "claims": [
+        "For A=diag(3,1), U=I, Σ=diag(3,1), V=I. Rank one keeps [[3,0],[0,0]] and loses the second direction.",
+        "Compare quality, storage, compute, randomized SVD, channel strategy, precision, memory and nonlinear alternatives."
+      ],
+      "responsibility": "narrative",
+      "semanticKey": "module-0.mathematics.svd.image-compression",
+      "topic": "Singular Value Decomposition"
+    },
+    "validationResults": [],
+    "warnings": []
+  },
+  {
+    "agentId": "curiosity",
+    "agentVersion": "1.0.0",
+    "assetRequestIds": [],
+    "citationIds": [
+      "citation:svd-scikit-image"
+    ],
+    "confidence": 1,
+    "contributionId": "contribution:svd-curiosity",
+    "contributionType": "curiosity_prompt",
+    "createdAt": "2026-07-18T00:00:00.000Z",
+    "created_at": "2026-07-18T00:00:00.000Z",
+    "generationJobId": "generation-job:svd-curiosity",
+    "inputDependencies": [
+      {
+        "id": "contribution:svd-narrative",
+        "kind": "contribution"
+      }
+    ],
+    "metadata": {
+      "referencePackage": "svd-image-compression",
+      "semanticOwner": "curiosity"
+    },
+    "minimum_reader_version": "1.0.0",
+    "packageId": "package:svd-image-compression-reference",
+    "packageVersion": "1.0.0",
+    "payloadSchemaVersion": "1.0.0",
+    "producer_version": "1.0.0",
+    "schema_name": "AgentContribution",
+    "schema_version": "1.0.0",
+    "structuredPayload": {
+      "claims": [
+        "A_k = U[:, :k] Σ[:k, :k] Vᵀ[:k, :] is the rank-k approximation selected by the first k singular values.",
+        "Truncated SVD is lossy; singular values are not pixels; rank is not resolution; low error is not always perceptual quality."
+      ],
+      "responsibility": "curiosity",
+      "semanticKey": "module-0.mathematics.svd.image-compression",
+      "topic": "Singular Value Decomposition"
+    },
+    "validationResults": [],
+    "warnings": []
+  },
+  {
+    "agentId": "obsidian-governance",
+    "agentVersion": "1.0.0",
+    "assetRequestIds": [],
+    "citationIds": [
+      "citation:svd-compression"
+    ],
+    "confidence": 1,
+    "contributionId": "contribution:svd-obsidian-governance",
+    "contributionType": "governance_finding",
+    "createdAt": "2026-07-18T00:00:00.000Z",
+    "created_at": "2026-07-18T00:00:00.000Z",
+    "generationJobId": "generation-job:svd-obsidian-governance",
+    "inputDependencies": [
+      {
+        "id": "contribution:svd-curiosity",
+        "kind": "contribution"
+      }
+    ],
+    "metadata": {
+      "referencePackage": "svd-image-compression",
+      "semanticOwner": "obsidian-governance"
+    },
+    "minimum_reader_version": "1.0.0",
+    "packageId": "package:svd-image-compression-reference",
+    "packageVersion": "1.0.0",
+    "payloadSchemaVersion": "1.0.0",
+    "producer_version": "1.0.0",
+    "schema_name": "AgentContribution",
+    "schema_version": "1.0.0",
+    "structuredPayload": {
+      "claims": [
+        "The Frobenius error is ||A-A_k||_F; for SVD it equals the square root of the sum of squared discarded singular values.",
+        "Answer conceptual, mathematical, code-reading, implementation, trade-off and misconception questions with evidence."
+      ],
+      "responsibility": "obsidian-governance",
+      "semanticKey": "module-0.mathematics.svd.image-compression",
+      "topic": "Singular Value Decomposition"
+    },
+    "validationResults": [],
+    "warnings": []
+  }
+]

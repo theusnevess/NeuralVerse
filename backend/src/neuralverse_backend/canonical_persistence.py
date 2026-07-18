@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from decimal import Decimal
 from typing import Any, cast
-from uuid import UUID, uuid4
+from uuid import NAMESPACE_URL, UUID, uuid4, uuid5
 
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
@@ -235,7 +235,12 @@ class CanonicalPersistenceService:
 
 def _package_id(artifact: dict[str, Any] | Any) -> str | None:
     value = artifact.get("packageId") if isinstance(artifact, dict) else None
-    return value if isinstance(value, str) else None
+    if not isinstance(value, str):
+        return None
+    try:
+        return str(UUID(value))
+    except ValueError:
+        return str(uuid5(NAMESPACE_URL, f"https://neuralverse.dev/content-package/{value}"))
 
 
 def _find_job(
