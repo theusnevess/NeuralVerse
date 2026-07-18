@@ -4,7 +4,7 @@
 title: BIP-M3 — Content Versioning and Publication Model
 canonical_id: NV-BIP-M3
 version: 1.0.0
-status: IMPLEMENTED_PENDING_OWNER_REVIEW
+status: IMPLEMENTED
 authority: [NV-BIP-000, NV-BIP-M0, NV-BIP-M1, NV-BIP-M2, NV-XFI-000]
 owner: NeuralVerse Hub
 language: en
@@ -12,7 +12,7 @@ created: 2026-07-18
 last_reviewed: 2026-07-18
 ```
 
-Status: `IMPLEMENTED_PENDING_OWNER_REVIEW`
+Status: `IMPLEMENTED`
 
 Migration head: `b51000000001` (additive successor of BIP-M2 `b50000000001`)
 

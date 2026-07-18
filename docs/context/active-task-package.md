@@ -23,7 +23,7 @@ without changing the concurrent Stage 5/6 task statements above.
 
 ## Stage 7 — BIP-M3 publication model
 
-BIP-M3 is `IMPLEMENTED_PENDING_OWNER_REVIEW` with migration head
+BIP-M3 is `IMPLEMENTED` with migration head
 `b51000000001`. The Backend publication transaction, immutable release model,
 publication gates, delivery manifest, audit and transactional outbox are
 validated. External delivery and later BIP milestones remain deferred.

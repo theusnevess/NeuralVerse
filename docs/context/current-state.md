@@ -62,7 +62,7 @@ implementation or delivery evidence recorded above.
 
 ## Stage 7 — BIP-M3 Content Versioning and Publication
 
-BIP-M3 is `IMPLEMENTED_PENDING_OWNER_REVIEW` at migration head
+BIP-M3 is `IMPLEMENTED` at migration head
 `b51000000001`. Immutable versions and ordered blocks, publication gates,
 release numbering, supersession/deprecation/retirement, audit records,
 delivery manifests, idempotent commands and transactional outbox persistence

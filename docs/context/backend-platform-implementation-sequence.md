@@ -183,7 +183,7 @@ for BIP-M1 only; BIP-M2 through BIP-M9 remain separately unauthorized.
 
 ## Stage 7 — BIP-M3 Content Versioning and Publication Model
 
-Status: `IMPLEMENTED_PENDING_OWNER_REVIEW`.
+Status: `IMPLEMENTED`.
 
 The BIP-M3 publication transaction is implemented at migration head
 `b51000000001`. It owns immutable content versions and ordered blocks,
