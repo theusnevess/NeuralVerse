@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterable
 from datetime import UTC, datetime
 from uuid import UUID
 
@@ -97,7 +98,9 @@ class SqlAlchemyCurriculumRepository:
             node_type=CurriculumNodeType(record.node_type),
             display_title=record.display_title,
             description=record.description,
-            competency_references=tuple(record.competency_references or []),
+            competency_references=tuple(str(value) for value in record.competency_references)
+            if isinstance(record.competency_references, Iterable)
+            else (),
         )
 
     def _reconstruct_edge(self, record: CurriculumEdgeRecord) -> CurriculumEdge:

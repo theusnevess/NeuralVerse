@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from datetime import UTC, datetime
 from uuid import UUID
 
@@ -102,7 +103,9 @@ class SqlAlchemyAssetRepository:
         return VisualizationSpec(
             spec_id=VisualizationSpecId(_value=str(record.visualization_spec_id)),
             visualization_type=record.visualization_type,
-            requirements=dict(record.requirements) if record.requirements else {},
+            requirements=(
+                dict(record.requirements) if isinstance(record.requirements, Mapping) else {}
+            ),
         )
 
     def _reconstruct_asset(self, record: AssetRecord) -> Asset:

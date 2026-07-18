@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 from datetime import UTC, datetime
+from typing import Any, cast
 from uuid import UUID
 
 from sqlalchemy import delete, select, update
+from sqlalchemy.engine import CursorResult
 from sqlalchemy.orm import Session
 
 from neuralverse_backend.domain.content import (
@@ -71,7 +73,7 @@ class SqlAlchemyContentPackageRepository:
             self._session.add(record)
         else:
             expected_lock_version = getattr(package, "_lock_version", record.lock_version)
-            result = self._session.execute(
+            result = cast(CursorResult[Any], self._session.execute(
                 update(ContentPackageRecord)
                 .where(
                     ContentPackageRecord.content_package_id == record.content_package_id,
@@ -82,10 +84,10 @@ class SqlAlchemyContentPackageRepository:
                     lock_version=ContentPackageRecord.lock_version + 1,
                     updated_at=datetime.now(UTC),
                 )
-            )
+            ))
             if result.rowcount != 1:
                 raise OptimisticConcurrencyError(OptimisticConcurrencyError.code)
-            package._lock_version = expected_lock_version + 1
+            cast(Any, package)._lock_version = expected_lock_version + 1
         self._session.flush()
         for version in package.versions:
             await self._save_version(version)
@@ -231,7 +233,7 @@ class SqlAlchemyContentPackageRepository:
             id=ContentPackageId(_value=str(record.content_package_id)),
             state=ContentPackageState(record.lifecycle_state),
         )
-        package._lock_version = record.lock_version
+        cast(Any, package)._lock_version = record.lock_version
         version_records = (
             self._session.execute(
                 select(ContentVersionRecord).where(

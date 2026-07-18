@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from datetime import UTC, datetime
 from uuid import UUID
 
@@ -73,10 +74,10 @@ class SqlAlchemySourceRepository:
             title=record.title,
             locator=record.locator,
             authorship_metadata=dict(record.authorship_metadata)
-            if record.authorship_metadata
+            if isinstance(record.authorship_metadata, Mapping)
             else {},
             publication_metadata=dict(record.publication_metadata)
-            if record.publication_metadata
+            if isinstance(record.publication_metadata, Mapping)
             else {},
             provenance=record.provenance,
             content_hash=record.content_hash,

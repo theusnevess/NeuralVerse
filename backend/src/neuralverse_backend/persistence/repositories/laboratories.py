@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterable, Mapping
 from datetime import UTC, datetime
+from typing import cast
 from uuid import UUID
 
 from sqlalchemy.orm import Session
@@ -98,15 +100,21 @@ class SqlAlchemyLaboratoryRepository:
         self._session.flush()
 
     def _reconstruct_run(self, record: LaboratoryRunRecord) -> LaboratoryRun:
+        evidence_values = (
+            cast(Iterable[object], record.evidence_ids)
+            if isinstance(record.evidence_ids, Iterable)
+            else ()
+        )
         return LaboratoryRun(
             run_id=LaboratoryRunId(_value=str(record.laboratory_run_id)),
             spec_id=LaboratorySpecId(_value=str(record.laboratory_spec_id)),
             spec_version=record.laboratory_spec_version,
             learner_id=record.learner_id,
             status=LaboratoryRunStatus(record.status),
-            inputs=dict(record.inputs) if record.inputs else {},
-            outputs=dict(record.outputs) if record.outputs else {},
+            inputs=dict(record.inputs) if isinstance(record.inputs, Mapping) else {},
+            outputs=dict(record.outputs) if isinstance(record.outputs, Mapping) else {},
             evidence_ids=tuple(
-                LaboratoryEvidenceId(_value=str(e)) for e in (record.evidence_ids or [])
+                LaboratoryEvidenceId(_value=str(e))
+                for e in evidence_values
             ),
         )

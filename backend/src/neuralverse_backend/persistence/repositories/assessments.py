@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterable, Mapping
 from datetime import UTC, datetime
+from typing import cast
 from uuid import UUID
 
 from sqlalchemy.orm import Session
@@ -101,15 +103,21 @@ class SqlAlchemyAssessmentRepository:
         self._session.flush()
 
     def _reconstruct_attempt(self, record: AssessmentAttemptRecord) -> AssessmentAttempt:
+        evidence_values = (
+            cast(Iterable[object], record.evidence_ids)
+            if isinstance(record.evidence_ids, Iterable)
+            else ()
+        )
         return AssessmentAttempt(
             attempt_id=AssessmentAttemptId(_value=str(record.assessment_attempt_id)),
             spec_id=AssessmentSpecId(_value=str(record.assessment_spec_id)),
             spec_version=record.assessment_spec_version,
             learner_id=record.learner_id,
             status=AssessmentAttemptStatus(record.status),
-            responses=dict(record.responses) if record.responses else {},
+            responses=dict(record.responses) if isinstance(record.responses, Mapping) else {},
             evidence_ids=tuple(
-                AssessmentEvidenceId(_value=str(e)) for e in (record.evidence_ids or [])
+                AssessmentEvidenceId(_value=str(e))
+                for e in evidence_values
             ),
             score=record.score,
         )

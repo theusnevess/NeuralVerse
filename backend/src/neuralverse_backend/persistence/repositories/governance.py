@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterable
 from datetime import UTC, datetime
 from uuid import UUID
 
@@ -84,9 +85,11 @@ class SqlAlchemyGovernanceRepository:
             target_version_id=ContentVersionId(_value=str(record.target_version_id)),
             review_authority=record.review_authority,
             decision=ReviewDecision(record.decision),
-            findings=tuple(record.findings) if record.findings else (),
-            evidence_references=tuple(record.evidence_references)
-            if record.evidence_references
+            findings=tuple(str(value) for value in record.findings)
+            if isinstance(record.findings, Iterable)
+            else (),
+            evidence_references=tuple(str(value) for value in record.evidence_references)
+            if isinstance(record.evidence_references, Iterable)
             else (),
         )
 
@@ -95,5 +98,7 @@ class SqlAlchemyGovernanceRepository:
             directive_id=RevisionDirectiveId(_value=str(record.revision_directive_id)),
             target_version_id=ContentVersionId(_value=str(record.source_content_version_id)),
             reason=record.reason,
-            required_changes=tuple(record.required_changes) if record.required_changes else (),
+            required_changes=tuple(str(value) for value in record.required_changes)
+            if isinstance(record.required_changes, Iterable)
+            else (),
         )
