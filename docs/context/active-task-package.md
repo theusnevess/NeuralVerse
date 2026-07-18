@@ -43,3 +43,14 @@ workflow execution, APIs, publication, delivery, Frontend, ACP and runtime
 integration remain `NOT_IMPLEMENTED` and require separate authorization.
 This Stage 5 state supersedes the earlier Stage 4 pre-authorization wording
 for BIP-M1 only; BIP-M2 through BIP-M9 remain separately unauthorized.
+
+## Stage 8 — BIP-M4 Durable Workflow Infrastructure
+
+BIP-M4 implementation is `IMPLEMENTED`.
+The deterministic workflow state model, optional Temporal client/worker host,
+semantic-free ACP adapter, bounded activity policies, durable operational
+projections, review/revision/cancellation state and BIP-M3 publication adapter
+are in the BIP-M4 candidate scope. Task-queue delivery, signals,
+cancellation, bounded retry, worker-restart and resume were certified on a
+disposable local non-production Temporal environment. BIP-M5+ remain
+`NOT_AUTHORIZED`.

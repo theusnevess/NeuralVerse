@@ -67,8 +67,8 @@ BIP-M3 is `IMPLEMENTED` at migration head
 release numbering, supersession/deprecation/retirement, audit records,
 delivery manifests, idempotent commands and transactional outbox persistence
 are implemented and validated against PostgreSQL 16. External delivery,
-workflow orchestration, Frontend, Obsidian synchronization and BIP-M4+
-remain separately unauthorized.
+Frontend, Obsidian synchronization and BIP-M5+ remain separately unauthorized;
+workflow orchestration is addressed by the Stage 8 BIP-M4 section below.
 
 ## Stage 5 — BIP-M1 Shared Contract Intake and Domain Model
 
@@ -84,3 +84,15 @@ publication, delivery, learner state, Frontend and ACP changes remain
 `NOT_IMPLEMENTED` or `NOT_AUTHORIZED`.
 This Stage 5 section supersedes the earlier Stage 4 pre-authorization wording
 for BIP-M1 only; BIP-M2 through BIP-M9 remain separately unauthorized.
+
+## Stage 8 — BIP-M4 Durable Workflow Infrastructure
+
+BIP-M4 is `IMPLEMENTED`.
+The Backend durable workflow model, optional Temporal host boundary,
+semantic-free ACP adapter, stable workflow and generation-job identities,
+bounded retries, timeout/cancellation/review/revision state, publication wait,
+progress and audit projections, and additive migration `b52000000001` are
+implemented and certified against a disposable local non-production Temporal
+dev server for task-queue delivery, signals, bounded retry, cancellation and
+worker restart/resume. BIP-M5 through BIP-M9 and ACP-RUNTIME-01 remain
+`NOT_AUTHORIZED`.

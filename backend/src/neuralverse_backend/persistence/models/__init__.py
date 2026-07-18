@@ -17,6 +17,16 @@ from neuralverse_backend.persistence.models.authoring import (
     GenerationJobRecord,
 )
 from neuralverse_backend.persistence.models.authoring_job import AuthoringJobRecord
+from neuralverse_backend.persistence.models.bip_m4 import (
+    BIPM4AuditEventRecord,
+    BIPM4CommandRecord,
+    BIPM4GenerationJobRecord,
+    BIPM4ProgressProjectionRecord,
+    BIPM4PublicationWaitRecord,
+    BIPM4ReviewWaitRecord,
+    BIPM4RevisionLoopRecord,
+    BIPM4WorkflowExecutionRecord,
+)
 from neuralverse_backend.persistence.models.canonical_input import CanonicalInputRecord
 from neuralverse_backend.persistence.models.canonical_intake_idempotency import (
     CanonicalIntakeIdempotencyRecord,
@@ -108,6 +118,14 @@ __all__ = [
     "AgentContributionRecord",
     "AgentRunRecord",
     "AuthoringJobRecord",
+    "BIPM4AuditEventRecord",
+    "BIPM4CommandRecord",
+    "BIPM4GenerationJobRecord",
+    "BIPM4ProgressProjectionRecord",
+    "BIPM4PublicationWaitRecord",
+    "BIPM4RevisionLoopRecord",
+    "BIPM4ReviewWaitRecord",
+    "BIPM4WorkflowExecutionRecord",
     "CanonicalInputRecord",
     "CanonicalIntakeIdempotencyRecord",
     "ContentBlockRecord",

@@ -181,6 +181,23 @@ authorization.
 This Stage 5 state supersedes the earlier Stage 4 pre-authorization wording
 for BIP-M1 only; BIP-M2 through BIP-M9 remain separately unauthorized.
 
+## Stage 8 — BIP-M4 Durable Workflow Infrastructure
+
+Status: `IMPLEMENTED`.
+
+BIP-M4 adds Backend-owned durable workflow infrastructure without moving ACP
+semantic authority. The implementation includes deterministic workflow and
+command contracts, stable workflow/generation-job identities, a semantic-free
+ACP activity adapter, bounded retry and timeout policies, cancellation and
+human-review/revision waits, publication wait integration around BIP-M3,
+progress/audit projections and additive migration `b52000000001`.
+
+The Temporal SDK boundary is optional at import time and fails fast when no
+client/worker is injected. Task queue delivery, signals, cancellation,
+bounded retries, worker restart and resume were certified on a disposable
+local non-production Temporal dev server; BIP-M5 through BIP-M9 remain
+`NOT_AUTHORIZED`.
+
 ## Stage 7 — BIP-M3 Content Versioning and Publication Model
 
 Status: `IMPLEMENTED`.
@@ -189,6 +206,6 @@ The BIP-M3 publication transaction is implemented at migration head
 `b51000000001`. It owns immutable content versions and ordered blocks,
 publication gates, release numbering, supersession/deprecation/retirement,
 delivery manifests, audit records, idempotent commands and transactional
-outbox persistence. External delivery, workflow orchestration, Frontend,
-Obsidian synchronization and BIP-M4 through BIP-M9 remain separately
-unauthorized.
+outbox persistence. External delivery, Frontend and Obsidian synchronization
+remain separately unauthorized; workflow orchestration is addressed by the
+Stage 8 BIP-M4 section below, while BIP-M5 through BIP-M9 remain unauthorized.
