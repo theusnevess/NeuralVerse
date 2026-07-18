@@ -159,3 +159,24 @@ existing committed evidence is preserved. Owner approval is recorded by the
 isolated BIP-M0 documentation commit. This status section does not
 authorize source, migration, dependency, infrastructure, Frontend or ACP
 changes.
+
+## Stage 5 — BIP-M1 Shared Contract Intake and Domain Model
+
+Status: `IMPLEMENTED_PENDING_OWNER_REVIEW`.
+
+BIP-M1 here denotes the canonical shared-contract intake/domain phase; the
+earlier BIP-M1/B.4 entry above is historical non-canonical fixture evidence
+and is not this phase's persistence-neutral implementation.
+
+BIP-M1 implements the persistence-neutral shared-contract intake and domain
+model from the released NV-XFI snapshot. It includes lossless canonical
+contract adaptation, compatibility and version checks, backend wrapper
+metadata, stable error normalization, immutable domain projections,
+cross-contract invariants and repository/unit-of-work ports. The dedicated
+fixture tests and focused static validation pass. Concrete persistence,
+SQLAlchemy mappings, migrations, durable workflows, APIs, publication,
+delivery, Frontend, ACP and runtime execution are not implemented by this
+phase; BIP-M2 through BIP-M9 remain outside this phase and require separate
+authorization.
+This Stage 5 state supersedes the earlier Stage 4 pre-authorization wording
+for BIP-M1 only; BIP-M2 through BIP-M9 remain separately unauthorized.

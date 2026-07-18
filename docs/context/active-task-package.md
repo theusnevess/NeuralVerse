@@ -19,3 +19,19 @@ Frontend migration and deferred-decision records are
 `APPROVED`. No BIP-M1 through BIP-M9 implementation is
 authorized by this documentation phase. This section records owner approval
 without changing the concurrent Stage 5/6 task statements above.
+
+## Stage 5 — BIP-M1 Shared Contract Intake and Domain Model
+
+BIP-M1 here denotes the canonical shared-contract intake/domain phase and is
+distinct from earlier fixture or persistence evidence retained above.
+
+BIP-M1 is `IMPLEMENTED_PENDING_OWNER_REVIEW`. The intake boundary consumes
+the released NV-XFI contract snapshot with lossless raw-byte preservation,
+compatibility checks, backend wrapper metadata and explicit stable errors.
+The persistence-neutral domain model, aggregate projections, invariants,
+repository ports and unit-of-work protocol are implemented and covered by
+the dedicated BIP-M1 fixture tests. Concrete persistence, migrations,
+workflow execution, APIs, publication, delivery, Frontend, ACP and runtime
+integration remain `NOT_IMPLEMENTED` and require separate authorization.
+This Stage 5 state supersedes the earlier Stage 4 pre-authorization wording
+for BIP-M1 only; BIP-M2 through BIP-M9 remain separately unauthorized.
