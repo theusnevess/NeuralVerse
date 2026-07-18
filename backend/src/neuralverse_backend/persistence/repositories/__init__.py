@@ -4,6 +4,10 @@ from neuralverse_backend.persistence.repositories.assessments import SqlAlchemyA
 from neuralverse_backend.persistence.repositories.assets import SqlAlchemyAssetRepository
 from neuralverse_backend.persistence.repositories.authoring import SqlAlchemyAuthoringRepository
 from neuralverse_backend.persistence.repositories.bip_m4 import BIPM4ProjectionRepository
+from neuralverse_backend.persistence.repositories.bip_m5 import (
+    AssetIntegrityRepository,
+    PostgresSearchResourceRepository,
+)
 from neuralverse_backend.persistence.repositories.content_packages import (
     SqlAlchemyContentPackageRepository,
 )
@@ -49,6 +53,8 @@ __all__ = [
     "SqlAlchemyAssetRepository",
     "SqlAlchemyAuthoringRepository",
     "BIPM4ProjectionRepository",
+    "AssetIntegrityRepository",
+    "PostgresSearchResourceRepository",
     "SqlAlchemyCitationRepository",
     "SqlAlchemyContentPackageRepository",
     "SqlAlchemyContentVersionRepository",

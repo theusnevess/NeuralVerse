@@ -5,6 +5,26 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Protocol
 
 from ..shared.entity import Entity
+from .m5 import (
+    AccessScope,
+    Embedding,
+    RetrievalMode,
+    SearchCandidate,
+    SearchRequest,
+    SearchResource,
+    cosine_similarity,
+    lexical_score,
+)
+from .services import (
+    DenyByDefaultAccessPolicy,
+    EmbeddingGenerator,
+    HybridCandidate,
+    ReindexCommand,
+    SearchAccessPolicy,
+    SearchFragment,
+    fragment_resource,
+    reciprocal_rank_fusion,
+)
 
 if TYPE_CHECKING:
     pass
@@ -68,3 +88,23 @@ class SearchRepository(Protocol):
     async def index(self, record: SearchIndexRecord) -> None: ...
     async def search(self, query: SearchQuery) -> list[SearchResultReference]: ...
     async def remove(self, document_id: str) -> None: ...
+
+
+__all__ = [
+    "AccessScope",
+    "DenyByDefaultAccessPolicy",
+    "Embedding",
+    "RetrievalMode",
+    "SearchCandidate",
+    "SearchRequest",
+    "SearchResource",
+    "SearchFragment",
+    "SearchAccessPolicy",
+    "EmbeddingGenerator",
+    "HybridCandidate",
+    "ReindexCommand",
+    "cosine_similarity",
+    "lexical_score",
+    "fragment_resource",
+    "reciprocal_rank_fusion",
+]

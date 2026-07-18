@@ -27,6 +27,15 @@ from neuralverse_backend.persistence.models.bip_m4 import (
     BIPM4RevisionLoopRecord,
     BIPM4WorkflowExecutionRecord,
 )
+from neuralverse_backend.persistence.models.bip_m5 import (
+    AssetReadinessAcknowledgementRecord,
+    AssetReadinessRecord,
+    AssetVersionIntegrityRecord,
+    SearchEmbeddingRecord,
+    SearchIndexFreshnessRecord,
+    SearchIndexRunRecord,
+    SearchResourceRecord,
+)
 from neuralverse_backend.persistence.models.canonical_input import CanonicalInputRecord
 from neuralverse_backend.persistence.models.canonical_intake_idempotency import (
     CanonicalIntakeIdempotencyRecord,
@@ -110,7 +119,10 @@ __all__ = [
     "AssessmentEvidenceRecord",
     "AssessmentSpecRecord",
     "AssetRecord",
+    "AssetReadinessRecord",
+    "AssetReadinessAcknowledgementRecord",
     "AssetVersionRecord",
+    "AssetVersionIntegrityRecord",
     "AuditActorType",
     "AuditEventType",
     "AuditOutcome",
@@ -178,6 +190,10 @@ __all__ = [
     "RevisionDirectiveRecord",
     "SourceClaimLinkRecord",
     "SourceRecord",
+    "SearchEmbeddingRecord",
+    "SearchIndexFreshnessRecord",
+    "SearchIndexRunRecord",
+    "SearchResourceRecord",
     "SynchronizationRecordRecord",
     "TransactionalOutboxEventRecord",
     "VisualizationSpecRecord",

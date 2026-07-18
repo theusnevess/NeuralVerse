@@ -36,11 +36,11 @@ def test_alembic_configuration_points_to_shared_migrations() -> None:
 def test_m5_canonical_persistence_migration_is_the_only_linear_head() -> None:
     script = ScriptDirectory.from_config(alembic_config())
     heads = script.get_heads()
-    assert heads == ["b52000000001"]
+    assert heads == ["b53000000001"]
     revision = script.get_revision(heads[0])
     assert revision is not None
-    assert revision.down_revision == "b51000000001"
-    assert revision.doc.startswith("BIP-M4 durable workflow projections")
+    assert revision.down_revision == "b52000000001"
+    assert revision.doc.startswith("BIP-M5 immutable assets")
 
 
 def test_application_metadata_contains_operational_and_canonical_tables() -> None:
@@ -69,6 +69,12 @@ def test_application_metadata_contains_operational_and_canonical_tables() -> Non
         "laboratory_runs",
         "assessment_attempts",
         "synchronization_records",
+        "asset_version_integrity",
+        "asset_readiness",
+        "search_resources",
+        "search_embeddings",
+        "search_index_runs",
+        "search_index_freshness",
     } <= set(metadata.tables)
 
 
