@@ -73,3 +73,18 @@ publication, delivery, learner state, Frontend and ACP changes remain
 `NOT_IMPLEMENTED` or `NOT_AUTHORIZED`.
 This Stage 5 section supersedes the earlier Stage 4 pre-authorization wording
 for BIP-M1 only; BIP-M2 through BIP-M9 remain separately unauthorized.
+
+## Stage 5 — BIP-M1 Shared Contract Intake and Domain Model
+
+BIP-M1 here denotes the canonical shared-contract intake/domain phase and is
+distinct from earlier fixture or persistence evidence retained above.
+
+BIP-M1 is `IMPLEMENTED`. The persistence-neutral intake,
+lossless adapters, compatibility validation, immutable domain projections,
+domain invariants, repository ports and unit-of-work protocol are documented
+in `backend-integration-platform-m1-shared-contract-intake-domain-model.md`.
+Concrete persistence, SQLAlchemy mappings, migrations, workflows, APIs,
+publication, delivery, learner state, Frontend and ACP changes remain
+`NOT_IMPLEMENTED` or `NOT_AUTHORIZED`.
+This Stage 5 section supersedes the earlier Stage 4 pre-authorization wording
+for BIP-M1 only; BIP-M2 through BIP-M9 remain separately unauthorized.

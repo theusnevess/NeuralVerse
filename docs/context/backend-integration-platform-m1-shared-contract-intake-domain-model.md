@@ -2,7 +2,7 @@
 title: BIP-M1 — Shared Contract Intake and Domain Model
 canonical_id: NV-BIP-M1
 version: 1.0.0
-status: IMPLEMENTED_PENDING_OWNER_REVIEW
+status: IMPLEMENTED
 authority:
   - approved Cross-Front Integration Contract
   - NV-BIP-000
@@ -143,7 +143,7 @@ Scoped Ruff: `PASS`. Scoped Mypy: `PASS`. Import/compile validation: `PASS`.
 
 ```text
 BIP-M0: IMPLEMENTED
-BIP-M1: IMPLEMENTED_PENDING_OWNER_REVIEW
+BIP-M1: IMPLEMENTED
 BIP-M2 through BIP-M9: NOT_AUTHORIZED
 Concrete persistence: NOT_IMPLEMENTED
 SQLAlchemy mappings: NOT_IMPLEMENTED

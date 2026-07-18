@@ -162,7 +162,7 @@ changes.
 
 ## Stage 5 — BIP-M1 Shared Contract Intake and Domain Model
 
-Status: `IMPLEMENTED_PENDING_OWNER_REVIEW`.
+Status: `IMPLEMENTED`.
 
 BIP-M1 here denotes the canonical shared-contract intake/domain phase; the
 earlier BIP-M1/B.4 entry above is historical non-canonical fixture evidence
