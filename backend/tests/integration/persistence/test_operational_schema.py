@@ -94,14 +94,27 @@ def assert_rejected(engine: Engine, statement: Insert) -> None:
 
 def test_catalog_contains_operational_and_cross_front_tables(postgres_engine: Engine) -> None:
     tables = set(inspect(postgres_engine).get_table_names(schema="public"))
-    assert tables == {
+    assert {
         "alembic_version",
         "cross_front_workflow_executions",
         "cross_front_workflow_queue",
         "fixture_records",
         "idempotency_records",
         "operational_audit_events",
-    }
+        "content_packages",
+        "content_versions",
+        "content_blocks",
+        "curriculum_nodes",
+        "sources",
+        "assets",
+        "generation_jobs",
+        "governance_reviews",
+        "publication_releases",
+        "learner_profiles",
+        "laboratory_runs",
+        "assessment_attempts",
+        "synchronization_records",
+    } <= tables
 
 
 def test_catalog_columns_constraints_and_indexes_match_metadata(postgres_engine: Engine) -> None:

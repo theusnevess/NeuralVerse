@@ -1,9 +1,15 @@
 from __future__ import annotations
 
 from pathlib import Path
+from uuid import uuid4
 
 from fastapi.testclient import TestClient
 
+from neuralverse_backend.canonical_input import CanonicalIntake
+from neuralverse_backend.canonical_persistence import (
+    CanonicalPersistenceResponse,
+    CanonicalPersistenceResult,
+)
 from neuralverse_backend.configuration.settings import Environment, LogFormat, Settings
 from neuralverse_backend.cross_front.workflow import (
     CrossFrontWorkflowService,
@@ -72,15 +78,42 @@ def test_nv_xfi_endpoint_rejects_idempotency_reuse_for_changed_payload() -> None
 def test_canonical_input_endpoint_validates_before_workflow() -> None:
     settings = Settings(environment=Environment.TEST, log_format=LogFormat.JSON)
     app = create_http_app(settings)
+    app.state.canonical_persistence_service = FakeCanonicalPersistenceService()
     fixture = (
         Path(__file__).parents[2]
         / "vendor/neutral-contracts/nv-xfi-input-contracts-v1.0.0/contracts/examples/golden/"
         "agent-contribution/1.0.0/complete-valid.json"
     ).read_bytes()
     with TestClient(app) as client:
-        accepted = client.post("/cross-front/canonical-input", content=fixture)
-        rejected = client.post("/cross-front/canonical-input", content=b"{invalid")
+        accepted = client.post(
+            "/cross-front/canonical-input",
+            content=fixture,
+            headers={"Idempotency-Key": "canonical-http"},
+        )
+        rejected = client.post(
+            "/cross-front/canonical-input",
+            content=b"{invalid",
+            headers={"Idempotency-Key": "canonical-http-invalid"},
+        )
     assert accepted.status_code == 200
     assert accepted.json()["contract_name"] == "AgentContribution"
     assert rejected.status_code == 422
     assert rejected.json()["error_code"] == "INVALID_JSON"
+
+
+class FakeCanonicalPersistenceService:
+    def accept(
+        self, intake: CanonicalIntake, *, idempotency_key: str
+    ) -> CanonicalPersistenceResult:
+        return CanonicalPersistenceResult(
+            response=CanonicalPersistenceResponse(
+                canonical_input_id=uuid4(),
+                authoring_job_id=uuid4(),
+                artifact_fingerprint=intake.artifact_sha256,
+                contract_name=intake.contract_name,
+                contract_version=intake.contract_version,
+                persistence_status="PERSISTED_PENDING_DISPATCH",
+                workflow_dispatch_status="PERSISTED_PENDING_DISPATCH",
+                idempotency_status="COMPLETED",
+            )
+        )

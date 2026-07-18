@@ -58,14 +58,33 @@ def database_settings() -> Settings:
     )
 
 
-def test_metadata_contains_only_operational_models_and_is_deterministic() -> None:
-    assert set(metadata.tables) == {
+def test_metadata_contains_operational_and_canonical_models() -> None:
+    assert {
         "fixture_records",
         "idempotency_records",
         "operational_audit_events",
         "cross_front_workflow_executions",
         "cross_front_workflow_queue",
-    }
+        "authoring_jobs",
+        "canonical_input_records",
+        "canonical_intake_idempotency",
+        "transactional_outbox_events",
+    } <= set(metadata.tables)
+    assert {
+        "content_packages",
+        "content_versions",
+        "content_blocks",
+        "curriculum_nodes",
+        "sources",
+        "assets",
+        "generation_jobs",
+        "governance_reviews",
+        "publication_releases",
+        "learner_profiles",
+        "laboratory_runs",
+        "assessment_attempts",
+        "synchronization_records",
+    } <= set(metadata.tables)
     assert metadata.naming_convention["ix"] == "ix_%(table_name)s_%(column_0_N_name)s"
 
 

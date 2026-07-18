@@ -46,6 +46,7 @@ def create_http_app(
     app.state.persistence_runtime = persistence_runtime
     app.state.cross_front_workflow_service = cross_front_workflow_service
     app.state.canonical_input_reader = readCanonicalInput
+    app.state.canonical_persistence_service = None
     app.add_middleware(CorrelationIdMiddleware)
     app.add_exception_handler(ApplicationError, cast(ExceptionHandler, application_error_handler))
     app.add_exception_handler(

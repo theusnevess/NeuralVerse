@@ -3,11 +3,13 @@ from __future__ import annotations
 from collections.abc import Callable
 from datetime import UTC, datetime
 from typing import Any, cast
+from uuid import UUID
 
 from fastapi import APIRouter, Header, HTTPException, Request, status
 from pydantic import BaseModel, ConfigDict, Field
 
 from neuralverse_backend.canonical_input import CanonicalInputResult, readCanonicalInput
+from neuralverse_backend.canonical_persistence import CanonicalPersistenceService
 from neuralverse_backend.cross_front.envelope import CrossFrontEnvelope, CrossFrontEnvelopeError
 from neuralverse_backend.cross_front.workflow import (
     CrossFrontWorkflowService,
@@ -46,7 +48,14 @@ router = APIRouter(prefix="/cross-front", tags=["cross-front"])
 
 @router.post("/canonical-input", status_code=status.HTTP_200_OK)
 async def ingest_canonical_input(request: Request) -> dict[str, Any]:
-    """Validate canonical ACP output before any workflow or persistence handoff."""
+    """Validate and durably enqueue canonical ACP output."""
+    idempotency_key = request.headers.get("Idempotency-Key")
+    authoring_job_header = request.headers.get("Authoring-Job-ID")
+    if not idempotency_key:
+        raise HTTPException(
+            status_code=400,
+            detail={"code": "PERSISTENCE_FAILURE", "message": "Idempotency-Key is required."},
+        )
     reader = cast(
         Callable[[bytes], CanonicalInputResult],
         getattr(request.app.state, "canonical_input_reader", readCanonicalInput),
@@ -62,17 +71,58 @@ async def ingest_canonical_input(request: Request) -> dict[str, Any]:
             },
         )
     intake = result.intake
+    service = getattr(request.app.state, "canonical_persistence_service", None)
+    if service is None:
+        runtime = getattr(request.app.state, "persistence_runtime", None)
+        session_factory = getattr(runtime, "session_factory", None)
+        if session_factory is None:
+            raise HTTPException(
+                status_code=503,
+                detail={
+                    "code": "PERSISTENCE_FAILURE",
+                    "message": "Canonical intake persistence is not configured.",
+                },
+            )
+        service = CanonicalPersistenceService(session_factory)
+    try:
+        requested_job_id = UUID(authoring_job_header) if authoring_job_header else None
+    except ValueError as error:
+        raise HTTPException(
+            status_code=400,
+            detail={"code": "PERSISTENCE_FAILURE", "message": "Authoring-Job-ID is invalid."},
+        ) from error
+    if requested_job_id is None:
+        persisted = service.accept(intake, idempotency_key=idempotency_key)
+    else:
+        persisted = service.accept(
+            intake,
+            idempotency_key=idempotency_key,
+            authoring_job_id=requested_job_id,
+        )
+    if not persisted.accepted or persisted.response is None:
+        persistence_failure = persisted.failure
+        raise HTTPException(
+            status_code=409
+            if persistence_failure and persistence_failure.code == "IDEMPOTENCY_CONFLICT"
+            else 503,
+            detail={
+                "code": persistence_failure.code if persistence_failure else "PERSISTENCE_FAILURE",
+                "message": persistence_failure.message
+                if persistence_failure
+                else "Canonical intake persistence failed.",
+            },
+        )
+    response = persisted.response
     return {
-        "contract_name": intake.contract_name,
-        "contract_version": intake.contract_version,
-        "minimum_reader_version": intake.minimum_reader_version,
-        "producer_version": intake.producer_version,
-        "artifact_sha256": intake.artifact_sha256,
-        "schema_hash": intake.schema_hash,
-        "release_tag": intake.release_identity.tag,
-        "release_commit": intake.release_identity.commit,
-        "validation_result": intake.validation_result,
-        "received_at": intake.received_at.isoformat(),
+        "canonical_input_id": str(response.canonical_input_id),
+        "authoring_job_id": str(response.authoring_job_id),
+        "artifact_fingerprint": response.artifact_fingerprint,
+        "contract_name": response.contract_name,
+        "contract_version": response.contract_version,
+        "persistence_status": response.persistence_status,
+        "workflow_dispatch_status": response.workflow_dispatch_status,
+        "idempotency_status": response.idempotency_status,
+        "replayed": response.replayed,
     }
 
 

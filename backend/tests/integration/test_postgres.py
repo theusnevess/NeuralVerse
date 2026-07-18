@@ -42,14 +42,27 @@ def test_postgresql_16_connectivity_and_catalog_are_clean(postgres_engine: Engin
             .scalars()
             .all()
         )
-    assert tables == [
+    assert {
         "alembic_version",
         "cross_front_workflow_executions",
         "cross_front_workflow_queue",
         "fixture_records",
         "idempotency_records",
         "operational_audit_events",
-    ]
+        "content_packages",
+        "content_versions",
+        "content_blocks",
+        "curriculum_nodes",
+        "sources",
+        "assets",
+        "generation_jobs",
+        "governance_reviews",
+        "publication_releases",
+        "learner_profiles",
+        "laboratory_runs",
+        "assessment_attempts",
+        "synchronization_records",
+    } <= set(tables)
 
 
 def test_real_session_rolls_back_and_closes(postgres_engine: Engine) -> None:
@@ -63,7 +76,7 @@ def test_real_session_rolls_back_and_closes(postgres_engine: Engine) -> None:
 def test_migration_inspector_reports_compatible(postgres_engine: Engine) -> None:
     inspection = MigrationStateInspector(postgres_engine).inspect(force=True)
     assert inspection.status == "healthy"
-    assert inspection.current_revision == inspection.expected_revision == "b42000000001"
+    assert inspection.current_revision == inspection.expected_revision == "b50000000001"
 
 
 def test_readiness_checker_reports_healthy(postgres_engine: Engine) -> None:

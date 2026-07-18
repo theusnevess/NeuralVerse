@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from datetime import datetime, timedelta
+from typing import cast
 from uuid import UUID, uuid4
 
 from sqlalchemy import select
@@ -75,7 +76,7 @@ class IdempotencyRecordRepository:
         )
         if for_update:
             statement = statement.with_for_update()
-        return session.execute(statement).scalar_one_or_none()
+        return cast(IdempotencyRecord | None, session.execute(statement).scalar_one_or_none())
 
     def lock(self, session: Session, record: IdempotencyRecord) -> IdempotencyRecord | None:
         return self.get_by_id(session, record.idempotency_record_id, for_update=True)

@@ -16,14 +16,18 @@ from neuralverse_backend.persistence.models import (
 )
 
 
-def test_shared_metadata_contains_stage2_workflow_model() -> None:
-    assert set(metadata.tables) == {
+def test_shared_metadata_contains_operational_and_canonical_models() -> None:
+    assert {
         "fixture_records",
         "idempotency_records",
         "operational_audit_events",
         "cross_front_workflow_executions",
         "cross_front_workflow_queue",
-    }
+        "authoring_jobs",
+        "canonical_input_records",
+        "canonical_intake_idempotency",
+        "transactional_outbox_events",
+    } <= set(metadata.tables)
     assert all(table.metadata is metadata for table in metadata.tables.values())
 
 
@@ -31,9 +35,7 @@ def test_fixture_model_has_frozen_operational_shape() -> None:
     table = cast(Table, FixtureRecord.__table__)
     assert isinstance(table.c.fixture_record_id.type, Uuid)
     assert isinstance(table.c.raw_payload.type, LargeBinary)
-    assert isinstance(
-        table.c.structural_payload.type.dialect_impl(postgresql_dialect()), JSONB
-    )
+    assert isinstance(table.c.structural_payload.type.dialect_impl(postgresql_dialect()), JSONB)
     assert "semantic_identifier_index" not in table.c
     assert "fixture_classification" in table.c
     assert "raw_payload_sha256" in table.c

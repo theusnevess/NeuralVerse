@@ -1,28 +1,11 @@
 # Current State
 
-`NV-BIP-M4` is `CERTIFIED WITH CONDITIONS — COMMIT REQUIRED`.
-
-Canonical backend domain model is explicit, typed, tested, and
-framework-independent. 15 bounded contexts implemented as a modular
-monolith. 38 typed identifier value objects. 172 domain tests passing.
-289 total unit tests passing. Ruff clean.
-
-Persistence integration: `FUTURE OR SEPARATE MILESTONE`.
-Durable workflow integration: `FUTURE OR SEPARATE MILESTONE`.
-Publication execution: `NOT IMPLEMENTED`.
-
-`NV-BIP-M3` is `IMPLEMENTED — CERTIFICATION REQUIRED`.
-
-Neutral release: `nv-xfi-input-contracts-v1.0.0`.
-
-ACP producer: `CERTIFIED WITH CONDITIONS`.
-
-Cross-front round trip: `NOT YET CERTIFIED`.
-
-Database persistence: `NOT IMPLEMENTED` for canonical intake.
-
-Durable workflow: `NOT IMPLEMENTED` for canonical intake.
-
-Publication execution: `NOT IMPLEMENTED`.
-
-The next action is independent BIP certification.
+The required baseline is `59e5603dd801574b7b4f9ea910679f548964630f` on
+`feat/backend-integration-platform`. Stage 5 changes intentionally remain
+unstaged for owner review. Core BIP-M2 evidence is complete against PostgreSQL
+16 and a clean reset-and-upgrade database. Bounded-context representative-data
+and repository round-trip evidence are complete, and Stage 5 is certified with
+conditions as `BIP_CANONICAL_DOMAIN_PERSISTENCE_CERTIFIED_WITH_CONDITIONS`.
+Earlier preserved worktree changes include cross-front workflow material; that
+material is classified as future-stage or pre-existing unless it is directly
+required by canonical persistence.

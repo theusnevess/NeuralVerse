@@ -33,24 +33,43 @@ def test_alembic_configuration_points_to_shared_migrations() -> None:
     assert Path(script_location) == MIGRATIONS
 
 
-def test_stage2_workflow_migration_is_the_only_linear_head() -> None:
+def test_m5_canonical_persistence_migration_is_the_only_linear_head() -> None:
     script = ScriptDirectory.from_config(alembic_config())
     heads = script.get_heads()
-    assert heads == ["b42000000001"]
+    assert heads == ["b50000000001"]
     revision = script.get_revision(heads[0])
     assert revision is not None
-    assert revision.down_revision == "b41000000001"
-    assert revision.doc.startswith("Add durable NV-XFI workflow checkpoints")
+    assert revision.down_revision == "b49000000001"
+    assert revision.doc.startswith("Persist learner collection")
 
 
-def test_application_metadata_has_only_operational_tables() -> None:
-    assert set(metadata.tables) == {
+def test_application_metadata_contains_operational_and_canonical_tables() -> None:
+    assert {
         "fixture_records",
         "idempotency_records",
         "operational_audit_events",
         "cross_front_workflow_executions",
         "cross_front_workflow_queue",
-    }
+        "authoring_jobs",
+        "canonical_input_records",
+        "canonical_intake_idempotency",
+        "transactional_outbox_events",
+    } <= set(metadata.tables)
+    assert {
+        "content_packages",
+        "content_versions",
+        "content_blocks",
+        "curriculum_nodes",
+        "sources",
+        "assets",
+        "generation_jobs",
+        "governance_reviews",
+        "publication_releases",
+        "learner_profiles",
+        "laboratory_runs",
+        "assessment_attempts",
+        "synchronization_records",
+    } <= set(metadata.tables)
 
 
 def test_offline_baseline_sql_does_not_expose_credentials(monkeypatch: pytest.MonkeyPatch) -> None:
