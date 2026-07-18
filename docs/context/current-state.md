@@ -43,3 +43,18 @@ Publication execution: `NOT IMPLEMENTED`
 Mutable backend APIs: `NOT IMPLEMENTED`
 
 Obsidian synchronization execution: `NOT IMPLEMENTED`
+
+## Stage 4 — BIP-M0 Mission, Boundaries and Baseline
+
+BIP-M0 is `IMPLEMENTED`. The canonical mission,
+authority boundaries, technology baseline, bounded contexts, source-of-truth
+matrix, shared handoff objects, lifecycle rules, workflow ownership, database
+boundaries, Frontend migration strategy and deferred decisions are documented
+in `backend-integration-platform-m0-mission-boundaries-baseline.md` and remain
+`APPROVED` after owner finalization.
+
+The reviewed Backend baseline is `2c22b7dbe0966339158b6b792561ceb0f30a2e5d`;
+`e192a2e939ba904dc5c42274ce8bdfc4362e13ba` is the prior Stage 5 baseline.
+BIP-M1 through BIP-M9 remain `NOT_AUTHORIZED` as new work; existing committed
+evidence is preserved. This additive section does not alter the concurrent
+implementation or delivery evidence recorded above.

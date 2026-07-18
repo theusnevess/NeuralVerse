@@ -143,3 +143,19 @@ The next authorized milestone is `NV-XFI-M1 — Neutral Shared Contract Artifact
 ## Phase 7 Handoff
 
 Phase 7 may convert this sequence into a file-level implementation plan. It must not scaffold code until the owner accepts the target architecture and cross-front registry. It must preserve the no-installation/no-service-execution constraints until implementation authorization is explicit.
+
+## Stage 4 — BIP-M0 Mission, Boundaries and Baseline
+
+Status: `IMPLEMENTED`.
+
+The canonical BIP-M0 baseline is documented in
+`backend-integration-platform-m0-mission-boundaries-baseline.md`. It records
+the approved technology baseline, bounded contexts,
+source-of-truth matrix, shared handoff objects, lifecycle and workflow rules,
+database boundaries, Frontend migration strategy and deferred decisions.
+
+`BIP-M1` through `BIP-M9` remain `NOT_AUTHORIZED` as new implementation work;
+existing committed evidence is preserved. Owner approval is recorded by the
+isolated BIP-M0 documentation commit. This status section does not
+authorize source, migration, dependency, infrastructure, Frontend or ACP
+changes.
