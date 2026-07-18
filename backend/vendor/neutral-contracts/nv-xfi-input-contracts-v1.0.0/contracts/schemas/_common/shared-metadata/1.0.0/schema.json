@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:neuralverse:xfi:common:shared-metadata:1.0.0",
+  "type": "object",
+  "required": ["schema_name", "schema_version", "minimum_reader_version", "producer_version", "created_at"],
+  "properties": {
+    "schema_name": { "type": "string", "minLength": 1, "maxLength": 256 },
+    "schema_version": { "$ref": "urn:neuralverse:xfi:common:primitives:1.0.0#/$defs/stableVersion" },
+    "minimum_reader_version": { "$ref": "urn:neuralverse:xfi:common:primitives:1.0.0#/$defs/stableVersion" },
+    "producer_version": { "type": "string", "minLength": 1, "maxLength": 256 },
+    "created_at": { "$ref": "urn:neuralverse:xfi:common:primitives:1.0.0#/$defs/utcTimestamp" },
+    "extensions": {
+      "type": "object",
+      "propertyNames": { "$ref": "urn:neuralverse:xfi:common:primitives:1.0.0#/$defs/extensionKey" },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

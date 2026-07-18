@@ -1,0 +1,90 @@
+{
+  "packageId": "package:math-foundations",
+  "packageVersion": "1.0.0",
+  "recommendation": "READY_WITH_DOCUMENTED_MINOR_BACKLOG",
+  "recommender": {
+    "kind": "governance",
+    "label": "content-governance"
+  },
+  "recommenderVersion": "1.0.0",
+  "qualityGateResults": [
+    {
+      "gateId": "gate:source-coverage",
+      "gateResult": "PASS_WITH_FINDINGS",
+      "severity": "P2",
+      "findings": [],
+      "evidenceReferences": [
+        "source:curriculum-guidance"
+      ],
+      "manualReviewRequired": false,
+      "unresolvedUnknowns": []
+    }
+  ],
+  "unresolvedFindingIds": [],
+  "requiredManualReviews": [],
+  "acceptedBacklog": [
+    {
+      "backlogItemId": "backlog:visual-example",
+      "category": "asset",
+      "description": "Add an optional visual example.",
+      "severity": "P2",
+      "reasonForAcceptance": "The omission is non-blocking.",
+      "affectedPackageArea": "content",
+      "evidenceReferences": [
+        "source:curriculum-guidance"
+      ],
+      "requiredFollowUp": "Review in the next authoring cycle.",
+      "blocking": false
+    }
+  ],
+  "coverage": {
+    "source": {
+      "status": "evaluated",
+      "value": 1
+    },
+    "contentBlock": {
+      "status": "evaluated",
+      "value": 1
+    },
+    "asset": {
+      "status": "not_applicable"
+    },
+    "laboratory": {
+      "status": "not_evaluated"
+    },
+    "assessment": {
+      "status": "evaluated",
+      "value": 0.5
+    },
+    "accessibility": {
+      "status": "evaluated",
+      "value": 1
+    },
+    "governance": {
+      "status": "evaluated",
+      "value": 1
+    }
+  },
+  "governanceRationale": "All blocking gates pass; the explicitly accepted backlog is non-blocking.",
+  "recommendedAt": "2026-07-17T00:00:00Z",
+  "metadata": {
+    "x-example:reviewed": true,
+    "xfi:fixture-case": "unsupported-minimum-reader",
+    "xfi:complete": {
+      "unicode": "μ → ∞",
+      "decimal": "001.2300",
+      "nestedFutureField": {
+        "kept": true
+      }
+    }
+  },
+  "schema_name": "PublicationReadinessRecommendation",
+  "schema_version": "1.0.0",
+  "minimum_reader_version": "2.0.0",
+  "producer_version": "1.0.0",
+  "created_at": "2026-07-17T00:00:00Z",
+  "extensions": {
+    "xfi:fixture": "PublicationReadinessRecommendation:unsupported-minimum-reader"
+  },
+  "unresolvedUnknowns": []
+}

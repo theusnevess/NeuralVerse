@@ -1,0 +1,184 @@
+{
+  "packageId": "package:math-foundations",
+  "packageVersion": "1.0.0",
+  "title": "Vectors and Dot Products",
+  "curriculumScope": {
+    "curriculumNodeIds": [
+      "node:linear-algebra"
+    ],
+    "lessonId": "lesson:vectors"
+  },
+  "learningObjectives": [
+    {
+      "statementId": "objective:dot-product",
+      "statement": "Explain dot products",
+      "required": true
+    }
+  ],
+  "prerequisites": [],
+  "competencies": [
+    {
+      "statement": "Reason about vector relationships",
+      "required": true
+    }
+  ],
+  "contributionIds": [
+    "contribution:vector-definition"
+  ],
+  "contentBlocks": [
+    {
+      "contentBlockId": "block:definition",
+      "blockVersion": "1.0.0",
+      "blockType": "definition",
+      "semanticPurpose": "Define vectors",
+      "sourceContributionIds": [
+        "contribution:vector-definition"
+      ],
+      "structuredPayload": {
+        "text": "A vector is an ordered element."
+      },
+      "conceptLinks": [
+        "concept:vector"
+      ],
+      "curriculumLinks": [
+        "node:linear-algebra"
+      ],
+      "citationIds": [],
+      "assetRequestIds": [],
+      "accessibilityMetadata": {
+        "language": "en"
+      },
+      "renderingPriority": 50,
+      "requirementStatus": "REQUIRED",
+      "lifecycle": {
+        "lifecycle": "DRAFT",
+        "version": "1.0.0",
+        "approval": "PENDING",
+        "publication": "UNPUBLISHED"
+      },
+      "metadata": {}
+    }
+  ],
+  "blockOrder": [
+    "block:definition"
+  ],
+  "sourceManifest": {
+    "manifestId": "manifest:math",
+    "version": "1.0.0",
+    "sources": []
+  },
+  "citations": [],
+  "laboratoryReferences": [
+    {
+      "laboratorySpecId": "laboratory:vector-demo",
+      "laboratorySpecVersion": "1.0.0",
+      "semanticType": "interactive_experiment",
+      "relationship": [
+        "block:definition"
+      ],
+      "requiredCapability": "vector_visualization"
+    }
+  ],
+  "assessmentReferences": [
+    {
+      "assessmentSpecId": "assessment:dot-product",
+      "assessmentSpecVersion": "1.0.0",
+      "assessmentType": "concept_check",
+      "competencyIds": [
+        "competency:reasoning"
+      ],
+      "relationship": [
+        "block:definition"
+      ]
+    }
+  ],
+  "assetRequestIds": [],
+  "validationResults": [],
+  "revisionDirectives": [],
+  "lifecycle": {
+    "lifecycle": "DRAFT",
+    "version": "1.0.0",
+    "approval": "PENDING",
+    "publication": "UNPUBLISHED"
+  },
+  "createdAt": "2026-07-17T00:00:00Z",
+  "updatedAt": "2026-07-17T00:00:00Z",
+  "metadata": {
+    "x-example:extension": true,
+    "xfi:fixture-case": "missing-optional",
+    "xfi:complete": {
+      "unicode": "μ → ∞",
+      "decimal": "001.2300",
+      "nestedFutureField": {
+        "kept": true
+      }
+    }
+  },
+  "schema_name": "LearningPackageDraft",
+  "schema_version": "1.0.0",
+  "minimum_reader_version": "1.0.0",
+  "producer_version": "1.0.0",
+  "created_at": "2026-07-17T00:00:00Z",
+  "extensions": {
+    "xfi:fixture": "LearningPackageDraft:missing-optional"
+  },
+  "expectedDepth": {
+    "level": "working_knowledge",
+    "scopeIds": [
+      "node:linear-algebra"
+    ],
+    "rationale": "The package develops working knowledge.",
+    "sourceReferences": [
+      "source:curriculum-guidance"
+    ]
+  },
+  "agentContributions": [
+    {
+      "contributionId": "contribution:vector-definition",
+      "agentId": "agent:knowledge",
+      "agentVersion": "1.0.0",
+      "contributionType": "conceptual_definition",
+      "usedIds": [
+        "block:definition"
+      ],
+      "citationIds": []
+    }
+  ],
+  "assemblyPlan": {
+    "planId": "assembly:math-package",
+    "planVersion": "1.0.0",
+    "stages": [
+      {
+        "stageId": "stage:content-order",
+        "stageType": "ordered_content_assembly",
+        "order": 0,
+        "inputContributionIds": [
+          "contribution:vector-definition"
+        ],
+        "targetIds": [
+          "block:definition"
+        ],
+        "dependencies": []
+      }
+    ],
+    "inputContributionIds": [
+      "contribution:vector-definition"
+    ],
+    "rationale": "Assemble governed contributions into ordered blocks.",
+    "unresolvedConstraints": []
+  },
+  "coverageReport": [
+    {
+      "dimension": "source",
+      "targetRequirement": "source traceability",
+      "observedCoverage": 1,
+      "status": "covered",
+      "evidenceReferences": [
+        "source:curriculum-guidance"
+      ],
+      "knownGaps": [],
+      "unknownState": "known"
+    }
+  ],
+  "unresolvedFindings": []
+}

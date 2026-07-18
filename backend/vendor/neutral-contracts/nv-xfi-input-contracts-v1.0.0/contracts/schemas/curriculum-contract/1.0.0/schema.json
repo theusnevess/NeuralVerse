@@ -1,0 +1,148 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:neuralverse:xfi:contract:curriculum-contract:1.0.0",
+  "title": "CurriculumContract",
+  "type": "object",
+  "allOf": [{ "$ref": "urn:neuralverse:xfi:common:shared-metadata:1.0.0" }],
+  "additionalProperties": true,
+  "required": ["schema_name", "schema_version", "minimum_reader_version", "producer_version", "created_at", "contractId", "contractVersion", "curriculumScope", "targetConceptIds", "targetCurriculumNodeIds", "learningObjectives", "prerequisites", "competencies", "expectedDepth", "forwardConnections", "cognitiveProgressionConstraints", "dependencyEdges", "requiredArtifactTypes", "requiredAgentContributions", "constraintSet", "validationResults", "lifecycle", "createdAt", "updatedAt", "metadata"],
+  "properties": {
+    "schema_name": { "const": "CurriculumContract" },
+    "schema_version": { "$ref": "urn:neuralverse:xfi:common:primitives:1.0.0#/$defs/stableVersion" },
+    "minimum_reader_version": { "$ref": "urn:neuralverse:xfi:common:primitives:1.0.0#/$defs/stableVersion" },
+    "producer_version": { "$ref": "urn:neuralverse:xfi:common:primitives:1.0.0#/$defs/stableVersion" },
+    "created_at": { "$ref": "urn:neuralverse:xfi:common:primitives:1.0.0#/$defs/utcTimestamp" },
+    "extensions": { "type": "object", "propertyNames": { "$ref": "urn:neuralverse:xfi:common:primitives:1.0.0#/$defs/extensionKey" }, "additionalProperties": true },
+    "contractId": { "$ref": "urn:neuralverse:xfi:common:primitives:1.0.0#/$defs/opaqueIdentifier" },
+    "contractVersion": { "$ref": "urn:neuralverse:xfi:common:primitives:1.0.0#/$defs/stableVersion" },
+    "curriculumScope": { "$ref": "urn:neuralverse:xfi:contract:curriculum-contract:1.0.0#/$defs/scope" },
+    "targetConceptIds": { "$ref": "urn:neuralverse:xfi:contract:curriculum-contract:1.0.0#/$defs/identifiers" },
+    "targetCurriculumNodeIds": { "$ref": "urn:neuralverse:xfi:contract:curriculum-contract:1.0.0#/$defs/identifiers" },
+    "learningObjectives": { "type": "array", "minItems": 1, "maxItems": 128, "items": { "$ref": "urn:neuralverse:xfi:contract:curriculum-contract:1.0.0#/$defs/objective" } },
+    "prerequisites": { "type": "array", "maxItems": 256, "items": { "$ref": "urn:neuralverse:xfi:contract:curriculum-contract:1.0.0#/$defs/prerequisite" } },
+    "competencies": { "$ref": "urn:neuralverse:xfi:contract:curriculum-contract:1.0.0#/$defs/identifiers" },
+    "expectedDepth": { "$ref": "urn:neuralverse:xfi:contract:curriculum-contract:1.0.0#/$defs/expectedDepth" },
+    "forwardConnections": { "type": "array", "maxItems": 128, "items": { "$ref": "urn:neuralverse:xfi:contract:curriculum-contract:1.0.0#/$defs/forwardConnection" } },
+    "cognitiveProgressionConstraints": { "type": "array", "maxItems": 128, "items": { "$ref": "urn:neuralverse:xfi:contract:curriculum-contract:1.0.0#/$defs/progressionConstraint" } },
+    "dependencyEdges": { "type": "array", "maxItems": 256, "items": { "$ref": "urn:neuralverse:xfi:contract:curriculum-contract:1.0.0#/$defs/dependency" } },
+    "requiredArtifactTypes": { "type": "array", "maxItems": 128, "items": { "type": "string", "minLength": 1 } },
+    "requiredAgentContributions": { "type": "array", "maxItems": 128, "items": { "$ref": "urn:neuralverse:xfi:contract:curriculum-contract:1.0.0#/$defs/requiredContribution" } },
+    "constraintSet": { "type": "object", "additionalProperties": true },
+    "validationResults": { "type": "array", "maxItems": 256, "items": { "$ref": "urn:neuralverse:xfi:contract:curriculum-contract:1.0.0#/$defs/validationResult" } },
+    "lifecycle": { "$ref": "urn:neuralverse:xfi:contract:curriculum-contract:1.0.0#/$defs/lifecycle" },
+    "createdAt": { "$ref": "urn:neuralverse:xfi:common:primitives:1.0.0#/$defs/utcTimestamp" },
+    "updatedAt": { "$ref": "urn:neuralverse:xfi:common:primitives:1.0.0#/$defs/utcTimestamp" },
+    "metadata": { "type": "object", "additionalProperties": true }
+  },
+  "$defs": {
+    "identifier": { "$ref": "urn:neuralverse:xfi:common:primitives:1.0.0#/$defs/opaqueIdentifier" },
+    "identifiers": { "type": "array", "maxItems": 256, "items": { "$ref": "urn:neuralverse:xfi:contract:curriculum-contract:1.0.0#/$defs/identifier" } },
+    "scope": {
+      "type": "object", "additionalProperties": true,
+      "required": ["curriculumNodeIds"],
+      "properties": {
+        "learningPathId": { "$ref": "urn:neuralverse:xfi:contract:curriculum-contract:1.0.0#/$defs/identifier" },
+        "moduleId": { "$ref": "urn:neuralverse:xfi:contract:curriculum-contract:1.0.0#/$defs/identifier" },
+        "lessonId": { "$ref": "urn:neuralverse:xfi:contract:curriculum-contract:1.0.0#/$defs/identifier" },
+        "curriculumNodeIds": { "$ref": "urn:neuralverse:xfi:contract:curriculum-contract:1.0.0#/$defs/identifiers" }
+      }
+    },
+    "objective": {
+      "type": "object", "additionalProperties": true,
+      "required": ["objectiveId", "statement", "requirementStatus", "competencyIds", "conceptIds"],
+      "properties": {
+        "objectiveId": { "$ref": "urn:neuralverse:xfi:contract:curriculum-contract:1.0.0#/$defs/identifier" },
+        "statement": { "type": "string", "minLength": 1 },
+        "requirementStatus": { "enum": ["REQUIRED", "OPTIONAL", "CONDITIONAL"] },
+        "competencyIds": { "$ref": "urn:neuralverse:xfi:contract:curriculum-contract:1.0.0#/$defs/identifiers" },
+        "conceptIds": { "$ref": "urn:neuralverse:xfi:contract:curriculum-contract:1.0.0#/$defs/identifiers" },
+        "validationCriteria": { "type": "array", "maxItems": 64, "items": {} }
+      }
+    },
+    "prerequisite": {
+      "type": "object", "additionalProperties": true,
+      "required": ["prerequisiteId", "kind", "targetId", "status", "depth"],
+      "properties": {
+        "prerequisiteId": { "$ref": "urn:neuralverse:xfi:contract:curriculum-contract:1.0.0#/$defs/identifier" },
+        "kind": { "enum": ["concept", "competency", "curriculum_node"] },
+        "targetId": { "$ref": "urn:neuralverse:xfi:contract:curriculum-contract:1.0.0#/$defs/identifier" },
+        "status": { "enum": ["required", "recommended"] },
+        "depth": { "enum": ["awareness", "basic_understanding", "working_knowledge", "advanced_understanding", "mastery"] },
+        "logicalGroup": { "type": "string" }
+      }
+    },
+    "dependency": {
+      "type": "object", "additionalProperties": true,
+      "required": ["dependencyId", "fromNodeId", "toNodeId", "relation"],
+      "properties": {
+        "dependencyId": { "$ref": "urn:neuralverse:xfi:contract:curriculum-contract:1.0.0#/$defs/identifier" },
+        "fromNodeId": { "$ref": "urn:neuralverse:xfi:contract:curriculum-contract:1.0.0#/$defs/identifier" },
+        "toNodeId": { "$ref": "urn:neuralverse:xfi:contract:curriculum-contract:1.0.0#/$defs/identifier" },
+        "relation": { "enum": ["requires", "precedes", "reinforces", "extends", "contrasts_with", "applies"] },
+        "rationale": { "type": "string" }
+      }
+    },
+    "requiredContribution": {
+      "type": "object", "additionalProperties": true,
+      "required": ["agentId", "contributionType", "required"],
+      "properties": {
+        "agentId": { "$ref": "urn:neuralverse:xfi:contract:curriculum-contract:1.0.0#/$defs/identifier" },
+        "contributionType": { "type": "string", "minLength": 1 },
+        "required": { "type": "boolean" }
+      }
+    },
+    "expectedDepth": {
+      "type": "object", "additionalProperties": true,
+      "required": ["level", "scopeIds", "rationale"],
+      "properties": {
+        "level": { "enum": ["awareness", "basic_understanding", "working_knowledge", "advanced_understanding", "mastery"] },
+        "scopeIds": { "type": "array", "maxItems": 256, "items": { "$ref": "urn:neuralverse:xfi:contract:curriculum-contract:1.0.0#/$defs/identifier" } },
+        "rationale": { "type": "string", "minLength": 1 },
+        "evidenceReferences": { "type": "array", "maxItems": 128, "items": { "$ref": "urn:neuralverse:xfi:common:primitives:1.0.0#/$defs/opaqueIdentifier" } }
+      }
+    },
+    "forwardConnection": {
+      "type": "object", "additionalProperties": true,
+      "required": ["connectionId", "targetId", "connectionType", "rationale", "priority"],
+      "properties": {
+        "connectionId": { "$ref": "urn:neuralverse:xfi:contract:curriculum-contract:1.0.0#/$defs/identifier" },
+        "targetId": { "$ref": "urn:neuralverse:xfi:contract:curriculum-contract:1.0.0#/$defs/identifier" },
+        "connectionType": { "type": "string", "minLength": 1 },
+        "rationale": { "type": "string", "minLength": 1 },
+        "priority": { "type": "integer", "minimum": 0, "maximum": 100 }
+      }
+    },
+    "progressionConstraint": {
+      "type": "object", "additionalProperties": true,
+      "required": ["constraintId", "constraintType", "affectedIds", "rationale", "enforcement"],
+      "properties": {
+        "constraintId": { "$ref": "urn:neuralverse:xfi:contract:curriculum-contract:1.0.0#/$defs/identifier" },
+        "constraintType": { "type": "string", "minLength": 1 },
+        "affectedIds": { "type": "array", "maxItems": 256, "items": { "$ref": "urn:neuralverse:xfi:contract:curriculum-contract:1.0.0#/$defs/identifier" } },
+        "rationale": { "type": "string", "minLength": 1 },
+        "enforcement": { "enum": ["required", "recommended", "prohibited"] }
+      }
+    },
+    "validationResult": {
+      "type": "object", "additionalProperties": true,
+      "required": ["status", "valid", "findings"],
+      "properties": {
+        "status": { "enum": ["PASS", "PASS_WITH_FINDINGS", "FAIL", "UNKNOWN"] },
+        "valid": { "type": "boolean" },
+        "findings": { "type": "array", "maxItems": 256, "items": {} },
+        "value": {},
+        "checkedAt": { "type": "string" }
+      }
+    },
+    "lifecycle": {
+      "type": "object", "additionalProperties": true,
+      "required": ["lifecycle", "version", "approval", "publication"],
+      "properties": {
+        "lifecycle": { "type": "string" },
+        "version": { "$ref": "urn:neuralverse:xfi:common:primitives:1.0.0#/$defs/stableVersion" },
+        "approval": { "type": "string" },
+        "publication": { "type": "string" }
+      }
+    }
+  }
+}

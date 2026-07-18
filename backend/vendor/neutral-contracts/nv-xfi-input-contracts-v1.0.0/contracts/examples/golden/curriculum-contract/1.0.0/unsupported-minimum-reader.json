@@ -1,0 +1,114 @@
+{
+  "contractId": "curriculum-contract:math-foundations",
+  "contractVersion": "1.0.0",
+  "curriculumScope": {
+    "curriculumNodeIds": [
+      "node:linear-algebra"
+    ],
+    "lessonId": "lesson:vectors"
+  },
+  "targetConceptIds": [
+    "concept:vector"
+  ],
+  "targetCurriculumNodeIds": [
+    "node:linear-algebra"
+  ],
+  "learningObjectives": [
+    {
+      "objectiveId": "objective:dot-product",
+      "statement": "Explain dot products",
+      "requirementStatus": "REQUIRED",
+      "competencyIds": [
+        "competency:reasoning"
+      ],
+      "conceptIds": [
+        "concept:vector"
+      ]
+    }
+  ],
+  "prerequisites": [
+    {
+      "prerequisiteId": "prerequisite:vector-basics",
+      "kind": "concept",
+      "targetId": "concept:vector",
+      "status": "required",
+      "depth": "basic_understanding"
+    }
+  ],
+  "competencies": [
+    "competency:reasoning"
+  ],
+  "dependencyEdges": [],
+  "requiredArtifactTypes": [
+    "definition"
+  ],
+  "requiredAgentContributions": [
+    {
+      "agentId": "agent:knowledge",
+      "contributionType": "conceptual_definition",
+      "required": true
+    }
+  ],
+  "constraintSet": {
+    "language": "en"
+  },
+  "validationResults": [],
+  "lifecycle": {
+    "lifecycle": "DRAFT",
+    "version": "1.0.0",
+    "approval": "PENDING",
+    "publication": "UNPUBLISHED"
+  },
+  "createdAt": "2026-07-17T00:00:00Z",
+  "updatedAt": "2026-07-17T00:00:00Z",
+  "metadata": {
+    "x-example:note": "preserve this extension",
+    "xfi:fixture-case": "unsupported-minimum-reader",
+    "xfi:complete": {
+      "unicode": "μ → ∞",
+      "decimal": "001.2300",
+      "nestedFutureField": {
+        "kept": true
+      }
+    }
+  },
+  "schema_name": "CurriculumContract",
+  "schema_version": "1.0.0",
+  "minimum_reader_version": "2.0.0",
+  "producer_version": "1.0.0",
+  "created_at": "2026-07-17T00:00:00Z",
+  "extensions": {
+    "xfi:fixture": "CurriculumContract:unsupported-minimum-reader"
+  },
+  "expectedDepth": {
+    "level": "working_knowledge",
+    "scopeIds": [
+      "concept:vector"
+    ],
+    "rationale": "The lesson requires working knowledge before application.",
+    "evidenceReferences": [
+      "source:curriculum-guidance"
+    ]
+  },
+  "forwardConnections": [
+    {
+      "connectionId": "connection:matrix-operations",
+      "targetId": "node:matrix-operations",
+      "connectionType": "extends",
+      "rationale": "Vectors lead into matrix operations.",
+      "priority": 10
+    }
+  ],
+  "cognitiveProgressionConstraints": [
+    {
+      "constraintId": "constraint:concept-before-application",
+      "constraintType": "concept_before_application",
+      "affectedIds": [
+        "concept:vector",
+        "node:linear-algebra"
+      ],
+      "rationale": "The concept must precede application work.",
+      "enforcement": "required"
+    }
+  ]
+}

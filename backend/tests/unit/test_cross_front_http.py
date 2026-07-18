@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 from fastapi.testclient import TestClient
 
 from neuralverse_backend.configuration.settings import Environment, LogFormat, Settings
@@ -65,3 +67,20 @@ def test_nv_xfi_endpoint_rejects_idempotency_reuse_for_changed_payload() -> None
     assert first.status_code == 202
     assert conflict.status_code == 409
     assert conflict.json()["error_code"] == "IDEMPOTENCY_CONFLICT"
+
+
+def test_canonical_input_endpoint_validates_before_workflow() -> None:
+    settings = Settings(environment=Environment.TEST, log_format=LogFormat.JSON)
+    app = create_http_app(settings)
+    fixture = (
+        Path(__file__).parents[2]
+        / "vendor/neutral-contracts/nv-xfi-input-contracts-v1.0.0/contracts/examples/golden/"
+        "agent-contribution/1.0.0/complete-valid.json"
+    ).read_bytes()
+    with TestClient(app) as client:
+        accepted = client.post("/cross-front/canonical-input", content=fixture)
+        rejected = client.post("/cross-front/canonical-input", content=b"{invalid")
+    assert accepted.status_code == 200
+    assert accepted.json()["contract_name"] == "AgentContribution"
+    assert rejected.status_code == 422
+    assert rejected.json()["error_code"] == "INVALID_JSON"

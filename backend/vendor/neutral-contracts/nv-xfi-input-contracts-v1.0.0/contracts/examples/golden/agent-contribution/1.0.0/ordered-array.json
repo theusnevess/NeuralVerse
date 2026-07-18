@@ -1,0 +1,60 @@
+{
+  "contributionId": "contribution:vector-definition",
+  "generationJobId": "generation:job-1",
+  "agentId": "agent:knowledge",
+  "agentVersion": "1.0.0",
+  "packageId": "package:math-foundations",
+  "packageVersion": "1.0.0",
+  "contributionType": "conceptual_definition",
+  "inputDependencies": [
+    {
+      "kind": "concept",
+      "id": "concept:vector"
+    }
+  ],
+  "payloadSchemaVersion": "1.0.0",
+  "structuredPayload": {
+    "payload_type": "concept_explanation",
+    "definition": "An ordered element of a vector space.",
+    "concepts": [
+      {
+        "concept_id": "concept:vector",
+        "role": "primary"
+      }
+    ]
+  },
+  "citationIds": [
+    "citation:first",
+    "citation:second",
+    "citation:third"
+  ],
+  "assetRequestIds": [],
+  "validationResults": [],
+  "warnings": [],
+  "confidence": 0.94,
+  "createdAt": "2026-07-17T00:00:00Z",
+  "metadata": {
+    "x-example:producer": "knowledge-agent",
+    "xfi:fixture-case": "ordered-array",
+    "xfi:complete": {
+      "unicode": "μ → ∞",
+      "decimal": "001.2300",
+      "nestedFutureField": {
+        "kept": true
+      }
+    },
+    "xfi:ordered": [
+      "first",
+      "second",
+      "third"
+    ]
+  },
+  "schema_name": "AgentContribution",
+  "schema_version": "1.0.0",
+  "minimum_reader_version": "1.0.0",
+  "producer_version": "1.0.0",
+  "created_at": "2026-07-17T00:00:00Z",
+  "extensions": {
+    "xfi:fixture": "AgentContribution:ordered-array"
+  }
+}

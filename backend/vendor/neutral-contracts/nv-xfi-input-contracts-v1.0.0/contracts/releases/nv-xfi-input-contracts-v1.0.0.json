@@ -1,0 +1,70 @@
+{
+  "release_name": "nv-xfi-input-contracts-v1.0.0",
+  "release_version": "1.0.0",
+  "release_status": "RELEASED",
+  "manifest_lifecycle": "RELEASED",
+  "tag": "nv-xfi-input-contracts-v1.0.0",
+  "tag_type": "annotated",
+  "tag_target": "SELF",
+  "implementation_commit": "70ed0547268d62f66c93fa934f9866d9d367a3ac",
+  "release_commit_reference": "SELF",
+  "certification": "NV-XFI-M2-CERT-R5",
+  "release_certification": "NV-XFI-M2-RELEASE-CERT-R1",
+  "certification_review": "R5",
+  "certification_status": "CERTIFIED WITH CONDITIONS",
+  "manifest_path": "contracts/contract-manifest.json",
+  "manifest_sha256": "f63831f48f300a2abf88dac33a2356c3db7cb8fcd1d9a8152f07bfe18c48ea22",
+  "contracts": [
+    {
+      "name": "CurriculumContract",
+      "version": "1.0.0",
+      "schema_id": "urn:neuralverse:xfi:contract:curriculum-contract:1.0.0",
+      "schema_sha256": "16974e4f8e4334410ab00b72cca204e323861cb7d81eccd35a758eef3ab61302"
+    },
+    {
+      "name": "AgentContribution",
+      "version": "1.0.0",
+      "schema_id": "urn:neuralverse:xfi:contract:agent-contribution:1.0.0",
+      "schema_sha256": "adfead3dc5cc22e9a91b205448227c0b22dd89373d1d3fa5eed6987f8e9f39f3"
+    },
+    {
+      "name": "LearningPackageDraft",
+      "version": "1.0.0",
+      "schema_id": "urn:neuralverse:xfi:contract:learning-package-draft:1.0.0",
+      "schema_sha256": "b0a0dccc297cc4cfc1a238d2716b2edfa6890d5381a39f140850cfeecd22ec9c"
+    },
+    {
+      "name": "PublicationReadinessRecommendation",
+      "version": "1.0.0",
+      "schema_id": "urn:neuralverse:xfi:contract:publication-readiness-recommendation:1.0.0",
+      "schema_sha256": "249ace10693abb245353d747ffec091ed10392bf2b29e064aa2f1f8a8becd926"
+    }
+  ],
+  "artifacts": {
+    "executable_examples": 40,
+    "expected_results": 4,
+    "python_projection_paths": [
+      "contracts/generated/python/agent_contribution.py",
+      "contracts/generated/python/curriculum_contract.py",
+      "contracts/generated/python/learning_package_draft.py",
+      "contracts/generated/python/publication_readiness_recommendation.py"
+    ],
+    "typescript_projection_paths": [
+      "contracts/generated/typescript/agent-contribution.ts",
+      "contracts/generated/typescript/curriculum-contract.ts",
+      "contracts/generated/typescript/learning-package-draft.ts",
+      "contracts/generated/typescript/publication-readiness-recommendation.ts"
+    ],
+    "generator_identity": "neuralverse-contract-projections",
+    "generator_version": "1.0.0",
+    "typescript_version": "5.9.2"
+  },
+  "publication": {
+    "remote_branch": "NOT_PERFORMED",
+    "remote_tag": "NOT_PERFORMED"
+  },
+  "consumers": {
+    "acp": "AUTHORIZED_NOT_IMPLEMENTED",
+    "bip": "NOT_IMPLEMENTED"
+  }
+}

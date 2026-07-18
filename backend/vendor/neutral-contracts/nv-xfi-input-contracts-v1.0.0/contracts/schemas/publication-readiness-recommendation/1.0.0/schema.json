@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:neuralverse:xfi:contract:publication-readiness-recommendation:1.0.0",
+  "title": "PublicationReadinessRecommendation",
+  "type": "object",
+  "allOf": [{ "$ref": "urn:neuralverse:xfi:common:shared-metadata:1.0.0" }],
+  "additionalProperties": true,
+  "required": ["schema_name", "schema_version", "minimum_reader_version", "producer_version", "created_at", "packageId", "packageVersion", "recommendation", "recommender", "recommenderVersion", "qualityGateResults", "unresolvedFindingIds", "requiredManualReviews", "acceptedBacklog", "unresolvedUnknowns", "coverage", "governanceRationale", "recommendedAt", "metadata"],
+  "properties": {
+    "schema_name": { "const": "PublicationReadinessRecommendation" },
+    "schema_version": { "$ref": "urn:neuralverse:xfi:common:primitives:1.0.0#/$defs/stableVersion" },
+    "minimum_reader_version": { "$ref": "urn:neuralverse:xfi:common:primitives:1.0.0#/$defs/stableVersion" },
+    "producer_version": { "$ref": "urn:neuralverse:xfi:common:primitives:1.0.0#/$defs/stableVersion" },
+    "created_at": { "$ref": "urn:neuralverse:xfi:common:primitives:1.0.0#/$defs/utcTimestamp" },
+    "extensions": { "type": "object", "propertyNames": { "$ref": "urn:neuralverse:xfi:common:primitives:1.0.0#/$defs/extensionKey" }, "additionalProperties": true },
+    "packageId": { "$ref": "urn:neuralverse:xfi:common:primitives:1.0.0#/$defs/opaqueIdentifier" },
+    "packageVersion": { "$ref": "urn:neuralverse:xfi:common:primitives:1.0.0#/$defs/stableVersion" },
+    "recommendation": { "enum": ["READY_FOR_PUBLICATION", "READY_WITH_DOCUMENTED_MINOR_BACKLOG", "REVISION_REQUIRED", "HUMAN_REVIEW_REQUIRED", "BLOCKED_BY_EVIDENCE", "BLOCKED_BY_CONTENT_GAP", "BLOCKED_BY_ASSET_GAP", "BLOCKED_BY_GOVERNANCE", "REJECTED"] },
+    "recommender": { "$ref": "urn:neuralverse:xfi:contract:publication-readiness-recommendation:1.0.0#/$defs/recommender" },
+    "recommenderVersion": { "$ref": "urn:neuralverse:xfi:common:primitives:1.0.0#/$defs/stableVersion" },
+    "qualityGateResults": { "type": "array", "maxItems": 128, "items": { "$ref": "urn:neuralverse:xfi:contract:publication-readiness-recommendation:1.0.0#/$defs/qualityGateResult" } },
+    "unresolvedFindingIds": { "$ref": "urn:neuralverse:xfi:contract:publication-readiness-recommendation:1.0.0#/$defs/identifiers" },
+    "requiredManualReviews": { "type": "array", "maxItems": 128, "items": { "$ref": "urn:neuralverse:xfi:contract:publication-readiness-recommendation:1.0.0#/$defs/manualReview" } },
+    "acceptedBacklog": { "type": "array", "maxItems": 128, "items": { "$ref": "urn:neuralverse:xfi:contract:publication-readiness-recommendation:1.0.0#/$defs/backlogItem" } },
+    "unresolvedUnknowns": { "type": "array", "maxItems": 128, "items": { "$ref": "urn:neuralverse:xfi:contract:publication-readiness-recommendation:1.0.0#/$defs/unresolvedUnknown" } },
+    "coverage": { "$ref": "urn:neuralverse:xfi:contract:publication-readiness-recommendation:1.0.0#/$defs/coverage" },
+    "governanceRationale": { "type": "string", "minLength": 1 },
+    "recommendedAt": { "$ref": "urn:neuralverse:xfi:common:primitives:1.0.0#/$defs/utcTimestamp" },
+    "metadata": { "type": "object", "additionalProperties": true }
+  },
+  "$defs": {
+    "identifiers": { "type": "array", "maxItems": 256, "items": { "$ref": "urn:neuralverse:xfi:common:primitives:1.0.0#/$defs/opaqueIdentifier" } },
+    "recommender": { "type": "object", "additionalProperties": true, "required": ["kind"], "properties": { "kind": { "enum": ["agent", "human", "governance"] }, "agentId": { "type": "string" }, "label": { "type": "string" } } },
+    "coverageValue": { "type": "object", "additionalProperties": true, "required": ["status"], "properties": { "status": { "enum": ["evaluated", "not_applicable", "not_evaluated"] }, "value": { "type": "number", "minimum": 0, "maximum": 1 } }, "allOf": [{ "if": { "properties": { "status": { "const": "evaluated" } } }, "then": { "required": ["value"] } }, { "if": { "properties": { "status": { "enum": ["not_applicable", "not_evaluated"] } } }, "then": { "not": { "required": ["value"] } } }] },
+    "coverage": { "type": "object", "additionalProperties": true, "required": ["source", "contentBlock", "asset", "laboratory", "assessment", "accessibility", "governance"], "properties": { "source": { "$ref": "urn:neuralverse:xfi:contract:publication-readiness-recommendation:1.0.0#/$defs/coverageValue" }, "contentBlock": { "$ref": "urn:neuralverse:xfi:contract:publication-readiness-recommendation:1.0.0#/$defs/coverageValue" }, "asset": { "$ref": "urn:neuralverse:xfi:contract:publication-readiness-recommendation:1.0.0#/$defs/coverageValue" }, "laboratory": { "$ref": "urn:neuralverse:xfi:contract:publication-readiness-recommendation:1.0.0#/$defs/coverageValue" }, "assessment": { "$ref": "urn:neuralverse:xfi:contract:publication-readiness-recommendation:1.0.0#/$defs/coverageValue" }, "accessibility": { "$ref": "urn:neuralverse:xfi:contract:publication-readiness-recommendation:1.0.0#/$defs/coverageValue" }, "governance": { "$ref": "urn:neuralverse:xfi:contract:publication-readiness-recommendation:1.0.0#/$defs/coverageValue" } } },
+    "qualityGateResult": {
+      "type": "object", "additionalProperties": true,
+      "required": ["gateId", "gateResult", "severity", "findings", "evidenceReferences", "manualReviewRequired", "unresolvedUnknowns"],
+      "properties": {
+        "gateId": { "$ref": "urn:neuralverse:xfi:contract:publication-readiness-recommendation:1.0.0#/$defs/id" },
+        "gateResult": { "enum": ["PASS", "PASS_WITH_FINDINGS", "FAIL", "UNKNOWN"] },
+        "severity": { "enum": ["P0", "P1", "P2", "P3", "UNKNOWN"] },
+        "findings": { "type": "array", "maxItems": 256, "items": { "$ref": "urn:neuralverse:xfi:contract:publication-readiness-recommendation:1.0.0#/$defs/finding" } },
+        "evidenceReferences": { "$ref": "urn:neuralverse:xfi:contract:publication-readiness-recommendation:1.0.0#/$defs/identifiers" },
+        "manualReviewRequired": { "type": "boolean" },
+        "unresolvedUnknowns": { "$ref": "urn:neuralverse:xfi:contract:publication-readiness-recommendation:1.0.0#/$defs/identifiers" }
+      }
+    },
+    "finding": {
+      "type": "object", "additionalProperties": true,
+      "required": ["findingId", "findingType", "severity", "description", "evidenceReferences", "blocking"],
+      "properties": {
+        "findingId": { "$ref": "urn:neuralverse:xfi:contract:publication-readiness-recommendation:1.0.0#/$defs/id" },
+        "findingType": { "type": "string", "minLength": 1 },
+        "severity": { "enum": ["P0", "P1", "P2", "P3", "UNKNOWN"] },
+        "description": { "type": "string", "minLength": 1 },
+        "evidenceReferences": { "$ref": "urn:neuralverse:xfi:contract:publication-readiness-recommendation:1.0.0#/$defs/identifiers" },
+        "blocking": { "type": "boolean" }
+      }
+    },
+    "backlogItem": {
+      "type": "object", "additionalProperties": true,
+      "required": ["backlogItemId", "category", "description", "severity", "reasonForAcceptance", "affectedPackageArea", "evidenceReferences", "requiredFollowUp", "blocking"],
+      "properties": {
+        "backlogItemId": { "$ref": "urn:neuralverse:xfi:contract:publication-readiness-recommendation:1.0.0#/$defs/id" },
+        "category": { "type": "string", "minLength": 1 },
+        "description": { "type": "string", "minLength": 1 },
+        "severity": { "enum": ["P2", "P3"] },
+        "reasonForAcceptance": { "type": "string", "minLength": 1 },
+        "affectedPackageArea": { "type": "string", "minLength": 1 },
+        "evidenceReferences": { "$ref": "urn:neuralverse:xfi:contract:publication-readiness-recommendation:1.0.0#/$defs/identifiers" },
+        "requiredFollowUp": { "type": "string", "minLength": 1 },
+        "blocking": { "const": false }
+      }
+    },
+    "unresolvedUnknown": {
+      "type": "object", "additionalProperties": true,
+      "required": ["unknownId", "affectedArea", "description", "risk", "resolutionPath", "blocking"],
+      "properties": {
+        "unknownId": { "$ref": "urn:neuralverse:xfi:contract:publication-readiness-recommendation:1.0.0#/$defs/id" },
+        "affectedArea": { "type": "string", "minLength": 1 },
+        "description": { "type": "string", "minLength": 1 },
+        "risk": { "type": "string", "minLength": 1 },
+        "resolutionPath": { "type": "string", "minLength": 1 },
+        "blocking": { "type": "boolean" }
+      }
+    },
+    "id": { "$ref": "urn:neuralverse:xfi:common:primitives:1.0.0#/$defs/opaqueIdentifier" },
+    "manualReview": { "type": "object", "additionalProperties": true, "required": ["manualReviewId", "reviewType", "reason", "owner", "blocking"], "properties": { "manualReviewId": { "type": "string", "minLength": 1 }, "reviewType": { "type": "string", "minLength": 1 }, "reason": { "type": "string", "minLength": 1 }, "owner": {}, "blocking": { "type": "boolean" }, "status": { "enum": ["PENDING", "COMPLETED", "REJECTED", "UNKNOWN"] }, "reviewResult": { "enum": ["APPROVED", "REJECTED", "DEFERRED"] }, "reviewedAt": { "type": "string" }, "reviewerId": { "type": "string" }, "evidenceReferences": { "type": "array", "maxItems": 128, "items": { "type": "string" } }, "metadata": { "type": "object", "additionalProperties": true } } }
+  }
+}
