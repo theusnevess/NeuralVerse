@@ -17,6 +17,12 @@ def create_app(
         allow_origins=resolved_settings.cors_allowed_origins,
         allow_credentials=False,
         allow_methods=["GET"],
-        allow_headers=["Accept", "Content-Type", "X-Correlation-ID"],
+        allow_headers=[
+            "Accept",
+            "Content-Type",
+            "X-Correlation-ID",
+            "X-Request-ID",
+            "If-None-Match",
+        ],
     )
     return app

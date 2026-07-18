@@ -3,6 +3,7 @@ from typing import cast
 
 from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
+from fastapi.middleware.gzip import GZipMiddleware
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.requests import Request
 from starlette.responses import Response
@@ -11,6 +12,8 @@ from neuralverse_backend.application.lifecycle import application_lifespan
 from neuralverse_backend.canonical_input import readCanonicalInput
 from neuralverse_backend.configuration.settings import Settings
 from neuralverse_backend.cross_front.workflow import CrossFrontWorkflowService
+from neuralverse_backend.delivery.http import router as delivery_router
+from neuralverse_backend.delivery.queries import DeliveryQueryService
 from neuralverse_backend.interfaces.http.cross_front import router as cross_front_router
 from neuralverse_backend.interfaces.http.errors import (
     ApplicationError,
@@ -47,7 +50,17 @@ def create_http_app(
     app.state.cross_front_workflow_service = cross_front_workflow_service
     app.state.canonical_input_reader = readCanonicalInput
     app.state.canonical_persistence_service = None
+    app.state.delivery_query_service = (
+        DeliveryQueryService(
+            persistence_runtime.session_factory,
+            max_blocks=settings.delivery_max_blocks,
+            max_manifest_references=settings.delivery_max_manifest_references,
+        )
+        if persistence_runtime is not None and persistence_runtime.session_factory is not None
+        else None
+    )
     app.add_middleware(CorrelationIdMiddleware)
+    app.add_middleware(GZipMiddleware, minimum_size=settings.delivery_compression_minimum_bytes)
     app.add_exception_handler(ApplicationError, cast(ExceptionHandler, application_error_handler))
     app.add_exception_handler(
         RequestValidationError,
@@ -57,4 +70,5 @@ def create_http_app(
     app.add_exception_handler(Exception, cast(ExceptionHandler, unexpected_error_handler))
     app.include_router(operations_router)
     app.include_router(cross_front_router)
+    app.include_router(delivery_router)
     return app

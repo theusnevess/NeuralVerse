@@ -59,6 +59,10 @@ class Settings(BaseSettings):
     database_pool_recycle_seconds: int = Field(default=1800, ge=60, le=86400)
     database_connect_timeout_seconds: int = Field(default=5, ge=1, le=60)
     database_statement_timeout_ms: int = Field(default=5000, ge=100, le=300000)
+    delivery_max_response_bytes: int = Field(default=2_000_000, ge=1024, le=50_000_000)
+    delivery_max_blocks: int = Field(default=256, ge=1, le=4096)
+    delivery_max_manifest_references: int = Field(default=1024, ge=1, le=10000)
+    delivery_compression_minimum_bytes: int = Field(default=1024, ge=0, le=1_000_000)
     database_echo: bool = False
     database_application_name: str = Field(
         default="neuralverse-backend", min_length=1, max_length=63

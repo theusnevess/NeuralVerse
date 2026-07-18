@@ -6,3 +6,6 @@ BIP-M2 canonical persistence is implemented and certified with conditions.
 Durable workflow execution, publication execution, frontend integration, and
 Obsidian synchronization execution are not implemented and remain outside
 Stage 5 certification.
+
+NV-BIP-M6-IMPLEMENT is certified with conditions and the XFO release is
+tagged. The BIP owner commit is the remaining finalization operation.

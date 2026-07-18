@@ -5,6 +5,7 @@ import structlog
 from starlette.types import ASGIApp, Message, Receive, Scope, Send
 
 CORRELATION_HEADER = "X-Correlation-ID"
+REQUEST_HEADER = "X-Request-ID"
 _CORRELATION_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$")
 
 
@@ -27,7 +28,7 @@ class CorrelationIdMiddleware:
 
         incoming: str | None = None
         for key, value in scope.get("headers", []):
-            if key.lower() == b"x-correlation-id":
+            if key.lower() in {b"x-correlation-id", b"x-request-id"}:
                 incoming = value.decode("latin-1") if isinstance(value, bytes) else str(value)
                 break
         correlation_id = (
@@ -45,6 +46,8 @@ class CorrelationIdMiddleware:
                     key.lower() == CORRELATION_HEADER.lower().encode() for key, _ in headers
                 ):
                     headers.append((CORRELATION_HEADER.lower().encode(), correlation_id.encode()))
+                if not any(key.lower() == REQUEST_HEADER.lower().encode() for key, _ in headers):
+                    headers.append((REQUEST_HEADER.lower().encode(), correlation_id.encode()))
                 message = {**message, "headers": headers}
             await send(message)
 
