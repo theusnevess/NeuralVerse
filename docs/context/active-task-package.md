@@ -7,8 +7,10 @@ Durable workflow execution, publication execution, frontend integration, and
 Obsidian synchronization execution are not implemented and remain outside
 Stage 5 certification.
 
-NV-BIP-M6-IMPLEMENT is certified with conditions and the XFO release is
-tagged. The BIP owner commit is the remaining finalization operation.
+At the historical Stage 6 certification boundary, NV-BIP-M6-IMPLEMENT was
+certified with conditions and the XFO release was tagged; its owner commit
+was the remaining finalization operation. Stage 10 below supersedes that
+delivery state.
 
 ## Stage 4 — BIP-M0 Mission, Boundaries and Baseline
 
@@ -61,4 +63,16 @@ BIP-M5 is `IMPLEMENTED` at migration head `b53000000001`. PostgreSQL 16.4,
 pgvector 0.7.4 and disposable loopback MinIO certification passed for empty
 upgrade/downgrade/re-upgrade, asset integrity, lexical FTS, vector and hybrid
 retrieval, readiness and index freshness. Production infrastructure and
-latency SLOs remain out of scope; BIP-M6 is `NOT_AUTHORIZED`.
+latency SLOs remain out of scope; at that historical Stage 9 boundary BIP-M6
+was `NOT_AUTHORIZED`.
+
+## Stage 10 — BIP-M6 Content Delivery API
+
+BIP-M6 is `IMPLEMENTED`. Its exact-release read boundary
+is `/api/v1/publication/releases/{release_id}` and preserves immutable package,
+content-version and release identity with ordered blocks, source/citation,
+asset, laboratory, assessment and accessibility projections. ETag,
+conditional requests, representation negotiation, cache policy, gzip and
+typed errors are implemented and certified against disposable PostgreSQL 16
+with pgvector 0.7.4, including an exact-release round trip, ETag/304, gzip,
+version negotiation and structured 404 behavior. BIP-M7 remains `NOT_AUTHORIZED`.

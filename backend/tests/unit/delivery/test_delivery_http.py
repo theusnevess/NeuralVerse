@@ -118,6 +118,7 @@ def _service() -> SimpleNamespace:
         get_learning_package=SimpleNamespace(execute=lambda _: package),
         get_exact_learning_package_version=SimpleNamespace(execute=lambda *_: package),
         get_publication_release=SimpleNamespace(execute=lambda _: release),
+        get_published_release_package=SimpleNamespace(execute=lambda _: package),
         resolve_required_assets=SimpleNamespace(execute=lambda _: [asset]),
         get_laboratory_specification=SimpleNamespace(execute=lambda *_: laboratory),
         get_assessment_specification=SimpleNamespace(execute=lambda *_: assessment),
@@ -163,6 +164,43 @@ def test_delivery_route_group_is_read_only(test_settings: Settings) -> None:
     }
     assert len(routes) == 7
     assert all(methods == {"GET"} for methods in routes.values())
+
+
+def test_canonical_release_route_returns_package_and_negotiates_version(
+    test_settings: Settings,
+) -> None:
+    client = _client(test_settings)
+    response = client.get(
+        f"/api/v1/publication/releases/{RELEASE_ID}",
+        headers={
+            "Accept": "application/vnd.neuralverse.published-learning-package+json;version=1"
+        },
+    )
+    assert response.status_code == 200
+    assert response.json()["release_id"] == str(RELEASE_ID)
+    assert response.headers["Vary"] == "Accept, Accept-Encoding"
+
+
+def test_canonical_release_route_rejects_unknown_representation(
+    test_settings: Settings,
+) -> None:
+    response = _client(test_settings).get(
+        f"/api/v1/publication/releases/{RELEASE_ID}",
+        headers={
+            "Accept": "application/vnd.neuralverse.published-learning-package+json;version=9"
+        },
+    )
+    assert response.status_code == 406
+    assert response.json()["code"] == "SCHEMA_VERSION_UNSUPPORTED"
+
+
+def test_canonical_release_route_honors_multiple_weak_etags(test_settings: Settings) -> None:
+    client = _client(test_settings)
+    path = f"/api/v1/publication/releases/{RELEASE_ID}"
+    first = client.get(path)
+    second = client.get(path, headers={"If-None-Match": 'W/"other", ' + first.headers["ETag"]})
+    assert second.status_code == 304
+    assert second.content == b""
 
 
 def test_delivery_error_contains_request_identity(test_settings: Settings) -> None:

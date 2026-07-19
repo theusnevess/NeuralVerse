@@ -10,7 +10,8 @@ Earlier preserved worktree changes include cross-front workflow material; that
 material is classified as future-stage or pre-existing unless it is directly
 required by canonical persistence.
 
-NV-BIP-M6: `CERTIFIED WITH CONDITIONS — COMMITTED`
+At the historical Stage 6 boundary, NV-BIP-M6 was `CERTIFIED WITH CONDITIONS
+— COMMITTED`; the Stage 10 BIP-M6 delivery state is recorded below.
 
 XFO release: `nv-xfo-delivery-contracts-v1.0.0`
 
@@ -104,5 +105,17 @@ readiness, PostgreSQL FTS, pgvector and hybrid-retrieval boundaries are
 certified against disposable local PostgreSQL 16.4 with pgvector 0.7.4 and a
 private loopback MinIO endpoint. Empty upgrade, downgrade/re-upgrade, asset
 PUT/HEAD/GET integrity, FTS, vector, hybrid RRF, readiness and freshness
-checks passed. This is non-production evidence; BIP-M6 remains
-`NOT_AUTHORIZED`.
+checks passed. This is non-production evidence; at that historical Stage 9
+boundary BIP-M6 was `NOT_AUTHORIZED`.
+
+## Stage 10 — BIP-M6 Content Delivery API
+
+BIP-M6 is `IMPLEMENTED`. The read-only canonical
+endpoint `/api/v1/publication/releases/{release_id}` delivers one coherent
+immutable `PublishedLearningPackage` with exact release identity, ordered
+blocks, source/citation relationships, asset-version references, learner-safe
+laboratory and assessment projections, deterministic ETags, conditional 304s,
+representation negotiation, cache headers, gzip compression and structured
+errors. Disposable PostgreSQL 16 with pgvector 0.7.4 certified the exact-release
+round trip, ETag/304, gzip, version negotiation and structured 404 behavior;
+BIP-M7 through BIP-M9 remain `NOT_AUTHORIZED`.

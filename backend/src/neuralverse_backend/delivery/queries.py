@@ -156,6 +156,18 @@ class GetPublicationRelease:
             )
 
 
+class GetPublishedReleasePackage:
+    """Read one complete immutable release as the frontend-safe package."""
+
+    def __init__(self, service: DeliveryQueryService) -> None:
+        self._service = service
+
+    def execute(self, release_id: UUID) -> PublishedLearningPackage:
+        with self._service._session() as session:
+            release = self._service._released(session, release_id)
+            return self._service._package(session, release)
+
+
 class ResolveRequiredAssets:
     def __init__(self, service: DeliveryQueryService) -> None:
         self._service = service
@@ -287,6 +299,7 @@ class DeliveryQueryService:
         self.get_learning_package = GetLearningPackage(self)
         self.get_exact_learning_package_version = GetExactLearningPackageVersion(self)
         self.get_publication_release = GetPublicationRelease(self)
+        self.get_published_release_package = GetPublishedReleasePackage(self)
         self.resolve_required_assets = ResolveRequiredAssets(self)
         self.get_laboratory_specification = GetLaboratorySpecification(self)
         self.get_assessment_specification = GetAssessmentSpecification(self)

@@ -7,7 +7,13 @@ from neuralverse_backend.delivery.contracts import OUTPUT_CONTRACT_VERSION
 
 class DeliveryError(Exception):
     def __init__(
-        self, code: str, message: str, *, status_code: int, details: dict[str, Any] | None = None
+        self,
+        code: str,
+        message: str,
+        *,
+        status_code: int,
+        details: dict[str, Any] | None = None,
+        retryable: bool = False,
     ):
         super().__init__(message)
         self.code = code
@@ -15,6 +21,7 @@ class DeliveryError(Exception):
         self.status_code = status_code
         self.details = details or {}
         self.contract_version = OUTPUT_CONTRACT_VERSION
+        self.retryable = retryable
 
 
 def not_found(code: str, message: str) -> DeliveryError:

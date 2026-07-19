@@ -207,7 +207,21 @@ with pgvector 0.7.4 and a private loopback MinIO endpoint. Asset integrity,
 readiness, PostgreSQL FTS, vector retrieval, deterministic hybrid fusion and
 index freshness passed, including empty upgrade, downgrade and re-upgrade.
 This records non-production certification only; production deployment and
-SLOs remain deferred. BIP-M6 remains `NOT_AUTHORIZED`.
+SLOs remain deferred. At that historical Stage 9 boundary BIP-M6 was
+`NOT_AUTHORIZED`.
+
+## Stage 10 — BIP-M6 Content Delivery API
+
+Status: `IMPLEMENTED`.
+
+BIP-M6 provides the exact immutable release delivery boundary at
+`/api/v1/publication/releases/{release_id}`. The typed projection, coherent
+read boundary, ordered block assembly, exact references, representation
+negotiation, ETag/conditional caching, compression and structured errors are
+implemented without migrations or Frontend changes. Disposable PostgreSQL 16
+with pgvector 0.7.4 certified the exact-release round trip, ETag/304, gzip,
+version negotiation and structured 404 behavior; BIP-M7 remains
+`NOT_AUTHORIZED`.
 
 ## Stage 7 — BIP-M3 Content Versioning and Publication Model
 

@@ -12,7 +12,12 @@ from neuralverse_backend.application.lifecycle import application_lifespan
 from neuralverse_backend.canonical_input import readCanonicalInput
 from neuralverse_backend.configuration.settings import Settings
 from neuralverse_backend.cross_front.workflow import CrossFrontWorkflowService
-from neuralverse_backend.delivery.http import router as delivery_router
+from neuralverse_backend.delivery.http import (
+    canonical_router,
+)
+from neuralverse_backend.delivery.http import (
+    router as delivery_router,
+)
 from neuralverse_backend.delivery.queries import DeliveryQueryService
 from neuralverse_backend.interfaces.http.cross_front import router as cross_front_router
 from neuralverse_backend.interfaces.http.errors import (
@@ -71,4 +76,5 @@ def create_http_app(
     app.include_router(operations_router)
     app.include_router(cross_front_router)
     app.include_router(delivery_router)
+    app.include_router(canonical_router)
     return app

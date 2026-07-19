@@ -23,6 +23,8 @@ from neuralverse_backend.delivery.errors import DeliveryError
 from neuralverse_backend.delivery.queries import DeliveryQueryService
 
 router = APIRouter(prefix="/delivery/v1", tags=["published-delivery"])
+canonical_router = APIRouter(prefix="/api/v1", tags=["content-delivery"])
+SUPPORTED_MEDIA_TYPE = "application/vnd.neuralverse.published-learning-package+json;version=1"
 
 
 def _payload(value: Any) -> Any:
@@ -54,6 +56,7 @@ def _respond(
     immutable: bool,
     content_location: str | None = None,
     if_none_match: str | None = None,
+    canonical: bool = False,
 ) -> Response:
     tag = _etag(value)
     payload = _payload(value)
@@ -82,12 +85,18 @@ def _respond(
         else "public, max-age=0, must-revalidate",
         "X-Request-ID": getattr(request.state, "correlation_id", "unknown"),
     }
+    if canonical:
+        # GZipMiddleware appends Accept-Encoding when it compresses the body.
+        headers["Vary"] = "Accept"
     if content_location:
         headers["Content-Location"] = content_location
     if if_none_match is not None:
-        if if_none_match.strip() == tag:
+        if _conditional_match(if_none_match, tag):
             return Response(status_code=304, headers=headers)
-        if not if_none_match.strip().startswith(('W/"', '"')):
+        if not all(
+            item.strip().startswith(("W/", '"', "*"))
+            for item in if_none_match.split(",")
+        ):
             raise DeliveryError(
                 "INVALID_CONDITIONAL_REQUEST", "If-None-Match is malformed", status_code=400
             )
@@ -104,6 +113,7 @@ def _error(request: Request, error: DeliveryError) -> JSONResponse:
             "correlation_id": correlation_id,
             "contract_version": error.contract_version,
             "details": error.details,
+            "retryable": error.retryable,
         },
         headers={
             "X-Request-ID": correlation_id,
@@ -117,6 +127,66 @@ def _run(request: Request, operation: Callable[[], Any], **kwargs: Any) -> Respo
         return _respond(request, operation(), **kwargs)
     except DeliveryError as error:
         return _error(request, error)
+
+
+def _conditional_match(header: str | None, tag: str) -> bool:
+    if header is None:
+        return False
+    values = [item.strip() for item in header.split(",")]
+    if "*" in values:
+        return True
+    normalized = tag.removeprefix("W/")
+    return any(value.removeprefix("W/") == normalized for value in values)
+
+
+def _accepts_supported_representation(accept: str | None) -> bool:
+    if not accept or accept.strip() in {"", "*/*", "application/json"}:
+        return True
+    for item in accept.split(","):
+        media, *parameters = (part.strip() for part in item.split(";"))
+        if media != "application/vnd.neuralverse.published-learning-package+json":
+            continue
+        version = next(
+            (
+                part.split("=", 1)[1].strip()
+                for part in parameters
+                if part.startswith("version=")
+            ),
+            None,
+        )
+        return version == "1"
+    return False
+
+
+@canonical_router.get(
+    "/publication/releases/{release_id}",
+    response_model=PublishedLearningPackage,
+    summary="Deliver one immutable published learning package",
+    description="Returns the complete frontend-safe projection of one exact released publication.",
+)
+def get_canonical_release_package(
+    request: Request,
+    release_id: UUID,
+    accept: str | None = Header(default=None, alias="Accept"),
+    if_none_match: str | None = Header(default=None, alias="If-None-Match"),
+) -> Response:
+    if not _accepts_supported_representation(accept):
+        return _error(
+            request,
+            DeliveryError(
+                "SCHEMA_VERSION_UNSUPPORTED",
+                "requested delivery representation is not supported",
+                status_code=406,
+                details={"supported_versions": ["1"]},
+            ),
+        )
+    return _run(
+        request,
+        lambda: _service(request).get_published_release_package.execute(release_id),
+        immutable=True,
+        if_none_match=if_none_match,
+        canonical=True,
+    )
 
 
 @router.get("/curriculum/lessons/{curriculum_node_id}", response_model=PublishedLearningPackage)
