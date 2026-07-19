@@ -14,6 +14,7 @@ from sqlalchemy import (
     Integer,
     String,
     Text,
+    UniqueConstraint,
     Uuid,
     text,
 )
@@ -32,7 +33,7 @@ class AssetVersionIntegrityRecord(Base):
         ForeignKey("asset_versions.asset_version_id", ondelete="RESTRICT"),
         primary_key=True,
     )
-    storage_key: Mapped[str] = mapped_column(String(1024), nullable=False, unique=True)
+    storage_key: Mapped[str] = mapped_column(String(1024), nullable=False)
     byte_size: Mapped[int] = mapped_column(Integer, nullable=False)
     content_hash: Mapped[str] = mapped_column(String(64), nullable=False)
     media_type: Mapped[str] = mapped_column(String(128), nullable=False)
@@ -44,6 +45,7 @@ class AssetVersionIntegrityRecord(Base):
     verified_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
     __table_args__ = (
+        UniqueConstraint("storage_key", name="uq_asset_integrity_storage_key"),
         CheckConstraint("byte_size >= 0", name="asset_integrity_byte_size_nonnegative"),
         CheckConstraint("char_length(content_hash) = 64", name="asset_integrity_hash_length"),
         CheckConstraint(
@@ -144,7 +146,9 @@ class SearchResourceRecord(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
 
     __table_args__ = (
-        Index("uq_search_resource_identity", "resource_id", "resource_version", unique=True),
+        UniqueConstraint(
+            "resource_id", "resource_version", name="uq_search_resource_identity"
+        ),
         Index("ix_search_resource_lifecycle", "lifecycle", "access_scope"),
         Index("ix_search_resource_lexical", "lexical_document", postgresql_using="gin"),
     )
