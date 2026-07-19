@@ -96,3 +96,13 @@ implemented and certified against a disposable local non-production Temporal
 dev server for task-queue delivery, signals, bounded retry, cancellation and
 worker restart/resume. BIP-M5 through BIP-M9 and ACP-RUNTIME-01 remain
 `NOT_AUTHORIZED`.
+
+## Stage 9 — BIP-M5 Assets, Search and Retrieval
+
+BIP-M5 is `IMPLEMENTED`. Migration `b53000000001` and the immutable asset,
+readiness, PostgreSQL FTS, pgvector and hybrid-retrieval boundaries are
+certified against disposable local PostgreSQL 16.4 with pgvector 0.7.4 and a
+private loopback MinIO endpoint. Empty upgrade, downgrade/re-upgrade, asset
+PUT/HEAD/GET integrity, FTS, vector, hybrid RRF, readiness and freshness
+checks passed. This is non-production evidence; BIP-M6 remains
+`NOT_AUTHORIZED`.

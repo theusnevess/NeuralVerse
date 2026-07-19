@@ -54,3 +54,11 @@ are in the BIP-M4 candidate scope. Task-queue delivery, signals,
 cancellation, bounded retry, worker-restart and resume were certified on a
 disposable local non-production Temporal environment. BIP-M5+ remain
 `NOT_AUTHORIZED`.
+
+## Stage 9 — BIP-M5 Assets, Search and Retrieval
+
+BIP-M5 is `IMPLEMENTED` at migration head `b53000000001`. PostgreSQL 16.4,
+pgvector 0.7.4 and disposable loopback MinIO certification passed for empty
+upgrade/downgrade/re-upgrade, asset integrity, lexical FTS, vector and hybrid
+retrieval, readiness and index freshness. Production infrastructure and
+latency SLOs remain out of scope; BIP-M6 is `NOT_AUTHORIZED`.

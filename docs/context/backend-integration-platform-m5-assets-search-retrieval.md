@@ -2,12 +2,13 @@
 
 ## Status
 
-`IMPLEMENTED_WITH_INFRASTRUCTURE_CERTIFICATION_BLOCKED_ENVIRONMENT`
+`IMPLEMENTED`
 
 The BIP-M5 deterministic domain, application boundaries, PostgreSQL
-migration and unit/reference implementations are present. Full
-certification remains conditional on a non-production PostgreSQL 16
-database with `pgvector` and an S3-compatible service.
+migration and unit/reference implementations are present and certified
+against disposable local PostgreSQL 16.4, pgvector 0.7.4 and MinIO
+infrastructure. This certification is non-production and does not claim a
+production latency or deployment SLA.
 
 ## Scope and authority
 
@@ -67,11 +68,25 @@ and adds GIN/identity constraints. It performs no destructive data changes.
 |---|---|
 | Domain and unit behavior | PASS |
 | Offline Alembic generation/head | PASS when migration dependencies are installed |
-| PostgreSQL 16 constraints/transactions | BLOCKED — no PostgreSQL service in environment |
-| pgvector extension/index/query plan | BLOCKED — extension/service unavailable |
-| S3-compatible put/head/read/delete | BLOCKED — no configured test endpoint |
-| FTS integration and hybrid retrieval | BLOCKED — PostgreSQL service unavailable |
+| PostgreSQL 16 constraints/transactions | PASS — disposable PostgreSQL 16.4; empty upgrade, downgrade and re-upgrade |
+| pgvector extension/index/query plan | PASS — pgvector 0.7.4, fixed 1,536 dimensions and HNSW cosine index |
+| S3-compatible put/head/read/delete | PASS — disposable MinIO loopback endpoint; SHA-256 metadata verified |
+| FTS integration and hybrid retrieval | PASS — parameterized PostgreSQL FTS, vector nearest-neighbor and deterministic RRF |
 | Security and bounds | PASS by unit/reference tests |
+
+## Infrastructure certification evidence
+
+- Migration head: `b53000000001`; BIP-M4 predecessor: `b52000000001`.
+- PostgreSQL 16.4 empty-database upgrade, representative no-op upgrade,
+  downgrade to `b52000000001` and re-upgrade to `b53000000001` all passed.
+- `pgcrypto` 1.3 and `vector` 0.7.4 extensions loaded successfully.
+- MinIO S3-compatible PUT, HEAD, bounded GET, SHA-256 integrity metadata and
+  missing-object classification passed on a private loopback bucket.
+- FTS ranking, pgvector nearest-neighbor retrieval, deterministic reciprocal
+  rank fusion, readiness UNKNOWN/READY gates and freshness watermark
+  transitions passed.
+- Bounded local query samples: lexical p95 `5.27 ms`; vector p95 `7.47 ms`.
+  These are evidence measurements, not production SLOs.
 
 Required later environment variables are read only by the certification
 harness and must never be printed: `NEURALVERSE_TEST_DATABASE_URL`,
@@ -83,5 +98,5 @@ harness and must never be printed: `NEURALVERSE_TEST_DATABASE_URL`,
 
 No provider credentials, model calls, Frontend changes, public routes,
 external search engine, separate vector database, BIP-M6 work or commit
-are authorized by this phase. Owner review and an isolated commit remain
-required after infrastructure certification.
+are authorized by this phase. Production deployment and production SLO
+certification remain deferred.

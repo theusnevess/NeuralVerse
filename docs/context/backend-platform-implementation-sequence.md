@@ -198,6 +198,17 @@ bounded retries, worker restart and resume were certified on a disposable
 local non-production Temporal dev server; BIP-M5 through BIP-M9 remain
 `NOT_AUTHORIZED`.
 
+## Stage 9 — BIP-M5 Assets, Search and Retrieval
+
+Status: `IMPLEMENTED`.
+
+BIP-M5 migration `b53000000001` is certified on disposable PostgreSQL 16.4
+with pgvector 0.7.4 and a private loopback MinIO endpoint. Asset integrity,
+readiness, PostgreSQL FTS, vector retrieval, deterministic hybrid fusion and
+index freshness passed, including empty upgrade, downgrade and re-upgrade.
+This records non-production certification only; production deployment and
+SLOs remain deferred. BIP-M6 remains `NOT_AUTHORIZED`.
+
 ## Stage 7 — BIP-M3 Content Versioning and Publication Model
 
 Status: `IMPLEMENTED`.
