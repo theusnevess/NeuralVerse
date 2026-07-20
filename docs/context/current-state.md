@@ -37,7 +37,7 @@ Payload bounds: `IMPLEMENTED`
 
 Database-independent delivery contracts: `IMPLEMENTED`
 
-Frontend integration: `NOT IMPLEMENTED`
+Frontend integration: `IMPLEMENTED`
 
 Publication execution: `NOT IMPLEMENTED`
 
@@ -126,4 +126,22 @@ Durable progress, revisioned notes, session continuity, explicit laboratory
 and assessment records, portability, deletion and privacy boundaries are
 implemented. BIP-M8 Frontend synchronization, production authentication,
 learner-data training, advertising and hidden mastery inference remain out of
-scope. BIP-M8 and BIP-M9 remain separately authorized.
+scope. BIP-M8 is separately authorized; BIP-M9 remains separately authorized.
+
+## Stage 12 — BIP-M8 Frontend Integration Vertical Slice
+
+BIP-M8 has a flag-gated Frontend integration foundation in
+`backend-integration-platform-m8-frontend-integration-vertical-slice.md`.
+Its checked-in `FrontendReleaseRegistry:1.0.0` removes the temporary
+`NV_BIP_M8_RELEASES` harness dependency; Playwright visual baselines and the
+scoped Axe audit pass at desktop, tablet and mobile viewports.
+The exact-release package adapter, schema/order validation, separated caches,
+renderer registry, learner merge boundary and idempotent BIP-M7 submission
+boundary are implemented. A disposable PostgreSQL 16 reference release was
+served through the live API and rendered by Chrome headless, including 23
+ordered blocks and successful laboratory/assessment submissions. The legacy
+hash-router/static projection remains the default rollback path. Formal
+visual/accessibility validation is certified. The approved Frontend-safe
+workflow-progress contract is committed in
+`13c2b363ebd1560f704f7d967448692f5bab8aa3` and exposes only the versioned
+BIP-M4 projection; BIP-M9 remains separately authorized.

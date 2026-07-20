@@ -29,6 +29,7 @@ import "./agents/agent-tools.js?v=1";
 import "./agents/agentic-loop.js?v=1";
 import { createAgentPanelController } from "./agents/agent-panel-controller.js?v=1";
 import "./learning/learning-controller.js?v=1";
+import { createBipM8Controller } from "./bip-m8/index.js?v=1";
 
 window.NV_DEBUG = window.NV_DEBUG || false;
 
@@ -70,6 +71,17 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   contentController.init();
+
+  // BIP-M8 is an incremental, flag-gated delivery path.  Flags are disabled
+  // by default, so the existing static projection remains the safe rollback
+  // path until an exact release mapping is explicitly supplied.
+  const bipM8Controller = createBipM8Controller({
+    root: document,
+    baseUrl: window.NV_BIP_M8_API_BASE_URL || '',
+  });
+  bipM8Controller.init();
+  window.NeuralVerse = window.NeuralVerse || {};
+  window.NeuralVerse.bipM8 = bipM8Controller;
 
   // Initialize the progress controller
   const progressController = createProgressController({

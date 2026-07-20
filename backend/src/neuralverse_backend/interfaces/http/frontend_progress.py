@@ -29,7 +29,7 @@ router = APIRouter(prefix="/orchestration/v1/frontend", tags=["frontend-progress
 
 
 def _parse_last_event_id(value: str | None) -> int:
-    if value in (None, ""):
+    if value is None or value == "":
         return 0
     try:
         sequence = int(value)
@@ -44,7 +44,10 @@ def _parse_last_event_id(value: str | None) -> int:
     return sequence
 
 
-def _safe_event_payload(job: BIPM4GenerationJobRecord, event: BIPM4WorkflowProgressEventRecord) -> dict[str, Any]:
+def _safe_event_payload(
+    job: BIPM4GenerationJobRecord,
+    event: BIPM4WorkflowProgressEventRecord,
+) -> dict[str, Any]:
     metadata = cast(dict[str, Any], event.event_metadata or {})
     retryable = bool(metadata.get("retryable", metadata.get("failure_retryable", False)))
     return {
@@ -59,7 +62,11 @@ def _safe_event_payload(job: BIPM4GenerationJobRecord, event: BIPM4WorkflowProgr
         "timestamp": event.occurred_at.isoformat(),
         "terminal": event.workflow_state.upper() in TERMINAL_STATES,
         "retryable": retryable,
-        "safe_error_code": metadata.get("error_code") if isinstance(metadata.get("error_code"), str) else None,
+        "safe_error_code": (
+            metadata.get("error_code")
+            if isinstance(metadata.get("error_code"), str)
+            else None
+        ),
     }
 
 
@@ -71,7 +78,12 @@ def _sse(payload: dict[str, Any]) -> str:
     )
 
 
-def _load_replay(request: Request, generation_job_id: str, after_sequence: int, viewer_identity: str | None) -> list[str]:
+def _load_replay(
+    request: Request,
+    generation_job_id: str,
+    after_sequence: int,
+    viewer_identity: str | None,
+) -> list[str]:
     runtime = getattr(request.app.state, "persistence_runtime", None)
     factory = getattr(runtime, "session_factory", None)
     if factory is None:
@@ -82,7 +94,11 @@ def _load_replay(request: Request, generation_job_id: str, after_sequence: int, 
             retryable=True,
         )
     if not viewer_identity or len(viewer_identity) > 255:
-        raise ApplicationError("WORKFLOW_PROGRESS_UNAUTHORIZED", "workflow viewer identity is required", status_code=401)
+        raise ApplicationError(
+            "WORKFLOW_PROGRESS_UNAUTHORIZED",
+            "workflow viewer identity is required",
+            status_code=401,
+        )
     with factory() as session:
         job = session.scalar(
             select(BIPM4GenerationJobRecord).where(
@@ -90,9 +106,17 @@ def _load_replay(request: Request, generation_job_id: str, after_sequence: int, 
             )
         )
         if job is None:
-            raise ApplicationError("WORKFLOW_NOT_FOUND", "generation job was not found", status_code=404)
+            raise ApplicationError(
+                "WORKFLOW_NOT_FOUND",
+                "generation job was not found",
+                status_code=404,
+            )
         if str(job.requested_by) != viewer_identity:
-            raise ApplicationError("WORKFLOW_PROGRESS_UNAUTHORIZED", "workflow viewer is not authorized", status_code=403)
+            raise ApplicationError(
+                "WORKFLOW_PROGRESS_UNAUTHORIZED",
+                "workflow viewer is not authorized",
+                status_code=403,
+            )
         first = session.scalar(
             select(BIPM4WorkflowProgressEventRecord.sequence)
             .where(BIPM4WorkflowProgressEventRecord.generation_job_id == generation_job_id)
@@ -124,7 +148,12 @@ def events(
     last_event_id: str | None = Header(default=None, alias="Last-Event-ID"),
     viewer_identity: str | None = Header(default=None, alias="X-NV-Viewer-Identity"),
 ) -> StreamingResponse:
-    replay = _load_replay(request, generation_job_id, _parse_last_event_id(last_event_id), viewer_identity)
+    replay = _load_replay(
+        request,
+        generation_job_id,
+        _parse_last_event_id(last_event_id),
+        viewer_identity,
+    )
 
     def body() -> Iterable[str]:
         yield ": keepalive\n\n"

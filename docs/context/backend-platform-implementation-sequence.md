@@ -243,3 +243,16 @@ delivery manifests, audit records, idempotent commands and transactional
 outbox persistence. External delivery, Frontend and Obsidian synchronization
 remain separately unauthorized; workflow orchestration is addressed by the
 Stage 8 BIP-M4 section below, while BIP-M5 through BIP-M9 remain unauthorized.
+
+## Stage 12 — BIP-M8 Frontend Integration Vertical Slice
+
+Status: `IMPLEMENTED`.
+BIP-M8 adds only Frontend adapters and reversible UI integration on the
+existing hash-router/React-island surface. It consumes exact BIP-M6 releases,
+uses BIP-M7 learner commands, preserves the legacy projection and introduces
+no migration or Backend schema. The disposable PostgreSQL/Chrome reference
+slice is exercised successfully; visual/accessibility certification passes
+through project-local Playwright/Axe checks. The approved Frontend-safe
+workflow-progress contract is committed in
+`13c2b363ebd1560f704f7d967448692f5bab8aa3` and remains limited to the
+versioned BIP-M4 projection. BIP-M9 is separately authorized.

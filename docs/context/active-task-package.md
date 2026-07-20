@@ -80,3 +80,17 @@ version negotiation and structured 404 behavior. BIP-M7 is now
 deletion and privacy boundaries are implemented and certified on disposable
 PostgreSQL 16 infrastructure.
 Frontend synchronization and learner-data training paths remain unauthorized.
+
+## Stage 12 — BIP-M8 Frontend Integration Vertical Slice
+
+Status: `IMPLEMENTED`.
+The flag-gated exact-release delivery adapter, schema/version validation,
+renderer registry, ETag/304 cache boundary, learner-state merge boundary and
+idempotent laboratory/assessment submission adapters are implemented without
+Backend schema changes. A disposable PostgreSQL 16 reference release passed
+live API and Chrome headless delivery, ordered rendering and both learner
+submission paths. Legacy static rendering remains available. Formal
+visual/accessibility certification passes through the project-local Playwright
+and Axe checks. The approved Frontend-safe workflow-progress contract is
+committed in `13c2b363ebd1560f704f7d967448692f5bab8aa3` and consumes only the
+versioned BIP-M4 projection; BIP-M9 is not authorized by this task.
