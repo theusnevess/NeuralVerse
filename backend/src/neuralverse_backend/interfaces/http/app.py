@@ -30,6 +30,7 @@ from neuralverse_backend.interfaces.http.errors import (
 from neuralverse_backend.interfaces.http.learner import router as learner_router
 from neuralverse_backend.interfaces.http.middleware import CorrelationIdMiddleware
 from neuralverse_backend.interfaces.http.operations import router as operations_router
+from neuralverse_backend.interfaces.http.frontend_progress import router as frontend_progress_router
 from neuralverse_backend.persistence.runtime import PersistenceRuntime
 
 ExceptionHandler = Callable[[Request, Exception], Response | Awaitable[Response]]
@@ -76,6 +77,7 @@ def create_http_app(
     app.add_exception_handler(Exception, cast(ExceptionHandler, unexpected_error_handler))
     app.include_router(operations_router)
     app.include_router(learner_router)
+    app.include_router(frontend_progress_router)
     app.include_router(cross_front_router)
     app.include_router(delivery_router)
     app.include_router(canonical_router)
