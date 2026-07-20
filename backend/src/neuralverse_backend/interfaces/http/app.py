@@ -27,6 +27,7 @@ from neuralverse_backend.interfaces.http.errors import (
     unexpected_error_handler,
     validation_error_handler,
 )
+from neuralverse_backend.interfaces.http.learner import router as learner_router
 from neuralverse_backend.interfaces.http.middleware import CorrelationIdMiddleware
 from neuralverse_backend.interfaces.http.operations import router as operations_router
 from neuralverse_backend.persistence.runtime import PersistenceRuntime
@@ -74,6 +75,7 @@ def create_http_app(
     app.add_exception_handler(StarletteHTTPException, cast(ExceptionHandler, http_error_handler))
     app.add_exception_handler(Exception, cast(ExceptionHandler, unexpected_error_handler))
     app.include_router(operations_router)
+    app.include_router(learner_router)
     app.include_router(cross_front_router)
     app.include_router(delivery_router)
     app.include_router(canonical_router)

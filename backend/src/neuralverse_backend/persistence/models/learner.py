@@ -11,6 +11,7 @@ from sqlalchemy import (
     Float,
     ForeignKey,
     Index,
+    Integer,
     String,
     Text,
     Uuid,
@@ -51,6 +52,7 @@ class LearnerProgressRecord(Base):
         nullable=False,
     )
     progress_pct: Mapped[float] = mapped_column(Float, nullable=False, server_default=text("0.0"))
+    revision: Mapped[int] = mapped_column(Integer, nullable=False, server_default=text("0"))
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
 
     __table_args__ = (
@@ -80,6 +82,7 @@ class LearnerNoteRecord(Base):
         nullable=False,
     )
     text: Mapped[str] = mapped_column(Text, nullable=False, server_default=text("''"))
+    revision: Mapped[int] = mapped_column(Integer, nullable=False, server_default="1")
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
 
     __table_args__ = (
@@ -174,6 +177,11 @@ class LearnerSessionRecord(Base):
         ForeignKey("content_versions.content_version_id", ondelete="RESTRICT"),
         nullable=True,
     )
+    revision: Mapped[int] = mapped_column(Integer, nullable=False, server_default=text("1"))
+    status: Mapped[str] = mapped_column(String(32), nullable=False, server_default=text("'active'"))
+    active_release_id: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    active_block_id: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    continuity_metadata: Mapped[object | None] = mapped_column(JSONB, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
 
     __table_args__ = (Index("ix_learner_sessions_learner", "learner_id"),)

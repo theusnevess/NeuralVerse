@@ -75,4 +75,8 @@ asset, laboratory, assessment and accessibility projections. ETag,
 conditional requests, representation negotiation, cache policy, gzip and
 typed errors are implemented and certified against disposable PostgreSQL 16
 with pgvector 0.7.4, including an exact-release round trip, ETag/304, gzip,
-version negotiation and structured 404 behavior. BIP-M7 remains `NOT_AUTHORIZED`.
+version negotiation and structured 404 behavior. BIP-M7 is now
+`IMPLEMENTED`; its learner-scoped, exact-version, revisioned API, portability,
+deletion and privacy boundaries are implemented and certified on disposable
+PostgreSQL 16 infrastructure.
+Frontend synchronization and learner-data training paths remain unauthorized.

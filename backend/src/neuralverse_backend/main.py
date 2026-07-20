@@ -16,13 +16,14 @@ def create_app(
         CORSMiddleware,
         allow_origins=resolved_settings.cors_allowed_origins,
         allow_credentials=False,
-        allow_methods=["GET"],
+        allow_methods=["GET", "POST", "PUT", "PATCH"],
         allow_headers=[
             "Accept",
             "Content-Type",
             "X-Correlation-ID",
             "X-Request-ID",
             "If-None-Match",
+            "Idempotency-Key",
         ],
     )
     return app

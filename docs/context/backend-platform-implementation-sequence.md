@@ -220,8 +220,17 @@ read boundary, ordered block assembly, exact references, representation
 negotiation, ETag/conditional caching, compression and structured errors are
 implemented without migrations or Frontend changes. Disposable PostgreSQL 16
 with pgvector 0.7.4 certified the exact-release round trip, ETag/304, gzip,
-version negotiation and structured 404 behavior; BIP-M7 remains
-`NOT_AUTHORIZED`.
+version negotiation and structured 404 behavior.
+
+## Stage 11 — BIP-M7 Learner-State Platform
+
+Status: `IMPLEMENTED`.
+Learner-owned persistence, revisioned APIs, explicit laboratory/assessment
+evidence, portability, deletion and privacy boundaries are implemented by
+additive migration `b55000000001` from `b53000000001`; PostgreSQL 16
+migration, rollback, concurrency, restart, backup/restore and semantic
+certification passed. BIP-M8 Frontend synchronization and later learner-state
+projections remain separately authorized work.
 
 ## Stage 7 — BIP-M3 Content Versioning and Publication Model
 

@@ -118,4 +118,12 @@ laboratory and assessment projections, deterministic ETags, conditional 304s,
 representation negotiation, cache headers, gzip compression and structured
 errors. Disposable PostgreSQL 16 with pgvector 0.7.4 certified the exact-release
 round trip, ETag/304, gzip, version negotiation and structured 404 behavior;
-BIP-M7 through BIP-M9 remain `NOT_AUTHORIZED`.
+BIP-M7 is `IMPLEMENTED` in this working tree. PostgreSQL 16 migration,
+rollback, concurrency, restart, backup/restore and semantic certification
+passed on disposable task-owned infrastructure. The additive learner-state
+migration `b55000000001` branches from finalized head `b53000000001`.
+Durable progress, revisioned notes, session continuity, explicit laboratory
+and assessment records, portability, deletion and privacy boundaries are
+implemented. BIP-M8 Frontend synchronization, production authentication,
+learner-data training, advertising and hidden mastery inference remain out of
+scope. BIP-M8 and BIP-M9 remain separately authorized.

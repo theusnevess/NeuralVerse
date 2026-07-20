@@ -87,6 +87,18 @@ from neuralverse_backend.persistence.models.learner import (
     LearnerProgressRecord,
     LearnerSessionRecord,
 )
+from neuralverse_backend.persistence.models.learner_state import (
+    LearnerCommandIdempotencyRecord,
+    LearnerDeletionAuditRecord,
+    LearnerDeletionJobRecord,
+    LearnerFeedbackRecord,
+    LearnerNoteConflictRecord,
+    LearnerNoteRevisionRecord,
+    LearnerPreferenceRecord,
+    LearnerStateConflictRecord,
+    LearnerStateExportRecord,
+    LearnerStateImportRecord,
+)
 from neuralverse_backend.persistence.models.operational_audit_event import OperationalAuditEvent
 from neuralverse_backend.persistence.models.outbox_event import TransactionalOutboxEventRecord
 from neuralverse_backend.persistence.models.publication import (
@@ -173,6 +185,16 @@ __all__ = [
     "LearnerProfileRecord",
     "LearnerProgressRecord",
     "LearnerSessionRecord",
+    "LearnerPreferenceRecord",
+    "LearnerNoteRevisionRecord",
+    "LearnerNoteConflictRecord",
+    "LearnerFeedbackRecord",
+    "LearnerStateConflictRecord",
+    "LearnerStateExportRecord",
+    "LearnerStateImportRecord",
+    "LearnerDeletionJobRecord",
+    "LearnerDeletionAuditRecord",
+    "LearnerCommandIdempotencyRecord",
     "OperationalAuditEvent",
     "OperationalAuditEvent",
     "PublicationManifestRecord",
