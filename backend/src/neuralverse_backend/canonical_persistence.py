@@ -13,9 +13,13 @@ from sqlalchemy.exc import IntegrityError
 
 from neuralverse_backend.canonical_input import CanonicalIntake
 from neuralverse_backend.persistence.models import (
+    AgentContributionRecord,
+    AgentRunRecord,
     AuthoringJobRecord,
     CanonicalInputRecord,
     CanonicalIntakeIdempotencyRecord,
+    ContentPackageRecord,
+    GenerationJobRecord,
     TransactionalOutboxEventRecord,
 )
 
@@ -49,6 +53,8 @@ class CanonicalPersistenceResponse:
     workflow_dispatch_status: str
     idempotency_status: str
     replayed: bool = False
+    agent_run_id: UUID | None = None
+    agent_contribution_id: UUID | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -77,6 +83,15 @@ class CanonicalPersistenceService:
         *,
         idempotency_key: str,
         authoring_job_id: UUID | None = None,
+        generation_job_id: UUID | None = None,
+        workflow_id: str | None = None,
+        revision_cycle: int = 0,
+        operation: str | None = None,
+        operation_version: str | None = None,
+        dependency_artifact_ids: list[str] | None = None,
+        dependency_fingerprints: list[str] | None = None,
+        agent_identity: str | None = None,
+        assembled_input_fingerprint: str | None = None,
     ) -> CanonicalPersistenceResult:
         if not 1 <= len(idempotency_key) <= 255:
             return CanonicalPersistenceResult(
@@ -145,6 +160,24 @@ class CanonicalPersistenceService:
                 authoring_job_id=job.authoring_job_id,
                 received_at=intake.received_at,
                 created_at=now,
+                generation_job_id=generation_job_id,
+                workflow_id=workflow_id,
+                revision_cycle=revision_cycle,
+                canonical_producer_id=agent_identity,
+                operation=operation,
+                operation_version=operation_version,
+                assembled_input_fingerprint=assembled_input_fingerprint,
+                dependency_artifact_ids=dependency_artifact_ids or [],
+                dependency_fingerprints=dependency_fingerprints or [],
+            )
+            relational_records, agent_run_id, agent_contribution_id = self._relational_projection(
+                session,
+                intake=intake,
+                canonical=canonical,
+                generation_job_id=generation_job_id,
+                agent_identity=agent_identity,
+                assembled_input_fingerprint=assembled_input_fingerprint,
+                now=now,
             )
             received_contracts = list(cast(list[str], job.received_contracts or []))
             input_ids = list(cast(list[str], job.canonical_input_ids or []))
@@ -187,6 +220,8 @@ class CanonicalPersistenceService:
                 persistence_status="PERSISTED_PENDING_DISPATCH",
                 workflow_dispatch_status="PERSISTED_PENDING_DISPATCH",
                 idempotency_status="COMPLETED",
+                agent_run_id=agent_run_id,
+                agent_contribution_id=agent_contribution_id,
             )
             idem = CanonicalIntakeIdempotencyRecord(
                 idempotency_record_id=uuid4(),
@@ -199,7 +234,7 @@ class CanonicalPersistenceService:
                 created_at=now,
                 expires_at=now + timedelta(days=30),
             )
-            session.add_all([job, canonical, event, idem])
+            session.add_all([job, canonical, event, idem, *relational_records])
             session.commit()
             return CanonicalPersistenceResult(response=response)
         except IntegrityError:
@@ -231,6 +266,78 @@ class CanonicalPersistenceService:
             )
         finally:
             session.close()
+
+    def _relational_projection(
+        self,
+        session: Any,
+        *,
+        intake: CanonicalIntake,
+        canonical: CanonicalInputRecord,
+        generation_job_id: UUID | None,
+        agent_identity: str | None,
+        assembled_input_fingerprint: str | None,
+        now: datetime,
+    ) -> tuple[list[Any], UUID | None, UUID | None]:
+        """Project accepted agent output while retaining one transaction boundary."""
+        if generation_job_id is None or not agent_identity or not hasattr(session, "get"):
+            return [], None, None
+        package_id = _uuid_value(_package_id(intake.canonical_artifact), namespace="package")
+        if session.get(ContentPackageRecord, package_id) is None:
+            return [], None, None
+        job = session.get(GenerationJobRecord, generation_job_id)
+        if job is None:
+            job = GenerationJobRecord(
+                generation_job_id=generation_job_id,
+                target_content_package_id=package_id,
+                workflow_id=_workflow_id_for_job(generation_job_id),
+                status="in_progress",
+                requested_operation=intake.contract_name,
+                created_at=now,
+                updated_at=now,
+            )
+            session.add(job)
+        run_id = uuid5(
+            NAMESPACE_URL, f"https://neuralverse.dev/agent-run/{generation_job_id}/{agent_identity}"
+        )
+        run = session.get(AgentRunRecord, run_id)
+        if run is None:
+            run = AgentRunRecord(
+                agent_run_id=run_id,
+                generation_job_id=generation_job_id,
+                agent_identity=agent_identity,
+                status="completed",
+                started_at=now,
+                completed_at=now,
+                input_references={"canonical_input_id": str(canonical.canonical_input_id)},
+                output_references={"artifact_id": str(canonical.canonical_input_id)},
+                execution_metadata={
+                    "contract_name": intake.contract_name,
+                    "assembled_input_fingerprint": assembled_input_fingerprint,
+                },
+                created_at=now,
+            )
+        records: list[Any] = [run]
+        contribution_id: UUID | None = None
+        if intake.contract_name == "AgentContribution":
+            contribution_id = _uuid_value(
+                intake.canonical_artifact.get("contributionId"), namespace="contribution"
+            )
+            contribution = session.get(AgentContributionRecord, contribution_id)
+            if contribution is None:
+                contribution = AgentContributionRecord(
+                    agent_contribution_id=contribution_id,
+                    generation_job_id=generation_job_id,
+                    agent_run_id=run_id,
+                    content_package_id=package_id,
+                    canonical_input_reference=str(canonical.canonical_input_id),
+                    dependency_references=intake.canonical_artifact.get("inputDependencies", []),
+                    structural_contribution_payload=_json_compatible(intake.canonical_artifact),
+                    opaque_semantic_payload={},
+                    status="proposed",
+                    created_at=now,
+                )
+                records.append(contribution)
+        return records, run_id, contribution_id
 
 
 def _package_id(artifact: dict[str, Any] | Any) -> str | None:
@@ -282,6 +389,10 @@ def _snapshot(response: CanonicalPersistenceResponse) -> dict[str, Any]:
         "persistence_status": response.persistence_status,
         "workflow_dispatch_status": response.workflow_dispatch_status,
         "idempotency_status": response.idempotency_status,
+        "agent_run_id": str(response.agent_run_id) if response.agent_run_id else None,
+        "agent_contribution_id": (
+            str(response.agent_contribution_id) if response.agent_contribution_id else None
+        ),
     }
 
 
@@ -298,7 +409,20 @@ def _response_from_snapshot(
         workflow_dispatch_status=snapshot["workflow_dispatch_status"],
         idempotency_status=snapshot["idempotency_status"],
         replayed=replayed,
+        agent_run_id=UUID(snapshot["agent_run_id"]) if snapshot.get("agent_run_id") else None,
+        agent_contribution_id=(
+            UUID(snapshot["agent_contribution_id"])
+            if snapshot.get("agent_contribution_id")
+            else None
+        ),
     )
+
+
+def _uuid_value(value: Any, *, namespace: str) -> UUID:
+    try:
+        return UUID(str(value))
+    except (ValueError, AttributeError):
+        return uuid5(NAMESPACE_URL, f"https://neuralverse.dev/{namespace}/{value}")
 
 
 def _json_compatible(value: Any) -> Any:

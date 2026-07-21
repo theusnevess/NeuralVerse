@@ -3,7 +3,7 @@ from __future__ import annotations
 import uuid
 from datetime import datetime
 
-from sqlalchemy import DateTime, ForeignKey, Index, LargeBinary, String, Text, Uuid
+from sqlalchemy import DateTime, ForeignKey, Index, Integer, LargeBinary, String, Text, Uuid, text
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -36,6 +36,19 @@ class CanonicalInputRecord(Base):
     )
     received_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    generation_job_id: Mapped[uuid.UUID | None] = mapped_column(Uuid(as_uuid=True), nullable=True)
+    workflow_id: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    revision_cycle: Mapped[int] = mapped_column(Integer, nullable=False, server_default=text("0"))
+    canonical_producer_id: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    operation: Mapped[str | None] = mapped_column(String(128), nullable=True)
+    operation_version: Mapped[str | None] = mapped_column(String(32), nullable=True)
+    assembled_input_fingerprint: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    dependency_artifact_ids: Mapped[object] = mapped_column(
+        JSONB, nullable=False, server_default=text("'[]'")
+    )
+    dependency_fingerprints: Mapped[object] = mapped_column(
+        JSONB, nullable=False, server_default=text("'[]'")
+    )
 
     __table_args__ = (
         Index("ix_canonical_input_records_fingerprint", "artifact_fingerprint"),
