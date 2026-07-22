@@ -54,4 +54,7 @@ class CanonicalInputRecord(Base):
         Index("ix_canonical_input_records_fingerprint", "artifact_fingerprint"),
         Index("ix_canonical_input_records_contract_version", "contract_name", "contract_version"),
         Index("ix_canonical_input_records_job", "authoring_job_id"),
+        Index("ix_canonical_input_records_generation_job", "generation_job_id"),
+        Index("ix_canonical_input_records_workflow", "workflow_id"),
+        Index("ix_canonical_input_records_assembled_fingerprint", "assembled_input_fingerprint"),
     )

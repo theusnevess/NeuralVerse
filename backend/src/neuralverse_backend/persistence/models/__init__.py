@@ -1,5 +1,6 @@
 """Canonical persistence models for BIP-M5 domain baseline."""
 
+from neuralverse_backend.persistence.models import legacy_schema as _legacy_schema  # noqa: F401
 from neuralverse_backend.persistence.models.assessments import (
     AssessmentAttemptRecord,
     AssessmentEvidenceRecord,
@@ -21,11 +22,13 @@ from neuralverse_backend.persistence.models.bip_m4 import (
     BIPM4AuditEventRecord,
     BIPM4CommandRecord,
     BIPM4GenerationJobRecord,
+    BIPM4GenerationRequestRecord,
     BIPM4ProgressProjectionRecord,
     BIPM4PublicationWaitRecord,
     BIPM4ReviewWaitRecord,
     BIPM4RevisionLoopRecord,
     BIPM4WorkflowExecutionRecord,
+    BIPM4WorkflowProgressEventRecord,
 )
 from neuralverse_backend.persistence.models.bip_m5 import (
     AssetReadinessAcknowledgementRecord,
@@ -99,6 +102,7 @@ from neuralverse_backend.persistence.models.learner_state import (
     LearnerStateExportRecord,
     LearnerStateImportRecord,
 )
+from neuralverse_backend.persistence.models.migration import MigrationReconciliationAuditRecord
 from neuralverse_backend.persistence.models.operational_audit_event import OperationalAuditEvent
 from neuralverse_backend.persistence.models.outbox_event import TransactionalOutboxEventRecord
 from neuralverse_backend.persistence.models.publication import (
@@ -145,7 +149,9 @@ __all__ = [
     "BIPM4AuditEventRecord",
     "BIPM4CommandRecord",
     "BIPM4GenerationJobRecord",
+    "BIPM4GenerationRequestRecord",
     "BIPM4ProgressProjectionRecord",
+    "BIPM4WorkflowProgressEventRecord",
     "BIPM4PublicationWaitRecord",
     "BIPM4RevisionLoopRecord",
     "BIPM4ReviewWaitRecord",
@@ -177,6 +183,7 @@ __all__ = [
     "LaboratoryEvidenceRecord",
     "LaboratoryRunRecord",
     "LaboratorySpecRecord",
+    "MigrationReconciliationAuditRecord",
     "LearnerBookmarkRecord",
     "LearnerCollectionRecord",
     "LearnerCollectionVersionRecord",

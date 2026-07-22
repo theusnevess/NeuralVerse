@@ -67,6 +67,26 @@ class BIPM4GenerationJobRecord(Base):
     __table_args__ = (Index("ix_bip_m4_generation_status", "status"),)
 
 
+class BIPM4GenerationRequestRecord(Base):
+    __tablename__ = "bip_m4_generation_requests"
+
+    generation_request_id: Mapped[uuid.UUID] = mapped_column(
+        Uuid(as_uuid=True), primary_key=True, default=uuid.uuid4
+    )
+    generation_job_id: Mapped[str] = mapped_column(String(255), unique=True, nullable=False)
+    request_version: Mapped[str] = mapped_column(String(32), nullable=False)
+    request_fingerprint: Mapped[str] = mapped_column(String(64), unique=True, nullable=False)
+    raw_json_bytes: Mapped[bytes] = mapped_column(nullable=False)
+    semantic_payload: Mapped[object] = mapped_column(JSONB, nullable=False)
+    curriculum_node_id: Mapped[str] = mapped_column(String(512), nullable=False)
+    requested_package_type: Mapped[str] = mapped_column(String(128), nullable=False)
+    workflow_policy_version: Mapped[str] = mapped_column(String(32), nullable=False)
+    activity_policy_version: Mapped[str] = mapped_column(String(32), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+
+    __table_args__ = (Index("ix_bip_m4_generation_request_job", "generation_job_id"),)
+
+
 class BIPM4CommandRecord(Base):
     __tablename__ = "bip_m4_commands"
 
@@ -80,6 +100,7 @@ class BIPM4CommandRecord(Base):
     workflow_execution_id: Mapped[str] = mapped_column(String(255), nullable=False)
     generation_job_id: Mapped[str] = mapped_column(String(255), nullable=False)
     response_snapshot: Mapped[object] = mapped_column(JSONB, nullable=False)
+    command_payload: Mapped[object | None] = mapped_column(JSONB, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
 
     __table_args__ = (
@@ -95,9 +116,43 @@ class BIPM4ProgressProjectionRecord(Base):
 
     workflow_execution_id: Mapped[str] = mapped_column(String(255), primary_key=True)
     generation_job_id: Mapped[str] = mapped_column(String(255), nullable=False)
+    workflow_id: Mapped[str] = mapped_column(String(255), nullable=False, server_default=text("''"))
+    workflow_run_id: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    workflow_type: Mapped[str] = mapped_column(
+        String(128), nullable=False, server_default=text("''")
+    )
+    workflow_version: Mapped[str] = mapped_column(
+        String(64), nullable=False, server_default=text("''")
+    )
     state: Mapped[str] = mapped_column(String(48), nullable=False)
     current_stage: Mapped[str] = mapped_column(String(96), nullable=False)
     revision: Mapped[int] = mapped_column(Integer, nullable=False, server_default=text("0"))
+    progress_sequence: Mapped[int] = mapped_column(
+        Integer, nullable=False, server_default=text("0")
+    )
+    completed_stages: Mapped[object] = mapped_column(
+        JSONB, nullable=False, server_default=text("'[]'")
+    )
+    active_stages: Mapped[object] = mapped_column(
+        JSONB, nullable=False, server_default=text("'[]'")
+    )
+    pending_human_action: Mapped[str | None] = mapped_column(String(96), nullable=True)
+    maximum_revision_cycles: Mapped[int] = mapped_column(
+        Integer, nullable=False, server_default=text("0")
+    )
+    latest_artifact_references: Mapped[object] = mapped_column(
+        JSONB, nullable=False, server_default=text("'[]'")
+    )
+    latest_validation_summary: Mapped[object] = mapped_column(
+        JSONB, nullable=False, server_default=text("'{}'")
+    )
+    latest_governance_summary: Mapped[object] = mapped_column(
+        JSONB, nullable=False, server_default=text("'{}'")
+    )
+    failure_code: Mapped[str | None] = mapped_column(String(96), nullable=True)
+    failure_retryable: Mapped[bool] = mapped_column(nullable=False, server_default=text("false"))
+    started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     review_wait_id: Mapped[str | None] = mapped_column(String(255), nullable=True)
     publication_wait_id: Mapped[str | None] = mapped_column(String(255), nullable=True)
     release_id: Mapped[str | None] = mapped_column(String(255), nullable=True)
@@ -105,6 +160,38 @@ class BIPM4ProgressProjectionRecord(Base):
         Integer, nullable=False, server_default=text("1")
     )
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+
+
+class BIPM4WorkflowProgressEventRecord(Base):
+    """Sanitized, replayable workflow events; raw Temporal history stays private."""
+
+    __tablename__ = "bip_m4_workflow_progress_events"
+
+    workflow_progress_event_id: Mapped[uuid.UUID] = mapped_column(
+        Uuid(as_uuid=True), primary_key=True, default=uuid.uuid4
+    )
+    generation_job_id: Mapped[str] = mapped_column(String(255), nullable=False)
+    workflow_id: Mapped[str] = mapped_column(String(255), nullable=False)
+    workflow_run_id: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    sequence: Mapped[int] = mapped_column(Integer, nullable=False)
+    event_type: Mapped[str] = mapped_column(String(96), nullable=False)
+    workflow_state: Mapped[str] = mapped_column(String(48), nullable=False)
+    workflow_stage: Mapped[str] = mapped_column(String(96), nullable=False)
+    activity_name: Mapped[str | None] = mapped_column(String(128), nullable=True)
+    revision_cycle: Mapped[int] = mapped_column(Integer, nullable=False, server_default=text("0"))
+    artifact_references: Mapped[object] = mapped_column(
+        JSONB, nullable=False, server_default=text("'[]'")
+    )
+    event_metadata: Mapped[object] = mapped_column(
+        "metadata", JSONB, nullable=False, server_default=text("'{}'")
+    )
+    correlation_id: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    occurred_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+
+    __table_args__ = (
+        UniqueConstraint("generation_job_id", "sequence", name="uq_bip_m4_progress_event_sequence"),
+        Index("ix_bip_m4_progress_event_job", "generation_job_id", "sequence"),
+    )
 
 
 class BIPM4AuditEventRecord(Base):

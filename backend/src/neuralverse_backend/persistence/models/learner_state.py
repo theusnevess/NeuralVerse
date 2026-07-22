@@ -10,7 +10,17 @@ from __future__ import annotations
 import uuid
 from datetime import datetime
 
-from sqlalchemy import DateTime, ForeignKey, Index, Integer, String, Text, UniqueConstraint, Uuid
+from sqlalchemy import (
+    DateTime,
+    ForeignKey,
+    Index,
+    Integer,
+    String,
+    Text,
+    UniqueConstraint,
+    Uuid,
+    text,
+)
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -28,7 +38,9 @@ class LearnerPreferenceRecord(Base):
     preference_key: Mapped[str] = mapped_column(String(128), primary_key=True)
     schema_version: Mapped[str] = mapped_column(String(64), nullable=False)
     value: Mapped[object] = mapped_column(JSONB, nullable=False)
-    revision: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    revision: Mapped[int] = mapped_column(
+        Integer, nullable=False, default=0, server_default=text("0")
+    )
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
 
     __table_args__ = (Index("ix_learner_preferences_learner", "learner_id"),)
@@ -75,7 +87,9 @@ class LearnerNoteConflictRecord(Base):
     client_revision: Mapped[int] = mapped_column(Integer, nullable=False)
     server_revision: Mapped[int] = mapped_column(Integer, nullable=False)
     client_text: Mapped[str] = mapped_column(Text, nullable=False)
-    status: Mapped[str] = mapped_column(String(32), nullable=False, default="open")
+    status: Mapped[str] = mapped_column(
+        String(32), nullable=False, default="open", server_default=text("'open'")
+    )
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
 
     __table_args__ = (Index("ix_learner_note_conflicts_status", "learner_id", "status"),)
@@ -113,7 +127,9 @@ class LearnerStateConflictRecord(Base):
     )
     state_type: Mapped[str] = mapped_column(String(64), nullable=False)
     resource_id: Mapped[str] = mapped_column(String(255), nullable=False)
-    status: Mapped[str] = mapped_column(String(32), nullable=False, default="open")
+    status: Mapped[str] = mapped_column(
+        String(32), nullable=False, default="open", server_default=text("'open'")
+    )
     details: Mapped[object] = mapped_column(JSONB, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
 
@@ -134,7 +150,9 @@ class LearnerStateExportRecord(Base):
     schema_version: Mapped[str] = mapped_column(String(64), nullable=False)
     checksum: Mapped[str] = mapped_column(String(64), nullable=False)
     payload: Mapped[object] = mapped_column(JSONB, nullable=False)
-    status: Mapped[str] = mapped_column(String(32), nullable=False, default="completed")
+    status: Mapped[str] = mapped_column(
+        String(32), nullable=False, default="completed", server_default=text("'completed'")
+    )
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
@@ -154,7 +172,9 @@ class LearnerStateImportRecord(Base):
     )
     schema_version: Mapped[str] = mapped_column(String(64), nullable=False)
     checksum: Mapped[str] = mapped_column(String(64), nullable=False)
-    status: Mapped[str] = mapped_column(String(32), nullable=False, default="completed")
+    status: Mapped[str] = mapped_column(
+        String(32), nullable=False, default="completed", server_default=text("'completed'")
+    )
     counts: Mapped[object] = mapped_column(JSONB, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
 
@@ -172,7 +192,9 @@ class LearnerDeletionJobRecord(Base):
         ForeignKey("learner_profiles.learner_id", ondelete="RESTRICT"),
         nullable=False,
     )
-    status: Mapped[str] = mapped_column(String(32), nullable=False, default="requested")
+    status: Mapped[str] = mapped_column(
+        String(32), nullable=False, default="requested", server_default=text("'requested'")
+    )
     idempotency_key: Mapped[str] = mapped_column(String(255), nullable=False)
     requested_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)

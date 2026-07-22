@@ -12,22 +12,30 @@ from alembic.config import Config
 from alembic.script import ScriptDirectory
 
 BACKEND_ROOT = Path(__file__).resolve().parents[2]
-MIGRATIONS = BACKEND_ROOT / "migrations"
+CANONICAL_MIGRATIONS = BACKEND_ROOT / "migrations" / "canonical"
+LEGACY_MIGRATIONS = BACKEND_ROOT / "migrations"
 
 
-def _script() -> ScriptDirectory:
+def _script(script_location: Path = LEGACY_MIGRATIONS) -> ScriptDirectory:
     config = Config(str(BACKEND_ROOT / "alembic.ini"))
-    config.set_main_option("script_location", str(MIGRATIONS))
+    config.set_main_option("script_location", str(script_location))
     return ScriptDirectory.from_config(config)
 
 
-def test_stage16_migration_graph_has_unique_revisions_and_one_head() -> None:
-    script = _script()
+def test_canonical_migration_graph_has_unique_revisions_and_one_head() -> None:
+    script = _script(CANONICAL_MIGRATIONS)
     revisions = list(script.walk_revisions())
     revision_ids = [revision.revision for revision in revisions]
     assert len(revision_ids) == len(set(revision_ids))
-    assert script.get_heads() == ["b63000000001"]
+    assert script.get_heads() == ["c00000000001"]
+
+
+def test_stage16_legacy_revisions_remain_immutable_and_separate() -> None:
+    script = _script()
+    for revision_id in ("b63000000001", "b64000000001"):
+        assert script.get_revision(revision_id) is not None
     assert script.get_revision("b63000000001").down_revision == "b61000000001"
+    assert script.get_revision("b64000000001").down_revision == "b63000000001"
 
 
 def test_stage16_lineage_columns_are_declared_by_the_repair_migration() -> None:
