@@ -176,7 +176,12 @@ def test_representative_dataset_covers_every_stage5_context(postgres_engine: Eng
             "INSERT INTO learner_profiles (learner_id, display_name, created_at, updated_at) VALUES (:id, 'Representative learner', :now, :now)",
             id=ids["learner"], now=now,
         )
-        execute("INSERT INTO learner_progress VALUES (:learner, :version, 50, :now)", learner=ids["learner"], version=ids["version"], now=now)
+        execute(
+            "INSERT INTO learner_progress "
+            "(learner_id, version_id, progress_pct, revision, updated_at) "
+            "VALUES (:learner, :version, 50, 0, :now)",
+            learner=ids["learner"], version=ids["version"], now=now,
+        )
         execute("INSERT INTO learner_notes (note_id, learner_id, version_id, text, created_at) VALUES (:id, :learner, :version, 'note', :now)", id=ids["note"], learner=ids["learner"], version=ids["version"], now=now)
         execute("INSERT INTO learner_bookmarks (bookmark_id, learner_id, version_id, label, created_at) VALUES (:id, :learner, :version, 'bookmark', :now)", id=ids["bookmark"], learner=ids["learner"], version=ids["version"], now=now)
         execute("INSERT INTO learner_collections (collection_id, learner_id, name, created_at, updated_at) VALUES (:id, :learner, 'collection', :now, :now)", id=ids["collection"], learner=ids["learner"], now=now)

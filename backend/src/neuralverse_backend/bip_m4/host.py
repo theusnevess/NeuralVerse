@@ -72,10 +72,10 @@ class TemporalHost:
         if self.client is None:
             raise TemporalUnavailable("Temporal client must be connected before worker creation")
         try:
-            from temporalio.worker import Worker  # type: ignore[import-not-found]
+            from temporalio.worker import Worker
         except ImportError as error:
             raise TemporalUnavailable("temporalio is not installed") from error
-        return Worker(  # type: ignore[no-any-return]
+        return Worker(
             self.client,
             task_queue=self.config.task_queue,
             workflows=list(workflows),
@@ -91,7 +91,7 @@ class TemporalHost:
     @staticmethod
     async def connect(config: TemporalHostConfig) -> Any:
         try:
-            from temporalio.client import Client  # type: ignore[import-not-found]
+            from temporalio.client import Client
         except ImportError as error:
             raise TemporalUnavailable("temporalio is not installed") from error
         return await Client.connect(config.address, namespace=config.namespace)

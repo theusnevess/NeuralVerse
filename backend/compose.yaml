@@ -1,6 +1,6 @@
 services:
   postgres:
-    image: postgres:16
+    image: pgvector/pgvector@sha256:1d533553fefe4f12e5d80c7b80622ba0c382abb5758856f52983d8789179f0fb
     environment:
       POSTGRES_DB: ${NEURALVERSE_POSTGRES_DATABASE:-neuralverse_backend_bip}
       POSTGRES_USER: ${NEURALVERSE_POSTGRES_USER:-neuralverse_bip}
@@ -19,5 +19,217 @@ services:
       start_period: 5s
     restart: unless-stopped
 
+  temporal-postgres:
+    image: postgres@sha256:17e67d7b9890c99b055ba1e0d5c5be4ec27c9d3a72bda32db24a5e5d8a85af0c
+    environment:
+      POSTGRES_DB: ${TEMPORAL_POSTGRES_DATABASE:-temporal}
+      POSTGRES_USER: ${TEMPORAL_POSTGRES_USER:-temporal}
+      POSTGRES_PASSWORD: ${TEMPORAL_POSTGRES_PASSWORD:-temporal_dev_only}
+    volumes:
+      - temporal-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\""]
+      interval: 2s
+      timeout: 3s
+      retries: 15
+    restart: unless-stopped
+
+  temporal:
+    image: temporalio/auto-setup@sha256:b44cbfeb43dbeae42db113b44fb8414c3452f05643b3d6b1592f955277d73526
+    environment:
+      DB: postgres12
+      DB_PORT: 5432
+      POSTGRES_USER: ${TEMPORAL_POSTGRES_USER:-temporal}
+      POSTGRES_PWD: ${TEMPORAL_POSTGRES_PASSWORD:-temporal_dev_only}
+      POSTGRES_SEEDS: temporal-postgres
+      DBNAME: ${TEMPORAL_POSTGRES_DATABASE:-temporal}
+      DEFAULT_NAMESPACE: ${TEMPORAL_NAMESPACE:-neuralverse}
+    ports:
+      - "127.0.0.1:${TEMPORAL_PORT:-7233}:7233"
+    depends_on:
+      temporal-postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "temporal operator cluster health --address temporal:7233"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+
+  temporal-ui:
+    image: temporalio/ui@sha256:cb17ea423d76a8a19a269d0bcd81fc12eee1f6365acd2a56b590dafb35696a95
+    environment:
+      TEMPORAL_ADDRESS: temporal:7233
+      TEMPORAL_CORS_ORIGINS: http://localhost:8233
+    ports:
+      - "127.0.0.1:${TEMPORAL_UI_PORT:-8233}:8080"
+    depends_on:
+      temporal:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:8080/ || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  object-storage:
+    image: minio/minio@sha256:14cea493d9a34af32f524e538b8346cf79f3321eff8e708c1e2960462bd8936e
+    command: ["server", "/data", "--console-address", ":9001"]
+    environment:
+      MINIO_ROOT_USER: ${NEURALVERSE_S3_ACCESS_KEY:-neuralverse_s3}
+      MINIO_ROOT_PASSWORD: ${NEURALVERSE_S3_SECRET_KEY:-neuralverse_s3_dev_only}
+    ports:
+      - "127.0.0.1:${NEURALVERSE_S3_PORT:-59000}:9000"
+      - "127.0.0.1:${NEURALVERSE_S3_CONSOLE_PORT:-59001}:9001"
+    volumes:
+      - object-storage-data:/data
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - >-
+          mc alias set local http://127.0.0.1:9000 "$${MINIO_ROOT_USER}"
+          "$${MINIO_ROOT_PASSWORD}" >/dev/null 2>&1 && mc ready local
+      interval: 3s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib@sha256:b14234c4bc1b7364629af272e564913bb57bdc9736d45b8b6db5ab3417dc75f9
+    command: ["--config=/etc/otel-collector-config.yaml"]
+    volumes:
+      - ./observability/otel-collector.yaml:/etc/otel-collector-config.yaml:ro
+    ports:
+      - "127.0.0.1:${NEURALVERSE_OTEL_GRPC_PORT:-4317}:4317"
+      - "127.0.0.1:${NEURALVERSE_OTEL_HTTP_PORT:-4318}:4318"
+    healthcheck:
+      test: ["CMD", "/otelcol-contrib", "validate", "--config=/etc/otel-collector-config.yaml"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["sh", "-c", "uv run --no-default-groups --group migration alembic upgrade head && uv run --no-default-groups uvicorn neuralverse_backend.main:create_app --factory --host 0.0.0.0 --port 8000"]
+    environment:
+      NEURALVERSE_DATABASE_ENABLED: "true"
+      NEURALVERSE_DATABASE_REQUIRED_FOR_READINESS: "true"
+      NEURALVERSE_DATABASE_URL: postgresql+psycopg://${NEURALVERSE_POSTGRES_USER:-neuralverse_bip}:${NEURALVERSE_POSTGRES_PASSWORD:-neuralverse_bip_dev_only}@postgres:5432/${NEURALVERSE_POSTGRES_DATABASE:-neuralverse_backend_bip}
+      TEMPORAL_ADDRESS: temporal:7233
+      TEMPORAL_NAMESPACE: ${TEMPORAL_NAMESPACE:-neuralverse}
+      NEURALVERSE_OTEL_ENABLED: ${NEURALVERSE_OTEL_ENABLED:-true}
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-http://otel-collector:4317}
+    ports:
+      - "127.0.0.1:${NEURALVERSE_API_PORT:-8000}:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      temporal:
+        condition: service_healthy
+      otel-collector:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health/live')\""]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  orchestration-dispatcher:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["uv", "run", "--no-default-groups", "python", "-m", "neuralverse_backend.bip_m4.dispatcher"]
+    environment:
+      NEURALVERSE_DATABASE_ENABLED: "true"
+      NEURALVERSE_DATABASE_URL: postgresql+psycopg://${NEURALVERSE_POSTGRES_USER:-neuralverse_bip}:${NEURALVERSE_POSTGRES_PASSWORD:-neuralverse_bip_dev_only}@postgres:5432/${NEURALVERSE_POSTGRES_DATABASE:-neuralverse_backend_bip}
+      TEMPORAL_ADDRESS: temporal:7233
+      TEMPORAL_NAMESPACE: ${TEMPORAL_NAMESPACE:-neuralverse}
+    depends_on:
+      api:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      temporal:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import socket; socket.gethostbyname('temporal')\""]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  workflow-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["uv", "run", "--no-default-groups", "python", "-m", "neuralverse_backend.bip_m4.workflow_worker"]
+    environment:
+      TEMPORAL_ADDRESS: temporal:7233
+      TEMPORAL_NAMESPACE: ${TEMPORAL_NAMESPACE:-neuralverse}
+      NEURALVERSE_DATABASE_ENABLED: "true"
+      NEURALVERSE_DATABASE_URL: postgresql+psycopg://${NEURALVERSE_POSTGRES_USER:-neuralverse_bip}:${NEURALVERSE_POSTGRES_PASSWORD:-neuralverse_bip_dev_only}@postgres:5432/${NEURALVERSE_POSTGRES_DATABASE:-neuralverse_backend_bip}
+    depends_on:
+      temporal:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import socket; socket.gethostbyname('temporal')\""]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  system-activity-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["uv", "run", "--no-default-groups", "python", "-m", "neuralverse_backend.bip_m4.system_worker"]
+    environment:
+      TEMPORAL_ADDRESS: temporal:7233
+      TEMPORAL_NAMESPACE: ${TEMPORAL_NAMESPACE:-neuralverse}
+      NEURALVERSE_DATABASE_ENABLED: "true"
+      NEURALVERSE_DATABASE_URL: postgresql+psycopg://${NEURALVERSE_POSTGRES_USER:-neuralverse_bip}:${NEURALVERSE_POSTGRES_PASSWORD:-neuralverse_bip_dev_only}@postgres:5432/${NEURALVERSE_POSTGRES_DATABASE:-neuralverse_backend_bip}
+    depends_on:
+      temporal:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import socket; socket.gethostbyname('temporal')\""]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  agent-worker-adapter:
+    build:
+      context: ../..
+      dockerfile: neuralverse-backend/backend/agent-worker.Dockerfile
+    command: ["uv", "run", "--no-default-groups", "python", "-m", "neuralverse_backend.bip_m4.agent_worker"]
+    environment:
+      TEMPORAL_ADDRESS: temporal:7233
+      TEMPORAL_NAMESPACE: ${TEMPORAL_NAMESPACE:-neuralverse}
+      NEURALVERSE_DATABASE_ENABLED: "true"
+      NEURALVERSE_DATABASE_URL: postgresql+psycopg://${NEURALVERSE_POSTGRES_USER:-neuralverse_bip}:${NEURALVERSE_POSTGRES_PASSWORD:-neuralverse_bip_dev_only}@postgres:5432/${NEURALVERSE_POSTGRES_DATABASE:-neuralverse_backend_bip}
+      NEURALVERSE_ACP_COMMAND: '["node","/opt/acp/src/cli/acp-executable.ts"]'
+      NEURALVERSE_ACP_WORKDIR: /opt/acp
+    depends_on:
+      temporal:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import socket; socket.gethostbyname('temporal')\""]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
 volumes:
   postgres-data:
+  temporal-postgres-data:
+  object-storage-data:

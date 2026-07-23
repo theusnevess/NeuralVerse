@@ -157,7 +157,10 @@ def test_concurrent_outbox_claims_are_exclusive(postgres_engine: Engine) -> None
 
     def claim() -> list[uuid.UUID]:
         with factory() as session:
-            events = OutboxRepository(session).claim_pending_events()
+            # The shared certification database can contain unrelated pending
+            # events. Claim enough rows to include this task-owned event while
+            # retaining the independent-session locking assertion.
+            events = OutboxRepository(session).claim_pending_events(limit=10_000)
             ids = [event.event_id for event in events]
             session.commit()
             return ids

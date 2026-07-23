@@ -9,6 +9,10 @@ from starlette.requests import Request
 from starlette.responses import Response
 
 from neuralverse_backend.application.lifecycle import application_lifespan
+from neuralverse_backend.application.telemetry import (
+    RequestTracingMiddleware,
+    configure_tracing,
+)
 from neuralverse_backend.canonical_input import readCanonicalInput
 from neuralverse_backend.configuration.settings import Settings
 from neuralverse_backend.cross_front.workflow import CrossFrontWorkflowService
@@ -27,10 +31,12 @@ from neuralverse_backend.interfaces.http.errors import (
     unexpected_error_handler,
     validation_error_handler,
 )
+from neuralverse_backend.interfaces.http.frontend_progress import router as frontend_progress_router
 from neuralverse_backend.interfaces.http.learner import router as learner_router
 from neuralverse_backend.interfaces.http.middleware import CorrelationIdMiddleware
 from neuralverse_backend.interfaces.http.operations import router as operations_router
-from neuralverse_backend.interfaces.http.frontend_progress import router as frontend_progress_router
+from neuralverse_backend.interfaces.http.orchestration import router as orchestration_router
+from neuralverse_backend.orchestration import OrchestrationService
 from neuralverse_backend.persistence.runtime import PersistenceRuntime
 
 ExceptionHandler = Callable[[Request, Exception], Response | Awaitable[Response]]
@@ -53,10 +59,16 @@ def create_http_app(
         lifespan=application_lifespan(settings, persistence_runtime),
     )
     app.state.settings = settings
+    app.state.telemetry_tracer = configure_tracing(settings.application_version)
     app.state.persistence_runtime = persistence_runtime
     app.state.cross_front_workflow_service = cross_front_workflow_service
     app.state.canonical_input_reader = readCanonicalInput
     app.state.canonical_persistence_service = None
+    app.state.orchestration_service = (
+        OrchestrationService(persistence_runtime.session_factory)
+        if persistence_runtime is not None and persistence_runtime.session_factory is not None
+        else None
+    )
     app.state.delivery_query_service = (
         DeliveryQueryService(
             persistence_runtime.session_factory,
@@ -67,6 +79,7 @@ def create_http_app(
         else None
     )
     app.add_middleware(CorrelationIdMiddleware)
+    app.add_middleware(RequestTracingMiddleware, tracer=app.state.telemetry_tracer)
     app.add_middleware(GZipMiddleware, minimum_size=settings.delivery_compression_minimum_bytes)
     app.add_exception_handler(ApplicationError, cast(ExceptionHandler, application_error_handler))
     app.add_exception_handler(
@@ -78,6 +91,7 @@ def create_http_app(
     app.include_router(operations_router)
     app.include_router(learner_router)
     app.include_router(frontend_progress_router)
+    app.include_router(orchestration_router)
     app.include_router(cross_front_router)
     app.include_router(delivery_router)
     app.include_router(canonical_router)

@@ -56,10 +56,22 @@ in `backend-integration-platform-m0-mission-boundaries-baseline.md` and remain
 
 The reviewed Backend baseline is `2c22b7dbe0966339158b6b792561ceb0f30a2e5d`;
 `e192a2e939ba904dc5c42274ce8bdfc4362e13ba` is the prior Stage 5 baseline.
-BIP-M1 through BIP-M9 remain `NOT_AUTHORIZED` as new work; existing committed
-evidence is preserved. This additive section does not alter the concurrent
-implementation or delivery evidence recorded above.
+At the historical BIP-M0 baseline, BIP-M1 through BIP-M9 were `NOT_AUTHORIZED`
+as new work; existing committed evidence is preserved. This additive section
+does not alter the concurrent implementation or delivery evidence recorded
+above.
 
+## NV-STAGE7 reference candidate
+
+Reference lesson: `Singular Value Decomposition for Image Compression and Low-Rank Approximation`
+Canonical package: `CREATED`
+LearningPackageDraft: `COMPLETE IN ACP`
+Canonical persistence: `COMPLETE`
+Governance review: `APPROVED AND PERSISTED`
+Immutable content version: `PUBLISHED AND IMMUTABLE`
+Reference publication release: `RELEASED`
+Minimal API delivery: `VALIDATED`
+Full curriculum expansion: `NOT STARTED`
 
 ## Stage 7 — BIP-M3 Content Versioning and Publication
 
@@ -80,9 +92,11 @@ BIP-M1 is `IMPLEMENTED`. The persistence-neutral intake,
 lossless adapters, compatibility validation, immutable domain projections,
 domain invariants, repository ports and unit-of-work protocol are documented
 in `backend-integration-platform-m1-shared-contract-intake-domain-model.md`.
-Concrete persistence, SQLAlchemy mappings, migrations, workflows, APIs,
-publication, delivery, learner state, Frontend and ACP changes remain
-`NOT_IMPLEMENTED` or `NOT_AUTHORIZED`.
+At the time of the Stage 5 intake phase, concrete persistence, SQLAlchemy
+mappings, migrations, workflows, APIs, publication, delivery, learner state,
+Frontend and ACP changes remained `NOT_IMPLEMENTED` or `NOT_AUTHORIZED`.
+Later phase sections supersede that historical snapshot where explicitly
+stated.
 This Stage 5 section supersedes the earlier Stage 4 pre-authorization wording
 for BIP-M1 only; BIP-M2 through BIP-M9 remain separately unauthorized.
 
@@ -120,13 +134,30 @@ errors. Disposable PostgreSQL 16 with pgvector 0.7.4 certified the exact-release
 round trip, ETag/304, gzip, version negotiation and structured 404 behavior;
 BIP-M7 is `IMPLEMENTED` in this working tree. PostgreSQL 16 migration,
 rollback, concurrency, restart, backup/restore and semantic certification
-passed on disposable task-owned infrastructure. The additive learner-state
-migration `b55000000001` branches from finalized head `b53000000001`.
-Durable progress, revisioned notes, session continuity, explicit laboratory
-and assessment records, portability, deletion and privacy boundaries are
-implemented. BIP-M8 Frontend synchronization, production authentication,
-learner-data training, advertising and hidden mastery inference remain out of
-scope. BIP-M8 is separately authorized; BIP-M9 remains separately authorized.
+passed on disposable task-owned infrastructure. The
+additive learner-state migration `b55000000001` branches from finalized head
+`b53000000001`. Durable progress, revisioned notes, session continuity,
+explicit laboratory and assessment records, portability, deletion and privacy
+boundaries are implemented. At the historical Stage 11 boundary, BIP-M8
+Frontend synchronization, production authentication, learner-data training,
+advertising and hidden mastery inference remained out of scope. The Stage 12
+section below records the separately authorized BIP-M8 foundation; BIP-M9
+remains separately authorized.
+
+## M9 — Durable workflow integration certification
+
+The M9 candidate on top of the M4/M5/M6 baseline is certified as
+`BIP_M9_OPERATIONAL_VALIDATION_AND_CERTIFICATION_CERTIFIED_WITH_CONDITIONS`.
+The earlier pending restart, `READY_FOR_PUBLICATION`, replay and clean-copy
+statements are historical and superseded by Stage 17 evidence.
+
+The persisted-reference wiring candidate adds explicit dependency descriptors,
+reference ownership checks, activity-side canonical loading and persisted
+artifact lineage. Worker/API/PostgreSQL recovery, deterministic replay,
+concurrency and idempotency, backup/restore, MinIO, publication, observability,
+resilience, history bounds and the canonical Playwright matrix passed. Stage 9
+is closed. Stage 10 BIP-M3 Publication Transaction is authorized; owner review,
+tag, push and defined production-scale validation remain conditions.
 
 ## Stage 12 — BIP-M8 Frontend Integration Vertical Slice
 

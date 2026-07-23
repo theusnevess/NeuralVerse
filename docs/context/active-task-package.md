@@ -3,9 +3,10 @@
 NV-BIP-M5: CERTIFIED WITH CONDITIONS - BIP_CANONICAL_DOMAIN_PERSISTENCE_CERTIFIED_WITH_CONDITIONS.
 
 BIP-M2 canonical persistence is implemented and certified with conditions.
-Durable workflow execution, publication execution, frontend integration, and
-Obsidian synchronization execution are not implemented and remain outside
-Stage 5 certification.
+At the historical Stage 5 certification boundary, durable workflow execution,
+publication execution, frontend integration, and Obsidian synchronization
+execution were not implemented and remained outside that certification.
+Stage 8 below supersedes the workflow portion only.
 
 At the historical Stage 6 certification boundary, NV-BIP-M6-IMPLEMENT was
 certified with conditions and the XFO release was tagged; its owner commit
@@ -22,6 +23,15 @@ Frontend migration and deferred-decision records are
 authorized by this documentation phase. This section records owner approval
 without changing the concurrent Stage 5/6 task statements above.
 
+## NV-STAGE7 reference candidate
+
+Status: `IMPLEMENTED WITH CONDITIONS — CERTIFICATION REQUIRED`
+
+The backend reference-package boundary validates ACP-produced draft and
+readiness bytes, stable package identity, ordered blocks, source/citation
+integrity and the six required asset requests. Canonical PostgreSQL projection,
+governance transaction, manifest creation and live release delivery remain the
+certification work item.
 
 ## Stage 7 — BIP-M3 publication model
 
@@ -40,9 +50,11 @@ the released NV-XFI contract snapshot with lossless raw-byte preservation,
 compatibility checks, backend wrapper metadata and explicit stable errors.
 The persistence-neutral domain model, aggregate projections, invariants,
 repository ports and unit-of-work protocol are implemented and covered by
-the dedicated BIP-M1 fixture tests. Concrete persistence, migrations,
-workflow execution, APIs, publication, delivery, Frontend, ACP and runtime
-integration remain `NOT_IMPLEMENTED` and require separate authorization.
+the dedicated BIP-M1 fixture tests. At that historical phase boundary,
+concrete persistence, migrations, workflow execution, APIs, publication,
+delivery, Frontend, ACP and runtime integration remained `NOT_IMPLEMENTED`
+and required separate authorization. Stage 8 below supersedes workflow
+execution only.
 This Stage 5 state supersedes the earlier Stage 4 pre-authorization wording
 for BIP-M1 only; BIP-M2 through BIP-M9 remain separately unauthorized.
 
@@ -80,6 +92,21 @@ version negotiation and structured 404 behavior. BIP-M7 is now
 deletion and privacy boundaries are implemented and certified on disposable
 PostgreSQL 16 infrastructure.
 Frontend synchronization and learner-data training paths remain unauthorized.
+
+## M9 — Durable workflow integration certification
+
+M9 is
+`BIP_M9_OPERATIONAL_VALIDATION_AND_CERTIFICATION_CERTIFIED_WITH_CONDITIONS`.
+The historical open-gate statement for restart, replay, full workflow,
+PostgreSQL concurrency and clean-copy validation is superseded by Stage 17
+certification evidence.
+
+The candidate now includes a bounded workflow artifact-reference map, explicit
+operation dependency descriptors, persisted lineage columns and activity-side
+canonical reference loading. The live operational and canonical Playwright
+gates passed; Stage 9 is closed. Stage 10 BIP-M3 Publication Transaction is
+authorized but not implemented in this task. Owner review, tag, push and
+defined production-scale validation remain conditions.
 
 ## Stage 12 — BIP-M8 Frontend Integration Vertical Slice
 

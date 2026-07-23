@@ -24,6 +24,7 @@ def create_app(
             "X-Request-ID",
             "If-None-Match",
             "Idempotency-Key",
+            "Last-Event-ID",
         ],
     )
     return app

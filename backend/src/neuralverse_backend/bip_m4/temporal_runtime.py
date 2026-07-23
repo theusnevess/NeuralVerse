@@ -11,8 +11,8 @@ from datetime import timedelta
 from typing import Any
 
 try:  # pragma: no cover - exercised only by the Temporal certification job
-    from temporalio import activity, workflow  # type: ignore[import-not-found]
-    from temporalio.common import (  # type: ignore[import-not-found]
+    from temporalio import activity, workflow
+    from temporalio.common import (
         RetryPolicy as TemporalRetryPolicy,
     )
 
@@ -23,13 +23,12 @@ except ImportError:  # pragma: no cover - normal unit-test environment
 
 if TEMPORAL_SDK_AVAILABLE:
 
-    @activity.defn(name="bip-m4-durable-pass-through")  # type: ignore[misc]
+    @activity.defn(name="bip-m4-durable-pass-through")
     async def durable_pass_through(payload: dict[str, Any]) -> dict[str, Any]:
         """Operational activity used for adapter and retry certification."""
         return {"status": "ACCEPTED", "payload": payload}
 
-
-    @activity.defn(name="bip-m4-retry-once")  # type: ignore[misc]
+    @activity.defn(name="bip-m4-retry-once")
     async def retry_once(payload: dict[str, Any]) -> dict[str, Any]:
         """Deterministic transient-failure probe for retry certification."""
         del payload
@@ -38,7 +37,6 @@ if TEMPORAL_SDK_AVAILABLE:
             raise RuntimeError("BIP_M4_TRANSIENT_PROBE")
         return {"status": "RETRIED", "attempts": attempts}
 
-
     @workflow.defn(name="BIPM4DurableAuthoringWorkflow")
     class BIPM4DurableAuthoringWorkflow:
         def __init__(self) -> None:
@@ -46,7 +44,7 @@ if TEMPORAL_SDK_AVAILABLE:
             self._review_decision: str | None = None
             self._progress = "ACCEPTED"
 
-        @workflow.run  # type: ignore[misc]
+        @workflow.run
         async def run(self, command: dict[str, Any]) -> dict[str, Any]:
             self._progress = "RUNNING"
             if command.get("retry_probe"):
@@ -74,17 +72,17 @@ if TEMPORAL_SDK_AVAILABLE:
             self._progress = "COMPLETED"
             return {"status": "COMPLETED", "command_id": command["command_id"], "activity": result}
 
-        @workflow.signal  # type: ignore[misc]
+        @workflow.signal
         async def resolve_review(self, decision: str) -> None:
             if decision not in {"APPROVED", "REJECTED"}:
                 raise ValueError("invalid review decision")
             self._review_decision = decision
 
-        @workflow.signal  # type: ignore[misc]
+        @workflow.signal
         async def cancel(self) -> None:
             self._cancelled = True
 
-        @workflow.query  # type: ignore[misc]
+        @workflow.query
         def progress(self) -> str:
             return self._progress
 

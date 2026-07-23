@@ -193,6 +193,10 @@ class PublicationTransactionService:
             release.status = "released"
             release.governance_review_ids = list(request.governance_review_ids)
             release.released_at = current_time
+        # The manifest has a foreign key to the release.  Flush the release
+        # explicitly because these models intentionally do not define an ORM
+        # relationship that would otherwise determine insert ordering.
+        session.flush([release])
         if manifest is None:
             manifest = PublicationManifestRecord(
                 publication_manifest_id=uuid.UUID(request.publication_manifest_id),
